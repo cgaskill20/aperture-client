@@ -87,6 +87,7 @@ let RenderInfrastructure = {
             Util.refreshInfoPopup();
             return;
         }
+        parent.pipe("graph_set_viewport", this.map.getBounds());
         let customQueryBounds = [];
         let bounds = Util.Convert.leafletBoundsToNESWObject(this.map.getBounds());
         usefulBounds = Querier.createBoundsList(bounds);
@@ -157,6 +158,8 @@ let RenderInfrastructure = {
         const datasource = indexData ? indexData : RenderInfrastructure.data;
         let preProcess = [];
         let layers = [];
+        const nameForGraphing = "power_plant";
+        let dataToPipe = [];
         L.geoJson(geoJsonData, {
             style: function (feature) {
                 let weight = 3;
@@ -177,6 +180,9 @@ let RenderInfrastructure = {
                 if (datasource[name]["preProcess"] && preProcessed) {
                     preProcess.push(feature);
                     return false;
+                }
+                if(name === nameForGraphing){
+                    dataToPipe.push(feature);
                 }
                 RenderInfrastructure.currentLayers.push(feature.id);
                 return true;
@@ -201,8 +207,8 @@ let RenderInfrastructure = {
                     opacity: 0
                 });
             }
-
         }).addTo(RenderInfrastructure.map);
+        parent.pipe("graph_data_ingest", dataToPipe);
         Util.refreshInfoPopup();
         //RenderInfrastructure.markerLayer.refreshClusters();
         if (!preProcessed) {
@@ -301,6 +307,7 @@ let RenderInfrastructure = {
      * @returns {boolean} true if successful, there will be an error otherwise
      */
     removeAllFeaturesFromMap: function () {
+        parent.pipe("graph_clear_data", null);
         this.markerLayer.eachLayer(function (layer) {
             RenderInfrastructure.markerLayer.removeLayer(layer);
         });

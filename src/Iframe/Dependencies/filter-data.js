@@ -5,7 +5,9 @@
 let ingestData = {
     ingestedData: [],
     newData: null,
-    
+    viewportRaw: null,
+    viewportTurf: null,
+
     /**
      * Loads GeoJson data into an array
      * @memberof ingestData
@@ -14,8 +16,9 @@ let ingestData = {
      * @returns {boolean} true if success, false otherwise
      */
     ingest: function (data) {
-        newData = JSON.parse(data);
-        ingestedData = ingestedData.concat(newData.features);
+        if (data.length === 0) return;
+        //edited to just tack on the new features - make sure to check for duplicates though, cause right now this code doesnt
+        ingestData.ingestedData = ingestData.ingestedData.concat(data); //things got messy so had to change 'this' to the explicit ingestData
         return true;
     },
 
@@ -26,21 +29,33 @@ let ingestData = {
      * @param {object} viewport from map 2
      * @returns {boolean} true if success, false otherwise
      */
-    setViewport: function(viewport) {
-        this.viewportRaw = {north: viewport.getNorth(),
-                            south: viewport.getSouth(),
-                            east: viewport.getEast(),
-                            west: viewport.getWest()
-                            }
+    setViewport: function (viewport) {
+        ingestData.viewportRaw = {
+            north: viewport.getNorth(),
+            south: viewport.getSouth(),
+            east: viewport.getEast(),
+            west: viewport.getWest()
+        }
 
-        this.viewportTurf = turf.polygon([[
-            [viewportRaw.west, viewportRaw.north],
-            [viewportRaw.east, viewportRaw.north],
-            [viewportRaw.east, viewportRaw.south],
-            [viewportRaw.west, viewportRaw.south]
+        ingestData.viewportTurf = turf.polygon([[
+            [ingestData.viewportRaw.west, ingestData.viewportRaw.north],
+            [ingestData.viewportRaw.east, ingestData.viewportRaw.north],
+            [ingestData.viewportRaw.east, ingestData.viewportRaw.south],
+            [ingestData.viewportRaw.west, ingestData.viewportRaw.south],
+            [ingestData.viewportRaw.west, ingestData.viewportRaw.north]
         ]]);
 
         return true;
+    },
+
+    /**
+     * Clears ingestedData in the event the main map clears its data of interest
+     * @memberof ingestData
+     * @method clearData
+     * @returns {boolean} true if success, false otherwise
+     */
+    clearData(placeholder){
+        ingestData.ingestedData = [];
     }
 }
 
@@ -57,4 +72,11 @@ let filterData = {
     }
 
 }
+
+
+//pipe code -- do not edit
+parent.createPipe("graph_data_ingest", ingestData.ingest);
+parent.createPipe("graph_set_viewport", ingestData.setViewport);
+parent.createPipe("graph_clear_data", ingestData.clearData);
+//----
 
