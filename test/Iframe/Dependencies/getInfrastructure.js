@@ -7,6 +7,7 @@ const ctx = canvas.getContext('2d');
 global.$ = require('jquery');
 global.L = require('leaflet');
 global.simplify = require('../../../src/Iframe/Dependencies/simplify.js');
+
 L.Map.prototype.setSize = function (width, height) {
     this._size = new L.Point(width, height);
     this._resetView(this.getCenter(), this.getZoom());
@@ -16,13 +17,12 @@ window.HTMLCanvasElement.prototype.getContext = function (a) {
     return ctx;
 }
 global.osmtogeojson = require('osmtogeojson');
-
 const elem = document.createElement('div');
 elem.style.cssText = 'width: "100%", height: "800px" ';
 elem.id = 'testMap';
 document.body.appendChild(elem);
 
-let jsonData = require("../../../src/Iframe/Dependencies/waterInfrastructure.json");
+let jsonData = require("../../../src/Iframe/Dependencies/infrastructure.json");
 let streamflowData = require("../../../src/Iframe/Dependencies/streamflowMetadata.json");
 let sampleQuery = require("./sampleRes.json");
 
@@ -43,6 +43,15 @@ testMap.removeLayers = function (layers) {
     });
 };
 
+global.grpc_querier = function(){
+    let onner = {
+        on: function(a,b){}
+    }
+    return {
+        getOSMData: function(a,b){return onner;},
+        getDatasetData: function(a,b){return onner;}
+    };
+}
 
 
 describe('RenderInfrastructure', function () {
@@ -67,14 +76,14 @@ describe('RenderInfrastructure', function () {
                 }
             );
             getInfrastructure.RenderInfrastructure.currentQueries.forEach(element => {
-                element.query.abort();
+                //element.query.abort();
             });
             currentQueries = [];
         });
     });
     describe('renderGeoJson()', function () {
         it('should render geojson onto map', function () {
-            assert.deepEqual(Object.keys(getInfrastructure.RenderInfrastructure.renderGeoJson(sampleQuery)._map._targets).length, 12);
+            assert.deepEqual(getInfrastructure.RenderInfrastructure.renderGeoJson(sampleQuery).length, 29);
         });
     });
     describe('removeFeatureFromMap()', function () {
@@ -82,7 +91,7 @@ describe('RenderInfrastructure', function () {
             let toRemove = 'dam';
             getInfrastructure.RenderInfrastructure.removeFeatureFromMap(toRemove);
             assert.deepEqual(getInfrastructure.RenderInfrastructure.blacklist.includes(toRemove), true);
-            assert.deepEqual(Object.keys(getInfrastructure.RenderInfrastructure.map._layers).length, 38);
+            assert.deepEqual(Object.keys(getInfrastructure.RenderInfrastructure.map._layers).length, 35);
         });
     });
     describe('cleanupMap()', function () {
@@ -91,7 +100,7 @@ describe('RenderInfrastructure', function () {
             getInfrastructure.RenderInfrastructure.renderGeoJson(sampleQuery);
             testMap.setView(L.latLng(48.494351, -105.295029), 22);
             getInfrastructure.RenderInfrastructure.cleanupMap();
-            assert.deepEqual(Object.keys(getInfrastructure.RenderInfrastructure.map._layers).length, 27);
+            assert.deepEqual(Object.keys(getInfrastructure.RenderInfrastructure.map._layers).length, 24);
         });
     });
     describe('getAttribute()', function () {
@@ -120,10 +129,10 @@ describe('RenderInfrastructure', function () {
             getInfrastructure.RenderInfrastructure.addFeatureToMap('water_tap');
             //console.log(getInfrastructure.RenderInfrastructure.currentQueries);
             assert.deepEqual(getInfrastructure.RenderInfrastructure.currentQueries[0].bounds, {
-                east: -105.29489491134883,
-                north: 48.4944397934167,
-                south: 48.49426204506454,
-                west: -105.29516313225032
+                east: -0,
+                north: 0,
+                south: 0,
+                west: 0
             });
             assert.deepEqual(getInfrastructure.RenderInfrastructure.currentBounds, []);
         });
@@ -147,13 +156,13 @@ describe('Querier', function () {
             assert.deepEqual(getInfrastructure.RenderInfrastructure.currentQueries, []);
         });
     });
-    describe('createOverpassQueryList()', function () {
+    describe('createBoundsList()', function () {
         it('should create a list of queries based on cropped bounds', function () {
             getInfrastructure.RenderInfrastructure.currentBounds = [{ north: 55, south: 45, east: 70, west: 30 }];
             getInfrastructure.RenderInfrastructure.currentQueries = [{ bounds: { north: 62, south: 58, east: 42, west: 38 } }];
-            assert.deepEqual(getInfrastructure.Querier.createOverpassQueryList(["waterway=dam"], { north: 60, south: 40, east: 60, west: 40 })[0].bounds, { north: 45, south: 40, east: 60, west: 40 });
-            assert.deepEqual(getInfrastructure.Querier.createOverpassQueryList(["waterway=dam"], { north: 60, south: 40, east: 60, west: 40 })[1].bounds, { north: 60, south: 55, east: 60, west: 42 });
-            assert.deepEqual(getInfrastructure.Querier.createOverpassQueryList(["waterway=dam"], { north: 60, south: 40, east: 60, west: 40 })[2].bounds, { north: 58, south: 55, east: 42, west: 40 });
+            assert.deepEqual(getInfrastructure.Querier.createBoundsList({ north: 60, south: 40, east: 60, west: 40 })[0], { north: 45, south: 40, east: 60, west: 40 });
+            assert.deepEqual(getInfrastructure.Querier.createBoundsList({ north: 60, south: 40, east: 60, west: 40 })[1], { north: 60, south: 55, east: 60, west: 42 });
+            assert.deepEqual(getInfrastructure.Querier.createBoundsList({ north: 60, south: 40, east: 60, west: 40 })[2], { north: 58, south: 55, east: 42, west: 40 });
         });
     });
 

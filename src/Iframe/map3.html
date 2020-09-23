@@ -13,8 +13,6 @@
 -->
     <script src="../../node_modules/leaflet/dist/leaflet.js"></script>
     <script type="text/javascript" src="Dependencies/osmbuildings/OSMBuildings-Leaflet.js"></script>
-    <script type="text/javascript" src="Dependencies/Census_Visualization/grpc_querier.bundle.js"></script>
-    <script type="text/javascript" src="Dependencies/Census_Visualization/census_visualizer.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="Dependencies/leaflet-sidebar.js"></script>
     <script src="Dependencies/getInfrastructure.js"></script>
@@ -32,33 +30,6 @@
 </head>
 
 <body>
-    <div id="sidebar" class="sidebar collapsed">
-        <!-- Nav tabs -->
-        <div class="sidebar-tabs">
-            <ul role="tablist">
-                <li>
-                    <a href="#home" role="tab">
-                        <img style="width:35px;height:35px;" src="../../images/hamburger-button.svg">
-                    </a>
-                </li>
-            </ul>
-
-        </div>
-
-        <!-- Tab panes -->
-        <div class="sidebar-content">
-            <div class="sidebar-pane" id="home">
-                <h1 class="sidebar-header">
-                    Demographic & Risk Data
-                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>
-                <div class="selectContainer" id="checkboxLocation">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="map" class="sidebar-map"></div>
-
     <div id='map3' class='map'></div>
     <!--Required for this map to be controlled-->
     <script src="Dependencies/MapJS/map3.js"></script>

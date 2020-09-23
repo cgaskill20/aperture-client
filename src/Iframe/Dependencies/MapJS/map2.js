@@ -24,15 +24,15 @@ var sidebar = L.control.sidebar('sidebar', {
 
 var markers = L.markerClusterGroup({
     showCoverageOnHover: false,
-    spiderfyOnMaxZoom: false,
-    disableClusteringAtZoom: 17,
-    maxClusterRadius: 55
+    spiderfyOnMaxZoom: true,
+    maxClusterRadius: 55,
+    animate: false
 });
 osmMap2.addLayer(markers);
 
 $.getJSON("Dependencies/streamflowMetadata.json", function (mdata) {
     RenderInfrastructure.preProcessData = mdata;
-    $.getJSON("Dependencies/waterInfrastructure.json", function (data) {
+    $.getJSON("Dependencies/infrastructure.json", function (data) {
         RenderInfrastructure.config(osmMap2, markers, data, {
             queryAlertText: document.getElementById('queryInfoText'),
             overpassInterpreter: 'http://lattice-136.cs.colostate.edu:4096/api/interpreter',
@@ -48,14 +48,23 @@ $.getJSON("Dependencies/streamflowMetadata.json", function (mdata) {
             '<li><b>Hospital</b>: Icons from Font Awesome by Dave Gandy - <a href="https://fortawesome.github.com/Font-Awesome">fortawesome.github.com/Font-Awesome</a> / CC BY-SA (<a href="https://creativecommons.org/licenses/by-sa/3.0">creativecommons.org/licenses/by-sa/3.0</a>)</li>' +
             '<li><b>Urgent Care</b>: Icon By Bridget Gahagan, <a href="https://thenounproject.com/">noun project</a></li>' + 
             '<li><b>Fire Station</b>: Icon From <a href="https://icons8.com/">icons8.com</a></li>' +
-        '</ul>'
-        );
+        '</ul>',
+        true);
         runQuery();
     });
 });
 
-//selectedObjects.forEach(object => osmMap2.addLayer(object));
+//map 3 merge stuff
+const censusViz = census_visualizer();
+censusViz.updateViz(osmMap2);
 
+const g = { groupMem: "Census", query: 1 };
+const census = {
+    "Total Population": g, "Avg. Household Income": g,
+    "Population by Age": g, "Median Age": g, "No. Below Poverty Line": g, "Demographics": g
+}
+
+Generator.config(census, document.getElementById("checkboxLocation"), true, changeChecked, "radio", true);
 
 function updateOverPassLayer() {
     RenderInfrastructure.update();
@@ -63,7 +72,6 @@ function updateOverPassLayer() {
 
 function removeOverpassLayer(map, removeLayer) {
     map.eachLayer(function (layer) {
-        //console.log(layer.options);
         if (layer.options.id === "OverPassLayer" && layer.options.query == removeLayer.options.query) {
             map.removeLayer(layer);
         }
@@ -72,15 +80,24 @@ function removeOverpassLayer(map, removeLayer) {
 
 function changeChecked(element) {
     if (element.checked) {
-        RenderInfrastructure.addFeatureToMap(element.id);
+        if (element.id in census) {
+            censusViz.setFeature(element.id);
+            censusViz.updateViz(osmMap2);
+        } else {
+            RenderInfrastructure.addFeatureToMap(element.id);
+        }
     }
     else {
-        RenderInfrastructure.removeFeatureFromMap(element.id);
+        if (element.id in census)
+            censusViz.setFeature(element.id);
+        else
+            RenderInfrastructure.removeFeatureFromMap(element.id);
     }
 }
 
 parent.addEventListener('updateMaps', function () {
     runQuery();
+    censusViz.updateViz(osmMap2);
 });
 
 function runQuery() {

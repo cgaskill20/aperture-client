@@ -4,27 +4,31 @@
         "color": "black",
         "defaultRender": true,
         "query":"man_made=water_works",
-        "groupMem":"Water (Man Made)"
+        "groupMem":"Water (Man Made)",
+        "grpc":"OSMRequest"
     },
     "wastewater_plant": {
         "iconAddr": "../../../images/sewage.png",
         "color": "#FF00FF",
         "defaultRender": true,
         "query":"man_made=wastewater_plant",
-        "groupMem":"Water (Man Made)"
+        "groupMem":"Water (Man Made)",
+        "grpc":"OSMRequest"
     },
     "canal": {
         "color": "teal",
         "defaultRender": true,
         "query":"waterway=canal",
         "preProcess":true,
-        "groupMem":"Water (Man Made)"
+        "groupMem":"Water (Man Made)",
+        "grpc":"OSMRequest"
     },
     "river": {
         "color": "#00008B",
         "defaultRender": true,
         "query":"waterway=river",
         "preProcess":true,
+        "grpc":"OSMRequest",
         "groupMem":"Water (Natural)"
     },
     "stream": {
@@ -32,68 +36,74 @@
         "defaultRender": false,
         "query":"waterway=stream",
         "preProcess":true,
-        "groupMem":"Water (Natural)"
+        "groupMem":"Water (Natural)",
+        "grpc":"OSMRequest"
     },
     "ditch": {
         "color": "#0000BB",
         "defaultRender": false,
         "query":"waterway=ditch",
         "preProcess":true,
-        "groupMem":"Water (Man Made)"
+        "groupMem":"Water (Man Made)",
+        "grpc":"OSMRequest"
     },
     "lock_gate": {
         "iconAddr": "../../../images/lock_gate.png",
         "color": "#FF0000",
         "defaultRender": true,
         "query":"waterway=lock_gate",
-        "groupMem":"Water (Man Made)"
+        "groupMem":"Water (Man Made)",
+        "grpc":"OSMRequest"
     },
     "weir": {
         "iconAddr": "../../../images/weir.png",
         "color": "#FF0000",
         "defaultRender": true,
         "query":"waterway=weir",
-        "groupMem":"Water (Man Made)"
+        "groupMem":"Water (Man Made)",
+        "grpc":"OSMRequest"
     },
     "tidal_channel": {
         "color": "#0080FF",
         "defaultRender": true,
         "query":"waterway=tidal_channel",
-        "groupMem":"Water (Natural)"
+        "groupMem":"Water (Natural)",
+        "grpc":"OSMRequest"
+    },
+    "water": {
+        "iconAddr": "../../../images/reservoir-lake.png",
+        "color": "#00FFFF",
+        "defaultRender": true,
+        "query":"natural=water",
+        "groupMem":"Water (Man Made)",
+        "grpc":"OSMRequest"
     },
     "reservoir": {
         "iconAddr": "../../../images/reservoir-lake.png",
         "color": "#00FFFF",
-        "defaultRender": true,
-        "query":"water=reservoir",
         "groupMem":"Water (Man Made)"
     },
     "basin": {
         "iconAddr": "../../../images/reservoir-lake.png",
         "color": "#00FFFF",
-        "defaultRender": true,
-        "query":"landuse=basin",
         "groupMem":"Water (Natural)"
     },
     "pond":{
         "color": "#00FFFF",
         "iconAddr": "../../../images/reservoir-lake.png",
-        "defaultRender": true,
-        "query": "water=pond",
         "groupMem":"Water (Natural)"
     },
     "lake":{
         "color": "#00FFFF",
         "iconAddr": "../../../images/reservoir-lake.png",
-        "defaultRender": true,
-        "query": "water=lake",
         "groupMem":"Water (Natural)"
     },
     "Natural_Gas_Pipeline": {
         "color": "#8A2BE2",
         "defaultRender": true,
         "query":"custom=Natural_Gas_Pipeline",
-        "queryURL":"https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Natural_Gas_Liquid_Pipelines/FeatureServer/0/query?where=1%3D1&outFields=*&geometry={{BOUNDS}}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",
+        "grpc":"DatasetRequest",
+        "grpcDataset":4, 
         "identityField": "TYPEPIPE",
         "groupMem":"Energy",
         "popup": "A(n) @@TYPEPIPE@@ natural gas pipeline operated by @@Operator@@."
@@ -102,8 +112,9 @@
         "iconAddr": "../../../images/substation.png",
         "defaultRender": true,
         "query": "custom=substation",
-        "queryURL": "https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Electric_Substations_1/FeatureServer/0/query?where=1%3D1&outFields=*&geometry={{BOUNDS}}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",
-        "identityField": "TYPE",
+        "grpc":"DatasetRequest",
+        "grpcDataset":2, 
+        "identityField": "TYPE", 
         "identityKey": "SUBSTATION",
         "groupMem":"Energy",
         "popup": "@@NAME@@ substation. An @@STATUS@@ substation in @@COUNTY@@ county with a max voltage of @@MAX_VOLT@@. Sourced from @@SOURCE@@."
@@ -112,7 +123,8 @@
         "color": "#000000",
         "defaultRender": true,
         "query": "custom=power_transmission_line",
-        "queryURL": "https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Electric_Power_Transmission_Lines/FeatureServer/0/query?where=1%3D1&outFields=*&geometry={{BOUNDS}}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",
+        "grpc":"DatasetRequest",
+        "grpcDataset":3, 
         "identityField": "TYPE",
         "identityKey": "AC",
         "groupMem":"Energy",
@@ -121,9 +133,10 @@
     "flood_zones":{
         "defaultRender":false,
         "query": "custom=flood_zone",
-        "queryURL":"https://hazards.fema.gov/gis/nfhl/rest/services/FIRMette/NFHLREST_FIRMette/MapServer/27/query?where=FLD_ZONE = 'AE' OR FLD_ZONE = 'A' OR FLD_ZONE = 'AH' OR FLD_ZONE = 'A0'&outFields=*&geometry={{BOUNDS}}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",
         "refrences":["flood_zone_A","flood_zone_AE","flood_zone_AH","flood_zone_AO","floodway"],
-        "groupMem":"Flood Data"
+        "groupMem":"Flood Data",
+        "grpc":"DatasetRequest",
+        "grpcDataset":7
     },
     "floodway":{
         "color":"#D60BB1",
@@ -180,23 +193,26 @@
         "defaultRender": true,
         "query":"custom=dam",
         "groupMem":"Water (Man Made)",
-        "queryURL":"https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Dam_Lines/FeatureServer/0/query?where=1%3D1&outFields=*&geometry={{BOUNDS}}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",
+        "grpc":"DatasetRequest",
+        "grpcDataset":1, 
         "identityField": "DAM_HEIGHT",
         "popup": "@@NAME@@ dam, located along the @@RIVER@@, standing @@DAM_HEIGHT@@ feet high, located in @@COUNTY@@ county, @@STATE@@. This dam primarily affects @@CITYAFFECT@@, @@NIDSTATE@@."
     },
     "power_plant":{
         "iconAddr": "../../../images/power_plant.png",
-        "defaultRender":false,
+        "defaultRender":true,
         "query": "custom=power_plant",
         "queryURL":"https://geodata.epa.gov/arcgis/rest/services/OEI/FRS_PowerPlants/MapServer/12/query?where=1%3D1&outFields=*&geometry={{BOUNDS}}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",
         "identityField": "ENERGY_SRC_DESC1",
-        "groupMem":"Energy"
+        "groupMem":"Energy",
+        "popup": "@@PLANT_NAME@@ power plant, which produces energy through @@ENERGY_SRC_DESC1@@"
     },
     "fire_station":{
         "iconAddr": "../../../images/fire_station.png",
         "defaultRender":true,
         "query": "custom=fire_station",
-        "queryURL":"https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Fire_Station/FeatureServer/0/query?where=1%3D1&outFields=*&geometry={{BOUNDS}}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",
+        "grpc":"DatasetRequest",
+        "grpcDataset":6,
         "identityField": "ISLANDMARK",
         "groupMem":"Emergency & Medical",
         "popup": "@@NAME@@, located in @@CITY@@, @@STATE@@."
@@ -205,7 +221,8 @@
         "iconAddr": "../../../images/hospital.png",
         "defaultRender":true,
         "query": "custom=hosptial",
-        "queryURL":"https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Hospitals_1/FeatureServer/0/query?where=1%3D1&outFields=*&geometry={{BOUNDS}}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",
+        "grpc":"DatasetRequest",
+        "grpcDataset":0, 
         "identityField": "BEDS",
         "groupMem":"Emergency & Medical",
         "popup": "@@NAME@@, a @@OWNER@@ hospital with @@BEDS@@ beds, located in @@CITY@@, @@STATE@@."

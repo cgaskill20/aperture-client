@@ -1,7 +1,6 @@
 //Author: Daniel Reynolds
 //Purpose: Get osm nodes, ways, and relations, and then translate them onto a leaflet map
 //Dependencies: Leaflet, osmtogeojson, jquery, Leaflet.markerCluster
-
 const FLYTOOPTIONS = { //for clicking on icons
     easeLinearity: 0.4,
     duration: 0.25,
@@ -26,7 +25,7 @@ const DEFAULTOPTIONS = {
     maxElements: 5000,
     maxLayers: 10,
     minRenderZoom: 10,
-    commonTagNames: ["streamflow", "waterway", "man_made", "landuse", "water", "amenity", "natural"],
+    commonTagNames: ["streamflow", "waterway", "man_made", "landuse", "amenity", "natural", "water"],
     blacklistedTagValues: ["yes", "amenity"],
     queryAlertText: null,
     iconSize: [25, 25],
@@ -52,7 +51,9 @@ let RenderInfrastructure = {
     currentLayers: [],
     currentQueries: [],
     blacklist: [],
+    grpcQuerier: null,
     options: JSON.parse(JSON.stringify(DEFAULTOPTIONS)),
+    idCounter: 0,
     /**
      * Sets up instance of renderer
      * @memberof RenderInfrastructure
@@ -71,8 +72,10 @@ let RenderInfrastructure = {
         this.currentBounds = [];
         this.currentLayers = [];
         this.currentQueries = [];
-        this.blacklist = [];
+        this.blacklist = Util.jsonToQueryList(this.data, true);
         this.queries = Util.jsonToQueryList(this.data);
+        this.grpcQuerier = grpc_querier();
+        this.idCounter = 0;
     },
     /**
      * Call this when the map should be updated
@@ -86,20 +89,27 @@ let RenderInfrastructure = {
         }
         let customQueryBounds = [];
         let bounds = Util.Convert.leafletBoundsToNESWObject(this.map.getBounds());
-        let usefulQueries = Querier.createOverpassQueryList(this.queries, bounds);
-        if (usefulQueries) {
-            usefulQueries.forEach(query => {
-                Querier.queryGeoJsonFromServer(query.query, query.bounds, true, RenderInfrastructure.renderGeoJson);
-                customQueryBounds.push(query.bounds);
+        usefulBounds = Querier.createBoundsList(bounds);
+        if (usefulBounds) {
+            usefulBounds.forEach(bound => {
+                let filter = Util.makeOSMFilter();
+                if (filter.length > 0) {
+                    Querier.queryGRPC("OSMRequest", null, bound, filter);
+                }
+                customQueryBounds.push(bound);
             });
         }
-        //pan loading bit
+        // //pan loading bit
+        bounds = Util.Convert.leafletBoundsToNESWObject(this.map.getBounds());
         bounds = Util.expandBounds(bounds);
-        usefulQueries = Querier.createOverpassQueryList(this.queries, bounds);
-        if (usefulQueries) {
-            usefulQueries.forEach(query => {
-                Querier.queryGeoJsonFromServer(query.query, query.bounds, true, RenderInfrastructure.renderGeoJson);
-                customQueryBounds.push(query.bounds);
+        usefulBounds = Querier.createBoundsList(bounds);
+        if (usefulBounds) {
+            usefulBounds.forEach(bound => {
+                let filter = Util.makeOSMFilter();
+                if (filter.length > 0) {
+                    Querier.queryGRPC("OSMRequest", null, bound, filter);
+                }
+                customQueryBounds.push(bound);
             });
         }
         this.updateCustom(this.queries, customQueryBounds);
@@ -116,42 +126,55 @@ let RenderInfrastructure = {
             let url = Util.queryToQueryURL(query);
             if (url) {
                 bounds.forEach(bound => {
-                    Querier.queryGeoJsonFromServer(Querier.createCustomQueryURL(url, bound), bound, false, RenderInfrastructure.renderGeoJson);
+                    Querier.queryGeoJsonFromServer(Querier.createCustomQueryURL(url, bound), bound, RenderInfrastructure.renderGeoJson);
                 });
+                return;
+            }
+            let grpc = Util.queryToGRPCDetails(query);
+            if (grpc) {
+                //console.log(query);
+                bounds.forEach(bound => {
+                    Querier.queryGRPC("DatasetRequest", grpc.dataset, bound);
+                });
+                return;
             }
         });
     },
     /**
-     * Rendes geojson
+     * Renders geojson
      * @memberof RenderInfrastructure
      * @method renderGeoJson
      * @param {JSON} geoJsonData GeoJSON 
-     * @param {bool} preProcess does this need to be preprocessed before rendering? false if not related to streamflow stuff
-     * @returns {leaflet layer} layer that was added
+     * @param {bool} preProcess (optional) does this need to be preprocessed before rendering? false if not related to streamflow stuff
+     * @param {JSON} indexData (optional) custom JSON data (if you don't want to use Renderinfrastructure.data as your indexing file)
+     * @returns {Array<int>} array of integers which contain the id of added layers
      */
-    renderGeoJson: function (geoJsonData, preProcessed) {
+    renderGeoJson: function (geoJsonData, preProcessed, indexData) {
         if (RenderInfrastructure.options.simplifyThreshold !== -1) {
             Util.simplifyGeoJSON(geoJsonData, RenderInfrastructure.options.simplifyThreshold);
         }
+        Util.fixGeoJSONID(geoJsonData);
+        const datasource = indexData ? indexData : RenderInfrastructure.data;
         let preProcess = [];
-        let resultLayer = L.geoJson(geoJsonData, {
+        let layers = [];
+        L.geoJson(geoJsonData, {
             style: function (feature) {
-                let type = Util.getFeatureType(feature);
                 let weight = 3;
                 let fillOpacity = 0.2;
-                let name = Util.getNameFromGeoJsonFeature(feature);
-                if (RenderInfrastructure.data[name] && RenderInfrastructure.data[name]["noBorder"]) {
+                let name = Util.getNameFromGeoJsonFeature(feature,indexData);
+                if (datasource[name] && datasource[name]["noBorder"]) {
                     weight = 0;
                     fillOpacity = 0.75;
                 }
-                return { color: RenderInfrastructure.getAttribute(name, ATTRIBUTE.color), weight: weight, fillOpacity: fillOpacity };
+                return { color: datasource[name]["color"], weight: weight, fillOpacity: fillOpacity };
             },
             filter: function (feature) {
-                let name = Util.getNameFromGeoJsonFeature(feature);
-                if (RenderInfrastructure.currentLayers.includes(feature.id) || RenderInfrastructure.map.getZoom() < RenderInfrastructure.options.minRenderZoom || RenderInfrastructure.blacklist.includes(name) || RenderInfrastructure.data[name] == null) {
+                if (!feature.id && feature._id.$oid) feature.id = feature._id.$oid; //osm data was kinda messy so had to hard code this
+                let name = Util.getNameFromGeoJsonFeature(feature,indexData);
+                if (RenderInfrastructure.currentLayers.includes(feature.id) || RenderInfrastructure.map.getZoom() < RenderInfrastructure.options.minRenderZoom || RenderInfrastructure.blacklist.includes(name) || datasource[name] == null) {
                     return false;
                 }
-                if (RenderInfrastructure.data[name]["preProcess"] && !preProcessed) {
+                if (datasource[name]["preProcess"] && preProcessed) {
                     preProcess.push(feature);
                     return false;
                 }
@@ -163,13 +186,15 @@ let RenderInfrastructure = {
                 if (latlng === -1) {
                     return;
                 }
-                let iconName = Util.getNameFromGeoJsonFeature(feature);
-                let iconDetails = Util.createDetailsFromGeoJsonFeature(feature, iconName);
+                let iconName = Util.getNameFromGeoJsonFeature(feature,indexData);
+                let iconDetails = Util.createDetailsFromGeoJsonFeature(feature, iconName, indexData);
                 RenderInfrastructure.addIconToMap(iconName, latlng, iconDetails);
                 layer.bindPopup(iconDetails);
                 layer.on('click', function (e) {
                     RenderInfrastructure.map.flyToBounds(layer.getBounds(), FLYTOOPTIONS);
                 });
+                layer.specifiedId = RenderInfrastructure.idCounter++;
+                layers.push(layer.specifiedId);
             },
             pointToLayer: function () {
                 return L.marker([0, 0], {
@@ -178,13 +203,12 @@ let RenderInfrastructure = {
             }
 
         }).addTo(RenderInfrastructure.map);
-
         Util.refreshInfoPopup();
         //RenderInfrastructure.markerLayer.refreshClusters();
         if (!preProcessed) {
             Querier.preProcessQuery(preProcess);
         }
-        return resultLayer;
+        return layers;
     },
     /**
      * Adds icon to map
@@ -205,6 +229,9 @@ let RenderInfrastructure = {
         });
         marker.uniqueId = iconName;
         RenderInfrastructure.markerLayer.addLayer(marker.on('click', function (e) {
+            if(e.target.__parent._group._spiderfied){
+                return;
+            }
             if (RenderInfrastructure.map.getZoom() < 16) {
                 RenderInfrastructure.map.flyTo(e.latlng, 16, FLYTOOPTIONS);
             }
@@ -252,6 +279,22 @@ let RenderInfrastructure = {
         return true;
     },
     /**
+     * Removes a feature id from the map
+     * @memberof RenderInfrastructure
+     * @method removeFeatureFromMap
+     * @param {Array<int>} specifiedIds id which should be removed from map, ex: 'dam' or 'weir'
+     * @returns {boolean} true if ids were removed
+     */
+    removeSpecifiedLayersFromMap: function (specifiedIds) {
+        this.map.eachLayer(function (layer) {
+            if (layer.feature && specifiedIds.includes(layer.specifiedId)) {
+                RenderInfrastructure.currentLayers.splice(RenderInfrastructure.currentLayers.indexOf(layer.feature.id), 1);
+                RenderInfrastructure.map.removeLayer(layer);
+            }
+        });
+        return true;
+    },
+    /**
      * Removes all features from the map
      * @memberof RenderInfrastructure
      * @method removeAllFeaturesFromMap
@@ -270,6 +313,7 @@ let RenderInfrastructure = {
         this.queries = [];
         this.currentBounds = [];
         this.currentLayers = [];
+        this.currentQueries = [];
         for (x in RenderInfrastructure.data) {
             if (RenderInfrastructure.data[x]['query']) {
                 this.blacklist.push(x);
@@ -372,10 +416,9 @@ const Querier = {
      * @method queryGeoJsonFromServer
      * @param {string} queryURL URL where geoJSON/Osm Xml is
      * @param {object} bounds (not necessary when using this function by itself) bounds object like: {north:?,east:?,south:?,west:?}
-     * @param {boolean} isOsmData is the url going to return OSM Xml data? (such as overpass queries)
      * @param {Function} callbackFn where the geoJSON will be sent on return, should be a 1-parameter function
      */
-    queryGeoJsonFromServer: async function (queryURL, bounds, isOsmData, callbackFn) {
+    queryGeoJsonFromServer: async function (queryURL, bounds, callbackFn) {
         this.removeUnnecessaryQueries();
         let query = $.getJSON(queryURL, function (dataAsJson) {
             for (let i = 0; i < RenderInfrastructure.currentQueries.length; i++) {
@@ -390,16 +433,13 @@ const Querier = {
             else if (RenderInfrastructure.currentBounds.length > RenderInfrastructure.options.maxLayers) {
                 RenderInfrastructure.currentBounds = [Util.expandBounds(Util.Convert.leafletBoundsToNESWObject(RenderInfrastructure.map.getBounds()))];
             }
-            if (isOsmData) {
-                RenderInfrastructure.currentBounds.push(bounds);
-                callbackFn(osmtogeojson(dataAsJson));
-            }
-            else {
-                callbackFn(dataAsJson);
-            }
+            let relevantBounds = Querier.createBoundsList(bounds);
+            if(relevantBounds)
+                RenderInfrastructure.currentBounds = RenderInfrastructure.currentBounds.concat(relevantBounds /*This is a weird use of this function but it works*/); 
+            callbackFn(dataAsJson);
         });
         RenderInfrastructure.currentQueries.push({ query: query, bounds: bounds });
-        if (isOsmData) Util.refreshInfoPopup();
+        Util.refreshInfoPopup();
     },
     /**
      * Removes queries that shouldnt be continued, for example if something was loading far away from the viewport,
@@ -412,7 +452,7 @@ const Querier = {
             let bound = Util.Convert.leafletBoundsToNESWObject(RenderInfrastructure.map.getBounds());
             bound = Util.expandBounds(bound);
             if (Util.boundsAreOutsideOfBounds(RenderInfrastructure.currentQueries[i].bounds, bound)) {
-                RenderInfrastructure.currentQueries[i].query.abort();
+                //RenderInfrastructure.currentQueries[i].query.abort();
                 RenderInfrastructure.currentQueries.splice(i, 1);
                 i--;
             }
@@ -421,14 +461,13 @@ const Querier = {
     /**
      * Gives you a list of queries to run based on bounds that already exist
      * @memberof Querier
-     * @method createOverpassQueryList
-     * @param {Array} queryList list of queries ie [waterway=river,waterway=stream]
+     * @method createBoundsList
      * @param {Object} queryBounds bbox to query
-     * @returns {Array} of objects with queries and bounds
+     * @returns {Array} of bounds that dont intersect existing bounds
      */
-    createOverpassQueryList: function (queryList, queryBounds) {
+    createBoundsList: function (queryBounds) {
         let boundsToQuery = [];
-        if ((RenderInfrastructure.currentBounds.length == 0 && RenderInfrastructure.currentQueries.length == 0)) {
+        if ((RenderInfrastructure.currentBounds.length === 0 && RenderInfrastructure.currentQueries.length == 0)) {
             boundsToQuery = [queryBounds];
         }
         else {
@@ -456,47 +495,10 @@ const Querier = {
         if (boundsToQuery.length == 0) return null;
         boundsToQuery = Util.optimizeBoundsList(boundsToQuery, RenderInfrastructure.options.simplifyThreshold);
         if (boundsToQuery.length == 0) return null;
-        let queries = [];
-        for (let i = 0; i < boundsToQuery.length; i++) {
-            queries.push({
-                query: this.createOverpassQueryURL(queryList, boundsToQuery[i], 111),
-                bounds: boundsToQuery[i]
-            });
-        }
-        return queries;
+        return boundsToQuery;
     },
     /**
-     * Creates a overpass query URL 
-     * @memberof Querier
-     * @method createOverpassQueryURL
-     * @param {Array<string>} queryList list of queries ex: ['waterway=dam','natural=lake']
-     * @param {object} bounds bounds object in the form: {north:?,east:?,south:?,west:?}, which states WHERE to query
-     * @param {number} node_way_relation binary choice for node,way,relation -- ex:111 = nodes, ways, AND relations -- 101 = nodes AND relations -- 100 = nodes only
-     * @returns {string} a valid overpass URL
-     */
-    createOverpassQueryURL: function (queryList, bounds, node_way_relation) {
-        let queryFString = '';
-        let boundsString = Util.Convert.createOverpassBoundsString(bounds);
-        let nWR = Util.binaryToBool(node_way_relation);
-        for (let i = 0; i < queryList.length; i++) {
-            if (queryList[i].split('=')[0] === 'custom' || RenderInfrastructure.blacklist.includes(queryList[i].split('=')[1])) {
-                continue; //skip if its a custom query and not a osm query, or if blacklisted
-            }
-            query = queryList[i].replace(/ /g, ''); //remove whitespace
-            if (nWR.node) {
-                queryFString += 'node[' + query + '](' + boundsString + ');';
-            }
-            if (nWR.way) {
-                queryFString += 'way[' + query + '](' + boundsString + ');';
-            }
-            if (nWR.relation) {
-                queryFString += 'relation[' + query + '](' + boundsString + ');';
-            }
-        }
-        return RenderInfrastructure.options.overpassInterpreter + '?data=[out:json][timeout:' + RenderInfrastructure.options.timeout + '];(' + queryFString + ');out body geom;';
-    },
-    /**
-     * Creates a overpass query URL 
+     * Pre-processes a query
      * @memberof Querier
      * @method preProcessQuery
      * @param {Array} features features from GeoJSON that should be preprocessed. This is used for streams in this implementation
@@ -506,8 +508,8 @@ const Querier = {
         if (features.length == 0) {
             return;
         }
-        if (!RenderInfrastructure.preProcessData) {
-            RenderInfrastructure.renderGeoJson(Util.createGeoJsonObj(features), true);
+        if (!RenderInfrastructure.preProcessData || true) { //disabling this entire function for now
+            RenderInfrastructure.renderGeoJson(Util.createGeoJsonObj(features));
             return;
         }
         let hits = [];
@@ -534,7 +536,7 @@ const Querier = {
                     splitHits.push(feature);
                     break;
                 }
-                let minDist = 99999.99999;
+                let minDist = Infinity;
                 let indx = 0;
                 for (let k = 0; k < feature.geometry.coordinates.length; k++) {
                     let d = Util.dist2d(stations[i].latlng, feature.geometry.coordinates[k]);
@@ -566,6 +568,45 @@ const Querier = {
      */
     createCustomQueryURL: function (URL, bounds) {
         return URL.replace('{{BOUNDS}}', bounds.west + '%2C' + bounds.south + '%2C' + bounds.east + '%2C' + bounds.north);
+    },
+    /**
+     * Queries from the grpc server
+     * @memberof Querier
+     * @method queryGRPC
+     * @param {string} func which type of request? "DatasetRequest" or "OSMRequest"
+     * @param {int} dataset int from sustain.proto datasets list
+     * @param {object} bounds NESW object, can be created with @method Util.Convert.leafletBoundsToNESWObject()
+     * @param {array<object>} filter can be made with @method Util.makeOSMFilter() or can be supplied like [{key:"natural",value:"water"}, ...]
+     * @param {function} callback (optional) function to stream geoJSON features into
+     */
+    queryGRPC: function (func, dataset, bounds, filter, callback) {
+        const callbackFunc = callback ? callback : RenderInfrastructure.renderGeoJson;
+        let stream;
+        if (func === "DatasetRequest") {
+            stream = RenderInfrastructure.grpcQuerier.getDatasetData(dataset, Util.Convert.createGeoJSONPoly(bounds));
+        }
+        else if (func === "OSMRequest" && filter) {
+            stream = RenderInfrastructure.grpcQuerier.getOSMData(Util.Convert.createGeoJSONPoly(bounds), filter);
+        }
+        stream.on('data', function (response) {
+            callbackFunc(JSON.parse(response.array[0]));
+        });
+        stream.on('status', function (status) {
+            //console.log(status.code, status.details, status.metadata);
+        });
+        stream.on('end', function (end) {
+            for (let i = 0; i < RenderInfrastructure.currentQueries.length; i++) {
+                if (RenderInfrastructure.currentQueries[i].query === stream) {
+                    if(!RenderInfrastructure.currentBounds.includes(RenderInfrastructure.currentQueries[i].bounds)){
+                        RenderInfrastructure.currentBounds.push(RenderInfrastructure.currentQueries[i].bounds);
+                    }
+                    RenderInfrastructure.currentQueries.splice(i, 1);
+                    break;
+                }
+            }
+            Util.refreshInfoPopup();
+        });
+        RenderInfrastructure.currentQueries.push({ query: stream, bounds: bounds });
     }
 }
 
@@ -582,7 +623,7 @@ const Util = {
     Convert: {
         /**
         * Converts leaflet bounds to NSEW
-        * @memberof Convert
+        * @memberof Util
         * @method leafletBoundsToNESWObject
         * @param {object} leafletBounds leaflet bounds object
         * @returns {object} an object which has simple, readable north, south, east, and west attributes
@@ -597,13 +638,35 @@ const Util = {
         },
         /**
         * Converts leaflet bounds to NSEW
-        * @memberof Convert
+        * @memberof Util
         * @method createOverpassBoundsString
         * @param {object} bounds NSEW bounds object
         * @returns {object} an object which has simple, readable north, south, east, and west attributes
         */
         createOverpassBoundsString: function (bounds) {
             return bounds.south + ',' + bounds.west + ',' + bounds.north + ',' + bounds.east;
+        },
+        /**
+        * Converts bounds obj to GeoJSON polygon used for queries
+        * @memberof Util
+        * @method createOverpassBoundsString
+        * @param {object} bounds NSEW bounds object
+        * @returns {object} GeoJSON polygon
+        */
+        createGeoJSONPoly: function (bounds) {
+            let geo = {
+                type: "Feature",
+                properties: {},
+                geometry: {
+                    type: "polygon", coordinates: [[
+                        [bounds.west, bounds.south],
+                        [bounds.west, bounds.north],
+                        [bounds.east, bounds.north],
+                        [bounds.east, bounds.south],
+                        [bounds.west, bounds.south]]]
+                }
+            };
+            return JSON.stringify(geo);
         }
     },
     /**
@@ -876,27 +939,29 @@ const Util = {
      * @memberof Util
      * @method getNameFromGeoJsonFeature
      * @param {object} feature feature to get name of
+     * @param {JSON} indexData (optional) custom JSON data (if you don't want to use Renderinfrastructure.data as your indexing file)
      * @returns {string} name/id of feature, "none" if not found
      */
-    getNameFromGeoJsonFeature: function (feature) {
+    getNameFromGeoJsonFeature: function (feature, indexData) {
         let pTObj = this.getParamsAndTagsFromGeoJsonFeature(feature);
         let params = pTObj.params;
         let tagsObj = pTObj.tagsObj;
+        const datasource = indexData ? indexData : RenderInfrastructure.data;
         for (let j = 0; j < RenderInfrastructure.options.commonTagNames.length; j++) {
             for (let i = 0; i < params.length; i++) {
-                if (RenderInfrastructure.options.commonTagNames[j] == params[i]) {
+                if (RenderInfrastructure.options.commonTagNames[j] === params[i]) {
                     if (!RenderInfrastructure.options.blacklistedTagValues.includes(tagsObj[params[i]])) {
                         return tagsObj[params[i]];
                     }
                 }
             }
         }
-        for (element in RenderInfrastructure.data) {
-            if (RenderInfrastructure.data[element]["identityField"]) {
+        for (element in datasource) {
+            if (datasource[element]["identityField"]) {
                 for (let i = 0; i < params.length; i++) {
-                    if (params[i] == RenderInfrastructure.data[element]["identityField"]) {
-                        if (RenderInfrastructure.data[element]["identityKey"]) {
-                            if (tagsObj[params[i]] == RenderInfrastructure.data[element]["identityKey"]) {
+                    if (params[i] === datasource[element]["identityField"]) {
+                        if (datasource[element]["identityKey"]) {
+                            if (tagsObj[params[i]] === datasource[element]["identityKey"]) {
                                 return element;
                             }
                         }
@@ -916,11 +981,12 @@ const Util = {
      * @method createDetailsFromGeoJsonFeature
      * @param {object} feature
      * @param {string} name
+     * @param {JSON} indexData (optional) custom JSON data (if you don't want to use Renderinfrastructure.data as your indexing file)
      * @returns {string} html to put on popup
      */
-    createDetailsFromGeoJsonFeature: function (feature, name) {
+    createDetailsFromGeoJsonFeature: function (feature, name, indexData) {
         let pTObj = this.getParamsAndTagsFromGeoJsonFeature(feature);
-        return this.createPopup(name, pTObj);
+        return this.createPopup(name, pTObj, indexData);
     },
     /**                                                                            
      * gets tags from GeoJSON feature
@@ -962,7 +1028,7 @@ const Util = {
         }
         str = str.split(" ");
         for (var i = 0, x = str.length; i < x; i++) {
-            if (str[i] == null || str[i].length <= 1) {
+            if (str[i] == null || str[i].length <= 2) {
                 continue;
             }
             str[i] = str[i][0].toUpperCase() + str[i].substr(1);
@@ -1049,17 +1115,21 @@ const Util = {
         return nWR;
     },
     /**                                                                            
-     * Creates query list based on json data
+     * Creates query list based on json data, can also make a blacklist for query id's that shouldnt be on by default
      * @memberof Util
      * @method binaryToBool
      * @param {object} json 
+     * @param {boolean} blacklist true if a list of inf that shouldnt be queried should be returned
      * @returns {Array} with the queries to run
      */
-    jsonToQueryList: function (json) {
+    jsonToQueryList: function (json, blacklist) {
         let ret = [];
         for (e in json) {
-            if (json[e]['defaultRender'] && json[e]['query']) {
+            if (json[e]['defaultRender'] && json[e]['query'] && !blacklist) {
                 ret.push(json[e]['query']);
+            }
+            else if (!json[e]['defaultRender'] && json[e]['query'] && blacklist) {
+                ret.push(json[e]['query'].split("=")[1]);
             }
         }
         return ret;
@@ -1100,9 +1170,7 @@ const Util = {
      * @returns {string} queryURL
      */
     queryToQueryURL: function (query) {
-        if (!RenderInfrastructure.data) {
-            return;
-        }
+        if (!RenderInfrastructure.data) return;
         for (x in RenderInfrastructure.data) {
             if (RenderInfrastructure.data[x]["query"] && RenderInfrastructure.data[x]["query"] === query && RenderInfrastructure.data[x]["queryURL"]) {
                 return RenderInfrastructure.data[x]["queryURL"];
@@ -1112,22 +1180,89 @@ const Util = {
     /**                                                                            
      * Gets query url from query
      * @memberof Util
+     * @method queryToGRPCDetails
+     * @param {string} query
+     * @returns {object} details
+     */
+    queryToGRPCDetails: function (query) {
+        if (!RenderInfrastructure.data) return;
+        for (x in RenderInfrastructure.data) {
+            if (RenderInfrastructure.data[x]["query"] && RenderInfrastructure.data[x]["query"] === query && RenderInfrastructure.data[x]["grpc"] && RenderInfrastructure.data[x]["grpc"] != "OSMRequest") {
+                return {
+                    func: RenderInfrastructure.data[x]["grpc"],
+                    dataset: RenderInfrastructure.data[x]["grpcDataset"]
+                };
+            }
+        }
+    },
+    /**                                                                            
+     * Makes an osm filter ready for grpc calls
+     * @memberof Util
+     * @method makeOSMFilter
+     * @returns {Array} filter
+     */
+    makeOSMFilter: function () {
+        let ret = [];
+        for (inf in RenderInfrastructure.data) {
+            if (RenderInfrastructure.data[inf]["query"] && RenderInfrastructure.data[inf]["grpc"] && RenderInfrastructure.data[inf]["grpc"] === "OSMRequest" && !RenderInfrastructure.blacklist.includes(inf)) {
+                ret.push({
+                    key: RenderInfrastructure.data[inf]["query"].split("=")[0],
+                    value: RenderInfrastructure.data[inf]["query"].split("=")[1]
+                });
+            }
+        }
+        return ret;
+    },
+    /**                                                                            
+     * Changed linestring to polygon if it is misidentified
+     * @memberof Util
+     * @method fixGeoJSONID
+     * @param geoJSON object or collection
+     * @returns {Object} geoJSON, object or full group
+     */
+    fixGeoJSONID: function (geoJSON) {
+        if(geoJSON.features){
+            geoJSON.features.forEach(feature => {
+                this.fixFeatureID(feature);
+            });
+        }
+        else{
+            this.fixFeatureID(geoJSON);
+        }
+    },
+    /**                                                                            
+     * Changed linestring to polygon if it is misidentified
+     * @memberof Util
+     * @method fixFeatureID
+     * @param {Object} feature geojson feature
+     */
+    fixFeatureID: function (feature) {
+        if(this.getFeatureType(feature) === FEATURETYPE.lineString && JSON.stringify(feature.geometry.coordinates[0]) === JSON.stringify(feature.geometry.coordinates[feature.geometry.coordinates.length - 1])){
+            feature.geometry.type = "Polygon";
+            feature.geometry.coordinates = [feature.geometry.coordinates];
+        }
+    },
+    /**                                                                            
+     * Makes popup text
+     * @memberof Util
      * @method createPopup
      * @param {string} id JSON data id
      * @param {object} pTObj params and tags object created with @method getParamsAndTagsFromGeoJsonFeature
+     * @param {JSON} indexData (optional) custom JSON data (if you don't want to use Renderinfrastructure.data as your indexing file)
      * @returns {string} html to put in popup
      */
-    createPopup: function (id, pTObj) {
+    createPopup: function (id, pTObj, indexData) {
         let params = pTObj.params;
         let tagsObj = pTObj.tagsObj;
         let details = "<b>" + this.capitalizeString(this.underScoreToSpace(id)) + "</b><br>";
-        if (!RenderInfrastructure.data[id]['popup']) {
+        const datasource = indexData ? indexData : RenderInfrastructure.data;
+        if (!datasource[id]['popup']) {
             details += "<ul style='padding-inline-start:20px;margin-block-start:2.5px;'>";
             params.forEach(param => details += "<li>" + this.capitalizeString(this.underScoreToSpace(param)) + ": " + this.capitalizeString(this.underScoreToSpace(tagsObj[param])) + "</li>");
             details += "</ul>";
         }
         else {
-            let tokens = RenderInfrastructure.data[id]['popup'].split(" ");
+            let tokens = datasource[id]['popup'].split(" ");
             tokens.forEach(token => {
                 if (token.substring(0, 2) === "@@") {
                     let to = token.substring(2).indexOf("@@"); //second @@

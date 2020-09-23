@@ -21,7 +21,7 @@ let Generator = {
      * @param {string} type checkbox style. ex: "checkbox" or "radio"
      * @param {boolean} groupModules should modules have groups? this requires special JSON groups
      */
-    config: function (elementsJson, selectContainer, colorCode, callFunc, type, groupModules, attribution) {
+    config: function (elementsJson, selectContainer, colorCode, callFunc, type, groupModules, attribution, clearFunc) {
         if (selectContainer == null || elementsJson == null) {
             return;
         }
@@ -32,9 +32,11 @@ let Generator = {
                 let innerHTML = this.makeList(groupInfo.elements[i], elementsJson, type, colorCode, callFunc);
                 selectContainer.innerHTML += "<div class='content' style='display:none;'>" + innerHTML + "</div>";
             }
-            selectContainer.innerHTML += '<button id="clearFeatures">Clear All Features</button>';
-            if(attribution){
-                this.attribution(attribution,selectContainer);
+            if (clearFunc) {
+                selectContainer.innerHTML += "<button id='clearFeatures' onClick='RenderInfrastructure.removeAllFeaturesFromMap(); Generator.clearChecks();'>Clear All Features</button>";
+            }
+            if (attribution) {
+                this.attribution(attribution, selectContainer);
             }
             var coll = document.getElementsByClassName("collapsible");
             for (let i = 0; i < coll.length; i++) {
@@ -47,16 +49,18 @@ let Generator = {
             }
         }
         else {
-            if(attribution){
-                this.attribution(attribution,selectContainer);
+            if (attribution) {
+                this.attribution(attribution, selectContainer);
             }
             selectContainer.innerHTML += this.makeList(Object.keys(elementsJson), elementsJson, type, colorCode, callFunc);
         }
         let featureChecks = document.getElementsByClassName("featureCheck")
-        for(let i = 0; i < featureChecks.length; i++){
-            featureChecks[i].onchange = function(){callFunc(featureChecks[i]);};
+        for (let i = 0; i < featureChecks.length; i++) {
+            featureChecks[i].onchange = function () { callFunc(featureChecks[i]); };
         }
-        document.getElementById("clearFeatures").onclick = function(){RenderInfrastructure.removeAllFeaturesFromMap(); Generator.clearChecks();};
+        if (clearFunc) {
+            document.getElementById("clearFeatures").onclick = function () { RenderInfrastructure.removeAllFeaturesFromMap(); Generator.clearChecks(); };
+        }
     },
     /** Helper for config 
      * @memberof config
@@ -114,13 +118,13 @@ let Generator = {
      * @method attribution
      * @param {string} html
      */
-    attribution: function(html,htmlElement){
+    attribution: function (html, htmlElement) {
         htmlElement.innerHTML += '<button class="attributionContainer" id="attributionClickable"><div class="clickableAttr">Icon Attributions</div><div id="attrText" class="attribution">' + html + '</div></button>';
         console.log(document.getElementById);
-        document.getElementById("attributionClickable").onclick = function(){Generator.showAttribution(document.getElementById("attrText"))};
+        document.getElementById("attributionClickable").onclick = function () { Generator.showAttribution(document.getElementById("attrText")) };
     },
-    showAttribution: function(htmlElement){
-        $(htmlElement).last().css({"display": $(htmlElement).last().css("display") === "none" ? "block" : "none"}); 
+    showAttribution: function (htmlElement) {
+        $(htmlElement).last().css({ "display": $(htmlElement).last().css("display") === "none" ? "block" : "none" });
     }
 }
 
