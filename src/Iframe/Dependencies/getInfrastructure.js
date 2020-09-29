@@ -54,6 +54,8 @@ let RenderInfrastructure = {
     grpcQuerier: null,
     options: JSON.parse(JSON.stringify(DEFAULTOPTIONS)),
     idCounter: 0,
+    distanceQuerier: null,
+    shapeGroup: L.layerGroup(),
     /**
      * Sets up instance of renderer
      * @memberof RenderInfrastructure
@@ -76,6 +78,7 @@ let RenderInfrastructure = {
         this.queries = Util.jsonToQueryList(this.data);
         this.grpcQuerier = grpc_querier();
         this.idCounter = 0;
+        this.distanceQuerier = distance_querier(this.map, Querier);
     },
     /**
      * Call this when the map should be updated
@@ -229,7 +232,8 @@ let RenderInfrastructure = {
         });
         marker.uniqueId = iconName;
         RenderInfrastructure.markerLayer.addLayer(marker.on('click', function (e) {
-            if(e.target.__parent._group._spiderfied){
+            RenderInfrastructure.shapeGroup.clearLayers();
+            /*if(e.target.__parent._group._spiderfied){
                 return;
             }
             if (RenderInfrastructure.map.getZoom() < 16) {
@@ -237,7 +241,8 @@ let RenderInfrastructure = {
             }
             else {
                 RenderInfrastructure.map.flyTo(e.latlng, RenderInfrastructure.map.getZoom(), FLYTOOPTIONS);
-            }
+            } */
+            RenderInfrastructure.distanceQuerier.query(latLng);
         }).bindPopup(popUpContent));
         return true;
     },
@@ -582,14 +587,27 @@ const Querier = {
     queryGRPC: function (func, dataset, bounds, filter, callback) {
         const callbackFunc = callback ? callback : RenderInfrastructure.renderGeoJson;
         let stream;
+        let geoArray = 0;
         if (func === "DatasetRequest") {
             stream = RenderInfrastructure.grpcQuerier.getDatasetData(dataset, Util.Convert.createGeoJSONPoly(bounds));
         }
         else if (func === "OSMRequest" && filter) {
             stream = RenderInfrastructure.grpcQuerier.getOSMData(Util.Convert.createGeoJSONPoly(bounds), filter);
         }
+        else if (func === "CensusRequest") {
+            const ne = {
+                lat: bounds.north,
+                lng: bounds.east
+            };
+            const sw = {
+                lat: bounds.south,
+                lng: bounds.west
+            };
+            stream = RenderInfrastructure.grpcQuerier.getCensusData(2, ne, sw, dataset, Util.Convert.createGeoJSONPoly(bounds));
+            geoArray = 1;
+        }
         stream.on('data', function (response) {
-            callbackFunc(JSON.parse(response.array[0]));
+            callbackFunc(JSON.parse(response.array[geoArray]));
         });
         stream.on('status', function (status) {
             //console.log(status.code, status.details, status.metadata);

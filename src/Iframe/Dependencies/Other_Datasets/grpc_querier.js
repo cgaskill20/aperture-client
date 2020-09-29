@@ -88,12 +88,13 @@ GRPCQuerier = {
     * @return {string} 
     *         A geojson string representing the bounding polygon
     */
-  getCensusData: function (resolution, southwest, northeast, feature) {
+  getCensusData: function (resolution, southwest, northeast, feature, geoJSONBounds) {
     const request = new CensusRequest();
     request.setCensusresolution(resolution); //tract
     request.setCensusfeature(feature); //median household income
     request.setSpatialop(1); //intersection
-    request.setRequestgeojson(this._makeGeoJson(southwest, northeast));
+    const geo = geoJSONBounds ? geoJSONBounds : this._makeGeoJson(southwest, northeast);
+    request.setRequestgeojson(geo);
     return this.service.censusQuery(request, {})
   }
 };
