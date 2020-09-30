@@ -1,82 +1,118 @@
 // Author: Ellie Martinez
 // Purpose: ingest and filter data to use for graphs
-// Dependencies: turf.min.js, leaflet.js, grapher.js
+// Dependencies: leaflet.js, grapher.js, getInfrastructure.js
 
-let ingestData = {
+
+
+let IngestData = {
     ingestedData: [],
     newData: null,
-    viewportRaw: null,
-    viewportTurf: null,
+    viewport: null,
+    indexData: null,
 
     /**
      * Loads GeoJson data into an array
-     * @memberof ingestData
+     * @memberof IngestData
      * @method ingest
      * @param {object} data in GeoJson format
      * @returns {boolean} true if success, false otherwise
      */
     ingest: function (data) {
         if (data.length === 0) return;
-        //edited to just tack on the new features - make sure to check for duplicates though, cause right now this code doesnt
-        ingestData.ingestedData = ingestData.ingestedData.concat(data); //things got messy so had to change 'this' to the explicit ingestData
+        entry_iterator:
+        for (let i = 0; i < data.length; i++) { //loop over entries
+            if (Util.getNameFromGeoJsonFeature(data[i], IngestData.indexData) !== "none") { //check if it is even relevant
+                for (let j = 0; j < IngestData.ingestedData.length; j++) { //check for duplicates
+                    if (data[i].id === IngestData.ingestedData[j].id) {
+                        console.log(data[i]);
+                        continue entry_iterator; //continue main iterator if duplicate
+                    }
+                }
+                //ready to be inserted!
+                IngestData.ingestedData.push(data[i]);
+            }
+        }
         return true;
     },
 
     /**
      * Sets the current viewport
-     * @memberof ingestData
+     * @memberof IngestData
      * @method setViewport
      * @param {object} viewport from map 2
      * @returns {boolean} true if success, false otherwise
      */
     setViewport: function (viewport) {
-        ingestData.viewportRaw = {
-            north: viewport.getNorth(),
-            south: viewport.getSouth(),
-            east: viewport.getEast(),
-            west: viewport.getWest()
-        }
-
-        ingestData.viewportTurf = turf.polygon([[
-            [ingestData.viewportRaw.west, ingestData.viewportRaw.north],
-            [ingestData.viewportRaw.east, ingestData.viewportRaw.north],
-            [ingestData.viewportRaw.east, ingestData.viewportRaw.south],
-            [ingestData.viewportRaw.west, ingestData.viewportRaw.south],
-            [ingestData.viewportRaw.west, ingestData.viewportRaw.north]
-        ]]);
-
+        IngestData.viewport = viewport;
+        FilterUtil.buildModel(FilterUtil.withinViewport(IngestData.viewport, IngestData.ingestedData), "power_plant");
         return true;
     },
 
     /**
      * Clears ingestedData in the event the main map clears its data of interest
-     * @memberof ingestData
+     * @memberof IngestData
      * @method clearData
      * @returns {boolean} true if success, false otherwise
      */
-    clearData(placeholder){
-        ingestData.ingestedData = [];
+    clearData(placeholder) {
+        IngestData.ingestedData = [];
     }
 }
 
-let filterData = {
+let Runtime = {
+
+}
+
+const FilterUtil = {
     /**
-     * Checks if data is within current viewport
-     * @memberof ingestData
-     * @method withinViewport
-     * @param {object} viewportTurf turf polygon with viewport coordinates
-     * @returns {} data within viewport
-     */
-    withinViewport: function (viewportTurf) {
+    * Checks if data is within current viewport
+    * @memberof IngestData
+    * @method withinViewport
+    * @param {object} viewport
+    * @param {Array<object>} data
+    * @returns {Array<object>} data within viewport
+    */
+    withinViewport: function (viewport, data) {
+        let returnData = [];
+        for (let i = 0; i < data.length; i++) {
+            const dataType = Util.getFeatureType(data[i]);
+            if (dataType === FEATURETYPE.point) {
+                if (viewport.contains(L.latLng(data[i].geometry.coordinates[1], data[i].geometry.coordinates[0]))) {
+                    returnData.push(data[i]);
+                }
+            }
+        }
+        console.log(returnData);
+        return returnData;
+    },
+    /**
+    * Builds a model to be pushed to grapher.js/d3.js
+    * @memberof FilterUtil
+    * @method buildModels
+    * @param {Array<object>} data
+    * @returns {Array<object>} models/counts
+    */
+    buildModel: function (data, modelName) {
+        let counts = [];
+        for (let i = 0; i < data.length; i++) {
+            if(data[i].properties[IngestData.indexData[modelName]["relevantData"]]){
+                if(counts[data[i].properties[IngestData.indexData[modelName]["relevantData"]]]){
+                    counts[data[i].properties[IngestData.indexData[modelName]["relevantData"]]]++;
+                }
+                else{
+                    counts[data[i].properties[IngestData.indexData[modelName]["relevantData"]]] = 1;
+                }
+            }
+        }
+        console.log(counts)
 
     }
-
 }
 
 
 //pipe code -- do not edit
-parent.createPipe("graph_data_ingest", ingestData.ingest);
-parent.createPipe("graph_set_viewport", ingestData.setViewport);
-parent.createPipe("graph_clear_data", ingestData.clearData);
+parent.createPipe("graph_data_ingest", IngestData.ingest);
+parent.createPipe("graph_set_viewport", IngestData.setViewport);
+parent.createPipe("graph_clear_data", IngestData.clearData);
 //----
 

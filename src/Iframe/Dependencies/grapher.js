@@ -30,7 +30,7 @@ let Grapher = {
      * @returns {string} unique id for this graph, use this for updating with @method updateGraph
      */
     createGraph: function (graphType) {
-        const id = Util.createRandomId();
+        const id = GrapherUtil.createRandomId();
         let graphDiv = document.createElement("div");
         graphDiv.id = id;
         graphDiv.classList.add("dataGraph");
@@ -77,10 +77,10 @@ let Grapher = {
     }
 }
 
-const Util = {
+const GrapherUtil = {
     /**
      * Creates Random string/id
-     * @memberof Util
+     * @memberof GrapherUtil
      * @method createRandomId
      * @returns {string} random id
      */
@@ -96,7 +96,7 @@ const Util = {
     },
     /**
      * Gets graph from id
-     * @memberof Util
+     * @memberof GrapherUtil
      * @method getGraph
      * @param {string} id id of graph to get
      * @returns {object} graph

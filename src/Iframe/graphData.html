@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <script type="text/javascript" src="Dependencies/d3.v4.js"></script>
     <script type="text/javascript" src="Dependencies/grapher.js"></script>
     <script type="text/javascript" src="Dependencies/turf.min.js"></script>
     <script type="text/javascript" src="Dependencies/filter-data.js"></script>
+    <script src="Dependencies/getInfrastructure.js"></script>
     <script src="../../node_modules/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" type="text/css" href="Dependencies/grapher.css">
 </head>
+
 <body>
     <div class="container" id="cont"></div>
     <script>
-        
+        IngestData.indexData = {
+            "power_plant": {
+                "identityField": "ENERGY_SRC_DESC1",
+                "relevantData": "ENERGY_SOURCE_1"
+            }
+        }
     </script>
 </body>

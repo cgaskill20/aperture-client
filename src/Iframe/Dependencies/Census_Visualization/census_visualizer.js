@@ -192,6 +192,7 @@ const Census_Visualizer = {
       let geo = JSON.parse(response.getResponsegeojson());
       const data = JSON.parse(response.getData());
       geo.properties = data;
+      parent.pipe("graph_data_ingest", geo);
       let newLayers = RenderInfrastructure.renderGeoJson(geo,false,{
         "census":{
           "color": Census_Visualizer._getColorForPercentage(Census_Visualizer._normalize(data[Census_Visualizer.propertyMap[Census_Visualizer.feature]], Census_Visualizer.ranges[Census_Visualizer.feature][0], Census_Visualizer.ranges[Census_Visualizer.feature][1]), 0.5),
