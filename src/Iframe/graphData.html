@@ -6,6 +6,7 @@
     <script type="text/javascript" src="Dependencies/grapher.js"></script>
     <script type="text/javascript" src="Dependencies/turf.min.js"></script>
     <script type="text/javascript" src="Dependencies/filter-data.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="Dependencies/getInfrastructure.js"></script>
     <script src="../../node_modules/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" type="text/css" href="Dependencies/grapher.css">
@@ -14,6 +15,7 @@
 <body>
     <div class="container" id="cont"></div>
     <script>
+        Grapher.init(document.getElementById("cont"));
         IngestData.indexData = {
             "power_plant": {
                 "identityField": "ENERGY_SRC_DESC1",

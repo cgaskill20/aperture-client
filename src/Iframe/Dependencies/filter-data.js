@@ -21,7 +21,8 @@ let IngestData = {
         if (data.length === 0) return;
         entry_iterator:
         for (let i = 0; i < data.length; i++) { //loop over entries
-            if (Util.getNameFromGeoJsonFeature(data[i], IngestData.indexData) !== "none") { //check if it is even relevant
+            let name = Util.getNameFromGeoJsonFeature(data[i], IngestData.indexData);
+            if (name !== "none") { //check if it is even relevant
                 for (let j = 0; j < IngestData.ingestedData.length; j++) { //check for duplicates
                     if (data[i].id === IngestData.ingestedData[j].id) {
                         console.log(data[i]);
@@ -29,9 +30,17 @@ let IngestData = {
                     }
                 }
                 //ready to be inserted!
-                IngestData.ingestedData.push(data[i]);
+                let dataToPush = {
+                    id: data[i].id,
+                    geometry: data[i].geometry,
+                    properties: {}
+                }
+                dataToPush.properties[IngestData.indexData[name]["identityField"]] = data[i].properties[IngestData.indexData[name]["identityField"]];
+                dataToPush.properties[IngestData.indexData[name]["relevantData"]] = data[i].properties[IngestData.indexData[name]["relevantData"]];
+                IngestData.ingestedData.push(dataToPush);
             }
         }
+        Runtime.update();
         return true;
     },
 
@@ -44,7 +53,7 @@ let IngestData = {
      */
     setViewport: function (viewport) {
         IngestData.viewport = viewport;
-        FilterUtil.buildModel(FilterUtil.withinViewport(IngestData.viewport, IngestData.ingestedData), "power_plant");
+        Runtime.update();
         return true;
     },
 
@@ -56,10 +65,28 @@ let IngestData = {
      */
     clearData(placeholder) {
         IngestData.ingestedData = [];
+        Runtime.removeAllGraphs();
     }
 }
 
 let Runtime = {
+    graphs:{},
+
+    update: function(){
+        for(id in IngestData.indexData){
+            if(!Runtime.graphs[id]){
+                Runtime.graphs[id] = Grapher.createGraph(GRAPHTYPE.bar);
+            }
+            Grapher.updateGraph(Runtime.graphs[id],FilterUtil.buildModel(FilterUtil.withinViewport(IngestData.viewport, IngestData.ingestedData), id));
+        }
+    },
+
+    removeAllGraphs: function(){
+        for(graph in Runtime.graphs){
+            console.log("Removing: " + Runtime.graphs[graph]);
+            Grapher.removeGraph(Runtime.graphs[graph]);
+        }
+    }
 
 }
 
@@ -82,7 +109,6 @@ const FilterUtil = {
                 }
             }
         }
-        console.log(returnData);
         return returnData;
     },
     /**
@@ -96,16 +122,25 @@ const FilterUtil = {
         let counts = [];
         for (let i = 0; i < data.length; i++) {
             if(data[i].properties[IngestData.indexData[modelName]["relevantData"]]){
-                if(counts[data[i].properties[IngestData.indexData[modelName]["relevantData"]]]){
-                    counts[data[i].properties[IngestData.indexData[modelName]["relevantData"]]]++;
+                let indx = -1;
+                for(let j = 0; j < counts.length; j++){
+                    if(counts[j].group === data[i].properties[IngestData.indexData[modelName]["relevantData"]]){
+                        indx = j;
+                        break;
+                    }
+                }
+                if(indx !== -1){
+                    counts[indx].count++;
                 }
                 else{
-                    counts[data[i].properties[IngestData.indexData[modelName]["relevantData"]]] = 1;
+                    counts.push({
+                        group: data[i].properties[IngestData.indexData[modelName]["relevantData"]],
+                        count: 1
+                    });
                 }
             }
         }
-        console.log(counts)
-
+        return counts;
     }
 }
 

@@ -2,7 +2,7 @@
 //Purpose: Generate d3.js graphs of different types from data
 //Dependencies: d3.v4.js, grapher.css
 
-const GraphType = {
+const GRAPHTYPE = {
     bar: 1,
     pie: 2,
     histogram: 3
@@ -10,7 +10,7 @@ const GraphType = {
 
 
 let Grapher = {
-    HTML_container:null,
+    HTML_container: null,
     currentGraphs: [],
     /**
      * Initializes Grapher onto a Div/Container
@@ -33,24 +33,39 @@ let Grapher = {
         const id = GrapherUtil.createRandomId();
         let graphDiv = document.createElement("div");
         graphDiv.id = id;
+        let squareSize = 400;
         graphDiv.classList.add("dataGraph");
+        var checkExist = setInterval(function () {
+            if ($("#" + id).length) {
+                clearInterval(checkExist);
+            }
+        }, 100);
         this.HTML_container.appendChild(graphDiv);
-        
+
         let graph = d3.select("#" + id)
             .append("svg")
-            .attr("width", 400)
-            .attr("height", 400)
+            .attr("width", squareSize)
+            .attr("height", squareSize)
             .append("g");
         let x = d3.scaleBand()
-            .range([0, 400])
+            .range([0, squareSize])
             .padding(0.2);
         let xAxis = graph.append("g")
-            .attr("transform", "translate(0," + 400 + ")");
+            .attr("transform", "translate(0," + squareSize + ")");
         let y = d3.scaleLinear()
-            .range([400, 0]);
+            .range([squareSize, 0]);
         let yAxis = graph.append("g")
             .attr("class", "myYaxis")
-        this.currentGraphs.push({id:id,graph:graph});
+        this.currentGraphs.push({
+            id: id, graph: graph, axes:
+            {
+                x: x,
+                xAxis: xAxis,
+                y: y,
+                yAxis: yAxis
+            }
+        });
+        return id;
     },
 
     /**
@@ -62,7 +77,36 @@ let Grapher = {
      * @returns {bool} true for success, false otherwise
      */
     updateGraph: function (graphId, data) {
+        console.log("Update graph: " + graphId + " to " + JSON.stringify(data));
+        let graph = GrapherUtil.getGraph(graphId);
 
+        // Update the X axis
+        graph.axes.x.domain(data.map(function (d) { return d.group; }))
+        graph.axes.xAxis.call(d3.axisBottom(graph.axes.x))
+
+        // Update the Y axis
+        graph.axes.y.domain([0, d3.max(data, function (d) { return d.count })]);
+        graph.axes.yAxis.transition().duration(1000).call(d3.axisLeft(graph.axes.y));
+
+        let u = graph.graph.selectAll("rect")
+            .data(data)
+
+        u
+            .enter()
+            .append("rect") // Add a new rect for each new elements
+            .merge(u) // get the already existing elements as well
+            .transition() // and apply changes to all of them
+            .duration(1000)
+            .attr("x", function (d) { return graph.axes.x(d.group); })
+            .attr("y", function (d) { return graph.axes.y(d.count); })
+            .attr("width", graph.axes.x.bandwidth())
+            .attr("height", function (d) { return 400 - graph.axes.y(d.count); })
+            .attr("fill", "#69b3a2")
+
+        // If less group in the new dataset, I delete the ones not in use anymore
+        u
+            .exit()
+            .remove()
     },
 
     /**
@@ -101,9 +145,9 @@ const GrapherUtil = {
      * @param {string} id id of graph to get
      * @returns {object} graph
      */
-    getGraph: function(id){
-        for(let i = 0; i < Grapher.currentGraphs.length; i++){
-            if(Grapher.currentGraphs[i].id == id){
+    getGraph: function (id) {
+        for (let i = 0; i < Grapher.currentGraphs.length; i++) {
+            if (Grapher.currentGraphs[i].id == id) {
                 return Grapher.currentGraphs[i];
             }
         }
