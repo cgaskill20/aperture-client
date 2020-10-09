@@ -2,8 +2,6 @@
 // Purpose: ingest and filter data to use for graphs
 // Dependencies: leaflet.js, grapher.js, getInfrastructure.js
 
-
-
 let IngestData = {
     ingestedData: [],
     newData: null,
@@ -69,26 +67,38 @@ let IngestData = {
     }
 }
 
+let previousViewport = null;
 let Runtime = {
-    graphs:{},
+    graphs: {},
 
-    update: function(){
-        for(id in IngestData.indexData){
-            if(!Runtime.graphs[id]){
-                Runtime.graphs[id] = Grapher.createGraph(GRAPHTYPE.bar);
-            }
-            Grapher.updateGraph(Runtime.graphs[id],FilterUtil.buildModel(FilterUtil.withinViewport(IngestData.viewport, IngestData.ingestedData), id));
+    update: function () {
+        const now = Date.now();
+        if(IngestData.viewport === previousViewport){
+            //return;
         }
+        previousViewport = IngestData.viewport;
+        const dataWithinViewport = FilterUtil.withinViewport(IngestData.viewport, IngestData.ingestedData);
+        for (id in IngestData.indexData) {
+            const idData = FilterUtil.buildModel(dataWithinViewport, id);
+            if (idData.length !== 0) {
+                if (!Runtime.graphs[id]) {
+                    Runtime.graphs[id] = Grapher.createGraph(GRAPHTYPE.bar);
+                }
+                Grapher.updateGraph(Runtime.graphs[id], idData);
+            }
+        }
+        console.log(Date.now() - now);
     },
 
-    removeAllGraphs: function(){
-        for(graph in Runtime.graphs){
-            console.log("Removing: " + Runtime.graphs[graph]);
+    removeAllGraphs: function () {
+        for (graph in Runtime.graphs) {
             Grapher.removeGraph(Runtime.graphs[graph]);
+            delete Runtime.graphs[graph];
         }
     }
 
 }
+
 
 const FilterUtil = {
     /**
@@ -101,11 +111,26 @@ const FilterUtil = {
     */
     withinViewport: function (viewport, data) {
         let returnData = [];
+        within_loop:
         for (let i = 0; i < data.length; i++) {
             const dataType = Util.getFeatureType(data[i]);
             if (dataType === FEATURETYPE.point) {
                 if (viewport.contains(L.latLng(data[i].geometry.coordinates[1], data[i].geometry.coordinates[0]))) {
                     returnData.push(data[i]);
+                    continue within_loop;
+                }
+            }
+            else if(dataType === FEATURETYPE.multipolygon){
+                for(let n = 0; n < data[i].geometry.coordinates[0].length; n++){
+                    for(let coord = 0; coord < data[i].geometry.coordinates[0][n].length; coord++){
+                        //console.log(data[i].geometry.coordinates[0][n]);
+                        //console.log("coordinates[0]["+n+"]");
+                        //console.log(data[i].geometry.coordinates[0][n][coord][1] + ", " + data[i].geometry.coordinates[0][n][coord][0]);
+                        if (viewport.contains(L.latLng(data[i].geometry.coordinates[0][n][coord][1], data[i].geometry.coordinates[0][n][coord][0]))) {
+                            returnData.push(data[i]);
+                            continue within_loop;
+                        }
+                    }
                 }
             }
         }
@@ -121,21 +146,33 @@ const FilterUtil = {
     buildModel: function (data, modelName) {
         let counts = [];
         for (let i = 0; i < data.length; i++) {
-            if(data[i].properties[IngestData.indexData[modelName]["relevantData"]]){
+            let dataOfRelevance = data[i].properties[IngestData.indexData[modelName]["relevantData"]];
+            if (dataOfRelevance) {
+                let sortIndex = 0;
                 let indx = -1;
-                for(let j = 0; j < counts.length; j++){
-                    if(counts[j].group === data[i].properties[IngestData.indexData[modelName]["relevantData"]]){
+                if(IngestData.indexData[modelName]["bands"]){ //if bands exist (quatitative data only), this data must be organized into bands
+                    for(let n = 0; n < IngestData.indexData[modelName]["bands"].length; n++){
+                        if(dataOfRelevance >= IngestData.indexData[modelName]["bands"][n]["range"][0] && dataOfRelevance < IngestData.indexData[modelName]["bands"][n]["range"][1]){
+                            dataOfRelevance = IngestData.indexData[modelName]["bands"][n]["label"];
+                            sortIndex = n;
+                            break;
+                        }
+                    }
+                }
+                for (let j = 0; j < counts.length; j++) {
+                    if (counts[j].group === dataOfRelevance) {
                         indx = j;
                         break;
                     }
                 }
-                if(indx !== -1){
+                if (indx !== -1) {
                     counts[indx].count++;
                 }
-                else{
+                else {
                     counts.push({
-                        group: data[i].properties[IngestData.indexData[modelName]["relevantData"]],
-                        count: 1
+                        group: dataOfRelevance,
+                        count: 1,
+                        sortIndex: sortIndex
                     });
                 }
             }

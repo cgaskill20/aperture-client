@@ -1,6 +1,6 @@
 //Author: Daniel Reynolds
 //Purpose: Get osm nodes, ways, and relations, and then translate them onto a leaflet map
-//Dependencies: Leaflet, osmtogeojson, jquery, Leaflet.markerCluster
+//Dependencies: Leaflet, osmtogeojson, jquery, Leaflet.markerCluster, jquery.waituntilexists.min.js
 const FLYTOOPTIONS = { //for clicking on icons
     easeLinearity: 0.4,
     duration: 0.25,
@@ -17,14 +17,15 @@ const ATTRIBUTE = { //attribute enums
 const FEATURETYPE = { //attribute enums
     point: 0,
     lineString: 1,
-    polygon: 2
+    polygon: 2,
+    multipolygon: 3
 }
 const DEFAULTOPTIONS = {
     overpassInterpreter: 'https://overpass.kumi.systems/api/interpreter',
     timeout: 30,
     maxElements: 5000,
     maxLayers: 10,
-    minRenderZoom: 10,
+    minRenderZoom: 8,
     commonTagNames: ["streamflow", "waterway", "man_made", "landuse", "amenity", "natural", "water"],
     blacklistedTagValues: ["yes", "amenity"],
     queryAlertText: null,
@@ -158,7 +159,7 @@ let RenderInfrastructure = {
         const datasource = indexData ? indexData : RenderInfrastructure.data;
         let preProcess = [];
         let layers = [];
-        const nameForGraphing = "power_plant";
+        const namesForGraphing = ["power_plant","2010_median_household_income"];
         let dataToPipe = [];
         L.geoJson(geoJsonData, {
             style: function (feature) {
@@ -181,7 +182,7 @@ let RenderInfrastructure = {
                     preProcess.push(feature);
                     return false;
                 }
-                if(name === nameForGraphing){
+                if(namesForGraphing.includes(name)){
                     dataToPipe.push(feature);
                 }
                 RenderInfrastructure.currentLayers.push(feature.id);
@@ -757,6 +758,9 @@ const Util = {
         else if ((feature.geometry) && (feature.geometry.type !== undefined) && (feature.geometry.type === "Point")) {
             return FEATURETYPE.point;
         }
+        else if ((feature.geometry) && (feature.geometry.type !== undefined) && (feature.geometry.type === "MultiPolygon")) {
+            return FEATURETYPE.multipolygon;
+        }
         else {
             return -1;
         }
@@ -774,6 +778,9 @@ const Util = {
                 this.simplifyFeatureCoords(feature, threshold);
             });
         }
+        else if(geoJSON.geometry){
+            this.simplifyFeatureCoords(geoJSON, threshold);
+        }
     },
     /**
      * Helper for simplify GeoJSON, simplifies a single feature
@@ -783,7 +790,7 @@ const Util = {
      * @param {number} threshold threshold to simplify by
      */
     simplifyFeatureCoords: function (feature, threshold) {
-        let type = this.getFeatureType(feature);
+        const type = this.getFeatureType(feature);
         if (type === -1 || type === FEATURETYPE.point) {
             return;
         }
@@ -792,6 +799,11 @@ const Util = {
         }
         else if (type === FEATURETYPE.lineString) {
             feature.geometry.coordinates = simplify(feature.geometry.coordinates, threshold, false);
+        }
+        else if (type === FEATURETYPE.multipolygon) {
+            for(let i = 0; i < feature.geometry.coordinates[0].length; i++){
+                feature.geometry.coordinates[0][i] = simplify(feature.geometry.coordinates[0][i], threshold, false);
+            }
         }
     },
     /**

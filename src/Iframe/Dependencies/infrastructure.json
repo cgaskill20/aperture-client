@@ -2,7 +2,7 @@
     "water_works": {
         "iconAddr": "../../../images/water_works.png",
         "color": "black",
-        "defaultRender": true,
+        "defaultRender":false,
         "query":"man_made=water_works",
         "groupMem":"Water (Man Made)",
         "grpc":"OSMRequest"
@@ -10,14 +10,14 @@
     "wastewater_plant": {
         "iconAddr": "../../../images/sewage.png",
         "color": "#FF00FF",
-        "defaultRender": true,
+        "defaultRender":false,
         "query":"man_made=wastewater_plant",
         "groupMem":"Water (Man Made)",
         "grpc":"OSMRequest"
     },
     "canal": {
         "color": "teal",
-        "defaultRender": true,
+        "defaultRender":false,
         "query":"waterway=canal",
         "preProcess":true,
         "groupMem":"Water (Man Made)",
@@ -25,7 +25,7 @@
     },
     "river": {
         "color": "#00008B",
-        "defaultRender": true,
+        "defaultRender":false,
         "query":"waterway=river",
         "preProcess":true,
         "grpc":"OSMRequest",
@@ -50,7 +50,7 @@
     "lock_gate": {
         "iconAddr": "../../../images/lock_gate.png",
         "color": "#FF0000",
-        "defaultRender": true,
+        "defaultRender":false,
         "query":"waterway=lock_gate",
         "groupMem":"Water (Man Made)",
         "grpc":"OSMRequest"
@@ -58,14 +58,14 @@
     "weir": {
         "iconAddr": "../../../images/weir.png",
         "color": "#FF0000",
-        "defaultRender": true,
+        "defaultRender":false,
         "query":"waterway=weir",
         "groupMem":"Water (Man Made)",
         "grpc":"OSMRequest"
     },
     "tidal_channel": {
         "color": "#0080FF",
-        "defaultRender": true,
+        "defaultRender":false,
         "query":"waterway=tidal_channel",
         "groupMem":"Water (Natural)",
         "grpc":"OSMRequest"
@@ -73,7 +73,7 @@
     "water": {
         "iconAddr": "../../../images/reservoir-lake.png",
         "color": "#00FFFF",
-        "defaultRender": true,
+        "defaultRender":false,
         "query":"natural=water",
         "groupMem":"Water (Man Made)",
         "grpc":"OSMRequest"
@@ -100,7 +100,7 @@
     },
     "Natural_Gas_Pipeline": {
         "color": "#8A2BE2",
-        "defaultRender": true,
+        "defaultRender":false,
         "query":"custom=Natural_Gas_Pipeline",
         "grpc":"DatasetRequest",
         "grpcDataset":4, 
@@ -110,7 +110,7 @@
     },
     "substation":{
         "iconAddr": "../../../images/substation.png",
-        "defaultRender": true,
+        "defaultRender":false,
         "query": "custom=substation",
         "grpc":"DatasetRequest",
         "grpcDataset":2, 
@@ -121,7 +121,7 @@
     },
     "power_transmission_line":{
         "color": "#000000",
-        "defaultRender": true,
+        "defaultRender":false,
         "query": "custom=power_transmission_line",
         "grpc":"DatasetRequest",
         "grpcDataset":3, 
@@ -190,7 +190,7 @@
     "dam": {
         "iconAddr": "../../../images/dam.png",
         "color": "#FF0000",
-        "defaultRender": true,
+        "defaultRender":false,
         "query":"custom=dam",
         "groupMem":"Water (Man Made)",
         "grpc":"DatasetRequest",
@@ -200,7 +200,7 @@
     },
     "power_plant":{
         "iconAddr": "../../../images/power_plant.png",
-        "defaultRender":true,
+        "defaultRender":false,
         "query": "custom=power_plant",
         "queryURL":"https://geodata.epa.gov/arcgis/rest/services/OEI/FRS_PowerPlants/MapServer/12/query?where=1%3D1&outFields=*&geometry={{BOUNDS}}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",
         "identityField": "ENERGY_SRC_DESC1",
@@ -209,7 +209,7 @@
     },
     "fire_station":{
         "iconAddr": "../../../images/fire_station.png",
-        "defaultRender":true,
+        "defaultRender":false,
         "query": "custom=fire_station",
         "grpc":"DatasetRequest",
         "grpcDataset":6,
@@ -219,7 +219,7 @@
     },
     "hospital":{
         "iconAddr": "../../../images/hospital.png",
-        "defaultRender":true,
+        "defaultRender":false,
         "query": "custom=hosptial",
         "grpc":"DatasetRequest",
         "grpcDataset":0, 
@@ -229,7 +229,7 @@
     },
     "urgent_care":{
         "iconAddr": "../../../images/urgent_care.png",
-        "defaultRender":true,
+        "defaultRender":false,
         "query": "custom=urgent_care",
         "queryURL": "https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Urgent_Care_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&geometry={{BOUNDS}}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",
         "identityField": "EMERGEXT",

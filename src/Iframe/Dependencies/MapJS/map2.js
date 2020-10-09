@@ -8,7 +8,7 @@ osmMap2 = L.map('map2', {
     fullscreenControl: true,
     inertia: false,
     timeDimension: false,
-    minZoom: 11
+    minZoom: 9
 });
 
 osmMap2.setView(osmMap2.wrapLatLng(parent.view), 11);

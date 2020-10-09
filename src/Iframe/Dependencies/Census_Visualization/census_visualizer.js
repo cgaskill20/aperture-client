@@ -30,12 +30,12 @@ const Census_Visualizer = {
       2: "2010_population_by_age", 3: "2010_median_age", 4: "2010_poverty", 5: "2010_race"
     };
     this.ranges = { //this is temporary until we can get the dataset catalog queried
-      0: [1,10000],
+      0: [1, 10000],
       1: [10000, 200000],
-      2: [0,0], //this data doesnt work so no range yet
-      3: [0,0], //this data doesnt work so no range yet
-      4: [0,0], //this data doesnt work so no range yet
-      5: [1,10] //not sure how to use a range on this data
+      2: [0, 0], //this data doesnt work so no range yet
+      3: [0, 0], //this data doesnt work so no range yet
+      4: [0, 0], //this data doesnt work so no range yet
+      5: [1, 10] //not sure how to use a range on this data
     }
     this.featureName = "";
     this.feature = -1;
@@ -193,12 +193,13 @@ const Census_Visualizer = {
       const data = JSON.parse(response.getData());
       geo.properties = data;
       parent.pipe("graph_data_ingest", geo);
-      let newLayers = RenderInfrastructure.renderGeoJson(geo,false,{
-        "census":{
-          "color": Census_Visualizer._getColorForPercentage(Census_Visualizer._normalize(data[Census_Visualizer.propertyMap[Census_Visualizer.feature]], Census_Visualizer.ranges[Census_Visualizer.feature][0], Census_Visualizer.ranges[Census_Visualizer.feature][1]), 0.5),
-          "identityField": "GISJOIN"
-        }
-      });
+      const id = Census_Visualizer.propertyMap[Census_Visualizer.feature];
+      let indexJSON = {};
+      indexJSON[id] = {
+        "color": Census_Visualizer._getColorForPercentage(Census_Visualizer._normalize(data[Census_Visualizer.propertyMap[Census_Visualizer.feature]], Census_Visualizer.ranges[Census_Visualizer.feature][0], Census_Visualizer.ranges[Census_Visualizer.feature][1]), 0.5),
+        "identityField": "GISJOIN"
+      }
+      let newLayers = RenderInfrastructure.renderGeoJson(geo, false, indexJSON);
       Census_Visualizer.layers = Census_Visualizer.layers.concat(newLayers);
       // // const responseList = response.getSinglespatialresponseList();
       // // console.log(responseList);
@@ -213,17 +214,19 @@ const Census_Visualizer = {
       // polygon.GISJOIN = data.GISJOIN;
       // Census_Visualizer.markers.push(polygon);
     }
-    
+
     if (this.featureName === "")
       return;
     const b = map.wrapLatLngBounds(map.getBounds());
+    parent.pipe("graph_set_viewport", map.getBounds());
     const stream = this._grpcQuerier.getCensusData(2, b._southWest, b._northEast, this.feature);
+    console.log("go");
     stream.on('data', function (r) {
       //console.log(JSON.stringify(response));
       draw(r);
     });
     stream.on('status', function (status) {
-      //console.log(status.code, status.details, status.metadata);
+      console.log(status.code, status.details, status.metadata);
     });
     stream.on('end', function (end) {
 

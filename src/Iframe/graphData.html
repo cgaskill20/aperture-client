@@ -7,8 +7,10 @@
     <script type="text/javascript" src="Dependencies/turf.min.js"></script>
     <script type="text/javascript" src="Dependencies/filter-data.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script src="Dependencies/getInfrastructure.js"></script>
     <script src="../../node_modules/leaflet/dist/leaflet.js"></script>
+    <script type="text/javascript" src="Dependencies/jquery.waituntilexists.min.js"></script>
     <link rel="stylesheet" type="text/css" href="Dependencies/grapher.css">
 </head>
 
@@ -19,7 +21,25 @@
         IngestData.indexData = {
             "power_plant": {
                 "identityField": "ENERGY_SRC_DESC1",
-                "relevantData": "ENERGY_SOURCE_1"
+                "relevantData": "ENERGY_SOURCE_1",
+                "macros": {
+                    "SUN": "Solar",
+                    "WAT": "Hydro"
+                }
+            },
+            "2010_median_household_income": {
+                "identityField": "2010_median_household_income",
+                "relevantData": "2010_median_household_income",
+                "graph": "bar",
+                "bands": [
+                    {"label": "<20k", "range":[0, 20000]},
+                    {"label": "20 - 40k", "range":[20000, 40000]},
+                    {"label": "40 - 60k", "range":[40000, 60000]},
+                    {"label": "60 - 80k", "range":[60000, 80000]},
+                    {"label": "80 - 100k", "range":[80000, 100000]},
+                    {"label": "100 - 120k", "range":[100000, 120000]},
+                    {"label": ">120k", "range":[120000, Infinity]}
+                ]
             }
         }
     </script>

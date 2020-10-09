@@ -2,12 +2,16 @@
 //Purpose: Generate d3.js graphs of different types from data
 //Dependencies: d3.v4.js, grapher.css
 
+
 const GRAPHTYPE = {
     bar: 1,
     pie: 2,
     histogram: 3
 }
+const MARGIN = 30;
 
+let readyContainers = []; //buffer of containers already on dom so there is no wait time
+//populate buffer
 
 let Grapher = {
     HTML_container: null,
@@ -20,6 +24,9 @@ let Grapher = {
      */
     init: function (HTML_container) {
         this.HTML_container = HTML_container;
+        for (let i = 0; i < 5; i++) {
+            GrapherUtil.addContainer();
+        }
     },
 
     /**
@@ -30,23 +37,25 @@ let Grapher = {
      * @returns {string} unique id for this graph, use this for updating with @method updateGraph
      */
     createGraph: function (graphType) {
-        const id = GrapherUtil.createRandomId();
-        let graphDiv = document.createElement("div");
-        graphDiv.id = id;
-        let squareSize = 400;
-        graphDiv.classList.add("dataGraph");
-        var checkExist = setInterval(function () {
-            if ($("#" + id).length) {
-                clearInterval(checkExist);
-            }
-        }, 100);
-        this.HTML_container.appendChild(graphDiv);
+        console.log("here");
+        const id = readyContainers.shift(); //get element from front of list
+        document.getElementById(id).style.display = "block";
+        GrapherUtil.addContainer();
 
-        let graph = d3.select("#" + id)
+        const squareSize = document.getElementById(id).scrollWidth - MARGIN * 2;
+        let graph = d3.select(document.getElementById(id))
             .append("svg")
-            .attr("width", squareSize)
-            .attr("height", squareSize)
-            .append("g");
+            .attr("width", squareSize + MARGIN * 2)
+            .attr("height", squareSize + MARGIN * 2)
+            .append("g")
+            .attr("transform",
+                "translate(" + MARGIN + "," + MARGIN + ")");
+        d3.select(window)
+            .on("resize", function () {
+                let targetWidth = graph.node().getBoundingClientRect().width;
+                graph.attr("width", targetWidth);
+                graph.attr("height", targetWidth);
+            });
         let x = d3.scaleBand()
             .range([0, squareSize])
             .padding(0.2);
@@ -77,8 +86,13 @@ let Grapher = {
      * @returns {bool} true for success, false otherwise
      */
     updateGraph: function (graphId, data) {
-        console.log("Update graph: " + graphId + " to " + JSON.stringify(data));
         let graph = GrapherUtil.getGraph(graphId);
+
+        if (!graph) return false;
+
+        data.sort(function (a, b) {
+            return d3.ascending(a.sortIndex, b.sortIndex)
+        })
 
         // Update the X axis
         graph.axes.x.domain(data.map(function (d) { return d.group; }))
@@ -91,22 +105,26 @@ let Grapher = {
         let u = graph.graph.selectAll("rect")
             .data(data)
 
+        let gHeight = document.getElementById(graphId).scrollWidth - 60;
+        let fillColor = d3.scaleOrdinal().domain(data.map(function (d) { return d.group; }))
+            .range(d3.schemeDark2);
         u
             .enter()
             .append("rect") // Add a new rect for each new elements
             .merge(u) // get the already existing elements as well
             .transition() // and apply changes to all of them
-            .duration(1000)
+            .duration(200)
             .attr("x", function (d) { return graph.axes.x(d.group); })
             .attr("y", function (d) { return graph.axes.y(d.count); })
             .attr("width", graph.axes.x.bandwidth())
-            .attr("height", function (d) { return 400 - graph.axes.y(d.count); })
-            .attr("fill", "#69b3a2")
+            .attr("height", function (d) { return gHeight - graph.axes.y(d.count); })
+            .attr("fill", function (d) { return fillColor(d.group) })
 
         // If less group in the new dataset, I delete the ones not in use anymore
         u
             .exit()
             .remove()
+        return true;
     },
 
     /**
@@ -117,6 +135,8 @@ let Grapher = {
      * @returns {bool} true for success, false otherwise
      */
     removeGraph: function (graphId) {
+        let g = document.getElementById(graphId);
+        if (g) g.remove();
 
     }
 }
@@ -146,11 +166,54 @@ const GrapherUtil = {
      * @returns {object} graph
      */
     getGraph: function (id) {
-        for (let i = 0; i < Grapher.currentGraphs.length; i++) {
-            if (Grapher.currentGraphs[i].id == id) {
-                return Grapher.currentGraphs[i];
-            }
+        if (GrapherUtil.getGraphIndexById(id) !== -1) {
+            return Grapher.currentGraphs[GrapherUtil.getGraphIndexById(id)];
         }
         return null;
-    }
+    },
+    /**
+     * Removes graph by id
+     * @memberof GrapherUtil
+     * @method removeGraph
+     * @param {string} id id of graph to get
+     * @returns {boolean} true if success
+     */
+    removeGraph: function (id) {
+        if (GrapherUtil.getGraphIndexById(id) !== -1) {
+            Grapher.currentGraphs.splice(GrapherUtil.getGraphIndexById(id), 1);
+            return true;
+        }
+        return false;
+    },
+    /**
+     * Gets graph index, helper method
+     * @memberof GrapherUtil
+     * @method getGraphIndexById
+     * @param {string} id id of graph to get index of
+     * @returns {int} -1 if not found, index otherwise
+     */
+    getGraphIndexById: function (id) {
+        for (let i = 0; i < Grapher.currentGraphs.length; i++) {
+            if (Grapher.currentGraphs[i].id == id) {
+                return i;
+            }
+        }
+        return -1;
+    },
+    /**
+     * Adds container to buffer
+     * @memberof GrapherUtil
+     * @method getGraphIndexById
+     * @returns {bool} true if successful
+     */
+    addContainer: function () {
+        const id = GrapherUtil.createRandomId();
+        let graphDiv = document.createElement("div");
+        graphDiv.id = id;
+        graphDiv.classList.add("dataGraph");
+        graphDiv.style.display = "none";
+        Grapher.HTML_container.appendChild(graphDiv);
+        readyContainers.push(id);
+        return true;
+    },
 }
