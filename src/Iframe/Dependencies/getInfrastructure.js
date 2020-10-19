@@ -17,7 +17,8 @@ const ATTRIBUTE = { //attribute enums
 const FEATURETYPE = { //attribute enums
     point: 0,
     lineString: 1,
-    polygon: 2
+    polygon: 2,
+    multipolygon: 3
 }
 const DEFAULTOPTIONS = {
     overpassInterpreter: 'https://overpass.kumi.systems/api/interpreter',
@@ -601,11 +602,12 @@ const Querier = {
         else if (func === "OSMRequest" && filter) {
             stream = RenderInfrastructure.grpcQuerier.getOSMData(Util.Convert.createGeoJSONPoly(bounds), filter);
         }
+        console.log("stream");
         stream.on('data', function (response) {
             callbackFunc(JSON.parse(response.array[0]));
         });
         stream.on('status', function (status) {
-            //console.log(status.code, status.details, status.metadata);
+            console.log(status.code, status.details, status.metadata);
         });
         stream.on('end', function (end) {
             for (let i = 0; i < RenderInfrastructure.currentQueries.length; i++) {
@@ -741,6 +743,11 @@ const Util = {
         else if (type === FEATURETYPE.point) {
             latlng = feature.geometry.coordinates;
         }
+        else if(type === FEATURETYPE.multipolygon){
+            let pos = L.latLngBounds(feature.geometry.coordinates[0][0]).getCenter();
+            latlng.push(pos.lat);
+            latlng.push(pos.lng);
+        }
         else {
             return [0, 0];
         }
@@ -762,6 +769,9 @@ const Util = {
         }
         else if ((feature.geometry) && (feature.geometry.type !== undefined) && (feature.geometry.type === "Point")) {
             return FEATURETYPE.point;
+        }
+        else if ((feature.geometry) && (feature.geometry.type !== undefined) && (feature.geometry.type === "MultiPolygon")) {
+            return FEATURETYPE.multipolygon;
         }
         else {
             return -1;

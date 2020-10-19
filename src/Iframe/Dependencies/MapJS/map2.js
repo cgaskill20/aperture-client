@@ -1,3 +1,5 @@
+
+
 const MAPNUMBER = 2;
 
 let queryAlertText = document.getElementById('queryInfoText');
@@ -86,11 +88,62 @@ const fc = {
     },
     onConstraintChange: "censusViz.updateFutureHeat(RenderInfrastructure.map, true)"
 };
-const future_climate = {
-    "Heat_Waves": fc
+
+const age_aqi_hospitals = {
+    groupMem: "Age + AQI + Hospitals", 
+    query: 1, 
+    constraints: {
+        "average_age":{
+            "label":"Average age",
+            "range":[15,80],
+            "default": [30,50],
+            "step":1
+        },
+        "aqi":{
+            "label":"AQI",
+            "range":[0,400],
+            "default":[1,50],
+            "step":1
+        },
+        "hospital_dist":{
+            "label":"No Hospital in Range (km)",
+            "range":[1,100],
+            "default":[5],
+            "step":1
+        }
+    },
+    onConstraintChange: "censusViz.updateAgeAQIDistanceToHospital(RenderInfrastructure.map, true)"
 }
 
-Generator.config(future_climate, document.getElementById("checkboxLocation"), true, changeChecked, "checkbox", true);
+const svi_floodzone_highway = {
+    groupMem: "SVI + Floodzone + Highway", 
+    query: 1, 
+    constraints: {
+        "svi":{
+            "label":"Social Vulnerability Index",
+            "range":[0,1],
+            "default": [0.5,1],
+            "step":0.05
+        },
+        "Highway_dist":{
+            "label":"No Highway in Range (miles)",
+            "range":[0,10],
+            "default":[1],
+            "step":1
+        }
+    },
+    onConstraintChange: "censusViz.updateSVIFloodzoneDist(RenderInfrastructure.map, true)"
+}
+
+const extraQueries = {
+    "Heat_Waves": fc,
+    "age_aqi_hospitals": age_aqi_hospitals,
+    "svi_floodzone_highway": svi_floodzone_highway
+}
+
+
+
+Generator.config(extraQueries, document.getElementById("checkboxLocation"), true, changeChecked, "checkbox", true);
 
 //map 3 merge stuff
 const censusViz = census_visualizer();
@@ -115,8 +168,10 @@ function changeChecked(element) {
         if (element.id in census) {
             censusViz.setFeature(element.id);
             censusViz.updateViz(osmMap2);
-        } else if (element.id in future_climate) {
+        } else if (element.id in extraQueries) {
             censusViz.updateFutureHeat(osmMap2, true);
+            censusViz.updateAgeAQIDistanceToHospital(osmMap2, true)
+            censusViz.updateSVIFloodzoneDist(RenderInfrastructure.map, true)
         } else {
             RenderInfrastructure.addFeatureToMap(element.id);
         }
@@ -124,8 +179,15 @@ function changeChecked(element) {
     else {
         if (element.id in census)
             censusViz.setFeature(element.id);
-        else if (element.id in future_climate)
-            censusViz.clearHeat();
+        else if (element.id in extraQueries)
+            switch(element.id){
+                case "Heat_Waves":
+                    censusViz.clearHeat();
+                    break;
+                case "svi_floodzone_highway":
+                    censusViz.clearSVIFloodHighway();
+                    break;
+            }
         else
             RenderInfrastructure.removeFeatureFromMap(element.id);
     }
@@ -134,7 +196,9 @@ function changeChecked(element) {
 parent.addEventListener('updateMaps', function () {
     runQuery();
     censusViz.updateViz(osmMap2);
-    censusViz.updateFutureHeat(osmMap2, false);
+    censusViz.updateFutureHeat(osmMap2, false); 
+    censusViz.updateAgeAQIDistanceToHospital(osmMap2, false)
+    censusViz.updateSVIFloodzoneDist(RenderInfrastructure.map, false)
 });
 
 function runQuery() {

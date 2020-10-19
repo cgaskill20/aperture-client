@@ -50,7 +50,15 @@ let Generator = {
                 });
             }
             if (clearFunc) {
-                selectContainer.insertAdjacentHTML('beforeend', "<button id='clearFeatures' onClick='RenderInfrastructure.removeAllFeaturesFromMap(); Generator.clearChecks();'>Clear All Features</button>");
+                let clearFeatures = document.createElement('button');
+                clearFeatures.id = 'clearFeatures';
+                clearFeatures.innerHTML = 'Clear All Features';
+                clearFeatures.onclick = function(){
+                    RenderInfrastructure.removeAllFeaturesFromMap(); 
+                    Generator.clearChecks(); 
+                    Census_Visualizer.clearAll();
+                };
+                selectContainer.appendChild(clearFeatures);
             }
             if (attribution) {
                 this.attribution(attribution, selectContainer);
@@ -65,9 +73,6 @@ let Generator = {
         let featureChecks = document.getElementsByClassName("featureCheck")
         for (let i = 0; i < featureChecks.length; i++) {
             featureChecks[i].onchange = function () { callFunc(featureChecks[i]); };
-        }
-        if (clearFunc) {
-            document.getElementById("clearFeatures").onclick = function () { RenderInfrastructure.removeAllFeaturesFromMap(); Generator.clearChecks(); };
         }
     },
     /** Helper for config 
