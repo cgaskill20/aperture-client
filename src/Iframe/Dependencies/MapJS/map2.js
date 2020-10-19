@@ -79,18 +79,39 @@ const fc = {
         },
         "years":{
             "label":"Yearly Range",
-            "range":[2006,2010],
-            "default":[2006,2010],
+            "range":[2006,2011],
+            "default":[2006,2011],
             "step":1
         }
     },
     onConstraintChange: "censusViz.updateFutureHeat(RenderInfrastructure.map, true)"
 };
+
 const future_climate = {
     "Heat_Waves": fc
 }
 
 Generator.config(future_climate, document.getElementById("checkboxLocation"), true, changeChecked, "checkbox", true);
+
+const sv = {
+    groupMem: "Social Vulnerability", 
+    query: 1, 
+    constraints: {
+        "svi":{
+            "label":"Social Vulnerability Index",
+            "range":[0,1],
+            "default": [0.0, 1.0],
+            "step":0.01
+        },
+    },
+    onConstraintChange: "censusViz.updateFutureHeat(RenderInfrastructure.map, true)"
+};
+
+const social_vulnerability = {
+    "Social_Vulnerability": sv
+}
+
+Generator.config(social_vulnerability, document.getElementById("checkboxLocation"), true, changeChecked, "checkbox", true);
 
 //map 3 merge stuff
 const censusViz = census_visualizer();

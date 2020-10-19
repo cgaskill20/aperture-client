@@ -193,6 +193,7 @@ const Census_Visualizer = {
   },
 
   updateFutureHeat: function (map, constraintsUpdated){
+      const start = new Date().getTime();
       if (!document.getElementById("Heat_Waves").checked){
         return;
       }
@@ -222,18 +223,52 @@ const Census_Visualizer = {
           const data = JSON.parse(r.getData());
           GISJOINS.push(data.properties.GISJOIN);
           polys[data.properties.GISJOIN] = data;
-          if(GISJOINS.length > 20){
+          if(GISJOINS.length > 1000000){
               this._queryMatchingValues(GISJOINS, polys);
               GISJOINS.length = 0;
 		  }
       }.bind(this));
 
       stream.on('end', function (end) {
-        this._queryMatchingValues(GISJOINS, polys);
+        console.log("Geospatial query", new Date().getTime() - start)
+        if(document.getElementById("Social_Vulnerability").checked){
+            this._queryMatchingSVIs(GISJOINS, polys);
+        } else {
+            this._queryMatchingValues(GISJOINS, polys);
+		}
+      }.bind(this));
+  },
+
+  _queryMatchingSVIs: function(GISJOINS, polys){
+      const firstMatch = "GISJOIN"
+      const firstQuery = {};
+      firstQuery[firstMatch] = {"$in": GISJOINS};
+
+      const secondMatch = "svi_mean"
+      const secondQuery = {};
+      secondQuery[secondMatch] = {"$gte": Number(document.getElementById("Social_Vulnerability_svi").noUiSlider.get()[0]), "$lt": Number(document.getElementById("Social_Vulnerability_svi").noUiSlider.get()[1])};
+
+      const q = [{"$match": firstQuery},
+                 {"$match": secondQuery},
+                ];
+
+      const stream = this._sustainQuerier.getStreamForQuery("lattice-46", 27017, "svi_county", JSON.stringify(q));
+
+      this.streams.push(stream);
+
+      GISJOINS.length = 0;
+      
+      stream.on('data', function (r) {
+          const data = JSON.parse(r.getData());
+          GISJOINS.push(data.GISJOIN);
+      }.bind(this));
+      stream.on('end', function (r) {
+          this._queryMatchingValues(GISJOINS, polys);
       }.bind(this));
   },
 
   _queryMatchingValues: function(GISJOINS, polys) {
+      const start = new Date().getTime();
       const firstMatch = "GISJOIN"
       const firstQuery = {};
       firstQuery[firstMatch] = {"$in": GISJOINS};
@@ -249,7 +284,7 @@ const Census_Visualizer = {
 
       const fourthMatch = "year"
       const fourthQuery = {};
-      fourthQuery[fourthMatch] = {"$gte": Number(document.getElementById("Heat_Waves_years").noUiSlider.get()[0]), "$lt": Number(document.getElementById("Heat_Waves_years").noUiSlider.get()[1])};
+      fourthQuery[fourthMatch] = {"$gte": Number(document.getElementById("Heat_Waves_years").noUiSlider.get()[0]), "$lt": Number(document.getElementById("Heat_Waves_years").noUiSlider.get()[1])}
       
       const q = [{"$match": firstQuery},
                  {"$match": secondQuery},
@@ -264,9 +299,12 @@ const Census_Visualizer = {
       const properties = {"Heat Wave Length": document.getElementById("Heat_Waves_length").noUiSlider.get(), "Heat Wave Lower Bound": document.getElementById("Heat_Waves_temperature").noUiSlider.get()}
       
       stream.on('data', function (r) {
-          const data = JSON.parse(r.getData());
+          data = JSON.parse(r.getData());
           const poly = polys[data.GISJOIN];
           this.generalizedDraw({...data, ...poly});
+      }.bind(this));
+      stream.on('end', function (r) {
+          console.log("Value query", new Date().getTime() - start)
       }.bind(this));
   },
 
