@@ -116,10 +116,11 @@ let Generator = {
                     });
                     const name = Util.capitalizeString(Util.underScoreToSpace(elementsJson[element]['constraints'][constraint]["label"] ? elementsJson[element]['constraints'][constraint]["label"] : constraint));
                     const step = elementsJson[element]['constraints'][constraint]['step'] ? elementsJson[element]['constraints'][constraint]['step'] : 1;
+                    const isDate = elementsJson[element]['constraints'][constraint]['isDate'];
                     slider.noUiSlider.on('update', function (values) {
-                        sliderLabel.innerHTML = name + ": " + (step < 1 ? values[0] : Math.floor(values[0]));
+                        sliderLabel.innerHTML = name + ": " + (isDate ? (new Date(Number(values[0]))).toUTCString().substr(0,16) : (step < 1 ? values[0] : Math.floor(values[0])));
                         for(let i = 1; i < values.length; i++){
-                            sliderLabel.innerHTML += " - " + (step < 1 ? values[i] : Math.floor(values[i]));
+                            sliderLabel.innerHTML += " - " + (isDate ? (new Date(Number(values[i]))).toUTCString().substr(0,16) : (step < 1 ? values[i] : Math.floor(values[i])));
                         }
                     });
                     slider.noUiSlider.on('change', function (values) {

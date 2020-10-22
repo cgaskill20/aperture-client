@@ -151,10 +151,10 @@ let RenderInfrastructure = {
      * @returns {Array<int>} array of integers which contain the id of added layers
      */
     renderGeoJson: function (geoJsonData, preProcessed, indexData) {
+        Util.fixGeoJSONID(geoJsonData);
         if (RenderInfrastructure.options.simplifyThreshold !== -1) {
             Util.simplifyGeoJSON(geoJsonData, RenderInfrastructure.options.simplifyThreshold);
         }
-        Util.fixGeoJSONID(geoJsonData);
         const datasource = indexData ? indexData : RenderInfrastructure.data;
         let preProcess = [];
         let layers = [];

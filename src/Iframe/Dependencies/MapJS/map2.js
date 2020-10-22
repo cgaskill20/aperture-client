@@ -65,80 +65,139 @@ const census = {
 Generator.config(census, document.getElementById("checkboxLocation"), true, changeChecked, "radio", true);
 
 const fc = {
-    groupMem: "Future Climate", 
-    query: 1, 
+    groupMem: "Future Climate",
+    query: 1,
     constraints: {
-        "temperature":{
-            "range":[88,110],
+        "temperature": {
+            "range": [88, 110],
             "default": [88],
-            "step":1
+            "step": 1
         },
-        "length":{
-            "label":"Length (Days)",
-            "range":[1,200],
-            "default":[1],
-            "step":1
+        "length": {
+            "label": "Length (Days)",
+            "range": [1, 200],
+            "default": [1],
+            "step": 1
         },
-        "years":{
-            "label":"Yearly Range",
-            "range":[2006,2010],
-            "default":[2006,2010],
-            "step":1
+        "years": {
+            "label": "Yearly Range",
+            "range": [2006, 2010],
+            "default": [2006, 2010],
+            "step": 1
         }
     },
     onConstraintChange: "censusViz.updateFutureHeat(RenderInfrastructure.map, true)"
 };
 
 const age_aqi_hospitals = {
-    groupMem: "Age + AQI + Hospitals", 
-    query: 1, 
+    groupMem: "Age + AQI + Hospitals",
+    query: 1,
     constraints: {
-        "average_age":{
-            "label":"Average age",
-            "range":[15,80],
-            "default": [30,50],
-            "step":1
-        },
-        "aqi":{
-            "label":"AQI",
-            "range":[0,400],
-            "default":[1,50],
-            "step":1
-        },
-        "hospital_dist":{
-            "label":"No Hospital in Range (km)",
-            "range":[1,100],
-            "default":[5],
-            "step":1
+        "hospital_dist": {
+            "label": "No Hospital in Range (miles)",
+            "range": [0, 50],
+            "default": [5],
+            "step": 1
         }
     },
     onConstraintChange: "censusViz.updateAgeAQIDistanceToHospital(RenderInfrastructure.map, true)"
 }
 
 const svi_floodzone_highway = {
-    groupMem: "SVI + Floodzone + Highway", 
-    query: 1, 
-    constraints: {
-        "svi":{
-            "label":"Social Vulnerability Index",
-            "range":[0,1],
-            "default": [0.5,1],
-            "step":0.05
-        },
-        "Highway_dist":{
-            "label":"No Highway in Range (miles)",
-            "range":[0,10],
-            "default":[1],
-            "step":1
-        }
-    },
-    onConstraintChange: "censusViz.updateSVIFloodzoneDist(RenderInfrastructure.map, true)"
+    groupMem: "SVI + Floodzone + Highway",
+    query: 1
 }
 
 const extraQueries = {
     "Heat_Waves": fc,
     "age_aqi_hospitals": age_aqi_hospitals,
-    "svi_floodzone_highway": svi_floodzone_highway
+    "average_age": {
+        groupMem: "Average Age",
+        query: 1,
+        constraints: {
+            "average_age": {
+                "label": "Average age",
+                "range": [15, 80],
+                "default": [30, 50],
+                "step": 1
+            }
+        },
+        onConstraintChange: "censusViz.updateAgeAQIDistanceToHospital(RenderInfrastructure.map, true); censusViz.updateCovidCounty(RenderInfrastructure.map,true);"
+    },
+    "aqi": {
+        groupMem: "Air Quality Index",
+        query: 1,
+        constraints: {
+            "aqi": {
+                "label": "Historic Average AQI",
+                "range": [0, 200],
+                "default": [1, 50],
+                "step": 1
+            }
+        },
+        onConstraintChange: "censusViz.updateAgeAQIDistanceToHospital(RenderInfrastructure.map, true)"
+    },
+    "covid-19": {
+        groupMem: "COVID-19",
+        query: 1,
+        constraints: {
+            "dateRange": {
+                "label": "Date Range",
+                "range": [1580169600000, 1580169600000 + 1000 * 60 * 60 * 24 * 266],
+                "default": [1580169600000, 1580169600000 + 1000 * 60 * 60 * 24 * 266],
+                "step": 1000 * 60 * 60 * 24,
+                "isDate": true
+            },
+            "increase_in_cases_per_1000": {
+                "label": "Increase in Cases Per 1000 People, per 2 Weeks",
+                "range": [0,10],
+                "default": [0,10],
+                "step": 1
+            },
+        },
+        onConstraintChange: "censusViz.updateCovidCounty(RenderInfrastructure.map,true);"
+    },
+    "distance_to_hospital": {
+        groupMem: "Distance to Hospital",
+        query: 1,
+        constraints: {
+            "hospital_dist": {
+                "label": "No Hospital in Range (miles)",
+                "range": [0, 50],
+                "default": [5],
+                "step": 1
+            }
+        },
+        onConstraintChange: "censusViz.updateCovidCounty(RenderInfrastructure.map,true);"
+    }
+    // "svi_floodzone_highway": svi_floodzone_highway,
+    // "svi": {
+    //     groupMem: "Social Vulnerability Index",
+    //     query: 1,
+    //     constraints: {
+    //         "svi": {
+    //             "label": "Social Vulnerability Index",
+    //             "range": [0, 1],
+    //             "default": [0.5, 1],
+    //             "step": 0.05
+    //         }
+    //     },
+    //     onConstraintChange: "censusViz.updateSVIFloodzoneDist(RenderInfrastructure.map, true)"
+    // },
+    // "Highway_dist": {
+    //     groupMem: "Constraints",
+    //     query: 1,
+    //     constraints: {
+    //         "Highway_dist": {
+    //             "label": "No Highway in Range (miles)",
+    //             "range": [0, 10],
+    //             "default": [1],
+    //             "step": 1
+    //         }
+    //     },
+    //     onConstraintChange: "censusViz.updateSVIFloodzoneDist(RenderInfrastructure.map, true)"
+    // },
+
 }
 
 
@@ -171,7 +230,8 @@ function changeChecked(element) {
         } else if (element.id in extraQueries) {
             censusViz.updateFutureHeat(osmMap2, true);
             censusViz.updateAgeAQIDistanceToHospital(osmMap2, true)
-            censusViz.updateSVIFloodzoneDist(RenderInfrastructure.map, true)
+            censusViz.updateSVIFloodzoneDist(osmMap2, true)
+            censusViz.updateCovidCounty(osmMap2, true);
         } else {
             RenderInfrastructure.addFeatureToMap(element.id);
         }
@@ -180,12 +240,17 @@ function changeChecked(element) {
         if (element.id in census)
             censusViz.setFeature(element.id);
         else if (element.id in extraQueries)
-            switch(element.id){
+            switch (element.id) {
                 case "Heat_Waves":
                     censusViz.clearHeat();
                     break;
                 case "svi_floodzone_highway":
                     censusViz.clearSVIFloodHighway();
+                    break;
+                case "age_aqi_hospitals":
+                    censusViz.clearAQIAgeHospital();
+                    break;
+                case "covid-19":
                     break;
             }
         else
@@ -196,9 +261,10 @@ function changeChecked(element) {
 parent.addEventListener('updateMaps', function () {
     runQuery();
     censusViz.updateViz(osmMap2);
-    censusViz.updateFutureHeat(osmMap2, false); 
+    censusViz.updateFutureHeat(osmMap2, false);
     censusViz.updateAgeAQIDistanceToHospital(osmMap2, false)
     censusViz.updateSVIFloodzoneDist(RenderInfrastructure.map, false)
+    censusViz.updateCovidCounty(osmMap2, false);
 });
 
 function runQuery() {

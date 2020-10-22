@@ -133,7 +133,7 @@
     "flood_zones":{
         "defaultRender":false,
         "query": "custom=flood_zone",
-        "refrences":["flood_zone_A","flood_zone_AE","flood_zone_AH","flood_zone_AO","floodway"],
+        "refrences":["flood_zone_A","flood_zone_AE","flood_zone_AH","flood_zone_AO","floodway","flood_zone_VE","flood_zone_V"],
         "groupMem":"Flood Data",
         "grpc":"DatasetRequest",
         "grpcDataset":7
