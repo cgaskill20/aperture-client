@@ -207,6 +207,94 @@ const Census_Visualizer = {
     this.futureHeatConstraints.flag = false;
   },
 
+  snowDroughtConstraints: {
+    flag: false,
+    length: 0,
+    percent_decrease: [],
+    years: []
+  },
+
+  updateSnowDroughtConstraint: function (constraint, value) {
+    this.snowDroughtConstraints[constraint] = value;
+    this.snowDroughtConstraints.flag = false;
+  },
+
+  updateSnowDrought: function (map, constraintsUpdated) {
+    this.streams.forEach(s => s.cancel());
+    this.clearFutureHeat();
+
+    if (this.heat_layers.length > 0 && this.snowDroughtConstraints.flag) {
+      this.clearFutureHeat();
+      this.heat_layers = [];
+      this.snowDroughtConstraints.flag = false;
+    }
+
+    const b = map.wrapLatLngBounds(map.getBounds());
+    const barray = [[b._southWest.lng, b._southWest.lat], [b._southWest.lng, b._northEast.lat],
+    [b._northEast.lng, b._northEast.lat], [b._northEast.lng, b._southWest.lat],
+    [b._southWest.lng, b._southWest.lat]];
+
+    const q = [{ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }];
+
+    const stream = this._sustainQuerier.getStreamForQuery("lattice-46", 27017, "county_geo_GISJOIN", JSON.stringify(q));
+
+    this.streams.push(stream);
+
+    const GISJOINS = [];
+    const polys = {};
+
+    stream.on('data', function (r) {
+      const data = JSON.parse(r.getData());
+      GISJOINS.push(data.GISJOIN.substr(1, data.GISJOIN.length - 3));
+      polys[data.GISJOIN.substr(1, data.GISJOIN.length - 3)] = data;
+      if (GISJOINS.length > 20) {
+        this._queryMatchingValuesSnow(GISJOINS, polys);
+        GISJOINS.length = 0;
+      }
+    }.bind(this));
+
+    stream.on('end', function (end) {
+      this._queryMatchingValuesSnow(GISJOINS, polys);
+    }.bind(this));
+  },
+
+  _queryMatchingValuesSnow: function (GISJOINS, polys) {
+    const firstMatch = "GISJOIN"
+    const firstQuery = {};
+    firstQuery[firstMatch] = { "$in": GISJOINS };
+
+    const secondMatch = "CDF." + this.snowDroughtConstraints.length
+    const secondQuery = {};
+    secondQuery[secondMatch] = { "$exists": true };
+
+    const thirdMatch = "CDF." + this.snowDroughtConstraints.length
+    const thirdQuery = {};
+    thirdQuery[thirdMatch] = { "$gte": this.snowDroughtConstraints.percent_decrease[0], "$lt": this.snowDroughtConstraints.percent_decrease[1] };
+
+
+    const fourthMatch = "year"
+    const fourthQuery = {};
+    fourthQuery[fourthMatch] = { "$gte": this.snowDroughtConstraints.years[0], "$lt": this.snowDroughtConstraints.years[1] };
+
+    const q = [{ "$match": firstQuery },
+    { "$match": secondQuery },
+    { "$match": thirdQuery },
+    { "$match": fourthQuery }
+    ];
+
+    const stream = this._sustainQuerier.getStreamForQuery("lattice-46", 27017, "snow_drought", JSON.stringify(q));
+
+    this.streams.push(stream);
+
+    const properties = { "Heat Wave Length": this.snowDroughtConstraints.years[0], "Snow Drought Lower Bound": this.snowDroughtConstraints.years[1] }
+
+    stream.on('data', function (r) {
+      const data = JSON.parse(r.getData());
+      const poly = polys[data.GISJOIN];
+      this.generalizedDraw({ ...data, ...poly });
+    }.bind(this));
+  },
+
   clearFutureHeat: function () {
     this.clearHeat();
     this.heat_layers = [];
@@ -352,8 +440,8 @@ const Census_Visualizer = {
     if (properties !== null)
       data["properties"] = { ...data["properties"], ...properties };
 
-    if (!document.getElementById("Heat_Waves_layer_selector").checked)
-      return;
+    //if (!document.getElementById("Heat_Waves_layer_selector").checked)
+    //  return;
 
     let newLayers = RenderInfrastructure.renderGeoJson(data, false, {
       "census": {

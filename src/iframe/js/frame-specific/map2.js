@@ -428,7 +428,68 @@ const data = {
             Census_Visualizer.updateFutureHeatConstraint(constraintName, value);
         },
         "onUpdate": function (layer) {
-            Census_Visualizer.updateFutureHeatNew(osmMap2);
+            Census_Visualizer.updateFutureHeat(osmMap2);
+        },
+        "onAdd": function (layer) {
+            //update is auto-called after add, so no need to do anything
+        },
+        "onRemove": function (layer) {
+            Census_Visualizer.clearHeat();
+        }
+    },
+    "Snow_Drought": {
+        "group": "Dynamic Layers",
+        "subGroup": "Climate",
+        "constraints": {
+            "percent_decrease": {
+                "type": "slider",
+                "range": [
+                    0,
+                    20
+                ],
+                "default": [
+                    1,
+                    3
+                ],
+                "step": 1
+            },
+            "length": {
+                "type": "slider",
+                "label": "Length (Months)",
+                "range": [
+                    1,
+                    12
+                ],
+                "default": [
+                    1
+                ],
+                "step": 1
+            },
+            "years": {
+                "type": "slider",
+                "label": "Yearly Range",
+                "range": [
+                    1981,
+                    2018
+                ],
+                "default": [
+                    2016,
+                    2018
+                ],
+                "step": 1
+            }
+        },
+        "onConstraintChange": function (layer, constraintName, value) {
+            if (constraintName == 'years' || constraintName == "percent_decrease")
+                for (let i = 0; i < value.length; i++) {
+                    value[i] = Number(value[i]);
+                }
+            else
+                value = Number(value)
+            Census_Visualizer.updateSnowDroughtConstraint(constraintName, value);
+        },
+        "onUpdate": function (layer) {
+            Census_Visualizer.updateSnowDrought(osmMap2);
         },
         "onAdd": function (layer) {
             //update is auto-called after add, so no need to do anything
