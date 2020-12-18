@@ -498,6 +498,67 @@ const data = {
             Census_Visualizer.clearHeat();
         }
     },
+    "Standard_Precipitation_Index": {
+        "group": "Dynamic Layers",
+        "subGroup": "Climate",
+        "constraints": {
+            "spi": {
+                "type": "slider",
+                "range": [
+                    0,
+                    4
+                ],
+                "default": [
+                    1,
+                    2
+                ],
+                "step": 1
+            },
+            "length": {
+                "type": "slider",
+                "label": "Length (Days)",
+                "range": [
+                    1,
+                    20
+                ],
+                "default": [
+                    1
+                ],
+                "step": 1
+            },
+            "years": {
+                "type": "slider",
+                "label": "Yearly Range",
+                "range": [
+                    2007,
+                    2014
+                ],
+                "default": [
+                    2012,
+                    2014
+                ],
+                "step": 1
+            }
+        },
+        "onConstraintChange": function (layer, constraintName, value) {
+            if (constraintName == 'years' || constraintName == "spi")
+                for (let i = 0; i < value.length; i++) {
+                    value[i] = Number(value[i]);
+                }
+            else
+                value = Number(value)
+            Census_Visualizer.updateSPIConstraint(constraintName, value);
+        },
+        "onUpdate": function (layer) {
+            Census_Visualizer.updateSPI(osmMap2);
+        },
+        "onAdd": function (layer) {
+            //update is auto-called after add, so no need to do anything
+        },
+        "onRemove": function (layer) {
+            Census_Visualizer.clearHeat();
+        }
+    },
     "social_vulnerability_index": {
         "group": "Dynamic Layers",
         "subGroup": "Social Vulnerability",

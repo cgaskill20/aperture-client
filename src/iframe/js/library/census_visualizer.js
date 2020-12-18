@@ -219,6 +219,93 @@ const Census_Visualizer = {
     this.snowDroughtConstraints.flag = false;
   },
 
+  SPIConstraints: {
+    flag: false,
+    length: 0,
+    spi: [],
+    years: []
+  },
+
+  updateSPIConstraint: function (constraint, value) {
+    this.SPIConstraints[constraint] = value;
+    this.SPIConstraints.flag = false;
+  },
+
+  updateSPI: function (map, constraintsUpdated) {
+    this.streams.forEach(s => s.cancel());
+
+    if (this.heat_layers.length > 0 && this.SPIConstraints.flag) {
+      this.clearFutureHeat();
+      this.heat_layers = [];
+      this.SPIConstraints.flag = false;
+    }
+
+    const b = map.wrapLatLngBounds(map.getBounds());
+    const barray = [[b._southWest.lng, b._southWest.lat], [b._southWest.lng, b._northEast.lat],
+    [b._northEast.lng, b._northEast.lat], [b._northEast.lng, b._southWest.lat],
+    [b._southWest.lng, b._southWest.lat]];
+
+    const q = [{ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }];
+
+    const stream = this._sustainQuerier.getStreamForQuery("lattice-46", 27017, "tract_geo_GISJOIN", JSON.stringify(q));
+
+    this.streams.push(stream);
+
+    const GISJOINS = [];
+    const polys = {};
+
+    stream.on('data', function (r) {
+      const data = JSON.parse(r.getData());
+      GISJOINS.push(data.properties.GEOID10);
+      polys[data.properties.GEOID10] = data;
+      if (GISJOINS.length > 20) {
+        this._queryMatchingValuesSPI(GISJOINS, polys);
+        GISJOINS.length = 0;
+      }
+    }.bind(this));
+
+    stream.on('end', function (end) {
+      this._queryMatchingValuesSPI(GISJOINS, polys);
+    }.bind(this));
+  },
+
+  _queryMatchingValuesSPI: function (GISJOINS, polys) {
+    const firstMatch = "GISJOIN"
+    const firstQuery = {};
+    firstQuery[firstMatch] = { "$in": GISJOINS };
+
+    const secondMatch = "CDF." + this.SPIConstraints.length
+    const secondQuery = {};
+    secondQuery[secondMatch] = { "$exists": true };
+
+    const thirdMatch = "SPI"
+    const thirdQuery = {};
+    thirdQuery[thirdMatch] = { "$gte": this.SPIConstraints.spi[0], "$lt": this.SPIConstraints.spi[1] };;
+
+
+    const fourthMatch = "year"
+    const fourthQuery = {};
+    fourthQuery[fourthMatch] = { "$gte": this.SPIConstraints.years[0], "$lt": this.SPIConstraints.years[1] };
+
+    const q = [{ "$match": firstQuery },
+    { "$match": secondQuery },
+    { "$match": thirdQuery },
+    { "$match": fourthQuery }
+    ];
+
+    const stream = this._sustainQuerier.getStreamForQuery("lattice-46", 27017, "spi", JSON.stringify(q));
+
+    this.streams.push(stream);
+
+    const properties = { "Heat Wave Length":this.SPIConstraints.years[0], "Heat Wave Lower Bound": this.SPIConstraints.years[0] }
+
+    stream.on('data', function (r) {
+      const data = JSON.parse(r.getData());
+      const poly = polys[data.GISJOIN];
+      this.generalizedDraw({ ...data, ...poly });
+    }.bind(this));
+  },
+
   updateSnowDrought: function (map, constraintsUpdated) {
     this.streams.forEach(s => s.cancel());
     this.clearFutureHeat();
