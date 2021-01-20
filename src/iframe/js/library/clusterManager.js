@@ -22,7 +22,13 @@ class ClusterManager {
                 cluster.render.renderGeoJson(feature, {
                     "Cluster":{
                         color: cluster.color,
-                        border: 1
+                        border: 1,
+                        onClick: function(layer){
+                            this.removeAllLayersApartFrom(layer)
+                        }.bind(this),
+                        onPopupRemove: function(layer){
+                            this.reAddLayers();
+                        }.bind(this)
                     }
                 });
             }
@@ -49,5 +55,20 @@ class ClusterManager {
                 return cluster;
         }
         return null;
+    }
+
+    removeAllLayersApartFrom(layer){
+        for(const cluster of this.clusters){
+            if(cluster.group !== layer){
+                this.layerGroup.removeLayer(cluster.group);
+            }
+        }
+    }
+
+    reAddLayers(){
+        this.removeAllLayersApartFrom(null);
+        for(const cluster of this.clusters){
+            this.layerGroup.addLayer(cluster.group);
+        }
     }
 }

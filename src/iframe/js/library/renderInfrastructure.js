@@ -94,13 +94,17 @@ class RenderInfrastructure {
                 this.addIconToMap(iconName, latlng, iconDetails, indexData, layer.specifiedId);
                 layer.bindPopup(iconDetails);
                 layer.on('click', function (e) {
-<<<<<<< HEAD
-                    this.map.flyToBounds(layer.getBounds(), FLYTOOPTIONS);
+                    this.map.flyTo(e.latlng, this.map.getZoom(), FLYTOOPTIONS);
+                    if(datasource[iconName].onClick){
+                        datasource[iconName].onClick(this.layerGroup);
+                    }
                 }.bind(this));
-=======
-                    RenderInfrastructure.map.flyTo(e.latlng, RenderInfrastructure.map.getZoom(), FLYTOOPTIONS);
-                });
->>>>>>> smallTweaks
+
+                if(datasource[iconName].onPopupRemove){
+                    layer.getPopup().on('remove', function() {
+                        datasource[iconName].onPopupRemove(this.layerGroup);
+                    });
+                }
                 layers.push(layer.specifiedId);
             }.bind(this),
             pointToLayer: function () {
@@ -132,25 +136,11 @@ class RenderInfrastructure {
         });
         marker.uniqueId = iconName;
         marker.specifiedId = specifiedId;
-<<<<<<< HEAD
         this.markerLayer.addLayer(marker.on('click', function (e) {
-            if (e.target.__parent._group._spiderfied) {
-                return;
-            }
-            if (this.map.getZoom() < 16) {
-                this.map.flyTo(e.latlng, 16, FLYTOOPTIONS);
-            }
-            else {
-                this.map.flyTo(e.latlng, this.map.getZoom(), FLYTOOPTIONS);
-            }
-        }.bind(this)).bindPopup(popUpContent));
-=======
-        RenderInfrastructure.markerLayer.addLayer(marker.on('click', function (e) {
             if (e.target.__parent._group._spiderfied) 
                 return;
-            RenderInfrastructure.map.flyTo(e.latlng, RenderInfrastructure.map.getZoom(), FLYTOOPTIONS);
-        }).bindPopup(popUpContent));
->>>>>>> smallTweaks
+            this.map.flyTo(e.latlng, RenderInfrastructure.map.getZoom(), FLYTOOPTIONS);
+        }.bind(this)).bindPopup(popUpContent));
         return true;
     }
 
