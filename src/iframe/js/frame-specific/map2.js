@@ -24,6 +24,11 @@ var sidebar = L.control.sidebar('sidebar', {
     position: 'right'
 }).addTo(map);
 
+
+map.on('click', function () {
+    sidebar.close();
+});
+
 const markers = L.markerClusterGroup({
     showCoverageOnHover: false,
     spiderfyOnMaxZoom: true,
