@@ -24,13 +24,31 @@ var sidebar = L.control.sidebar('sidebar', {
     position: 'right'
 }).addTo(map);
 
-var markers = L.markerClusterGroup({
+const markers = L.markerClusterGroup({
     showCoverageOnHover: false,
     spiderfyOnMaxZoom: true,
     maxClusterRadius: 55,
     animate: false
 });
 map.addLayer(markers);
+
+const dataExplorationGroup = L.featureGroup().addTo(map);
+const dataModeling = L.featureGroup();
+
+const modelsSwitch = document.getElementById("modelsOn");
+modelsSwitch.addEventListener('change', function (e) {
+    const isOn = modelsSwitch.checked;
+    if(isOn){
+        map.removeLayer(markers);
+        map.removeLayer(dataExplorationGroup);
+        map.addLayer(dataModeling);
+    }
+    else{
+        map.addLayer(markers);
+        map.addLayer(dataExplorationGroup);
+        map.removeLayer(dataModeling);
+    }
+});
 
 const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
 const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
@@ -39,41 +57,9 @@ window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty
 
 const overwrite = { //leaving this commented cause it explains the schema really well 
-    // "covid_county": {
-    //     "group": "Tract, County, & State Data",
-    //     "subGroup": "County Level",
-    //     "constraints": {
-    //         date_range: {
-    //             "type": "slider",
-    //             "label": "Date Range",
-    //             "range": [1580169600000, 1580169600000 + 1000 * 60 * 60 * 24 * 266],
-    //             "default": [1580169600000, 1580169600000 + 1000 * 60 * 60 * 24 * 266],
-    //             "step": 1000 * 60 * 60 * 24,
-    //             "isDate": true
-    //         }
-    //     },
-    //     "onConstraintChange": function (layer, constraintName, value) {
-    //         console.log(layer + "-" + constraintName + "-");
-    //         COVID.dateStart = Number(value[0]);
-    //         COVID.dateEnd = Number(value[1]);
-    //         COVID.changeFlag = true;
-    //         COVID.makeQuery(map);
-    //     },
-    //     "onAdd": function () {
-    //         COVID.allowRender = true;
-    //     },
-    //     "onRemove": function () {
-    //         COVID.allowRender = false;
-    //         COVID.clear();
-    //     },
-    //     "onUpdate": function () {
-    //         COVID.makeQuery(map);
-    //     },
-    //     "noAutoQuery": true
-    // },
 }
 
-RenderInfrastructure.config(map, markers, overwrite, {
+window.renderInfrastructure = new RenderInfrastructure(window.map, markers, dataExplorationGroup, {
     queryAlertText: document.getElementById('queryInfoText'),
     maxElements: 10000,
     maxLayers: 20,
@@ -90,6 +76,10 @@ parent.addEventListener('updateMaps', function () {
     updateLayers();
 });
 
+const clusterer = new ClusterManager("xd", map, dataModeling, "tract_geo_GISJOIN");
+
+
+//-----------
 map.on("move", function (e) {
     parent.setGlobalPosition(map.getCenter(), MAPNUMBER);
 });

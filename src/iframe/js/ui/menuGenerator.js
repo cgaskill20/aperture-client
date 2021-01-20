@@ -90,7 +90,7 @@ const MenuGenerator = {
         for (let i = 0; i < categoryCount; i++)
             columns += perColPct + " ";
         container.style.gridTemplateColumns = columns; //set columns up
-        container.style.height = "90%"
+        //container.style.height = "90%"
     },
 
     /** Helper method for @method generate

@@ -16,7 +16,7 @@ class AutoQuery {
     constructor(layerData) {
         this.data = layerData;
         this.collection = layerData.collection;
-        this.map = layerData.map();
+        this.map = window.map;
         this.sustainQuerier = sustain_querier(); //init querier
 
         this.constraintData = {};
@@ -211,7 +211,7 @@ class AutoQuery {
       * @method clearMapLayers
       */
     clearMapLayers() {
-        RenderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
+        renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
         this.mapLayers = [];
         this.layerIDs = [];
     }
@@ -272,7 +272,7 @@ class AutoQuery {
 
         indexData[this.collection]["border"] = this.color.border;
 
-        this.mapLayers = this.mapLayers.concat(RenderInfrastructure.renderGeoJson(data, indexData));
+        this.mapLayers = this.mapLayers.concat(renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.push(data.id);
     }
 
