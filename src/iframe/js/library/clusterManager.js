@@ -3,6 +3,7 @@ class ClusterManager {
         this.data = data;
         this.map = map;
         this.layerGroup = layerGroup;
+        this.sustainQuerier = sustain_querier(); //init querier
 
         this.clusters = [];
         this.getData();
@@ -45,7 +46,6 @@ class ClusterManager {
             let j = 0;
             for(const b of buckets)
                 this.clusters.push(new ClusterState(b, colors[j++], this.layerGroup));
-            console.log(this.clusters);
         }.bind(this));
     }
     

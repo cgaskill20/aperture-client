@@ -1,4 +1,4 @@
-const {Query, CompoundRequest} = require("./sustain_pb.js")
+const {Query, CompoundRequest, ModelRequest} = require("./sustain_pb.js")
 const {SustainClient} = require('./sustain_grpc_web_pb.js');
 
 /**
@@ -119,6 +119,13 @@ SustainQuerier = {
      */
     executeCompoundQuery: function (request) {
         return this.service.compoundQuery(request, {});
+    },
+    
+    
+    executeModelQuery: function (query) {
+        const request = new ModelRequest();
+        ModelRequest.setRequest(query);
+        return this.service.modelQuery(request, {});
 	},
 };
 

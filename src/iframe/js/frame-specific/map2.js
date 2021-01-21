@@ -38,22 +38,35 @@ const markers = L.markerClusterGroup({
 map.addLayer(markers);
 
 const dataExplorationGroup = L.featureGroup().addTo(map);
-const dataModeling = L.featureGroup();
+const dataModelingGroup = L.featureGroup();
 
-const modelsSwitch = document.getElementById("modelsOn");
-modelsSwitch.addEventListener('change', function (e) {
-    const isOn = modelsSwitch.checked;
-    if(isOn){
-        map.removeLayer(markers);
-        map.removeLayer(dataExplorationGroup);
-        map.addLayer(dataModeling);
-    }
-    else{
-        map.addLayer(markers);
-        map.addLayer(dataExplorationGroup);
-        map.removeLayer(dataModeling);
-    }
-});
+
+const dataExplorationTab = document.getElementById("dataExplorationTab");
+const dataModelingTab = document.getElementById("dataModelingTab");
+const dataExploration = document.getElementById("checkboxLocation");
+const dataModeling = document.getElementById("dataModeling");
+
+dataExplorationTab.onclick = function () {
+    if(dataExploration.style.display === "grid")
+        return;
+    dataExploration.style.display = "grid";
+    dataModeling.style.display = "none";
+
+    map.addLayer(markers);
+    map.addLayer(dataExplorationGroup);
+    map.removeLayer(dataModelingGroup);
+}
+dataModelingTab.onclick = function () {
+    if(dataModeling.style.display === "block")
+        return;
+    dataModeling.style.display = "block";
+    dataExploration.style.display = "none";
+
+    map.removeLayer(markers);
+    map.removeLayer(dataExplorationGroup);
+    map.addLayer(dataModelingGroup);
+}
+
 
 const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
 const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
@@ -74,14 +87,14 @@ window.renderInfrastructure = new RenderInfrastructure(window.map, markers, data
 //where the magic happens
 $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the mongo server yet so query it locally
     const finalData = await AutoMenu.build(mdata, overwrite);
-    MenuGenerator.generate(finalData, document.getElementById("checkboxLocation"));
+    MenuGenerator.generate(finalData, dataExploration);
 });
 
 parent.addEventListener('updateMaps', function () {
     updateLayers();
 });
 
-const clusterer = new ClusterManager("xd", map, dataModeling, "tract_geo_GISJOIN");
+const clusterer = new ClusterManager("xd", map, dataModelingGroup, "tract_geo_GISJOIN");
 
 
 //-----------

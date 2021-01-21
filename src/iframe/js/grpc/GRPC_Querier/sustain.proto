@@ -16,8 +16,8 @@ service Sustain{
   // Query datasets (hospitals, dams, natural_gas_pipelines, power_plants, transmission_lines, etc.
   rpc DatasetQuery (DatasetRequest) returns (stream DatasetResponse) {}
 
-  // Query Social Vulnerability Index values
-  rpc SVIQuery (SVIRequest) returns (stream SVIResponse) {}
+  // Query Social Vulnerability Index (SVI) values
+  rpc SviQuery (SviRequest) returns (stream SviResponse) {}
 
   // targeted queries - return geographical areas that satisfy a given value range of a census feature
   // Example 1: Retrieve all counties where (population >= 1,000,000)
@@ -25,29 +25,24 @@ service Sustain{
   rpc ExecuteTargetedCensusQuery (TargetedCensusRequest) returns (stream TargetedCensusResponse) {}
 
   rpc CompoundQuery (CompoundRequest) returns (stream CompoundResponse) {}
+
+  rpc ModelQuery (ModelRequest) returns (ModelResponse) {}
 }
 
-message SVIRequest {
-  enum Type {
-    PERCENT_POVERTY = 0;            // 1. Percent individuals below poverty
-    PERCENT_UNEMPLOYED = 1;         // 2. Percent civilian unemployed
-    PER_CAPITA_INCOME = 2;          // 3. Per capita Income in 1999
-    PERCENT_NO_HIGH_SCHOOL_DIPLOMA = 3; // 4. Percent persons with no high school diploma
-    PERCENT_65_OR_OLDER = 4;        // 5. Percent persons 65 years of age or older
-    PERCENT_17_OR_YOUNGER = 5;      // 6. Percent persons 17 years of age or younger
-    PERCENT_DISABILITY = 6;         // 7. Percent persons more than 5 years old with a disability
-    PERCENT_HOUSEHOLDER = 7;        // 8. Percent male or female householder, no spouse present, with children under 18
-    PERCENT_MINORITY = 8;           // 9. Percent minority
-    PERCENT_SPEAKS_ENGLISH = 9;     // 10. Percent persons 5 years of age or older who speak English less than “well”
-    PERCENT_MULTI_UNIT_STRUCTURE = 10; // 11. Percent multi-unit structure
-    PERCENT_MOBILE_HOME = 11;       // 12. Percent mobile homes
-    CROWDING = 12;                  // 13. Crowding
-    NO_VEHICLE_AVAILABLE = 13;      // 14. No vehicle available
-    PERCENT_GROUP_QUARTERS = 14;    // 15. Percent of persons in group quarters
-  }
+message ModelRequest {
+  string request = 1;
 }
 
-message SVIResponse {
+message ModelResponse {
+  string results = 1;
+}
+
+message SviRequest {
+  string requestGeoJson = 1;
+  SpatialOp spatialOp = 2;
+}
+
+message SviResponse {
   string data = 1;
   string responseGeoJson = 2; // geoJson associated with 'data'
 }
