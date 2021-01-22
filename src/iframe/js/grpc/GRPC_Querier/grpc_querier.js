@@ -124,7 +124,7 @@ SustainQuerier = {
     
     executeModelQuery: function (query) {
         const request = new ModelRequest();
-        ModelRequest.setRequest(query);
+        request.setRequest(query);
         return this.service.modelQuery(request, {});
 	},
 };

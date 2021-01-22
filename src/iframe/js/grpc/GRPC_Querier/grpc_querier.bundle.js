@@ -2726,7 +2726,7 @@ SustainQuerier = {
     
     executeModelQuery: function (query) {
         const request = new ModelRequest();
-        ModelRequest.setRequest(query);
+        request.setRequest(query);
         return this.service.modelQuery(request, {});
 	},
 };
@@ -3281,7 +3281,7 @@ proto.sustain.SustainPromiseClient.prototype.compoundQuery =
  */
 const methodDescriptor_Sustain_ModelQuery = new grpc.web.MethodDescriptor(
   '/sustain.Sustain/ModelQuery',
-  grpc.web.MethodType.UNARY,
+  grpc.web.MethodType.SERVER_STREAMING,
   proto.sustain.ModelRequest,
   proto.sustain.ModelResponse,
   /**
@@ -3315,37 +3315,32 @@ const methodInfo_Sustain_ModelQuery = new grpc.web.AbstractClientBase.MethodInfo
 
 
 /**
- * @param {!proto.sustain.ModelRequest} request The
- *     request proto
+ * @param {!proto.sustain.ModelRequest} request The request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.sustain.ModelResponse)}
- *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.sustain.ModelResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.sustain.ModelResponse>}
  *     The XHR Node Readable Stream
  */
 proto.sustain.SustainClient.prototype.modelQuery =
-    function(request, metadata, callback) {
-  return this.client_.rpcCall(this.hostname_ +
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
       '/sustain.Sustain/ModelQuery',
       request,
       metadata || {},
-      methodDescriptor_Sustain_ModelQuery,
-      callback);
+      methodDescriptor_Sustain_ModelQuery);
 };
 
 
 /**
- * @param {!proto.sustain.ModelRequest} request The
- *     request proto
+ * @param {!proto.sustain.ModelRequest} request The request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.sustain.ModelResponse>}
- *     A native promise that resolves to the response
+ * @return {!grpc.web.ClientReadableStream<!proto.sustain.ModelResponse>}
+ *     The XHR Node Readable Stream
  */
 proto.sustain.SustainPromiseClient.prototype.modelQuery =
     function(request, metadata) {
-  return this.client_.unaryCall(this.hostname_ +
+  return this.client_.serverStreaming(this.hostname_ +
       '/sustain.Sustain/ModelQuery',
       request,
       metadata || {},
