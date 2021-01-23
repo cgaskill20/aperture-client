@@ -45,12 +45,14 @@ const dataExplorationTab = document.getElementById("dataExplorationTab");
 const dataModelingTab = document.getElementById("dataModelingTab");
 const dataExploration = document.getElementById("checkboxLocation");
 const dataModeling = document.getElementById("dataModeling");
+const dataModelingLegend = document.getElementById("modelLegend");
 
 dataExplorationTab.onclick = function () {
     if(dataExploration.style.display === "grid")
         return;
     dataExploration.style.display = "grid";
     dataModeling.style.display = "none";
+    dataModelingLegend.style.display = "none";
 
     map.addLayer(markers);
     map.addLayer(dataExplorationGroup);
@@ -60,6 +62,7 @@ dataModelingTab.onclick = function () {
     if(dataModeling.style.display === "block")
         return;
     dataModeling.style.display = "block";
+    dataModelingLegend.style.display = "block";
     dataExploration.style.display = "none";
 
     map.removeLayer(markers);
@@ -68,7 +71,7 @@ dataModelingTab.onclick = function () {
 }
 
 
-const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
+const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 2500);
 const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
 
 window.backgroundTract = backgroundTract;

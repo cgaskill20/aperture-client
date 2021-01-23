@@ -50,14 +50,14 @@ body {
     height: 40px;
 }
 
-.menuColumn .categoryName .titleText{
-    width:100%;
+.menuColumn .categoryName .titleText {
+    width: 100%;
     text-align: center;
     font-weight: bold;
     font-size: 18px;
 }
 
-.menuHeader{
+.menuHeader {
     margin: 10px;
     margin-bottom: 15px;
     padding: 0;
@@ -65,35 +65,33 @@ body {
     background-color: white;
 }
 
-.menuHeaderLabel{
+.menuHeaderLabel {
     padding: 5px;
     border-radius: 3px;
     background-color: #0074d9;
     text-align: center;
-    color:white;
+    color: white;
     font-weight: bold;
     cursor: pointer;
 }
 
-
-.checkboxConstraintLabel{
+.checkboxConstraintLabel {
     padding: 5px;
     border-radius: 3px;
     background-color: #0074d9;
     text-align: left;
-    color:white;
+    color: white;
 }
 
-.checkboxConstraintContainer{
+.checkboxConstraintContainer {
     padding: 5px;
 }
 
-
-.menuHeaderContainer{
+.menuHeaderContainer {
     padding: 5px;
 }
 
-.layerContainer{
+.layerContainer {
     background-color: #DDD;
     margin: 5px;
     margin-bottom: 10px;
@@ -102,32 +100,32 @@ body {
     cursor: default;
 }
 
-.layerSelector{
+.layerSelector {
     font-weight: bold;
-    color:white;
+    color: white;
     background-color: #42b33e;
     padding: 5px;
     border-radius: 3px;
 }
 
-.layerConstraints{
+.layerConstraints {
     padding: 10px;
 }
 
-.checkboxContainer{
+.checkboxContainer {
     background-color: white;
     border-radius: 3px;
     margin-bottom: 15px;
 }
 
-.sliderContainer{
+.sliderContainer {
     background-color: white;
     border-radius: 3px;
     padding: 5px;
     margin-bottom: 15px;
 }
 
-.dropdown{
+.dropdown {
     height: 18px;
     width: 18px;
     float: right;
@@ -178,10 +176,10 @@ body {
     transform: translateY(-50%);
 }
 
-.editConstraints{
+.editConstraints {
     position: absolute;
-    top:12.5%;
-    left:12.5%;
+    top: 12.5%;
+    left: 12.5%;
     width: 75%;
     height: 75%;
     border-radius: 3px;
@@ -191,11 +189,11 @@ body {
     overflow-x: hidden;
 }
 
-.editConstraintsHeader{
-    top:0;
+.editConstraintsHeader {
+    top: 0;
     padding: 10px;
-    background-color:#0074d9;
-    color:white;
+    background-color: #0074d9;
+    color: white;
     font-weight: bold;
     font-size: 18px;
     text-align: center;
@@ -203,24 +201,80 @@ body {
     margin-bottom: 8px;
 }
 
-.editConstraintsConstraint{
+.editConstraintsConstraint {
     padding: 1px;
     padding-left: 20px;
     font-weight: bold;
 }
 
-
-.saveAndCloseConstraints{
+.saveAndCloseConstraints {
     bottom: 25px;
     left: 85%;
     position: sticky;
-
 }
 
-.clusterContainer{
-    display:none;
+.clusterContainer {
+    display: none;
 }
 
 .leaflet-fade-anim .leaflet-tile, .leaflet-zoom-anim .leaflet-zoom-animated {
     will-change: auto !important;
+}
+
+/* Style the tab */
+
+/* Style the buttons that are used to open the tab content */
+
+.tab{
+    height: 100%;
+}
+
+.tab button {
+    height: 100%;
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Change background color of buttons on hover */
+
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+
+.tab button.active {
+    background-color: #ccc;
+}
+
+.modelLegend{
+    background-color: rgba(255, 255, 255, 0.5);
+    height: 50px;
+    width: 455px;
+    border-radius: 3px;
+    margin-bottom: 50px;
+    margin-left: 50vw;
+    transform: translate(-50%, 0);
+    position: absolute;
+    bottom: 0;
+    z-index: 2000;
+    display: none;
+}
+
+.modelLegendField{
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    margin: 5px 0px 5px 5px;
+    color: red;
+    float: left;
+    opacity: 0.8;
 }

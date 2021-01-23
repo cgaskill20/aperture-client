@@ -33,9 +33,8 @@
 </head>
 
 <body>
-    <div class="leaflet-bottom leaflet-left">
-        
-    </div>
+    <div class="modelLegend" id="modelLegend"> </div>
+
     <div id="sidebar" class="sidebar collapsed">
         <!-- Nav tabs -->
         <div class="sidebar-tabs">
@@ -62,8 +61,13 @@
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </div>
                 <div class="clusterContainer" id="dataModeling">
-                    <label for="modelsOn">Modeling</label>
-                    <input type="checkbox" id="modelsOn">
+                    <br>
+                    <label for="cars">Cluster Based On:</label>
+                    <select id="clusterS">
+                    <option value="clustered_age">Age</option>
+                    <option value="clustered_income">Income</option>
+                    <option value="clustered_income_age">Income & Age</option>
+                    </select>
                 </div>
                 <div class="selectContainer" id="checkboxLocation">
                     
@@ -71,6 +75,8 @@
             </div>
         </div>
     </div>
+
+
     <div id="map" class="sidebar-map"></div>
     <!------------------------------------------>
     <div id='map2' class='map'></div>

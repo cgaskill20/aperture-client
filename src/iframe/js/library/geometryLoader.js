@@ -40,6 +40,10 @@ class GeometryLoader {
         return this.convertArrayToGISJOINS(this.cache);
     }
 
+    getCache(){
+        return this.cache;
+    }
+
     /**
       * Gets geometry from a GISJOIN
       * @memberof GeometryLoader
@@ -127,6 +131,10 @@ class GeometryLoader {
             }
             else {
                 newResults.push(data);
+                if(newResults.length > 20){
+                    this.broadcastNewResults(newResults);
+                    newResults = [];
+                }
             }
 
             this.cache.unshift(data); //add it to the front of the arr

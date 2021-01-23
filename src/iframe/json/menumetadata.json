@@ -155,7 +155,7 @@
   "color": {
     "style": "sequential",
     "variable": "properties.FLD_ZONE",
-    "border": 1
+    "border": 0
   },
   "fieldMetadata" : [ {
     "name" : "properties.FLD_ZONE",
