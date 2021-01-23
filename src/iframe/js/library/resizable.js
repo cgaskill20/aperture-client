@@ -56,7 +56,6 @@
    }, true);
 
    box.addEventListener('mousemove', function(event) {
-       event.preventDefault();
        if (isDown) {
            mousePosition = {
 
