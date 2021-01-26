@@ -1,3 +1,34 @@
+/**
+* Where utility functions are
+* @namespace Util
+*/
+class resizable {
+    static numOfInstances = 0;
+    constructor(defaultWidth, defaultHeight, defaultX, defaultY, backgroundColor){
+        numOfInstances += 1;
+        this.width = defaultWidth;
+        this.height = defaultHeight;
+        this.xCoordinate = defaultX;
+        this.yCoordinate = defaultY;
+        this.uniqueId = numOfInstances;
+        this.createOverlay();
+    }
+
+    createOverlay(){
+        const overlayDocument = document.createElement("div");
+        overlayDocument.id = "overlay" + this.uniqueId;
+        overlayDocument.className = "overlay";
+
+        const boxDocument = document.createElement("div");
+        boxDocument.id = "box" + this.uniqueId;
+        boxDocument.className = "box";
+    }
+
+
+
+}
+
+
 // Run when page is loaded
  $( document ).ready(function() {
    const element = document.querySelector('.overlay');
@@ -55,7 +86,7 @@
        isDown = false;
    }, true);
 
-   box.addEventListener('mousemove', function(event) {
+   window.addEventListener('mousemove', function(event) {
        if (isDown) {
            mousePosition = {
 
