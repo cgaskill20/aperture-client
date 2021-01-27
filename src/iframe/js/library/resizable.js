@@ -1,6 +1,6 @@
 /**
-* Where utility functions are
-* @namespace Util
+* DOCS
+*
 */
 class resizable {
     static numOfInstances = 0;
