@@ -40,6 +40,7 @@ class resizable {
 
     }
 
+    //Cleaning this up need to bind anonymous functions to instance
     addListeners(overlayDocument){
            var offset = [0,0];
            var isDown = false;
@@ -59,14 +60,14 @@ class resizable {
                 window.addEventListener('mouseup', stopResize);
 
                function resize(e) {
-                 let newWidth = width + (e.pageX - mouseXCoord)
-                 let newHeight = height - (e.pageY - mouseYCoord)
+                 let newWidth = width + (e.pageX - mouseXCoord);
+                 let newHeight = height - (e.pageY - mouseYCoord);
                  if (newWidth > minimum_size) {
-                     overlayDocument.style.width = newWidth + 'px'
+                     overlayDocument.style.width = newWidth + 'px';
                  }
                  if (newHeight > minimum_size) {
-                     overlayDocument.style.height = newHeight + 'px'
-                     overlayDocument.style.top = yCoord + (e.pageY - mouseYCoord) + 'px'
+                     overlayDocument.style.height = newHeight + 'px';
+                     overlayDocument.style.top = yCoord + (e.pageY - mouseYCoord) + 'px';
                  }
                }
 
@@ -115,6 +116,7 @@ class resizable {
 
 // Run when page is loaded
  $( document ).ready(function() {
-   const test = new resizable(500,100,"white");
+   const test = new resizable(100,100,"white");
+   const test2 = new resizable(1000,500,"black");
 
  });
