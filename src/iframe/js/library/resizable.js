@@ -4,6 +4,7 @@
 */
 class resizable {
     static numOfInstances = 0;
+    static zIndex = 1000;
 
     constructor(defaultWidth, defaultHeight, backgroundColor){
         resizable.numOfInstances += 1;
@@ -23,6 +24,7 @@ class resizable {
         overlayDocument.style.width = this.width + "px";
         overlayDocument.style.height = this.height + "px";
         overlayDocument.style.background = this.backgroundColor;
+        overlayDocument.style.zIndex = resizable.zIndex;
 
         const boxDocument = document.createElement("div");
         this.boxDocument = boxDocument;
@@ -48,6 +50,7 @@ class resizable {
            const minimum_size = 20;
 
            this.boxResizer.addEventListener('mousedown', function(e) {
+
                 isDown = false;
                 e.preventDefault();
 
@@ -77,6 +80,11 @@ class resizable {
 
            })
 
+           overlayDocument.addEventListener('mousedown', function(){
+                resizable.zIndex += 1;
+                overlayDocument.style.zIndex = resizable.zIndex;
+           });
+
            overlayDocument.addEventListener('mousedown', function(e) {
                isDown = true;
                offset = [
@@ -105,6 +113,12 @@ class resizable {
            }, true);
     }
 
+    alterZindex(){
+        if(resizable.zIndex > 2000){
+
+        }
+    }
+
 
 
 
@@ -112,11 +126,9 @@ class resizable {
 
 
 
-
-
 // Run when page is loaded
  $( document ).ready(function() {
    const test = new resizable(100,100,"white");
-   const test2 = new resizable(1000,500,"black");
+   const test2 = new resizable(300,200,"black");
 
  });
