@@ -1,9 +1,11 @@
 /**
-* DOCS
-*
+* Library for the creation and alteration of floating divs
+* Author Jean-Marc
 */
 class resizable {
+    // Allows us to add listeners to the unique overlays
     static numOfInstances = 0;
+    // Each time a overlay is clicked its Z Index increases so it is seen above all other overlays
     static zIndex = 1000;
 
     constructor(defaultWidth, defaultHeight, backgroundColor){
@@ -18,7 +20,12 @@ class resizable {
         this.movementListeners();
         this.resizeListeners();
     }
-
+     /**
+         * Generates the 3 necessary divs for the overlay and adds in the CSS based on its initialization variables
+         * @memberof resizable
+         * @method createOverlay()
+         * @returns 3 divs appended to the body of the HTML doc
+    */
     createOverlay(){
         const overlayDocument = document.createElement("div");
         this.overlayDocument = overlayDocument;
@@ -34,6 +41,7 @@ class resizable {
         boxDocument.id = "box" + this.uniqueId;
         boxDocument.className = "box";
 
+        // This is the button in the top right that allows the div's size to be altered
         const boxResizer = document.createElement("div");
         this.boxResizer = boxResizer;
         boxResizer.id = "resizer" + this.uniqueId;
@@ -45,9 +53,19 @@ class resizable {
 
     }
 
+     /**
+        * Adds in the necessary listeners for the divs to be resized
+        * @memberof resizable
+        * @method resizeListeners()
+        * @returns 3 listeners for mousemovement
+     */
     resizeListeners(){
         const minimum_size = 20;
         this.boxResizer.addEventListener('mousedown', (e) => {
+            /**
+                * Since there are the same listeners for resizing and movement we need these booleans so that resizing does
+                * not also move the div around and vice-versa
+            */
             this.isDown = true;
             this.isResizing = true;
             e.preventDefault();
@@ -75,7 +93,12 @@ class resizable {
             });
         });
     }
-
+     /**
+        * Adds in the necessary listeners for the div to be moved
+        * @memberof resizable
+        * @method movementListeners()
+        * @returns 4 listeners for mousemovement
+     */
     movementListeners(){
         var offset = [0,0];
         var mousePosition;
@@ -110,9 +133,6 @@ class resizable {
         }, true);
 
     }
-
-
-
 
 }
 
