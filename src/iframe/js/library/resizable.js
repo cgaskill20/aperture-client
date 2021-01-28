@@ -12,8 +12,11 @@ class resizable {
         this.height = defaultHeight;
         this.uniqueId = resizable.numOfInstances;
         this.backgroundColor = backgroundColor;
+        this.isDown = false;
+        this.isResizing = false;
         this.createOverlay();
-        this.addListeners(this.overlayDocument);
+        this.movementListeners();
+        this.resizeListeners();
     }
 
     createOverlay(){
@@ -42,81 +45,70 @@ class resizable {
 
     }
 
-    //Cleaning this up need to bind anonymous functions to instance
-    addListeners(overlayDocument){
-           var offset = [0,0];
-           var isDown = false;
-           var mousePosition;
-           const minimum_size = 20;
-
-           this.boxResizer.addEventListener('mousedown', function(e) {
-
-                isDown = false;
-                e.preventDefault();
-
-                let width =  parseFloat(getComputedStyle(overlayDocument, null).getPropertyValue('width').replace('px', ''));
-                let height = parseFloat(getComputedStyle(overlayDocument, null).getPropertyValue('height').replace('px', ''));
-                let yCoord = overlayDocument.getBoundingClientRect().top;
-                let mouseXCoord = e.pageX;
-                let mouseYCoord = e.pageY;
-                window.addEventListener('mousemove', resize);
-                window.addEventListener('mouseup', stopResize);
-
-               function resize(e) {
-                 let newWidth = width + (e.pageX - mouseXCoord);
-                 let newHeight = height - (e.pageY - mouseYCoord);
-                 if (newWidth > minimum_size) {
-                     overlayDocument.style.width = newWidth + 'px';
-                 }
-                 if (newHeight > minimum_size) {
-                     overlayDocument.style.height = newHeight + 'px';
-                     overlayDocument.style.top = yCoord + (e.pageY - mouseYCoord) + 'px';
-                 }
-               }
-
-               function stopResize() {
-                 window.removeEventListener('mousemove', resize)
-               }
-
-           })
-
-           overlayDocument.addEventListener('mousedown', function(){
-                resizable.zIndex += 1;
-                overlayDocument.style.zIndex = resizable.zIndex;
-           });
-
-           overlayDocument.addEventListener('mousedown', function(e) {
-               isDown = true;
-               offset = [
-                   overlayDocument.offsetLeft - e.clientX,
-                   overlayDocument.offsetTop - e.clientY
-               ];
-
-
-           }, true);
-
-           overlayDocument.addEventListener('mouseup', function() {
-               isDown = false;
-           }, true);
-
-           window.addEventListener('mousemove', function(event) {
-               if (isDown) {
-                   mousePosition = {
-
-                       x : event.clientX,
-                       y : event.clientY
-
-                   };
-                   overlayDocument.style.left = (mousePosition.x + offset[0]) + 'px';
-                   overlayDocument.style.top  = (mousePosition.y + offset[1]) + 'px';
-               }
-           }, true);
+    resizeListeners(){
+        const minimum_size = 20;
+        this.boxResizer.addEventListener('mousedown', (e) => {
+            this.isDown = true;
+            this.isResizing = true;
+            e.preventDefault();
+            let width =  parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('width').replace('px', ''));
+            let height = parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('height').replace('px', ''));
+            let yCoord = this.overlayDocument.getBoundingClientRect().top;
+            let mouseXCoord = e.pageX;
+            let mouseYCoord = e.pageY;
+            window.addEventListener('mousemove', (e) =>{
+                if(this.isDown && this.isResizing){
+                    let newWidth = width + (e.pageX - mouseXCoord);
+                    let newHeight = height - (e.pageY - mouseYCoord);
+                    if (newWidth > minimum_size) {
+                        this.overlayDocument.style.width = newWidth + 'px';
+                    }
+                    if (newHeight > minimum_size) {
+                        this.overlayDocument.style.height = newHeight + 'px';
+                        this.overlayDocument.style.top = yCoord + (e.pageY - mouseYCoord) + 'px';
+                    }
+                }
+            });
+            window.addEventListener('mouseup', ()=>{
+                this.isDown = false;
+                this.isResizing = false;
+            });
+        });
     }
 
-    alterZindex(){
-        if(resizable.zIndex > 2000){
+    movementListeners(){
+        var offset = [0,0];
+        var mousePosition;
+        this.overlayDocument.addEventListener('mousedown', ()=>{
+            resizable.zIndex += 1;
+            this.overlayDocument.style.zIndex = resizable.zIndex;
+        });
 
-        }
+        this.overlayDocument.addEventListener('mousedown', (e) => {
+            this.isDown = true;
+            offset = [
+                this.overlayDocument.offsetLeft - e.clientX,
+                this.overlayDocument.offsetTop - e.clientY
+            ];
+
+
+        }, true);
+
+        this.overlayDocument.addEventListener('mouseup', () => {
+            this.isDown = false;
+        }, true);
+
+        window.addEventListener('mousemove', (event) => {
+            if (this.isDown && !this.isResizing) {
+                mousePosition = {
+                    x : event.clientX,
+                    y : event.clientY
+                };
+                this.overlayDocument.style.left = (mousePosition.x + offset[0]) + 'px';
+                this.overlayDocument.style.top  = (mousePosition.y + offset[1]) + 'px';
+            }
+        }, true);
+
     }
 
 
@@ -125,8 +117,6 @@ class resizable {
 }
 
 
-
-// Run when page is loaded
  $( document ).ready(function() {
    const test = new resizable(100,100,"white");
    const test2 = new resizable(300,200,"black");
