@@ -17,8 +17,11 @@ class resizable {
         this.isDown = false;
         this.isResizing = false;
         this.createOverlay();
+        this.collapseButton();
+        this.test();
         this.movementListeners();
         this.resizeListeners();
+
     }
      /**
          * Generates the 3 necessary divs for the overlay and adds in the CSS based on its initialization variables
@@ -35,6 +38,8 @@ class resizable {
         overlayDocument.style.height = this.height + "px";
         overlayDocument.style.background = this.backgroundColor;
         overlayDocument.style.zIndex = resizable.zIndex;
+        overlayDocument.style.display = "none";
+        overlayDocument.style.opacity = .9;
 
         const boxDocument = document.createElement("div");
         this.boxDocument = boxDocument;
@@ -62,6 +67,7 @@ class resizable {
     resizeListeners(){
         const minimum_size = 20;
         this.boxResizer.addEventListener('mousedown', (e) => {
+        console.log('here');
             /**
                 * Since there are the same listeners for resizing and movement we need these booleans so that resizing does
                 * not also move the div around and vice-versa
@@ -134,11 +140,61 @@ class resizable {
 
     }
 
+    collapseButton(){
+        L.easyButton('<span>&starf;</span>', ()=>{
+            this.overlayDocument.style.display =  this.overlayDocument.style.display == "none" ? "block" : "none";
+
+
+        }).addTo(map);
+    }
+
+    test(){
+        this.boxDocument.innerHTML += "<canvas id='myChart' width='400' height='400'></canvas>";
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+    }
+
 }
 
 
  $( document ).ready(function() {
-   const test = new resizable(100,100,"white");
+   const test = new resizable(500,500,"white");
    const test2 = new resizable(300,200,"black");
 
  });
