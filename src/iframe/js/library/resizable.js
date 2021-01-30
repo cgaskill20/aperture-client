@@ -18,6 +18,7 @@ class resizable {
         this.isResizing = false;
         this.createOverlay();
         this.collapseButton();
+        this.resizeListeners();
         this.test();
         this.movementListeners();
         this.resizeListeners();
@@ -149,7 +150,11 @@ class resizable {
     }
 
     test(){
-        this.boxDocument.innerHTML += "<canvas id='myChart' width='400' height='400'></canvas>";
+
+         const canvas = document.createElement("div");
+         canvas.innerHTML = "<canvas id='myChart' width='400' height='400'></canvas>";
+         this.boxDocument.appendChild(canvas);
+       // this.boxDocument.innerHTML += "<canvas id='myChart' width='400' height='400'></canvas>";
         var ctx = document.getElementById('myChart').getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'bar',
