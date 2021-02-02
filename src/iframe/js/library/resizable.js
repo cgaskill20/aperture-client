@@ -7,6 +7,7 @@ class resizable {
     static numOfInstances = 0;
     // Each time a overlay is clicked its Z Index increases so it is seen above all other overlays
     static zIndex = 1000;
+    chartJS = null;
 
     constructor(defaultWidth, defaultHeight, backgroundColor){
         resizable.numOfInstances += 1;
@@ -68,7 +69,6 @@ class resizable {
     resizeListeners(){
         const minimum_size = 20;
         this.boxResizer.addEventListener('mousedown', (e) => {
-        console.log('here');
             /**
                 * Since there are the same listeners for resizing and movement we need these booleans so that resizing does
                 * not also move the div around and vice-versa
@@ -83,15 +83,19 @@ class resizable {
             let mouseYCoord = e.pageY;
             window.addEventListener('mousemove', (e) =>{
                 if(this.isDown && this.isResizing){
-                    let newWidth = width + (e.pageX - mouseXCoord);
-                    let newHeight = height - (e.pageY - mouseYCoord);
-                    if (newWidth > minimum_size) {
-                        this.overlayDocument.style.width = newWidth + 'px';
+                    this.width = width + (e.pageX - mouseXCoord);
+                    this.height = height - (e.pageY - mouseYCoord);
+                    if (this.width > minimum_size) {
+                        this.overlayDocument.style.width = this.width + 'px';
                     }
-                    if (newHeight > minimum_size) {
-                        this.overlayDocument.style.height = newHeight + 'px';
+                    if (this.height > minimum_size) {
+                        this.overlayDocument.style.height = this.height + 'px';
                         this.overlayDocument.style.top = yCoord + (e.pageY - mouseYCoord) + 'px';
+                        if(this.chartJS != null){
+                            this.test()
+                        }
                     }
+
                 }
             });
             window.addEventListener('mouseup', ()=>{
@@ -150,9 +154,9 @@ class resizable {
     }
 
     test(){
-
+        console.log("<canvas id='myChart' width="+this.width +" height="+this.height+"></canvas>");
          const canvas = document.createElement("div");
-         canvas.innerHTML = "<canvas id='myChart' width='400' height='400'></canvas>";
+         canvas.innerHTML = "<canvas id='myChart' width="+this.width +" height="+this.height+"></canvas>";
          this.boxDocument.appendChild(canvas);
        // this.boxDocument.innerHTML += "<canvas id='myChart' width='400' height='400'></canvas>";
         var ctx = document.getElementById('myChart').getContext('2d');
@@ -183,15 +187,17 @@ class resizable {
                 }]
             },
             options: {
+                responsive: true,
                 scales: {
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
+                            beginAtZero:true
                         }
                     }]
                 }
             }
         });
+        this.chartJS = myChart;
 
     }
 

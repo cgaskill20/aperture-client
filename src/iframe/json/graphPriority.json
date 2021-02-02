@@ -1,1 +1,24 @@
-[]
+[
+  {
+    "collection": "svi_county_GISJOIN",
+    "level": "county",
+    "label": "Social Vulnerability Index (County)",
+    "constraints": {
+      "RPL_THEMES": {
+        "label": "Social Vulnerability Index",
+        "priority": 10,
+        "graphTypes": ["bar", "pie", "histogram"]
+      },
+      "DBNAME": {
+        "label": "HUMAN READABLE NAME",
+        "priority": 10,
+        "graphTypes": ["bar", "pie", "histogram"]
+      },
+      "DBNAME" : {
+        "label": "HUMAN READABLE NAME",
+        "priority": 10,
+        "graphTypes": ["bar", "pie", "histogram"]
+      }
+    }
+  }
+]
