@@ -72,6 +72,11 @@ RenderInfrastructure = {
             Util.simplifyGeoJSON(geoJsonData, RenderInfrastructure.options.simplifyThreshold);
         }
         Util.fixGeoJSONID(geoJsonData);
+
+        if (RenderInfrastructure.dataFilter) {
+            RenderInfrastructure.dataFilter.add(geoJsonData);
+        }
+
         const datasource = indexData ? indexData : RenderInfrastructure.data;
         let layers = [];
         L.geoJson(geoJsonData, {
@@ -230,8 +235,13 @@ RenderInfrastructure = {
             return "#000000";
         }
         else {
-            return "noicon"
+            return "noicon";
         }
+    },
+
+    useFilter: function(filter) {
+        RenderInfrastructure.dataFilter = filter;
+        console.log(filter);
     }
 }
 

@@ -4,6 +4,7 @@ var util = require('../../../../src/iframe/js/library/apertureUtil');
 const pointGeoJSON = JSON.parse('{"geometry":{"type":"Point","coordinates":[-105.03530293462781,40.567845225922326]},"_id":{"$oid":"5f868381c2af109387d74fec"},"type":"Feature","properties":{"ZIP":"80525","POPULATION":288,"LONGITUDE":-105.03530293499995,"FT_TEACHER":18,"STATE":"CO","VAL_DATE":"2016/01/15","DISTRICTID":"803990","COUNTYFIPS":"08069","OBJECTID":99066,"ENROLLMENT":270,"STATUS":"1","NAICS_CODE":"611110","END_GRADE":"08","NCESID":"080399006573","COUNTRY":"USA","TYPE":"1","COUNTY":"LARIMER","LEVEL_":"ELEMENTARY","ST_GRADE":"KG","TELEPHONE":"(970) 568-5456","NAME":"MOUNTAIN SAGE COMMUNITY SCHOOL","VAL_METHOD":"IMAGERY","CITY":"FORT COLLINS","SHELTER_ID":"NOT AVAILABLE","ADDRESS":"2310 EAST PROSPECT ROAD","SOURCE":"http://nces.ed.gov/GLOBALLOCATOR/sch_info_popup.asp?Type=Public&ID=080399006573","SOURCEDATE":"2016/01/05","ZIP4":"NOT AVAILABLE","LATITUDE":40.56784522600003,"NAICS_DESC":"ELEMENTARY AND SECONDARY SCHOOLS","WEBSITE":"NOT AVAILABLE"},"id":"5f868381c2af109387d74fec"}');
 const lineGeoJSON = JSON.parse('{"geometry":{"type":"LineString","coordinates":[[-104.80239,40.37141],[-104.80694,40.94508],[-104.74965,40.96079],[-104.2806,40.98829],[-104.08579,40.99178],[-102.99201,41.20027]]},"_id":{"$oid":"5f16543c4b8c2a92130731c6"},"id":30808,"type":"Feature","properties":{"Operator":"Tallgrass Interstate Gas Transmission","Shape_Leng":0.88671076607,"TYPEPIPE":"Interstate","Shape__Len":290626.23415315}}');
 const polyGeoJSON = JSON.parse('{"geometry":{"type":"Polygon","coordinates":[[[-105.13885544065886,40.40299726423427],[-105.13875448713502,40.40303334703509],[-105.13844432906546,40.40308151025965],[-105.13885544065886,40.40299726423427]]]},"_id":{"$oid":"5f3a83a15c90881617f44ec9"},"type":"Feature","properties":{"VELOCITY":-9999,"DFIRM_ID":"08069C","BFE_REVERT":-9999,"SFHA_TF":"T","VERSION_ID":"1.1.1.0","DUAL_ZONE":"F","SOURCE_CIT":"08069C_FIRM1","STUDY_TYP":"NP","FLD_ZONE":"AE","DEP_REVERT":-9999,"STATIC_BFE":-9999,"DEPTH":-9999},"id":"5f3a83a15c90881617f44ec9"}');
+const multiPolyGeoJSON = JSON.parse('{"geometry":{"type":"MultiPolygon","coordinates":[[[[-105.13885544065886,40.40299726423427],[-105.13875448713502,40.40303334703509],[-105.13844432906546,40.40308151025965],[-105.13885544065886,40.40299726423427]]], [[[105.13, 40.40], [105.60, 41.50]]]]},"_id":{"$oid":"5f3a83a15c90881617f44ec9"},"type":"Feature","properties":{"VELOCITY":-9999,"DFIRM_ID":"08069C","BFE_REVERT":-9999,"SFHA_TF":"T","VERSION_ID":"1.1.1.0","DUAL_ZONE":"F","SOURCE_CIT":"08069C_FIRM1","STUDY_TYP":"NP","FLD_ZONE":"AE","DEP_REVERT":-9999,"STATIC_BFE":-9999,"DEPTH":-9999},"id":"5f3a83a15c90881617f44ec9"}');
 const polyGeoJSONClone = JSON.parse(JSON.stringify(polyGeoJSON));
 
 describe('Util', function () {
@@ -124,4 +125,51 @@ describe('Util', function () {
             );
         });
     });
+    describe('mirrorLatLng()', () => {
+        it('swaps entires when passed an array', () => {
+            let latlng = [20, 30];
+            assert(util.Util.mirrorLatLng(latlng)[0] === 30);
+            assert(util.Util.mirrorLatLng(latlng)[1] === 20);
+        });
+
+        it('swaps entires when passed an object', () => {
+            let latlng = { lat: 20, lng: 30, };
+            assert(util.Util.mirrorLatLng(latlng).lat === 30);
+            assert(util.Util.mirrorLatLng(latlng).lng === 20);
+        });
+    });
+    describe('arePointsApproximatelyInBounds()', () => {
+        it('can guess for small numbers of points', () => {
+            this.timeout(2000);
+            let points = [
+                [1, 1],
+                [2, 1],
+                [3, 1], 
+                [4, 1],
+                [5, 1],
+                [6, 1],
+            ];
+            let bounds = L.latLngBounds(
+                [3.5, 3],
+                [5.5, -3],
+            );
+            let badbounds = L.latLngBounds(
+                [7.5, 3],
+                [8.5, -3],
+            );
+            assert(util.Util.arePointsApproximatelyInBounds(points, bounds));
+            assert(!util.Util.arePointsApproximatelyInBounds(points, badbounds));
+        });
+    });
+
+    describe('isInBounds()', () => {
+        it('can determine bounds for multipolygon', () => {
+            let entry = multiPolyGeoJSON;
+            debugger;
+            assert(util.Util.isInBounds(entry, L.latLngBounds([30, -100], [50, -120])));
+            assert(util.Util.isInBounds(entry, L.latLngBounds([30, 100], [50, 120])));
+            assert(!util.Util.isInBounds(entry, L.latLngBounds([30, 20], [50, 30])));
+        });
+    });
 });
+

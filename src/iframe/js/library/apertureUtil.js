@@ -7,7 +7,8 @@ Util = {
     FEATURETYPE: {
         point: 0,
         lineString: 1,
-        polygon: 2
+        polygon: 2,
+        multiPolygon: 3,
     },
     /**
      * What is the best latLng point for a GeoJSON feature?
@@ -21,6 +22,11 @@ Util = {
         latlng = [];
         if (type === this.FEATURETYPE.polygon) {
             let pos = L.latLngBounds(feature.geometry.coordinates[0]).getCenter();
+            latlng.push(pos.lat);
+            latlng.push(pos.lng);
+        }
+        else if (type === this.FEATURETYPE.multiPolygon) {
+            let pos = L.latLngBounds(feature.geometry.coordinates[0][0]).getCenter();
             latlng.push(pos.lat);
             latlng.push(pos.lng);
         }
@@ -42,12 +48,15 @@ Util = {
      * What type is a GeoJSON feature?
      * @memberof Util
      * @method getFeatureType
-     * @param {object} feature GeoJSON feature, a latlng point will be extracted. Can be a point, linestring, or polygon.
+     * @param {object} feature GeoJSON feature, a latlng point will be extracted. 
+     *                         Can be a point, linestring, polygon, or multipolygon.
      * @returns {number} Enum from FEATURETYPE or -1 if not found
      */
     getFeatureType: function (feature) {
         if (feature.geometry && feature.geometry.type) {
             switch (feature.geometry.type) {
+                case "MultiPolygon":
+                    return this.FEATURETYPE.multiPolygon;
                 case "Polygon":
                     return this.FEATURETYPE.polygon;
                 case "LineString":
@@ -329,6 +338,91 @@ Util = {
         return [[b._southWest.lng, b._southWest.lat], [b._southWest.lng, b._northEast.lat],
         [b._northEast.lng, b._northEast.lat], [b._northEast.lng, b._southWest.lat],
         [b._southWest.lng, b._southWest.lat]];
+    },
+
+    /**
+      * Swaps the latitude and longitude of a latlng object or array.
+      * @memberof Util
+      * @method mirrorLatLng
+      * @param {(LatLng|Array<Number>)} the LatLng object or array with latitude and longitude
+      * @returns {(LatLng|Array<Number>)} the argument with the lat/lng properties switched
+      */
+    mirrorLatLng(latlng) {
+        if (Array.isArray(latlng)) {
+            return [latlng[1], latlng[0]];
+        } else {
+            return {
+                lat: latlng.lng,
+                lng: latlng.lat,
+            };
+        }
+    },
+
+    /**
+      * Swaps the latitude and longitude on both edges of a latlng bounds object.
+      * @memberof Util
+      * @method mirrorLatLngBounds
+      * @param {(LatLng|Array<Number>)} the LatLng bounds
+      * @returns {(LatLng|Array<Number>)} the argument with the lat/lng properties switched on its northwest and southeast points
+      */
+    mirrorLatLngBounds(bounds) {
+        return L.latLngBounds( 
+            Util.mirrorLatLng(bounds.getNorthWest()), 
+            Util.mirrorLatLng(bounds.getSouthEast())
+        );
+    },
+
+    /** 
+      * Given a list of points (in leaflet latlng form) and a leaftlet latlng
+      * bounds, determine _approximately_ if at least one of the points is 
+      * inside the bounds.
+      * @memberof Util
+      * @method arePointsApproximatelyInBounds
+      * @param {Array<LatLng>} points 
+      * @param {Leaflet Bounds} bounds
+      * @returns {boolean} whether or not the function estimates at least one point is in the bounds
+      */
+    arePointsApproximatelyInBounds(points, bounds) {
+        let sampleSpacing = Math.floor(points.length / 10);
+        // ensure sampleSpacing is not zero, or else the bad will happen
+        sampleSpacing = (sampleSpacing === 0) ? 1 : sampleSpacing;
+
+        for (let i = 0; i < points.length; i += sampleSpacing) {
+            if (bounds.contains(points[i])) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    /** Given a single entry of GeoJSON data and a leaflet bounds object, determines
+      * (approximately) if the entry's geometry intersects the bounds at all.
+      * If the bounds object is null or undefined, this just returns true.
+      * @memberof MapDataFilter
+      * @method isInBounds
+      * @param {object} entry - a single entry of GeoJSON data, as directly from the database
+      * @param {(Leaflet Bounds|null)} bounds
+      * @returns {boolean} true if the entry seems to intersect the bounds at all, false otherwise
+      */
+    isInBounds(entry, bounds) {
+        if (!bounds) {
+            return true;
+        }
+
+        const featureType = Util.getFeatureType(entry);
+        switch (featureType) {
+            case Util.FEATURETYPE.point: {
+                let point = [entry.geometry.coordinates[1], entry.geometry.coordinates[0]];
+                return bounds.contains(point);
+            }
+            case Util.FEATURETYPE.multiPolygon: {
+                let polygons = entry.geometry.coordinates;
+                bounds = Util.mirrorLatLngBounds(bounds);
+                return polygons.find(polygon => Util.arePointsApproximatelyInBounds(polygon[0], bounds));
+            }
+        }
+
+        return false;
     }
 }
 
