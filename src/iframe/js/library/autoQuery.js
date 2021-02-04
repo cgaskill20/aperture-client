@@ -124,7 +124,7 @@ class AutoQuery {
     reQuery() {
         if (this.enabled) {
             this.clearMapLayers();
-            this.killStreams();
+            this.sustainQuerier.killAllStreamsOverCollection(this.collection);
             this.query();
         }
     }
@@ -204,17 +204,6 @@ class AutoQuery {
         RenderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
         this.mapLayers = [];
         this.layerIDs = [];
-    }
-
-    /**
-      * Kills any streams (queries) which are currently running.
-      * @memberof AutoQuery
-      * @method killStreams
-      */
-    killStreams() {
-        for (const stream of this.streams)
-            stream.cancel();
-        this.streams = [];
     }
 
     /**

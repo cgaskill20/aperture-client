@@ -88,7 +88,7 @@ class GeometryLoader {
       * @method runQuery
       */
     runQuery() {
-        this.killAllStreams();
+        this.sustainQuerier.killAllStreamsOverCollection(this.collection);
         this.getData();
     }
 
@@ -164,18 +164,6 @@ class GeometryLoader {
             indx++;
         }
         return -1;
-    }
-
-    /**
-      * Kills all streams (queries) which are currently running
-      * @memberof GeometryLoader
-      * @method killAllStreams
-      */
-    killAllStreams() {
-        for (const stream of this.streams) {
-            stream.cancel();
-        }
-        this.streams = [];
     }
 
     /**
