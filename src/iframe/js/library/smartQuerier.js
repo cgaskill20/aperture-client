@@ -80,15 +80,68 @@ class SmartQuerier {
         this.activeStreams = [];
     }
 
-    query(collection, queryText, onDataCallback) {
+    query(collection, queryParams, onDataCallback) {
+        let modParams = this.getGISJOINIgnorePipeline(collection).concat(queryParams);
         const stream = this.querier.getStreamForQuery(SmartQuerier.dbMachine, 
                                                       SmartQuerier.dbPort, 
                                                       collection, 
-                                                      queryText);
-        stream.on('data', onDataCallback);
-        this.activeStreams.push(stream);
+                                                      JSON.stringify(modParams));
+        let onResponseCallback = (response) => {
+            const data = JSON.parse(response.getData());
+            this.addToCache(collection, data);
+            onDataCallback(data);
+        }
+        onResponseCallback.bind(this);
+        stream.on('data', onResponseCallback);
+
+        // Activate the callback for data that already exists
+        Object.values(this.getCollectionBucket(collection)).forEach((GISBucket) => {
+            GISBucket.forEach((item) => {
+                onDataCallback(item);
+            })
+        });
+
+        this.activeStreams.push({ "stream": stream, "collection": collection });
+        return stream;
     }
 
-    
+    getGISJOINIgnorePipeline(collection) {
+        let collectionBucket = this.getCollectionBucket(collection);
+        let GISJOINList = Object.keys(collectionBucket);
+
+        return [{
+            "$match": { "GISJOIN": { "$nin": GISJOINList } } 
+        }];
+    }
+
+    addToCache(collection, data) {
+        let bucket = this.getGISJOINBucket(collection, data.GISJOIN);
+        bucket.push(data);
+    }
+
+    getCollectionBucket(collection) {
+        let bucket = this.cache[collection];
+        if (!bucket) {
+            bucket = {};
+            this.cache[collection] = bucket;
+        }
+        return bucket;
+    }
+
+    getGISJOINBucket(collection, GISJOIN) {
+        let bucket = this.getCollectionBucket(collection);
+        let GISBucket = bucket[GISJOIN];
+        if (!GISBucket) {
+            bucket[GISJOIN] = [];
+            GISBucket = bucket[GISJOIN];
+        }
+        return GISBucket;
+    }
+
+    killAllStreamsOverCollection(collection) {
+        this.activeStreams.filter((s) => s.collection === collection)
+            .forEach((s) => { s.cancel(); });
+        this.activeStreams = this.activeStreams.filter((s) => s.collection !== collection);
+    }
 }
 

@@ -187,10 +187,8 @@ class AutoQuery {
         }
         q = q.concat(this.buildConstraintPipeline());
 
-        this.sustainQuerier.query(this.collection, JSON.stringify(q), response => {
-            const data = JSON.parse(response.getData());
+        this.sustainQuerier.query(this.collection, q, data => {
             Util.normalizeFeatureID(data);
-
             if (!this.layerIDs.includes(data.id)) {
                 this.renderData(data, forcedGeometry);
             }
