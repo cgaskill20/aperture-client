@@ -63,7 +63,7 @@ class AutoQuery {
       */
     onRemove() {
         this.clearMapLayers();
-        this.killStreams();
+        this.sustainQuerier.killAllStreamsOverCollection(this.collection);
         this.layerIDs = [];
         this.enabled = false;
     }

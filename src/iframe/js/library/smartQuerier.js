@@ -57,6 +57,11 @@ END OF TERMS AND CONDITIONS
 
 let _querier;
 
+/**
+  * Gets a SmartQuerier instance for the database.
+  * ALL query requests should be made through this instance.
+  * @returns {Object} the SmartQuerier that should be used for all requests
+  */
 function getSustainQuerier() {
     if (!_querier) {
         _querier = new SmartQuerier()
@@ -66,46 +71,113 @@ function getSustainQuerier() {
 
 /**
   * @class  SmartQuerier
-  * @file   High-level wrapper for the sustain querier
+  * @file   High-level wrapper for the sustain querier. This is a singleton class.
   * @author Pierce Smith
-  * @dependencies
   */
 class SmartQuerier {
     static dbMachine = "lattice-46";
     static dbPort = 27017;
+    static bucketMaxSize = 100;
 
+    /**
+      * Constructs a SmartQuerier.
+      * This method should NOT be called directly. Use getSustainQuerier to get
+      * an instance of a SmartQuerier.
+      * @class SmartQuerier
+      * @method constructor
+      * @see getSustainQuerier
+      */
     constructor() {
         this.querier = sustain_querier();
         this.cache = {};
         this.activeStreams = [];
     }
 
+    /**
+     * Perform a query on the database, using the given collection, mongodb
+     * aggregate query, and callbacks for data receiving and stream closure.
+     * @memberof SmartQuerier
+     * @method query
+     * @param {string} collection The name of the collection to query over
+     * @param {JSON} queryParams The mongodb aggregate query, as a JS object
+     * @param {Function} onDataCallback The callback to fire when data is recieved. It should take a single parameter, which is the PARSED JSON of the response. 
+     * @param {Function} onStreamEndCallback The callback to fire when the stream dies.
+     * @returns {Object} The associated stream. Note you don't need to use this - the callbacks should be sufficient to process data in most situations.
+     */
     query(collection, queryParams, onDataCallback, onStreamEndCallback) {
-        let modParams = this.getGISJOINIgnorePipeline(collection).concat(queryParams);
+        queryParams = this.attachGISJOINIgnorePipeline(collection, queryParams);
         const stream = this.querier.getStreamForQuery(SmartQuerier.dbMachine, 
-                                                      SmartQuerier.dbPort, 
-                                                      collection, 
-                                                      JSON.stringify(modParams));
-        let onResponseCallback = (response) => {
-            const data = JSON.parse(response.getData());
-            this.addToCache(collection, data);
-            onDataCallback(data);
-        }
-        onResponseCallback.bind(this);
-        stream.on('data', onResponseCallback);
+            SmartQuerier.dbPort, collection, JSON.stringify(queryParams));
+
+        stream.on('data', this.wrapResponseCallback(collection, onDataCallback));
         stream.on('end', onStreamEndCallback);
 
-        // Activate the callback for data that already exists
-        Object.values(this.getCollectionBucket(collection)).forEach((GISBucket) => {
-            GISBucket.forEach((item) => {
-                onDataCallback(item);
-            })
-        });
+        this.passCachedData(collection, onDataCallback);
 
         this.activeStreams.push({ "stream": stream, "collection": collection });
         return stream;
     }
 
+    /**
+      * Given a callback that fires on new data, wraps it to correctly handle
+      * responses from the database and integrate with the cache.
+      * This wrapped callback should be called on stream events, while the raw
+      * on data callback should be called elsewhere.
+      * @memberof AutoQuery
+      * @method wrapResponseCallback
+      * @param {Function} callback Callback to fire on data recieve
+      * @returns {Function} A callback that can be passed directly to stream.on('data' ...
+      */
+    wrapResponseCallback(collection, callback) {
+        let onResponseCallback = (response) => {
+            console.log(response);
+            const data = JSON.parse(response.getData());
+            this.addToCache(collection, data);
+            callback(data);
+        }
+        onResponseCallback.bind(this);
+        return onResponseCallback;
+    }
+
+    /**
+      * Passes any cached data for the given collection into the callback.
+      * @param {Function} callback Callback to fire on data recieve
+      */
+    passCachedData(collection, callback) {
+        Object.values(this.getCollectionBucket(collection)).forEach((GISBucket) => {
+            GISBucket.forEach((item) => {
+                callback(item);
+            })
+        });
+    }
+
+    /** 
+      * Given a particular collection and a set of mongodb query parameters,
+      * attacks a pipeline to the beginning that ignores GISJOINS which have already
+      * been queried.
+      * @memberof SmartQuerier
+      * @method attachGISJOINIgnorePipeline
+      * @param {string} collection
+      * @param {string} params Stringified mongodb query
+      * @returns The given params, but with a GISJOIN ignore pipeline prepended
+      */
+    attachGISJOINIgnorePipeline(collection, params) {
+        let pipeline = this.getGISJOINIgnorePipeline(collection);
+        // Don't concatenate an empty list of params, since this breaks everything
+        if (params.length == 0) {
+            return pipeline;
+        }
+        return pipeline.concat(params);
+    }
+
+    /** 
+      * Creates the first part of a mongodb aggregate query that ignores the
+      * GISJOINS that have already been queried, for a given collection.
+      * @memberof SmartQuerier
+      * @method getGISJOINIgnorePipeline
+      * @param {string} collection The collection to filter within
+      * @returns {Array<Object>} A single-element array with the GISJOIN ignore query
+      */
     getGISJOINIgnorePipeline(collection) {
         let collectionBucket = this.getCollectionBucket(collection);
         let GISJOINList = Object.keys(collectionBucket);
@@ -115,11 +187,39 @@ class SmartQuerier {
         }];
     }
 
+    /**
+      * Adds a piece of data to the cache for a specific collection.
+      * The cache is structured as follows:
+      * {
+      *   collection1: {
+      *     GISJOIN1: [ data with that GISJOIN ... ],
+      *     GISJOIN2: [ data with that GISJOIN ... ],
+      *     ...
+      *   }, 
+      *   collection2: {
+      *     GISJOIN1: [ data with that GISJOIN ... ],
+      *     GISJOIN2: [ data with that GISJOIN ... ],
+      *     ...
+      *   }
+      * }
+      * @memberof SmartQuerier
+      * @method addToCache
+      */
     addToCache(collection, data) {
         let bucket = this.getGISJOINBucket(collection, data.GISJOIN);
         bucket.push(data);
+
+        if (bucket.length > SmartQuerier.maxBucketSize) {
+            bucket.shift();
+        }
     }
 
+    /** 
+      * Gets the bucket object for a given collection, or creates it if it doesn't exist yet.
+      * See the addToCache method for a description of how the cache is layed out.
+      * @param {string} collection The collection for which to get the bucket
+      * @return {Object} The collection's bucket.
+      */
     getCollectionBucket(collection) {
         let bucket = this.cache[collection];
         if (!bucket) {
@@ -129,6 +229,13 @@ class SmartQuerier {
         return bucket;
     }
 
+    /**
+      * Gets a specific GISJOIN bucket in a collection, or creates it if it doesn't exist yet.
+      * See the addToCache method for a description of how the cache is layed out.
+      * @param {string} collection The collection for which to get the bucket
+      * @param {string} GISJOIN The specific GISJOIN for which to get the bucket
+      * @return {Array<Object>} The array of data items that have the given GISJOIN for the given collection
+      */
     getGISJOINBucket(collection, GISJOIN) {
         let bucket = this.getCollectionBucket(collection);
         let GISBucket = bucket[GISJOIN];
@@ -139,9 +246,15 @@ class SmartQuerier {
         return GISBucket;
     }
 
+    /**
+      * Cancel every stream over the given collection.
+      * @memberof SmartQuerier
+      * @method killAllStreamsOverCollection
+      * @param {string} collection The name of the collection to kill streams for
+      */
     killAllStreamsOverCollection(collection) {
         this.activeStreams.filter((s) => s.collection === collection)
-            .forEach((s) => { s.cancel(); });
+            .forEach((s) => { s.stream.cancel(); });
         this.activeStreams = this.activeStreams.filter((s) => s.collection !== collection);
     }
 }
