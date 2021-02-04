@@ -80,7 +80,7 @@ class SmartQuerier {
         this.activeStreams = [];
     }
 
-    query(collection, queryParams, onDataCallback) {
+    query(collection, queryParams, onDataCallback, onStreamEndCallback) {
         let modParams = this.getGISJOINIgnorePipeline(collection).concat(queryParams);
         const stream = this.querier.getStreamForQuery(SmartQuerier.dbMachine, 
                                                       SmartQuerier.dbPort, 
@@ -93,6 +93,7 @@ class SmartQuerier {
         }
         onResponseCallback.bind(this);
         stream.on('data', onResponseCallback);
+        stream.on('end', onStreamEndCallback);
 
         // Activate the callback for data that already exists
         Object.values(this.getCollectionBucket(collection)).forEach((GISBucket) => {
