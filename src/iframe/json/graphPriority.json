@@ -7,9 +7,75 @@
         "label": "Heatwave Temperature",
         "priority": 1,
         "graphTypes": ["bar", "histogram", "line"],
-        "buckets":[10,20,30,40,50,60,70,80,90],
+        "buckets":[[89,95],[95,101],[101,107],[107,113],[113,119]],
         "color scheme": []
       }
+    }
+  },
+  {
+    "collection": "svi_county_GISJOIN",
+    "label": "Social Vulnerability Index (County)",
+    "constraints": {
+      "RPL_THEMES": {
+        "label": "Social Vulnerability Index",
+        "priority": 2,
+        "graphTypes": ["bar", "histogram"],
+        "buckets": [[0.0,0.2],[0.2,0.4],[0.4,0.6],[0.6,0.8],[0.8,1.0]],
+        "color scheme": []
+      }
+    }
+  },
+  {
+    "collection": "tract_median_household_income",
+    "label": "Tract Median Household Income",
+    "constraints": {
+      "2010_median_household_income": {
+        "label": "Median Household Income in 2000",
+        "priority": 3,
+        "graphTypes": ["bar", "histogram"],
+        "buckets": [[2499,42000],[42000,81500],[81500,121000],[121000,160500],[160500,200000]],
+        "color scheme": []
+      }
+    }
+  },
+  {
+    "collection": "svi_tract_GISJOIN",
+    "label": "Social Vulnerability Index (Tract)",
+    "constraints": {
+      "RPL_THEMES": {
+        "label": "Social Vulnerability Index",
+        "priority": 4,
+        "graphTypes": ["bar", "histogram"],
+        "buckets": [[0.0,0.2],[0.2,0.4],[0.4,0.6],[0.6,0.8],[0.8,1.0]],
+        "color scheme": []
+      }
+    }
+  },
+  {
+    "collection": "tract_median_age",
+    "label": "Median Tract Age",
+    "constraints": {
+      "median_age_total": {
+        "label": "Median age Male/Female",
+        "priority": 5,
+        "graphTypes": ["bar", "histogram"],
+        "buckets": [[0,18],[18,36],[36,54],[54,72],[72,90]],
+        "color scheme": []
+      },
+      "median_age_female": {
+          "label": "Median age Female",
+          "priority": 6,
+          "graphTypes": ["bar", "histogram"],
+          "buckets": [[0,18],[18,36],[36,54],[54,72],[72,90]],
+          "color scheme": []
+        },
+        "median_age_male": {
+            "label": "Median age Male",
+            "priority": 7,
+            "graphTypes": ["bar", "histogram"],
+            "buckets": [[0,18],[18,36],[36,54],[54,72],[72,90]],
+            "color scheme": []
+          }
     }
   }
 ]
