@@ -1,23 +1,14 @@
 [
   {
-    "collection": "svi_county_GISJOIN",
-    "level": "county",
-    "label": "Social Vulnerability Index (County)",
+    "collection": "future_heat",
+    "label": "Heatwave Temperature",
     "constraints": {
-      "RPL_THEMES": {
-        "label": "Social Vulnerability Index",
-        "priority": 10,
-        "graphTypes": ["bar", "pie", "histogram"]
-      },
-      "DBNAME": {
-        "label": "HUMAN READABLE NAME",
-        "priority": 10,
-        "graphTypes": ["bar", "pie", "histogram"]
-      },
-      "DBNAME" : {
-        "label": "HUMAN READABLE NAME",
-        "priority": 10,
-        "graphTypes": ["bar", "pie", "histogram"]
+      "temp": {
+        "label": "Heatwave Temperature",
+        "priority": 1,
+        "graphTypes": ["bar", "histogram", "line"],
+        "buckets":[10,20,30,40,50,60,70,80,90],
+        "color scheme": []
       }
     }
   }

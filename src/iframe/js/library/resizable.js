@@ -3,6 +3,7 @@
 * Author Jean-Marc
 */
 class resizable {
+    minimum_size = 20;
     // Allows us to add listeners to the unique overlays
     static numOfInstances = 0;
     // Each time a overlay is clicked its Z Index increases so it is seen above all other overlays
@@ -22,15 +23,14 @@ class resizable {
         this.resizeListeners();
         this.test();
         this.movementListeners();
-        this.resizeListeners();
 
     }
-     /**
-         * Generates the 3 necessary divs for the overlay and adds in the CSS based on its initialization variables
-         * @memberof resizable
-         * @method createOverlay()
-         * @returns 3 divs appended to the body of the HTML doc
-    */
+    /**
+     * Generates the 3 necessary divs for the overlay and adds in the CSS based on its initialization variables
+     * @memberof resizable
+     * @method createOverlay()
+     * @returns 3 divs appended to the body of the HTML doc
+     */
     createOverlay(){
         const overlayDocument = document.createElement("div");
         this.overlayDocument = overlayDocument;
@@ -60,42 +60,25 @@ class resizable {
 
     }
 
-     /**
-        * Adds in the necessary listeners for the divs to be resized
-        * @memberof resizable
-        * @method resizeListeners()
-        * @returns 3 listeners for mousemovement
+    /**
+     * Adds in the necessary listeners for the divs to be resized
+     * @memberof resizable
+     * @method resizeListeners()
+     * @returns 3 listeners for mousemovement
      */
     resizeListeners(){
-        const minimum_size = 20;
         this.boxResizer.addEventListener('mousedown', (e) => {
             /**
-                * Since there are the same listeners for resizing and movement we need these booleans so that resizing does
-                * not also move the div around and vice-versa
-            */
+             * Since there are the same listeners for resizing and movement we need these booleans so that resizing does
+             * not also move the div around and vice-versa
+             */
             this.isDown = true;
             this.isResizing = true;
             e.preventDefault();
-            let width =  parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('width').replace('px', ''));
-            let height = parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('height').replace('px', ''));
-            let yCoord = this.overlayDocument.getBoundingClientRect().top;
-            let mouseXCoord = e.pageX;
-            let mouseYCoord = e.pageY;
+            let dimensions = this.calculateDimensions(e);
             window.addEventListener('mousemove', (e) =>{
                 if(this.isDown && this.isResizing){
-                    this.width = width + (e.pageX - mouseXCoord);
-                    this.height = height - (e.pageY - mouseYCoord);
-                    if (this.width > minimum_size) {
-                        this.overlayDocument.style.width = this.width + 'px';
-                    }
-                    if (this.height > minimum_size) {
-                        this.overlayDocument.style.height = this.height + 'px';
-                        this.overlayDocument.style.top = yCoord + (e.pageY - mouseYCoord) + 'px';
-                        if(this.chartJS != null){
-                            this.test()
-                        }
-                    }
-
+                    this.changeBoxSize(e, dimensions);
                 }
             });
             window.addEventListener('mouseup', ()=>{
@@ -104,15 +87,47 @@ class resizable {
             });
         });
     }
-     /**
-        * Adds in the necessary listeners for the div to be moved
-        * @memberof resizable
-        * @method movementListeners()
-        * @returns 4 listeners for mousemovement
+    /**
+     * Calculates dimensions for resize, only because the resize function needed less lines
+     * @memberof resizable
+     * @method calculateDimensions
+     * @param {event} e - the current position of the mouse
+     * @returns 4 listeners for mousemovement
+     */
+    calculateDimensions(e){
+        let dimensions = [];
+        //Calculates the width
+        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('width').replace('px', '')));
+        // Calculates the height
+        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('height').replace('px', '')));
+        // Calculates the Y coordinate
+        dimensions.push(this.overlayDocument.getBoundingClientRect().top);
+        // Calculates the mouse X and Y coordinate
+        dimensions.push(e.pageX);
+        dimensions.push(e.pageY);
+        return dimensions;
+    }
+
+    changeBoxSize(e, dimensions){
+        this.width = dimensions[0] + (e.pageX - dimensions[3]);
+        this.height = dimensions[1] - (e.pageY - dimensions[4]);
+        if (this.width > this.minimum_size) {
+            this.overlayDocument.style.width = this.width + 'px';
+        }
+        if (this.height > this.minimum_size) {
+            this.overlayDocument.style.height = this.height + 'px';
+            this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
+        }
+    }
+    /**
+     * Adds in the necessary listeners for the div to be moved
+     * @memberof resizable
+     * @method movementListeners()
+     * @returns 4 listeners for mousemovement
      */
     movementListeners(){
-        var offset = [0,0];
-        var mousePosition;
+        let offset = [0,0];
+        let mousePosition;
         this.overlayDocument.addEventListener('mousedown', ()=>{
             resizable.zIndex += 1;
             this.overlayDocument.style.zIndex = resizable.zIndex;
@@ -125,7 +140,6 @@ class resizable {
                 this.overlayDocument.offsetTop - e.clientY
             ];
 
-
         }, true);
 
         this.overlayDocument.addEventListener('mouseup', () => {
@@ -134,31 +148,32 @@ class resizable {
 
         window.addEventListener('mousemove', (event) => {
             if (this.isDown && !this.isResizing) {
-                mousePosition = {
-                    x : event.clientX,
-                    y : event.clientY
-                };
-                this.overlayDocument.style.left = (mousePosition.x + offset[0]) + 'px';
-                this.overlayDocument.style.top  = (mousePosition.y + offset[1]) + 'px';
+                mousePosition = this.moveBox(event, mousePosition, offset);
             }
         }, true);
 
     }
 
+    moveBox(event, mousePosition, offset){
+        mousePosition = {
+            x : event.clientX,
+            y : event.clientY
+        };
+        this.overlayDocument.style.left = (mousePosition.x + offset[0]) + 'px';
+        this.overlayDocument.style.top  = (mousePosition.y + offset[1]) + 'px';
+        return mousePosition;
+    }
+
     collapseButton(){
         L.easyButton('<span>&starf;</span>', ()=>{
             this.overlayDocument.style.display =  this.overlayDocument.style.display == "none" ? "block" : "none";
-
-
         }).addTo(map);
     }
 
     test(){
-        console.log("<canvas id='myChart' width="+this.width +" height="+this.height+"></canvas>");
-         const canvas = document.createElement("div");
-         canvas.innerHTML = "<canvas id='myChart' width="+this.width +" height="+this.height+"></canvas>";
-         this.boxDocument.appendChild(canvas);
-       // this.boxDocument.innerHTML += "<canvas id='myChart' width='400' height='400'></canvas>";
+        /*const canvas = document.createElement("div");
+        canvas.innerHTML = "<canvas id='myChart' width="+this.width +" height="+this.height+"></canvas>";
+        this.boxDocument.appendChild(canvas);
         var ctx = document.getElementById('myChart').getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'bar',
@@ -197,15 +212,15 @@ class resizable {
                 }
             }
         });
-        this.chartJS = myChart;
+        this.chartJS = myChart;*/
 
     }
 
 }
 
 
- $( document ).ready(function() {
-   const test = new resizable(500,500,"white");
-   const test2 = new resizable(300,200,"black");
+$( document ).ready(function() {
+    const test = new resizable(500,500,"white");
+    const test2 = new resizable(300,200,"black");
 
- });
+});
