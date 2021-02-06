@@ -77,5 +77,77 @@
             "color scheme": []
           }
       }
+  },
+  {
+    "collection": "tract_total_population",
+    "label": "Total Population",
+    "constraints": {
+      "2010_total_population": {
+        "label": "2010 Population",
+        "priority": 8,
+        "graphTypes": ["bar", "histogram"],
+        "buckets": [[0,2000],[2000,4000],[4000,6000],[6000,8000],[8000,10000]],
+        "color scheme": []
+      }
+    }
+  },
+  {
+    "collection": "air_quality_avg",
+    "label": "Particulate Matter Air Quality Index",
+    "constraints": {
+      "avgAqi": {
+        "label": "Average Air Quality Index",
+        "priority": 9,
+        "graphTypes": ["bar", "histogram"],
+        "buckets": [[2,35.4],[35.4,68.8],[68.8,102.2],[102.2,135.6],[135.6,159]],
+        "color scheme": []
+      }
+    }
+  },
+  {
+    "collection": "public_schools",
+    "label": "Public Schools",
+    "constraints": {
+      "properties.ENROLLMENT": {
+        "label": "Total Students",
+        "priority": 10,
+        "graphTypes": ["bar", "histogram"],
+        "buckets": [[0,3000],[3000,6000],[6000,9000],[9000,12000],[12000,1500]],
+        "color scheme": []
+      },
+      "properties.FT_TEACHER": {
+        "label": "Faculty Count",
+        "priority": 11,
+        "graphTypes": ["bar", "histogram"],
+        "buckets": [[0,300],[300,600],[600,900],[900,1200],[1200,1500]],
+        "color scheme": []
+      }
+    }
+  },
+  {
+    "collection": "dams_geo",
+    "label": "Dams",
+    "constraints": {
+      "properties.STR_HEIGHT": {
+        "label": "Dam Height",
+        "priority": 12,
+        "graphTypes": ["bar", "histogram"],
+        "buckets": [[0,154],[154,308],[308,462],[462,616],[616,770]],
+        "color scheme": []
+      }
+    }
+  },
+  {
+    "collection": "hospitals_geo",
+    "label": "Hospitals",
+    "constraints": {
+      "properties.BEDS": {
+        "label": "# of Hospital Beds",
+        "priority": 13,
+        "graphTypes": ["bar", "histogram"],
+        "buckets": [[0,318],[318,636],[636,954],[954,1272],[1272,1590]],
+        "color scheme": []
+      }
+    }
   }
 ]
