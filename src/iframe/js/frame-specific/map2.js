@@ -19,7 +19,6 @@ var tiles2 = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/
     maxZoom: 18
 }).addTo(map);
 
-
 var sidebar = L.control.sidebar('sidebar', {
     position: 'right'
 }).addTo(map);
@@ -100,9 +99,6 @@ map.on("move", function (e) {
 map.on("zoomend", function () {
     parent.setGlobalPositionFORCE(map.getCenter(), MAPNUMBER);
 });
-
-
-
 
 //-----------
 var thisMapsSetter = function (view, zoom) {
