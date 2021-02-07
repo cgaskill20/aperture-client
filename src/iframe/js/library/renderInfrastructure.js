@@ -74,7 +74,6 @@ RenderInfrastructure = {
         Util.fixGeoJSONID(geoJsonData);
 
         if (RenderInfrastructure.dataFilter) {
-            console.log(geoJsonData);
             RenderInfrastructure.dataFilter.add(geoJsonData);
         }
 

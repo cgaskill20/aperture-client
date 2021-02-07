@@ -138,15 +138,46 @@ class MapDataFilter {
 
         for (const entry of data) {
             if (entry.properties[feature] !== undefined) {
-                model[feature].push(entry.properties[feature]);
+                model[feature].push(this.model(entry, feature));
             }
         }
 
         return model;
     }
 
+    /** Formats data to a single model datapoint.
+      * Currently, the datapoints are objects with a data, type, and locationName property.
+      * The data is the actual data, the type is either "county" or "tract", and
+      * locationName should be self-explanatory.
+      * @memberof MapDataFilter
+      * @method model
+      * @param {object} entry The data entry to format
+      * @param {string} feature The feature to model over
+      * @returns {object} An object with a data, type, and locationName property
+      */
     model(entry, feature) { 
-        return entry.properties[feature];
+        console.log(entry);
+        return { 
+            data: entry.properties[feature],
+            type: this.dataLocation(entry),
+            locationName: entry.properties.NAME10,
+        };
+    }
+
+    /** Given a data entry, tell what kind of location it is tied to.
+      * (e.g. county or tract)
+      * @param {object} entry The data entry to examine
+      * @returns {string} A string that describes the entry's location
+      */
+    dataLocation(entry) {
+        let locationName = entry.properties.NAMELSAD10;
+        if (/\bCounty\b/gi.test(locationName)) {
+           return "county";
+        }
+        if (/\Tract\b/gi.test(locationName)) {
+            return "tract";
+        }
+        return undefined;
     }
 
     /** Gets an array of models for multiple features.
