@@ -161,6 +161,7 @@ class MapDataFilter {
             data: entry.properties[feature],
             type: this.dataLocation(entry),
             locationName: entry.properties.NAME10,
+            feature: feature,
         };
     }
 
