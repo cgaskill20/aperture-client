@@ -6,10 +6,10 @@ const exampleData = [
     { properties: { median_income: 43000 }},
     { properties: { median_income: 16000 }},
     { properties: { median_income: 73000 }},
-    { properties: { median_income: 244000 }},
-    { properties: { median_income: 8000 }},
+    { properties: { median_income: 244000, NAMELSAD10: "Some Tract", NAME10: "65.0" }},
+    { properties: { median_income: 8000, NAMELSAD10: "Some County" }},
     { properties: { population: 7000 }},
-    { properties: { population: 65000 }},
+    { properties: { population: 65000, NAME10: "Some" }},
     { properties: { population: 9000 }},
     { properties: { population: 2000 }},
 ];
@@ -76,7 +76,7 @@ describe('MapDataFilter', () => {
             filter.add(exampleData);
             let model = filter.getModel('median_income');
             assert(model.median_income.length === 6);
-            assert(model.median_income[1] === 43000);
+            assert(model.median_income[1].data === 43000);
         });
 
         it('can create multiple models', () => {
@@ -85,6 +85,15 @@ describe('MapDataFilter', () => {
             let model = filter.getModel(['median_income', 'population']);
             assert(model.median_income.length === 6);
             assert(model.population.length === 4);
+        });
+
+        it('properly records name and type', () => {
+            let filter = new mdf.MapDataFilter();
+            filter.add(exampleData);
+            let model = filter.getModel(['median_income', 'population']);
+            assert.equal(model.median_income[4].type, "tract");
+            assert.equal(model.median_income[4].locationName, "65.0");
+            assert.equal(model.median_income[5].type, "county");
         });
     });
 
