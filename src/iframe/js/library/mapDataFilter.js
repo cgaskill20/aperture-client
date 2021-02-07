@@ -46,6 +46,11 @@ class MapDataFilter {
 
         newData.entryTime = Date.now();
         this.data.push(newData);
+
+        if (this.newDataCallback) {
+            this.newDataCallback(this.model(newData)); 
+        }
+
         return true;
     }
 
@@ -108,7 +113,6 @@ class MapDataFilter {
         return filtered;
     }
 
-
     /** Removes any data from the filter that is older in miliseconds than the
       * given max age.
       * @memberof MapDataFilter
@@ -141,13 +145,17 @@ class MapDataFilter {
         return model;
     }
 
+    model(entry, feature) { 
+        return entry.properties[feature];
+    }
+
     /** Gets an array of models for multiple features.
       * See the getModel function for more information on what a 
       * "model" means in this context.
       * @memberof MapDataFilter
       * @method getSingleModel
-      * @param {Array<string>} features - the features to model
-      * @param {Array<object>} data - the data to create the model from
+      * @param {Array<string>} features The features to model
+      * @param {Array<object>} data The data to create the model from
       * returns {Array<object>} the models
       */
     getMultipleModel(features, data) {
@@ -159,6 +167,17 @@ class MapDataFilter {
         }
 
         return model;
+    }
+
+    /** Set a callback that fires whenever new data arrives. The callback will
+      * be given one parameter filled with the new data in its processed
+      * (modeled) form.
+      * @memberof MapDataFilter
+      * @method onGetNewData
+      * @param {Function} callback Callback to fire whenever new data comes into the filter
+      */
+    onGetNewData(callback) {
+        this.newDataCallback = callback;
     }
 }
 

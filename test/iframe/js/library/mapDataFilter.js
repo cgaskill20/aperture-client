@@ -87,4 +87,16 @@ describe('MapDataFilter', () => {
             assert(model.population.length === 4);
         });
     });
+
+    describe('onGetNewData', () => {
+        it('can set a data callback', () => {
+            let filter = new mdf.MapDataFilter();
+
+            let callbackedData = [];
+            filter.onGetNewData((data) => { callbackedData.push(data); });
+            filter.add(exampleData);
+
+            assert.equal(callbackedData.length, exampleData.length);
+        });
+    });
 });
