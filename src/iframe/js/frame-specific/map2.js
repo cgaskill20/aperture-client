@@ -48,14 +48,17 @@ map.on('click', function () {
 
 function showDataExploration() {
     document.getElementById("sidebar-container").style.display = "grid";
+    document.getElementById("model-container").style.display = "none";
 }
 
 function showModeling() {
     document.getElementById("sidebar-container").style.display = "none";
+    document.getElementById("model-container").style.display = "block";
 }
 
 function showValidation() {
     document.getElementById("sidebar-container").style.display = "none";
+    document.getElementById("model-container").style.display = "none";
 }
 
 function openNav() {
