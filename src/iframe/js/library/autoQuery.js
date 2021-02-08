@@ -12,8 +12,9 @@ class AutoQuery {
       * @memberof AutoQuery
       * @method constructor
       * @param {JSON} layerData JSON which was spit out by autoMenu.js
+      * @param {string=} graphPipeID optional ID of a pipe to spit all queried data into
       */
-    constructor(layerData) {
+    constructor(layerData, graphPipeID) {
         this.data = layerData;
         this.collection = layerData.collection;
         this.map = layerData.map();
@@ -42,6 +43,8 @@ class AutoQuery {
         this.color = layerData.color;
         this.colorStyle = layerData.color.style;
         this.colorCode = this.buildColorCode(layerData);
+
+        this.graphPipeID = graphPipeID;
     }
 
     /**
@@ -193,6 +196,7 @@ class AutoQuery {
 
         stream.on('data', function (r) {
             const data = JSON.parse(r.getData());
+
             Util.normalizeFeatureID(data);
 
             if (!this.layerIDs.includes(data.id)) {
