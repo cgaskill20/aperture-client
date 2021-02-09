@@ -32,7 +32,6 @@ class MapDataFilter {
       * @see add
       */
     addSingle(newData) {
-        console.log(this.data.length);
         let entryAlreadyExists = this.data.find(entry => {
             if (newData.id) {
                 return entry.id === newData.id;

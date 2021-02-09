@@ -6,6 +6,7 @@ class BarChart {
         this.width = initialWidth;
         this.height = initialHeight;
         this.binNum = 10;
+        this.colorScale = () => "steelblue";
     }
 
     rerender(newWidth, newHeight) {
@@ -22,6 +23,7 @@ class BarChart {
         this.svg.select("g#yAxis").call(this.yAxis);
         this.svg.select("g#rects")
             .selectAll("rect")
+                .attr("fill", d => this.colorScale(d.x1))
             .data(this.bins)
             .join("rect")
                 .attr("x", d => this.x(d.x0) + 1)
@@ -39,6 +41,12 @@ class BarChart {
         this.data = newData;
         this.changeBins(binNum);
         this.rerender(this.width, this.height);
+    }
+
+    setColors(start, end) {
+        this.colorScale = d3.scaleLinear()
+            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1])
+            .range([start, end]);
     }
 
     addTo(node) {

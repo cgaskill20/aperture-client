@@ -18,7 +18,6 @@ class ChartSystem {
     }
 
     initialize() {
-        console.log(this.catalog);
         this.map.on('move', (e) => {
             if (this.doNotUpdate) {
                 return;
@@ -27,8 +26,8 @@ class ChartSystem {
             let graphable = this.catalog.map(e => Object.keys(e.constraints));
             graphable = graphable.flat();
             let values = this.filter.getModel(graphable, this.map.getBounds());
-            console.log(values.temp);
             this.chart.changeData(values.temp.map(e => e.data), 5);
+            this.chart.setColors('#4200ea', '#ea0042');
 
             this.doNotUpdate = true;
             window.setTimeout(() => { this.doNotUpdate = false }, 200);
