@@ -170,18 +170,25 @@ class resizable {
         }).addTo(map);
     }
 
-    test(){
-        /*const canvas = document.createElement("div");
+    test(labels, values){
+        var divsToRemove = document.getElementsByClassName("canvas");
+        for (var i = divsToRemove.length-1; i >= 0; i--) {
+            divsToRemove[i].remove();
+        }
+        const canvas = document.createElement("div");
+        canvas.classList.add('canvas');
         canvas.innerHTML = "<canvas id='myChart' width="+this.width +" height="+this.height+"></canvas>";
         this.boxDocument.appendChild(canvas);
-        var ctx = document.getElementById('myChart').getContext('2d');
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var dataValues = values;
+        var dataLabels = labels;
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                labels: dataLabels,
                 datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
+                    label: 'Group A',
+                    data: dataValues,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -190,20 +197,23 @@ class resizable {
                         'rgba(153, 102, 255, 0.2)',
                         'rgba(255, 159, 64, 0.2)'
                     ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
                 }]
             },
             options: {
-                responsive: true,
                 scales: {
+                    xAxes: [{
+                        display: false,
+                        barPercentage: 1.3,
+                        ticks: {
+                            max: 3,
+                        }
+                    }, {
+                        display: true,
+                        ticks: {
+                            autoSkip: false,
+                            max: 4,
+                        }
+                    }],
                     yAxes: [{
                         ticks: {
                             beginAtZero:true
@@ -212,15 +222,8 @@ class resizable {
                 }
             }
         });
-        this.chartJS = myChart;*/
+        this.chartJS = myChart;
 
     }
 
 }
-
-
-$( document ).ready(function() {
-    const test = new resizable(500,500,"white");
-    const test2 = new resizable(300,200,"black");
-
-});
