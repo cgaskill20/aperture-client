@@ -32,9 +32,10 @@ class MapDataFilter {
       * @see add
       */
     addSingle(newData) {
+        console.log(this.data.length);
         let entryAlreadyExists = this.data.find(entry => {
-            if (newData.GISJOIN) {
-                return entry.GISJOIN === newData.GISJOIN;
+            if (newData.id) {
+                return entry.id === newData.id;
             } else {
                 return false;
             }

@@ -27,8 +27,11 @@ class ChartSystem {
             let graphable = this.catalog.map(e => Object.keys(e.constraints));
             graphable = graphable.flat();
             let values = this.filter.getModel(graphable, this.map.getBounds());
-            console.log(values);
-            this.chart.changeData(values, 10);
+            console.log(values.temp);
+            this.chart.changeData(values.temp.map(e => e.data), 5);
+
+            this.doNotUpdate = true;
+            window.setTimeout(() => { this.doNotUpdate = false }, 200);
         });
     }
 }
