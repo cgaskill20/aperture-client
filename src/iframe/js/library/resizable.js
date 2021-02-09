@@ -118,6 +118,8 @@ class resizable {
             this.overlayDocument.style.height = this.height + 'px';
             this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
         }
+
+        this.chart.resize(this.width, this.height);
     }
     /**
      * Adds in the necessary listeners for the div to be moved
@@ -171,7 +173,12 @@ class resizable {
     }
 
     test(){
-        /*const canvas = document.createElement("div");
+        this.chart = new BarChart([1, 2.5, 3, 4, 5, 6, 5, 1.5, 2, 2, 3], this.width, this.height);
+        this.chart.addTo(this.boxDocument);
+    }
+
+        /*
+        const canvas = document.createElement("div");
         canvas.innerHTML = "<canvas id='myChart' width="+this.width +" height="+this.height+"></canvas>";
         this.boxDocument.appendChild(canvas);
         var ctx = document.getElementById('myChart').getContext('2d');
@@ -212,9 +219,8 @@ class resizable {
                 }
             }
         });
-        this.chartJS = myChart;*/
-
-    }
+        this.chartJS = myChart;
+        */
 
 }
 
