@@ -5,6 +5,7 @@ class BarChart {
         this.data = data;
         this.width = initialWidth;
         this.height = initialHeight;
+        this.binNum = 10;
     }
 
     rerender(newWidth, newHeight) {
@@ -31,6 +32,11 @@ class BarChart {
 
     changeBins(binNum) {
         this.bins = d3.bin().thresholds(binNum)(this.data);
+    }
+
+    changeData(newData, binNum) {
+        this.data = newData;
+        this.changeBins(binNum);
     }
 
     addTo(node) {

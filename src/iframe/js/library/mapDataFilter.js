@@ -156,7 +156,6 @@ class MapDataFilter {
       * @returns {object} An object with a data, type, and locationName property
       */
     model(entry, feature) { 
-        console.log(entry);
         return { 
             data: entry.properties[feature],
             type: this.dataLocation(entry),
