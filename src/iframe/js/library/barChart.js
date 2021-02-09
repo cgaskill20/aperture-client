@@ -7,21 +7,30 @@ class BarChart {
         this.height = initialHeight;
     }
 
-    resize(newWidth, newHeight) {
+    rerender(newWidth, newHeight) {
         this.width = newWidth;
         this.height = newHeight;
         this.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
-        this.x.range([this.margin.left, newWidth - this.margin.right]);
-        this.y.range([newHeight - this.margin.bottom, this.margin.top]);
+        this.x
+            .range([this.margin.left, newWidth - this.margin.right])
+            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1]);
+        this.y
+            .range([newHeight - this.margin.bottom, this.margin.top])
+            .domain([0, d3.max(this.bins, d => d.length)]).nice();
         this.svg.select("g#xAxis").call(this.xAxis);
         this.svg.select("g#yAxis").call(this.yAxis);
         this.svg.select("g#rects")
             .selectAll("rect")
+            .data(this.bins)
             .join("rect")
                 .attr("x", d => this.x(d.x0) + 1)
                 .attr("width", d => Math.max(0, this.x(d.x1) - this.x(d.x0) - 1))
                 .attr("y", d => this.y(d.length))
                 .attr("height", d => this.y(0) - this.y(d.length));
+    }
+
+    changeBins(binNum) {
+        this.bins = d3.bin().thresholds(binNum)(this.data);
     }
 
     addTo(node) {

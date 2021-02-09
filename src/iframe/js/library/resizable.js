@@ -119,7 +119,8 @@ class resizable {
             this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
         }
 
-        this.chart.resize(this.width, this.height);
+        this.chart.changeBins(1);
+        this.chart.rerender(this.width, this.height);
     }
     /**
      * Adds in the necessary listeners for the div to be moved
