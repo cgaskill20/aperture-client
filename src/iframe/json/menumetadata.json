@@ -64,6 +64,7 @@
   "collection" : "svi_county_GISJOIN",
   "level":"county",
   "label": "Social Vulnerability Index (County)",
+  "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
   "color": {
     "style": "gradient",
     "gradient": ["#00FF00", "#FF0000"],
@@ -85,6 +86,7 @@
   "collection" : "svi_tract_GISJOIN",
   "level": "tract",
   "label": "Social Vulnerability Index (Tract)",
+  "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
   "color": {
     "style": "gradient",
     "gradient": ["#00FF00", "#FF0000"],
