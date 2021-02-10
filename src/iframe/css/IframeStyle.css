@@ -245,3 +245,15 @@ body {
     margin-top: 2px;
     margin-right: 15px;
 }
+
+.modelParameter{
+    background-color: #DDD;
+    border-radius: 3px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#model-container{
+    margin-left: 25px;
+    margin-right: 25px;
+}
