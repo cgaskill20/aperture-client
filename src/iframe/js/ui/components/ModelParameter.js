@@ -9,12 +9,14 @@ class ModelParameter extends React.Component {
             value: this.props.config.default
         }
 
+        this.name = this.props.config.name;
         this.sliderQueue = [];
     }
     
     render() {
+        this.updateParent()
         return e("div", {className: "modelParameter"},
-            e("label", {htmlFor: this.props.config.name}, `${this.props.config.name}: ${this.state.value}`),
+            e("label", {htmlFor: this.nane}, `${this.name}: ${this.state.value}`),
             this.buildParameter()
         );
     }
@@ -23,6 +25,7 @@ class ModelParameter extends React.Component {
         this.sliderQueue.forEach(slider => {
             document.getElementById(slider.id).appendChild(slider.e);
         });
+        this.sliderQueue = [];
     }
 
     getType(){
@@ -39,6 +42,9 @@ class ModelParameter extends React.Component {
                 return this.buildCheckbox();
             case "string":
                 return this.buildSelect();
+            default:
+                console.error(`Did not recongnize ${this.getType()}!`);
+                return null;
         }
     }
 
@@ -76,8 +82,8 @@ class ModelParameter extends React.Component {
                 this.setState({value: newValue});}
         }.bind(this));
 
-        this.sliderQueue.push({id:this.props.config.name, e: slider});
-        return e("div", {id:`${this.props.config.name}`});
+        this.sliderQueue.push({id:this.name, e: slider}); //the slider will be injected after render() is called
+        return e("div", {id:`${this.name}`});
     }
 
     buildCheckbox(){
@@ -88,5 +94,9 @@ class ModelParameter extends React.Component {
                 this.setState({value: e.target.checked})
             }
         })
+    }
+
+    updateParent(){
+        this.props.setParameter(this.name, this.state.value)
     }
 }
