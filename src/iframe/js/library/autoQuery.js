@@ -18,7 +18,7 @@ class AutoQuery {
         this.data = layerData;
         this.collection = layerData.collection;
         this.map = layerData.map();
-        this.sustainQuerier = sustain_querier(); //init querier
+        this.sustainQuerier = getSustainQuerier(); //init querier
 
         this.constraintData = {};
         this.constraintState = {};
@@ -63,7 +63,7 @@ class AutoQuery {
       */
     onRemove() {
         this.clearMapLayers();
-        this.killStreams();
+        this.sustainQuerier.killAllStreamsOverCollection(this.collection);
         this.layerIDs = [];
         this.enabled = false;
     }
@@ -127,7 +127,7 @@ class AutoQuery {
     reQuery() {
         if (this.enabled) {
             this.clearMapLayers();
-            this.killStreams();
+            this.sustainQuerier.killAllStreamsOverCollection(this.collection);
             this.query();
         }
     }
@@ -190,23 +190,12 @@ class AutoQuery {
         }
         q = q.concat(this.buildConstraintPipeline());
 
-        const stream = this.sustainQuerier.getStreamForQuery("lattice-46", 27017, this.collection, JSON.stringify(q));
-
-        this.streams.push(stream);
-
-        stream.on('data', function (r) {
-            const data = JSON.parse(r.getData());
-
+        this.sustainQuerier.query(this.collection, q, data => {
             Util.normalizeFeatureID(data);
-
             if (!this.layerIDs.includes(data.id)) {
                 this.renderData(data, forcedGeometry);
             }
-        }.bind(this));
-
-        stream.on('end', function (r) {
-
-        }.bind(this));
+        });
     }
 
     /**
@@ -218,17 +207,6 @@ class AutoQuery {
         RenderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
         this.mapLayers = [];
         this.layerIDs = [];
-    }
-
-    /**
-      * Kills any streams (queries) which are currently running.
-      * @memberof AutoQuery
-      * @method killStreams
-      */
-    killStreams() {
-        for (const stream of this.streams)
-            stream.cancel();
-        this.streams = [];
     }
 
     /**
