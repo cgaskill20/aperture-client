@@ -36,6 +36,9 @@ var markers = L.markerClusterGroup({
 });
 map.addLayer(markers);
 
+const dataExplorationGroup = L.featureGroup().addTo(map);
+const dataModelingGroup = L.featureGroup();
+
 const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
 const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
 
@@ -107,7 +110,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
     // },
 }
 
-RenderInfrastructure.config(map, markers, overwrite, {
+window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplorationGroup, overwrite, {
     queryAlertText: document.getElementById('queryInfoText'),
     maxElements: 10000,
     maxLayers: 20,
@@ -121,34 +124,34 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
 });
 
 const modelMenuConfig = {
-    "Regression":[
-        "Linear regression",
-        "Generalized linear regression",
-        "Decision tree regression",
-        "Random forest regression",
-        "Gradient-boosted tree regression",
-        "Survival regression",
-        "Isotonic regression"
-    ],
+    // "Regression":[
+    //     "Linear regression",
+    //     "Generalized linear regression",
+    //     "Decision tree regression",
+    //     "Random forest regression",
+    //     "Gradient-boosted tree regression",
+    //     "Survival regression",
+    //     "Isotonic regression"
+    // ],
     "Clustering":[
         "K-means",
-        "Gaussian mixture",
-        "Power iteration clustering (PIC)",
-        "Latent Dirichlet allocation (LDA)",
-        "Bisecting k-means",
-        "Streaming k-means"
+        // "Gaussian mixture",
+        // "Power iteration clustering (PIC)",
+        // "Latent Dirichlet allocation (LDA)",
+        // "Bisecting k-means",
+        // "Streaming k-means"
     ],
-    "Classification":[
-        "Binomial logistic regression",
-        "Multinomial logistic regression",
-        "Decision tree classifier",
-        "Random forest classifier",
-        "Gradient-boosted tree classifier",
-        "Multilayer perceptron classifier",
-        "Linear Support Vector Machine",
-        "One-vs-Rest classifier (a.k.a. One-vs-All)",
-        "Naive Bayes"
-    ],
+    // "Classification":[
+    //     "Binomial logistic regression",
+    //     "Multinomial logistic regression",
+    //     "Decision tree classifier",
+    //     "Random forest classifier",
+    //     "Gradient-boosted tree classifier",
+    //     "Multilayer perceptron classifier",
+    //     "Linear Support Vector Machine",
+    //     "One-vs-Rest classifier (a.k.a. One-vs-All)",
+    //     "Naive Bayes"
+    // ],
 }
 
 
@@ -158,6 +161,8 @@ ReactDOM.render(e(ModelMenu, {config: modelMenuConfig}), modelContainer);
 parent.addEventListener('updateMaps', function () {
     updateLayers();
 });
+
+//const clusterer = new ClusterManager("xd", map, dataModelingGroup, "tract_geo_GISJOIN");
 
 map.on("move", function (e) {
     parent.setGlobalPosition(map.getCenter(), MAPNUMBER);
@@ -177,3 +182,6 @@ parent.setterFunctions.push({
 setTimeout(function () {
     map.setView([map.wrapLatLng(parent.view).lat, map.wrapLatLng(parent.view).lng - 0.0002], map.getZoom());
 }, 1); //this is a terrible fix but it works for now
+
+
+

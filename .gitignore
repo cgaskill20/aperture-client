@@ -4,3 +4,4 @@
 /coverage
 .nfs*
 *.DS_Store
+*.vscode

@@ -116,7 +116,7 @@ Util = {
         let pTObj = this.getParamsAndTagsFromGeoJsonFeature(feature);
         let params = pTObj.params;
         let tagsObj = pTObj.tagsObj;
-        const datasource = indexData ? indexData : RenderInfrastructure.data;
+        const datasource = indexData ? indexData : window.renderInfrastructure.data;
         if (indexData) { //this is quite a bit simpler than the other way.
             return Object.keys(indexData)[0];
         }
@@ -291,7 +291,7 @@ Util = {
         let params = pTObj.params;
         let tagsObj = pTObj.tagsObj;
         let details = "<b>" + this.capitalizeString(this.underScoreToSpace(id)) + "</b><br>";
-        const datasource = indexData ? indexData : RenderInfrastructure.data;
+        const datasource = indexData ? indexData : window.renderInfrastructure.data;
         if (!datasource[id]['popup']) {
             details += "<ul style='padding-inline-start:20px;margin-block-start:2.5px;'>";
             params.forEach(param => details += "<li>" + this.capitalizeString(this.underScoreToSpace(param)) + ": " + this.capitalizeString(this.underScoreToSpace(tagsObj[param])) + "</li>");

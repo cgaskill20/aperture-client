@@ -71,21 +71,19 @@ body {
     cursor: pointer;
 }
 
-
-.checkboxConstraintLabel{
+.checkboxConstraintLabel {
     padding: 5px;
     background-color: #0074d9;
     text-align: left;
-    color:white;
+    color: white;
 }
 
-.checkboxConstraintContainer{
+.checkboxConstraintContainer {
     padding: 5px;
     padding-bottom: 2px;
 }
 
-
-.menuHeaderContainer{
+.menuHeaderContainer {
     padding: 5px;
 }
 
@@ -109,13 +107,13 @@ body {
     background-color: #ffffff;
 }
 
-.checkboxContainer{
+.checkboxContainer {
     background-color: white;
     border-radius: 3px;
     margin-bottom: 15px;
 }
 
-.sliderContainer{
+.sliderContainer {
     background-color: white;
     border-radius: 3px;
     padding: 5px;
@@ -193,8 +191,8 @@ body {
     min-width: 20vw;
 }
 
-.editConstraintsHeader{
-    top:0;
+.editConstraintsHeader {
+    top: 0;
     padding: 10px;
     color: #111;
     font-size: 20px;
@@ -213,17 +211,19 @@ body {
     background-color: #f1f1f1;
 }
 
-.editConstraintsConstraint{
+.editConstraintsConstraint {
     padding: 1px;
     padding-left: 20px;
 }
 
-
-.saveAndCloseConstraints{
+.saveAndCloseConstraints {
     bottom: 25px;
     left: 85%;
     position: sticky;
+}
 
+.clusterContainer {
+    display: none;
 }
 
 .constraintCloseButton {

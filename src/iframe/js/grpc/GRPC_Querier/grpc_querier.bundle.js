@@ -153,7 +153,7 @@ function fromByteArray (uint8) {
 }
 
 },{}],2:[function(require,module,exports){
-(function (Buffer){(function (){
+(function (Buffer){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -1932,9 +1932,95 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-}).call(this)}).call(this,require("buffer").Buffer)
-},{"base64-js":1,"buffer":2,"ieee754":5}],3:[function(require,module,exports){
-(function (global,Buffer){(function (){
+}).call(this,require("buffer").Buffer)
+},{"base64-js":1,"buffer":2,"ieee754":3}],3:[function(require,module,exports){
+exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = ((value * c) - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
+}
+
+},{}],4:[function(require,module,exports){
+(function (global,Buffer){
 var $jscomp=$jscomp||{};$jscomp.scope={};$jscomp.findInternal=function(a,b,c){a instanceof String&&(a=String(a));for(var d=a.length,e=0;e<d;e++){var f=a[e];if(b.call(c,f,e,a))return{i:e,v:f}}return{i:-1,v:void 0}};$jscomp.ASSUME_ES5=!1;$jscomp.ASSUME_NO_NATIVE_MAP=!1;$jscomp.ASSUME_NO_NATIVE_SET=!1;$jscomp.SIMPLE_FROUND_POLYFILL=!1;
 $jscomp.defineProperty=$jscomp.ASSUME_ES5||"function"==typeof Object.defineProperties?Object.defineProperty:function(a,b,c){a!=Array.prototype&&a!=Object.prototype&&(a[b]=c.value)};$jscomp.getGlobal=function(a){return"undefined"!=typeof window&&window===a?a:"undefined"!=typeof global&&null!=global?global:a};$jscomp.global=$jscomp.getGlobal(this);
 $jscomp.polyfill=function(a,b,c,d){if(b){c=$jscomp.global;a=a.split(".");for(d=0;d<a.length-1;d++){var e=a[d];e in c||(c[e]={});c=c[e]}a=a[a.length-1];d=c[a];b=b(d);b!=d&&null!=b&&$jscomp.defineProperty(c,a,{configurable:!0,writable:!0,value:b})}};$jscomp.polyfill("Array.prototype.findIndex",function(a){return a?a:function(a,c){return $jscomp.findInternal(this,a,c).i}},"es6","es3");
@@ -2457,9 +2543,9 @@ jspb.BinaryWriter.prototype.writePackedDouble=function(a,b){if(null!=b&&b.length
 jspb.BinaryWriter.prototype.writePackedEnum=function(a,b){if(null!=b&&b.length){a=this.beginDelimited_(a);for(var c=0;c<b.length;c++)this.encoder_.writeEnum(b[c]);this.endDelimited_(a)}};jspb.BinaryWriter.prototype.writePackedFixedHash64=function(a,b){if(null!=b&&b.length)for(this.writeFieldHeader_(a,jspb.BinaryConstants.WireType.DELIMITED),this.encoder_.writeUnsignedVarint32(8*b.length),a=0;a<b.length;a++)this.encoder_.writeFixedHash64(b[a])};
 jspb.BinaryWriter.prototype.writePackedVarintHash64=function(a,b){if(null!=b&&b.length){a=this.beginDelimited_(a);for(var c=0;c<b.length;c++)this.encoder_.writeVarintHash64(b[c]);this.endDelimited_(a)}};jspb.Export={};exports.Map=jspb.Map;exports.Message=jspb.Message;exports.BinaryReader=jspb.BinaryReader;exports.BinaryWriter=jspb.BinaryWriter;exports.ExtensionFieldInfo=jspb.ExtensionFieldInfo;exports.ExtensionFieldBinaryInfo=jspb.ExtensionFieldBinaryInfo;exports.exportSymbol=goog.exportSymbol;exports.inherits=goog.inherits;exports.object={extend:goog.object.extend};exports.typeOf=goog.typeOf;
 
-}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"buffer":2}],4:[function(require,module,exports){
-(function (global){(function (){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
+},{"buffer":2}],5:[function(require,module,exports){
+(function (global){
 var aa="function"==typeof Object.defineProperties?Object.defineProperty:function(a,b,c){a!=Array.prototype&&a!=Object.prototype&&(a[b]=c.value)},ba="undefined"!=typeof window&&window===this?this:"undefined"!=typeof global&&null!=global?global:this;function ca(a,b){if(b){var c=ba;a=a.split(".");for(var d=0;d<a.length-1;d++){var e=a[d];e in c||(c[e]={});c=c[e]}a=a[a.length-1];d=c[a];b=b(d);b!=d&&null!=b&&aa(c,a,{configurable:!0,writable:!0,value:b})}}
 function da(a){var b=0;return function(){return b<a.length?{done:!1,value:a[b++]}:{done:!0}}}function ea(a){var b="undefined"!=typeof Symbol&&Symbol.iterator&&a[Symbol.iterator];return b?b.call(a):{next:da(a)}}
 ca("Promise",function(a){function b(f){this.b=0;this.c=void 0;this.a=[];var h=this.f();try{f(h.resolve,h.reject)}catch(k){h.reject(k)}}function c(){this.a=null}function d(f){return f instanceof b?f:new b(function(h){h(f)})}if(a)return a;c.prototype.b=function(f){if(null==this.a){this.a=[];var h=this;this.c(function(){h.g()})}this.a.push(f)};var e=ba.setTimeout;c.prototype.c=function(f){e(f,0)};c.prototype.g=function(){for(;this.a&&this.a.length;){var f=this.a;this.a=[];for(var h=0;h<f.length;++h){var k=
@@ -2512,95 +2598,9 @@ function mc(a,b){"text"==a.a?(b.headers.set("Content-Type","application/grpc-web
 a+"m")}};var W=module.exports;W.AbstractClientBase={MethodInfo:function(a,b,c,d){this.name=d;this.a=b;this.b=c}};W.GrpcWebClientBase=V;W.StatusCode={OK:0,CANCELLED:1,UNKNOWN:2,INVALID_ARGUMENT:3,DEADLINE_EXCEEDED:4,NOT_FOUND:5,ALREADY_EXISTS:6,PERMISSION_DENIED:7,UNAUTHENTICATED:16,RESOURCE_EXHAUSTED:8,FAILED_PRECONDITION:9,ABORTED:10,OUT_OF_RANGE:11,UNIMPLEMENTED:12,INTERNAL:13,UNAVAILABLE:14,DATA_LOSS:15};W.MethodDescriptor=function(a,b,c,d,e,g){this.name=a;this.a=e;this.b=g};
 W.MethodType={UNARY:"unary",SERVER_STREAMING:"server_streaming"};
 
-}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],5:[function(require,module,exports){
-exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m
-  var eLen = (nBytes * 8) - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var nBits = -7
-  var i = isLE ? (nBytes - 1) : 0
-  var d = isLE ? -1 : 1
-  var s = buffer[offset + i]
-
-  i += d
-
-  e = s & ((1 << (-nBits)) - 1)
-  s >>= (-nBits)
-  nBits += eLen
-  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8) {}
-
-  m = e & ((1 << (-nBits)) - 1)
-  e >>= (-nBits)
-  nBits += mLen
-  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8) {}
-
-  if (e === 0) {
-    e = 1 - eBias
-  } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
-  } else {
-    m = m + Math.pow(2, mLen)
-    e = e - eBias
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
-
-exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c
-  var eLen = (nBytes * 8) - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-  var i = isLE ? 0 : (nBytes - 1)
-  var d = isLE ? 1 : -1
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
-
-  value = Math.abs(value)
-
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0
-    e = eMax
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2)
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--
-      c *= 2
-    }
-    if (e + eBias >= 1) {
-      value += rt / c
-    } else {
-      value += rt * Math.pow(2, 1 - eBias)
-    }
-    if (value * c >= 2) {
-      e++
-      c /= 2
-    }
-
-    if (e + eBias >= eMax) {
-      m = 0
-      e = eMax
-    } else if (e + eBias >= 1) {
-      m = ((value * c) - 1) * Math.pow(2, mLen)
-      e = e + eBias
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-      e = 0
-    }
-  }
-
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
-
-  e = (e << mLen) | m
-  eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
-
-  buffer[offset + i - d] |= s * 128
-}
-
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],6:[function(require,module,exports){
-const {Query, CompoundRequest} = require("./sustain_pb.js")
+const {Query, CompoundRequest, ModelRequest} = require("./sustain_pb.js")
 const {SustainClient} = require('./sustain_grpc_web_pb.js');
 
 /**
@@ -2721,6 +2721,13 @@ SustainQuerier = {
      */
     executeCompoundQuery: function (request) {
         return this.service.compoundQuery(request, {});
+    },
+    
+    
+    executeModelQuery: function (query) {
+        const request = new ModelRequest();
+        request.setRequest(query);
+        return this.service.modelQuery(request, {});
 	},
 };
 
@@ -2751,6 +2758,10 @@ try{
  */
 
 // GENERATED CODE -- DO NOT EDIT!
+
+
+/* eslint-disable */
+// @ts-nocheck
 
 
 
@@ -3040,75 +3051,75 @@ proto.sustain.SustainPromiseClient.prototype.datasetQuery =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.sustain.SVIRequest,
- *   !proto.sustain.SVIResponse>}
+ *   !proto.sustain.SviRequest,
+ *   !proto.sustain.SviResponse>}
  */
-const methodDescriptor_Sustain_SVIQuery = new grpc.web.MethodDescriptor(
-  '/sustain.Sustain/SVIQuery',
+const methodDescriptor_Sustain_SviQuery = new grpc.web.MethodDescriptor(
+  '/sustain.Sustain/SviQuery',
   grpc.web.MethodType.SERVER_STREAMING,
-  proto.sustain.SVIRequest,
-  proto.sustain.SVIResponse,
+  proto.sustain.SviRequest,
+  proto.sustain.SviResponse,
   /**
-   * @param {!proto.sustain.SVIRequest} request
+   * @param {!proto.sustain.SviRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.sustain.SVIResponse.deserializeBinary
+  proto.sustain.SviResponse.deserializeBinary
 );
 
 
 /**
  * @const
  * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.sustain.SVIRequest,
- *   !proto.sustain.SVIResponse>}
+ *   !proto.sustain.SviRequest,
+ *   !proto.sustain.SviResponse>}
  */
-const methodInfo_Sustain_SVIQuery = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.sustain.SVIResponse,
+const methodInfo_Sustain_SviQuery = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.sustain.SviResponse,
   /**
-   * @param {!proto.sustain.SVIRequest} request
+   * @param {!proto.sustain.SviRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.sustain.SVIResponse.deserializeBinary
+  proto.sustain.SviResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.sustain.SVIRequest} request The request proto
+ * @param {!proto.sustain.SviRequest} request The request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @return {!grpc.web.ClientReadableStream<!proto.sustain.SVIResponse>}
+ * @return {!grpc.web.ClientReadableStream<!proto.sustain.SviResponse>}
  *     The XHR Node Readable Stream
  */
-proto.sustain.SustainClient.prototype.sVIQuery =
+proto.sustain.SustainClient.prototype.sviQuery =
     function(request, metadata) {
   return this.client_.serverStreaming(this.hostname_ +
-      '/sustain.Sustain/SVIQuery',
+      '/sustain.Sustain/SviQuery',
       request,
       metadata || {},
-      methodDescriptor_Sustain_SVIQuery);
+      methodDescriptor_Sustain_SviQuery);
 };
 
 
 /**
- * @param {!proto.sustain.SVIRequest} request The request proto
+ * @param {!proto.sustain.SviRequest} request The request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @return {!grpc.web.ClientReadableStream<!proto.sustain.SVIResponse>}
+ * @return {!grpc.web.ClientReadableStream<!proto.sustain.SviResponse>}
  *     The XHR Node Readable Stream
  */
-proto.sustain.SustainPromiseClient.prototype.sVIQuery =
+proto.sustain.SustainPromiseClient.prototype.sviQuery =
     function(request, metadata) {
   return this.client_.serverStreaming(this.hostname_ +
-      '/sustain.Sustain/SVIQuery',
+      '/sustain.Sustain/SviQuery',
       request,
       metadata || {},
-      methodDescriptor_Sustain_SVIQuery);
+      methodDescriptor_Sustain_SviQuery);
 };
 
 
@@ -3262,11 +3273,85 @@ proto.sustain.SustainPromiseClient.prototype.compoundQuery =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.sustain.ModelRequest,
+ *   !proto.sustain.ModelResponse>}
+ */
+const methodDescriptor_Sustain_ModelQuery = new grpc.web.MethodDescriptor(
+  '/sustain.Sustain/ModelQuery',
+  grpc.web.MethodType.SERVER_STREAMING,
+  proto.sustain.ModelRequest,
+  proto.sustain.ModelResponse,
+  /**
+   * @param {!proto.sustain.ModelRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.sustain.ModelResponse.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.sustain.ModelRequest,
+ *   !proto.sustain.ModelResponse>}
+ */
+const methodInfo_Sustain_ModelQuery = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.sustain.ModelResponse,
+  /**
+   * @param {!proto.sustain.ModelRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.sustain.ModelResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.sustain.ModelRequest} request The request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.sustain.ModelResponse>}
+ *     The XHR Node Readable Stream
+ */
+proto.sustain.SustainClient.prototype.modelQuery =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/sustain.Sustain/ModelQuery',
+      request,
+      metadata || {},
+      methodDescriptor_Sustain_ModelQuery);
+};
+
+
+/**
+ * @param {!proto.sustain.ModelRequest} request The request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.sustain.ModelResponse>}
+ *     The XHR Node Readable Stream
+ */
+proto.sustain.SustainPromiseClient.prototype.modelQuery =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/sustain.Sustain/ModelQuery',
+      request,
+      metadata || {},
+      methodDescriptor_Sustain_ModelQuery);
+};
+
+
 module.exports = proto.sustain;
 
 
-},{"./sustain_pb.js":8,"grpc-web":4}],8:[function(require,module,exports){
-// source: sustain.proto
+},{"./sustain_pb.js":8,"grpc-web":5}],8:[function(require,module,exports){
 /**
  * @fileoverview
  * @enhanceable
@@ -3278,7 +3363,7 @@ module.exports = proto.sustain;
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = (typeof self == "undefined" ? typeof global == "undefined"? this : global : self);
+var global = Function('return this')();
 
 goog.exportSymbol('proto.sustain.CensusFeature', null, global);
 goog.exportSymbol('proto.sustain.CensusRequest', null, global);
@@ -3286,8 +3371,6 @@ goog.exportSymbol('proto.sustain.CensusResolution', null, global);
 goog.exportSymbol('proto.sustain.CensusResponse', null, global);
 goog.exportSymbol('proto.sustain.ComparisonOperator', null, global);
 goog.exportSymbol('proto.sustain.CompoundRequest', null, global);
-goog.exportSymbol('proto.sustain.CompoundRequest.FirstpredicateCase', null, global);
-goog.exportSymbol('proto.sustain.CompoundRequest.SecondpredicateCase', null, global);
 goog.exportSymbol('proto.sustain.CompoundResponse', null, global);
 goog.exportSymbol('proto.sustain.DatasetEntry', null, global);
 goog.exportSymbol('proto.sustain.DatasetRequest', null, global);
@@ -3296,6 +3379,8 @@ goog.exportSymbol('proto.sustain.DatasetResponse', null, global);
 goog.exportSymbol('proto.sustain.Decade', null, global);
 goog.exportSymbol('proto.sustain.IntraDatasetOp', null, global);
 goog.exportSymbol('proto.sustain.JoinOperator', null, global);
+goog.exportSymbol('proto.sustain.ModelRequest', null, global);
+goog.exportSymbol('proto.sustain.ModelResponse', null, global);
 goog.exportSymbol('proto.sustain.OsmRequest', null, global);
 goog.exportSymbol('proto.sustain.OsmRequest.Dataset', null, global);
 goog.exportSymbol('proto.sustain.OsmRequest.OsmRequestParam', null, global);
@@ -3303,381 +3388,59 @@ goog.exportSymbol('proto.sustain.OsmResponse', null, global);
 goog.exportSymbol('proto.sustain.Predicate', null, global);
 goog.exportSymbol('proto.sustain.Predicate.ComparisonOperator', null, global);
 goog.exportSymbol('proto.sustain.Query', null, global);
-goog.exportSymbol('proto.sustain.SVIRequest', null, global);
-goog.exportSymbol('proto.sustain.SVIRequest.Type', null, global);
-goog.exportSymbol('proto.sustain.SVIResponse', null, global);
 goog.exportSymbol('proto.sustain.SpatialOp', null, global);
+goog.exportSymbol('proto.sustain.SviRequest', null, global);
+goog.exportSymbol('proto.sustain.SviResponse', null, global);
 goog.exportSymbol('proto.sustain.TargetedCensusRequest', null, global);
 goog.exportSymbol('proto.sustain.TargetedCensusResponse', null, global);
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.SVIRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.SVIRequest, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.SVIRequest.displayName = 'proto.sustain.SVIRequest';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.SVIResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.SVIResponse, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.SVIResponse.displayName = 'proto.sustain.SVIResponse';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.DatasetRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.DatasetRequest, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.DatasetRequest.displayName = 'proto.sustain.DatasetRequest';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.DatasetResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.DatasetResponse, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.DatasetResponse.displayName = 'proto.sustain.DatasetResponse';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.OsmRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sustain.OsmRequest.repeatedFields_, null);
-};
-goog.inherits(proto.sustain.OsmRequest, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.OsmRequest.displayName = 'proto.sustain.OsmRequest';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.OsmRequest.OsmRequestParam = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.OsmRequest.OsmRequestParam, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.OsmRequest.OsmRequestParam.displayName = 'proto.sustain.OsmRequest.OsmRequestParam';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.OsmResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.OsmResponse, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.OsmResponse.displayName = 'proto.sustain.OsmResponse';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.CensusRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.CensusRequest, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.CensusRequest.displayName = 'proto.sustain.CensusRequest';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.CensusResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.CensusResponse, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.CensusResponse.displayName = 'proto.sustain.CensusResponse';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.DatasetEntry = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.DatasetEntry, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.DatasetEntry.displayName = 'proto.sustain.DatasetEntry';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.TargetedCensusRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.TargetedCensusRequest, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.TargetedCensusRequest.displayName = 'proto.sustain.TargetedCensusRequest';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.TargetedCensusResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.TargetedCensusResponse, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.TargetedCensusResponse.displayName = 'proto.sustain.TargetedCensusResponse';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.Predicate = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.Predicate, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.Predicate.displayName = 'proto.sustain.Predicate';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.CompoundResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.CompoundResponse, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.CompoundResponse.displayName = 'proto.sustain.CompoundResponse';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.CompoundRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.sustain.CompoundRequest.oneofGroups_);
-};
-goog.inherits(proto.sustain.CompoundRequest, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.CompoundRequest.displayName = 'proto.sustain.CompoundRequest';
-}
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.sustain.Query = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.sustain.Query, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  /**
-   * @public
-   * @override
-   */
-  proto.sustain.Query.displayName = 'proto.sustain.Query';
-}
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.ModelRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.ModelRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.ModelRequest.displayName = 'proto.sustain.ModelRequest';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sustain.SVIRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.sustain.SVIRequest.toObject(opt_includeInstance, this);
+proto.sustain.ModelRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.sustain.ModelRequest.toObject(opt_includeInstance, this);
 };
 
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sustain.SVIRequest} msg The msg instance to transform.
+ * @param {!proto.sustain.ModelRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.sustain.SVIRequest.toObject = function(includeInstance, msg) {
+proto.sustain.ModelRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-
+    request: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -3691,29 +3454,33 @@ proto.sustain.SVIRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sustain.SVIRequest}
+ * @return {!proto.sustain.ModelRequest}
  */
-proto.sustain.SVIRequest.deserializeBinary = function(bytes) {
+proto.sustain.ModelRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sustain.SVIRequest;
-  return proto.sustain.SVIRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.sustain.ModelRequest;
+  return proto.sustain.ModelRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sustain.SVIRequest} msg The message object to deserialize into.
+ * @param {!proto.sustain.ModelRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sustain.SVIRequest}
+ * @return {!proto.sustain.ModelRequest}
  */
-proto.sustain.SVIRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.sustain.ModelRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
     }
     var field = reader.getFieldNumber();
     switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setRequest(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -3727,9 +3494,9 @@ proto.sustain.SVIRequest.deserializeBinaryFromReader = function(msg, reader) {
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sustain.SVIRequest.prototype.serializeBinary = function() {
+proto.sustain.ModelRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.sustain.SVIRequest.serializeBinaryToWriter(this, writer);
+  proto.sustain.ModelRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -3737,67 +3504,394 @@ proto.sustain.SVIRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.sustain.SVIRequest} message
+ * @param {!proto.sustain.ModelRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.sustain.SVIRequest.serializeBinaryToWriter = function(message, writer) {
+proto.sustain.ModelRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getRequest();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
 };
 
 
 /**
- * @enum {number}
+ * optional string request = 1;
+ * @return {string}
  */
-proto.sustain.SVIRequest.Type = {
-  PERCENT_POVERTY: 0,
-  PERCENT_UNEMPLOYED: 1,
-  PER_CAPITA_INCOME: 2,
-  PERCENT_NO_HIGH_SCHOOL_DIPLOMA: 3,
-  PERCENT_65_OR_OLDER: 4,
-  PERCENT_17_OR_YOUNGER: 5,
-  PERCENT_DISABILITY: 6,
-  PERCENT_HOUSEHOLDER: 7,
-  PERCENT_MINORITY: 8,
-  PERCENT_SPEAKS_ENGLISH: 9,
-  PERCENT_MULTI_UNIT_STRUCTURE: 10,
-  PERCENT_MOBILE_HOME: 11,
-  CROWDING: 12,
-  NO_VEHICLE_AVAILABLE: 13,
-  PERCENT_GROUP_QUARTERS: 14
+proto.sustain.ModelRequest.prototype.getRequest = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
+/** @param {string} value */
+proto.sustain.ModelRequest.prototype.setRequest = function(value) {
+  jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.ModelResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.ModelResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.ModelResponse.displayName = 'proto.sustain.ModelResponse';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.sustain.SVIResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.sustain.SVIResponse.toObject(opt_includeInstance, this);
+proto.sustain.ModelResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.sustain.ModelResponse.toObject(opt_includeInstance, this);
 };
 
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.sustain.SVIResponse} msg The msg instance to transform.
+ * @param {!proto.sustain.ModelResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.sustain.SVIResponse.toObject = function(includeInstance, msg) {
+proto.sustain.ModelResponse.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    results: jspb.Message.getFieldWithDefault(msg, 1, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.sustain.ModelResponse}
+ */
+proto.sustain.ModelResponse.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.sustain.ModelResponse;
+  return proto.sustain.ModelResponse.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.sustain.ModelResponse} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.sustain.ModelResponse}
+ */
+proto.sustain.ModelResponse.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setResults(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.sustain.ModelResponse.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.sustain.ModelResponse.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.sustain.ModelResponse} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.sustain.ModelResponse.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getResults();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string results = 1;
+ * @return {string}
+ */
+proto.sustain.ModelResponse.prototype.getResults = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/** @param {string} value */
+proto.sustain.ModelResponse.prototype.setResults = function(value) {
+  jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.SviRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.SviRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.SviRequest.displayName = 'proto.sustain.SviRequest';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.sustain.SviRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.sustain.SviRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.sustain.SviRequest} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.sustain.SviRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    requestgeojson: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    spatialop: jspb.Message.getFieldWithDefault(msg, 2, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.sustain.SviRequest}
+ */
+proto.sustain.SviRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.sustain.SviRequest;
+  return proto.sustain.SviRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.sustain.SviRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.sustain.SviRequest}
+ */
+proto.sustain.SviRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setRequestgeojson(value);
+      break;
+    case 2:
+      var value = /** @type {!proto.sustain.SpatialOp} */ (reader.readEnum());
+      msg.setSpatialop(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.sustain.SviRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.sustain.SviRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.sustain.SviRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.sustain.SviRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getRequestgeojson();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getSpatialop();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      2,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string requestGeoJson = 1;
+ * @return {string}
+ */
+proto.sustain.SviRequest.prototype.getRequestgeojson = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/** @param {string} value */
+proto.sustain.SviRequest.prototype.setRequestgeojson = function(value) {
+  jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional SpatialOp spatialOp = 2;
+ * @return {!proto.sustain.SpatialOp}
+ */
+proto.sustain.SviRequest.prototype.getSpatialop = function() {
+  return /** @type {!proto.sustain.SpatialOp} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/** @param {!proto.sustain.SpatialOp} value */
+proto.sustain.SviRequest.prototype.setSpatialop = function(value) {
+  jspb.Message.setProto3EnumField(this, 2, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.SviResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.SviResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.SviResponse.displayName = 'proto.sustain.SviResponse';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.sustain.SviResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.sustain.SviResponse.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.sustain.SviResponse} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.sustain.SviResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     data: jspb.Message.getFieldWithDefault(msg, 1, ""),
     responsegeojson: jspb.Message.getFieldWithDefault(msg, 2, "")
@@ -3814,23 +3908,23 @@ proto.sustain.SVIResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.sustain.SVIResponse}
+ * @return {!proto.sustain.SviResponse}
  */
-proto.sustain.SVIResponse.deserializeBinary = function(bytes) {
+proto.sustain.SviResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.sustain.SVIResponse;
-  return proto.sustain.SVIResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.sustain.SviResponse;
+  return proto.sustain.SviResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.sustain.SVIResponse} msg The message object to deserialize into.
+ * @param {!proto.sustain.SviResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.sustain.SVIResponse}
+ * @return {!proto.sustain.SviResponse}
  */
-proto.sustain.SVIResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.sustain.SviResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -3858,9 +3952,9 @@ proto.sustain.SVIResponse.deserializeBinaryFromReader = function(msg, reader) {
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.sustain.SVIResponse.prototype.serializeBinary = function() {
+proto.sustain.SviResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.sustain.SVIResponse.serializeBinaryToWriter(this, writer);
+  proto.sustain.SviResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -3868,11 +3962,11 @@ proto.sustain.SVIResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.sustain.SVIResponse} message
+ * @param {!proto.sustain.SviResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.sustain.SVIResponse.serializeBinaryToWriter = function(message, writer) {
+proto.sustain.SviResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getData();
   if (f.length > 0) {
@@ -3895,17 +3989,14 @@ proto.sustain.SVIResponse.serializeBinaryToWriter = function(message, writer) {
  * optional string data = 1;
  * @return {string}
  */
-proto.sustain.SVIResponse.prototype.getData = function() {
+proto.sustain.SviResponse.prototype.getData = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.SVIResponse} returns this
- */
-proto.sustain.SVIResponse.prototype.setData = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+/** @param {string} value */
+proto.sustain.SviResponse.prototype.setData = function(value) {
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -3913,34 +4004,46 @@ proto.sustain.SVIResponse.prototype.setData = function(value) {
  * optional string responseGeoJson = 2;
  * @return {string}
  */
-proto.sustain.SVIResponse.prototype.getResponsegeojson = function() {
+proto.sustain.SviResponse.prototype.getResponsegeojson = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.SVIResponse} returns this
- */
-proto.sustain.SVIResponse.prototype.setResponsegeojson = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+/** @param {string} value */
+proto.sustain.SviResponse.prototype.setResponsegeojson = function(value) {
+  jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.DatasetRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.DatasetRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.DatasetRequest.displayName = 'proto.sustain.DatasetRequest';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.DatasetRequest.prototype.toObject = function(opt_includeInstance) {
@@ -3950,8 +4053,8 @@ proto.sustain.DatasetRequest.prototype.toObject = function(opt_includeInstance) 
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.DatasetRequest} msg The msg instance to transform.
  * @return {!Object}
@@ -4014,7 +4117,7 @@ proto.sustain.DatasetRequest.deserializeBinaryFromReader = function(msg, reader)
     case 4:
       var value = msg.getRequestparamsMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString);
          });
       break;
     default:
@@ -4097,12 +4200,9 @@ proto.sustain.DatasetRequest.prototype.getDataset = function() {
 };
 
 
-/**
- * @param {!proto.sustain.DatasetRequest.Dataset} value
- * @return {!proto.sustain.DatasetRequest} returns this
- */
+/** @param {!proto.sustain.DatasetRequest.Dataset} value */
 proto.sustain.DatasetRequest.prototype.setDataset = function(value) {
-  return jspb.Message.setProto3EnumField(this, 1, value);
+  jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -4115,12 +4215,9 @@ proto.sustain.DatasetRequest.prototype.getRequestgeojson = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.DatasetRequest} returns this
- */
+/** @param {string} value */
 proto.sustain.DatasetRequest.prototype.setRequestgeojson = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -4133,12 +4230,9 @@ proto.sustain.DatasetRequest.prototype.getSpatialop = function() {
 };
 
 
-/**
- * @param {!proto.sustain.SpatialOp} value
- * @return {!proto.sustain.DatasetRequest} returns this
- */
+/** @param {!proto.sustain.SpatialOp} value */
 proto.sustain.DatasetRequest.prototype.setSpatialop = function(value) {
-  return jspb.Message.setProto3EnumField(this, 3, value);
+  jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 
@@ -4155,29 +4249,40 @@ proto.sustain.DatasetRequest.prototype.getRequestparamsMap = function(opt_noLazy
 };
 
 
-/**
- * Clears values from the map. The map will be non-null.
- * @return {!proto.sustain.DatasetRequest} returns this
- */
 proto.sustain.DatasetRequest.prototype.clearRequestparamsMap = function() {
   this.getRequestparamsMap().clear();
-  return this;};
+};
 
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.DatasetResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.DatasetResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.DatasetResponse.displayName = 'proto.sustain.DatasetResponse';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.DatasetResponse.prototype.toObject = function(opt_includeInstance) {
@@ -4187,8 +4292,8 @@ proto.sustain.DatasetResponse.prototype.toObject = function(opt_includeInstance)
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.DatasetResponse} msg The msg instance to transform.
  * @return {!Object}
@@ -4285,16 +4390,30 @@ proto.sustain.DatasetResponse.prototype.getResponse = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.DatasetResponse} returns this
- */
+/** @param {string} value */
 proto.sustain.DatasetResponse.prototype.setResponse = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.OsmRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.sustain.OsmRequest.repeatedFields_, null);
+};
+goog.inherits(proto.sustain.OsmRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.OsmRequest.displayName = 'proto.sustain.OsmRequest';
+}
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
@@ -4306,15 +4425,13 @@ proto.sustain.OsmRequest.repeatedFields_ = [4];
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.OsmRequest.prototype.toObject = function(opt_includeInstance) {
@@ -4324,8 +4441,8 @@ proto.sustain.OsmRequest.prototype.toObject = function(opt_includeInstance) {
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.OsmRequest} msg The msg instance to transform.
  * @return {!Object}
@@ -4465,19 +4582,34 @@ proto.sustain.OsmRequest.Dataset = {
 };
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.OsmRequest.OsmRequestParam = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.OsmRequest.OsmRequestParam, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.OsmRequest.OsmRequestParam.displayName = 'proto.sustain.OsmRequest.OsmRequestParam';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.OsmRequest.OsmRequestParam.prototype.toObject = function(opt_includeInstance) {
@@ -4487,8 +4619,8 @@ proto.sustain.OsmRequest.OsmRequestParam.prototype.toObject = function(opt_inclu
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.OsmRequest.OsmRequestParam} msg The msg instance to transform.
  * @return {!Object}
@@ -4597,12 +4729,9 @@ proto.sustain.OsmRequest.OsmRequestParam.prototype.getKey = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.OsmRequest.OsmRequestParam} returns this
- */
+/** @param {string} value */
 proto.sustain.OsmRequest.OsmRequestParam.prototype.setKey = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -4615,12 +4744,9 @@ proto.sustain.OsmRequest.OsmRequestParam.prototype.getValue = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.OsmRequest.OsmRequestParam} returns this
- */
+/** @param {string} value */
 proto.sustain.OsmRequest.OsmRequestParam.prototype.setValue = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -4633,12 +4759,9 @@ proto.sustain.OsmRequest.prototype.getDataset = function() {
 };
 
 
-/**
- * @param {!proto.sustain.OsmRequest.Dataset} value
- * @return {!proto.sustain.OsmRequest} returns this
- */
+/** @param {!proto.sustain.OsmRequest.Dataset} value */
 proto.sustain.OsmRequest.prototype.setDataset = function(value) {
-  return jspb.Message.setProto3EnumField(this, 1, value);
+  jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -4651,12 +4774,9 @@ proto.sustain.OsmRequest.prototype.getRequestgeojson = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.OsmRequest} returns this
- */
+/** @param {string} value */
 proto.sustain.OsmRequest.prototype.setRequestgeojson = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -4669,31 +4789,25 @@ proto.sustain.OsmRequest.prototype.getSpatialop = function() {
 };
 
 
-/**
- * @param {!proto.sustain.SpatialOp} value
- * @return {!proto.sustain.OsmRequest} returns this
- */
+/** @param {!proto.sustain.SpatialOp} value */
 proto.sustain.OsmRequest.prototype.setSpatialop = function(value) {
-  return jspb.Message.setProto3EnumField(this, 3, value);
+  jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 
 /**
  * repeated OsmRequestParam requestParams = 4;
- * @return {!Array<!proto.sustain.OsmRequest.OsmRequestParam>}
+ * @return {!Array.<!proto.sustain.OsmRequest.OsmRequestParam>}
  */
 proto.sustain.OsmRequest.prototype.getRequestparamsList = function() {
-  return /** @type{!Array<!proto.sustain.OsmRequest.OsmRequestParam>} */ (
+  return /** @type{!Array.<!proto.sustain.OsmRequest.OsmRequestParam>} */ (
     jspb.Message.getRepeatedWrapperField(this, proto.sustain.OsmRequest.OsmRequestParam, 4));
 };
 
 
-/**
- * @param {!Array<!proto.sustain.OsmRequest.OsmRequestParam>} value
- * @return {!proto.sustain.OsmRequest} returns this
-*/
+/** @param {!Array.<!proto.sustain.OsmRequest.OsmRequestParam>} value */
 proto.sustain.OsmRequest.prototype.setRequestparamsList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 4, value);
+  jspb.Message.setRepeatedWrapperField(this, 4, value);
 };
 
 
@@ -4707,29 +4821,40 @@ proto.sustain.OsmRequest.prototype.addRequestparams = function(opt_value, opt_in
 };
 
 
-/**
- * Clears the list making it empty but non-null.
- * @return {!proto.sustain.OsmRequest} returns this
- */
 proto.sustain.OsmRequest.prototype.clearRequestparamsList = function() {
-  return this.setRequestparamsList([]);
+  this.setRequestparamsList([]);
 };
 
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.OsmResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.OsmResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.OsmResponse.displayName = 'proto.sustain.OsmResponse';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.OsmResponse.prototype.toObject = function(opt_includeInstance) {
@@ -4739,8 +4864,8 @@ proto.sustain.OsmResponse.prototype.toObject = function(opt_includeInstance) {
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.OsmResponse} msg The msg instance to transform.
  * @return {!Object}
@@ -4837,29 +4962,41 @@ proto.sustain.OsmResponse.prototype.getResponse = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.OsmResponse} returns this
- */
+/** @param {string} value */
 proto.sustain.OsmResponse.prototype.setResponse = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.CensusRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.CensusRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.CensusRequest.displayName = 'proto.sustain.CensusRequest';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.CensusRequest.prototype.toObject = function(opt_includeInstance) {
@@ -4869,8 +5006,8 @@ proto.sustain.CensusRequest.prototype.toObject = function(opt_includeInstance) {
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.CensusRequest} msg The msg instance to transform.
  * @return {!Object}
@@ -5003,12 +5140,9 @@ proto.sustain.CensusRequest.prototype.getCensusresolution = function() {
 };
 
 
-/**
- * @param {!proto.sustain.CensusResolution} value
- * @return {!proto.sustain.CensusRequest} returns this
- */
+/** @param {!proto.sustain.CensusResolution} value */
 proto.sustain.CensusRequest.prototype.setCensusresolution = function(value) {
-  return jspb.Message.setProto3EnumField(this, 1, value);
+  jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -5021,12 +5155,9 @@ proto.sustain.CensusRequest.prototype.getCensusfeature = function() {
 };
 
 
-/**
- * @param {!proto.sustain.CensusFeature} value
- * @return {!proto.sustain.CensusRequest} returns this
- */
+/** @param {!proto.sustain.CensusFeature} value */
 proto.sustain.CensusRequest.prototype.setCensusfeature = function(value) {
-  return jspb.Message.setProto3EnumField(this, 2, value);
+  jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 
@@ -5039,12 +5170,9 @@ proto.sustain.CensusRequest.prototype.getRequestgeojson = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.CensusRequest} returns this
- */
+/** @param {string} value */
 proto.sustain.CensusRequest.prototype.setRequestgeojson = function(value) {
-  return jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -5057,29 +5185,41 @@ proto.sustain.CensusRequest.prototype.getSpatialop = function() {
 };
 
 
-/**
- * @param {!proto.sustain.SpatialOp} value
- * @return {!proto.sustain.CensusRequest} returns this
- */
+/** @param {!proto.sustain.SpatialOp} value */
 proto.sustain.CensusRequest.prototype.setSpatialop = function(value) {
-  return jspb.Message.setProto3EnumField(this, 4, value);
+  jspb.Message.setProto3EnumField(this, 4, value);
 };
 
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.CensusResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.CensusResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.CensusResponse.displayName = 'proto.sustain.CensusResponse';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.CensusResponse.prototype.toObject = function(opt_includeInstance) {
@@ -5089,8 +5229,8 @@ proto.sustain.CensusResponse.prototype.toObject = function(opt_includeInstance) 
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.CensusResponse} msg The msg instance to transform.
  * @return {!Object}
@@ -5199,12 +5339,9 @@ proto.sustain.CensusResponse.prototype.getData = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.CensusResponse} returns this
- */
+/** @param {string} value */
 proto.sustain.CensusResponse.prototype.setData = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -5217,29 +5354,41 @@ proto.sustain.CensusResponse.prototype.getResponsegeojson = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.CensusResponse} returns this
- */
+/** @param {string} value */
 proto.sustain.CensusResponse.prototype.setResponsegeojson = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.DatasetEntry = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.DatasetEntry, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.DatasetEntry.displayName = 'proto.sustain.DatasetEntry';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.DatasetEntry.prototype.toObject = function(opt_includeInstance) {
@@ -5249,8 +5398,8 @@ proto.sustain.DatasetEntry.prototype.toObject = function(opt_includeInstance) {
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.DatasetEntry} msg The msg instance to transform.
  * @return {!Object}
@@ -5347,29 +5496,41 @@ proto.sustain.DatasetEntry.prototype.getEntry = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.DatasetEntry} returns this
- */
+/** @param {string} value */
 proto.sustain.DatasetEntry.prototype.setEntry = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.TargetedCensusRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.TargetedCensusRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.TargetedCensusRequest.displayName = 'proto.sustain.TargetedCensusRequest';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.TargetedCensusRequest.prototype.toObject = function(opt_includeInstance) {
@@ -5379,8 +5540,8 @@ proto.sustain.TargetedCensusRequest.prototype.toObject = function(opt_includeIns
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.TargetedCensusRequest} msg The msg instance to transform.
  * @return {!Object}
@@ -5515,12 +5676,9 @@ proto.sustain.TargetedCensusRequest.prototype.getResolution = function() {
 };
 
 
-/**
- * @param {!proto.sustain.CensusResolution} value
- * @return {!proto.sustain.TargetedCensusRequest} returns this
- */
+/** @param {!proto.sustain.CensusResolution} value */
 proto.sustain.TargetedCensusRequest.prototype.setResolution = function(value) {
-  return jspb.Message.setProto3EnumField(this, 1, value);
+  jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -5534,27 +5692,20 @@ proto.sustain.TargetedCensusRequest.prototype.getPredicate = function() {
 };
 
 
-/**
- * @param {?proto.sustain.Predicate|undefined} value
- * @return {!proto.sustain.TargetedCensusRequest} returns this
-*/
+/** @param {?proto.sustain.Predicate|undefined} value */
 proto.sustain.TargetedCensusRequest.prototype.setPredicate = function(value) {
-  return jspb.Message.setWrapperField(this, 2, value);
+  jspb.Message.setWrapperField(this, 2, value);
 };
 
 
-/**
- * Clears the message field making it undefined.
- * @return {!proto.sustain.TargetedCensusRequest} returns this
- */
 proto.sustain.TargetedCensusRequest.prototype.clearPredicate = function() {
-  return this.setPredicate(undefined);
+  this.setPredicate(undefined);
 };
 
 
 /**
  * Returns whether this field is set.
- * @return {boolean}
+ * @return {!boolean}
  */
 proto.sustain.TargetedCensusRequest.prototype.hasPredicate = function() {
   return jspb.Message.getField(this, 2) != null;
@@ -5570,12 +5721,9 @@ proto.sustain.TargetedCensusRequest.prototype.getSpatialop = function() {
 };
 
 
-/**
- * @param {!proto.sustain.SpatialOp} value
- * @return {!proto.sustain.TargetedCensusRequest} returns this
- */
+/** @param {!proto.sustain.SpatialOp} value */
 proto.sustain.TargetedCensusRequest.prototype.setSpatialop = function(value) {
-  return jspb.Message.setProto3EnumField(this, 3, value);
+  jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 
@@ -5588,29 +5736,41 @@ proto.sustain.TargetedCensusRequest.prototype.getRequestgeojson = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.TargetedCensusRequest} returns this
- */
+/** @param {string} value */
 proto.sustain.TargetedCensusRequest.prototype.setRequestgeojson = function(value) {
-  return jspb.Message.setProto3StringField(this, 4, value);
+  jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.TargetedCensusResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.TargetedCensusResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.TargetedCensusResponse.displayName = 'proto.sustain.TargetedCensusResponse';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.TargetedCensusResponse.prototype.toObject = function(opt_includeInstance) {
@@ -5620,8 +5780,8 @@ proto.sustain.TargetedCensusResponse.prototype.toObject = function(opt_includeIn
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.TargetedCensusResponse} msg The msg instance to transform.
  * @return {!Object}
@@ -5730,12 +5890,9 @@ proto.sustain.TargetedCensusResponse.prototype.getData = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.TargetedCensusResponse} returns this
- */
+/** @param {string} value */
 proto.sustain.TargetedCensusResponse.prototype.setData = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -5748,29 +5905,41 @@ proto.sustain.TargetedCensusResponse.prototype.getResponsegeojson = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.TargetedCensusResponse} returns this
- */
+/** @param {string} value */
 proto.sustain.TargetedCensusResponse.prototype.setResponsegeojson = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.Predicate = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.Predicate, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.Predicate.displayName = 'proto.sustain.Predicate';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.Predicate.prototype.toObject = function(opt_includeInstance) {
@@ -5780,8 +5949,8 @@ proto.sustain.Predicate.prototype.toObject = function(opt_includeInstance) {
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.Predicate} msg The msg instance to transform.
  * @return {!Object}
@@ -5792,7 +5961,7 @@ proto.sustain.Predicate.toObject = function(includeInstance, msg) {
     censusfeature: jspb.Message.getFieldWithDefault(msg, 1, 0),
     decade: jspb.Message.getFieldWithDefault(msg, 2, 0),
     comparisonop: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    comparisonvalue: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0)
+    comparisonvalue: +jspb.Message.getFieldWithDefault(msg, 4, 0.0)
   };
 
   if (includeInstance) {
@@ -5925,12 +6094,9 @@ proto.sustain.Predicate.prototype.getCensusfeature = function() {
 };
 
 
-/**
- * @param {!proto.sustain.CensusFeature} value
- * @return {!proto.sustain.Predicate} returns this
- */
+/** @param {!proto.sustain.CensusFeature} value */
 proto.sustain.Predicate.prototype.setCensusfeature = function(value) {
-  return jspb.Message.setProto3EnumField(this, 1, value);
+  jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -5943,12 +6109,9 @@ proto.sustain.Predicate.prototype.getDecade = function() {
 };
 
 
-/**
- * @param {!proto.sustain.Decade} value
- * @return {!proto.sustain.Predicate} returns this
- */
+/** @param {!proto.sustain.Decade} value */
 proto.sustain.Predicate.prototype.setDecade = function(value) {
-  return jspb.Message.setProto3EnumField(this, 2, value);
+  jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 
@@ -5961,12 +6124,9 @@ proto.sustain.Predicate.prototype.getComparisonop = function() {
 };
 
 
-/**
- * @param {!proto.sustain.Predicate.ComparisonOperator} value
- * @return {!proto.sustain.Predicate} returns this
- */
+/** @param {!proto.sustain.Predicate.ComparisonOperator} value */
 proto.sustain.Predicate.prototype.setComparisonop = function(value) {
-  return jspb.Message.setProto3EnumField(this, 3, value);
+  jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 
@@ -5975,33 +6135,45 @@ proto.sustain.Predicate.prototype.setComparisonop = function(value) {
  * @return {number}
  */
 proto.sustain.Predicate.prototype.getComparisonvalue = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 4, 0.0));
+  return /** @type {number} */ (+jspb.Message.getFieldWithDefault(this, 4, 0.0));
 };
+
+
+/** @param {number} value */
+proto.sustain.Predicate.prototype.setComparisonvalue = function(value) {
+  jspb.Message.setProto3FloatField(this, 4, value);
+};
+
 
 
 /**
- * @param {number} value
- * @return {!proto.sustain.Predicate} returns this
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
  */
-proto.sustain.Predicate.prototype.setComparisonvalue = function(value) {
-  return jspb.Message.setProto3FloatField(this, 4, value);
+proto.sustain.CompoundResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-
-
-
+goog.inherits(proto.sustain.CompoundResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.CompoundResponse.displayName = 'proto.sustain.CompoundResponse';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.CompoundResponse.prototype.toObject = function(opt_includeInstance) {
@@ -6011,8 +6183,8 @@ proto.sustain.CompoundResponse.prototype.toObject = function(opt_includeInstance
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.CompoundResponse} msg The msg instance to transform.
  * @return {!Object}
@@ -6121,12 +6293,9 @@ proto.sustain.CompoundResponse.prototype.getData = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.CompoundResponse} returns this
- */
+/** @param {string} value */
 proto.sustain.CompoundResponse.prototype.setData = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -6139,16 +6308,30 @@ proto.sustain.CompoundResponse.prototype.getGeojson = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.CompoundResponse} returns this
- */
+/** @param {string} value */
 proto.sustain.CompoundResponse.prototype.setGeojson = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.CompoundRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.sustain.CompoundRequest.oneofGroups_);
+};
+goog.inherits(proto.sustain.CompoundRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.CompoundRequest.displayName = 'proto.sustain.CompoundRequest';
+}
 /**
  * Oneof group definitions for this message. Each group defines the field
  * numbers belonging to that group. When of these fields' value is set, all
@@ -6195,15 +6378,13 @@ proto.sustain.CompoundRequest.prototype.getSecondpredicateCase = function() {
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.CompoundRequest.prototype.toObject = function(opt_includeInstance) {
@@ -6213,8 +6394,8 @@ proto.sustain.CompoundRequest.prototype.toObject = function(opt_includeInstance)
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.CompoundRequest} msg The msg instance to transform.
  * @return {!Object}
@@ -6368,27 +6549,20 @@ proto.sustain.CompoundRequest.prototype.getFirstQuery = function() {
 };
 
 
-/**
- * @param {?proto.sustain.Query|undefined} value
- * @return {!proto.sustain.CompoundRequest} returns this
-*/
+/** @param {?proto.sustain.Query|undefined} value */
 proto.sustain.CompoundRequest.prototype.setFirstQuery = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 1, proto.sustain.CompoundRequest.oneofGroups_[0], value);
+  jspb.Message.setOneofWrapperField(this, 1, proto.sustain.CompoundRequest.oneofGroups_[0], value);
 };
 
 
-/**
- * Clears the message field making it undefined.
- * @return {!proto.sustain.CompoundRequest} returns this
- */
 proto.sustain.CompoundRequest.prototype.clearFirstQuery = function() {
-  return this.setFirstQuery(undefined);
+  this.setFirstQuery(undefined);
 };
 
 
 /**
  * Returns whether this field is set.
- * @return {boolean}
+ * @return {!boolean}
  */
 proto.sustain.CompoundRequest.prototype.hasFirstQuery = function() {
   return jspb.Message.getField(this, 1) != null;
@@ -6405,27 +6579,20 @@ proto.sustain.CompoundRequest.prototype.getFirstCompoundRequest = function() {
 };
 
 
-/**
- * @param {?proto.sustain.CompoundRequest|undefined} value
- * @return {!proto.sustain.CompoundRequest} returns this
-*/
+/** @param {?proto.sustain.CompoundRequest|undefined} value */
 proto.sustain.CompoundRequest.prototype.setFirstCompoundRequest = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 2, proto.sustain.CompoundRequest.oneofGroups_[0], value);
+  jspb.Message.setOneofWrapperField(this, 2, proto.sustain.CompoundRequest.oneofGroups_[0], value);
 };
 
 
-/**
- * Clears the message field making it undefined.
- * @return {!proto.sustain.CompoundRequest} returns this
- */
 proto.sustain.CompoundRequest.prototype.clearFirstCompoundRequest = function() {
-  return this.setFirstCompoundRequest(undefined);
+  this.setFirstCompoundRequest(undefined);
 };
 
 
 /**
  * Returns whether this field is set.
- * @return {boolean}
+ * @return {!boolean}
  */
 proto.sustain.CompoundRequest.prototype.hasFirstCompoundRequest = function() {
   return jspb.Message.getField(this, 2) != null;
@@ -6441,12 +6608,9 @@ proto.sustain.CompoundRequest.prototype.getJoin = function() {
 };
 
 
-/**
- * @param {!proto.sustain.JoinOperator} value
- * @return {!proto.sustain.CompoundRequest} returns this
- */
+/** @param {!proto.sustain.JoinOperator} value */
 proto.sustain.CompoundRequest.prototype.setJoin = function(value) {
-  return jspb.Message.setProto3EnumField(this, 3, value);
+  jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 
@@ -6460,27 +6624,20 @@ proto.sustain.CompoundRequest.prototype.getSecondQuery = function() {
 };
 
 
-/**
- * @param {?proto.sustain.Query|undefined} value
- * @return {!proto.sustain.CompoundRequest} returns this
-*/
+/** @param {?proto.sustain.Query|undefined} value */
 proto.sustain.CompoundRequest.prototype.setSecondQuery = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 4, proto.sustain.CompoundRequest.oneofGroups_[1], value);
+  jspb.Message.setOneofWrapperField(this, 4, proto.sustain.CompoundRequest.oneofGroups_[1], value);
 };
 
 
-/**
- * Clears the message field making it undefined.
- * @return {!proto.sustain.CompoundRequest} returns this
- */
 proto.sustain.CompoundRequest.prototype.clearSecondQuery = function() {
-  return this.setSecondQuery(undefined);
+  this.setSecondQuery(undefined);
 };
 
 
 /**
  * Returns whether this field is set.
- * @return {boolean}
+ * @return {!boolean}
  */
 proto.sustain.CompoundRequest.prototype.hasSecondQuery = function() {
   return jspb.Message.getField(this, 4) != null;
@@ -6497,27 +6654,20 @@ proto.sustain.CompoundRequest.prototype.getSecondCompoundRequest = function() {
 };
 
 
-/**
- * @param {?proto.sustain.CompoundRequest|undefined} value
- * @return {!proto.sustain.CompoundRequest} returns this
-*/
+/** @param {?proto.sustain.CompoundRequest|undefined} value */
 proto.sustain.CompoundRequest.prototype.setSecondCompoundRequest = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 5, proto.sustain.CompoundRequest.oneofGroups_[1], value);
+  jspb.Message.setOneofWrapperField(this, 5, proto.sustain.CompoundRequest.oneofGroups_[1], value);
 };
 
 
-/**
- * Clears the message field making it undefined.
- * @return {!proto.sustain.CompoundRequest} returns this
- */
 proto.sustain.CompoundRequest.prototype.clearSecondCompoundRequest = function() {
-  return this.setSecondCompoundRequest(undefined);
+  this.setSecondCompoundRequest(undefined);
 };
 
 
 /**
  * Returns whether this field is set.
- * @return {boolean}
+ * @return {!boolean}
  */
 proto.sustain.CompoundRequest.prototype.hasSecondCompoundRequest = function() {
   return jspb.Message.getField(this, 5) != null;
@@ -6525,19 +6675,34 @@ proto.sustain.CompoundRequest.prototype.hasSecondCompoundRequest = function() {
 
 
 
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.Query = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.Query, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.Query.displayName = 'proto.sustain.Query';
+}
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto.
+ * Creates an object representation of this proto suitable for use in Soy templates.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
- * @param {boolean=} opt_includeInstance Deprecated. whether to include the
- *     JSPB instance for transitional soy proto support:
- *     http://goto/soy-param-migration
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.sustain.Query.prototype.toObject = function(opt_includeInstance) {
@@ -6547,8 +6712,8 @@ proto.sustain.Query.prototype.toObject = function(opt_includeInstance) {
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Deprecated. Whether to include
- *     the JSPB instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.sustain.Query} msg The msg instance to transform.
  * @return {!Object}
@@ -6681,12 +6846,9 @@ proto.sustain.Query.prototype.getHost = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.Query} returns this
- */
+/** @param {string} value */
 proto.sustain.Query.prototype.setHost = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -6699,12 +6861,9 @@ proto.sustain.Query.prototype.getPort = function() {
 };
 
 
-/**
- * @param {number} value
- * @return {!proto.sustain.Query} returns this
- */
+/** @param {number} value */
 proto.sustain.Query.prototype.setPort = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+  jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -6717,12 +6876,9 @@ proto.sustain.Query.prototype.getCollection = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.Query} returns this
- */
+/** @param {string} value */
 proto.sustain.Query.prototype.setCollection = function(value) {
-  return jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -6735,12 +6891,9 @@ proto.sustain.Query.prototype.getQuery = function() {
 };
 
 
-/**
- * @param {string} value
- * @return {!proto.sustain.Query} returns this
- */
+/** @param {string} value */
 proto.sustain.Query.prototype.setQuery = function(value) {
-  return jspb.Message.setProto3StringField(this, 4, value);
+  jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -6816,4 +6969,4 @@ proto.sustain.ComparisonOperator = {
 
 goog.object.extend(exports, proto.sustain);
 
-},{"google-protobuf":3}]},{},[6]);
+},{"google-protobuf":4}]},{},[6]);

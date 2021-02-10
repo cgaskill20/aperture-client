@@ -132,7 +132,7 @@
   left: 0;
   right: 0;
   box-sizing: border-box;
-  padding: 10px 20px;
+  padding: 0px 20px 20px 20px;
   width: 100%;
 }
 
@@ -144,7 +144,7 @@
 .sidebar-header {
   margin: -10px -20px 0;
   height: 50px;
-  padding: 3px 20px 0px 0px;
+  padding: 0px 20px 0px 0px;
   line-height: 23px;
   color: #fff;
   background-color: #0074d9;
@@ -160,7 +160,7 @@
   font-size: 18pt;
   font-weight: bolder;
   text-align: center;
-
+  height: 100%;
 }
 
 .sidebar-close {
