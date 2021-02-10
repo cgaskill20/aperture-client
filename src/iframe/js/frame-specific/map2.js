@@ -10,7 +10,6 @@ const map = L.map('map2', {
     inertia: false,
     timeDimension: false,
     zoomControl: false,
-    //minZoom: 11
 });
 window.map = map;
 
@@ -20,13 +19,7 @@ var tiles2 = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/
     maxZoom: 18
 }).addTo(map);
 
-
 const zoomControl = L.control.zoom({position:"topright"}).addTo(map);
-
-// var sidebar = L.control.sidebar('sidebar', {
-//     position: 'left'
-// }).addTo(map);
-
 
 var markers = L.markerClusterGroup({
     showCoverageOnHover: false,
@@ -49,6 +42,28 @@ map.on('click', function () {
     closeNav();
 });
 
+document.getElementById('nav-menu-button').addEventListener('click', openNav);
+document.getElementById('nav-close-button').addEventListener('click', closeNav);
+document.getElementById('nav-data-exploration-button').addEventListener('click', showDataExploration);
+document.getElementById('nav-modeling-button').addEventListener('click', showModeling);
+document.getElementById('nav-validation-button').addEventListener('click', showValidation);
+document.getElementById('nav-graph-button').addEventListener('click', showGraph);
+
+// $('#nav-close-button').on('click', closeNav);
+// $('#nav-data-exploration-button').on('click', showDataExploration);
+// $('#nav-modeling-button').on('click', showModeling);
+// $('#nav-validation-button').on('click', showValidation);
+
+function openNav() {
+  document.getElementById("sidebar-id").style.width = "52vw";
+  document.getElementById("main").style.opacity = "0";
+}
+
+function closeNav() {
+  document.getElementById("sidebar-id").style.width = "0";
+  document.getElementById("main").style.opacity = "1";
+}
+
 function showDataExploration() {
     document.getElementById("sidebar-container").style.display = "grid";
     document.getElementById("model-container").style.display = "none";
@@ -64,15 +79,8 @@ function showValidation() {
     document.getElementById("model-container").style.display = "none";
 }
 
-function openNav() {
-  document.getElementById("sidebar-id").style.width = "52vw";
-  document.getElementById("main").style.opacity = "0";
-}
-
-function closeNav() {
-  document.getElementById("sidebar-id").style.width = "0";
-  document.getElementById("main").style.opacity = "1";
-  document.getElementById("main").style.transition = "0.5s";
+function showGraph() {
+    //FIXME Jean-Marc & Piers, put your graph pop-up JS here
 }
 
 const overwrite = { //leaving this commented cause it explains the schema really well 

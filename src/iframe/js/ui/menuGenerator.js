@@ -28,10 +28,6 @@ function updateLayers() {
     }
 }
 
-// $(function () {
-//   $('[data-toggle="tooltip"]').tooltip()
-// })
-
 const MenuGenerator = {
     /** Generates the menu within a container
      * @memberof MenuGenerator

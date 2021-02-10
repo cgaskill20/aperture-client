@@ -15,7 +15,6 @@
     <link rel="stylesheet" type="text/css" href="css/third-party/nouislider.min.css">
     <link rel="stylesheet" type="text/css" href="css/third-party/bootstrap4-toggle.min.css">
     <link rel="stylesheet" type="text/css" href="css/third-party/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/newUI.css">
 
     <link rel="stylesheet" type="text/css" href="css/third-party/leaflet-sidebar.css">
 
@@ -38,7 +37,6 @@
     <script src="js/library/autoMenu.js"></script>
 
     <script src="js/ui/menuGenerator.js"></script>
-    <!-- <script src="js/library/exampleFilterDigester.js"></script> -->
 </head>
 
 <body>
@@ -46,21 +44,47 @@
 
     <div class="leaflet-bottom leaflet-right"></div>
     <div id="sidebar-id" class="sidebar">
-        <div class="custom-nav">
-            <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-outline-dark" onclick="showDataExploration()">Data Exploration</button>
-              <button type="button" class="btn btn-outline-dark" onclick="showModeling()">Modeling</button>
-              <button type="button" class="btn btn-outline-dark" onclick="showValidation()">Validation</button>
-              <button type="button" class="btn btn-outline-dark" onclick="closeNav()">Close</button>
+        <div class="nav-tabs">
+
+
+
+<!--           <div class="btn-group" role='group'>
+
+            <button type="button" id='nav-graph-button' class="btn btn-outline-dark" disabled><img src="/images/graph.png" class="graph-button-pic"></button>
+
+            <div class="btn-group btn-group-toggle" id="nav-radio-group" data-toggle="buttons">
+              <label class="btn btn-outline-dark active">
+                <input type="radio" id="nav-data-exploration-button" autocomplete="off" checked> Data Exploration
+              </label>
+              <label class="btn btn-outline-dark">
+                <input type="radio" id="nav-modeling-button" autocomplete="off"> Modeling
+              </label>
+              <label class="btn btn-outline-dark">
+                <input type="radio" id="nav-validation-button" autocomplete="off"> Validation
+              </label>
             </div>
+
+            <button type="button" id='nav-close-button' class="btn btn-outline-dark">Close</button>
+
+          </div> -->
+
+
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="button" id='nav-graph-button' class="btn btn-outline-dark" disabled><img src="/images/graph.png" class="graph-button-pic"></button>
+              <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark">Data Exploration</button>
+              <button type="button" id='nav-modeling-button' class="btn btn-outline-dark">Modeling</button>
+              <button type="button" id='nav-validation-button' class="btn btn-outline-dark">Validation</button>
+              <button type="button" id='nav-close-button' class="btn btn-outline-dark">Close</button>
+            </div>
+
+
         </div>
-        <!-- <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a> -->
         <div id="sidebar-container"></div>
         <div id="model-container"></div>
     </div>
 
     <div id="main">
-      <button class="btn btn-outline-dark" onclick="openNav()">☰ Menu</button>
+      <button class="btn btn-outline-dark" id='nav-menu-button'>☰ Menu</button>
     </div>
 
 
@@ -72,16 +96,18 @@
     <script src="js/third-party/bootstrap.min.js"></script>
 
 
-    <!-- React Lib -->
+    <!-- React Lib Prod-->
     <!-- <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script> -->
+    <!-- React Lib Dev -->
     <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+
     <!-- React Components -->
     <script src="js/ui/components/ModelMenu.js"></script>
     <script src="js/ui/components/ModelParameter.js"></script>
 
-    <!-- Frame JS -->
+    <!-- Frame JS, Load Last! -->
     <script src="js/frame-specific/map2.js"></script>
     <script src="js/control/mouseDown.js"></script>
 </body>
