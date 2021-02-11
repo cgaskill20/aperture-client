@@ -130,7 +130,6 @@ class SmartQuerier {
       */
     wrapResponseCallback(collection, callback) {
         let onResponseCallback = (response) => {
-            console.log(response);
             const data = JSON.parse(response.getData());
             this.addToCache(collection, data);
             callback(data);
@@ -147,7 +146,7 @@ class SmartQuerier {
         Object.values(this.getCollectionBucket(collection)).forEach((GISBucket) => {
             GISBucket.forEach((item) => {
                 callback(item);
-            })
+            });
         });
     }
 
@@ -209,8 +208,9 @@ class SmartQuerier {
         let bucket = this.getGISJOINBucket(collection, data.GISJOIN);
         bucket.push(data);
 
-        if (bucket.length > SmartQuerier.maxBucketSize) {
-            bucket.shift();
+        let cbucket = this.getCollectionBucket(collection);
+        if (Object.keys(cbucket).length > 10) {
+            delete cbucket[Object.keys(cbucket)[0]];
         }
     }
 

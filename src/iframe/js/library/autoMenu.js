@@ -7,7 +7,7 @@
 
 const AutoMenu = {
     //get the querier
-    _sustainQuerier: getSustainQuerier(),
+    _sustainQuerier: new SharedWorker('js/library/queryWorker.js'),
 
     /**
       * Main, asyncronous function which is called by an external code block
@@ -20,20 +20,25 @@ const AutoMenu = {
     build: async function (menuMetaData, overwrite) {
         return new Promise(((resolve) => {
             let catalog = {};
-            AutoMenu._sustainQuerier.query("Metadata", [],
-                (data) => {
-                    catalog[data.collection] = data;
-                },
-                (end) => {
+            AutoMenu._sustainQuerier.port.postMessage({
+                type: "query",
+                collection: "Metadata", 
+                queryParams: [],
+            });
+            AutoMenu._sustainQuerier.port.onmessage = function (msg) {
+                if (msg.data.type == "data") {
+                    catalog[msg.data.data.collection] = msg.data.data; // do da data dance
+                } else if (msg.data.type == "end") {
                     //build it
                     const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
 
                     //return it
                     resolve({
                         ...autoMenu,
-                        ...overwrite //overwrite using the ... operarator
+                        ...overwrite,
                     });
-                });
+                }
+            }.bind(this);
         }).bind(this));
     },
 
