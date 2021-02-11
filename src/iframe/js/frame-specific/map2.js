@@ -1,4 +1,6 @@
 const MAPNUMBER = 2;
+const e = React.createElement;
+
 
 //const queryAlertText = document.getElementById('queryInfoText');
 

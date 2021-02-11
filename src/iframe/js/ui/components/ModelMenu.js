@@ -1,6 +1,4 @@
 'use strict';
-const e = React.createElement;
-
 class ModelMenu extends React.Component {
     constructor(props) {
         super(props);

@@ -1,6 +1,4 @@
 'use strict';
-//const e = React.createElement; defined in another file
-
 class ModelParameter extends React.Component {
     constructor(props) {
         super(props);
