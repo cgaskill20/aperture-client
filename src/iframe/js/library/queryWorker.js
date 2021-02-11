@@ -14,7 +14,7 @@ onconnect = function(p) {
                           msg.data.queryParams, 
                           data => { port.postMessage({ type: "data", data: data }); }, 
                           end => { port.postMessage({ type: "end" }); });
-        } else if (msg.data.type === "kill streams") {
+        } else if (msg.data.type === "kill") {
             querier.killAllStreamsOverCollection(msg.data.collection);
         }
     }

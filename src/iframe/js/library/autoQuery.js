@@ -63,7 +63,7 @@ class AutoQuery {
       */
     onRemove() {
         this.clearMapLayers();
-        this.queryWorker.postMessage({ type: "kill streams", collection: this.collection });
+        this.queryWorker.postMessage({ type: "kill", collection: this.collection });
         this.layerIDs = [];
         this.enabled = false;
     }
@@ -127,7 +127,7 @@ class AutoQuery {
     reQuery() {
         if (this.enabled) {
             this.clearMapLayers();
-            this.queryWorker.port.postMessage({ type: "kill streams", collection: this.collection });
+            this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
             this.query();
         }
     }
