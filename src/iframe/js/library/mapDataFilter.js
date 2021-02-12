@@ -33,8 +33,8 @@ class MapDataFilter {
       */
     addSingle(newData) {
         let entryAlreadyExists = this.data.find(entry => {
-            if (newData.GISJOIN) {
-                return entry.GISJOIN === newData.GISJOIN;
+            if (newData.id) {
+                return entry.id === newData.id;
             } else {
                 return false;
             }
@@ -156,7 +156,6 @@ class MapDataFilter {
       * @returns {object} An object with a data, type, and locationName property
       */
     model(entry, feature) { 
-        console.log(entry);
         return { 
             data: entry.properties[feature],
             type: this.dataLocation(entry),

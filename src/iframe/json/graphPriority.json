@@ -6,9 +6,9 @@
       "temp": {
         "label": "Heatwave Temperature",
         "priority": 1,
-        "graphTypes": ["bar", "histogram", "line"],
+        "graphTypes": ["histogram", "line"],
         "buckets":[10,20,30,40,50,60,70,80,90],
-        "color scheme": []
+        "color scheme": [[192, 0, 64], [64, 0, 192]]
       }
     }
   }

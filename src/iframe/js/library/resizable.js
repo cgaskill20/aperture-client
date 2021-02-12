@@ -21,9 +21,8 @@ class resizable {
         this.createOverlay();
         this.collapseButton();
         this.resizeListeners();
-        this.test();
         this.movementListeners();
-
+        this.components = [];
     }
     /**
      * Generates the 3 necessary divs for the overlay and adds in the CSS based on its initialization variables
@@ -118,6 +117,9 @@ class resizable {
             this.overlayDocument.style.height = this.height + 'px';
             this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
         }
+        this.components.forEach(chart => {
+            chart.rerender(this.width, this.height);
+        });
     }
     /**
      * Adds in the necessary listeners for the div to be moved
@@ -170,52 +172,10 @@ class resizable {
         }).addTo(map);
     }
 
-    test(){
-        /*const canvas = document.createElement("div");
-        canvas.innerHTML = "<canvas id='myChart' width="+this.width +" height="+this.height+"></canvas>";
-        this.boxDocument.appendChild(canvas);
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
-                }
-            }
-        });
-        this.chartJS = myChart;*/
-
+    addChart(chart) {
+        chart.addTo(this.boxDocument);
+        this.components.push(chart);
     }
-
 }
 
 
