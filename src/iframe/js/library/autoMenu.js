@@ -70,6 +70,9 @@ const AutoMenu = {
                 if(metadata.icon)
                     autoMenuLayer["icon"] = metadata.icon;
                 
+                if(metadata.info)
+                    autoMenuLayer["info"] = metadata.info;
+                
                 if(metadata.color){
                     if(typeof metadata.color === "string"){
                         autoMenuLayer["color"] = {
