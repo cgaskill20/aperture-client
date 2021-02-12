@@ -21,9 +21,8 @@ class resizable {
         this.createOverlay();
         this.collapseButton();
         this.resizeListeners();
-        this.test();
         this.movementListeners();
-
+        this.components = [];
     }
     /**
      * Generates the 3 necessary divs for the overlay and adds in the CSS based on its initialization variables
@@ -118,6 +117,9 @@ class resizable {
             this.overlayDocument.style.height = this.height + 'px';
             this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
         }
+        this.components.forEach(chart => {
+            chart.rerender(this.width, this.height);
+        });
     }
     /**
      * Adds in the necessary listeners for the div to be moved
@@ -170,60 +172,15 @@ class resizable {
         }).addTo(map);
     }
 
-    test(labels, values){
-        var divsToRemove = document.getElementsByClassName("canvas");
-        for (var i = divsToRemove.length-1; i >= 0; i--) {
-            divsToRemove[i].remove();
-        }
-        const canvas = document.createElement("div");
-        canvas.classList.add('canvas');
-        canvas.innerHTML = "<canvas id='myChart' width="+this.width +" height="+this.height+"></canvas>";
-        this.boxDocument.appendChild(canvas);
-        var ctx = document.getElementById("myChart").getContext('2d');
-        var dataValues = values;
-        var dataLabels = labels;
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: dataLabels,
-                datasets: [{
-                    label: 'Group A',
-                    data: dataValues,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        display: false,
-                        barPercentage: 1.3,
-                        ticks: {
-                            max: 3,
-                        }
-                    }, {
-                        display: true,
-                        ticks: {
-                            autoSkip: false,
-                            max: 4,
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
-                }
-            }
-        });
-        this.chartJS = myChart;
-
+    addChart(chart) {
+        chart.addTo(this.boxDocument);
+        this.components.push(chart);
     }
-
 }
+
+
+$( document ).ready(function() {
+    const test = new resizable(500,500,"white");
+    const test2 = new resizable(300,200,"black");
+
+});
