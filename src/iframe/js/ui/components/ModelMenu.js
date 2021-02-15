@@ -11,7 +11,9 @@ class ModelMenu extends React.Component {
         this.onCategoryChange = this.onCategoryChange.bind(this)
         this.onTypeChange = this.onTypeChange.bind(this)
         this.setParameter = this.setParameter.bind(this)
+        this.setCollection = this.setCollection.bind(this)
 
+        this.collections = {};
         this.parameters = {};
 
         this.parametersTemp = [
@@ -96,6 +98,16 @@ class ModelMenu extends React.Component {
                 "default": 0.000001
             }
         ]
+
+        this.collectionsTemp = [
+            {
+                "name": "future_heat",
+                "features": [
+                    "temp",
+                    "year"
+                ]
+            }
+        ]
     }
 
 
@@ -106,7 +118,8 @@ class ModelMenu extends React.Component {
             e("label", { htmlFor: "typeSelector" }, "Select type: "),
             this.createTypeSelector(),
             //e("div", null, JSON.stringify(this.state)),
-            ...this.createParameters()
+            ...this.createCollections(),
+            ...this.createParameters(),
         );
     }
 
@@ -152,19 +165,38 @@ class ModelMenu extends React.Component {
     }
 
     createParameters() {
-        return this.parametersTemp.map(p => {
+        return this.parametersTemp.map(parameter => {
             return e(ModelParameter, {
-                config: p,
+                config: parameter,
                 setParameter: this.setParameter
             });
         });
     }
 
-    clearParameters(){
+    clearParameters() {
         this.parameters = {};
     }
 
     setParameter(name, value) {
         this.parameters[name] = value;
+    }
+
+    createCollections(){
+        return this.collectionsTemp.map(collection => {
+            return e(ModelCollection, {
+                config: collection,
+                setCollection: this.setCollection
+            })
+        });
+    }
+
+    clearCollections() {
+        this.collections = {};
+    }
+
+    setCollection(name, feature, value){
+        if(!this.collections[name])
+            this.collections[name] = {};
+        this.collections[name][feature] = value;
     }
 }

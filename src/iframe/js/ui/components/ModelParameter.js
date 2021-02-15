@@ -14,7 +14,7 @@ class ModelParameter extends React.Component {
     render() {
         this.updateParent()
         return e("div", {className: "modelParameter"},
-            e("label", {htmlFor: this.nane}, `${this.name}: ${this.state.value}`),
+            e("label", {htmlFor: this.name}, `${this.name}: ${this.state.value}`),
             this.buildParameter()
         );
     }
