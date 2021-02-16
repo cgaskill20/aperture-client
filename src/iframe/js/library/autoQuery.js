@@ -63,7 +63,7 @@ class AutoQuery {
       */
     onRemove() {
         this.clearMapLayers();
-        this.queryWorker.postMessage({ type: "kill", collection: this.collection });
+        this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
         this.layerIDs = [];
         this.enabled = false;
     }
