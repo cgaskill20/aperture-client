@@ -18,7 +18,7 @@ class AutoQuery {
         this.data = layerData;
         this.collection = layerData.collection;
         this.map = layerData.map();
-        this.sustainQuerier = sustain_querier(); //init querier
+        this.queryWorker = new SharedWorker('js/library/queryWorker.js'); //init querier
 
         this.constraintData = {};
         this.constraintState = {};
@@ -63,7 +63,7 @@ class AutoQuery {
       */
     onRemove() {
         this.clearMapLayers();
-        this.killStreams();
+        this.queryWorker.postMessage({ type: "kill", collection: this.collection });
         this.layerIDs = [];
         this.enabled = false;
     }
@@ -127,7 +127,7 @@ class AutoQuery {
     reQuery() {
         if (this.enabled) {
             this.clearMapLayers();
-            this.killStreams();
+            this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
             this.query();
         }
     }
@@ -190,23 +190,20 @@ class AutoQuery {
         }
         q = q.concat(this.buildConstraintPipeline());
 
-        const stream = this.sustainQuerier.getStreamForQuery("lattice-46", 27017, this.collection, JSON.stringify(q));
+        this.queryWorker.port.postMessage({
+            type: "query",
+            collection: this.collection,
+            queryParams: q,
+        });
 
-        this.streams.push(stream);
-
-        stream.on('data', function (r) {
-            const data = JSON.parse(r.getData());
-
-            Util.normalizeFeatureID(data);
-
-            if (!this.layerIDs.includes(data.id)) {
-                this.renderData(data, forcedGeometry);
+        this.queryWorker.port.onmessage = (msg) => {
+            if (msg.data.type == "data") {
+                Util.normalizeFeatureID(msg.data.data);
+                if (!this.layerIDs.includes(msg.data.data.id)) {
+                    this.renderData(msg.data.data, forcedGeometry);
+                }
             }
-        }.bind(this));
-
-        stream.on('end', function (r) {
-
-        }.bind(this));
+        }
     }
 
     /**
@@ -218,17 +215,6 @@ class AutoQuery {
         RenderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
         this.mapLayers = [];
         this.layerIDs = [];
-    }
-
-    /**
-      * Kills any streams (queries) which are currently running.
-      * @memberof AutoQuery
-      * @method killStreams
-      */
-    killStreams() {
-        for (const stream of this.streams)
-            stream.cancel();
-        this.streams = [];
     }
 
     /**

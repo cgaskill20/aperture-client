@@ -71,6 +71,7 @@ RenderInfrastructure = {
         if (RenderInfrastructure.options.simplifyThreshold !== -1) {
             Util.simplifyGeoJSON(geoJsonData, RenderInfrastructure.options.simplifyThreshold);
         }
+        //console.log(geoJsonData)
         Util.fixGeoJSONID(geoJsonData);
 
         if (RenderInfrastructure.dataFilter) {
@@ -241,7 +242,7 @@ RenderInfrastructure = {
 
     useFilter: function(filter) {
         RenderInfrastructure.dataFilter = filter;
-        console.log(filter);
+
     }
 }
 
