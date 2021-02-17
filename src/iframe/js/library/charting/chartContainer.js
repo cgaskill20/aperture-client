@@ -62,6 +62,8 @@ class ChartContainer {
         this.hidden = false;
         this.parentNode = node;
         this.viewIndex = viewIndex;
+        this.currentHeight = 0;
+        this.currentWidth = 0;
 
         this.attachTo(node);
     }
@@ -97,9 +99,13 @@ class ChartContainer {
         console.log(`cycling from ${this.currentChartIndex}`);
         this.charts[this.currentChartIndex].hide(this.viewIndex);
         this.currentChartIndex = (this.currentChartIndex + 1) % this.charts.length;
+        this.charts[this.currentChartIndex].unhide(this.viewIndex);
+        this.charts[this.currentChartIndex].rerender(this.currentWidth - 50, this.currentHeight, this.viewIndex);
     }
 
     resize(newWidth, newHeight) {
+        this.currentWidth = newWidth;
+        this.currentHeight = newHeight;
         this.charts[this.currentChartIndex].unhide(this.viewIndex);
         this.charts[this.currentChartIndex].rerender(newWidth - 50, newHeight, this.viewIndex);
         this.chartContainer.style.width = newWidth + 'px';

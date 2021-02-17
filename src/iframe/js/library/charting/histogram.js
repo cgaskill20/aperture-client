@@ -56,9 +56,8 @@ END OF TERMS AND CONDITIONS
 */
 
 class Histogram extends Chart {
-    constructor(data) {
-        super(data);
-        this.data = data;
+    constructor() {
+        super([]);
         this.binNum = 10;
         this.changeBins(this.binNum);
         this.colorScale = () => "steelblue";

@@ -58,21 +58,26 @@ END OF TERMS AND CONDITIONS
 
 class ChartSystem {
     constructor(map, chartCatalogFilename) {
+        this.charts = {};
         this.filter = new MapDataFilter();
         RenderInfrastructure.useFilter(this.filter);
 
         this.map = map;
 
-        this.chart = new Histogram([], 1000, 300);
-        this.chart2 = new Histogram([], 1000, 300);
         this.resizable = new resizable(1, 1, "white");
         this.resizable = new resizable(1000, 300, "white"); // The most temporary of temporary solutions
-        this.resizable.addChart(this.chart);
-        this.resizable.addChart(this.chart2);
+                                                            // someone needs to integrate this graph
+                                                            // button with Matt's UI before I have a
+                                                            // full anyeurism
 
         $.getJSON(chartCatalogFilename, (catalog) => {
             this.catalog = catalog;
             this.initialize();
+            this.graphable = this.catalog.map(e => Object.keys(e.constraints)).flat();
+            this.graphable.forEach(feature => {
+                this.charts[feature] = new Histogram();
+                this.resizable.addChart(this.charts[feature]);
+            });
         });
 
         this.doNotUpdate = false;
@@ -84,13 +89,12 @@ class ChartSystem {
                 return;
             }
 
-            let graphable = this.catalog.map(e => Object.keys(e.constraints));
-            graphable = graphable.flat();
-            let values = this.filter.getModel(graphable, this.map.getBounds());
-            this.chart.changeData(values.temp.map(e => e.data), 5);
-            this.chart.setColors('#4200ea', '#ea0042');
-            this.chart2.changeData(values.RPL_THEMES.map(e => e.data), 5);
-            this.chart2.setColors('#00ea00', '#004200');
+            let values = this.filter.getModel(this.graphable, this.map.getBounds());
+            console.log(values);
+
+            for (let feature in values) {
+                this.charts[feature].changeData(values[feature].map(e => e.data), 5);
+            }
 
             this.doNotUpdate = true;
             window.setTimeout(() => { this.doNotUpdate = false }, 200);
