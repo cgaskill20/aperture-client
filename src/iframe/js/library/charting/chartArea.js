@@ -66,8 +66,8 @@ class ChartArea {
     static MIN_CHART_SIZE = 200;
 
     constructor() {
-        this.charts = [];
         this.availableContainers = [];
+        this.visibleContainers = [];
     }
 
     attachTo(node) {
@@ -80,41 +80,41 @@ class ChartArea {
     }
 
     attachChartContainers(node) {
-        for (let i = 0; i < ChartArea.MAX_SIMULATANEOUS_CHARTS; i++) {
+        for (let i = this.availableContainers.length; i < ChartArea.MAX_SIMULTANEOUS_CHARTS; i++) {
             let containerNode = document.createElement("div");
+            containerNode.className = "chart-container";
             node.appendChild(containerNode);
-            this.availableContainers.push(new ChartContainer(containerNode));
+
+            let containerObject = new ChartContainer(containerNode);
+            containerObject.hide();
+            this.availableContainers.push(containerObject);
         }
     }
 
     addChart(chart) {
-        this.charts.push();
-    }
-
-    redistributeCharts() {
-        
+        this.availableContainers.forEach(container => {
+            container.addChart(chart);
+        });
     }
 
     rerenderAll(newWidth, newHeight) {
         this.resizeContainers(newWidth, newHeight);
-        this.fitChartsToContainers();
     }
 
     resizeContainers(newWidth, newHeight) {
+        this.availableContainers.forEach(container => {
+            container.hide();
+        });
+
         let availableSpace = this.container.offsetHeight;
-        for (i = 0; i * ChartArea.MIN_CHART_SIZE < availableSpace; i++) {
+        for (let i = 0; (i * ChartArea.MIN_CHART_SIZE) < availableSpace; i++) {
             this.availableContainers[i].unhide();
+            console.log('unhiding');
         }
 
-        let visibleContainers = this.availableContainers.filter(container => !container.hidden);
-        visibleContainers.forEach(container => {
-            container.resize(newWidth, newHeight / visibleContainers.length);
-        });
-    }
-
-    fitChartsToContainers() {
-        this.charts.forEach(item => {
-            item.chart.rerender(item.container.offsetWidth, item.container.offsetHeight);
+        this.visibleContainers = this.availableContainers.filter(container => !container.hidden);
+        this.visibleContainers.forEach(container => {
+            container.resize(newWidth, newHeight / this.visibleContainers.length);
         });
     }
 }

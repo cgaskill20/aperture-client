@@ -401,3 +401,11 @@ body {
   flex-direction: column;
 }
 
+.chart-container {
+  display: flex;
+}
+
+.chart-container-arrow {
+  max-width: 50px;
+}
+

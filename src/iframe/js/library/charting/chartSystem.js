@@ -57,19 +57,20 @@ END OF TERMS AND CONDITIONS
 
 
 class ChartSystem {
-    constructor(map, chartCatalogeFilename) {
+    constructor(map, chartCatalogFilename) {
         this.filter = new MapDataFilter();
         RenderInfrastructure.useFilter(this.filter);
+
         this.map = map;
 
         this.chart = new Histogram([], 1000, 300);
         this.chart2 = new Histogram([], 1000, 300);
         this.resizable = new resizable(1, 1, "white");
-        this.resizable = new resizable(1000, 300, "white"); // The most temporary of temporary
+        this.resizable = new resizable(1000, 300, "white"); // The most temporary of temporary solutions
         this.resizable.addChart(this.chart);
         this.resizable.addChart(this.chart2);
 
-        $.getJSON(chartCatalogeFilename, (catalog) => {
+        $.getJSON(chartCatalogFilename, (catalog) => {
             this.catalog = catalog;
             this.initialize();
         });

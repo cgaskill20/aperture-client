@@ -60,27 +60,51 @@ class ChartContainer {
         this.charts = [];
         this.currentChartIndex = 0;
         this.hidden = false;
-        this.node = node;
+        this.parentNode = node;
+
+        this.attachTo(node);
     }
 
-    pushOut() {
+    hide() {
         this.hidden = true;
-        let heldCharts = this.charts.slice();
-        this.charts = [];
-        return heldCharts;
+        this.parentNode.style.display = "hidden";
+        console.log('hiding container');
     }
 
-    pullIn(charts) {
+    unhide() {
         this.hidden = false;
-        this.charts = this.charts.concat(charts);
+        this.parentNode.style.display = "flex";
     }
 
-    resize(newWidth, newHeight) {  
-        if (!hidden) {
-            this.charts.forEach(chart => {
-                chart.rerender(newWidth, newHeight);
-            });
-        }
+    attachTo(node) {
+        let prevArrow = document.createElement("div");
+        prevArrow.className = "chart-container-arrow";
+        prevArrow.innerText = '>';
+        node.appendChild(prevArrow);
+
+        this.chartContainer = document.createElement("div");
+        this.chartContainer.className = "chart-container";
+        node.appendChild(this.chartContainer);
+
+        let nextArrow = document.createElement("div");
+        nextArrow.className = "chart-container-arrow";
+        nextArrow.innerText = '<';
+        node.appendChild(nextArrow);
+    }
+
+    addChart(chart) {
+        this.charts.push(chart);
+        chart.addTo(this.chartContainer);
+    }
+
+    cycleChart() {
+        this.currentChartIndex = (this.currentChartIndex + 1) % this.charts.length;
+    }
+
+    resize(newWidth, newHeight) {
+        this.chartContainer.style.width = (newWidth - 100) + 'px';
+        this.chartContainer.style.height = newHeight + 'px';
+        this.charts[this.currentChartIndex].rerender(newWidth - 100, newHeight);
     }
 
 }
