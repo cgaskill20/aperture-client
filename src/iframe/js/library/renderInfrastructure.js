@@ -65,7 +65,7 @@ class RenderInfrastructure {
         if (this.dataFilter) {
             this.dataFilter.add(geoJsonData);
         }
-
+        
         const datasource = indexData ? indexData : this.data;
         let layers = [];
         const newLayer = L.geoJson(geoJsonData, {
@@ -85,6 +85,7 @@ class RenderInfrastructure {
                 if (this.currentLayers.includes(feature.id) || this.map.getZoom() < this.options.minRenderZoom || datasource[name] == null) {
                     return false;
                 }
+                
                 this.currentLayers.push(feature.id);
                 return true;
             }.bind(this),
@@ -119,6 +120,7 @@ class RenderInfrastructure {
             }.bind(this)
         })
         newLayer.addTo(this.layerGroup);
+        
         return layers;
     }
 
@@ -144,7 +146,7 @@ class RenderInfrastructure {
         this.markerLayer.addLayer(marker.on('click', function (e) {
             if (e.target.__parent._group._spiderfied) 
                 return;
-            this.map.flyTo(e.latlng, RenderInfrastructure.map.getZoom(), FLYTOOPTIONS);
+            this.map.flyTo(e.latlng, this.map.getZoom(), FLYTOOPTIONS);
         }.bind(this)).bindPopup(popUpContent));
         return true;
     }

@@ -31,8 +31,8 @@ var markers = L.markerClusterGroup({
 });
 map.addLayer(markers);
 
-const dataExplorationGroup = L.featureGroup().addTo(map);
-const dataModelingGroup = L.featureGroup();
+const dataExplorationGroup = L.layerGroup().addTo(map);
+const dataModelingGroup = L.layerGroup();
 
 const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
 const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);

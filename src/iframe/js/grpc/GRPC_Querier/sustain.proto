@@ -6,7 +6,19 @@ option java_outer_classname = "SustainQueryService";
 
 package sustain;
 
-service Sustain{
+service JsonProxy {
+    rpc ModelQuery(JsonModelRequest) returns (stream JsonModelResponse) {}
+}
+
+message JsonModelRequest {
+    string json = 1;
+}
+
+message JsonModelResponse {
+    string json = 1;
+}
+
+service Sustain {
   // census query with MongoDB support
   rpc CensusQuery (CensusRequest) returns (stream CensusResponse) {}
 
@@ -19,22 +31,68 @@ service Sustain{
   // Query Social Vulnerability Index (SVI) values
   rpc SviQuery (SviRequest) returns (stream SviResponse) {}
 
-  // targeted queries - return geographical areas that satisfy a given value range of a census feature
-  // Example 1: Retrieve all counties where (population >= 1,000,000)
-  // Example 2: Retrieve all tracts where (median household income < $50,000/year)
-  rpc ExecuteTargetedCensusQuery (TargetedCensusRequest) returns (stream TargetedCensusResponse) {}
-
   rpc CompoundQuery (CompoundRequest) returns (stream CompoundResponse) {}
 
   rpc ModelQuery (ModelRequest) returns (stream ModelResponse) {}
 }
 
+enum ModelType {
+    K_MEANS_CLUSTERING = 0;
+    LINEAR_REGRESSION = 1;
+}
+
 message ModelRequest {
-  string request = 1;
+  ModelType type = 1;
+  repeated Collection collections = 2;
+  KMeansClusteringRequest kMeansClusteringRequest = 3;
+  LinearRegressionRequest linearRegressionRequest = 4;
+}
+
+message Collection {
+  string name = 1;
+  string label = 2;
+  repeated string features = 3;
 }
 
 message ModelResponse {
-  string results = 1;
+  KMeansClusteringResponse kMeansClusteringResponse = 1;
+  LinearRegressionResponse linearRegressionResponse = 2;
+}
+
+message KMeansClusteringRequest {
+  int32 clusterCount = 1;
+  int32 maxIterations = 2;
+  CensusResolution resolution = 3;
+  repeated string features = 4;
+}
+
+message KMeansClusteringResponse {
+  string gisJoin = 1;
+  int32 prediction = 2; // cluster
+}
+
+message LinearRegressionRequest {
+  repeated string gisJoins = 2;
+  string loss = 3;
+  string solver = 4;
+  int32 maxIterations = 5;
+  int32 aggregationDepth = 6;
+  double elasticNetParam = 7;
+  double epsilon = 8;
+  double convergenceTolerance = 9;
+  double regularizationParam = 10;
+  bool setStandardization = 11;
+  bool fitIntercept = 12;
+}
+
+message LinearRegressionResponse {
+  string gisJoin = 1;
+  double totalIterations = 2;
+  double rmseResidual = 3;
+  double r2Residual = 4;
+  double intercept = 5;
+  repeated double slopeCoefficients = 6;
+  repeated double objectiveHistory = 7;
 }
 
 message SviRequest {
@@ -87,7 +145,6 @@ message OsmRequest {
   repeated OsmRequestParam requestParams = 4;
 }
 
-
 message OsmResponse {
   string response = 1;
 }
@@ -128,18 +185,6 @@ message DatasetEntry {
   string entry = 1;
 }
 
-message TargetedCensusRequest {
-  CensusResolution resolution = 1;
-  Predicate predicate = 2;
-  SpatialOp spatialOp = 3;
-  string requestGeoJson = 4; // bounding polygon
-}
-
-message TargetedCensusResponse {
-  string data = 1;
-  string responseGeoJson = 2; // geoJson associated with 'data'
-}
-
 enum CensusResolution {
   State = 0;
   County = 1;
@@ -168,7 +213,6 @@ message Predicate {
   double comparisonValue = 4;
 }
 
-
 enum JoinOperator {
     INNER_JOIN = 0;
     OUTER_JOIN = 1;
@@ -176,21 +220,18 @@ enum JoinOperator {
     RIGHT_JOIN = 3;
 }
 
-
 enum ComparisonOperator {
     EQUAL = 0;
     GREATER_THAN = 1;
     LESS_THAN = 2;
     GREATER_THAN_OR_EQUAL = 3;
     LESS_THAN_OR_EQUAL = 4;
- }
+}
 
-
- message CompoundResponse {
+message CompoundResponse {
     string data = 1;
     string geoJson = 2;
 }
-
 
 message CompoundRequest {
     oneof FirstPredicate {
@@ -205,7 +246,6 @@ message CompoundRequest {
         CompoundRequest second_compound_request = 5;
     }
 }
-
 
 message Query {
     string host = 1;
