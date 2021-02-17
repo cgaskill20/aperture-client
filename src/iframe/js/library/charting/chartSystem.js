@@ -89,6 +89,8 @@ class ChartSystem {
             let values = this.filter.getModel(graphable, this.map.getBounds());
             this.chart.changeData(values.temp.map(e => e.data), 5);
             this.chart.setColors('#4200ea', '#ea0042');
+            this.chart2.changeData(values.RPL_THEMES.map(e => e.data), 5);
+            this.chart2.setColors('#00ea00', '#004200');
 
             this.doNotUpdate = true;
             window.setTimeout(() => { this.doNotUpdate = false }, 200);

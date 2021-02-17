@@ -233,9 +233,3 @@ class resizable {
     }
 }
 
-
-$( document ).ready(function() {
-    //const test = new resizable(500,500,"white");
-    //const test2 = new resizable(300,200,"black");
-
-});

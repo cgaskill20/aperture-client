@@ -407,5 +407,6 @@ body {
 
 .chart-container-arrow {
   min-width: 50px;
+  background-color: #f00;
 }
 

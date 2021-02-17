@@ -80,7 +80,7 @@ class ChartArea {
     }
 
     attachChartContainers(node) {
-        for (let i = 0; i < ChartArea.MAX_SIMULTANEOUS_CHARTS; i++) {
+        for (let i = this.availableContainers.length; i < ChartArea.MAX_SIMULTANEOUS_CHARTS; i++) {
             let containerNode = document.createElement("div");
             containerNode.className = "chart-container";
             node.appendChild(containerNode);
@@ -114,7 +114,6 @@ class ChartArea {
         }
 
         this.visibleContainers = this.availableContainers.filter(container => !container.hidden);
-        console.log(this.visibleContainers);
         this.visibleContainers.forEach(container => {
             container.resize(newWidth, newHeight / this.visibleContainers.length);
         });

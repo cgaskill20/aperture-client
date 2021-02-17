@@ -59,8 +59,8 @@ class Histogram extends Chart {
     constructor(data) {
         super(data);
         this.data = data;
-        this.bins = null;
         this.binNum = 10;
+        this.changeBins(this.binNum);
         this.colorScale = () => "steelblue";
     }
 
@@ -76,6 +76,15 @@ class Histogram extends Chart {
         view.y
             .range([newHeight - view.margin.bottom, view.margin.top])
             .domain([0, d3.max(this.bins, d => d.length)]).nice();
+
+        view.xAxis = g => g
+            .attr("transform", `translate(0,${newHeight - view.margin.bottom})`)
+            .call(d3.axisBottom(view.x).ticks(newWidth / 80).tickSizeOuter(0))
+
+        view.yAxis = g => g
+            .attr("transform", `translate(${view.margin.left}, 0)`)
+            .call(d3.axisLeft(view.y).ticks(newHeight / 40))
+
         view.svg.select("g#xAxis").call(view.xAxis);
         view.svg.select("g#yAxis").call(view.yAxis);
         view.svg.select("g#rects")
@@ -144,9 +153,6 @@ class Histogram extends Chart {
 
         view.svg.append("g").attr('id', 'xAxis').call(view.xAxis);
         view.svg.append("g").attr('id', 'yAxis').call(view.yAxis);
-
-        node.appendChild(view.svg.node());
-        this.views.push(view);
 
         return view;
     }

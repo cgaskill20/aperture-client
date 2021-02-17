@@ -78,17 +78,12 @@ class ChartContainer {
     }
 
     attachTo(node) {
-        let prevArrow = document.createElement("div");
-        prevArrow.className = "chart-container-arrow";
-        prevArrow.innerText = '>';
-        node.appendChild(prevArrow);
-
         this.chartContainer = document.createElement("div");
         node.appendChild(this.chartContainer);
 
         let nextArrow = document.createElement("div");
         nextArrow.className = "chart-container-arrow";
-        nextArrow.innerText = '<';
+        nextArrow.addEventListener("click", () => { this.cycleChart(); });
         node.appendChild(nextArrow);
     }
 
@@ -99,13 +94,15 @@ class ChartContainer {
     }
 
     cycleChart() {
+        console.log(`cycling from ${this.currentChartIndex}`);
+        this.charts[this.currentChartIndex].hide(this.viewIndex);
         this.currentChartIndex = (this.currentChartIndex + 1) % this.charts.length;
     }
 
     resize(newWidth, newHeight) {
         this.charts[this.currentChartIndex].unhide(this.viewIndex);
-        this.charts[this.currentChartIndex].rerender(newWidth, newHeight, this.viewIndex);
-        this.chartContainer.style.width = (newWidth - 100) + 'px';
+        this.charts[this.currentChartIndex].rerender(newWidth - 50, newHeight, this.viewIndex);
+        this.chartContainer.style.width = newWidth + 'px';
         this.chartContainer.style.height = newHeight + 'px';
     }
 
