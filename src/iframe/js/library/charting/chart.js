@@ -6,16 +6,22 @@ class Chart {
     }
 
     addTo(node) {
-        let view = this.makeNewView();
+        let view = this.makeNewView(node, 1000, 1000);
         this.views.push(view);
         node.appendChild(view.svg.node());
     }
 
+    rerenderAllViews() {
+        for (let i = 0; i < this.views.length; i++) {
+            this.rerender(this.views[i].width, this.views[i].height, i);
+        }
+    }
+
     hide(viewIndex) {
-        this.view.svg.style("display", "none");
+        this.views[viewIndex].svg.style("display", "none");
     }
 
     unhide(viewIndex) {
-        this.view.svg.style("display", "default");
+        this.views[viewIndex].svg.style("display", "default");
     }
 }

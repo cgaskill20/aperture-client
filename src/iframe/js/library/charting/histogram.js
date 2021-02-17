@@ -59,6 +59,7 @@ class Histogram extends Chart {
     constructor(data) {
         super(data);
         this.data = data;
+        this.bins = null;
         this.binNum = 10;
         this.colorScale = () => "steelblue";
     }
@@ -71,16 +72,16 @@ class Histogram extends Chart {
         view.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
         view.x
             .range([view.margin.left, newWidth - view.margin.right])
-            .domain([view.bins[0].x0, view.bins[view.bins.length - 1].x1]);
+            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1]);
         view.y
             .range([newHeight - view.margin.bottom, view.margin.top])
-            .domain([0, d3.max(view.bins, d => d.length)]).nice();
+            .domain([0, d3.max(this.bins, d => d.length)]).nice();
         view.svg.select("g#xAxis").call(view.xAxis);
         view.svg.select("g#yAxis").call(view.yAxis);
         view.svg.select("g#rects")
             .selectAll("rect")
                 .attr("fill", d => this.colorScale(d.x1))
-            .data(view.bins)
+            .data(this.bins)
             .join("rect")
                 .attr("x", d => view.x(d.x0) + 1)
                 .attr("width", d => Math.max(0, view.x(d.x1) - view.x(d.x0) - 1))
@@ -88,18 +89,15 @@ class Histogram extends Chart {
                 .attr("height", d => view.y(0) - view.y(d.length));
     }
 
-    changeBins(binNum, viewIndex) {
-        let view = this.views[viewIndex];
-        view.bins = d3.bin().thresholds(binNum)(this.data);
-        this.rerender(view.width, view.height, viewIndex);
+    changeBins(binNum) {
+        this.bins = d3.bin().thresholds(binNum)(this.data);
+        this.rerenderAllViews();
     }
 
-    changeData(newData, binNum, viewIndex) {
-        let view = this.views[viewIndex];
-
+    changeData(newData, binNum) {
         this.data = newData;
-        this.changeBins(binNum, viewIndex);
-        this.rerender(view.width, view.height, viewIndex);
+        this.changeBins(binNum);
+        this.rerenderAllViews();
     }
 
     setColors(start, end) {
@@ -148,5 +146,8 @@ class Histogram extends Chart {
         view.svg.append("g").attr('id', 'yAxis').call(view.yAxis);
 
         node.appendChild(view.svg.node());
+        this.views.push(view);
+
+        return view;
     }
 }

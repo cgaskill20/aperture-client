@@ -80,12 +80,12 @@ class ChartArea {
     }
 
     attachChartContainers(node) {
-        for (let i = this.availableContainers.length; i < ChartArea.MAX_SIMULTANEOUS_CHARTS; i++) {
+        for (let i = 0; i < ChartArea.MAX_SIMULTANEOUS_CHARTS; i++) {
             let containerNode = document.createElement("div");
             containerNode.className = "chart-container";
             node.appendChild(containerNode);
 
-            let containerObject = new ChartContainer(containerNode);
+            let containerObject = new ChartContainer(containerNode, i);
             containerObject.hide();
             this.availableContainers.push(containerObject);
         }

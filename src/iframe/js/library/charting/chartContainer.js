@@ -56,11 +56,12 @@ END OF TERMS AND CONDITIONS
 */
 
 class ChartContainer {
-    constructor(node) {
+    constructor(node, viewIndex) {
         this.charts = [];
         this.currentChartIndex = 0;
         this.hidden = false;
         this.parentNode = node;
+        this.viewIndex = viewIndex;
 
         this.attachTo(node);
     }
@@ -73,7 +74,7 @@ class ChartContainer {
     unhide() {
         this.hidden = false;
         this.parentNode.style.display = "flex";
-        this.charts[this.currentChartIndex].unhide();
+        this.charts[this.currentChartIndex].unhide(this.viewIndex);
     }
 
     attachTo(node) {
@@ -94,7 +95,7 @@ class ChartContainer {
     addChart(chart) {
         this.charts.push(chart);
         chart.addTo(this.chartContainer);
-        chart.hide();
+        chart.hide(this.viewIndex);
     }
 
     cycleChart() {
@@ -102,8 +103,8 @@ class ChartContainer {
     }
 
     resize(newWidth, newHeight) {
-        this.charts[this.currentChartIndex].unhide();
-        this.charts[this.currentChartIndex].rerender(newWidth, newHeight);
+        this.charts[this.currentChartIndex].unhide(this.viewIndex);
+        this.charts[this.currentChartIndex].rerender(newWidth, newHeight, this.viewIndex);
         this.chartContainer.style.width = (newWidth - 100) + 'px';
         this.chartContainer.style.height = newHeight + 'px';
     }
