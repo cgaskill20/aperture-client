@@ -350,7 +350,21 @@ body {
     margin-right: 15px;
 }
 
+.modelSelect{
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #FFF;
+    border-radius: 3px;
+}
+
 .modelParameter{
+    background-color: #DDD;
+    border-radius: 3px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.modelCollection{
     background-color: #DDD;
     border-radius: 3px;
     padding: 10px;

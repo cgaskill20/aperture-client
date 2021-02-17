@@ -113,16 +113,20 @@ class ModelMenu extends React.Component {
 
     render() {
         return e("div", null,
-            e("label", { htmlFor: "categorySelector" }, "Select category: "),
-            this.createCategorySelector(),
-            e("label", { htmlFor: "typeSelector" }, "Select type: "),
-            this.createTypeSelector(),
-            //e("div", null, JSON.stringify(this.state)),
+            this.createModelSelect(),
             ...this.createCollections(),
             ...this.createParameters(),
         );
     }
 
+    createModelSelect() {
+        return e("div", { className: "modelSelect" },
+            e("label", { htmlFor: "categorySelector" }, "Select category: "),
+            this.createCategorySelector(),
+            e("label", { htmlFor: "typeSelector" }, "Select type: "),
+            this.createTypeSelector(),
+        );
+    }
 
     createCategorySelector() {
         const categories = Object.keys(this.props.config);
@@ -181,7 +185,7 @@ class ModelMenu extends React.Component {
         this.parameters[name] = value;
     }
 
-    createCollections(){
+    createCollections() {
         return this.collectionsTemp.map(collection => {
             return e(ModelCollection, {
                 config: collection,
@@ -194,8 +198,8 @@ class ModelMenu extends React.Component {
         this.collections = {};
     }
 
-    setCollection(name, feature, value){
-        if(!this.collections[name])
+    setCollection(name, feature, value) {
+        if (!this.collections[name])
             this.collections[name] = {};
         this.collections[name][feature] = value;
     }

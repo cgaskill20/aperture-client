@@ -73,7 +73,7 @@ class RenderInfrastructure {
                 let weight = 3;
                 let fillOpacity = 0.2;
                 let name = Util.getNameFromGeoJsonFeature(feature, indexData);
-                if (datasource[name] && datasource[name]["border"] !== null) {
+                if (datasource[name] && datasource[name]["border"] !== null && datasource[name]["border"] !== undefined) {
                     weight = datasource[name]["border"];
                     fillOpacity = 0.2;
                 }
@@ -119,8 +119,8 @@ class RenderInfrastructure {
                 });
             }.bind(this)
         })
+        console.log(newLayer)
         newLayer.addTo(this.layerGroup);
-        
         return layers;
     }
 
@@ -191,7 +191,6 @@ class RenderInfrastructure {
             if(!subLayer)
                 return;
             if (subLayer.feature) {
-                console.log(layer);
                 this.layerGroup.removeLayer(layer);
             }
         }.bind(this));
