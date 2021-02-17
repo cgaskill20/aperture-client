@@ -69,10 +69,12 @@ class Histogram extends Chart {
         view.width = newWidth;
         view.height = newHeight;
         view.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
-        view.x
+
+        view.x = d3.scaleLinear()
             .range([view.margin.left, newWidth - view.margin.right])
             .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1]);
-        view.y
+
+        view.y = d3.scaleLinear()
             .range([newHeight - view.margin.bottom, view.margin.top])
             .domain([0, d3.max(this.bins, d => d.length)]).nice();
 
@@ -95,6 +97,11 @@ class Histogram extends Chart {
                 .attr("width", d => Math.max(0, view.x(d.x1) - view.x(d.x0) - 1))
                 .attr("y", d => view.y(d.length))
                 .attr("height", d => view.y(0) - view.y(d.length));
+        view.svg.select("text#title")
+            .attr("x", newWidth / 2)
+            .attr("y", 12)
+            .attr("text-anchor", "middle")
+            .text(this.title);
     }
 
     changeBins(binNum) {
@@ -114,6 +121,11 @@ class Histogram extends Chart {
             .range([start, end]);
     }
 
+    setTitle(title) {
+        this.title = title;
+        this.rerenderAllViews();
+    }
+
     makeNewView(node, width, height) {
         let view = {};
         view.width = width;
@@ -123,35 +135,10 @@ class Histogram extends Chart {
         view.bins = d3.bin().thresholds(8)(this.data);
         view.margin = { top: 20, right: 20, bottom: 30, left: 40 };
 
-        view.x = d3.scaleLinear()
-            .domain([view.bins[0].x0, view.bins[view.bins.length - 1].x1])
-            .range([view.margin.left, view.width - view.margin.right]);
-
-        view.y = d3.scaleLinear()
-            .domain([0, d3.max(view.bins, d => d.length)]).nice()
-            .range([height - view.margin.bottom, view.margin.top])
-
-        view.xAxis = g => g
-            .attr("transform", `translate(0,${height - view.margin.bottom})`)
-            .call(d3.axisBottom(view.x).ticks(width / 80).tickSizeOuter(0))
-
-        view.yAxis = g => g
-            .attr("transform", `translate(${view.margin.left}, 0)`)
-            .call(d3.axisLeft(view.y).ticks(height / 40))
-
-        view.svg.append("g")
-                .attr("fill", "steelblue")
-                .attr('id', 'rects')
-            .selectAll("rect")
-            .data(view.bins)
-            .join("rect")
-                .attr("x", d => view.x(d.x0) + 1)
-                .attr("width", d => Math.max(0, view.x(d.x1) - view.x(d.x0) - 1))
-                .attr("y", d => view.y(d.length))
-                .attr("height", d => view.y(0) - view.y(d.length));
-
-        view.svg.append("g").attr('id', 'xAxis').call(view.xAxis);
-        view.svg.append("g").attr('id', 'yAxis').call(view.yAxis);
+        view.svg.append("g").attr("id", "rects");
+        view.svg.append("g").attr("id", "xAxis");
+        view.svg.append("g").attr("id", "yAxis");
+        view.svg.append("text").attr("id", "title");
 
         return view;
     }

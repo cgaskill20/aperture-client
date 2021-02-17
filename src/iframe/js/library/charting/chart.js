@@ -81,3 +81,4 @@ class Chart {
         this.views[viewIndex].svg.style("display", "block");
     }
 }
+

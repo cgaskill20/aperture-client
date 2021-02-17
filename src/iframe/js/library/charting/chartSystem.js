@@ -76,6 +76,7 @@ class ChartSystem {
             this.graphable = this.catalog.map(e => Object.keys(e.constraints)).flat();
             this.graphable.forEach(feature => {
                 this.charts[feature] = new Histogram();
+                this.charts[feature].setTitle(feature);
                 this.resizable.addChart(this.charts[feature]);
             });
         });
@@ -90,7 +91,6 @@ class ChartSystem {
             }
 
             let values = this.filter.getModel(this.graphable, this.map.getBounds());
-            console.log(values);
 
             for (let feature in values) {
                 this.charts[feature].changeData(values[feature].map(e => e.data), 5);
