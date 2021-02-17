@@ -67,13 +67,12 @@ class ChartContainer {
 
     hide() {
         this.hidden = true;
-        this.parentNode.style.display = "hidden";
-        console.log('hiding container');
+        this.parentNode.style.visibility = "hidden";
     }
 
     unhide() {
         this.hidden = false;
-        this.parentNode.style.display = "flex";
+        this.parentNode.style.visibility = "visible";
     }
 
     attachTo(node) {
@@ -83,7 +82,6 @@ class ChartContainer {
         node.appendChild(prevArrow);
 
         this.chartContainer = document.createElement("div");
-        this.chartContainer.className = "chart-container";
         node.appendChild(this.chartContainer);
 
         let nextArrow = document.createElement("div");
@@ -95,6 +93,7 @@ class ChartContainer {
     addChart(chart) {
         this.charts.push(chart);
         chart.addTo(this.chartContainer);
+        chart.hide();
     }
 
     cycleChart() {
@@ -102,9 +101,10 @@ class ChartContainer {
     }
 
     resize(newWidth, newHeight) {
+        this.charts[this.currentChartIndex].unhide();
+        this.charts[this.currentChartIndex].rerender(newWidth, newHeight);
         this.chartContainer.style.width = (newWidth - 100) + 'px';
         this.chartContainer.style.height = newHeight + 'px';
-        this.charts[this.currentChartIndex].rerender(newWidth - 100, newHeight);
     }
 
 }

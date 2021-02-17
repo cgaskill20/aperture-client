@@ -406,6 +406,6 @@ body {
 }
 
 .chart-container-arrow {
-  max-width: 50px;
+  min-width: 50px;
 }
 

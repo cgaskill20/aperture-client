@@ -65,6 +65,7 @@ class Histogram {
     }
 
     rerender(newWidth, newHeight) {
+        console.log(`resizing to ${newWidth}, ${newHeight}`);
         this.width = newWidth;
         this.height = newHeight;
         this.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
@@ -141,5 +142,13 @@ class Histogram {
         this.svg.append("g").attr('id', 'yAxis').call(this.yAxis);
 
         node.appendChild(this.svg.node());
+    }
+
+    hide() {
+        this.svg.style("visibility", "hidden");
+    }
+
+    unhide() {
+        this.svg.style("visibility", "visible");
     }
 }

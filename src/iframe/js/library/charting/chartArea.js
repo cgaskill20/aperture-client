@@ -63,7 +63,7 @@ END OF TERMS AND CONDITIONS
   */
 class ChartArea {
     static MAX_SIMULTANEOUS_CHARTS = 6;
-    static MIN_CHART_SIZE = 200;
+    static MIN_CHART_SIZE = 300;
 
     constructor() {
         this.availableContainers = [];
@@ -102,14 +102,15 @@ class ChartArea {
     }
 
     resizeContainers(newWidth, newHeight) {
-        this.availableContainers.forEach(container => {
-            container.hide();
-        });
+        let availableSpace = this.parentNode.clientHeight;
 
-        let availableSpace = this.container.offsetHeight;
-        for (let i = 0; (i * ChartArea.MIN_CHART_SIZE) < availableSpace; i++) {
+        let i = 0;
+        for (; (i * ChartArea.MIN_CHART_SIZE) < availableSpace; i++) {
             this.availableContainers[i].unhide();
-            console.log('unhiding');
+        }
+
+        for (; i < this.availableContainers.length; i++) {
+            this.availableContainers[i].hide();
         }
 
         this.visibleContainers = this.availableContainers.filter(container => !container.hidden);
