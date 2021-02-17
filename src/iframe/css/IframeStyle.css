@@ -395,3 +395,13 @@ body {
   height: 25px;
   width: 25px;
 }
+
+.chart-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-area > div {
+    border: 1px solid red;
+}
+

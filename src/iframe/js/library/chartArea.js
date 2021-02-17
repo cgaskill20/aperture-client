@@ -54,92 +54,37 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 
 */
-// Demonstration class - document me pls :(
-class BarChart {
-    constructor(data, initialWidth, initialHeight) {
-        this.data = data;
-        this.width = initialWidth;
-        this.height = initialHeight;
-        this.binNum = 10;
-        this.colorScale = () => "steelblue";
+
+/**
+  * A class that represents an HTML element which can hold and dynamically
+  * display multiple charts.
+  * 
+  * @author Pierce Smith
+  */
+
+class ChartArea {
+    constructor() {
+        this.charts = [];
     }
 
-    rerender(newWidth, newHeight) {
-        this.width = newWidth;
-        this.height = newHeight;
-        this.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
-        this.x
-            .range([this.margin.left, newWidth - this.margin.right])
-            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1]);
-        this.y
-            .range([newHeight - this.margin.bottom, this.margin.top])
-            .domain([0, d3.max(this.bins, d => d.length)]).nice();
-        this.svg.select("g#xAxis").call(this.xAxis);
-        this.svg.select("g#yAxis").call(this.yAxis);
-        this.svg.select("g#rects")
-            .selectAll("rect")
-                .attr("fill", d => this.colorScale(d.x1))
-            .data(this.bins)
-            .join("rect")
-                .attr("x", d => this.x(d.x0) + 1)
-                .attr("width", d => Math.max(0, this.x(d.x1) - this.x(d.x0) - 1))
-                .attr("y", d => this.y(d.length))
-                .attr("height", d => this.y(0) - this.y(d.length));
+    attachTo(node) {
+        this.parentNode = node;
+        this.container = document.createElement("div");
+        this.container.className = "chart-area";
+        this.parentNode.appendChild(this.container);
     }
 
-    changeBins(binNum) {
-        this.bins = d3.bin().thresholds(binNum)(this.data);
-        this.rerender(this.width, this.height);
+    addChart(chart) {
+        let chartContainer = document.createElement("div");
+        chart.addTo(chartContainer);
+        this.container.appendChild(chartContainer);
+
+        this.charts.push({ chart: chart, container: chartContainer });
     }
 
-    changeData(newData, binNum) {
-        this.data = newData;
-        this.changeBins(binNum);
-        this.rerender(this.width, this.height);
-    }
-
-    setColors(start, end) {
-        this.colorScale = d3.scaleLinear()
-            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1])
-            .range([start, end]);
-    }
-
-    addTo(node) {
-        this.svg = d3.create("svg").attr("viewBox", [0, 0, this.width, this.height]);
-
-        this.bins = d3.bin().thresholds(8)(this.data);
-        this.margin = { top: 20, right: 20, bottom: 30, left: 40 };
-
-        this.x = d3.scaleLinear()
-            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1])
-            .range([this.margin.left, this.width - this.margin.right]);
-
-        this.y = d3.scaleLinear()
-            .domain([0, d3.max(this.bins, d => d.length)]).nice()
-            .range([this.height - this.margin.bottom, this.margin.top])
-
-        this.xAxis = g => g
-            .attr("transform", `translate(0,${this.height - this.margin.bottom})`)
-            .call(d3.axisBottom(this.x).ticks(this.width / 80).tickSizeOuter(0))
-
-        this.yAxis = g => g
-            .attr("transform", `translate(${this.margin.left}, 0)`)
-            .call(d3.axisLeft(this.y).ticks(this.height / 40))
-
-        this.svg.append("g")
-                .attr("fill", "steelblue")
-                .attr('id', 'rects')
-            .selectAll("rect")
-            .data(this.bins)
-            .join("rect")
-                .attr("x", d => this.x(d.x0) + 1)
-                .attr("width", d => Math.max(0, this.x(d.x1) - this.x(d.x0) - 1))
-                .attr("y", d => this.y(d.length))
-                .attr("height", d => this.y(0) - this.y(d.length));
-
-        this.svg.append("g").attr('id', 'xAxis').call(this.xAxis);
-        this.svg.append("g").attr('id', 'yAxis').call(this.yAxis);
-
-        node.appendChild(this.svg.node());
+    rerenderAll() {
+        this.charts.forEach(item => {
+            item.chart.rerender(item.container.clientWidth, item.container.clientHeight);
+        });
     }
 }
