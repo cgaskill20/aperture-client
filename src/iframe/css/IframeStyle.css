@@ -401,7 +401,3 @@ body {
   flex-direction: column;
 }
 
-.chart-area > div {
-    border: 1px solid red;
-}
-

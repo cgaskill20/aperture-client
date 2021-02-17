@@ -55,42 +55,66 @@ END OF TERMS AND CONDITIONS
 
 */
 
+/**
+  * A class that represents an HTML element which can hold and dynamically
+  * display multiple charts.
+  * 
+  * @author Pierce Smith
+  */
+class ChartArea {
+    static MAX_SIMULTANEOUS_CHARTS = 6;
+    static MIN_CHART_SIZE = 200;
 
-class ChartSystem {
-    constructor(map, chartCatalogeFilename) {
-        this.filter = new MapDataFilter();
-        RenderInfrastructure.useFilter(this.filter);
-        this.map = map;
-
-        this.chart = new BarChart([], 1000, 300);
-        this.chart2 = new BarChart([], 1000, 300);
-        this.resizable = new resizable(1, 1, "white");
-        this.resizable = new resizable(1000, 300, "white"); // The most temporary of temporary
-        this.resizable.addChart(this.chart);
-        this.resizable.addChart(this.chart2);
-
-        $.getJSON(chartCatalogeFilename, (catalog) => {
-            this.catalog = catalog;
-            this.initialize();
-        });
-
-        this.doNotUpdate = false;
+    constructor() {
+        this.charts = [];
+        this.availableContainers = [];
     }
 
-    initialize() {
-        this.map.on('move', (e) => {
-            if (this.doNotUpdate) {
-                return;
-            }
+    attachTo(node) {
+        this.parentNode = node;
+        this.container = document.createElement("div");
+        this.container.className = "chart-area";
+        this.parentNode.appendChild(this.container);
 
-            let graphable = this.catalog.map(e => Object.keys(e.constraints));
-            graphable = graphable.flat();
-            let values = this.filter.getModel(graphable, this.map.getBounds());
-            this.chart.changeData(values.temp.map(e => e.data), 5);
-            this.chart.setColors('#4200ea', '#ea0042');
+        this.attachChartContainers(this.container);
+    }
 
-            this.doNotUpdate = true;
-            window.setTimeout(() => { this.doNotUpdate = false }, 200);
+    attachChartContainers(node) {
+        for (let i = 0; i < ChartArea.MAX_SIMULATANEOUS_CHARTS; i++) {
+            let containerNode = document.createElement("div");
+            node.appendChild(containerNode);
+            this.availableContainers.push(new ChartContainer(containerNode));
+        }
+    }
+
+    addChart(chart) {
+        this.charts.push();
+    }
+
+    redistributeCharts() {
+        
+    }
+
+    rerenderAll(newWidth, newHeight) {
+        this.resizeContainers(newWidth, newHeight);
+        this.fitChartsToContainers();
+    }
+
+    resizeContainers(newWidth, newHeight) {
+        let availableSpace = this.container.offsetHeight;
+        for (i = 0; i * ChartArea.MIN_CHART_SIZE < availableSpace; i++) {
+            this.availableContainers[i].unhide();
+        }
+
+        let visibleContainers = this.availableContainers.filter(container => !container.hidden);
+        visibleContainers.forEach(container => {
+            container.resize(newWidth, newHeight / visibleContainers.length);
+        });
+    }
+
+    fitChartsToContainers() {
+        this.charts.forEach(item => {
+            item.chart.rerender(item.container.offsetWidth, item.container.offsetHeight);
         });
     }
 }

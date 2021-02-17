@@ -55,36 +55,42 @@ END OF TERMS AND CONDITIONS
 
 */
 
-/**
-  * A class that represents an HTML element which can hold and dynamically
-  * display multiple charts.
-  * 
-  * @author Pierce Smith
-  */
 
-class ChartArea {
-    constructor() {
-        this.charts = [];
+class ChartSystem {
+    constructor(map, chartCatalogeFilename) {
+        this.filter = new MapDataFilter();
+        RenderInfrastructure.useFilter(this.filter);
+        this.map = map;
+
+        this.chart = new Histogram([], 1000, 300);
+        this.chart2 = new Histogram([], 1000, 300);
+        this.resizable = new resizable(1, 1, "white");
+        this.resizable = new resizable(1000, 300, "white"); // The most temporary of temporary
+        this.resizable.addChart(this.chart);
+        this.resizable.addChart(this.chart2);
+
+        $.getJSON(chartCatalogeFilename, (catalog) => {
+            this.catalog = catalog;
+            this.initialize();
+        });
+
+        this.doNotUpdate = false;
     }
 
-    attachTo(node) {
-        this.parentNode = node;
-        this.container = document.createElement("div");
-        this.container.className = "chart-area";
-        this.parentNode.appendChild(this.container);
-    }
+    initialize() {
+        this.map.on('move', (e) => {
+            if (this.doNotUpdate) {
+                return;
+            }
 
-    addChart(chart) {
-        let chartContainer = document.createElement("div");
-        chart.addTo(chartContainer);
-        this.container.appendChild(chartContainer);
+            let graphable = this.catalog.map(e => Object.keys(e.constraints));
+            graphable = graphable.flat();
+            let values = this.filter.getModel(graphable, this.map.getBounds());
+            this.chart.changeData(values.temp.map(e => e.data), 5);
+            this.chart.setColors('#4200ea', '#ea0042');
 
-        this.charts.push({ chart: chart, container: chartContainer });
-    }
-
-    rerenderAll() {
-        this.charts.forEach(item => {
-            item.chart.rerender(item.container.clientWidth, item.container.clientHeight);
+            this.doNotUpdate = true;
+            window.setTimeout(() => { this.doNotUpdate = false }, 200);
         });
     }
 }

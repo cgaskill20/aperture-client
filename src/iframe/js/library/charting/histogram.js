@@ -55,7 +55,7 @@ END OF TERMS AND CONDITIONS
 
 */
 // Demonstration class - document me pls :(
-class BarChart {
+class Histogram {
     constructor(data, initialWidth, initialHeight) {
         this.data = data;
         this.width = initialWidth;
