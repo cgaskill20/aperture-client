@@ -54,49 +54,52 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 
 */
-// Demonstration class - document me pls :(
-class Histogram {
-    constructor(data, initialWidth, initialHeight) {
+
+class Histogram extends Chart {
+    constructor(data) {
+        super(data);
         this.data = data;
-        this.width = initialWidth;
-        this.height = initialHeight;
         this.binNum = 10;
         this.colorScale = () => "steelblue";
     }
 
-    rerender(newWidth, newHeight) {
-        console.log(`resizing to ${newWidth}, ${newHeight}`);
-        this.width = newWidth;
-        this.height = newHeight;
-        this.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
-        this.x
-            .range([this.margin.left, newWidth - this.margin.right])
-            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1]);
-        this.y
-            .range([newHeight - this.margin.bottom, this.margin.top])
-            .domain([0, d3.max(this.bins, d => d.length)]).nice();
-        this.svg.select("g#xAxis").call(this.xAxis);
-        this.svg.select("g#yAxis").call(this.yAxis);
-        this.svg.select("g#rects")
+    rerender(newWidth, newHeight, viewIndex) {
+        let view = this.views[viewIndex];
+
+        view.width = newWidth;
+        view.height = newHeight;
+        view.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
+        view.x
+            .range([view.margin.left, newWidth - view.margin.right])
+            .domain([view.bins[0].x0, view.bins[view.bins.length - 1].x1]);
+        view.y
+            .range([newHeight - view.margin.bottom, view.margin.top])
+            .domain([0, d3.max(view.bins, d => d.length)]).nice();
+        view.svg.select("g#xAxis").call(view.xAxis);
+        view.svg.select("g#yAxis").call(view.yAxis);
+        view.svg.select("g#rects")
             .selectAll("rect")
                 .attr("fill", d => this.colorScale(d.x1))
-            .data(this.bins)
+            .data(view.bins)
             .join("rect")
-                .attr("x", d => this.x(d.x0) + 1)
-                .attr("width", d => Math.max(0, this.x(d.x1) - this.x(d.x0) - 1))
-                .attr("y", d => this.y(d.length))
-                .attr("height", d => this.y(0) - this.y(d.length));
+                .attr("x", d => view.x(d.x0) + 1)
+                .attr("width", d => Math.max(0, view.x(d.x1) - view.x(d.x0) - 1))
+                .attr("y", d => view.y(d.length))
+                .attr("height", d => view.y(0) - view.y(d.length));
     }
 
-    changeBins(binNum) {
-        this.bins = d3.bin().thresholds(binNum)(this.data);
-        this.rerender(this.width, this.height);
+    changeBins(binNum, viewIndex) {
+        let view = this.views[viewIndex];
+        view.bins = d3.bin().thresholds(binNum)(this.data);
+        this.rerender(view.width, view.height, viewIndex);
     }
 
-    changeData(newData, binNum) {
+    changeData(newData, binNum, viewIndex) {
+        let view = this.views[viewIndex];
+
         this.data = newData;
-        this.changeBins(binNum);
-        this.rerender(this.width, this.height);
+        this.changeBins(binNum, viewIndex);
+        this.rerender(view.width, view.height, viewIndex);
     }
 
     setColors(start, end) {
@@ -105,50 +108,45 @@ class Histogram {
             .range([start, end]);
     }
 
-    addTo(node) {
-        this.svg = d3.create("svg").attr("viewBox", [0, 0, this.width, this.height]);
+    makeNewView(node, width, height) {
+        let view = {};
+        view.width = width;
+        view.height = height;
+        view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
 
-        this.bins = d3.bin().thresholds(8)(this.data);
-        this.margin = { top: 20, right: 20, bottom: 30, left: 40 };
+        view.bins = d3.bin().thresholds(8)(this.data);
+        view.margin = { top: 20, right: 20, bottom: 30, left: 40 };
 
-        this.x = d3.scaleLinear()
-            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1])
-            .range([this.margin.left, this.width - this.margin.right]);
+        view.x = d3.scaleLinear()
+            .domain([view.bins[0].x0, view.bins[view.bins.length - 1].x1])
+            .range([view.margin.left, view.width - view.margin.right]);
 
-        this.y = d3.scaleLinear()
-            .domain([0, d3.max(this.bins, d => d.length)]).nice()
-            .range([this.height - this.margin.bottom, this.margin.top])
+        view.y = d3.scaleLinear()
+            .domain([0, d3.max(view.bins, d => d.length)]).nice()
+            .range([height - view.margin.bottom, view.margin.top])
 
-        this.xAxis = g => g
-            .attr("transform", `translate(0,${this.height - this.margin.bottom})`)
-            .call(d3.axisBottom(this.x).ticks(this.width / 80).tickSizeOuter(0))
+        view.xAxis = g => g
+            .attr("transform", `translate(0,${height - view.margin.bottom})`)
+            .call(d3.axisBottom(view.x).ticks(width / 80).tickSizeOuter(0))
 
-        this.yAxis = g => g
-            .attr("transform", `translate(${this.margin.left}, 0)`)
-            .call(d3.axisLeft(this.y).ticks(this.height / 40))
+        view.yAxis = g => g
+            .attr("transform", `translate(${view.margin.left}, 0)`)
+            .call(d3.axisLeft(view.y).ticks(height / 40))
 
-        this.svg.append("g")
+        view.svg.append("g")
                 .attr("fill", "steelblue")
                 .attr('id', 'rects')
             .selectAll("rect")
-            .data(this.bins)
+            .data(view.bins)
             .join("rect")
-                .attr("x", d => this.x(d.x0) + 1)
-                .attr("width", d => Math.max(0, this.x(d.x1) - this.x(d.x0) - 1))
-                .attr("y", d => this.y(d.length))
-                .attr("height", d => this.y(0) - this.y(d.length));
+                .attr("x", d => view.x(d.x0) + 1)
+                .attr("width", d => Math.max(0, view.x(d.x1) - view.x(d.x0) - 1))
+                .attr("y", d => view.y(d.length))
+                .attr("height", d => view.y(0) - view.y(d.length));
 
-        this.svg.append("g").attr('id', 'xAxis').call(this.xAxis);
-        this.svg.append("g").attr('id', 'yAxis').call(this.yAxis);
+        view.svg.append("g").attr('id', 'xAxis').call(view.xAxis);
+        view.svg.append("g").attr('id', 'yAxis').call(view.yAxis);
 
-        node.appendChild(this.svg.node());
-    }
-
-    hide() {
-        this.svg.style("visibility", "hidden");
-    }
-
-    unhide() {
-        this.svg.style("visibility", "visible");
+        node.appendChild(view.svg.node());
     }
 }

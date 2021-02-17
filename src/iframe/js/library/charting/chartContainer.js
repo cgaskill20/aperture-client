@@ -67,12 +67,13 @@ class ChartContainer {
 
     hide() {
         this.hidden = true;
-        this.parentNode.style.visibility = "hidden";
+        this.parentNode.style.display = "none";
     }
 
     unhide() {
         this.hidden = false;
-        this.parentNode.style.visibility = "visible";
+        this.parentNode.style.display = "flex";
+        this.charts[this.currentChartIndex].unhide();
     }
 
     attachTo(node) {

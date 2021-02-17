@@ -114,6 +114,7 @@ class ChartArea {
         }
 
         this.visibleContainers = this.availableContainers.filter(container => !container.hidden);
+        console.log(this.visibleContainers);
         this.visibleContainers.forEach(container => {
             container.resize(newWidth, newHeight / this.visibleContainers.length);
         });
