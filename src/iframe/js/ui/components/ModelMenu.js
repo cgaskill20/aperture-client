@@ -18,8 +18,8 @@ class ModelMenu extends React.Component {
 
 
     render() {
-        if(!this.state || !this.state.catalog) return null;
-        if(this.state.modelRunning) return null;
+        if (!this.state || !this.state.catalog) return null;
+        if (this.state.modelRunning) return null;
         return e("div", null,
             this.createModelSelect(),
             ...this.createCollections(),
@@ -28,7 +28,7 @@ class ModelMenu extends React.Component {
         );
     }
 
-    populateCatalog(){
+    populateCatalog() {
         const q = [];
         const stream = this._sustainQuerier.getStreamForQuery("lattice-46", 27017, "model_catalogue", JSON.stringify(q));
         const catalog = {};
@@ -51,8 +51,8 @@ class ModelMenu extends React.Component {
 
     catalogMap(catalog) {
         const ret = {};
-        for (const entry in catalog){
-            if(!ret[catalog[entry].category])
+        for (const entry in catalog) {
+            if (!ret[catalog[entry].category])
                 ret[catalog[entry].category] = {}
 
             ret[catalog[entry].category][catalog[entry].type] = catalog[entry];
@@ -145,60 +145,24 @@ class ModelMenu extends React.Component {
         this.collections[name][feature] = value;
     }
 
-    createModelRunButton(){
-        return e("button", {type: "button", className:"btn btn-primary modelRunButton", onClick: this.runModel}, 
+    createModelRunButton() {
+        return e("button", { type: "button", className: "btn btn-primary modelRunButton", onClick: this.runModel },
             "Run Model!"
         );
     }
 
-    runModel(){
+    runModel() {
         this.setState({
             modelRunning: false
         });
-        const goal = JSON.parse(`{
-            "type": "LINEAR_REGRESSION",
-            "collections": [
-              {
-                "name": "macav2",
-                "label": "max_max_air_temperature",
-                "features": [
-                  "timestamp"
-                ]
-              }
-            ],
-            "linearRegressionRequest": {
-              "gisJoins": [
-                "G0100290",
-                "G0100210",
-                "G0100190",
-                "G0100230"
-              ],
-              "loss": "squaredError",
-              "solver": "auto",
-              "aggregationDepth": 2,
-              "maxIterations": 10,
-              "elasticNetParam": 0.0,
-              "epsilon": 1.35,
-              "regularizationParam": 0.5,
-              "convergenceTolerance": 0.000001,
-              "fitIntercept": true,
-              "setStandardization": true
-            }
-        }`)
         const q = {};
         q.type = this.state.modelType;
         q.collections = this.convertCollectionsToCollectionsQuery()
-
         q[this.getCurrentConfig().requestName] = {
             ...this.parameters,
-            "gisJoins": [
-                "G0100290",
-                "G0100210",
-                "G0100190",
-                "G0100230"
-            ]
+            ...this.getExtraRequestParams()
         };
-        
+
         console.log(JSON.stringify(q))
         //q.collections = 
         const stream = this._sustainQuerier.executeModelQuery(JSON.stringify(q));
@@ -211,25 +175,41 @@ class ModelMenu extends React.Component {
         }.bind(this));
     }
 
-    convertCollectionsToCollectionsQuery(){
+    convertCollectionsToCollectionsQuery() {
         let ret = [];
         for (const collection in this.collections)
             ret.push({
                 "name": collection,
                 "features": this.convertFeaturesToFeaturesQuery(this.collections[collection])
             });
-        return ret; 
+        return ret;
     }
 
-    convertFeaturesToFeaturesQuery(collectionFeatures){
+    convertFeaturesToFeaturesQuery(collectionFeatures) {
         let ret = [];
-        for(const feature in collectionFeatures)
-            if(collectionFeatures[feature])
+        for (const feature in collectionFeatures)
+            if (collectionFeatures[feature])
                 ret.push(feature);
         return ret;
     }
 
-    getCurrentConfig(){
+    getCurrentConfig() {
         return this.state.config[this.state.modelCategory][this.state.modelType];
+    }
+
+    getExtraRequestParams() {
+        switch (this.state.modelCategory) {
+            case "REGRESSION":
+                return {
+                    "gisJoins": [
+                        "G0100290",
+                        "G0100210",
+                        "G0100190",
+                        "G0100230"
+                    ]
+                }
+            default:
+                return null;
+        }
     }
 }
