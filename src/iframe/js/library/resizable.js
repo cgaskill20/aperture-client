@@ -50,10 +50,18 @@ class resizable {
         // This is the button in the top right that allows the div's size to be altered
         const boxResizer = document.createElement("div");
         this.boxResizer = boxResizer;
-        boxResizer.id = "resizer" + this.uniqueId;
-        boxResizer.className = "resizer top-right";
+        boxResizer.id = "option" + this.uniqueId;
+        boxResizer.className = "option top-right";
+
+        const collapseButton = document.createElement("div");
+        this.collapseButton = collapseButton;
+
+        collapseButton.id = "minimize" + this.uniqueId;
+        collapseButton.className = "option right1";
+
 
         boxDocument.appendChild(boxResizer);
+        boxDocument.appendChild(collapseButton);
         overlayDocument.appendChild(boxDocument);
         document.body.appendChild(overlayDocument);
 
@@ -166,11 +174,7 @@ class resizable {
         return mousePosition;
     }
 
-    collapseButton(){
-        L.easyButton('<span>&starf;</span>', ()=>{
-            this.overlayDocument.style.display =  this.overlayDocument.style.display == "none" ? "block" : "none";
-        }).addTo(map);
-    }
+
 
     addChart(chart) {
         chart.addTo(this.boxDocument);
