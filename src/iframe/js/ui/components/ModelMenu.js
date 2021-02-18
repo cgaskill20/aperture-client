@@ -86,7 +86,7 @@ class ModelMenu extends React.Component {
     onCategoryChange(e) {
         this.setState({
             modelCategory: e.target.value,
-            modelType: this.state.config[e.target.value][0]
+            modelType: Object.keys(this.state.config[e.target.value])[0]
         });
     }
 
@@ -110,12 +110,15 @@ class ModelMenu extends React.Component {
     }
 
     createParameters() {
-        return this.getCurrentConfig().parameters.map(parameter => {
-            return e(ModelParameter, {
+        if(this.state.modelCategory === "CLUSTERING") return [];
+        const params =  this.getCurrentConfig().parameters.map(parameter => {
+            const obj = {
                 config: parameter,
                 setParameter: this.setParameter
-            });
+            }
+            return e(ModelParameter, obj);
         });
+        return params;
     }
 
     clearParameters() {

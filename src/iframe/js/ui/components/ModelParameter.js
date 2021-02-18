@@ -2,16 +2,21 @@
 class ModelParameter extends React.Component {
     constructor(props) {
         super(props);
-
+        // console.log(this.props)
+        // console.log("^ in constructor")
         this.state = {
             value: this.props.config.default
         }
-
         this.name = this.props.config.name;
         this.sliderQueue = [];
     }
     
     render() {
+        if(this.state.value == null){
+            console.error("Value not set after constructor!!!!")
+            console.error(this.props.config)
+            return null;
+        }
         this.updateParent()
         return e("div", {className: "modelParameter"},
             e("label", {htmlFor: this.name}, `${Util.cleanUpString(this.name)}: ${Util.cleanUpString(this.state.value)}`),
@@ -65,6 +70,8 @@ class ModelParameter extends React.Component {
 
     buildSlider(){
         const slider = document.createElement("div");
+        // console.log(this.state.value + " <- " + this.name)
+        // console.log(this.props.config)
         noUiSlider.create(slider, {
             start: this.state.value,
             step: this.getType() === "integer" ? 1 : this.props.config.default < 0.01 ? this.props.config.default : 0.01, 
