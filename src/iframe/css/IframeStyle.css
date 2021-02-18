@@ -371,7 +371,7 @@ body {
 
 .overlay .box .option.right1 {
     right: -5px;
-    top: 10px;
+    top: 50%;
 }
 
 .tool-tip {

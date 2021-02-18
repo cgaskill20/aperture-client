@@ -78,6 +78,8 @@ function showValidation() {
 }
 
 function showGraph() {
+    document.getElementById("sidebar-id").style.width = "0";
+    document.getElementById("main").style.opacity = "1";
     document.getElementById("overlay1").style.display =  document.getElementById("overlay1").style.display == "none" ? "block" : "none";
 }
 
