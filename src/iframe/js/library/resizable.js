@@ -19,7 +19,7 @@ class resizable {
         this.isDown = false;
         this.isResizing = false;
         this.createOverlay();
-        this.collapseButton();
+        //this.collapseButton();
         this.resizeListeners();
         this.movementListeners();
         this.components = [];
