@@ -76,6 +76,12 @@ class ChartArea {
         this.container.className = "chart-area";
         this.parentNode.appendChild(this.container);
 
+        this.usageMessage = document.createElement("p");
+        this.usageMessage.innerText = "Enable data exploration to begin graphing";
+        this.usageMessage.className = "chart-usage-message";
+        this.usageMessage.style.display = "none";
+        this.parentNode.appendChild(this.usageMessage);
+
         this.attachChartContainers(this.container);
     }
 
@@ -98,17 +104,32 @@ class ChartArea {
     }
 
     rerenderAll(newWidth, newHeight) {
-        this.resizeContainers(newWidth, newHeight);
+        if (this.hasNothingToRender) {
+            this.showUsageMessage();
+        } else {
+            this.hideUsageMessage();
+            this.resizeContainers(newWidth, newHeight);
+        }
+    }
+
+    showUsageMessage() {
+        this.usageMessage.style.display = "inline";
+    }
+
+    hideUsageMessage() {
+        this.usageMessage.style.display = "none";
     }
 
     resizeContainers(newWidth, newHeight) {
         let availableSpace = this.parentNode.clientHeight;
 
         let i = 0;
+        // Show containers we have space for
         for (; (i * ChartArea.MIN_CHART_SIZE) < availableSpace; i++) {
             this.availableContainers[i].unhide();
         }
 
+        // Hide the rest
         for (; i < this.availableContainers.length; i++) {
             this.availableContainers[i].hide();
         }
@@ -116,6 +137,18 @@ class ChartArea {
         this.visibleContainers = this.availableContainers.filter(container => !container.hidden);
         this.visibleContainers.forEach(container => {
             container.resize(newWidth, newHeight / this.visibleContainers.length);
+        });
+    }
+
+    tellNumberOfCharts(chartCount) {
+        this.possibleChartCount = chartCount;
+    }
+
+    tellEmptyCharts(inaccessibleList) {
+        this.hasNothingToRender = inaccessibleList.length === this.possibleChartCount;
+
+        this.visibleContainers.forEach(container => {
+            container.setForbiddenIndices(inaccessibleList);
         });
     }
 }

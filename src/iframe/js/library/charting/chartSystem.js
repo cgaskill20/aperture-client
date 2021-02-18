@@ -69,35 +69,64 @@ class ChartSystem {
                                                             // someone needs to integrate this graph
                                                             // button with Matt's UI before I have a
                                                             // full anyeurism
+        this.chartArea = this.resizable.chartArea;
 
         $.getJSON(chartCatalogFilename, (catalog) => {
             this.catalog = catalog;
             this.initialize();
             this.graphable = this.catalog.map(e => Object.keys(e.constraints)).flat();
-            this.graphable.forEach(feature => {
-                this.charts[feature] = new Histogram();
-                this.charts[feature].setTitle(feature);
-                this.resizable.addChart(this.charts[feature]);
+            this.constraints = this.catalog.map(e => e.constraints);
+            this.constraints.forEach(constraint => {
+                for (let feature in constraint) {
+                    this.charts[feature] = new Histogram();
+                    this.charts[feature].setTitle(constraint[feature].label);
+                    this.resizable.addChart(this.charts[feature]);
+                }
             });
+            this.chartArea.tellNumberOfCharts(this.graphable.length);
         });
 
         this.doNotUpdate = false;
     }
 
     initialize() {
-        this.map.on('move', (e) => {
-            if (this.doNotUpdate) {
-                return;
+        this.map.on('move', (e) => { this.update(); });
+        this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
+    }
+
+    update() {
+        if (this.doNotUpdate) {
+            return;
+        }
+
+        let values = this.filter.getModel(this.graphable, this.map.getBounds());
+        this.reportEmptyCharts(values);
+        this.removeEmptyCharts(values);
+
+        for (let feature in values) {
+            this.charts[feature].changeData(values[feature].map(e => e.data), 5);
+        }
+
+        this.doNotUpdate = true;
+        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
+    }
+
+    reportEmptyCharts(values) {
+        let emptyCharts = Object.values(values).map((feature, i) => {
+            if (feature.length === 0) {
+                return i;
             }
-
-            let values = this.filter.getModel(this.graphable, this.map.getBounds());
-
-            for (let feature in values) {
-                this.charts[feature].changeData(values[feature].map(e => e.data), 5);
-            }
-
-            this.doNotUpdate = true;
-            window.setTimeout(() => { this.doNotUpdate = false }, 200);
+            return -1;
         });
+        emptyCharts = emptyCharts.filter(i => i !== -1);
+        this.chartArea.tellEmptyCharts(emptyCharts);
+    }
+
+    removeEmptyCharts(values) {
+        for (let feature in values) {
+            if (values[feature].length === 0) {
+                delete values[feature];
+            }
+        }
     }
 }

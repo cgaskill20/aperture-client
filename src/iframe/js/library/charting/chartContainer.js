@@ -58,10 +58,14 @@ END OF TERMS AND CONDITIONS
 class ChartContainer {
     constructor(node, viewIndex) {
         this.charts = [];
+
         this.currentChartIndex = 0;
+        this.forbiddenChartIndices = [];
+
         this.hidden = false;
         this.parentNode = node;
         this.viewIndex = viewIndex;
+
         this.currentHeight = 0;
         this.currentWidth = 0;
 
@@ -96,11 +100,26 @@ class ChartContainer {
     }
 
     cycleChart() {
-        console.log(`cycling from ${this.currentChartIndex}`);
         this.charts[this.currentChartIndex].hide(this.viewIndex);
-        this.currentChartIndex = (this.currentChartIndex + 1) % this.charts.length;
+        
+        this.currentChartIndex = this.getNextAllowedChartIndex();
+
         this.charts[this.currentChartIndex].unhide(this.viewIndex);
         this.charts[this.currentChartIndex].rerender(this.currentWidth - 50, this.currentHeight, this.viewIndex);
+    }
+
+    getNextAllowedChartIndex() {
+        let oldIndex = this.currentChartIndex;
+        let current = oldIndex;
+        do {
+            current = (current + 1) % this.charts.length;
+            if (current === oldIndex) {
+                break;
+            }
+        } while (this.forbiddenChartIndices.find(i => i === current));
+        console.log(`cyling to ${current}`);
+        console.log(this.forbiddenChartIndices);
+        return current;
     }
 
     resize(newWidth, newHeight) {
@@ -110,6 +129,10 @@ class ChartContainer {
         this.charts[this.currentChartIndex].rerender(newWidth - 50, newHeight, this.viewIndex);
         this.chartContainer.style.width = newWidth + 'px';
         this.chartContainer.style.height = newHeight + 'px';
+    }
+
+    setForbiddenIndices(forbiddenList) {
+        this.forbiddenChartIndices = forbiddenList;
     }
 
 }
