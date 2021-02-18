@@ -371,6 +371,10 @@ body {
     margin-bottom: 10px;
 }
 
+.modelRunButton{
+    margin-bottom: 10px;
+}
+
 #model-container{
     margin-left: 25px;
     margin-right: 25px;

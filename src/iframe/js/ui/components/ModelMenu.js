@@ -7,12 +7,28 @@ class ModelMenu extends React.Component {
         this.onTypeChange = this.onTypeChange.bind(this)
         this.setParameter = this.setParameter.bind(this)
         this.setCollection = this.setCollection.bind(this)
+        this.runModel = this.runModel.bind(this)
 
         this.collections = {};
         this.parameters = {};
 
         this._sustainQuerier = sustain_querier();
+        this.populateCatalog();
+    }
 
+
+    render() {
+        if(!this.state || !this.state.catalog) return null;
+        if(this.state.modelRunning) return null;
+        return e("div", null,
+            this.createModelSelect(),
+            ...this.createCollections(),
+            ...this.createParameters(),
+            this.createModelRunButton(),
+        );
+    }
+
+    populateCatalog(){
         const q = [];
         const stream = this._sustainQuerier.getStreamForQuery("lattice-46", 27017, "model_catalogue", JSON.stringify(q));
         const catalog = {};
@@ -27,19 +43,10 @@ class ModelMenu extends React.Component {
                 catalog: catalog,
                 config: catalogMap,
                 modelCategory: Object.keys(catalogMap)[0],
-                modelType: Object.keys(catalogMap[Object.keys(catalogMap)[0]])[0]
+                modelType: Object.keys(catalogMap[Object.keys(catalogMap)[0]])[0],
+                modelRunning: false
             })
         }.bind(this));
-    }
-
-
-    render() {
-        if(!this.state || !this.state.catalog) return null;
-        return e("div", null,
-            this.createModelSelect(),
-            ...this.createCollections(),
-            ...this.createParameters(),
-        );
     }
 
     catalogMap(catalog) {
@@ -136,5 +143,71 @@ class ModelMenu extends React.Component {
         if (!this.collections[name])
             this.collections[name] = {};
         this.collections[name][feature] = value;
+    }
+
+    createModelRunButton(){
+        return e("button", {type: "button", className:"btn btn-primary modelRunButton", onClick: this.runModel}, 
+            "Run Model!"
+        );
+    }
+
+    runModel(){
+        this.setState({
+            modelRunning: false
+        });
+        const goal = JSON.parse(`{
+            "type": "LINEAR_REGRESSION",
+            "collections": [
+              {
+                "name": "macav2",
+                "label": "max_max_air_temperature",
+                "features": [
+                  "timestamp"
+                ]
+              }
+            ],
+            "linearRegressionRequest": {
+              "gisJoins": [
+                "G0100290",
+                "G0100210",
+                "G0100190",
+                "G0100230"
+              ],
+              "loss": "squaredError",
+              "solver": "auto",
+              "aggregationDepth": 2,
+              "maxIterations": 10,
+              "elasticNetParam": 0.0,
+              "epsilon": 1.35,
+              "regularizationParam": 0.5,
+              "convergenceTolerance": 0.000001,
+              "fitIntercept": true,
+              "setStandardization": true
+            }
+        }`)
+        const q = {};
+        q.type = this.state.modelType;
+        q.collections = this.convertCollectionsToCollectionsQuery()
+        console.log(q)
+        //q.collections = 
+        //const stream = this._sustainQuerier.executeModelQuery(JSON.stringify(q));
+    }
+
+    convertCollectionsToCollectionsQuery(){
+        let ret = [];
+        for (const collection in this.collections)
+            ret.push({
+                "name": collection,
+                "features": this.convertFeaturesToFeaturesQuery(this.collections[collection])
+            });
+        return ret; 
+    }
+
+    convertFeaturesToFeaturesQuery(collectionFeatures){
+        let ret = [];
+        for(const feature in collectionFeatures)
+            if(collectionFeatures[feature])
+                ret.push(feature);
+        return ret;
     }
 }
