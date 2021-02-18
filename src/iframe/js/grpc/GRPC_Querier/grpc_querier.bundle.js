@@ -2600,13 +2600,13 @@ W.MethodType={UNARY:"unary",SERVER_STREAMING:"server_streaming"};
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],6:[function(require,module,exports){
-const {Query, CompoundRequest, ModelRequest} = require("./sustain_pb.js")
-const {SustainClient} = require('./sustain_grpc_web_pb.js');
+const {Query, CompoundRequest, JsonModelRequest} = require("./sustain_pb.js")
+const {SustainClient, JsonProxyClient} = require('./sustain_grpc_web_pb.js');
 
 /**
  * @namespace SustainQuerier
  * @file Object used for performing gRPC queries
- * @author Kevin Bruhwiler
+ * @author Kevin Bruhwiler & Daniel Reynolds
  */
 SustainQuerier = {
     /**
@@ -2617,6 +2617,7 @@ SustainQuerier = {
       */
     initialize: function () {
         this.service = new SustainClient("http://lattice-2.cs.colostate.edu:9092", "sustainServer");
+        this.modelService = new JsonProxyClient("http://lattice-2.cs.colostate.edu:9092", "sustainServer");
         return this;
     },
 
@@ -2725,9 +2726,9 @@ SustainQuerier = {
     
     
     executeModelQuery: function (query) {
-        const request = new ModelRequest();
-        request.setRequest(query);
-        return this.service.modelQuery(request, {});
+        const request = new JsonModelRequest();
+        request.setJson(query);
+        return this.modelService.modelQuery(request, {});
 	},
 };
 
