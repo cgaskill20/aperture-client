@@ -8,13 +8,9 @@ class ModelCollection extends React.Component {
     
     render() {
         return e("div", {className: "modelCollection"},
-            e("label", {htmlFor: this.name}, `${this.name}: `),
+            e("label", {htmlFor: this.name}, `${Util.cleanUpString(this.name)}: `),
             this.buildCollection()
         );
-    }
-
-    componentDidMount() {
-        
     }
 
     buildCollection(){
@@ -24,7 +20,7 @@ class ModelCollection extends React.Component {
             if(checked)
                 this.props.setCollection(this.name,feature,true);
             return e("div",{className: "modelCollectionFeatures", key: key++},
-                e("label", {htmlFor: `${feature}_feature`}, `${feature}: `),
+                e("label", {htmlFor: `${feature}_feature`}, `${Util.cleanUpString(feature)}: `),
                 e("input", {
                     type: "checkbox", 
                     id:`${feature}_feature`, 

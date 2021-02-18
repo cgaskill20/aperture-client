@@ -110,7 +110,7 @@ class ModelMenu extends React.Component {
     }
 
     createParameters() {
-        return this.state.config[this.state.modelCategory][this.state.modelType].parameters.map(parameter => {
+        return this.getCurrentConfig().parameters.map(parameter => {
             return e(ModelParameter, {
                 config: parameter,
                 setParameter: this.setParameter
@@ -127,7 +127,7 @@ class ModelMenu extends React.Component {
     }
 
     createCollections() {
-        return this.state.config[this.state.modelCategory][this.state.modelType].collections.map(collection => {
+        return this.getCurrentConfig().collections.map(collection => {
             return e(ModelCollection, {
                 config: collection,
                 setCollection: this.setCollection
@@ -188,9 +188,27 @@ class ModelMenu extends React.Component {
         const q = {};
         q.type = this.state.modelType;
         q.collections = this.convertCollectionsToCollectionsQuery()
-        console.log(q)
+
+        q[this.getCurrentConfig().requestName] = {
+            ...this.parameters,
+            "gisJoins": [
+                "G0100290",
+                "G0100210",
+                "G0100190",
+                "G0100230"
+            ]
+        };
+        
+        console.log(JSON.stringify(q))
         //q.collections = 
-        //const stream = this._sustainQuerier.executeModelQuery(JSON.stringify(q));
+        const stream = this._sustainQuerier.executeModelQuery(JSON.stringify(q));
+        stream.on('data', function (r) {
+            const data = JSON.parse(r.getJson());
+            console.log(data)
+        }.bind(this));
+        stream.on('end', function (end) {
+            console.log("end")
+        }.bind(this));
     }
 
     convertCollectionsToCollectionsQuery(){
@@ -209,5 +227,9 @@ class ModelMenu extends React.Component {
             if(collectionFeatures[feature])
                 ret.push(feature);
         return ret;
+    }
+
+    getCurrentConfig(){
+        return this.state.config[this.state.modelCategory][this.state.modelType];
     }
 }

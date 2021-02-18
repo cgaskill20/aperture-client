@@ -214,6 +214,19 @@ Util = {
         return str.replace(/_/gi, " ");
     },
     /**                                                                            
+     * convertsCamelCase -> to spaces.
+     * @memberof Util
+     * @method camelCaseToSpaced
+     * @param {string} str
+     * @returns {string} 
+     */
+    camelCaseToSpaced: function (str){
+        if(str.includes(" ")) return str; //its not camel case if it has space
+        let result = str.replace( /([A-Z])/g, " $1" );
+        let finalResult = result.charAt(0).toUpperCase() + result.slice(1);
+        return finalResult;
+    },
+    /**                                                                            
      * Converts_spaces -> to underscores.
      * @memberof Util
      * @method underScoreToSpace
@@ -224,6 +237,16 @@ Util = {
         if (typeof str !== 'string')
             str = str.toString();
         return str.replace(/ /gi, "_");
+    },
+    /**                                                                            
+     * Cleans up gross definitions, in general
+     * @memberof Util
+     * @method cleanUpString
+     * @param {string} str
+     * @returns {string} 
+     */
+    cleanUpString: function (str) {
+        return this.capitalizeString(this.camelCaseToSpaced(this.underScoreToSpace(str)));
     },
     /**                                                                            
      * Creates a full geojson object from a feature array
