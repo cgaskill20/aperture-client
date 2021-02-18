@@ -119,7 +119,6 @@ class RenderInfrastructure {
                 });
             }.bind(this)
         })
-        console.log(newLayer)
         newLayer.addTo(this.layerGroup);
         return layers;
     }

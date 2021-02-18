@@ -133,40 +133,8 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
     MenuGenerator.generate(finalData, document.getElementById("sidebar-container"));
 });
 
-const modelMenuConfig = {
-    // "Regression":[
-    //     "Linear regression",
-    //     "Generalized linear regression",
-    //     "Decision tree regression",
-    //     "Random forest regression",
-    //     "Gradient-boosted tree regression",
-    //     "Survival regression",
-    //     "Isotonic regression"
-    // ],
-    "Clustering":[
-        "K-means",
-        // "Gaussian mixture",
-        // "Power iteration clustering (PIC)",
-        // "Latent Dirichlet allocation (LDA)",
-        // "Bisecting k-means",
-        // "Streaming k-means"
-    ],
-    // "Classification":[
-    //     "Binomial logistic regression",
-    //     "Multinomial logistic regression",
-    //     "Decision tree classifier",
-    //     "Random forest classifier",
-    //     "Gradient-boosted tree classifier",
-    //     "Multilayer perceptron classifier",
-    //     "Linear Support Vector Machine",
-    //     "One-vs-Rest classifier (a.k.a. One-vs-All)",
-    //     "Naive Bayes"
-    // ],
-}
-
-
 const modelContainer = document.getElementById("model-container");
-ReactDOM.render(e(ModelMenu, {config: modelMenuConfig}), modelContainer);
+ReactDOM.render(e(ModelMenu), modelContainer);
 
 parent.addEventListener('updateMaps', function () {
     updateLayers();
