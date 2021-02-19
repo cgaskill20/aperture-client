@@ -180,7 +180,6 @@ class ModelMenu extends React.Component {
         let resData = [];
         stream.on('data', function (r) {
             const data = JSON.parse(r.getJson());
-            console.log(data)
             this.handleSingleResponse(data);
             resData.push(data);
         }.bind(this));
@@ -206,7 +205,7 @@ class ModelMenu extends React.Component {
                 console.log(data)
                 break;
             case "CLUSTERING":
-                console.log(data)
+                //console.log(data)
                 break;
             default:
                 return null;
@@ -218,6 +217,7 @@ class ModelMenu extends React.Component {
             case "REGRESSION":
                 break;
             case "CLUSTERING":
+                console.log(data)
                 this.handleFullClusteringResponse(data);
                 break;
             default:
@@ -226,7 +226,10 @@ class ModelMenu extends React.Component {
     }
 
     handleFullClusteringResponse(data){
-        this.modelManager = new ClusterManager(data,window.map,window.dataModelingGroup,"tract_geo_GISJOIN");
+        const refinedData = data.map(d => {
+            return d.kMeansClusteringResponse;
+        })
+        this.modelManager = new ClusterManager(refinedData,window.map,window.dataModelingGroup,"county_geo_GISJOIN");
         
     }
 

@@ -87,8 +87,8 @@ class RenderInfrastructure {
                 if (this.currentLayers.includes(feature.id) || this.map.getZoom() < this.options.minRenderZoom || datasource[name] == null) {
                     return false;
                 }
-                this.layors.push(feature.GISJOIN);
-                console.log(this.layors)
+                // this.layors.push(feature.GISJOIN);
+                // console.log(this.layors)
                 this.currentLayers.push(feature.id);
                 return true;
             }.bind(this),

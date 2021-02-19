@@ -6,16 +6,15 @@ class ClusterManager {
         this.sustainQuerier = sustain_querier(); //init querier
 
         this.clusters = [];
-        this.getData();
 
         this.linked = linkedGeometry;
         this.backgroundLoader = this.linked === "tract_geo_GISJOIN" ? window.backgroundTract : window.backgroundCounty;
         this.backgroundLoader.addNewResultListener(function (updates) {
             this.listenForLinkedGeometryUpdates(updates);
         }.bind(this));
-        document.getElementById("clusterS").onchange = function(){
-            this.getData();
-        }.bind(this)
+
+        document.getElementById("clusterLegend").style.display = "block";
+        this.getData();
     }
 
     listenForLinkedGeometryUpdates(updates) {
@@ -38,7 +37,7 @@ class ClusterManager {
         }
     }
 
-    getCacheAndRender(){
+    getCacheAndRender() {
         this.listenForLinkedGeometryUpdates(this.backgroundLoader.getCache());
     }
 
@@ -46,29 +45,38 @@ class ClusterManager {
         this.removeAllLayers();
         this.clusters = [];
         const colors = ["#e6194B", "#f58231", "#ffe119", "#bfef45", "#3cb44b", "#42d4f4", "#4363d8", "#911eb4", "#f032e6", "#a9a9a9"];
-        let buckets = [[], [], [], [], [], [], [], [], [], []];
-        let indx = 0;
-        const doc =  document.getElementById("clusterS").value;
-        $.getJSON(`json/${doc}.json`, async function (data) {
-            for (const d of data)
-                buckets[d.cluster].push(d.GISJOIN);
-            let j = 0;
+        let buckets = [];
+        for(let i = 0; i <= this.getMaxPrediction(); i++){
+            buckets.push([]);
+        }
+        for (const d of this.data){
+            buckets[d.prediction].push(d.gisJoin);
+        }
+        let j = 0;
 
-            for (const b of buckets) {
-                const cluster = new ClusterState(b, colors[j++], this.layerGroup);
-                this.clusters.push(cluster);
+        for (const b of buckets) {
+            const cluster = new ClusterState(b, colors[j++], this.layerGroup);
+            this.clusters.push(cluster);
 
-                const legendClick = document.createElement("div");
-                legendClick.className = "modelLegendField";
-                legendClick.style.backgroundColor = colors[j - 1];
-                legendClick.onclick = function () {
-                    this.reAddLayers();
-                    this.removeAllLayersApartFrom(cluster.group);
-                }.bind(this)
-                document.getElementById("modelLegend").appendChild(legendClick);
-            }
-            this.getCacheAndRender();
-        }.bind(this));
+            const legendClick = document.createElement("div");
+            legendClick.className = "clusterLegendField";
+            legendClick.style.backgroundColor = colors[j - 1];
+            legendClick.onclick = function () {
+                this.reAddLayers();
+                this.removeAllLayersApartFrom(cluster.group);
+            }.bind(this)
+            document.getElementById("clusterLegend").appendChild(legendClick);
+        }
+        this.getCacheAndRender();
+    }
+
+    getMaxPrediction(){
+        let max = 0;
+        for(const result of this.data){
+            if(result.prediction > max)
+                max = result.prediction;
+        }
+        return max;
     }
 
     getClusterFromGISJOIN(GISJOIN) {
@@ -83,7 +91,7 @@ class ClusterManager {
         for (const cluster of this.clusters) {
             this.layerGroup.removeLayer(cluster.group);
         }
-        document.getElementById("modelLegend").innerHTML = "";
+        document.getElementById("clusterLegend").innerHTML = "";
     }
 
     removeAllLayersApartFrom(layer) {

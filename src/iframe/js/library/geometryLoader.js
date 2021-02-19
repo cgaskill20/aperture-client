@@ -210,7 +210,7 @@ class GeometryLoader {
 }
 
 try {
-  module.exports = {
-      GeometryLoader: GeometryLoader
-  }
+    module.exports = {
+        GeometryLoader: GeometryLoader
+    }
 } catch (e) { }

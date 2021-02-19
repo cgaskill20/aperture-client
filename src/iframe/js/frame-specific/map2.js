@@ -36,7 +36,7 @@ const dataModelingGroup = L.layerGroup();
 window.dataModelingGroup = dataModelingGroup;
 
 const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
-const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
+const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 500);
 
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty
@@ -70,11 +70,15 @@ function closeNav() {
 function showDataExploration() {
     document.getElementById("sidebar-container").style.display = "grid";
     document.getElementById("model-container").style.display = "none";
+    map.removeLayer(dataModelingGroup)
+    map.addLayer(dataExplorationGroup)
 }
 
 function showModeling() {
     document.getElementById("sidebar-container").style.display = "none";
     document.getElementById("model-container").style.display = "block";
+    map.addLayer(dataModelingGroup)
+    map.removeLayer(dataExplorationGroup)
 }
 
 function showValidation() {

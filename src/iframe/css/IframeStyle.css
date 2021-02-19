@@ -379,6 +379,26 @@ body {
     margin-left: 25px;
     margin-right: 25px;
 }
+
+#clusterLegend{
+    background-color: white;
+    position: absolute;
+    bottom: 50px;
+    margin: auto;
+    z-index: 999999;
+    left: 50%;
+    padding: 10px;
+    display: none;
+    width: 700px;
+}
+
+.clusterLegendField{
+    height: 60px;
+    width: 60px;
+    cursor: pointer;
+    display: inline-block;
+}
+
 .graph-pic {
   cursor: pointer;
   height: 25px;
