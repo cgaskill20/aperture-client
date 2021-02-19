@@ -19,7 +19,6 @@ class resizable {
         this.isDown = false;
         this.isResizing = false;
         this.createOverlay();
-        //this.collapseButton();
         this.resizeListeners();
         this.movementListeners();
         this.components = [];
@@ -53,15 +52,7 @@ class resizable {
         boxResizer.id = "option" + this.uniqueId;
         boxResizer.className = "option top-right";
 
-        const collapseButton = document.createElement("div");
-        this.collapseButton = collapseButton;
-
-        collapseButton.id = "minimize" + this.uniqueId;
-        collapseButton.className = "option right1";
-
-
         boxDocument.appendChild(boxResizer);
-        boxDocument.appendChild(collapseButton);
         overlayDocument.appendChild(boxDocument);
         document.body.appendChild(overlayDocument);
 

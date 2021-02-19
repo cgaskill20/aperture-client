@@ -369,11 +369,6 @@ body {
     cursor: nesw-resize;
 }
 
-.overlay .box .option.right1 {
-    right: -5px;
-    top: 50%;
-}
-
 .tool-tip {
     cursor: pointer;
     height: 18px;
