@@ -2,7 +2,6 @@
 class ModelCollection extends React.Component {
     constructor(props) {
         super(props);
-
         this.name = this.props.config.name;
     }
     

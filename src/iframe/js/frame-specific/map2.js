@@ -33,6 +33,7 @@ map.addLayer(markers);
 
 const dataExplorationGroup = L.layerGroup().addTo(map);
 const dataModelingGroup = L.layerGroup();
+window.dataModelingGroup = dataModelingGroup;
 
 const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
 const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);

@@ -12,8 +12,12 @@ class ModelMenu extends React.Component {
         this.collections = {};
         this.parameters = {};
 
+        this.modelManager = null;
+
         this._sustainQuerier = sustain_querier();
         this.populateCatalog();
+
+        this.keyVal = 0;
     }
 
 
@@ -88,7 +92,9 @@ class ModelMenu extends React.Component {
             modelCategory: e.target.value,
             modelType: Object.keys(this.state.config[e.target.value])[0]
         });
+        this.clearAll()
     }
+
 
     createTypeSelector() {
         const types = Object.keys(this.state.config[this.state.modelCategory]);
@@ -106,15 +112,16 @@ class ModelMenu extends React.Component {
 
     onTypeChange(e) {
         this.setState({ modelType: e.target.value });
-        this.clearParameters();
+        this.clearAll();
     }
 
     createParameters() {
-        if(this.state.modelCategory === "CLUSTERING") return [];
+        //if(this.state.modelCategory === "CLUSTERING") return [];
         const params =  this.getCurrentConfig().parameters.map(parameter => {
             const obj = {
                 config: parameter,
-                setParameter: this.setParameter
+                setParameter: this.setParameter,
+                key: this.keyVal++
             }
             return e(ModelParameter, obj);
         });
@@ -133,7 +140,8 @@ class ModelMenu extends React.Component {
         return this.getCurrentConfig().collections.map(collection => {
             return e(ModelCollection, {
                 config: collection,
-                setCollection: this.setCollection
+                setCollection: this.setCollection,
+                key: this.keyVal++
             })
         });
     }
@@ -156,35 +164,84 @@ class ModelMenu extends React.Component {
 
     runModel() {
         this.setState({
-            modelRunning: false
+            modelRunning: true
         });
-        const q = {};
-        q.type = this.state.modelType;
-        q.collections = this.convertCollectionsToCollectionsQuery()
-        q[this.getCurrentConfig().requestName] = {
-            ...this.parameters,
-            ...this.getExtraRequestParams()
-        };
+        this.modelManager = null;
+         const q = {};
+         q.type = this.state.modelType;
+         q.collections = this.convertCollectionsToCollectionsQuery()
+         q[this.getCurrentConfig().requestName] = {
+             ...this.parameters,
+             ...this.getExtraRequestParams()
+         };
 
         console.log(JSON.stringify(q))
-        //q.collections = 
         const stream = this._sustainQuerier.executeModelQuery(JSON.stringify(q));
+        let resData = [];
         stream.on('data', function (r) {
             const data = JSON.parse(r.getJson());
             console.log(data)
+            this.handleSingleResponse(data);
+            resData.push(data);
         }.bind(this));
         stream.on('end', function (end) {
             console.log("end")
+            this.handleFullResponse(resData);
+            this.setState({
+                modelRunning: false
+            });
         }.bind(this));
+    }
+
+    clearAll(){
+        this.clearParameters();
+        this.clearCollections();
+        this.modelManager = null;
+    }
+
+
+    handleSingleResponse(data){
+        switch (this.state.modelCategory) {
+            case "REGRESSION":
+                console.log(data)
+                break;
+            case "CLUSTERING":
+                console.log(data)
+                break;
+            default:
+                return null;
+        }
+    }
+
+    handleFullResponse(data){
+        switch (this.state.modelCategory) {
+            case "REGRESSION":
+                break;
+            case "CLUSTERING":
+                this.handleFullClusteringResponse(data);
+                break;
+            default:
+                return null;
+        }
+    }
+
+    handleFullClusteringResponse(data){
+        this.modelManager = new ClusterManager(data,window.map,window.dataModelingGroup,"tract_geo_GISJOIN");
+        
     }
 
     convertCollectionsToCollectionsQuery() {
         let ret = [];
-        for (const collection in this.collections)
-            ret.push({
+        for (const collection in this.collections){
+            const col = {
                 "name": collection,
                 "features": this.convertFeaturesToFeaturesQuery(this.collections[collection])
-            });
+            }
+            if(col.features.length === 0) continue;
+            if(this.state.modelCategory === "REGRESSION") 
+                col["label"] = "max_max_air_temperature";
+            ret.push(col);
+        }
         return ret;
     }
 
@@ -204,12 +261,7 @@ class ModelMenu extends React.Component {
         switch (this.state.modelCategory) {
             case "REGRESSION":
                 return {
-                    "gisJoins": [
-                        "G0100290",
-                        "G0100210",
-                        "G0100190",
-                        "G0100230"
-                    ]
+                    "gisJoins": ["G0801230", "G0800690", "G0800130", "G0800590", "G0800470", "G0800140", "G0800010", "G0800190", "G0800310", "G0800490", "G0800570", "G0801070", "G0801170", "G5600010", "G5600070"]
                 }
             default:
                 return null;
