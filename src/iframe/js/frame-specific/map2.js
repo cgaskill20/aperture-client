@@ -41,15 +41,17 @@ map.on('click', function () {
 
 document.getElementById('nav-menu-button').addEventListener('click', openNav);
 document.getElementById('nav-close-button').addEventListener('click', closeNav);
-document.getElementById('nav-data-exploration-button').addEventListener('click', showDataExploration);
-document.getElementById('nav-modeling-button').addEventListener('click', showModeling);
-document.getElementById('nav-validation-button').addEventListener('click', showValidation);
 document.getElementById('nav-graph-button').addEventListener('click', showGraph);
 
-// $('#nav-close-button').on('click', closeNav);
-// $('#nav-data-exploration-button').on('click', showDataExploration);
-// $('#nav-modeling-button').on('click', showModeling);
-// $('#nav-validation-button').on('click', showValidation);
+$('#nav-data-exploration-button').on('click', function(e) {
+    document.getElementById("sidebar-container").style.display = "grid";
+});
+$('#nav-modeling-button').on('click', function(e) {
+    document.getElementById("sidebar-container").style.display = "none";
+});
+$('#nav-validation-button').on('click', function(e) {
+    document.getElementById("sidebar-container").style.display = "none";
+});
 
 function openNav() {
   document.getElementById("sidebar-id").style.width = "52vw";
@@ -59,18 +61,6 @@ function openNav() {
 function closeNav() {
   document.getElementById("sidebar-id").style.width = "0";
   document.getElementById("main").style.opacity = "1";
-}
-
-function showDataExploration() {
-    document.getElementById("sidebar-container").style.display = "grid";
-}
-
-function showModeling() {
-    document.getElementById("sidebar-container").style.display = "none";
-}
-
-function showValidation() {
-    document.getElementById("sidebar-container").style.display = "none";
 }
 
 function showGraph() {

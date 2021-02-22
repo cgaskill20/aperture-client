@@ -233,8 +233,8 @@ body {
 .dropdown-arrow {
     cursor: pointer;
     margin-left: 5px;
-    height: 18px;
-    width: 18px;
+    height: 9px;
+    width: 20px;
 }
 
 .collapsible, .attributionContainer, #clearFeatures {
