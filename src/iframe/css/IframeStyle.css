@@ -187,7 +187,6 @@ body {
     padding-bottom: 2px;
 }
 
-
 .menuHeaderContainer{
     padding: 5px;
 }
@@ -238,7 +237,7 @@ body {
 }
 
 .collapsible, .attributionContainer, #clearFeatures {
-    background-color: #DDD;
+    background-color: #ddd;
     cursor: pointer;
     padding: 10px;
     border-radius: 3px;
@@ -360,6 +359,11 @@ body {
 .graph-button-pic {
   height: 25px;
   width: 25px;
+}
+
+.dark-mode-button {
+  height: 30px;
+  width: 30px;
 }
 
 .close-button-pic {

@@ -67,6 +67,16 @@ function showGraph() {
     //FIXME Jean-Marc & Piers, put your graph pop-up JS here
 }
 
+
+document.getElementById('nav-dark-mode-button').addEventListener('click', switchColorMode);
+function switchColorMode() {
+    document.getElementById("sidebar-id").classList.toggle("sidebar-dark-mode");
+}
+
+// $('#nav-dark-mode-button').on('click', function(e) {
+//     document.getElementById("sidebar-id").toggleClass("sidebar-dark-mode");
+// });
+
 const overwrite = { //leaving this commented cause it explains the schema really well 
     // "covid_county": {
     //     "group": "Tract, County, & State Data",
