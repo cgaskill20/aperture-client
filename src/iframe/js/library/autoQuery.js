@@ -196,8 +196,9 @@ class AutoQuery {
             queryParams: q,
         });
 
-        this.queryWorker.port.onmessage = (msg) => {
-            if (msg.data.type == "data") {
+        this.queryWorker.port.onmessage = msg => {
+            console.log(msg);
+            if (msg.data.type === "data") {
                 Util.normalizeFeatureID(msg.data.data);
                 if (!this.layerIDs.includes(msg.data.data.id)) {
                     this.renderData(msg.data.data, forcedGeometry);

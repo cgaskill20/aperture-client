@@ -106,6 +106,7 @@ class SmartQuerier {
      */
     query(collection, queryParams, onDataCallback, onStreamEndCallback) {
         queryParams = this.attachGISJOINIgnorePipeline(collection, queryParams);
+        console.log(queryParams);
         const stream = this.querier.getStreamForQuery(SmartQuerier.dbMachine, 
             SmartQuerier.dbPort, collection, JSON.stringify(queryParams));
 
