@@ -197,7 +197,6 @@ class AutoQuery {
         });
 
         this.queryWorker.port.onmessage = msg => {
-            console.log(msg);
             if (msg.data.type === "data") {
                 Util.normalizeFeatureID(msg.data.data);
                 if (!this.layerIDs.includes(msg.data.data.id)) {

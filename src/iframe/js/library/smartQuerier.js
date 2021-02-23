@@ -105,8 +105,11 @@ class SmartQuerier {
      * @returns {Object} The associated stream. Note you don't need to use this - the callbacks should be sufficient to process data in most situations.
      */
     query(collection, queryParams, onDataCallback, onStreamEndCallback) {
-        queryParams = this.attachGISJOINIgnorePipeline(collection, queryParams);
-        console.log(queryParams);
+        if (collection !== 'county_geo_GISJOIN') {
+            queryParams = this.attachGISJOINIgnorePipeline(collection, queryParams);
+        }
+        console.log(collection);
+        console.log(JSON.stringify(queryParams));
         const stream = this.querier.getStreamForQuery(SmartQuerier.dbMachine, 
             SmartQuerier.dbPort, collection, JSON.stringify(queryParams));
 
