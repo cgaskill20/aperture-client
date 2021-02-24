@@ -105,14 +105,14 @@ const MenuGenerator = {
             const outerColumn = document.createElement("div");
 
             const newColumn = document.createElement("div");
-            newColumn.className = "menuColumn";
+            newColumn.className = "menuColumn colorMode1";
             newColumn.id = Util.spaceToUnderScore(obj);
             outerColumn.appendChild(newColumn);
             container.appendChild(outerColumn);
 
             const columnTitle = document.createElement("div");
             columnTitle.className = "categoryName";
-            columnTitle.innerHTML = "<div class='vertical-center titleText'>" + obj + "</div>";
+            columnTitle.innerHTML = "<div class='vertical-center titleText colorMode1'>" + obj + "</div>";
             newColumn.appendChild(columnTitle);
         }
     },
@@ -132,16 +132,16 @@ const MenuGenerator = {
                     return 1;
                 }
                 const subGroup = document.createElement("div");
-                subGroup.className = "menuHeader";
+                subGroup.className = "menuHeader colorMode1";
                 subGroup.id = Util.spaceToUnderScore(obj) + Util.spaceToUnderScore(header);
 
                 const subGroupHeader = document.createElement("div");
-                subGroupHeader.className = "menuHeaderLabel";
+                subGroupHeader.className = "menuHeaderLabel colorMode1";
                 subGroupHeader.innerHTML = Util.capitalizeString(Util.underScoreToSpace(header));
                 subGroup.appendChild(subGroupHeader);
 
                 const subGroupContainer = document.createElement("div");
-                subGroupContainer.className = "menuHeaderContainer";
+                subGroupContainer.className = "menuHeaderContainer colorMode1";
                 subGroup.appendChild(subGroupContainer);
 
                 //now add content to each header
@@ -170,7 +170,7 @@ const MenuGenerator = {
 
         //create checkbox selector for this layer, and add a label
         const layerSelector = document.createElement("div");
-        layerSelector.className = "layerSelector";
+        layerSelector.className = "layerSelector colorMode1";
 
         const selectorLabel = document.createElement("label");
         selectorLabel.id = layerContainer.id + "_label";
@@ -221,7 +221,7 @@ const MenuGenerator = {
 
         if (layerObj["constraints"]) {
             const layerConstraints = document.createElement("div");
-            layerConstraints.className = "layerConstraints";
+            layerConstraints.className = "layerConstraints colorMode2 border";
             layerConstraints.style.display = "none";
             let anyActiveConstraints = false;
 
@@ -270,7 +270,7 @@ const MenuGenerator = {
 
         if (constraintObj["type"] === "slider") {
             container = this.createSliderContainer(constraintName, constraintObj, layerObj, layerName);
-            container.className = "content-section slider-section";
+            container.className = "content-section slider-section colorMode1 border";
         }
 
         else if (constraintObj["type"] === "selector") {
@@ -293,7 +293,6 @@ const MenuGenerator = {
     createDropdown: function (layerConstraints) {
         const dropdown = document.createElement("img");
         dropdown.src = "../../images/Dropdown_Black.png";
-        dropdown.id = "dropdown-arrow-id";
         dropdown.className = "dropdown-arrow";
         dropdown.style.transform = layerConstraints.style.display === "none" ? "rotate(0deg)" : "rotate(180deg)";
         dropdown.onclick = function () {
@@ -306,7 +305,7 @@ const MenuGenerator = {
     createTooltip: function(layerInfo) {
         const title = layerInfo;
         const tooltip = document.createElement("span");
-        tooltip.innerHTML = "<img src='../../images/Info_Black.png' id='tooltip-id' class='tool-tip' data-toggle='tooltip'\
+        tooltip.innerHTML = "<img src='../../images/Info_Black.png' class='tool-tip' data-toggle='tooltip'\
         data-placement='top' container='body' title=\'" + title + "\'>";
         $(function () {
           $('[data-toggle="tooltip"]').tooltip()
@@ -320,16 +319,16 @@ const MenuGenerator = {
         }
 
         const editDiv = document.createElement("div");
-        editDiv.className = "editConstraints";
+        editDiv.className = "editConstraints colorMode2 border";
         editDiv.id = "editConstraints";
 
         const editDivHeader = document.createElement("div");
-        editDivHeader.className = "editConstraintsHeader";
+        editDivHeader.className = "editConstraintsHeader colorMode1";
         editDivHeader.innerHTML = `Select Constraints for ${layerLabel}`;
         editDiv.appendChild(editDivHeader);
 
         const editConstraintArea = document.createElement("div");
-        editConstraintArea.className = "editConstraintArea";
+        editConstraintArea.className = "editConstraintArea colorMode1 border";
         editDiv.appendChild(editConstraintArea)
 
 
@@ -416,7 +415,7 @@ const MenuGenerator = {
 
     createCheckboxContainer: function (constraint, constraintObj, layerObj, layerName, type) {
         const checkboxContainer = document.createElement("div");
-        checkboxContainer.className = "content-section checkbox-section";
+        checkboxContainer.className = "content-section checkbox-section colorMode1 border";
         checkboxContainer.id = constraint;
 
         const checkboxLabel = document.createElement("div");
