@@ -1,4 +1,6 @@
 
+let lightMode = true;
+
 document.getElementById('nav-dark-mode-button').addEventListener('click', colorModeSwitch);
 function colorModeSwitch() {
     document.getElementById("sidebar-id").classList.toggle("sidebar-dark-mode");
@@ -27,16 +29,29 @@ function colorModeSwitch() {
     for(var i = 0; i < layer_constraints.length; i++) {
       layer_constraints[i].classList.toggle("secondary-dark-mode-with-border");
     }
-    var dropdown_arrow = document.querySelectorAll("[id='dropdown-arrow-id']");
-    for(var i = 0; i < dropdown_arrow.length; i++) {
-      dropdown_arrow[i].src="../../images/Custom_Dropdown_White.png";
-    }
-    var tooltip = document.querySelectorAll("[id='tooltip-id']");
-    for(var i = 0; i < tooltip.length; i++) {
-      tooltip[i].src="../../images/Info_White.png";
-    }
     var modal_button = document.querySelectorAll("[id='modal-button-id']");
     for(var i = 0; i < modal_button.length; i++) {
       modal_button[i].classList.toggle("btn-outline-dark-dark-mode");
     }
+    var dropdown_arrow = document.querySelectorAll("[id='dropdown-arrow-id']");
+    for(var i = 0; i < dropdown_arrow.length; i++) {
+      if(lightMode) dropdown_arrow[i].src="../../images/Dropdown_White.png";
+      else dropdown_arrow[i].src="../../images/Dropdown_Black.png";
+    }
+    var tooltip = document.querySelectorAll("[id='tooltip-id']");
+    for(var i = 0; i < tooltip.length; i++) {
+      if(lightMode) tooltip[i].src="../../images/Info_White.png";
+      else tooltip[i].src="../../images/Info_Black.png";
+    }
+    var graph = document.querySelectorAll("[id='graph-icon-id']");
+    for(var i = 0; i < graph.length; i++) {
+      if(lightMode) graph[i].src="../../images/Graph_White.png";
+      else graph[i].src="../../images/Graph_Black.png";
+    }
+    var dark_mode_icon = document.querySelectorAll("[id='dark-mode-icon-id']");
+    for(var i = 0; i < dark_mode_icon.length; i++) {
+      if(lightMode) dark_mode_icon[i].src="../../images/Moon.png";
+      else dark_mode_icon[i].src="../../images/Sun.png";
+    }
+    lightMode = !lightMode;
 }

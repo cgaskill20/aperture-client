@@ -317,7 +317,7 @@ const MenuGenerator = {
 
     createDropdown: function (layerConstraints) {
         const dropdown = document.createElement("img");
-        dropdown.src = "../../images/Custom_Dropdown.png";
+        dropdown.src = "../../images/Dropdown_Black.png";
         dropdown.id = "dropdown-arrow-id";
         dropdown.className = "dropdown-arrow";
         dropdown.style.transform = layerConstraints.style.display === "none" ? "rotate(0deg)" : "rotate(180deg)";
