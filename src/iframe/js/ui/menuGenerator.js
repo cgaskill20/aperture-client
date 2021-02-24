@@ -115,6 +115,7 @@ const MenuGenerator = {
 
             const columnTitle = document.createElement("div");
             columnTitle.className = "categoryName";//Menu headers 
+            columnTitle.id = "major-header-id";
             columnTitle.innerHTML = "<div class='vertical-center titleText'>" + obj + "</div>";
             newColumn.appendChild(columnTitle);
         }
@@ -140,6 +141,7 @@ const MenuGenerator = {
 
                 const subGroupHeader = document.createElement("div");
                 subGroupHeader.className = "menuHeaderLabel";
+                subGroupHeader.id = "menu-header-label-id";
                 subGroupHeader.innerHTML = Util.capitalizeString(Util.underScoreToSpace(header));
                 subGroup.appendChild(subGroupHeader);
 
@@ -165,20 +167,6 @@ const MenuGenerator = {
         }
     },
 
-    // createToggle(layerContainer) {
-    //     const toggleDiv = document.createElement("div");
-    //     toggleDiv.innerHTML = "<a class='checkbox-inline toggle-box'>\
-    //           <input class='checkbox-for-layer' \
-    //           id=\'" + layerContainer.id + "\'_selector \
-    //           type='checkbox' data-toggle='toggle' data-size='xs' \
-    //           data-onstyle='outline-primary' data-offstyle='outline-dark'>\
-    //           </a>";
-    //     // $(function () {
-    //     //   $('[data-toggle="toggle"]').toggle()
-    //     // })
-    //     return toggleDiv;
-    // }
-
     createLayerContainer(layerName, layerLabel, layerObj, layerQuerier, layerInfo) {
         //create entire container
         const layerContainer = document.createElement("div");
@@ -188,6 +176,7 @@ const MenuGenerator = {
         //create checkbox selector for this layer, and add a label
         const layerSelector = document.createElement("div");
         layerSelector.className = "layerSelector";
+        layerSelector.id = "layer-selector-id";
 
         const selectorLabel = document.createElement("label");
         selectorLabel.id = layerContainer.id + "_label";
@@ -242,6 +231,7 @@ const MenuGenerator = {
         if (layerObj["constraints"]) {
             const layerConstraints = document.createElement("div");
             layerConstraints.className = "layerConstraints";
+            layerConstraints.id = "layer-constraint-id";
             layerConstraints.style.display = "none";
             //populate the constraints
             let anyActiveConstraints = false;
@@ -299,7 +289,8 @@ const MenuGenerator = {
 
         if (constraintObj["type"] === "slider") {
             container = this.createSliderContainer(constraintName, constraintObj, layerObj, layerName);
-            container.className = "content-section slider-section";        }
+            container.className = "content-section slider-section";
+        }
 
 
         else if (constraintObj["type"] === "selector") {
@@ -317,6 +308,7 @@ const MenuGenerator = {
             layerQuerier.constraintSetActive(constraintName, true);
         }
 
+        container.id = "data-container-id";
         return container;
     },
 
@@ -336,7 +328,7 @@ const MenuGenerator = {
     createTooltip: function(layerInfo) {
         const title = layerInfo;
         const tooltip = document.createElement("span");
-        tooltip.innerHTML = "<img src='../../images/tooltip.png' class='tool-tip' data-toggle='tooltip'\
+        tooltip.innerHTML = "<img src='../../images/tooltip.png' id='tooltip-id' class='tool-tip' data-toggle='tooltip'\
         data-placement='top' container='body' title=\'" + title + "\'>";
         $(function () {
           $('[data-toggle="tooltip"]').tooltip()

@@ -8,6 +8,7 @@
         crossorigin="" />
     <script src="../../node_modules/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" type="text/css" href="css/IframeStyle.css">
+    <link rel="stylesheet" type="text/css" href="css/darkMode.css">
     <script src="js/third-party/leaflet-sidebar.js"></script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -44,7 +45,7 @@
     <div id="sidebar-id" class="sidebar">
         <div class="nav-tabs">
 
-            <div class="btn-group" role="group" aria-label="Basic example">
+            <div class="btn-group" id="nav-group-id" role="group" aria-label="Basic example">
               <button type="button" id='nav-graph-button' class="btn btn-outline-dark"><img src="/images/graph.png" class="graph-button-pic"></button>
               <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark">Data Exploration</button>
               <button type="button" id='nav-modeling-button' class="btn btn-outline-dark">Modeling</button>
@@ -67,6 +68,8 @@
     <div id='map2' class='map'></div>
 
     <script src="js/frame-specific/map2.js"></script>
+    <script src="js/frame-specific/UI-Buttons.js"></script>
+    <script src="js/frame-specific/darkMode.js"></script>
     <script src="js/control/mouseDown.js"></script>
 
     <script src="js/third-party/jquery-3.2.1.slim.min.js"></script>
