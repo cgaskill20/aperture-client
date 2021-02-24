@@ -17,20 +17,6 @@
 
 .tooltip-inner-dark-mode{max-width:400px;padding:.25rem .5rem;color:#d1d1d1;text-align:center;background-color:#141414;border-radius:.2px;border:1px solid #444;border-radius:3px;}
 
-.btn-outline-dark-dark-mode {
-  color:#f8f9fa;background-color:transparent;background-image:none;border-color:#f8f9fa;
-}
-
-.btn-outline-dark-dark-mode{color:#f8f9fa;background-color:transparent;background-image:none;border-color:#f8f9fa}
-.btn-outline-dark-dark-mode:hover{color:#212529;background-color:#f8f9fa;border-color:#f8f9fa}
-.btn-outline-dark-dark-mode.focus,.btn-outline-dark-dark-mode:focus{box-shadow:0 0 0 .2rem rgba(248,249,250,.5)}
-.btn-outline-dark-dark-mode.disabled,.btn-outline-dark-dark-mode:disabled{color:#f8f9fa;background-color:transparent}
-.btn-outline-dark-dark-mode:not(:disabled):not(.disabled).active,.btn-outline-dark-dark-mode:not(:disabled):not(.disabled):active,.show>.btn-outline-dark-dark-mode.dropdown-toggle{color:#212529;background-color:#f8f9fa;border-color:#f8f9fa}
-.btn-outline-dark-dark-mode:not(:disabled):not(.disabled).active:focus,.btn-outline-dark-dark-mode:not(:disabled):not(.disabled):active:focus,.show>.btn-outline-dark-dark-mode.dropdown-toggle:focus{box-shadow:0 0 0 .2rem rgba(248,249,250,.5)}
-
-
-
-
 .btn-outline-dark{color:#343a40;background-color:transparent;background-image:none;border-color:#343a40}
 .btn-outline-dark:hover{color:#fff;background-color:#343a40;border-color:#343a40}
 

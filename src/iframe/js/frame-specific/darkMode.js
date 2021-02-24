@@ -7,6 +7,9 @@ var brightWhite = "#fbfbfb";
 var trueWhite = "#fff";
 var transitionTime = "0.3s";
 var realBorderRadius = "3px";
+var bootstrapWarning = "#ffc107";
+var bootstrapDark = "#343a40";
+var bootstrapLight = "#f8f9fa";
 
 document.getElementById('nav-dark-mode-button').addEventListener('click', colorModeSwitch);
 function colorModeSwitch() {
@@ -49,26 +52,43 @@ function colorModeSwitch() {
 	var darkButtons = document.getElementsByClassName("btn-outline-dark");
 	if(darkMode) {
 		for(var i = 0; i < darkButtons.length; i++) {
-			darkButtons[i].style.color="#f8f9fa";
+			darkButtons[i].style.color=bootstrapLight;
 			darkButtons[i].style.backgroundColor="transparent";
 			darkButtons[i].style.backgroundImage="none";
-			darkButtons[i].style.borderColor="#f8f9fa";
-			// darkButtons[i].style:hover.color="#212529";
-			// darkButtons[i].style:hover.backgroundColor="#f8f9fa";
-			// darkButtons[i].style:hover.borderColor="#f8f9fa";
+			darkButtons[i].style.borderColor=bootstrapLight;
+			// darkButtons[i].style.hover.color="#212529";
+			// darkButtons[i].style.hover.backgroundColor="#f8f9fa";
+			// darkButtons[i].style.hover.borderColor="#f8f9fa";
 		}
 	}
 	else {
 		for(var i = 0; i < darkButtons.length; i++) {
-			darkButtons[i].style.color="#343a40";
+			darkButtons[i].style.color=bootstrapDark;
 			darkButtons[i].style.backgroundColor="transparent";
 			darkButtons[i].style.backgroundImage="none";
-			darkButtons[i].style.borderColor="#343a40";
-			// darkButtons[i].style:hover.color="#fff";
-			// darkButtons[i].style:hover.backgroundColor="#343a40";
-			// darkButtons[i].style:hover.borderColor="#343a40";
+			darkButtons[i].style.borderColor=bootstrapDark;
+			// darkButtons[i].style.hover.color="#fff";
+			// darkButtons[i].style.hover.backgroundColor="#343a40";
+			// darkButtons[i].style.hover.borderColor="#343a40";
 		}
 	}
+
+	// var toolTips = document.getElementsByClassName("tool-tip");
+	// if(darkMode) {
+	// 	for(var i = 0; i < toolTips.length; i++) {
+	// 		toolTips[i].style.color=trueBlack;
+	// 		toolTips[i].style.backgroundColor=trueWhite;
+	// 		toolTips[i].style.border="1px solid #f1f1f1";
+	// 	}
+	// }
+	// else {
+	// 	for(var i = 0; i < toolTips.length; i++) {
+	// 		toolTips[i].style.color=brightWhite;
+	// 		toolTips[i].style.backgroundColor=trueBlack;
+	// 		toolTips[i].style.border="1px solid #777";
+	// 	}
+	// }
+
 
 	var dropdownArrow = document.getElementsByClassName("dropdown-arrow");
 	var tooltipIcon = document.getElementsByClassName("tool-tip");
