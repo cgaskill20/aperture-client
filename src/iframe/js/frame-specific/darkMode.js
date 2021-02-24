@@ -47,7 +47,28 @@ function colorModeSwitch() {
 	}
 
 	var darkButtons = document.getElementsByClassName("btn-outline-dark");
-
+	if(darkMode) {
+		for(var i = 0; i < darkButtons.length; i++) {
+			darkButtons[i].style.color="#f8f9fa";
+			darkButtons[i].style.backgroundColor="transparent";
+			darkButtons[i].style.backgroundImage="none";
+			darkButtons[i].style.borderColor="#f8f9fa";
+			// darkButtons[i].style:hover.color="#212529";
+			// darkButtons[i].style:hover.backgroundColor="#f8f9fa";
+			// darkButtons[i].style:hover.borderColor="#f8f9fa";
+		}
+	}
+	else {
+		for(var i = 0; i < darkButtons.length; i++) {
+			darkButtons[i].style.color="#343a40";
+			darkButtons[i].style.backgroundColor="transparent";
+			darkButtons[i].style.backgroundImage="none";
+			darkButtons[i].style.borderColor="#343a40";
+			// darkButtons[i].style:hover.color="#fff";
+			// darkButtons[i].style:hover.backgroundColor="#343a40";
+			// darkButtons[i].style:hover.borderColor="#343a40";
+		}
+	}
 
 	var dropdownArrow = document.getElementsByClassName("dropdown-arrow");
 	var tooltipIcon = document.getElementsByClassName("tool-tip");
