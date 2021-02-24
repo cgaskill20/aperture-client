@@ -5,7 +5,7 @@
 /**
  * @namespace MenuGenerator
  * @file Build's menu UI for the Aperture Client
- * @author Daniel Reynolds
+ * @authors Daniel Reynolds, Matt Young, but mostly Daniel
  * @dependencies 
  * @notes Work in progress!
  */
@@ -108,10 +108,14 @@ const MenuGenerator = {
      */
     addColumns(container, nested_json_map) {
         for (obj in nested_json_map) {
+            const outerColumn = document.createElement("div");
+            outerColumn.id = "outer-column-id";
+
             const newColumn = document.createElement("div");
             newColumn.className = "menuColumn";
             newColumn.id = Util.spaceToUnderScore(obj);
-            container.appendChild(newColumn);
+            outerColumn.appendChild(newColumn);
+            container.appendChild(outerColumn);
 
             const columnTitle = document.createElement("div");
             columnTitle.className = "categoryName";//Menu headers 
@@ -266,6 +270,7 @@ const MenuGenerator = {
         const modalDiv = document.createElement("div");
         modalDiv.className = "modal-popout";
         const modalButton = document.createElement("mod");
+        modalButton.id = "modal-button-id";
         modalButton.type = "modal-btn";
         modalButton.className = "btn btn-xs btn-outline-dark";
         modalButton.role = "button";
@@ -277,8 +282,6 @@ const MenuGenerator = {
             }, constraintsObj);
         }
         modalDiv.appendChild(modalButton);
-        // modalDiv.appendChild(this.createTooltip(layerInfo));
-
         return modalDiv;
     },
 
@@ -314,8 +317,8 @@ const MenuGenerator = {
 
     createDropdown: function (layerConstraints) {
         const dropdown = document.createElement("img");
-        // dropdown.src = "../../images/drop-down-arrow.png";
-        dropdown.src = "../../images/Custom-Dropdown.png";
+        dropdown.src = "../../images/Custom_Dropdown.png";
+        dropdown.id = "dropdown-arrow-id";
         dropdown.className = "dropdown-arrow";
         dropdown.style.transform = layerConstraints.style.display === "none" ? "rotate(0deg)" : "rotate(180deg)";
         dropdown.onclick = function () {
@@ -328,7 +331,7 @@ const MenuGenerator = {
     createTooltip: function(layerInfo) {
         const title = layerInfo;
         const tooltip = document.createElement("span");
-        tooltip.innerHTML = "<img src='../../images/tooltip.png' id='tooltip-id' class='tool-tip' data-toggle='tooltip'\
+        tooltip.innerHTML = "<img src='../../images/Info_Black.png' id='tooltip-id' class='tool-tip' data-toggle='tooltip'\
         data-placement='top' container='body' title=\'" + title + "\'>";
         $(function () {
           $('[data-toggle="tooltip"]').tooltip()
