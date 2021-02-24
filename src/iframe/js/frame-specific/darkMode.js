@@ -1,55 +1,59 @@
 
-var lightMode = true;
+var darkMode = true;
+
 var trueBlack = "#111";
-var darkBlack = "#414141"
-var softBlack = "#171717"
+var softBlack = "#181818"
 var brightWhite = "#fbfbfb";
-var softWhite = "#f1f1f1"
-var trueWhite = "#fff"
+var trueWhite = "#fff";
+var transitionTime = "0.3s";
+var realBorderRadius = "3px";
 
 document.getElementById('nav-dark-mode-button').addEventListener('click', colorModeSwitch);
 function colorModeSwitch() {
 	var colorMode1 = document.getElementsByClassName("colorMode1");
 	var colorMode2 = document.getElementsByClassName("colorMode2");
 	var borders = document.getElementsByClassName("border");
-	if(lightMode) {
+	if(darkMode) {
 		for(var i = 0; i < colorMode1.length; i++) {
 			colorMode1[i].style.backgroundColor=trueBlack;
-			colorMode1[i].style.color=softWhite;
+			colorMode1[i].style.color=trueWhite;
+			colorMode1[i].style.transition=transitionTime;
 		}
 		for(var i = 0; i < colorMode2.length; i++) {
 			colorMode2[i].style.backgroundColor=softBlack;
-			colorMode2[i].style.color=softWhite;
+			colorMode2[i].style.color=trueWhite;
+			colorMode2[i].style.transition=transitionTime;
 		}
 		for(var i = 0; i < borders.length; i++) {
 			borders[i].style.border = "1px solid #f1f1f1";
-			borders[i].style.borderRadius = "3px";
+			borders[i].style.borderRadius = realBorderRadius;
 		}
 	}
 	else {
 		for(var i = 0; i < colorMode1.length; i++) {
 			colorMode1[i].style.backgroundColor=brightWhite;
 			colorMode1[i].style.color=trueBlack;
+			colorMode1[i].style.transition=transitionTime;
 		}
 		for(var i = 0; i < colorMode2.length; i++) {
 			colorMode2[i].style.backgroundColor=trueWhite;
 			colorMode2[i].style.color=softBlack;
+			colorMode2[i].style.transition=transitionTime;
 		}
 		for(var i = 0; i < borders.length; i++) {
 			borders[i].style.border = "1px solid #777";
-			borders[i].style.borderRadius = "3px";
+			borders[i].style.borderRadius = realBorderRadius;
 		}
 	}
 
-    // var modal_button = document.querySelectorAll("[id='modal-button-id']");
-    // for(var i = 0; i < modal_button.length; i++) {
-    //   modal_button[i].classList.toggle("btn-outline-dark-dark-mode");
-    // }
+	var darkButtons = document.getElementsByClassName("btn-outline-dark");
+
+
 	var dropdownArrow = document.getElementsByClassName("dropdown-arrow");
 	var tooltipIcon = document.getElementsByClassName("tool-tip");
 	var graph = document.getElementsByClassName("graph-button-pic");
 	var darkModeButton = document.getElementsByClassName("dark-mode-button");
-	if(lightMode) {
+	if(darkMode) {
 		for(var i = 0; i < dropdownArrow.length; i++) {
 	 		dropdownArrow[i].src="../../images/Dropdown_White.png";
 		}
@@ -78,5 +82,5 @@ function colorModeSwitch() {
 		}
 	}
 
-    lightMode = !lightMode;
+    darkMode = !darkMode;
 }
