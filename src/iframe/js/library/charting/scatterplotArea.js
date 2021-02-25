@@ -76,4 +76,12 @@ class ScatterplotArea {
             this.scatterplot.rerender(newWidth, newHeight, 0);
         }
     }
+
+    toggleVisible() {
+        if (this.container.style.display === "none") {
+            this.container.style.display = "block";
+        } else {
+            this.container.style.display = "none";
+        }
+    }
 }

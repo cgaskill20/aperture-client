@@ -69,7 +69,7 @@ class Scatterplot extends Chart {
 
         view.x = d3.scaleLinear()
             .domain(d3.extent(this.data, d => d.x)).nice()
-            .range([view.margin.left, view.width, view.margin.right])
+            .range([view.margin.left, view.width - view.margin.right])
 
         view.y = d3.scaleLinear()
             .domain(d3.extent(this.data, d => d.y)).nice()
@@ -85,26 +85,6 @@ class Scatterplot extends Chart {
             .call(d3.axisLeft(view.y))
             .call(g => g.select(".domain").remove())
 
-        view.grid = g => g
-            .attr("stroke", "curentColor")
-            .attr("stroke-opacity", 0.1)
-            .call(g => g.append("g")
-                .selectAll("line")
-                .data(view.x.ticks())
-                .join("line")
-                    .attr("x1", d => 0.5 + view.x(d))
-                    .attr("x2", d => 0.5 + view.x(d))
-                    .attr("y1", view.margin.top)
-                    .attr("y2", view.height - view.margin.bottom))
-            .call(g => g.append("g")
-                .selectAll("line")
-                .data(view.y.ticks())
-                .join("line")
-                    .attr("y1", d => 0.5 + view.y(d))
-                    .attr("y2", d => 0.5 + view.y(d))
-                    .attr("x1", view.margin.left)
-                    .attr("x2", view.width - view.margin.right));
-
         view.svg.select("g#points")
             .selectAll("circle")
             .data(this.data)
@@ -115,14 +95,22 @@ class Scatterplot extends Chart {
 
         view.svg.select("g#xAxis").call(view.xAxis);
         view.svg.select("g#yAxis").call(view.yAxis);
-        view.svg.select("g#grid")
+        view.svg.select("g#xGrid")
             .selectAll("line")
             .data(view.x.ticks())
             .join("line")
                 .attr("x1", d => 0.5 + view.x(d))
                 .attr("x2", d => 0.5 + view.x(d))
                 .attr("y1", view.margin.top)
-                .attr("y2", view.height - view.margin.bottom);
+                .attr("y2", view.height - view.margin.bottom)
+        view.svg.select("g#yGrid")
+            .selectAll("line")
+            .data(view.y.ticks())
+            .join("line")
+                .attr("y1", d => 0.5 + view.y(d))
+                .attr("y2", d => 0.5 + view.y(d))
+                .attr("x1", view.margin.left)
+                .attr("x2", view.width - view.margin.right);
 
         view.svg.select("text#xAxisLabel")
             .attr("x", newWidth - view.margin.right)
@@ -155,9 +143,14 @@ class Scatterplot extends Chart {
 
         view.svg.append("g").attr("id", "xAxis");
         view.svg.append("g").attr("id", "yAxis");
-        view.svg.append("g").append("text").attr("id", "xAxisLabel");
-        view.svg.append("g").append("text").attr("id", "yAxisLabel");
-        view.svg.append("g").attr("id", "grid");
+        view.svg.append("text").attr("id", "xAxisLabel");
+        view.svg.append("text").attr("id", "yAxisLabel");
+        view.svg.append("g").attr("id", "xGrid")
+            .attr("stroke", "grey")
+            .attr("stroke-opacity", 0.5);
+        view.svg.append("g").attr("id", "yGrid")
+            .attr("stroke", "grey")
+            .attr("stroke-opacity", 0.5);
         view.svg.append("g").attr("id", "points")
             .attr("stroke", "steelblue")
             .attr("stroke-width", 1.5)

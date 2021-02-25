@@ -56,13 +56,11 @@ END OF TERMS AND CONDITIONS
 */
 
 const ChartingType = {
-    /*
     SINGLE: {
         name: "single",
         managerType: SingleChartManager,
         areaType: SingleChartArea,
     },
-    */
     SCATTERPLOT: {
         name: "scatterplot",
         managerType: ScatterplotManager,
@@ -90,6 +88,9 @@ class ChartSystem {
                 let type = ChartingType[typeName];
                 this.chartAreas[type.name] = new type.areaType();
                 this.resizable.addChartArea(type.name, this.chartAreas[type.name]);
+                if (type.name != this.currentMode.name) {
+                    this.chartAreas[type.name].toggleVisible();
+                }
                 this.chartManagers[type.name] = new type.managerType(catalog, this.chartAreas[type.name]);
             }
 
@@ -119,5 +120,4 @@ class ChartSystem {
     toggleVisible() {
         this.resizable.toggleVisible();
     }
-
 }

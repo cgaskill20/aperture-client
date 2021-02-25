@@ -95,5 +95,12 @@ class SingleChartArea {
             container.setForbiddenIndices(inaccessibleList);
         });
     }
-
+    
+    toggleVisible() {
+        if (this.container.style.display === "none") {
+            this.container.style.display = "block";
+        } else {
+            this.container.style.display = "none";
+        }
+    }
 }

@@ -69,7 +69,6 @@ class ScatterplotManager {
 
     prepareData(values) {
         let data = [];
-        console.log(values);
         for (let i = 0; i < values[this.featureName.x].length; i++) {
             data.push({
                 x: values[this.featureName.x][i].data,
