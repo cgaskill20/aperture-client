@@ -381,17 +381,24 @@ class AutoQuery {
       * @returns {string} hex color code
       */
     getColor(properties) {
-        const propsVarName = Util.removePropertiesPrefix(this.color.variable);
-        const value = properties[propsVarName];
+        let propsVarName;
+        let value;
+        if (this.color.variable) {
+            propsVarName = Util.removePropertiesPrefix(this.color.variable);
+            value = properties[propsVarName];
+        }
+        const skew = this.color.skew != null ? this.color.skew + 1 : 1;
         switch (this.colorStyle) {
             case "solid":
                 return this.colorCode;
             case "gradient":
                 const range = this.getConstraintMetadata(this.color.variable).range;
-                const normalizedValue = Math.round((value - range[0]) / (range[1] - range[0]) * 32); //normalizes value on range. results in #1 - 32
-                return this.colorCode[normalizedValue];
-            case "logGradient":
-                const skew = this.color.skew;
+                const normalizedValue = (value - range[0]) / (range[1] - range[0]);
+                const skewCorrectedValue = Math.pow(normalizedValue, 1 / skew); // https://www.desmos.com/calculator/rarbpgoalk
+                console.log(`Before skew: ${normalizedValue}`)
+                console.log(`After skew: ${skewCorrectedValue}`)
+                const colorindex = Math.round(skewCorrectedValue * 32); //normalizes value on range. results in #1 - 32
+                return this.colorCode[colorindex];
             case "sequential":
                 const index = this.getConstraintMetadata(this.color.variable).options.indexOf(value);
                 return this.colorCode[index];
@@ -428,10 +435,10 @@ class AutoQuery {
       * @method buildPopup
       * @returns {string} popup text
       */
-    buildPopup(){
+    buildPopup() {
         let returnText = "<ul style='padding-inline-start:20px;margin-block-start:2.5px;'>";
-        for(const constraint in this.constraintState){
-            if(this.constraintState[constraint]){
+        for (const constraint in this.constraintState) {
+            if (this.constraintState[constraint]) {
                 const constraintNoPrefix = Util.removePropertiesPrefix(constraint);
                 const constraintLabel = this.getConstraintMetadata(constraint).label ? this.getConstraintMetadata(constraint).label : constraintNoPrefix;
                 returnText += "<li><b>" + constraintLabel + ":</b> @@" + constraintNoPrefix + "@@</li>";
