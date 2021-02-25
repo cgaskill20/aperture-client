@@ -228,10 +228,13 @@ class AutoQuery {
       */
     renderData(data, forcedGeometry) {
         if (this.linked) {
-            const GeoJSON = this.backgroundLoader.getGeometryFromGISJOIN(data.GISJOIN, forcedGeometry);
+            const GeoJSON = JSON.parse(JSON.stringify(this.backgroundLoader.getGeometryFromGISJOIN(data.GISJOIN, forcedGeometry)));
             if (!GeoJSON)
                 return;
-
+            Util.normalizeFeatureID(GeoJSON)
+            GeoJSON.id = `${GeoJSON.id}_${data.id}`
+            if (this.layerIDs.includes(GeoJSON.id))
+                return;
             GeoJSON.properties = {
                 ...GeoJSON.properties,
                 ...data
