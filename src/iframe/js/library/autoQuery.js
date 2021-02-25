@@ -189,14 +189,12 @@ class AutoQuery {
             q.push({ "$match": { "GISJOIN": { "$in": GISJOINS } } });
         }
         q = q.concat(this.buildConstraintPipeline());
-
         const stream = this.sustainQuerier.getStreamForQuery("lattice-46", 27017, this.collection, JSON.stringify(q));
 
         this.streams.push(stream);
 
         stream.on('data', function (r) {
             const data = JSON.parse(r.getData());
-
             Util.normalizeFeatureID(data);
 
             if (!this.layerIDs.includes(data.id)) {
