@@ -55,57 +55,48 @@ END OF TERMS AND CONDITIONS
 
 */
 
-const ChartingMode = {
-    SINGLE_CHARTS: 0,
-    SCATTERPLOT: 1
-}
+class SingleChartManager {
+    constructor(catalog, chartArea) {
+        this.charts = {};
+        this.chartArea = chartArea;
+        let graphable = catalog.map(e => Object.keys(e.constraints)).flat();
 
-class ChartSystem {
-    constructor(map, chartCatalogFilename) {
-        this.currentMode = ChartingMode.SINGLE_CHARTS;
-        this.filter = new MapDataFilter();
-        RenderInfrastructure.useFilter(this.filter);
-
-        this.map = map;
-
-        this.resizable = new resizable(1, 1, "white");
-        this.resizable = new resizable(1000, 300, "white"); // The most temporary of temporary solutions
-                                                            // someone needs to integrate this graph
-                                                            // button with Matt's UI before I have a
-                                                            // full anyeurism
-        this.chartArea = this.resizable.chartArea;
-
-        $.getJSON(chartCatalogFilename, (catalog) => {
-            this.catalog = catalog;
-            this.initialize();
-            
-            this.chartManagers = {};
-            this.chartManagers.singleChart = new SingleChartManager(this.catalog, this.chartArea);
-            //this.chartManagers.scatterplot = new ScatterplotManager(this.chartArea);
-
+        this.constraints = catalog.map(e => e.constraints);
+        this.constraints.forEach(constraint => {
+            for (let feature in constraint) {
+                this.charts[feature] = new Histogram();
+                this.charts[feature].setTitle(constraint[feature].label);
+                this.chartArea.addChart(this.charts[feature]);
+            }
         });
-
-        this.doNotUpdate = false;
+        this.chartArea.tellNumberOfCharts(graphable.length);
     }
 
-    initialize() {
-        this.map.on('move', (e) => { this.update(); });
-        this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
-    }
+    update(values) {
+        this.reportEmptyCharts(values);
+        this.removeEmptyCharts(values);
 
-    update() {
-        if (this.doNotUpdate) {
-            return;
+        for (let feature in values) {
+            this.charts[feature].changeData(values[feature].map(e => e.data), 5);
         }
-
-        let values = this.filter.getModel(this.graphable, this.map.getBounds());
-        console.log(values);
-        for (let managerName in this.chartManagers) {
-            this.chartManagers[managerName].update(values);
-        }
-
-        this.doNotUpdate = true;
-        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
     }
 
+    reportEmptyCharts(values) {
+        let emptyCharts = Object.values(values).map((feature, i) => {
+            if (feature.length === 0) {
+                return i;
+            }
+            return -1;
+        });
+        emptyCharts = emptyCharts.filter(i => i !== -1);
+        this.chartArea.tellEmptyCharts(emptyCharts);
+    }
+
+    removeEmptyCharts(values) {
+        for (let feature in values) {
+            if (values[feature].length === 0) {
+                delete values[feature];
+            }
+        }
+    }
 }

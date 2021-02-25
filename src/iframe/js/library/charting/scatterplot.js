@@ -55,57 +55,74 @@ END OF TERMS AND CONDITIONS
 
 */
 
-const ChartingMode = {
-    SINGLE_CHARTS: 0,
-    SCATTERPLOT: 1
+class Scatterplot extends Chart {
+    constructor() {
+        super([]);
+    }
+
+    rerender(newWidth, newHeight, viewIndex) {
+        let view = this.views[viewIndex];
+
+        view.width = newWdith;
+        view.height = newHeight;
+        view.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
+
+        view.x = d3.scaleLinear()
+            .domain(d3.extent(this.data, d => d.x)).nice()
+            .range([view.margin.left, view.width, view.margin.right])
+
+        view.y = d3.scaleLinear()
+            .domain(d3.extent(this.data, d => d.y)).nice()
+            .range([view.height - view.margin.bottom, view.margin.top])
+
+        view.xAxis = g => g
+            .attr("transform", `translate(0,${view.height - view.margin.bottom}`)
+            .call(d3.axisBottom(view.x).ticks(view.width / 80))
+            .call(g => g.select(".domain").remove())
+            .call(g => g.append("text")
+                .attr("x", view.width)
+                .attr("y", view.margin.bottom - 4)
+                .attr("fill", "currentColor")
+                .attr("text-anchor", "end")
+                .text(this.data.x));
+
+        view.yAxis = g => g
+            .attr("transform", `translate(${view.margin.left},0)`)
+            .call(d3.axisLeft(view.y))
+            .call(g => g.select(".domain").remove())
+            .call(g => g.append("text")
+                .attr("x", -view.margin.left)
+                .attr("y", 10)
+                .attr("fill", "currentColor")
+                .attr("text-anchor", "start")
+                .text(this.data.y));
+
+        view.svg.select("g#points")
+            .selectAll("circle")
+            .data(this.data)
+            .join("circle")
+                .attr("cx", d => view.x(d.x))
+                .attr("cy", d => view.y(d.y))
+                .attr("r", 3);
+
+    }
+
+    makeNewView(node, width, height) {
+        let view = {};
+        view.width = width;
+        view.height = height;
+        
+        view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
+
+        view.margin = { top: 20, right: 20, bottom: 30, left: 40 };
+
+        view.svg.append("g").attr("id", "xAxis");
+        view.svg.append("g").attr("id", "yAxis");
+        view.svg.append("g").attr("id", "grid");
+        view.svg.append("g").attr("id", "points")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 1.5)
+            .attr("fill", "none");
+    }
 }
 
-class ChartSystem {
-    constructor(map, chartCatalogFilename) {
-        this.currentMode = ChartingMode.SINGLE_CHARTS;
-        this.filter = new MapDataFilter();
-        RenderInfrastructure.useFilter(this.filter);
-
-        this.map = map;
-
-        this.resizable = new resizable(1, 1, "white");
-        this.resizable = new resizable(1000, 300, "white"); // The most temporary of temporary solutions
-                                                            // someone needs to integrate this graph
-                                                            // button with Matt's UI before I have a
-                                                            // full anyeurism
-        this.chartArea = this.resizable.chartArea;
-
-        $.getJSON(chartCatalogFilename, (catalog) => {
-            this.catalog = catalog;
-            this.initialize();
-            
-            this.chartManagers = {};
-            this.chartManagers.singleChart = new SingleChartManager(this.catalog, this.chartArea);
-            //this.chartManagers.scatterplot = new ScatterplotManager(this.chartArea);
-
-        });
-
-        this.doNotUpdate = false;
-    }
-
-    initialize() {
-        this.map.on('move', (e) => { this.update(); });
-        this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
-    }
-
-    update() {
-        if (this.doNotUpdate) {
-            return;
-        }
-
-        let values = this.filter.getModel(this.graphable, this.map.getBounds());
-        console.log(values);
-        for (let managerName in this.chartManagers) {
-            this.chartManagers[managerName].update(values);
-        }
-
-        this.doNotUpdate = true;
-        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
-    }
-
-}
