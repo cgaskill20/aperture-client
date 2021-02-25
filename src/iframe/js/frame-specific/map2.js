@@ -167,6 +167,7 @@ parent.setterFunctions.push({
     setterFunc: thisMapsSetter,
     mapNum: MAPNUMBER
 });
+let chartSystem = new ChartSystem(map, "json/graphPriority.json");
 setTimeout(function () {
     map.setView([map.wrapLatLng(parent.view).lat, map.wrapLatLng(parent.view).lng - 0.0002], map.getZoom());
 }, 1); //this is a terrible fix but it works for now
