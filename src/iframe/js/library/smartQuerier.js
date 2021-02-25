@@ -79,6 +79,9 @@ class SmartQuerier {
     static dbPort = 27017;
     static bucketMaxSize = 100;
 
+    // Collections whose queries should not be changed.
+    static unmodifiableCollections = ['tract_geo_GISJOIN', 'county_geo_GISJOIN'];
+
     /**
       * Constructs a SmartQuerier.
       * This method should NOT be called directly. Use getSustainQuerier to get
@@ -105,7 +108,7 @@ class SmartQuerier {
      * @returns {Object} The associated stream. Note you don't need to use this - the callbacks should be sufficient to process data in most situations.
      */
     query(collection, queryParams, onDataCallback, onStreamEndCallback) {
-        queryParams = this.attachGISJOINIgnorePipeline(collection, queryParams);
+        this.attachGISJOINIgnorePipeline(collection, queryParams);
         const stream = this.querier.getStreamForQuery(SmartQuerier.dbMachine, 
             SmartQuerier.dbPort, collection, JSON.stringify(queryParams));
 
@@ -161,10 +164,15 @@ class SmartQuerier {
       * @returns The given params, but with a GISJOIN ignore pipeline prepended
       */
     attachGISJOINIgnorePipeline(collection, params) {
+        if (SmartQuerier.unmodifiableCollections.find(c => c === collection)) {
+            console.log(params);
+            return;
+        }
+
         let pipeline = this.getGISJOINIgnorePipeline(collection);
         // Don't concatenate an empty list of params, since this breaks everything
         if (params.length == 0) {
-            return pipeline;
+            return;
         }
         return pipeline.concat(params);
     }
