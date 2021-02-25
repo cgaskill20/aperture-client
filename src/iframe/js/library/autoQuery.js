@@ -379,20 +379,20 @@ class AutoQuery {
       * @returns {string} hex color code
       */
     getColor(properties) {
-        let propsVarName;
         let value;
         if (this.color.variable) {
-            propsVarName = Util.removePropertiesPrefix(this.color.variable);
+            const propsVarName = Util.removePropertiesPrefix(this.color.variable);
             value = properties[propsVarName];
         }
         const skew = this.color.skew != null ? this.color.skew + 1 : 1;
+        const skewDir = this.color.skewDir != null ? this.color.skewDir : "right";
         switch (this.colorStyle) {
             case "solid":
                 return this.colorCode;
             case "gradient":
-                const range = this.getConstraintMetadata(this.color.variable).range;
+                const range = this.getConstraintMetadata(this.color.variable).range; 
                 const normalizedValue = (value - range[0]) / (range[1] - range[0]);
-                const skewCorrectedValue = Math.pow(normalizedValue, 1 / skew); // https://www.desmos.com/calculator/rarbpgoalk
+                const skewCorrectedValue = skewDir === "right" ?  Math.pow(normalizedValue, 1 / skew) : Math.pow(normalizedValue, skew); // https://www.desmos.com/calculator/4qpxsz2pdg
                 console.log(`Before skew: ${normalizedValue}`)
                 console.log(`After skew: ${skewCorrectedValue}`)
                 const colorindex = Math.round(skewCorrectedValue * 32); //normalizes value on range. results in #1 - 32

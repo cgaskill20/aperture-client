@@ -310,7 +310,7 @@
         "#00FF00",
         "#FF0000"
       ],
-      "skew":1.5
+      "skew":1
     },
     "fieldMetadata": [
       {
@@ -334,7 +334,8 @@
         "#00FF00",
         "#FF0000"
       ],
-      "skew":1.5
+      "skew":1,
+      "border": 1
     },
     "fieldMetadata": [
       {
