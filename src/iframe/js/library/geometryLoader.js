@@ -114,30 +114,6 @@ class GeometryLoader {
       */
     getData() {
         let newResults = [];
-        /*
-        this.sustainQuerier.query(this.collection, this.getBasicSpatialQuery(), 
-            (data) => {
-                Util.normalizeFeatureID(data);
-
-                //remove an existing refrence
-                const indexInCache = this.indexInCache(data.GISJOIN);
-                if (indexInCache !== -1) {
-                    this.cache.splice(indexInCache, 1);
-                }
-                else {
-                    newResults.push(data);
-                }
-
-                this.cache.unshift(data); //add it to the front of the arr
-
-                if (this.cache.length > this.maxSize) { //if length is too long, pop from end
-                    this.cache.pop();
-                }
-            }, () => {
-                this.broadcastNewResults(newResults);
-            }
-        );
-        */
 
         this.queryWorker.port.postMessage({
             type: "query",
@@ -146,7 +122,8 @@ class GeometryLoader {
         });
 
         this.queryWorker.port.onmessage = msg => {
-            if (msg.data.type == "data") {
+            console.log(msg);
+            if (msg.data.type === "data") {
                 let data = msg.data.data;
                 Util.normalizeFeatureID(data);
 
@@ -164,7 +141,7 @@ class GeometryLoader {
                 if (this.cache.length > this.maxSize) { //if length is too long, pop from end
                     this.cache.pop();
                 }
-            } else if (msg.data.type == "end") {
+            } else if (msg.data.type === "end") {
                 this.broadcastNewResults(newResults);
             }
         };
