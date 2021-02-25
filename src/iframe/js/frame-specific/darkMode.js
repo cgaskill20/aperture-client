@@ -5,11 +5,15 @@ var trueBlack = "#111";
 var softBlack = "#181818"
 var brightWhite = "#fbfbfb";
 var trueWhite = "#fff";
+var softWhite = "#f1f1f1";
 var transitionTime = "0.3s";
 var realBorderRadius = "3px";
+var bootstrapPrimary = "#007bff";
 var bootstrapWarning = "#ffc107";
 var bootstrapDark = "#343a40";
 var bootstrapLight = "#f8f9fa";
+var borderWhite = "1px solid #f1f1f1";
+var borderBlack = "1px solid #777";
 
 document.getElementById('nav-dark-mode-button').addEventListener('click', colorModeSwitch);
 function colorModeSwitch() {
@@ -28,7 +32,7 @@ function colorModeSwitch() {
 			colorMode2[i].style.transition=transitionTime;
 		}
 		for(var i = 0; i < borders.length; i++) {
-			borders[i].style.border = "1px solid #f1f1f1";
+			borders[i].style.border = borderWhite;
 			borders[i].style.borderRadius = realBorderRadius;
 		}
 	}
@@ -44,7 +48,7 @@ function colorModeSwitch() {
 			colorMode2[i].style.transition=transitionTime;
 		}
 		for(var i = 0; i < borders.length; i++) {
-			borders[i].style.border = "1px solid #777";
+			borders[i].style.border = borderBlack;
 			borders[i].style.borderRadius = realBorderRadius;
 		}
 	}
@@ -89,6 +93,17 @@ function colorModeSwitch() {
 	// 	}
 	// }
 
+	var sliders = document.getElementsByClassName("noUi-connect");
+	if(darkMode) {
+		for(var i = 0; i < sliders.length; i++) {
+			sliders[i].style.backgroundColor = bootstrapPrimary;
+		}
+	}
+	else {
+		for(var i = 0; i < sliders.length; i++) {
+			sliders[i].style.backgroundColor = bootstrapPrimary;
+		}
+	}
 
 	var dropdownArrow = document.getElementsByClassName("dropdown-arrow");
 	var tooltipIcon = document.getElementsByClassName("tool-tip");
