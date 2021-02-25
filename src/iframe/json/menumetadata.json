@@ -302,6 +302,7 @@
   {
     "collection":"risk_county",
     "level": "county",
+    "info": "In the National Risk Index, risk is defined as the potential for negative impacts as a result of a natural hazard. It ranges from 0 (lowest risk) to 100 (highest risk).",
     "color":{
       "style": "gradient",
       "variable": "RISK_SCORE",
@@ -324,6 +325,7 @@
   {
     "collection":"risk_tract",
     "level": "tract",
+    "info": "In the National Risk Index, risk is defined as the potential for negative impacts as a result of a natural hazard. It ranges from 0 (lowest risk) to 100 (highest risk).",
     "color":{
       "style": "gradient",
       "variable": "RISK_SCORE",
