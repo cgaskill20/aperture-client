@@ -392,9 +392,7 @@ class AutoQuery {
             case "gradient":
                 const range = this.getConstraintMetadata(this.color.variable).range; 
                 const normalizedValue = (value - range[0]) / (range[1] - range[0]);
-                const skewCorrectedValue = skewDir === "right" ?  Math.pow(normalizedValue, 1 / skew) : Math.pow(normalizedValue, skew); // https://www.desmos.com/calculator/4qpxsz2pdg
-                console.log(`Before skew: ${normalizedValue}`)
-                console.log(`After skew: ${skewCorrectedValue}`)
+                const skewCorrectedValue = skewDir === "right" ?  Math.pow(normalizedValue, 1 / skew) : Math.pow(normalizedValue, skew); // https://www.desmos.com/calculator/ww74bpjmxv
                 const colorindex = Math.round(skewCorrectedValue * 32); //normalizes value on range. results in #1 - 32
                 return this.colorCode[colorindex];
             case "sequential":
