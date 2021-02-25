@@ -396,7 +396,7 @@ body {
   width: 25px;
 }
 
-.chart-area {
+.single-chart-area {
   display: flex;
   flex-direction: column;
 }

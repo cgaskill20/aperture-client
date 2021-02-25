@@ -63,7 +63,7 @@ class Scatterplot extends Chart {
     rerender(newWidth, newHeight, viewIndex) {
         let view = this.views[viewIndex];
 
-        view.width = newWdith;
+        view.width = newWidth;
         view.height = newHeight;
         view.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
 
@@ -76,26 +76,34 @@ class Scatterplot extends Chart {
             .range([view.height - view.margin.bottom, view.margin.top])
 
         view.xAxis = g => g
-            .attr("transform", `translate(0,${view.height - view.margin.bottom}`)
+            .attr("transform", `translate(0,${view.height - view.margin.bottom})`)
             .call(d3.axisBottom(view.x).ticks(view.width / 80))
             .call(g => g.select(".domain").remove())
-            .call(g => g.append("text")
-                .attr("x", view.width)
-                .attr("y", view.margin.bottom - 4)
-                .attr("fill", "currentColor")
-                .attr("text-anchor", "end")
-                .text(this.data.x));
 
         view.yAxis = g => g
             .attr("transform", `translate(${view.margin.left},0)`)
             .call(d3.axisLeft(view.y))
             .call(g => g.select(".domain").remove())
-            .call(g => g.append("text")
-                .attr("x", -view.margin.left)
-                .attr("y", 10)
-                .attr("fill", "currentColor")
-                .attr("text-anchor", "start")
-                .text(this.data.y));
+
+        view.grid = g => g
+            .attr("stroke", "curentColor")
+            .attr("stroke-opacity", 0.1)
+            .call(g => g.append("g")
+                .selectAll("line")
+                .data(view.x.ticks())
+                .join("line")
+                    .attr("x1", d => 0.5 + view.x(d))
+                    .attr("x2", d => 0.5 + view.x(d))
+                    .attr("y1", view.margin.top)
+                    .attr("y2", view.height - view.margin.bottom))
+            .call(g => g.append("g")
+                .selectAll("line")
+                .data(view.y.ticks())
+                .join("line")
+                    .attr("y1", d => 0.5 + view.y(d))
+                    .attr("y2", d => 0.5 + view.y(d))
+                    .attr("x1", view.margin.left)
+                    .attr("x2", view.width - view.margin.right));
 
         view.svg.select("g#points")
             .selectAll("circle")
@@ -105,6 +113,35 @@ class Scatterplot extends Chart {
                 .attr("cy", d => view.y(d.y))
                 .attr("r", 3);
 
+        view.svg.select("g#xAxis").call(view.xAxis);
+        view.svg.select("g#yAxis").call(view.yAxis);
+        view.svg.select("g#grid")
+            .selectAll("line")
+            .data(view.x.ticks())
+            .join("line")
+                .attr("x1", d => 0.5 + view.x(d))
+                .attr("x2", d => 0.5 + view.x(d))
+                .attr("y1", view.margin.top)
+                .attr("y2", view.height - view.margin.bottom);
+
+        view.svg.select("text#xAxisLabel")
+            .attr("x", newWidth - view.margin.right)
+            .attr("y", newHeight - view.margin.bottom / 2)
+            .attr("text-anchor", "right")
+            .attr("font-size", "8pt")
+            .text(this.data.x);
+
+        view.svg.select("text#yAxisLabel")
+            .attr("x", view.margin.left / 2)
+            .attr("y", view.margin.top / 2)
+            .attr("text-anchor", "left")
+            .attr("font-size", "8pt")
+            .text(this.data.y);
+    }
+
+    changeData(newData) {
+        this.data = newData;
+        this.rerenderAllViews();
     }
 
     makeNewView(node, width, height) {
@@ -114,15 +151,19 @@ class Scatterplot extends Chart {
         
         view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
 
-        view.margin = { top: 20, right: 20, bottom: 30, left: 40 };
+        view.margin = { top: 50, right: 50, bottom: 50, left: 50 };
 
         view.svg.append("g").attr("id", "xAxis");
         view.svg.append("g").attr("id", "yAxis");
+        view.svg.append("g").append("text").attr("id", "xAxisLabel");
+        view.svg.append("g").append("text").attr("id", "yAxisLabel");
         view.svg.append("g").attr("id", "grid");
         view.svg.append("g").attr("id", "points")
             .attr("stroke", "steelblue")
             .attr("stroke-width", 1.5)
             .attr("fill", "none");
+
+        return view;
     }
 }
 

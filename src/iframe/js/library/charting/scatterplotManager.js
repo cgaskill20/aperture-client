@@ -55,69 +55,29 @@ END OF TERMS AND CONDITIONS
 
 */
 
-const ChartingType = {
-    /*
-    SINGLE: {
-        name: "single",
-        managerType: SingleChartManager,
-        areaType: SingleChartArea,
-    },
-    */
-    SCATTERPLOT: {
-        name: "scatterplot",
-        managerType: ScatterplotManager,
-        areaType: ScatterplotArea,
-    },
-}
-
-class ChartSystem {
-    constructor(map, chartCatalogFilename) {
-        this.map = map;
-
-        this.currentMode = ChartingType.SCATTERPLOT;
-
-        this.filter = new MapDataFilter();
-        RenderInfrastructure.useFilter(this.filter);
-
-        this.resizable = new resizable(500, 300, "white");
-        this.chartManagers = {};
-        this.chartAreas = {};
-
-        $.getJSON(chartCatalogFilename, (catalog) => {
-            this.initializeUpdateHooks();
-
-            for (let typeName in ChartingType) {
-                let type = ChartingType[typeName];
-                this.chartAreas[type.name] = new type.areaType();
-                this.resizable.addChartArea(type.name, this.chartAreas[type.name]);
-                this.chartManagers[type.name] = new type.managerType(catalog, this.chartAreas[type.name]);
-            }
-
-            this.graphable = catalog.map(e => Object.keys(e.constraints)).flat();
-        });
-
-        this.doNotUpdate = false;
+class ScatterplotManager {
+    constructor(catalog, chartArea){
+        this.chartArea = chartArea;
+        this.scatterplot = new Scatterplot();
+        this.chartArea.addChart(this.scatterplot);
+        this.featureName = { x: 'temp', y: 'RPL_THEMES' };
     }
 
-    initializeUpdateHooks() {
-        this.map.on('move', (e) => { this.update(); });
-        this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
+    update(values) {
+        this.scatterplot.changeData(this.prepareData(values));
     }
 
-    update() {
-        if (this.doNotUpdate) {
-            return;
+    prepareData(values) {
+        let data = [];
+        console.log(values);
+        for (let i = 0; i < values[this.featureName.x].length; i++) {
+            data.push({
+                x: values[this.featureName.x][i].data,
+                y: values[this.featureName.y][i].data,
+            });
         }
-
-        let values = this.filter.getModel(this.graphable, this.map.getBounds());
-        this.chartManagers[this.currentMode.name].update(values);
-
-        this.doNotUpdate = true;
-        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
+        data.x = this.featureName.x;
+        data.y = this.featureName.y;
+        return data;
     }
-
-    toggleVisible() {
-        this.resizable.toggleVisible();
-    }
-
 }

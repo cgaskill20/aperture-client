@@ -55,69 +55,25 @@ END OF TERMS AND CONDITIONS
 
 */
 
-const ChartingType = {
-    /*
-    SINGLE: {
-        name: "single",
-        managerType: SingleChartManager,
-        areaType: SingleChartArea,
-    },
-    */
-    SCATTERPLOT: {
-        name: "scatterplot",
-        managerType: ScatterplotManager,
-        areaType: ScatterplotArea,
-    },
-}
-
-class ChartSystem {
-    constructor(map, chartCatalogFilename) {
-        this.map = map;
-
-        this.currentMode = ChartingType.SCATTERPLOT;
-
-        this.filter = new MapDataFilter();
-        RenderInfrastructure.useFilter(this.filter);
-
-        this.resizable = new resizable(500, 300, "white");
-        this.chartManagers = {};
-        this.chartAreas = {};
-
-        $.getJSON(chartCatalogFilename, (catalog) => {
-            this.initializeUpdateHooks();
-
-            for (let typeName in ChartingType) {
-                let type = ChartingType[typeName];
-                this.chartAreas[type.name] = new type.areaType();
-                this.resizable.addChartArea(type.name, this.chartAreas[type.name]);
-                this.chartManagers[type.name] = new type.managerType(catalog, this.chartAreas[type.name]);
-            }
-
-            this.graphable = catalog.map(e => Object.keys(e.constraints)).flat();
-        });
-
-        this.doNotUpdate = false;
+class ScatterplotArea {
+    constructor() {
     }
 
-    initializeUpdateHooks() {
-        this.map.on('move', (e) => { this.update(); });
-        this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
+    attachTo(node) {
+        this.parentNode = node;
+        this.container = document.createElement("div");
+        this.container.className = "scatterplot-chart-area";
+        this.parentNode.appendChild(this.container);
     }
 
-    update() {
-        if (this.doNotUpdate) {
-            return;
+    addChart(chart) {
+        chart.addTo(this.container);
+        this.scatterplot = chart;
+    }
+
+    rerender(newWidth, newHeight) {
+        if (this.scatterplot) {
+            this.scatterplot.rerender(newWidth, newHeight, 0);
         }
-
-        let values = this.filter.getModel(this.graphable, this.map.getBounds());
-        this.chartManagers[this.currentMode.name].update(values);
-
-        this.doNotUpdate = true;
-        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
     }
-
-    toggleVisible() {
-        this.resizable.toggleVisible();
-    }
-
 }

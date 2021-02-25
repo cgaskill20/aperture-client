@@ -122,7 +122,6 @@ class GeometryLoader {
         });
 
         this.queryWorker.port.onmessage = msg => {
-            console.log(msg);
             if (msg.data.type === "data") {
                 let data = msg.data.data;
                 Util.normalizeFeatureID(data);

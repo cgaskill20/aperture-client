@@ -65,7 +65,6 @@ class resizable {
     static numOfInstances = 0;
     // Each time a overlay is clicked its Z Index increases so it is seen above all other overlays
     static zIndex = 1000;
-    chartJS = null;
 
     constructor(defaultWidth, defaultHeight, backgroundColor){
         resizable.numOfInstances += 1;
@@ -75,7 +74,7 @@ class resizable {
         this.backgroundColor = backgroundColor;
         this.isDown = false;
         this.isResizing = false;
-        this.chartArea = new ChartArea();
+        this.chartAreas = {};
         this.createOverlay();
         this.resizeListeners();
         this.movementListeners();
@@ -112,8 +111,6 @@ class resizable {
         boxDocument.appendChild(boxResizer);
         overlayDocument.appendChild(boxDocument);
         document.body.appendChild(overlayDocument);
-
-        this.chartArea.attachTo(boxDocument);
     }
 
     /**
@@ -174,8 +171,12 @@ class resizable {
             this.overlayDocument.style.height = this.height + 'px';
             this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
         }
-        this.chartArea.rerenderAll(this.width, this.height);
+
+        for (let areaName in this.chartAreas) {
+            this.chartAreas[areaName].rerender(this.width, this.height);
+        }
     }
+
     /**
      * Adds in the necessary listeners for the div to be moved
      * @memberof resizable
@@ -221,10 +222,21 @@ class resizable {
         return mousePosition;
     }
 
-
+    toggleVisible(){
+        if (this.overlayDocument.style.display === "block") {
+            this.overlayDocument.style.display = "none";
+        } else {
+            this.overlayDocument.style.display = "block";
+        }
+    }
 
     addChart(chart) {
         this.chartArea.addChart(chart);
+    }
+
+    addChartArea(type, chartArea) {
+        this.chartAreas[type] = chartArea;
+        chartArea.attachTo(this.boxDocument);
     }
 }
 
