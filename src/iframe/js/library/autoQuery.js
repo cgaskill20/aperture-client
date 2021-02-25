@@ -231,11 +231,13 @@ class AutoQuery {
             const GeoJSON = this.backgroundLoader.getGeometryFromGISJOIN(data.GISJOIN, forcedGeometry);
             if (!GeoJSON)
                 return;
-
+            Util.normalizeFeatureID(GeoJSON)
+            GeoJSON.id = `${GeoJSON.properties}_${data.id}`
             GeoJSON.properties = {
                 ...GeoJSON.properties,
                 ...data
             }
+            console.log(GeoJSON.properties)
             data = GeoJSON;
         }
 
