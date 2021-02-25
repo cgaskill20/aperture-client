@@ -381,18 +381,19 @@ class AutoQuery {
       * @returns {string} hex color code
       */
     getColor(properties) {
+        const propsVarName = Util.removePropertiesPrefix(this.color.variable);
+        const value = properties[propsVarName];
         switch (this.colorStyle) {
             case "solid":
                 return this.colorCode;
             case "gradient":
-                const value = properties[this.color.variable];
                 const range = this.getConstraintMetadata(this.color.variable).range;
                 const normalizedValue = Math.round((value - range[0]) / (range[1] - range[0]) * 32); //normalizes value on range. results in #1 - 32
                 return this.colorCode[normalizedValue];
+            case "logGradient":
+                const skew = this.color.skew;
             case "sequential":
-                const varName = Util.removePropertiesPrefix(this.color.variable);
-                const v = properties[varName];
-                const index = this.getConstraintMetadata(this.color.variable).options.indexOf(v);
+                const index = this.getConstraintMetadata(this.color.variable).options.indexOf(value);
                 return this.colorCode[index];
         }
     }
