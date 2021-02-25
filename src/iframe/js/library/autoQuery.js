@@ -195,7 +195,6 @@ class AutoQuery {
 
         stream.on('data', function (r) {
             const data = JSON.parse(r.getData());
-            console.log(data.GISJOIN)
             Util.normalizeFeatureID(data);
 
             if (!this.layerIDs.includes(data.id)) {
