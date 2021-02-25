@@ -1,268 +1,348 @@
-[ {
-  "collection" : "future_heat",
-  "label": "Future Heatwaves",
-  "level": "county",
-  "color": {
-    "colorCode":"#FF0000",
-    "style":"solid"
+[
+  {
+    "collection": "future_heat",
+    "label": "Future Heatwaves",
+    "level": "county",
+    "color": {
+      "colorCode": "#FF0000",
+      "style": "solid"
+    },
+    "fieldMetadata": [
+      {
+        "name": "temp",
+        "label": "Heatwave Temperature",
+        "type": "range",
+        "unit": "farenheit"
+      },
+      {
+        "name": "year",
+        "label": "Years",
+        "type": "range",
+        "unit": "year"
+      }
+    ]
   },
-  "fieldMetadata" : [ 
-    {
-    "name" : "temp",
-    "label": "Heatwave Temperature",
-    "type" : "range",
-    "unit": "farenheit"
-  }, {
-    "name" : "year",
-    "label": "Years",
-    "type" : "range",
-    "unit": "year"
-  } ]
-}, {
-  "collection" : "tract_median_household_income",
-  "label": "Tract Median Household Income",
-  "level": "tract",
-  "color": {
-    "style": "gradient",
-    "variable": "2010_median_household_income",
-    "border": 1
+  {
+    "collection": "tract_median_household_income",
+    "label": "Tract Median Household Income",
+    "level": "tract",
+    "color": {
+      "style": "gradient",
+      "variable": "2010_median_household_income",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "2000_median_household_income",
+        "max": 99899.0,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "hideByDefault": true
+      },
+      {
+        "name": "1990_median_household_income",
+        "max": 9982.0,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "hideByDefault": true
+      },
+      {
+        "name": "1980_median_household_income",
+        "max": 9994.0,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "hideByDefault": true
+      },
+      {
+        "name": "2010_median_household_income",
+        "label": "2010 Median Household Income",
+        "min": 2499.0,
+        "max": 200000,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars"
+      }
+    ]
   },
-  "fieldMetadata" : [ {
-    "name" : "2000_median_household_income",
-    "max" : 99899.0,
-    "type" : "range",
-    "step": 100,
-    "unit": "dollars",
-    "hideByDefault": true
-  }, {
-    "name" : "1990_median_household_income",
-    "max" : 9982.0,
-    "type" : "range",
-    "step": 100,
-    "unit": "dollars",
-    "hideByDefault": true
-  }, {
-    "name" : "1980_median_household_income",
-    "max" : 9994.0,
-    "type" : "range",
-    "step": 100,
-    "unit": "dollars",
-    "hideByDefault": true
-  }, {
-    "name" : "2010_median_household_income",
-    "label": "2010 Median Household Income",
-    "min" : 2499.0,
-    "max" : 200000,
-    "type" : "range",
-    "step": 100,
-    "unit": "dollars"
-  }]
-}, {
-  "collection" : "transmission_lines_geo",
-  "label": "Power Transmission Lines"
-}, {
-  "collection" : "svi_county_GISJOIN",
-  "level":"county",
-  "label": "Social Vulnerability Index (County)",
-  "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
-  "color": {
-    "style": "gradient",
-    "gradient": ["#00FF00", "#FF0000"],
-    "variable": "RPL_THEMES"
+  {
+    "collection": "transmission_lines_geo",
+    "label": "Power Transmission Lines"
   },
-  "fieldMetadata" : [ 
-    {
-    "label":"Social Vulnerability Index",
-    "name" : "RPL_THEMES",
-    "type" : "range",
-    "step": 0.05,
-    "max" : 0.9997
-  } ]
-}, {
-  "collection" : "tract_race",
-  "level":"tract",
-  "label": "Tract Race Distribution"
-}, {
-  "collection" : "svi_tract_GISJOIN",
-  "level": "tract",
-  "label": "Social Vulnerability Index (Tract)",
-  "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
-  "color": {
-    "style": "gradient",
-    "gradient": ["#00FF00", "#FF0000"],
-    "variable": "RPL_THEMES",
-    "border": 1
+  {
+    "collection": "svi_county_GISJOIN",
+    "level": "county",
+    "label": "Social Vulnerability Index (County)",
+    "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
+    "color": {
+      "style": "gradient",
+      "gradient": [
+        "#00FF00",
+        "#FF0000"
+      ],
+      "variable": "RPL_THEMES"
+    },
+    "fieldMetadata": [
+      {
+        "label": "Social Vulnerability Index",
+        "name": "RPL_THEMES",
+        "type": "range",
+        "step": 0.05,
+        "max": 0.9997
+      }
+    ]
   },
-  "fieldMetadata" : [ {
-    "label":"Social Vulnerability Index",
-    "name" : "RPL_THEMES",
-    "type" : "range",
-    "step": 0.05,
-    "max" : 0.9999
-  }]
-}, {
-  "collection" : "tract_median_age",
-  "label": "Median Tract Age",
-  "level": "tract",
-  "color": {
-    "style": "gradient",
-    "gradient": ["#00FF00", "#FF0000"],
-    "variable": "median_age_total",
-    "border": 1
+  {
+    "collection": "tract_race",
+    "level": "tract",
+    "label": "Tract Race Distribution"
   },
-  "fieldMetadata" : [ {
-    "name" : "median_age_female",
-    "type" : "range",
-    "min" : 6.2,
-    "max" : 83.5
-  }, {
-    "name" : "median_age_male",
-    "type" : "range",
-    "min" : 3.8,
-    "max" : 85.2
-  }, {
-    "name" : "median_age_total",
-    "type" : "range",
-    "min" : 5.8,
-    "max" : 84.5
-  } ]
-}, {
-  "collection" : "public_schools",
-  "icon": "school",
-  "fieldMetadata" : [ {
-    "label": "Total Students",
-    "name" : "properties.ENROLLMENT",
-    "type" : "range",
-    "min" : 0,
-    "max" : 14286.0
-  }, {
-    "name" : "properties.FT_TEACHER",
-    "label": "Faculty Count",
-    "type" : "range",
-    "min" : 0,
-    "max" : 1419.0
-  }, {
-    "label": "Highest Grade Level",
-    "name" : "properties.END_GRADE",
-    "type" : "multiselect",
-    "hideByDefault": true
-  }, {
-    "name" : "properties.LEVEL_",
-    "type" : "multiselect",
-    "label": "Level"
-  } ]
-}, {
-  "collection" : "flood_zones_geo",
-  "label": "Flood Zone",
-  "color": {
-    "style": "sequential",
-    "variable": "properties.FLD_ZONE",
-    "border": 1
+  {
+    "collection": "svi_tract_GISJOIN",
+    "level": "tract",
+    "label": "Social Vulnerability Index (Tract)",
+    "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
+    "color": {
+      "style": "gradient",
+      "gradient": [
+        "#00FF00",
+        "#FF0000"
+      ],
+      "variable": "RPL_THEMES",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "label": "Social Vulnerability Index",
+        "name": "RPL_THEMES",
+        "type": "range",
+        "step": 0.05,
+        "max": 0.9999
+      }
+    ]
   },
-  "fieldMetadata" : [ {
-    "name" : "properties.FLD_ZONE",
-    "label": "Flood Zone Code",
-    "type" : "multiselect"
-      } ]
-}, {
-  "collection" : "tract_total_population",
-  "level":"tract",
-  "color": {
-    "style": "gradient",
-    "variable": "2010_total_population",
-    "border": 1
+  {
+    "collection": "tract_median_age",
+    "label": "Median Tract Age",
+    "level": "tract",
+    "color": {
+      "style": "gradient",
+      "gradient": [
+        "#00FF00",
+        "#FF0000"
+      ],
+      "variable": "median_age_total",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "median_age_female",
+        "type": "range",
+        "min": 6.2,
+        "max": 83.5
+      },
+      {
+        "name": "median_age_male",
+        "type": "range",
+        "min": 3.8,
+        "max": 85.2
+      },
+      {
+        "name": "median_age_total",
+        "type": "range",
+        "min": 5.8,
+        "max": 84.5
+      }
+    ]
   },
-  "fieldMetadata" : [ {
-    "name" : "2010_total_population",
-    "type" : "range",
-    "step": 10,
-    "max" : 9994.0
-  } ]
-}, {
-  "collection" : "fire_stations_geo",
-  "icon": "fire_station",
-  "label": "Fire Stations"
-}, {
-  "collection" : "dams_geo",
-  "color": "#FF0000",
-  "label": "Dams",
-  "icon": "dam",
-  "fieldMetadata" : [  {
-    "name" : "properties.STR_HEIGHT",
-    "label": "Height",
-    "type" : "range",
-    "max" : 770.0,
-    "unit": "feet"
-  }]
-}, {
-  "collection" : "air_quality_avg",
-  "level":"tract",
-  "label": "Particulate Matter Air Quality Index",
-  "color": {
-    "style": "gradient",
-    "variable": "avgAqi",
-    "border": 1
+  {
+    "collection": "public_schools",
+    "icon": "school",
+    "fieldMetadata": [
+      {
+        "label": "Total Students",
+        "name": "properties.ENROLLMENT",
+        "type": "range",
+        "min": 0,
+        "max": 14286.0
+      },
+      {
+        "name": "properties.FT_TEACHER",
+        "label": "Faculty Count",
+        "type": "range",
+        "min": 0,
+        "max": 1419.0
+      },
+      {
+        "label": "Highest Grade Level",
+        "name": "properties.END_GRADE",
+        "type": "multiselect",
+        "hideByDefault": true
+      },
+      {
+        "name": "properties.LEVEL_",
+        "type": "multiselect",
+        "label": "Level"
+      }
+    ]
   },
-  "fieldMetadata" : [ {
-    "name" : "avgAqi",
-    "label": "Average",
-    "type" : "range",
-    "min" : 2.1098477667778845,
-    "max" : 158.35387318384656
-  } ]
-},{
-  "collection" : "hospitals_geo",
-  "icon": "hospital",
-  "label": "Hospitals",
-  "fieldMetadata" : [ {
-    "name" : "properties.BEDS",
-    "type" : "range",
-    "min" : 0,
-    "max" : 1592.0
-  }, {
-    "name" : "properties.HELIPAD",
-    "label": "Has Helipad",
-    "type" : "select"
-      } ]
-}, {
-  "collection" : "electrical_substations_geo",
-  "icon": "hospital",
-  "label": "Electrical Substations"
-}, {
-  "collection" : "power_plants_geo",
-  "icon": "power_plant",
-  "label": "Power Plants",
-  "fieldMetadata" : [ {
-    "name" : "properties.ENERGY_SRC",
-    "type" : "multiselect",
-    "label": "Energy Source"
-      } ]
-}, {
-  "collection" : "natural_gas_pipelines_geo",
-  "label": "Natural Gas Pipelines"
-}, {
-  "collection" : "covid_county",
-  "level": "county",
-  "color": {
-    "style": "gradient",
-    "variable": "totalCaseCount"
+  {
+    "collection": "flood_zones_geo",
+    "label": "Flood Zone",
+    "color": {
+      "style": "sequential",
+      "variable": "properties.FLD_ZONE",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "properties.FLD_ZONE",
+        "label": "Flood Zone Code",
+        "type": "multiselect"
+      }
+    ]
   },
-  "fieldMetadata" : [ {
-    "name" : "totalDeathCount",
-    "type" : "range",
-    "max" : 7353.0
-  }, {
-    "name" : "population",
-    "type" : "range",
-    "max" : 1.0039107E7
-  }, {
-    "name" : "newDeathCount",
-    "type" : "range",
-    "min" : -993.0,
-    "max" : 707.0
-  }, {
-    "name" : "totalCaseCount",
-    "type" : "range",
-    "max" : 282982.0
-  } ]
-} ]
+  {
+    "collection": "tract_total_population",
+    "level": "tract",
+    "color": {
+      "style": "gradient",
+      "variable": "2010_total_population",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "2010_total_population",
+        "type": "range",
+        "step": 10,
+        "max": 9994.0
+      }
+    ]
+  },
+  {
+    "collection": "fire_stations_geo",
+    "icon": "fire_station",
+    "label": "Fire Stations"
+  },
+  {
+    "collection": "dams_geo",
+    "color": "#FF0000",
+    "label": "Dams",
+    "icon": "dam",
+    "fieldMetadata": [
+      {
+        "name": "properties.STR_HEIGHT",
+        "label": "Height",
+        "type": "range",
+        "max": 770.0,
+        "unit": "feet"
+      }
+    ]
+  },
+  {
+    "collection": "air_quality_avg",
+    "level": "tract",
+    "label": "Particulate Matter Air Quality Index",
+    "color": {
+      "style": "gradient",
+      "variable": "avgAqi",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "avgAqi",
+        "label": "Average",
+        "type": "range",
+        "min": 2.1098477667778845,
+        "max": 158.35387318384656
+      }
+    ]
+  },
+  {
+    "collection": "hospitals_geo",
+    "icon": "hospital",
+    "label": "Hospitals",
+    "fieldMetadata": [
+      {
+        "name": "properties.BEDS",
+        "type": "range",
+        "min": 0,
+        "max": 1592.0
+      },
+      {
+        "name": "properties.HELIPAD",
+        "label": "Has Helipad",
+        "type": "select"
+      }
+    ]
+  },
+  {
+    "collection": "electrical_substations_geo",
+    "icon": "hospital",
+    "label": "Electrical Substations"
+  },
+  {
+    "collection": "power_plants_geo",
+    "icon": "power_plant",
+    "label": "Power Plants",
+    "fieldMetadata": [
+      {
+        "name": "properties.ENERGY_SRC",
+        "type": "multiselect",
+        "label": "Energy Source"
+      }
+    ]
+  },
+  {
+    "collection": "natural_gas_pipelines_geo",
+    "label": "Natural Gas Pipelines"
+  },
+  {
+    "collection":"risk_county",
+    "level": "county",
+    "info": "In the National Risk Index, risk is defined as the potential for negative impacts as a result of a natural hazard. It ranges from 0 (lowest risk) to 100 (highest risk).",
+    "color":{
+      "style": "gradient",
+      "variable": "RISK_SCORE",
+      "gradient": [
+        "#0057e3",
+        "#ff8000"
+      ]
+    },
+    "fieldMetadata": [
+      {
+        "name": "RISK_SCORE",
+        "label": "Risk Index"
+      },
+      {
+        "name": "RISK_RATNG",
+        "label": "Risk Rating"
+      }
+    ]
+  },
+  {
+    "collection":"risk_tract",
+    "level": "tract",
+    "info": "In the National Risk Index, risk is defined as the potential for negative impacts as a result of a natural hazard. It ranges from 0 (lowest risk) to 100 (highest risk).",
+    "color":{
+      "style": "gradient",
+      "variable": "RISK_SCORE",
+      "gradient": [
+        "#0057e3",
+        "#ff8000"
+      ]
+    },
+    "fieldMetadata": [
+      {
+        "name": "RISK_SCORE",
+        "label": "Risk Index"
+      },
+      {
+        "name": "RISK_RATNG",
+        "label": "Risk Rating"
+      }
+    ]
+  }
+]
