@@ -233,11 +233,12 @@ class AutoQuery {
                 return;
             Util.normalizeFeatureID(GeoJSON)
             GeoJSON.id = `${GeoJSON.properties}_${data.id}`
+            if (this.layerIDs.includes(GeoJSON.id))
+                return;
             GeoJSON.properties = {
                 ...GeoJSON.properties,
                 ...data
             }
-            console.log(GeoJSON.properties)
             data = GeoJSON;
         }
 
