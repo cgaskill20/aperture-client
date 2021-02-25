@@ -10,7 +10,6 @@ onconnect = function(p) {
 
     port.onmessage = function(msg) {
         if (msg.data.type === "query") {
-            console.log(msg.data.queryParams);
             querier.query(msg.data.collection, 
                           msg.data.queryParams, 
                           data => { port.postMessage({ type: "data", data: data }); }, 
