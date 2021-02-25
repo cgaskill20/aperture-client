@@ -30,6 +30,7 @@ const AutoMenu = {
 
 
             stream.on('end', function (end) {
+                console.log(catalog)
                 //build it
                 const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
 
