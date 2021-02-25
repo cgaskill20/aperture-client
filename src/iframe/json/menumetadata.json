@@ -307,9 +307,10 @@
       "style": "gradient",
       "variable": "RISK_SCORE",
       "gradient": [
-        "#0057e3",
-        "#ff8000"
-      ]
+        "#00FF00",
+        "#FF0000"
+      ],
+      "skew":1.5
     },
     "fieldMetadata": [
       {
@@ -330,9 +331,10 @@
       "style": "gradient",
       "variable": "RISK_SCORE",
       "gradient": [
-        "#0057e3",
-        "#ff8000"
-      ]
+        "#00FF00",
+        "#FF0000"
+      ],
+      "skew":1.5
     },
     "fieldMetadata": [
       {
