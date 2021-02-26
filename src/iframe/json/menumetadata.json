@@ -314,7 +314,7 @@
         "Very Low": "#4d6dbd"
       },
       "border":1,
-      "skew":1
+      "opacity": 0.5
     },
     "fieldMetadata": [
       {
@@ -341,7 +341,7 @@
         "Relatively Low": "#509bc7",
         "Very Low": "#4d6dbd"
       },
-      "skew":1,
+      "opacity": 0.5,
       "border": 1
     },
     "fieldMetadata": [
