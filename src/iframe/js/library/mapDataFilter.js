@@ -33,8 +33,8 @@ class MapDataFilter {
       */
     addSingle(newData) {
         let entryAlreadyExists = this.data.find(entry => {
-            if (newData.GISJOIN) {
-                return entry.GISJOIN === newData.GISJOIN;
+            if (newData.id) {
+                return entry.id === newData.id;
             } else {
                 return false;
             }
@@ -46,6 +46,11 @@ class MapDataFilter {
 
         newData.entryTime = Date.now();
         this.data.push(newData);
+
+        if (this.newDataCallback) {
+            this.newDataCallback(this.model(newData)); 
+        }
+
         return true;
     }
 
@@ -108,7 +113,6 @@ class MapDataFilter {
         return filtered;
     }
 
-
     /** Removes any data from the filter that is older in miliseconds than the
       * given max age.
       * @memberof MapDataFilter
@@ -134,11 +138,46 @@ class MapDataFilter {
 
         for (const entry of data) {
             if (entry.properties[feature] !== undefined) {
-                model[feature].push(entry.properties[feature]);
+                model[feature].push(this.model(entry, feature));
             }
         }
 
         return model;
+    }
+
+    /** Formats data to a single model datapoint.
+      * Currently, the datapoints are objects with a data, type, and locationName property.
+      * The data is the actual data, the type is either "county" or "tract", and
+      * locationName should be self-explanatory.
+      * @memberof MapDataFilter
+      * @method model
+      * @param {object} entry The data entry to format
+      * @param {string} feature The feature to model over
+      * @returns {object} An object with a data, type, and locationName property
+      */
+    model(entry, feature) { 
+        return { 
+            data: entry.properties[feature],
+            type: this.dataLocation(entry),
+            locationName: entry.properties.NAME10,
+            feature: feature,
+        };
+    }
+
+    /** Given a data entry, tell what kind of location it is tied to.
+      * (e.g. county or tract)
+      * @param {object} entry The data entry to examine
+      * @returns {string} A string that describes the entry's location
+      */
+    dataLocation(entry) {
+        let locationName = entry.properties.NAMELSAD10;
+        if (/\bCounty\b/gi.test(locationName)) {
+           return "county";
+        }
+        if (/\Tract\b/gi.test(locationName)) {
+            return "tract";
+        }
+        return undefined;
     }
 
     /** Gets an array of models for multiple features.
@@ -146,8 +185,8 @@ class MapDataFilter {
       * "model" means in this context.
       * @memberof MapDataFilter
       * @method getSingleModel
-      * @param {Array<string>} features - the features to model
-      * @param {Array<object>} data - the data to create the model from
+      * @param {Array<string>} features The features to model
+      * @param {Array<object>} data The data to create the model from
       * returns {Array<object>} the models
       */
     getMultipleModel(features, data) {
@@ -159,6 +198,17 @@ class MapDataFilter {
         }
 
         return model;
+    }
+
+    /** Set a callback that fires whenever new data arrives. The callback will
+      * be given one parameter filled with the new data in its processed
+      * (modeled) form.
+      * @memberof MapDataFilter
+      * @method onGetNewData
+      * @param {Function} callback Callback to fire whenever new data comes into the filter
+      */
+    onGetNewData(callback) {
+        this.newDataCallback = callback;
     }
 }
 

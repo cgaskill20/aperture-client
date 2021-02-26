@@ -8,30 +8,35 @@
         crossorigin="" />
     <script src="../../node_modules/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" type="text/css" href="css/IframeStyle.css">
-    <script src="js/third-party/leaflet-sidebar.js"></script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="js/third-party/nouislider.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/third-party/nouislider.min.css">
     <link rel="stylesheet" type="text/css" href="css/third-party/bootstrap4-toggle.min.css">
-    <link rel="stylesheet" type="text/css" href="css/third-party/bootstrap.min.css">
 
-    <link rel="stylesheet" type="text/css" href="css/third-party/leaflet-sidebar.css">
+    <link rel="stylesheet" type="text/css" href="css/third-party/bootstrap.min.css">
 
     <script src="../../node_modules/osmtogeojson/osmtogeojson.js"></script>
     <script src="js/third-party/simplify.js"></script>
     <script src="js/grpc/Other_Datasets/grpc_querier.bundle.js"></script>
     <script src="js/grpc/GRPC_Querier/grpc_querier.bundle.js"></script>
+    <script src="js/library/smartQuerier.js"></script>
     <link rel="stylesheet" type="text/css" href="css/third-party/MarkerCluster.css">
     <link rel="stylesheet" type="text/css" href="css/third-party/MarkerCluster.Default.css">
+    <link rel="stylesheet" type="text/css" href="css/third-party/chart.css">
     <script src="js/third-party/leaflet.markercluster.js"></script>
     <script src="js/third-party/Gradient.js"></script>
+    <script src="js/third-party/d3.min.js"></script>
 
     <script src="js/library/clusterState.js"></script>
     <script src="js/library/clusterManager.js"></script>
     <script src="js/library/regressionManager.js"></script>
     <script src="js/library/apertureUtil.js"></script>
+    <script src="js/library/barChart.js"></script>
+    <script src="js/library/resizable.js"></script>
     <script src="js/library/mapDataFilter.js"></script>
+    <script src="js/library/chartSystem.js"></script>
+
     <script src="js/library/renderInfrastructure.js"></script>
     <script src="js/library/geometryLoader.js"></script>
     <script src="js/library/autoQuery.js"></script>
@@ -41,8 +46,6 @@
 </head>
 
 <body>
-
-
     <div class="leaflet-bottom leaflet-right"></div>
     <div id="sidebar-id" class="sidebar">
         <div class="nav-tabs">
@@ -71,7 +74,7 @@
 
 
             <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" id='nav-graph-button' class="btn btn-outline-dark" disabled><img src="/images/graph.png" class="graph-button-pic"></button>
+              <button type="button" id='nav-graph-button' class="btn btn-outline-dark"><img src="../../images/graph.png" class="graph-button-pic"></button>
               <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark">Data Exploration</button>
               <button type="button" id='nav-modeling-button' class="btn btn-outline-dark">Modeling</button>
               <button type="button" id='nav-validation-button' class="btn btn-outline-dark">Validation</button>
@@ -85,7 +88,7 @@
     </div>
 
     <div id="main">
-      <button class="btn btn-outline-dark" id='nav-menu-button'>☰ Menu</button>
+      <button class="btn" style="border-color: #343a40;" id='nav-menu-button'>☰ Menu</button>
     </div>
 
     <div id="map" class="sidebar-map"></div>

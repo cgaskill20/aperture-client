@@ -7,7 +7,7 @@
 
 const AutoMenu = {
     //get the querier
-    _sustainQuerier: sustain_querier(),
+    _sustainQuerier: new SharedWorker('js/library/queryWorker.js'),
 
     /**
       * Main, asyncronous function which is called by an external code block
@@ -18,29 +18,28 @@ const AutoMenu = {
       * @returns {JSON} JSON which can be used with menuGenerator.js to build a menu
       */
     build: async function (menuMetaData, overwrite) {
-        return new Promise(resolve => {
-            //stream the metadata catalog in
-            const q = [];
-            const stream = this._sustainQuerier.getStreamForQuery("lattice-46", 27017, "Metadata", JSON.stringify(q));
+        return new Promise(((resolve) => {
             let catalog = {};
-            stream.on('data', function (r) {
-                const data = JSON.parse(r.getData());
-                catalog[data.collection] = data;
-            }.bind(this));
+            AutoMenu._sustainQuerier.port.postMessage({
+                type: "query",
+                collection: "Metadata", 
+                queryParams: [],
+            });
+            AutoMenu._sustainQuerier.port.onmessage = function (msg) {
+                if (msg.data.type == "data") {
+                    catalog[msg.data.data.collection] = msg.data.data; // do da data dance
+                } else if (msg.data.type == "end") {
+                    //build it
+                    const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
 
-
-            stream.on('end', function (end) {
-                //build it
-                const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
-
-                //return it
-                resolve({
-                    ...autoMenu,
-                    ...overwrite //overwrite using the ... operarator
-                });
-
-            }.bind(this));
-        });
+                    //return it
+                    resolve({
+                        ...autoMenu,
+                        ...overwrite,
+                    });
+                }
+            }.bind(this);
+        }).bind(this));
     },
 
     /**

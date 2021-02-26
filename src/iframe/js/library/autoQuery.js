@@ -17,8 +17,8 @@ class AutoQuery {
     constructor(layerData, graphPipeID) {
         this.data = layerData;
         this.collection = layerData.collection;
-        this.map = window.map;
-        this.sustainQuerier = sustain_querier(); //init querier
+        this.map = layerData.map();
+        this.queryWorker = new SharedWorker('js/library/queryWorker.js'); //init querier
 
         this.constraintData = {};
         this.constraintState = {};
@@ -63,7 +63,7 @@ class AutoQuery {
       */
     onRemove() {
         this.clearMapLayers();
-        this.killStreams();
+        this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
         this.layerIDs = [];
         this.enabled = false;
     }
@@ -127,7 +127,7 @@ class AutoQuery {
     reQuery() {
         if (this.enabled) {
             this.clearMapLayers();
-            this.killStreams();
+            this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
             this.query();
         }
     }
@@ -190,23 +190,20 @@ class AutoQuery {
         }
         q = q.concat(this.buildConstraintPipeline());
 
-        const stream = this.sustainQuerier.getStreamForQuery("lattice-46", 27017, this.collection, JSON.stringify(q));
+        this.queryWorker.port.postMessage({
+            type: "query",
+            collection: this.collection,
+            queryParams: q,
+        });
 
-        this.streams.push(stream);
-
-        stream.on('data', function (r) {
-            const data = JSON.parse(r.getData());
-
-            Util.normalizeFeatureID(data);
-
-            if (!this.layerIDs.includes(data.id)) {
-                this.renderData(data, forcedGeometry);
+        this.queryWorker.port.onmessage = msg => {
+            if (msg.data.type === "data") {
+                Util.normalizeFeatureID(msg.data.data);
+                if (!this.layerIDs.includes(msg.data.data.id)) {
+                    this.renderData(msg.data.data, forcedGeometry);
+                }
             }
-        }.bind(this));
-
-        stream.on('end', function (r) {
-
-        }.bind(this));
+        }
     }
 
     /**
@@ -215,20 +212,9 @@ class AutoQuery {
       * @method clearMapLayers
       */
     clearMapLayers() {
-        renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
+        window.renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
         this.mapLayers = [];
         this.layerIDs = [];
-    }
-
-    /**
-      * Kills any streams (queries) which are currently running.
-      * @memberof AutoQuery
-      * @method killStreams
-      */
-    killStreams() {
-        for (const stream of this.streams)
-            stream.cancel();
-        this.streams = [];
     }
 
     /**
@@ -242,10 +228,13 @@ class AutoQuery {
       */
     renderData(data, forcedGeometry) {
         if (this.linked) {
-            const GeoJSON = this.backgroundLoader.getGeometryFromGISJOIN(data.GISJOIN, forcedGeometry);
+            const GeoJSON = JSON.parse(JSON.stringify(this.backgroundLoader.getGeometryFromGISJOIN(data.GISJOIN, forcedGeometry)));
             if (!GeoJSON)
                 return;
-
+            Util.normalizeFeatureID(GeoJSON)
+            GeoJSON.id = `${GeoJSON.id}_${data.id}`
+            if (this.layerIDs.includes(GeoJSON.id))
+                return;
             GeoJSON.properties = {
                 ...GeoJSON.properties,
                 ...data
@@ -276,7 +265,7 @@ class AutoQuery {
 
         indexData[this.collection]["border"] = this.color.border;
 
-        this.mapLayers = this.mapLayers.concat(renderInfrastructure.renderGeoJson(data, indexData));
+        this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.push(data.id);
     }
 
@@ -381,18 +370,24 @@ class AutoQuery {
       * @returns {string} hex color code
       */
     getColor(properties) {
+        let value;
+        if (this.color.variable) {
+            const propsVarName = Util.removePropertiesPrefix(this.color.variable);
+            value = properties[propsVarName];
+        }
+        const skew = this.color.skew != null ? this.color.skew + 1 : 1;
+        const skewDir = this.color.skewDir != null ? this.color.skewDir : "right";
         switch (this.colorStyle) {
             case "solid":
                 return this.colorCode;
             case "gradient":
-                const value = properties[this.color.variable];
-                const range = this.getConstraintMetadata(this.color.variable).range;
-                const normalizedValue = Math.round((value - range[0]) / (range[1] - range[0]) * 32); //normalizes value on range. results in #1 - 32
-                return this.colorCode[normalizedValue];
+                const range = this.getConstraintMetadata(this.color.variable).range; 
+                const normalizedValue = (value - range[0]) / (range[1] - range[0]);
+                const skewCorrectedValue = skewDir === "right" ?  (1 - (Math.pow(1 - normalizedValue,skew))) : Math.pow(normalizedValue, skew); // https://www.desmos.com/calculator/gezo3xfbfj
+                const colorindex = Math.round(skewCorrectedValue * 32); //normalizes value on range. results in #1 - 32
+                return this.colorCode[colorindex];
             case "sequential":
-                const varName = Util.removePropertiesPrefix(this.color.variable);
-                const v = properties[varName];
-                const index = this.getConstraintMetadata(this.color.variable).options.indexOf(v);
+                const index = this.getConstraintMetadata(this.color.variable).options.indexOf(value);
                 return this.colorCode[index];
         }
     }
@@ -427,10 +422,10 @@ class AutoQuery {
       * @method buildPopup
       * @returns {string} popup text
       */
-    buildPopup(){
+    buildPopup() {
         let returnText = "<ul style='padding-inline-start:20px;margin-block-start:2.5px;'>";
-        for(const constraint in this.constraintState){
-            if(this.constraintState[constraint]){
+        for (const constraint in this.constraintState) {
+            if (this.constraintState[constraint]) {
                 const constraintNoPrefix = Util.removePropertiesPrefix(constraint);
                 const constraintLabel = this.getConstraintMetadata(constraint).label ? this.getConstraintMetadata(constraint).label : constraintNoPrefix;
                 returnText += "<li><b>" + constraintLabel + ":</b> @@" + constraintNoPrefix + "@@</li>";
@@ -445,3 +440,4 @@ try {
         AutoQuery: AutoQuery
     }
 } catch (e) { }
+

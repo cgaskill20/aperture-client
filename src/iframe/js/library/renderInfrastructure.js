@@ -62,6 +62,7 @@ class RenderInfrastructure {
         if (this.options.simplifyThreshold !== -1) {
             Util.simplifyGeoJSON(geoJsonData, this.options.simplifyThreshold);
         }
+        //console.log(geoJsonData)
         Util.fixGeoJSONID(geoJsonData);
 
         if (this.dataFilter) {
@@ -246,6 +247,7 @@ class RenderInfrastructure {
             return "noicon";
         }
     }
+
 
     useFilter(filt) {
         this.dataFilter = filt;

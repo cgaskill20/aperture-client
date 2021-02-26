@@ -1,7 +1,3 @@
-//Use INSPECT in the browser to see the classes etc...
-
-
-
 /**
  * @namespace MenuGenerator
  * @file Build's menu UI for the Aperture Client
@@ -75,7 +71,7 @@ const MenuGenerator = {
             //create obj
             columnsAndHeadings[mergeWithDefalt["group"]][mergeWithDefalt["subGroup"]][obj] = mergeWithDefalt;
         }
-        console.log(columnsAndHeadings);
+        //console.log(columnsAndHeadings);
         return columnsAndHeadings;
     },
 

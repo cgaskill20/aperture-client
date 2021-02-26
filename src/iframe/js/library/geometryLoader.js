@@ -18,7 +18,7 @@ class GeometryLoader {
       */
     constructor(collection, map, maxSize) {
         this.map = map;
-        this.sustainQuerier = sustain_querier(); //init querier
+        this.queryWorker = new SharedWorker('js/library/queryWorker.js'); //init querier
         this.collection = collection;
         this.maxSize = maxSize;
 
@@ -92,7 +92,7 @@ class GeometryLoader {
       * @method runQuery
       */
     runQuery() {
-        this.killAllStreams();
+        this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
         this.getData();
     }
 
@@ -117,35 +117,36 @@ class GeometryLoader {
       * @method getData
       */
     getData() {
-        const stream = this.sustainQuerier.getStreamForQuery("lattice-46", 27017, this.collection, JSON.stringify(this.getBasicSpatialQuery()));
-        this.streams.push(stream);
         let newResults = [];
-        stream.on('data', function (r) {
-            const data = JSON.parse(r.getData());
-            Util.normalizeFeatureID(data);
+        this.queryWorker.port.postMessage({
+            type: "query",
+            collection: this.collection,
+            queryParams: this.getBasicSpatialQuery(),
+        });
 
-            //remove an existing refrence
-            const indexInCache = this.indexInCache(data.GISJOIN);
-            if (indexInCache !== -1) {
-                this.cache.splice(indexInCache, 1);
-            }
-            else {
-                newResults.push(data);
-                if(newResults.length > 20){
-                    this.broadcastNewResults(newResults);
-                    newResults = [];
+        this.queryWorker.port.onmessage = msg => {
+            if (msg.data.type === "data") {
+                let data = msg.data.data;
+                Util.normalizeFeatureID(data);
+
+                //remove an existing refrence
+                const indexInCache = this.indexInCache(data.GISJOIN);
+                if (indexInCache !== -1) {
+                    this.cache.splice(indexInCache, 1);
                 }
-            }
+                else {
+                    newResults.push(data);
+                }
 
-            this.cache.unshift(data); //add it to the front of the arr
+                this.cache.unshift(data); //add it to the front of the arr
 
-            if (this.cache.length > this.maxSize) { //if length is too long, pop from end
-                this.cache.pop();
+                if (this.cache.length > this.maxSize) { //if length is too long, pop from end
+                    this.cache.pop();
+                }
+            } else if (msg.data.type === "end") {
+                this.broadcastNewResults(newResults);
             }
-        }.bind(this));
-        stream.on('end', function (r) {
-            this.broadcastNewResults(newResults);
-        }.bind(this));
+        };
     }
 
     /**
@@ -174,18 +175,6 @@ class GeometryLoader {
             indx++;
         }
         return -1;
-    }
-
-    /**
-      * Kills all streams (queries) which are currently running
-      * @memberof GeometryLoader
-      * @method killAllStreams
-      */
-    killAllStreams() {
-        for (const stream of this.streams) {
-            stream.cancel();
-        }
-        this.streams = [];
     }
 
     /**
