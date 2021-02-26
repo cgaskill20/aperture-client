@@ -6,20 +6,22 @@ var softBlack = "#181818"
 var brightWhite = "#fbfbfb";
 var trueWhite = "#fff";
 var softWhite = "#f1f1f1";
-var transitionTime = "0.3s";
-var realBorderRadius = "3px";
+
 var bootstrapPrimary = "#007bff";
 var bootstrapWarning = "#ffc107";
 var bootstrapDark = "#343a40";
 var bootstrapLight = "#f8f9fa";
-var borderWhite = "1px solid #f1f1f1";
+
+var transitionTime = "0.3s";
+var realBorderRadius = "3px";
+var borderWhite = "1px solid #fbfbfb";
 var borderBlack = "1px solid #777";
 
 document.getElementById('nav-dark-mode-button').addEventListener('click', colorModeSwitch);
 function colorModeSwitch() {
 	var colorMode1 = document.getElementsByClassName("colorMode1");
 	var colorMode2 = document.getElementsByClassName("colorMode2");
-	var borders = document.getElementsByClassName("border");
+	var borders = document.getElementsByClassName("customBorder");
 	if(darkMode) {
 		for(var i = 0; i < colorMode1.length; i++) {
 			colorMode1[i].style.backgroundColor=trueBlack;
@@ -77,31 +79,20 @@ function colorModeSwitch() {
 		}
 	}
 
-	// var toolTips = document.getElementsByClassName("tool-tip");
-	// if(darkMode) {
-	// 	for(var i = 0; i < toolTips.length; i++) {
-	// 		toolTips[i].style.color=trueBlack;
-	// 		toolTips[i].style.backgroundColor=trueWhite;
-	// 		toolTips[i].style.border="1px solid #f1f1f1";
-	// 	}
-	// }
-	// else {
-	// 	for(var i = 0; i < toolTips.length; i++) {
-	// 		toolTips[i].style.color=brightWhite;
-	// 		toolTips[i].style.backgroundColor=trueBlack;
-	// 		toolTips[i].style.border="1px solid #777";
-	// 	}
-	// }
-
-	var sliders = document.getElementsByClassName("noUi-connect");
+	//FIXME Get these working
+	var toolTips = document.getElementsByClassName("tooltip-inner");
 	if(darkMode) {
-		for(var i = 0; i < sliders.length; i++) {
-			sliders[i].style.backgroundColor = bootstrapPrimary;
+		for(var i = 0; i < toolTips.length; i++) {
+			toolTips[i].style.color=trueBlack;
+			toolTips[i].style.backgroundColor=trueWhite;
+			toolTips[i].style.border=borderWhite;
 		}
 	}
 	else {
-		for(var i = 0; i < sliders.length; i++) {
-			sliders[i].style.backgroundColor = bootstrapPrimary;
+		for(var i = 0; i < toolTips.length; i++) {
+			toolTips[i].style.color=brightWhite;
+			toolTips[i].style.backgroundColor=trueBlack;
+			toolTips[i].style.border=borderBlack;
 		}
 	}
 

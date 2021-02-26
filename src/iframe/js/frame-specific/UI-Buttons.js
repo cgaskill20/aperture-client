@@ -18,11 +18,13 @@ $('#nav-validation-button').on('click', function(e) {
 
 function openNav() {
   document.getElementById("sidebar-id").style.width = "52vw";
+  document.getElementById("sidebar-id").style.transition = "0.7s";
   document.getElementById("main").style.opacity = "0";
 }
 
 function closeNav() {
   document.getElementById("sidebar-id").style.width = "0";
+  document.getElementById("sidebar-id").style.transition = "0.7s";
   document.getElementById("main").style.opacity = "1";
 }
 

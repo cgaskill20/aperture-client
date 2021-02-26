@@ -221,7 +221,7 @@ const MenuGenerator = {
 
         if (layerObj["constraints"]) {
             const layerConstraints = document.createElement("div");
-            layerConstraints.className = "layerConstraints colorMode2 border";
+            layerConstraints.className = "layerConstraints colorMode2 customBorder";
             layerConstraints.style.display = "none";
             let anyActiveConstraints = false;
 
@@ -270,7 +270,7 @@ const MenuGenerator = {
 
         if (constraintObj["type"] === "slider") {
             container = this.createSliderContainer(constraintName, constraintObj, layerObj, layerName);
-            container.className = "content-section slider-section colorMode1 border";
+            container.className = "content-section slider-section colorMode1 customBorder";
         }
 
         else if (constraintObj["type"] === "selector") {
@@ -319,7 +319,7 @@ const MenuGenerator = {
         }
 
         const editDiv = document.createElement("div");
-        editDiv.className = "editConstraints colorMode2 border";
+        editDiv.className = "editConstraints colorMode2 customBorder";
         editDiv.id = "editConstraints";
 
         const editDivHeader = document.createElement("div");
@@ -328,7 +328,7 @@ const MenuGenerator = {
         editDiv.appendChild(editDivHeader);
 
         const editConstraintArea = document.createElement("div");
-        editConstraintArea.className = "editConstraintArea colorMode1 border";
+        editConstraintArea.className = "editConstraintArea colorMode1 customBorder";
         editDiv.appendChild(editConstraintArea)
 
 
@@ -415,7 +415,7 @@ const MenuGenerator = {
 
     createCheckboxContainer: function (constraint, constraintObj, layerObj, layerName, type) {
         const checkboxContainer = document.createElement("div");
-        checkboxContainer.className = "content-section checkbox-section colorMode1 border";
+        checkboxContainer.className = "content-section checkbox-section colorMode1 customBorder";
         checkboxContainer.id = constraint;
 
         const checkboxLabel = document.createElement("div");

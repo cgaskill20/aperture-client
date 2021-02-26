@@ -47,13 +47,9 @@ body {
   color: #181818;
 }
 
-.border {
+.customBorder {
   border: 1px solid #777;
   border-radius: 3px;
-}
-
-.scrollable {
-
 }
 
 .sidebar {
