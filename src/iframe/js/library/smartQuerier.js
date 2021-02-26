@@ -165,7 +165,6 @@ class SmartQuerier {
       */
     attachGISJOINIgnorePipeline(collection, params) {
         if (SmartQuerier.unmodifiableCollections.find(c => c === collection)) {
-            console.log(params);
             return;
         }
 
