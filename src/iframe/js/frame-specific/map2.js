@@ -110,8 +110,11 @@ function showValidation() {
 }
 
 function showGraph() {
-    //FIXME Jean-Marc & Piers, put your graph pop-up JS here
+    document.getElementById("sidebar-id").style.width = "0";
+    document.getElementById("main").style.opacity = "1";
+    document.getElementById("overlay1").style.display =  document.getElementById("overlay1").style.display == "none" ? "block" : "none";
 }
+
 
 const overwrite = { //leaving this commented cause it explains the schema really well 
     // "covid_county": {
@@ -158,6 +161,7 @@ window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplora
 //where the magic happens
 $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the mongo server yet so query it locally
     const finalData = await AutoMenu.build(mdata, overwrite);
+    console.log(finalData)
     MenuGenerator.generate(finalData, document.getElementById("sidebar-container"));
 });
 

@@ -76,10 +76,10 @@ class RenderInfrastructure {
                 let weight = 3;
                 let fillOpacity = 0.2;
                 let name = Util.getNameFromGeoJsonFeature(feature, indexData);
-                if (datasource[name] && datasource[name]["border"] !== null && datasource[name]["border"] !== undefined) {
+                if (datasource[name] && datasource[name]["border"] !== null && datasource[name]["border"] !== undefined) 
                     weight = datasource[name]["border"];
-                    fillOpacity = 0.2;
-                }
+                if (datasource[name] && datasource[name]["opacity"] !== null && datasource[name]["border"] !== undefined) 
+                    fillOpacity = datasource[name]["opacity"];
                 return { color: datasource[name]["color"], weight: weight, fillOpacity: fillOpacity };
             }.bind(this),
             filter: function (feature) {
