@@ -168,8 +168,6 @@ parent.addEventListener('updateMaps', function () {
     updateLayers();
 });
 
-//const clusterer = new ClusterManager("xd", map, dataModelingGroup, "tract_geo_GISJOIN");
-
 map.on("move", function (e) {
     parent.setGlobalPosition(map.getCenter(), MAPNUMBER);
 });
