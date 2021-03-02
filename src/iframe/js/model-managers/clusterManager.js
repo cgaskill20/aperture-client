@@ -1,3 +1,11 @@
+/**
+ * @class ClusterManager
+ * @file Takes a set of clusters and displays them
+ * @author Daniel Reynolds
+ * @dependencies autoQuery.js
+ * @notes Work in progress!
+ */
+
 class ClusterManager {
     constructor(data, map, layerGroup, linkedGeometry) {
         this.data = data;
@@ -15,6 +23,13 @@ class ClusterManager {
 
         document.getElementById("clusterLegend").style.display = "block";
         this.getData();
+    }
+
+    clear(){
+        document.getElementById("clusterLegend").style.display = "none";
+        for(const cluster of this.clusters){
+            cluster.render.removeAllFeaturesFromMap();
+        }
     }
 
     listenForLinkedGeometryUpdates(updates) {

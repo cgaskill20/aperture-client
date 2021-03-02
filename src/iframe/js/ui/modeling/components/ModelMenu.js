@@ -9,6 +9,7 @@ class ModelMenu extends React.Component {
         this.setCollection = this.setCollection.bind(this)
         this.runModel = this.runModel.bind(this)
         this.setResolution = this.setResolution.bind(this)
+        this.restart = this.restart.bind(this)
 
         this.collections = {};
         this.parameters = {};
@@ -20,12 +21,27 @@ class ModelMenu extends React.Component {
         this.populateCatalog();
 
         this.keyVal = 0;
+        this.state = {
+            modelStatus: "none"
+        }
     }
 
 
     render() {
         if (!this.state || !this.state.catalog) return null;
-        if (this.state.modelRunning) return null;
+        switch (this.state.modelStatus) {
+            case "none":
+                return this.createModelBuilder();
+            case "building":
+                return e("div", null, 
+                "Building your model, this may take awhile..."
+                );
+            case "built":
+                return this.createModelBuilt()
+        }
+    }
+
+    createModelBuilder() {
         return e("div", null,
             this.createModelSelect(),
             this.createResolution(),
@@ -33,6 +49,27 @@ class ModelMenu extends React.Component {
             ...this.createParameters(),
             this.createModelRunButton(),
         );
+    }
+
+    createModelBuilt(){
+        return e("div", null,
+            "Your model is done, check it out on the map!<br>",
+            this.createResetButton()
+        );
+    }
+
+    createResetButton(){
+        return e("button", { type: "button", className: "btn btn-danger modelButton", onClick: this.restart },
+            "Build a New Model"
+        );
+    }
+
+    restart(){
+        this.modelManager.clear();
+        this.clearAll();
+        this.setState({
+            modelStatus: "none"
+        });
     }
 
     populateCatalog() {
@@ -51,7 +88,7 @@ class ModelMenu extends React.Component {
                 config: catalogMap,
                 modelCategory: Object.keys(catalogMap)[0],
                 modelType: Object.keys(catalogMap[Object.keys(catalogMap)[0]])[0],
-                modelRunning: false
+                modelStatus: "none"
             })
         }.bind(this));
     }
@@ -140,24 +177,24 @@ class ModelMenu extends React.Component {
         this.parameters[name] = value;
     }
 
-    createResolution(){
-        return e(ModelResolution,{
+    createResolution() {
+        return e(ModelResolution, {
             options: this.getResolutionOptions(),
             setResolution: this.setResolution
         })
     }
 
-    getResolutionOptions(){
+    getResolutionOptions() {
         let ret = [];
-        for(const collection of this.getCurrentConfig().collections)
-            if(!ret.includes(collection.resolution))
+        for (const collection of this.getCurrentConfig().collections)
+            if (!ret.includes(collection.resolution))
                 ret.push(collection.resolution);
         return ret;
     }
 
-    setResolution(resolution){
+    setResolution(resolution) {
         this.setState({
-            resolution:resolution
+            resolution: resolution
         });
         this.clearCollections();
     }
@@ -185,14 +222,14 @@ class ModelMenu extends React.Component {
     }
 
     createModelRunButton() {
-        return e("button", { type: "button", className: "btn btn-primary modelRunButton", onClick: this.runModel },
+        return e("button", { type: "button", className: "btn btn-primary modelButton", onClick: this.runModel },
             "Run Model!"
         );
     }
 
     runModel() {
         this.setState({
-            modelRunning: true
+            modelStatus: "building"
         });
         this.modelManager = null;
         const q = {};
@@ -215,7 +252,7 @@ class ModelMenu extends React.Component {
             console.log("end")
             this.handleFullResponse(resData);
             this.setState({
-                modelRunning: false
+                modelStatus: "built"
             });
         }.bind(this));
     }
@@ -245,6 +282,7 @@ class ModelMenu extends React.Component {
             case "REGRESSION":
                 break;
             case "CLUSTERING":
+                console.log(data)
                 this.handleFullClusteringResponse(data);
                 break;
             default:
@@ -292,6 +330,10 @@ class ModelMenu extends React.Component {
             case "REGRESSION":
                 return {
                     "gisJoins": ["G0801230", "G0800690", "G0800130", "G0800590", "G0800470", "G0800140", "G0800010", "G0800190", "G0800310", "G0800490", "G0800570", "G0801070", "G0801170", "G5600010", "G5600070"]
+                }
+            case "CLUSTERING":
+                return {
+                    "resolution": this.state.resolution
                 }
             default:
                 return null;

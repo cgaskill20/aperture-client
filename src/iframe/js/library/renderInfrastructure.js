@@ -186,9 +186,10 @@ class RenderInfrastructure {
      * @returns {boolean} true if successful, there will be an error otherwise
      */
     removeAllFeaturesFromMap () {
-        this.markerLayer.eachLayer(function (layer) {
-            this.markerLayer.removeLayer(layer);
-        }.bind(this));
+        if(this.markerLayer)
+            this.markerLayer.eachLayer(function (layer) {
+                this.markerLayer.removeLayer(layer);
+            }.bind(this));
         this.layerGroup.eachLayer(function (layer) {
             const subLayer = layer.getLayers()[0];
             if(!subLayer)
