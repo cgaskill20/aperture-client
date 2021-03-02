@@ -14,7 +14,7 @@ const DEFAULT_OBJECT = {
     color: "#000000",
     popup: null,
     constraints: null,
-    map: function () { return RenderInfrastructure.map; }
+    map: function () { return window.renderInfrastructure.map; }
 }
 
 let updateQueue = {};

@@ -40,6 +40,10 @@ class GeometryLoader {
         return this.convertArrayToGISJOINS(this.cache);
     }
 
+    getCache(){
+        return this.cache;
+    }
+
     /**
       * Gets geometry from a GISJOIN
       * @memberof GeometryLoader
@@ -64,7 +68,19 @@ class GeometryLoader {
       * array of GeoJSON features whenever new results come in.
       */
     addNewResultListener(func) {
-        this.listeners.push(func);
+        if(!this.listeners.includes(func))
+            this.listeners.push(func);
+    }
+
+    /**
+      * Removes a result listener
+      * @memberof GeometryLoader
+      * @method removeResultListener
+      * @param {Function} func function which will be removed
+      */
+    removeResultListener(func) {
+        if(this.listeners.includes(func))
+            this.listeners.splice(1,this.listeners.indexOf(func));
     }
 
     /**
@@ -114,7 +130,6 @@ class GeometryLoader {
       */
     getData() {
         let newResults = [];
-
         this.queryWorker.port.postMessage({
             type: "query",
             collection: this.collection,
@@ -196,7 +211,7 @@ class GeometryLoader {
 }
 
 try {
-  module.exports = {
-      GeometryLoader: GeometryLoader
-  }
+    module.exports = {
+        GeometryLoader: GeometryLoader
+    }
 } catch (e) { }

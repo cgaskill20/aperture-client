@@ -1,4 +1,6 @@
 const MAPNUMBER = 2;
+const e = React.createElement;
+
 
 //const queryAlertText = document.getElementById('queryInfoText');
 
@@ -52,6 +54,10 @@ var markers = L.markerClusterGroup({
 });
 map.addLayer(markers);
 
+const dataExplorationGroup = L.layerGroup().addTo(map);
+const dataModelingGroup = L.layerGroup();
+window.dataModelingGroup = dataModelingGroup;
+
 const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
 const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
 
@@ -86,14 +92,23 @@ function closeNav() {
 
 function showDataExploration() {
     document.getElementById("sidebar-container").style.display = "grid";
+    document.getElementById("model-container").style.display = "none";
+    document.getElementById("clusterLegendContainer").style.display = "none";
+    map.removeLayer(dataModelingGroup)
+    map.addLayer(dataExplorationGroup)
 }
 
 function showModeling() {
     document.getElementById("sidebar-container").style.display = "none";
+    document.getElementById("model-container").style.display = "block";
+    document.getElementById("clusterLegendContainer").style.display = "block";
+    map.addLayer(dataModelingGroup)
+    map.removeLayer(dataExplorationGroup)
 }
 
 function showValidation() {
     document.getElementById("sidebar-container").style.display = "none";
+    document.getElementById("model-container").style.display = "none";
 }
 
 function showGraph() {
@@ -138,7 +153,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
     // },
 }
 
-RenderInfrastructure.config(map, markers, overwrite, {
+window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplorationGroup, overwrite, {
     queryAlertText: document.getElementById('queryInfoText'),
     maxElements: 10000,
     maxLayers: 20,
@@ -151,8 +166,13 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
     MenuGenerator.generate(finalData, document.getElementById("sidebar-container"));
 });
 
+const modelContainer = document.getElementById("model-container");
+ReactDOM.render(e(ModelMenu), modelContainer);
+
 parent.addEventListener('updateMaps', function () {
     updateLayers();
+    backgroundCounty.runQuery();
+    backgroundTract.runQuery();
 });
 
 map.on("move", function (e) {

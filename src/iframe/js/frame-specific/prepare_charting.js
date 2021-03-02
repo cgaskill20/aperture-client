@@ -1,6 +1,6 @@
 
 let filter = new MapDataFilter();
-RenderInfrastructure.useFilter(filter);
+window.renderInfrastructure.useFilter(filter);
 
 let chartCataloge;
 $.getJSON("json/graphPriority.json", (cataloge) => {

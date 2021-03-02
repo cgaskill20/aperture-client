@@ -1,10 +1,10 @@
-const {Query, CompoundRequest} = require("./sustain_pb.js")
-const {SustainClient} = require('./sustain_grpc_web_pb.js');
+const {Query, CompoundRequest, JsonModelRequest} = require("./sustain_pb.js")
+const {SustainClient, JsonProxyClient} = require('./sustain_grpc_web_pb.js');
 
 /**
  * @namespace SustainQuerier
  * @file Object used for performing gRPC queries
- * @author Kevin Bruhwiler
+ * @author Kevin Bruhwiler & Daniel Reynolds
  */
 SustainQuerier = {
     /**
@@ -15,6 +15,7 @@ SustainQuerier = {
       */
     initialize: function () {
         this.service = new SustainClient("http://lattice-2.cs.colostate.edu:9092", "sustainServer");
+        this.modelService = new JsonProxyClient("http://lattice-2.cs.colostate.edu:9092", "sustainServer");
         return this;
     },
 
@@ -119,6 +120,13 @@ SustainQuerier = {
      */
     executeCompoundQuery: function (request) {
         return this.service.compoundQuery(request, {});
+    },
+    
+    
+    executeModelQuery: function (query) {
+        const request = new JsonModelRequest();
+        request.setJson(query);
+        return this.modelService.modelQuery(request, {});
 	},
 };
 

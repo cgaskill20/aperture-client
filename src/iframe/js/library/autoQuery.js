@@ -183,8 +183,8 @@ class AutoQuery {
             q.push({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }); //only get geometry in viewport
         }
         else {
-            if (!forcedGeometry)
-                this.backgroundLoader.runQuery();
+            // if (!forcedGeometry)
+            //     this.backgroundLoader.runQuery();
             const GISJOINS = forcedGeometry ? this.backgroundLoader.convertArrayToGISJOINS(forcedGeometry) : this.backgroundLoader.getCachedGISJOINS();
             q.push({ "$match": { "GISJOIN": { "$in": GISJOINS } } });
         }
@@ -212,7 +212,7 @@ class AutoQuery {
       * @method clearMapLayers
       */
     clearMapLayers() {
-        RenderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
+        window.renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
         this.mapLayers = [];
         this.layerIDs = [];
     }
@@ -266,7 +266,7 @@ class AutoQuery {
         indexData[this.collection]["border"] = this.color.border;
         indexData[this.collection]["opacity"] = this.color.opacity;
 
-        this.mapLayers = this.mapLayers.concat(RenderInfrastructure.renderGeoJson(data, indexData));
+        this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.push(data.id);
     }
 
@@ -445,3 +445,4 @@ try {
         AutoQuery: AutoQuery
     }
 } catch (e) { }
+

@@ -2,7 +2,7 @@
 class ChartSystem {
     constructor(map, chartCatalogeFilename) {
         this.filter = new MapDataFilter();
-        RenderInfrastructure.useFilter(this.filter);
+        window.renderInfrastructure.useFilter(this.filter);
         this.map = map;
 
         this.chart = new BarChart([], 1000, 300);

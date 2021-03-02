@@ -4,7 +4,7 @@
 let filter = new MapDataFilter();
 
 // Tell the RenderInfrastructure object to use it.
-RenderInfrastructure.useFilter(filter);
+window.renderInfrastructure.useFilter(filter);
 
 // use .getModel to get information from it.
 
