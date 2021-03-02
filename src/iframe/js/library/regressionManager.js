@@ -4,6 +4,5 @@ class RegressionManager{
         this.layerGroup = layerGroup;
         this.linkedGeometry = linkedGeometry;
     }
-
-
+    //work in progress
 }

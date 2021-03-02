@@ -8,6 +8,7 @@ class ModelMenu extends React.Component {
         this.setParameter = this.setParameter.bind(this)
         this.setCollection = this.setCollection.bind(this)
         this.runModel = this.runModel.bind(this)
+        this.setResolution = this.setResolution.bind(this)
 
         this.collections = {};
         this.parameters = {};
@@ -27,6 +28,7 @@ class ModelMenu extends React.Component {
         if (this.state.modelRunning) return null;
         return e("div", null,
             this.createModelSelect(),
+            this.createResolution(),
             ...this.createCollections(),
             ...this.createParameters(),
             this.createModelRunButton(),
@@ -57,7 +59,7 @@ class ModelMenu extends React.Component {
     catalogMap(catalog) {
         const ret = {};
         for (const entry in catalog) {
-            if(!this.whitelist.includes(entry))
+            if (!this.whitelist.includes(entry))
                 continue;
             if (!ret[catalog[entry].category])
                 ret[catalog[entry].category] = {}
@@ -119,8 +121,7 @@ class ModelMenu extends React.Component {
     }
 
     createParameters() {
-        //if(this.state.modelCategory === "CLUSTERING") return [];
-        const params =  this.getCurrentConfig().parameters.map(parameter => {
+        const params = this.getCurrentConfig().parameters.map(parameter => {
             const obj = {
                 config: parameter,
                 setParameter: this.setParameter,
@@ -139,8 +140,32 @@ class ModelMenu extends React.Component {
         this.parameters[name] = value;
     }
 
+    createResolution(){
+        return e(ModelResolution,{
+            options: this.getResolutionOptions(),
+            setResolution: this.setResolution
+        })
+    }
+
+    getResolutionOptions(){
+        let ret = [];
+        for(const collection of this.getCurrentConfig().collections)
+            if(!ret.includes(collection.resolution))
+                ret.push(collection.resolution);
+        return ret;
+    }
+
+    setResolution(resolution){
+        this.setState({
+            resolution:resolution
+        });
+        this.clearCollections();
+    }
+
     createCollections() {
-        return this.getCurrentConfig().collections.map(collection => {
+        return this.getCurrentConfig().collections.filter(collection => {
+            return collection.resolution === this.state.resolution
+        }).map(collection => {
             return e(ModelCollection, {
                 config: collection,
                 setCollection: this.setCollection,
@@ -170,13 +195,13 @@ class ModelMenu extends React.Component {
             modelRunning: true
         });
         this.modelManager = null;
-         const q = {};
-         q.type = this.state.modelType;
-         q.collections = this.convertCollectionsToCollectionsQuery()
-         q[this.getCurrentConfig().requestName] = {
-             ...this.parameters,
-             ...this.getExtraRequestParams()
-         };
+        const q = {};
+        q.type = this.state.modelType;
+        q.collections = this.convertCollectionsToCollectionsQuery()
+        q[this.getCurrentConfig().requestName] = {
+            ...this.parameters,
+            ...this.getExtraRequestParams()
+        };
 
         console.log(JSON.stringify(q))
         const stream = this._sustainQuerier.executeModelQuery(JSON.stringify(q));
@@ -195,17 +220,17 @@ class ModelMenu extends React.Component {
         }.bind(this));
     }
 
-    clearAll(){
+    clearAll() {
         this.clearParameters();
         this.clearCollections();
         this.modelManager = null;
     }
 
 
-    handleSingleResponse(data){
+    handleSingleResponse(data) {
         switch (this.state.modelCategory) {
             case "REGRESSION":
-                console.log(data)
+                //console.log(data)
                 break;
             case "CLUSTERING":
                 //console.log(data)
@@ -215,12 +240,11 @@ class ModelMenu extends React.Component {
         }
     }
 
-    handleFullResponse(data){
+    handleFullResponse(data) {
         switch (this.state.modelCategory) {
             case "REGRESSION":
                 break;
             case "CLUSTERING":
-                console.log(data)
                 this.handleFullClusteringResponse(data);
                 break;
             default:
@@ -228,23 +252,23 @@ class ModelMenu extends React.Component {
         }
     }
 
-    handleFullClusteringResponse(data){
+    handleFullClusteringResponse(data) {
         const refinedData = data.map(d => {
             return d.kMeansClusteringResponse;
         })
-        this.modelManager = new ClusterManager(refinedData,window.map,window.dataModelingGroup,"county_geo_GISJOIN");
-        
+        this.modelManager = new ClusterManager(refinedData, window.map, window.dataModelingGroup, "county_geo_GISJOIN");
+
     }
 
     convertCollectionsToCollectionsQuery() {
         let ret = [];
-        for (const collection in this.collections){
+        for (const collection in this.collections) {
             const col = {
                 "name": collection,
                 "features": this.convertFeaturesToFeaturesQuery(this.collections[collection])
             }
-            if(col.features.length === 0) continue;
-            if(this.state.modelCategory === "REGRESSION") 
+            if (col.features.length === 0) continue;
+            if (this.state.modelCategory === "REGRESSION")
                 col["label"] = "max_max_air_temperature";
             ret.push(col);
         }
