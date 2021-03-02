@@ -183,8 +183,8 @@ class AutoQuery {
             q.push({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }); //only get geometry in viewport
         }
         else {
-            if (!forcedGeometry)
-                this.backgroundLoader.runQuery();
+            // if (!forcedGeometry)
+            //     this.backgroundLoader.runQuery();
             const GISJOINS = forcedGeometry ? this.backgroundLoader.convertArrayToGISJOINS(forcedGeometry) : this.backgroundLoader.getCachedGISJOINS();
             q.push({ "$match": { "GISJOIN": { "$in": GISJOINS } } });
         }

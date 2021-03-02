@@ -59,7 +59,7 @@ const dataModelingGroup = L.layerGroup();
 window.dataModelingGroup = dataModelingGroup;
 
 const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
-const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 500);
+const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
 
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty
@@ -169,6 +169,8 @@ ReactDOM.render(e(ModelMenu), modelContainer);
 
 parent.addEventListener('updateMaps', function () {
     updateLayers();
+    backgroundCounty.runQuery();
+    backgroundTract.runQuery();
 });
 
 map.on("move", function (e) {

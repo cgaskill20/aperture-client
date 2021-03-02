@@ -53,7 +53,10 @@ class ModelMenu extends React.Component {
 
     createModelBuilt(){
         return e("div", null,
-            "Your model is done, check it out on the map!<br>",
+            e("div",{
+                style:{display:"block"}
+            },"Your model is done, check it out on the map!"),
+            e("br"),
             this.createResetButton()
         );
     }

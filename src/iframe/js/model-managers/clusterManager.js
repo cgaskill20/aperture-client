@@ -11,25 +11,27 @@ class ClusterManager {
         this.data = data;
         this.map = map;
         this.layerGroup = layerGroup;
+        this.listenForLinkedGeometryUpdates = this.listenForLinkedGeometryUpdates.bind(this)
         this.sustainQuerier = sustain_querier(); //init querier
 
         this.clusters = [];
 
         this.linked = linkedGeometry;
         this.backgroundLoader = this.linked === "tract_geo_GISJOIN" ? window.backgroundTract : window.backgroundCounty;
-        this.backgroundLoader.addNewResultListener(function (updates) {
-            this.listenForLinkedGeometryUpdates(updates);
-        }.bind(this));
+        this.backgroundLoader.addNewResultListener(this.listenForLinkedGeometryUpdates);
 
         document.getElementById("clusterLegend").style.display = "block";
         this.getData();
+
+        this.currentClusterSelected = null;
     }
 
-    clear(){
+    clear(){ //basically a destructor
         document.getElementById("clusterLegend").style.display = "none";
         for(const cluster of this.clusters){
             cluster.render.removeAllFeaturesFromMap();
         }
+        this.backgroundLoader.removeResultListener(this.listenForLinkedGeometryUpdates)
     }
 
     listenForLinkedGeometryUpdates(updates) {
@@ -39,13 +41,14 @@ class ClusterManager {
                 cluster.render.renderGeoJson(feature, {
                     "Cluster": {
                         color: cluster.color,
-                        border: 1,
+                        border: 0,
+                        opacity: 0.4,
                         onClick: function (layer) {
                             this.removeAllLayersApartFrom(layer)
                         }.bind(this),
-                        onPopupRemove: function (layer) {
-                            this.reAddLayers();
-                        }.bind(this)
+                        // onPopupRemove: function (layer) {
+                        //     this.reAddLayers();
+                        // }.bind(this)
                     }
                 });
             }
@@ -77,6 +80,14 @@ class ClusterManager {
             legendClick.className = "clusterLegendField";
             legendClick.style.backgroundColor = colors[j - 1];
             legendClick.onclick = function () {
+                if(this.currentClusterSelected) this.currentClusterSelected.style.filter = "";
+                if(this.currentClusterSelected === legendClick){
+                     this.reAddLayers();
+                     this.currentClusterSelected = null;
+                     return;
+                }
+                this.currentClusterSelected = legendClick;
+                legendClick.style.filter = "brightness(0.4)";
                 this.reAddLayers();
                 this.removeAllLayersApartFrom(cluster.group);
             }.bind(this)

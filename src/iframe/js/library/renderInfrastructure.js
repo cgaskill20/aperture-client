@@ -46,8 +46,6 @@ class RenderInfrastructure {
         this.currentBounds = [];
         this.currentLayers = [];
         this.idCounter = 0;
-
-        this.layors = [];
     }
 
     /**
@@ -78,7 +76,7 @@ class RenderInfrastructure {
                 let name = Util.getNameFromGeoJsonFeature(feature, indexData);
                 if (datasource[name] && datasource[name]["border"] !== null && datasource[name]["border"] !== undefined) 
                     weight = datasource[name]["border"];
-                if (datasource[name] && datasource[name]["opacity"] !== null && datasource[name]["border"] !== undefined) 
+                if (datasource[name] && datasource[name]["opacity"] !== null && datasource[name]["opacity"] !== undefined) 
                     fillOpacity = datasource[name]["opacity"];
                 return { color: datasource[name]["color"], weight: weight, fillOpacity: fillOpacity };
             }.bind(this),
@@ -88,8 +86,6 @@ class RenderInfrastructure {
                 if (this.currentLayers.includes(feature.id) || this.map.getZoom() < this.options.minRenderZoom || datasource[name] == null) {
                     return false;
                 }
-                // this.layors.push(feature.GISJOIN);
-                // console.log(this.layors)
                 this.currentLayers.push(feature.id);
                 return true;
             }.bind(this),

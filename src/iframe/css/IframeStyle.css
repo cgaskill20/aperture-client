@@ -429,6 +429,10 @@ body {
     display: inline-block;
 }
 
+.clusterLegendField:hover{
+    filter: brightness(0.4)
+}
+
 .graph-pic {
   cursor: pointer;
   height: 25px;
