@@ -85,7 +85,7 @@ class ModelMenu extends React.Component {
         }.bind(this));
         stream.on('end', function (end) {
             const catalogMap = this.catalogMap(catalog);
-            console.log(catalogMap)
+            //console.log(catalogMap)
             this.setState({
                 catalog: catalog,
                 config: catalogMap,
@@ -243,7 +243,7 @@ class ModelMenu extends React.Component {
             ...this.getExtraRequestParams()
         };
 
-        console.log(JSON.stringify(q))
+        //console.log(JSON.stringify(q))
         const stream = this._sustainQuerier.executeModelQuery(JSON.stringify(q));
         let resData = [];
         stream.on('data', function (r) {
@@ -252,7 +252,7 @@ class ModelMenu extends React.Component {
             resData.push(data);
         }.bind(this));
         stream.on('end', function (end) {
-            console.log("end")
+            //console.log("end")
             this.handleFullResponse(resData);
             this.setState({
                 modelStatus: "built"
@@ -285,7 +285,7 @@ class ModelMenu extends React.Component {
             case "REGRESSION":
                 break;
             case "CLUSTERING":
-                console.log(data)
+                //console.log(data)
                 this.handleFullClusteringResponse(data);
                 break;
             default:

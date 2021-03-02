@@ -20,7 +20,8 @@ class ClusterManager {
         this.backgroundLoader = this.linked === "tract_geo_GISJOIN" ? window.backgroundTract : window.backgroundCounty;
         this.backgroundLoader.addNewResultListener(this.listenForLinkedGeometryUpdates);
 
-        document.getElementById("clusterLegend").style.display = "block";
+        if(document.getElementById("model-container").style.display = "block") 
+            document.getElementById("clusterLegend").style.display = "block";
         this.getData();
 
         this.currentClusterSelected = null;

@@ -93,6 +93,7 @@ function closeNav() {
 function showDataExploration() {
     document.getElementById("sidebar-container").style.display = "grid";
     document.getElementById("model-container").style.display = "none";
+    document.getElementById("clusterLegendContainer").style.display = "none";
     map.removeLayer(dataModelingGroup)
     map.addLayer(dataExplorationGroup)
 }
@@ -100,6 +101,7 @@ function showDataExploration() {
 function showModeling() {
     document.getElementById("sidebar-container").style.display = "none";
     document.getElementById("model-container").style.display = "block";
+    document.getElementById("clusterLegendContainer").style.display = "block";
     map.addLayer(dataModelingGroup)
     map.removeLayer(dataExplorationGroup)
 }
