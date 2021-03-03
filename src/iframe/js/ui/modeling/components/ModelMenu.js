@@ -226,7 +226,7 @@ class ModelMenu extends React.Component {
 
     createModelRunButton() {
         return e("button", { type: "button", className: "btn btn-primary modelButton", onClick: this.runModel },
-            "Run Model!"
+            "Run Model"
         );
     }
 
