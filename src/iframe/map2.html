@@ -8,6 +8,7 @@
         crossorigin="" />
     <script src="../../node_modules/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/darkModeSwitch.css">
     <script src="js/third-party/leaflet-sidebar.js"></script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -41,19 +42,20 @@
     <div class="leaflet-bottom leaflet-right"></div>
     <div id="sidebar-id" class="sidebar colorMode1">
 
-<!--         <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-          <label class="form-check-label" for="flexSwitchCheckDefault">Color Mode</label>
-        </div> -->
-
         <div class="nav-tabs">
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider round"></div>
+          </label>
+        </div>
             <div class="btn-group" id="nav-group-id" role="group" aria-label="Basic example">
-              <button type="button" id='nav-graph-button' class="btn btn-outline-dark"><img src="/images/Graph_Black.png" class="graph-button-pic"></button>
-              <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark">Data Exploration</button>
-              <button type="button" id='nav-modeling-button' class="btn btn-outline-dark">Modeling</button>
-              <button type="button" id='nav-validation-button' class="btn btn-outline-dark">Validation</button>
-              <button type="button" id='nav-close-button' class="btn btn-outline-dark">Close</button>
-              <button type="button" id='nav-dark-mode-button' class="btn btn-outline-dark">Color Mode</button>
+              <!-- <button type="button" id='nav-graph-button' class="btn btn-outline-dark color-change"><img src="/images/Graph_Black.png" class="graph-button-pic"></button> -->
+              <button type="button" id='nav-graph-button' class="btn btn-outline-dark color-change">Graphing</button>
+              <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark color-change">Data Exploration</button>
+              <button type="button" id='nav-modeling-button' class="btn btn-outline-dark color-change">Modeling</button>
+              <button type="button" id='nav-validation-button' class="btn btn-outline-dark color-change">Validation</button>
+              <button type="button" id='nav-close-button' class="btn btn-outline-dark color-change">Close</button>
             </div>
         </div>
         <div id="sidebar-container"></div>
