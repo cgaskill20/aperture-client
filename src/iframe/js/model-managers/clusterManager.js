@@ -47,9 +47,9 @@ class ClusterManager {
                         onClick: function (layer) {
                             this.removeAllLayersApartFrom(layer)
                         }.bind(this),
-                        // onPopupRemove: function (layer) {
-                        //     this.reAddLayers();
-                        // }.bind(this)
+                        onPopupRemove: function (layer) {
+                            this.reAddLayers();
+                        }.bind(this)
                     }
                 });
             }
