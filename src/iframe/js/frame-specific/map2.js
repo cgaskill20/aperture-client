@@ -169,12 +169,11 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
 const modelContainer = document.getElementById("model-container");
 ReactDOM.render(e(ModelMenu), modelContainer);
 
-parent.addEventListener('updateMaps', function () {
+map.on("moveend zoomend", function (e) {
     updateLayers();
     backgroundCounty.runQuery();
     backgroundTract.runQuery();
 });
-
 map.on("move", function (e) {
     parent.setGlobalPosition(map.getCenter(), MAPNUMBER);
 });

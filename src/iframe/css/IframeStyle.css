@@ -413,7 +413,7 @@ body {
 #clusterLegend{
     background-color: white;
     position: absolute;
-    bottom: 50px;
+    bottom: 8%;
     margin: auto;
     z-index: 999999;
     left: 50%;
@@ -423,8 +423,8 @@ body {
 }
 
 .clusterLegendField{
-    height: 60px;
-    width: 60px;
+    height: 6vh;
+    width: 6vh;
     cursor: pointer;
     display: inline-block;
 }
