@@ -44,12 +44,12 @@ class ClusterManager {
                         color: cluster.color,
                         border: 0,
                         opacity: 0.4,
-                        onClick: function (layer) {
-                            this.removeAllLayersApartFrom(layer)
-                        }.bind(this),
-                        onPopupRemove: function (layer) {
-                            this.reAddLayers();
-                        }.bind(this)
+                        // onClick: function (layer) {
+                        //     this.removeAllLayersApartFrom(layer)
+                        // }.bind(this),
+                        // onPopupRemove: function (layer) {
+                        //     this.reAddLayers();
+                        // }.bind(this)
                     }
                 });
             }
@@ -74,7 +74,8 @@ class ClusterManager {
         let j = 0;
 
         for (const b of buckets) {
-            const cluster = new ClusterState(b, colors[j++], this.layerGroup);
+            const cluster = new ClusterState(b, colors[j], this.layerGroup);
+            j++;
             this.clusters.push(cluster);
 
             const legendClick = document.createElement("div");

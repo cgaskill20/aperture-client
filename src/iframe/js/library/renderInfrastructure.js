@@ -37,7 +37,7 @@ class RenderInfrastructure {
      * @param {JSON} data - JSON that contains needed information for renderable things
      * @param {object} options - object with attributes
      */
-    constructor (map, markerLayer, layerGroup, options) { //basically a constructor
+    constructor(map, markerLayer, layerGroup, options) { //basically a constructor
         this.options = JSON.parse(JSON.stringify(DEFAULTOPTIONS));
         L.Util.setOptions(this, options);
         this.map = map;
@@ -66,7 +66,7 @@ class RenderInfrastructure {
         if (this.dataFilter) {
             this.dataFilter.add(geoJsonData);
         }
-        
+
         const datasource = indexData ? indexData : this.data;
         let layers = [];
         const newLayer = L.geoJson(geoJsonData, {
@@ -74,9 +74,9 @@ class RenderInfrastructure {
                 let weight = 3;
                 let fillOpacity = 0.2;
                 let name = Util.getNameFromGeoJsonFeature(feature, indexData);
-                if (datasource[name] && datasource[name]["border"] !== null && datasource[name]["border"] !== undefined) 
+                if (datasource[name] && datasource[name]["border"] !== null && datasource[name]["border"] !== undefined)
                     weight = datasource[name]["border"];
-                if (datasource[name] && datasource[name]["opacity"] !== null && datasource[name]["opacity"] !== undefined) 
+                if (datasource[name] && datasource[name]["opacity"] !== null && datasource[name]["opacity"] !== undefined)
                     fillOpacity = datasource[name]["opacity"];
                 return { color: datasource[name]["color"], weight: weight, fillOpacity: fillOpacity };
             }.bind(this),
@@ -101,13 +101,13 @@ class RenderInfrastructure {
                 layer.bindPopup(iconDetails);
                 layer.on('click', function (e) {
                     this.map.flyTo(e.latlng, this.map.getZoom(), FLYTOOPTIONS);
-                    if(datasource[iconName].onClick){
+                    if (datasource[iconName].onClick) {
                         datasource[iconName].onClick(this.layerGroup);
                     }
                 }.bind(this));
 
-                if(datasource[iconName].onPopupRemove){
-                    layer.getPopup().on('remove', function() {
+                if (datasource[iconName].onPopupRemove) {
+                    layer.getPopup().on('remove', function () {
                         datasource[iconName].onPopupRemove(this.layerGroup);
                     });
                 }
@@ -131,7 +131,7 @@ class RenderInfrastructure {
      * @param {Array} latLng latlng array where the icon will be put
      * @param {string} popUpContent the content that will display for this element when clicked, accepts HTML formatting
      */
-    addIconToMap (iconName, latLng, popUpContent, indexData, specifiedId) {
+    addIconToMap(iconName, latLng, popUpContent, indexData, specifiedId) {
         let icon = this.getAttribute(iconName, ATTRIBUTE.icon, indexData)
         if (!icon || icon === "noicon") {
             return false;
@@ -143,7 +143,7 @@ class RenderInfrastructure {
         marker.uniqueId = iconName;
         marker.specifiedId = specifiedId;
         this.markerLayer.addLayer(marker.on('click', function (e) {
-            if (e.target.__parent._group._spiderfied) 
+            if (e.target.__parent._group._spiderfied)
                 return;
             this.map.flyTo(e.latlng, this.map.getZoom(), FLYTOOPTIONS);
         }.bind(this)).bindPopup(popUpContent));
@@ -165,7 +165,7 @@ class RenderInfrastructure {
         }.bind(this));
         this.layerGroup.eachLayer(function (layer) {
             const subLayer = layer.getLayers()[0];
-            if(!subLayer)
+            if (!subLayer)
                 return;
             if (subLayer.feature && specifiedIds.includes(subLayer.specifiedId)) {
                 this.currentLayers.splice(this.currentLayers.indexOf(subLayer.feature.id), 1);
@@ -181,14 +181,14 @@ class RenderInfrastructure {
      * @method removeAllFeaturesFromMap
      * @returns {boolean} true if successful, there will be an error otherwise
      */
-    removeAllFeaturesFromMap () {
-        if(this.markerLayer)
+    removeAllFeaturesFromMap() {
+        if (this.markerLayer)
             this.markerLayer.eachLayer(function (layer) {
                 this.markerLayer.removeLayer(layer);
             }.bind(this));
         this.layerGroup.eachLayer(function (layer) {
             const subLayer = layer.getLayers()[0];
-            if(!subLayer)
+            if (!subLayer)
                 return;
             if (subLayer.feature) {
                 this.layerGroup.removeLayer(layer);
@@ -197,7 +197,7 @@ class RenderInfrastructure {
         this.currentLayers = [];
         return true;
     }
-    
+
     /**                                                                            
      * Creates a leaflet icon from an image address.
      * @memberof Util
@@ -223,17 +223,15 @@ class RenderInfrastructure {
      */
     getAttribute(tag, attribute, indexData) {
         const datasource = indexData;
-        if (datasource) {
-            if (datasource[tag]) {
-                if (attribute == ATTRIBUTE.color) {
-                    if (datasource[tag]["color"]) {
-                        return datasource[tag]["color"];
-                    }
+        if (datasource && datasource[tag]) {
+            if (attribute == ATTRIBUTE.color) {
+                if (datasource[tag]["color"]) {
+                    return datasource[tag]["color"];
                 }
-                else {
-                    if (datasource[tag]["iconAddr"]) {
-                        return this.makeIcon(datasource[tag]["iconAddr"]);
-                    }
+            }
+            else {
+                if (datasource[tag]["iconAddr"]) {
+                    return this.makeIcon(datasource[tag]["iconAddr"]);
                 }
             }
         }
