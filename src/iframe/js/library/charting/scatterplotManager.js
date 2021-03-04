@@ -56,27 +56,64 @@ END OF TERMS AND CONDITIONS
 */
 
 class ScatterplotManager {
-    constructor(catalog, chartArea){
-        this.chartArea = chartArea;
+    constructor(catalog, chartArea, validFeatureManager, chartSystem) {
+        this.chartArea = chartArea
         this.scatterplot = new Scatterplot();
         this.chartArea.addChart(this.scatterplot);
-        this.featureName = { x: 'temp', y: 'RPL_THEMES' };
+    
+        this.validFeatures = validFeatureManager;
+        this.currentFeatures = {};
+
+        this.system = chartSystem;
+
+        this.chartArea.setChangeAxisButtonCallbacks(
+            () => { this.axisButtonCallback("x"); },
+            () => { this.axisButtonCallback("y"); }
+        );
     }
 
+    axisButtonCallback(axis) {
+        this.currentFeatures[axis] = this.nextValidFeatureForAxis(axis); 
+        this.update(this.system.getValues());
+    }
+
+    nextValidFeatureForAxis(axis) {
+        let ignore = [];
+        for (let axisToIgnore in this.currentFeatures) {
+            if (axisToIgnore !== axis) {
+                ignore.push(this.currentFeatures[axisToIgnore]);
+            }
+        }
+        return this.validFeatures.getNextFeature(this.currentFeatures[axis], ignore);
+    }
+    
     update(values) {
-        this.scatterplot.changeData(this.prepareData(values));
+        let shouldUpdate = this.validFeatures.enoughFeaturesExist(2);
+
+        if (shouldUpdate) {
+            if (!this.currentFeatures.x) {
+                this.currentFeatures.x = this.validFeatures.getAnyFeature();
+            }
+            if (!this.currentFeatures.y) {
+                this.currentFeatures.y = this.validFeatures.getAnyFeature();
+            }
+            this.scatterplot.changeData(this.prepareData(values));
+        }
     }
 
     prepareData(values) {
         let data = [];
-        for (let i = 0; i < values[this.featureName.x].length; i++) {
+        let xfeat = values[this.currentFeatures.x];
+        let yfeat = values[this.currentFeatures.y];
+        let shorterFeature = (xfeat.length > yfeat.length) ? yfeat : xfeat; 
+        for (let i = 0; i < shorterFeature.length; i++) {
             data.push({
-                x: values[this.featureName.x][i].data,
-                y: values[this.featureName.y][i].data,
+                x: xfeat[i].data,
+                y: yfeat[i].data,
             });
         }
-        data.x = this.featureName.x;
-        data.y = this.featureName.y;
+        data.x = this.currentFeatures.x;
+        data.y = this.currentFeatures.y;
         return data;
     }
 }

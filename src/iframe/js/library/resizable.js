@@ -223,15 +223,15 @@ class resizable {
     }
 
     toggleVisible(){
-        if (this.overlayDocument.style.display === "block") {
+        let currentlyVisible = this.overlayDocument.style.display === "block";
+        if (currentlyVisible) {
             this.overlayDocument.style.display = "none";
         } else {
             this.overlayDocument.style.display = "block";
+            for (let areaName in this.chartAreas) {
+                this.chartAreas[areaName].rerender(this.width, this.height);
+            }
         }
-    }
-
-    addChart(chart) {
-        this.chartArea.addChart(chart);
     }
 
     addChartArea(type, chartArea) {

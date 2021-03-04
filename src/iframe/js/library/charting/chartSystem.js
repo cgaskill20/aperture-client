@@ -81,6 +81,8 @@ class ChartSystem {
         this.chartManagers = {};
         this.chartAreas = {};
 
+        this.validFeatureManager = new ValidFeatureManager([]);
+
         $.getJSON(chartCatalogFilename, (catalog) => {
             this.initializeUpdateHooks();
 
@@ -91,7 +93,7 @@ class ChartSystem {
                 if (type.name != this.currentMode.name) {
                     this.chartAreas[type.name].toggleVisible();
                 }
-                this.chartManagers[type.name] = new type.managerType(catalog, this.chartAreas[type.name]);
+                this.chartManagers[type.name] = new type.managerType(catalog, this.chartAreas[type.name], this.validFeatureManager, this);
             }
 
             this.graphable = catalog.map(e => Object.keys(e.constraints)).flat();
@@ -110,11 +112,22 @@ class ChartSystem {
             return;
         }
 
-        let values = this.filter.getModel(this.graphable, this.map.getBounds());
+        let values = this.getValues();
         this.chartManagers[this.currentMode.name].update(values);
 
         this.doNotUpdate = true;
         window.setTimeout(() => { this.doNotUpdate = false; }, 200);
+    }
+
+    getValues() {
+        let values = this.filter.getModel(this.graphable, this.map.getBounds());
+
+        // This arcane incantation gets a list of feature names for which there's actually data.
+        // Don't ask.
+        let validFeatures = Object.entries(values).filter(kv => kv[1].length !== 0).map(kv => kv[0]);
+        this.validFeatureManager.update(validFeatures);
+
+        return values;
     }
 
     toggleVisible() {

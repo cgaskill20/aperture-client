@@ -115,14 +115,14 @@ class Scatterplot extends Chart {
         view.svg.select("text#xAxisLabel")
             .attr("x", newWidth - view.margin.right)
             .attr("y", newHeight - view.margin.bottom / 2)
-            .attr("text-anchor", "right")
+            .attr("text-anchor", "end")
             .attr("font-size", "8pt")
             .text(this.data.x);
 
         view.svg.select("text#yAxisLabel")
             .attr("x", view.margin.left / 2)
             .attr("y", view.margin.top / 2)
-            .attr("text-anchor", "left")
+            .attr("text-anchor", "start")
             .attr("font-size", "8pt")
             .text(this.data.y);
     }

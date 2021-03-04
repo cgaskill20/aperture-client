@@ -410,3 +410,13 @@ body {
   background-color: #f00;
 }
 
+.scatterplot-change-x-axis-button {
+  background-color: #f00;
+  min-height: 25px;
+}
+
+.scatterplot-change-y-axis-button {
+  background-color: #00f; /* oof */
+  min-height: 25px;
+}
+

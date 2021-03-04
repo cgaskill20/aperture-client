@@ -30,7 +30,7 @@ class SingleChartArea {
     }
 
     attachChartContainers(node) {
-        for (let i = this.availableContainers.length; i < ChartArea.MAX_SIMULTANEOUS_CHARTS; i++) {
+        for (let i = this.availableContainers.length; i < SingleChartArea.MAX_SIMULTANEOUS_CHARTS; i++) {
             let containerNode = document.createElement("div");
             containerNode.className = "chart-container";
             node.appendChild(containerNode);
@@ -69,7 +69,7 @@ class SingleChartArea {
 
         let i = 0;
         // Show containers we have space for
-        for (; (i * ChartArea.MIN_CHART_SIZE) < availableSpace; i++) {
+        for (; (i * SingleChartArea.MIN_CHART_SIZE) < availableSpace; i++) {
             this.availableContainers[i].unhide();
         }
 

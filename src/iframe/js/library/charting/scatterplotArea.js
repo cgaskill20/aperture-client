@@ -64,6 +64,19 @@ class ScatterplotArea {
         this.container = document.createElement("div");
         this.container.className = "scatterplot-chart-area";
         this.parentNode.appendChild(this.container);
+
+        this.changeXAxisButton = document.createElement("div");
+        this.changeXAxisButton.className = "scatterplot-change-x-axis-button";
+        this.container.appendChild(this.changeXAxisButton);
+
+        this.changeYAxisButton = document.createElement("div");
+        this.changeYAxisButton.className = "scatterplot-change-y-axis-button";
+        this.container.appendChild(this.changeYAxisButton);
+    }
+
+    setChangeAxisButtonCallbacks(xCallback, yCallback) {
+        this.changeXAxisButton.onclick = xCallback;
+        this.changeYAxisButton.onclick = yCallback;
     }
 
     addChart(chart) {
@@ -73,7 +86,7 @@ class ScatterplotArea {
 
     rerender(newWidth, newHeight) {
         if (this.scatterplot) {
-            this.scatterplot.rerender(newWidth, newHeight, 0);
+            this.scatterplot.rerender(newWidth, newHeight - 100, 0);
         }
     }
 
