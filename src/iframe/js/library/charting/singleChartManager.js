@@ -64,7 +64,7 @@ class SingleChartManager {
         this.constraints = catalog.map(e => e.constraints);
         this.constraints.forEach(constraint => {
             for (let feature in constraint) {
-                this.charts[feature] = new Histogram();
+                this.charts[feature] = new LineGraph();
                 this.charts[feature].setTitle(constraint[feature].label);
                 this.chartArea.addChart(this.charts[feature]);
             }

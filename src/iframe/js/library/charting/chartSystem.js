@@ -72,7 +72,7 @@ class ChartSystem {
     constructor(map, chartCatalogFilename) {
         this.map = map;
 
-        this.currentMode = ChartingType.SCATTERPLOT;
+        this.currentMode = ChartingType.SINGLE;
 
         this.filter = new MapDataFilter();
         RenderInfrastructure.useFilter(this.filter);

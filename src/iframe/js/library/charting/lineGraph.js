@@ -55,63 +55,81 @@ END OF TERMS AND CONDITIONS
 
 */
 
-/* The base class for all charts.
- * This class takes care of bookkeeping for creating chart views and attaching
- * these views to the DOM.
- * 
- * A chart view is a particular rendering of a chart. Views have their own size,
- * but share all of the same data. 
- * Users of Chart subclasses can call the addTo function on a DOM node to add a
- * new view of the given chart to a particular node.
- * 
- * Hey, I'd like to make my own chart! How do I do it?
- * Easy! Just follow these steps:
- *  1) create a class that extends this one
- *  2) create at least the following three functions in the derived class:
- *     - makeNewView(node, width, height):
- *       Sets up the basic variables to create a d3 chart, packages these into a view
- *       object, and returns it.
- *       (see an existing chart for examples - there is pretty much no set
- *        format for the view object at all, there are no expectations on the
- *        part of outside code for what a view object must contain)
- *     - rerender(width, height, viewIndex):
- *       Re-generates the view at viewIndex with the given width and height.
- *       You will pretty much always start this method by getting the view
- *       at that particular index. Then you'll probably call a bunch of d3
- *       functions on the d3 objects you have stored in the view object. Again,
- *       refer to an existing chart for examples.
- *     - changeData(data):
- *       Update the data in the graph with that passed into this function.
- *       Every chart will need the data to be formatted a different way, and
- *       this is at your discretion. For instance, the histogram simply
- *       expects a list of values, the list also having an "x" property for the
- *       data's human readable label. 
- * @author Pierce Smith
- */
-class Chart {
-    constructor(data) {
-        this.views = [];
-        this.data = data;
+class LineGraph extends Chart {
+
+    rerender(width, height, viewIndex) {
+        let view = this.views[viewIndex];
+
+        view.width = width;
+        view.height = height;
+        view.svg.attr("viewBox", [0, 0, width, height]);
+
+        // This will only work if the data comes in like this:
+        // { date: Date, value: number }
+        // view.x and view.y will need to change if this isn't the case.
+        view.x = d3.scaleUtc()
+            .domain(d3.extent(this.data, d => d.date))
+            .range([view.margin.left, width - view.margin.right]);
+
+        view.y = d3.scaleLinear()
+            .domain([0, d3.max(this.data, d => d.value)]).nice()
+            .range([height - view.margin.bottom, view.margin.top]);
+
+        view.xAxis = g => g
+            .attr("transform", `translate(0, ${height - view.margin.bottom})`)
+            .call(d3.axisBottom(view.x).ticks(width / 80).tickSizeOuter(0))
+
+        view.yAxis = g => g
+            .attr("transform", `translate(${view.margin.left}, 0)`)
+            .call(d3.axisLeft(view.y))
+            .call(g => g.select(".domain").remove());
+
+        view.line = d3.line()
+            .defined(d => !isNaN(d.value))
+            .x(d => view.x(d.date))
+            .y(d => view.y(d.value))
+
+        view.svg.select("g#xAxis").call(view.xAxis);
+        view.svg.select("g#yAxis").call(view.yAxis);
+        view.svg.select("path#line")
+            .datum(this.data)
+            .attr("d", view.line);
+        view.svg.select("text#title")
+            .attr("x", width / 2)
+            .attr("y", 12)
+            .attr("text-anchor", "middle")
+            .text(this.title);
+    }
+    
+    changeData(data) {
+        let wrongData = data.map(e => { return { date: new Date(Math.round((Math.random() * (1 << 63)))), value: e }});
+        wrongData.sort((a, b) => a.date - b.date );
+        console.log(wrongData);
+        this.data = wrongData;
+        this.rerenderAllViews();
     }
 
-    addTo(node) {
-        let view = this.makeNewView(node, 1000, 300);
-        this.views.push(view);
-        node.appendChild(view.svg.node());
+    setTitle(title) {
+        this.title = title;
+        this.rerenderAllViews();
     }
 
-    rerenderAllViews() {
-        for (let i = 0; i < this.views.length; i++) {
-            this.rerender(this.views[i].width, this.views[i].height, i);
-        }
-    }
+    makeNewView(node, width, height) {
+        let view = {};
+        view.width = width;
+        view.height = height;
+        view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
 
-    hide(viewIndex) {
-        this.views[viewIndex].svg.style("display", "none");
-    }
+        view.margin = { top: 50, right: 20, bottom: 30, left: 40 };
 
-    unhide(viewIndex) {
-        this.views[viewIndex].svg.style("display", "block");
+        view.svg.append("g").attr("id", "xAxis");
+        view.svg.append("g").attr("id", "yAxis");
+        view.svg.append("path").attr("id", "line")
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 1.5)
+        view.svg.append("text").attr("id", "title");
+
+        return view;
     }
 }
-
