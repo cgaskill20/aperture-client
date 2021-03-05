@@ -1,13 +1,28 @@
 
+:root {
+  --bootstrapLight: #f8f9fa;
+  --bootstrapDark: #343a40;
+  --bootstrapPrimary: #007bff;
+  --bootstrapWarning: #ffc107;
+  --bootstrapSuccess: #28a745;
+  --customDark: #111;
+  --customLight: #fbfbfb;
+}
+
 .theme-switch-wrapper {
   position: absolute;
-  right: 25px;
-
-  em {
-    margin-left: 10px;
-    font-size: 12px;
-  }
+  right: 45px;
+  top: 25px;
 }
+
+.moon-icon {
+  position: absolute;
+  left: 38px;
+  top: -4.5px;
+  height: 23px;
+  width: 23px;
+}
+
 .theme-switch {
   display: inline-block;
   height: 17px;
@@ -20,29 +35,29 @@
 }
 
 .slider {
-  background-color: #ccc;
-  bottom: 0;
+  background-color: var(--bootstrapDark); /*the slider groove*/
   cursor: pointer;
-  left: 0;
   position: absolute;
-  right: 0;
-  top: 0;
   transition: .4s;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .slider:before {
-  background-color: #fff;
-  bottom: 2px;
-  content: "";
-  height: 13px;
-  left: 2px;
   position: absolute;
   transition: .4s;
+  content: "";
+  background-color: var(--bootstrapLight);  /*the slider button*/
+  bottom: 2px;
+  left: 2px;
+  height: 13px;
   width: 13px;
 }
 
 input:checked + .slider {
-  background-color: #007bff;
+  background-color: var(--bootstrapPrimary); /*the slider groove AFTER*/
 }
 
 input:checked + .slider:before {

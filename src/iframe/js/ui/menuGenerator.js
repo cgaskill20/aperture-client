@@ -34,7 +34,6 @@ const MenuGenerator = {
      * @param {object} options options object
      */
     generate(json_map, container, options) {
-        // console.log(json_map);
         let ops = JSON.parse(JSON.stringify(DEFAULT_OPTIONS)); //deep copy
         if (options) { //if options arg exists, merge options
             ops = { ...ops, ...options }; //merge both options into one obj
@@ -79,7 +78,6 @@ const MenuGenerator = {
      * @param {HTMLElement} container Where to generate the menu, what we are configing
      * @param {Number} categoryCount how many categories? these will become seperate columns
      */
-     //Daniel's
     configureContainer(container, categoryCount) {
         container.innerHTML = ""; //clear it out
 
