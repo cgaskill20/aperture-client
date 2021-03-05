@@ -1,8 +1,8 @@
 const MAPNUMBER = 2;
 const e = React.createElement;
 
-
 //const queryAlertText = document.getElementById('queryInfoText');
+
 
 //--------------
 const standardTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -173,6 +173,7 @@ map.on("moveend zoomend", function (e) {
     updateLayers();
     backgroundCounty.runQuery();
     backgroundTract.runQuery();
+    BoundsToGISJOIN.boundsToLengthNGeohashes(map.getBounds())
 });
 map.on("move", function (e) {
     parent.setGlobalPosition(map.getCenter(), MAPNUMBER);
