@@ -11,7 +11,6 @@ function switchImageSources() {
 			tooltipIcon[i].src="../../images/Info_White.png";
 		}
 		for(var i = 0; i < moonIcon.length; i++) {
-			// moonIcon[i].src="../../images/Moon_Purple&Yellow.png";
 			moonIcon[i].src="../../images/Moon_White.png";
 		}
 	}

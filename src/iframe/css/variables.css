@@ -1,0 +1,31 @@
+:root {
+  --bootstrapLight: #f8f9fa;
+  --bootstrapDark: #343a40;
+  --bootstrapPrimary: #007bff;
+  --bootstrapWarning: #ffc107;
+  --bootstrapSuccess: #28a745;
+  --customDark: #111;
+  --customLight: #fbfbfb;
+
+  --backgroundColor-colorMode-1: #fbfbfb;
+  --color-colorMode-1: #111;
+  --backgroundColor-colorMode-2: #fff;
+  --color-colorMode-2: #181818;
+  --border-customBorder: 1px solid #777;
+  --bootstrapButtonsColor: #343a40;
+  --bootstrapButtonsHover: #fff;
+  --bootstrapButtonsFocus: 0 0 0 .2rem rgba(52,58,64,.5);
+  --tooltip-arrow-color: #111;
+}
+
+[data-theme="dark"] {
+  --backgroundColor-colorMode-1: #111;
+  --color-colorMode-1: #fff;
+  --backgroundColor-colorMode-2: #181818;
+  --color-colorMode-2: #fff;
+  --border-customBorder: 1px solid #fbfbfb;
+  --bootstrapButtonsColor: #f8f9fa;
+  --bootstrapButtonsHover: #212529;
+  --bootstrapButtonsFocus: 0 0 0 .2rem rgba(249,249,250,.5);
+  --tooltip-arrow-color: #fff;
+}
