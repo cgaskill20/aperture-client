@@ -64,6 +64,7 @@ class AutoQuery {
         this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
         this.layerIDs = [];
         this.enabled = false;
+        this.geohashCache = [];
     }
 
     /**
@@ -99,7 +100,6 @@ class AutoQuery {
                 this.constraintData[constraint][value] = isActive;
                 break;
         }
-
         this.reQuery();
     }
 
@@ -112,6 +112,7 @@ class AutoQuery {
     reQuery() {
         if (this.enabled) {
             this.clearMapLayers();
+            this.geohashCache = [];
             this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
             this.query();
         }
@@ -172,48 +173,35 @@ class AutoQuery {
             let relevantGISJOINS = [];
             let relevantData = [];
             const sessionID = Math.random().toString(36).substring(2, 15);
-            AutoQuery.GISJOINWorker.port.postMessage({
+            this.backgroundLoader.port.postMessage({
                 type: "query",
                 senderID: sessionID,
-                resolution: this.linked === "tract_geo_140mb" ? 'tract' : 'county',
                 bounds: this.map.getBounds(),
                 blacklist: this.geohashCache
             })
-            AutoQuery.GISJOINWorker.port.onmessage = msg => {
-                if (msg.data.senderID === sessionID && msg.data.type === "data") {
-                    if(Object.keys(msg.data.data).length)
-                        this.geohashCache = [...new Set([...Object.keys(msg.data.data),...this.geohashCache])];
-                    else
-                        return
-                    this.backgroundLoader.port.postMessage({
-                        senderID: sessionID,
-                        type: "query",
-                        query: msg.data.data
-                    });
-
-                    this.backgroundLoader.port.onmessage = msgBg => {
-                        const data = msgBg.data;
-                        if(data.senderID === sessionID && data.type === "data"){
-                            //populate cache
-                            console.log(data.data.data)
-                            relevantGISJOINS = [...new Set([...data.data.GISJOINS,...relevantGISJOINS])];
-                            relevantData = [...new Set([...data.data.data,...relevantData])];
-                            if(relevantGISJOINS.length > 100){
-                                this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": relevantGISJOINS } } }],relevantData);
-                                relevantGISJOINS = [];
-                            }
-                        }
-                        else if(data.senderID === sessionID && data.type === "end"){
-                            if(relevantGISJOINS.length)
-                                this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": relevantGISJOINS } } }],relevantData);
-                        }
+            this.backgroundLoader.port.onmessage = msg => {
+                const data = msg.data;
+                console.log(data)
+                if (data.senderID === sessionID && data.type === "data") {
+                    //populate cache
+                    console.log(data.data.data)
+                    relevantGISJOINS = [...new Set([...data.data.GISJOINS, ...relevantGISJOINS])];
+                    relevantData = [...new Set([...data.data.data, ...relevantData])];
+                    this.geohashCache = [...new Set([...data.data.geohashes, ...this.geohashCache])];
+                    if (relevantGISJOINS.length > 100) {
+                        this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": relevantGISJOINS } } }], relevantData);
+                        relevantGISJOINS = [];
                     }
+                }
+                else if (data.senderID === sessionID && data.type === "end") {
+                    if (relevantGISJOINS.length)
+                        this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": relevantGISJOINS } } }], relevantData);
                 }
             }
         }
     }
 
-    bindConstraintsAndQuery(q,forcedGeometry){
+    bindConstraintsAndQuery(q, forcedGeometry) {
         q = q.concat(this.buildConstraintPipeline());
         this.queryWorker.port.postMessage({
             type: "query",

@@ -27,20 +27,17 @@ class GeometryLoader {
     getCachedData(geohashes){
         if(!Object.keys(this.cache).length)
             return null;
-        console.log(Object.keys(this.cache))
         const geohashesCached = Object.keys(this.cache).filter((current) => {
             if(geohashes.includes(current)) 
                 return true
             return false
         });
-        console.log(geohashesCached)
         let resultList = [];
         let resultGISJOINS = [];
         for(const gh of geohashesCached){
             resultList = this.addListToListNoDuplicates(this.cache[gh],resultList)
             resultGISJOINS = this.addListToListNoDuplicates(this.cache[gh].map(f => {return f.GISJOIN}),resultGISJOINS)
         }
-
         return {
             geohashes: geohashesCached,
             GISJOINS: resultGISJOINS,
@@ -74,15 +71,13 @@ class GeometryLoader {
         });
         stream.on('end', (e) => {
             responseFunction("END");
+            return;
         });
     }
 
     getInvertedGeohashGISJOINMap(geohashesGISJOINS){
         const reverse = {};
         for(const geohash in geohashesGISJOINS){
-            console.log(geohashesGISJOINS)
-            console.log(geohash)
-            console.log(geohashesGISJOINS[geohash])
             for(const GISJOIN of geohashesGISJOINS[geohash]){
                 if(!reverse[GISJOIN])
                     reverse[GISJOIN] = [];

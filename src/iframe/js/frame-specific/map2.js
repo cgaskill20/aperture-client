@@ -58,21 +58,23 @@ const dataExplorationGroup = L.layerGroup().addTo(map);
 const dataModelingGroup = L.layerGroup();
 window.dataModelingGroup = dataModelingGroup;
 
-const backgroundTract = new SharedWorker("js/library/geometryLoaderWorker.js");
-const backgroundCounty = new SharedWorker("js/library/geometryLoaderWorker.js");
+let bgTractId = "bgTract";
+let bgCountyId = "bgCounty";
+const backgroundTract = new SharedWorker("js/library/geometryLoaderWorker.js", {name: `Background tract worker: ${bgTractId}`});
+const backgroundCounty = new SharedWorker("js/library/geometryLoaderWorker.js", {name: `Background county worker: ${bgCountyId}`});
 backgroundTract.port.postMessage({
     senderID: null,
     type: "config",
-    collection: "tract_geo_140mb"
+    collection: "tract_geo_140mb",
+    id: bgTractId
 });
+randID = Math.random().toString(36).substring(2, 15);
 backgroundCounty.port.postMessage({
     senderID: null,
     type: "config",
-    collection: "county_geo_GISJOIN"
+    collection: "county_geo_GISJOIN", 
+    id: bgCountyId
 });
-backgroundCounty.onerror = (e) => console.log
-backgroundCounty.port.onmessageerror = (e) => console.log
-console.log(backgroundCounty)
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty
 
