@@ -6,6 +6,8 @@
  * @notes Work in progress!
  */
 
+const { features } = require("process");
+
 class AutoQuery {
     static GISJOINWorker = new SharedWorker('js/library/GISJOINQueryWorker.js');
     /**
@@ -35,10 +37,7 @@ class AutoQuery {
         if (this.data.linkedGeometry) { //linked geometry stuff
             this.linked = this.data.linkedGeometry;
             this.backgroundLoader = this.linked === "tract_geo_140mb" ? window.backgroundTract : window.backgroundCounty;
-            this.backgroundLoader.addNewResultListener(function (updates) {
-                if (this.enabled)
-                    this.listenForLinkedGeometryUpdates(updates);
-            }.bind(this));
+            this.geohashCache = [];
         }
 
         this.color = layerData.color;
@@ -107,19 +106,6 @@ class AutoQuery {
     }
 
     /**
-      * Waits for geometry updates from an external source, then automatically
-      * runs a query with the given geometry.
-      * This is only used for layers with linked geometry (census tracts, counties)
-      * @memberof AutoQuery
-      * @method listenForLinkedGeometryUpdates
-      * @param {Array<GeoJSON>} updates array of GeoJSON fields which each must
-      *  constain a "GISJOIN" property.
-      */
-    listenForLinkedGeometryUpdates(updates) {
-        this.query(updates);
-    }
-
-    /**
       * Restarts querying. This is used whenever a constraint changes, as any
       * layers or existing queries are no longer relevant.
       * @memberof AutoQuery
@@ -176,24 +162,40 @@ class AutoQuery {
       * which can overide any automatic stuff. This parameter is ONLY used when
       * new features come in with @method listenForLinkedGeometryUpdates
       */
-    query(forcedGeometry) {
+    query() {
         let q = [];
         if (!this.linked) {
             const b = this.map.wrapLatLngBounds(this.map.getBounds());
             const barray = Util.leafletBoundsToGeoJSONPoly(b);
             q.push({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }); //only get geometry in viewport
-            this.bindConstraintsAndQuery(q,forcedGeometry)
+            this.bindConstraintsAndQuery(q)
         }
         else {
+            const sessionID = Math.random().toString(36).substring(2, 15);
             AutoQuery.GISJOINWorker.port.postMessage({
                 type: "query",
+                senderID: sessionID,
                 resolution: this.linked === "tract_geo_140mb" ? 'tract' : 'county',
-                bounds: this.map.getBounds()
+                bounds: this.map.getBounds(),
+                blacklist: this.geohashCache
             })
             AutoQuery.GISJOINWorker.port.onmessage = msg => {
-                if (msg.data.type === "data") {
-                    q.push({ "$match": { "GISJOIN": { "$in": msg.data.GISJOINS } } });
-                    this.bindConstraintsAndQuery(q,forcedGeometry)
+                if (msg.data.senderID === sessionID && msg.data.type === "data") {
+                    this.backgroundLoader.port.postMessage({
+                        senderID: sessionID,
+                        type: "query",
+                        query: msg.data.data
+                    });
+
+                    this.backgroundLoader.port.onmessage = msgBg => {
+                        const data = msgBg.data;
+                        if(data.senderID === sessionID && data.type === "data"){
+                            //populate cache
+                            this.geohashCache = [...new Set([...data.data.geohashes,...this.geohashCache])];
+                            q.push({ "$match": { "GISJOIN": { "$in": data.data.GISJOINS } } });
+                            this.bindConstraintsAndQuery(q,data.data.data /*hmmmmm...*/);
+                        }
+                    }
                 }
             }
         }
@@ -240,7 +242,7 @@ class AutoQuery {
       */
     renderData(data, forcedGeometry) {
         if (this.linked) {
-            const GeoJSON = JSON.parse(JSON.stringify(this.backgroundLoader.getGeometryFromGISJOIN(data.GISJOIN, forcedGeometry)));
+            const GeoJSON = forcedGeometry.find(feature => feature.GISJOIN === data.GISJOIN);
             if (!GeoJSON)
                 return;
             Util.normalizeFeatureID(GeoJSON)

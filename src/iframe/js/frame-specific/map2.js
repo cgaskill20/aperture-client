@@ -58,11 +58,21 @@ const dataExplorationGroup = L.layerGroup().addTo(map);
 const dataModelingGroup = L.layerGroup();
 window.dataModelingGroup = dataModelingGroup;
 
-const backgroundTract = new GeometryLoader("tract_geo_140mb", window.map, 300);
-const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
-
+const backgroundTract = new SharedWorker("js/library/GeometryWorker.js");
+const backgroundCounty = new SharedWorker("js/library/GeometryWorker.js");
+backgroundTract.port.postMessage({
+    senderID: null,
+    type: "config",
+    collection: "tract_geo_140mb"
+});
+backgroundCounty.port.postMessage({
+    senderID: null,
+    type: "config",
+    collection: "county_geo_GISJOIN"
+});
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty
+
 
 map.on('click', function () {
     closeNav();
@@ -168,7 +178,7 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
 
 const modelContainer = document.getElementById("model-container");
 ReactDOM.render(e(ModelMenu), modelContainer);
-const gisjoinworker = new SharedWorker('js/library/GISJOINQueryWorker.js')
+//const gisjoinworker = new SharedWorker('js/library/GISJOINQueryWorker.js')
 let j = 0;
 map.on("moveend zoomend", function (e) {
     updateLayers();

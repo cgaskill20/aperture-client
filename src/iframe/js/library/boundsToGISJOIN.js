@@ -3,6 +3,21 @@ const BoundsToGISJOIN = {
     countyBuckets: null, //loaded at end of file
     geohashResolution: 3,
 
+    boundsToData: function(bounds,level,blacklist){
+        let geohashes = this.boundsToLengthNGeohashes(bounds);
+        geohashes = geohashes.filter((geohash) => {
+            return !blacklist.includes(geohash);
+        });
+        const datasource = level === "tract" ? this.tractBuckets : this.countyBuckets;
+        if(datasource){
+            const data = {};
+            for(const geohash of geohashes)
+                data[geohash] = datasource[geohash];
+            return data;
+        }
+        return {};
+    },
+
     boundsToGISJOINS: function(bounds,level){
         const geohashes = this.boundsToLengthNGeohashes(bounds);
         const datasource = level === "tract" ? this.tractBuckets : this.countyBuckets;
