@@ -69,7 +69,8 @@ const MenuGenerator = {
                 columnsAndHeadings[mergeWithDefalt["group"]][mergeWithDefalt["subGroup"]] = {};
             }
             columnsAndHeadings[mergeWithDefalt["group"]][mergeWithDefalt["subGroup"]][obj] = mergeWithDefalt;
-        }        return columnsAndHeadings;
+        }        
+        return columnsAndHeadings;
     },
 
     /** Helper method for @method generate
