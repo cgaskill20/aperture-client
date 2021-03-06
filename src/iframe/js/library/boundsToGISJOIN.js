@@ -3,14 +3,36 @@ const BoundsToGISJOIN = {
     countyBuckets: null, //loaded at end of file
     geohashResolution: 3,
 
+    boundsToGISJOINS: function(bounds,level){
+        const geohashes = this.boundsToLengthNGeohashes(bounds);
+        const datasource = level === "tract" ? this.tractBuckets : this.countyBuckets;
+        if(datasource)
+            return this.geohashesToGISJOINS(geohashes,datasource);
+        return []
+    },
+
     boundsToLengthNGeohashes: function(bounds) {
         const geohashCorners = {
-            sw: encode_geohash(bounds.getSouth(),bounds.getWest(),this.geohashResolution),
-            se: encode_geohash(bounds.getSouth(),bounds.getEast(),this.geohashResolution),
-            nw: encode_geohash(bounds.getNorth(),bounds.getWest(),this.geohashResolution),
-            ne: encode_geohash(bounds.getNorth(),bounds.getEast(),this.geohashResolution)
+            sw: encode_geohash(bounds._southWest.lat,bounds._southWest.lng,this.geohashResolution),
+            se: encode_geohash(bounds._southWest.lat,bounds._northEast.lng,this.geohashResolution),
+            nw: encode_geohash(bounds._northEast.lat,bounds._southWest.lng,this.geohashResolution),
+            ne: encode_geohash(bounds._northEast.lat,bounds._northEast.lng,this.geohashResolution)
         }
-        let geohashesInViewport = this.fillInSpace(geohashCorners)
+        return this.fillInSpace(geohashCorners)
+    },
+
+    fillInSpace: function(corners){
+        let space = [];
+        const southernBorder = this.getSouthernBorder(corners);
+        let slidingBorder = JSON.parse(JSON.stringify(southernBorder))
+        space = this.addListToListNoDuplicates(slidingBorder,space)
+        while(slidingBorder[0] !== corners.nw){ //go bottom to top
+            for(let i = 0; i < slidingBorder.length; i++){
+                slidingBorder[i] = geohash_adjacent(slidingBorder[i],'n')
+            }
+            space = this.addListToListNoDuplicates(slidingBorder,space)
+        }
+        return space;
     },
 
     addToListNoDuplicates: function(toAdd,list) {
@@ -23,14 +45,6 @@ const BoundsToGISJOIN = {
         return [...new Set([...listToAdd,...list])];
     },
 
-    fillInSpace: function(corners){
-        console.log(corners)
-        let space = [];
-        for(const corner in corners)
-            space = this.addToListNoDuplicates(corners[corner],space)
-        space = this.addToListNoDuplicates(getSouthernBorder(corners),space)
-    },
-
     getSouthernBorder(corners){
         //go sw to se
         let bottomBorder = [corners.sw];
@@ -40,8 +54,20 @@ const BoundsToGISJOIN = {
             bottomBorder.push(recent);
         }
         return bottomBorder;
+    },
+
+    geohashesToGISJOINS(geohashes,datasource){
+        let GISJOINS = [];
+        for(const geohash of geohashes)
+            if(datasource[geohash])
+                GISJOINS = this.addListToListNoDuplicates(datasource[geohash],GISJOINS)
+        return GISJOINS;
     }
 }
-$.getJSON("json/tractGeohashBuckets.json", async function (d) { //this isnt on the mongo server yet so query it locally
-    BoundsToGISJOIN.tractBuckets = d;
-});
+
+fetch('../../json/tractGeohashBuckets.json')
+  .then(response => response.json())
+  .then(data => BoundsToGISJOIN.tractBuckets = data);
+  fetch('../../json/countyGeohashBuckets.json')
+  .then(response => response.json())
+  .then(data => BoundsToGISJOIN.countyBuckets = data);

@@ -7,6 +7,7 @@
  */
 
 class AutoQuery {
+    static GISJOINWorker = new SharedWorker('js/library/GISJOINQueryWorker.js');
     /**
       * Constructs the instance of the autoquerier to a specific layer
       * @memberof AutoQuery
@@ -33,7 +34,7 @@ class AutoQuery {
 
         if (this.data.linkedGeometry) { //linked geometry stuff
             this.linked = this.data.linkedGeometry;
-            this.backgroundLoader = this.linked === "tract_geo_GISJOIN" ? window.backgroundTract : window.backgroundCounty;
+            this.backgroundLoader = this.linked === "tract_geo_140mb" ? window.backgroundTract : window.backgroundCounty;
             this.backgroundLoader.addNewResultListener(function (updates) {
                 if (this.enabled)
                     this.listenForLinkedGeometryUpdates(updates);
@@ -181,15 +182,26 @@ class AutoQuery {
             const b = this.map.wrapLatLngBounds(this.map.getBounds());
             const barray = Util.leafletBoundsToGeoJSONPoly(b);
             q.push({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }); //only get geometry in viewport
+            this.bindConstraintsAndQuery(q,forcedGeometry)
         }
         else {
-            // if (!forcedGeometry)
-            //     this.backgroundLoader.runQuery();
-            const GISJOINS = forcedGeometry ? this.backgroundLoader.convertArrayToGISJOINS(forcedGeometry) : this.backgroundLoader.getCachedGISJOINS();
-            q.push({ "$match": { "GISJOIN": { "$in": GISJOINS } } });
+            AutoQuery.GISJOINWorker.port.postMessage({
+                type: "query",
+                resolution: this.linked === "tract_geo_140mb" ? 'tract' : 'county',
+                bounds: this.map.getBounds()
+            })
+            AutoQuery.GISJOINWorker.port.onmessage = msg => {
+                if (msg.data.type === "data") {
+                    q.push({ "$match": { "GISJOIN": { "$in": msg.data.GISJOINS } } });
+                    this.bindConstraintsAndQuery(q,forcedGeometry)
+                }
+            }
         }
-        q = q.concat(this.buildConstraintPipeline());
+    }
 
+    bindConstraintsAndQuery(q,forcedGeometry){
+        q = q.concat(this.buildConstraintPipeline());
+        console.log(q)
         this.queryWorker.port.postMessage({
             type: "query",
             collection: this.collection,

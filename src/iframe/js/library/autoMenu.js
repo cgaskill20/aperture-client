@@ -59,7 +59,7 @@ const AutoMenu = {
                 if(metadata.level){
                     autoMenuLayer["group"] = "Tract, County, & State Data";
                     autoMenuLayer["subGroup"] = metadata.level === "tract" ? "Tract Level" : "County Level";
-                    autoMenuLayer["linkedGeometry"] = metadata.level === "tract" ? "tract_geo_GISJOIN" : "county_geo_GISJOIN";
+                    autoMenuLayer["linkedGeometry"] = metadata.level === "tract" ? "tract_geo_140mb" : "county_geo_GISJOIN";
                     autoMenuLayer["joinProperty"] = "GISJOIN";
                 }
                 else{

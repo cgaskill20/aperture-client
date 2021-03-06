@@ -647,5 +647,80 @@ proto.sustain.SustainPromiseClient.prototype.modelQuery =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.sustain.DirectRequest,
+ *   !proto.sustain.DirectResponse>}
+ */
+const methodDescriptor_Sustain_DirectQuery = new grpc.web.MethodDescriptor(
+  '/sustain.Sustain/DirectQuery',
+  grpc.web.MethodType.SERVER_STREAMING,
+  proto.sustain.DirectRequest,
+  proto.sustain.DirectResponse,
+  /**
+   * @param {!proto.sustain.DirectRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.sustain.DirectResponse.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.sustain.DirectRequest,
+ *   !proto.sustain.DirectResponse>}
+ */
+const methodInfo_Sustain_DirectQuery = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.sustain.DirectResponse,
+  /**
+   * @param {!proto.sustain.DirectRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.sustain.DirectResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.sustain.DirectRequest} request The request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.sustain.DirectResponse>}
+ *     The XHR Node Readable Stream
+ */
+proto.sustain.SustainClient.prototype.directQuery =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/sustain.Sustain/DirectQuery',
+      request,
+      metadata || {},
+      methodDescriptor_Sustain_DirectQuery);
+};
+
+
+/**
+ * @param {!proto.sustain.DirectRequest} request The request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.sustain.DirectResponse>}
+ *     The XHR Node Readable Stream
+ */
+proto.sustain.SustainPromiseClient.prototype.directQuery =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/sustain.Sustain/DirectQuery',
+      request,
+      metadata || {},
+      methodDescriptor_Sustain_DirectQuery);
+};
+
+
 module.exports = proto.sustain;
 

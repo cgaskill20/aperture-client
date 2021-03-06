@@ -1,4 +1,4 @@
-const {Query, CompoundRequest, JsonModelRequest} = require("./sustain_pb.js")
+const {Query, CompoundRequest, JsonModelRequest, DirectRequest} = require("./sustain_pb.js")
 const {SustainClient, JsonProxyClient} = require('./sustain_grpc_web_pb.js');
 
 /**
@@ -36,14 +36,10 @@ SustainQuerier = {
       *         The gRPC query stream
       */
     getStreamForQuery: function (host, port, collection, query) {
-        const request = new CompoundRequest();
-        const q = new Query();
-        q.setHost(host);
-        q.setPort(port);
-        q.setCollection(collection);
-        q.setQuery(query);
-        request.setFirstQuery(q);
-        return this.service.compoundQuery(request, {});
+        const request = new DirectRequest();
+        request.setCollection(collection);
+        request.setQuery(query);
+        return this.service.directQuery(request, {});
     },
 
     /**

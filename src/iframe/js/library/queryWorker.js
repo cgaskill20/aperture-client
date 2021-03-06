@@ -1,4 +1,3 @@
-
 importScripts('./smartQuerier.js');
 importScripts('../grpc/GRPC_Querier/grpc_querier.bundle.js');
 

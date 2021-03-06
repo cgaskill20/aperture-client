@@ -40,7 +40,7 @@ class GeometryLoader {
         return this.convertArrayToGISJOINS(this.cache);
     }
 
-    getCache(){
+    getCache() {
         return this.cache;
     }
 
@@ -68,7 +68,7 @@ class GeometryLoader {
       * array of GeoJSON features whenever new results come in.
       */
     addNewResultListener(func) {
-        if(!this.listeners.includes(func))
+        if (!this.listeners.includes(func))
             this.listeners.push(func);
     }
 
@@ -79,8 +79,8 @@ class GeometryLoader {
       * @param {Function} func function which will be removed
       */
     removeResultListener(func) {
-        if(this.listeners.includes(func))
-            this.listeners.splice(1,this.listeners.indexOf(func));
+        if (this.listeners.includes(func))
+            this.listeners.splice(1, this.listeners.indexOf(func));
     }
 
     /**
@@ -128,12 +128,17 @@ class GeometryLoader {
       * @memberof GeometryLoader
       * @method getData
       */
-    getData() {
+    async getData() {
+        if(this.collection === "county_geo_GISJOIN") return;
         let newResults = [];
+        const spatialQuery = await this.getBasicSpatialQuery();
+        console.log(this.collection)
+        console.log(spatialQuery)
+        console.log("gotSpatialQuery")
         this.queryWorker.port.postMessage({
             type: "query",
             collection: this.collection,
-            queryParams: this.getBasicSpatialQuery(),
+            queryParams: spatialQuery,
         });
 
         this.queryWorker.port.onmessage = msg => {
@@ -159,6 +164,7 @@ class GeometryLoader {
                 this.broadcastNewResults(newResults);
             }
         };
+
     }
 
     /**
@@ -205,8 +211,20 @@ class GeometryLoader {
       * @memberof GeometryLoader
       * @method getBasicSpatialQuery
       */
-    getBasicSpatialQuery() {
-        return [{ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [this.getMapBoundsArray()] } } } } }];
+    async getBasicSpatialQuery() {
+        return new Promise(((resolve) => {
+            AutoQuery.GISJOINWorker.port.postMessage({
+                type: "query",
+                resolution: this.collection === "tract_geo_140mb" ? 'tract' : 'county',
+                bounds: this.map.getBounds()
+            })
+            AutoQuery.GISJOINWorker.port.onmessage = msg => {
+                if (msg.data.type === "data") {
+                    resolve([{ "$match": { "GISJOIN": { "$in": msg.data.GISJOINS } } }]);
+                }
+            }
+        }));
+        //return [{ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [this.getMapBoundsArray()] } } } } }];
     }
 }
 

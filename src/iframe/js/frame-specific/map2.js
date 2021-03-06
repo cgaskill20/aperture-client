@@ -58,7 +58,7 @@ const dataExplorationGroup = L.layerGroup().addTo(map);
 const dataModelingGroup = L.layerGroup();
 window.dataModelingGroup = dataModelingGroup;
 
-const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
+const backgroundTract = new GeometryLoader("tract_geo_140mb", window.map, 300);
 const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
 
 window.backgroundTract = backgroundTract;
@@ -168,12 +168,24 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
 
 const modelContainer = document.getElementById("model-container");
 ReactDOM.render(e(ModelMenu), modelContainer);
-
+const gisjoinworker = new SharedWorker('js/library/GISJOINQueryWorker.js')
+let j = 0;
 map.on("moveend zoomend", function (e) {
     updateLayers();
     backgroundCounty.runQuery();
     backgroundTract.runQuery();
-    BoundsToGISJOIN.boundsToLengthNGeohashes(map.getBounds())
+    // console.time("get all gisjoins")
+    // gisjoinworker.port.postMessage({
+    //     type: "query",
+    //     bounds: map.getBounds(),
+    //     resolution: "county"
+    // });
+    // gisjoinworker.port.onmessage = function (msg) {
+    //     if (msg.data.type == "data") {
+    //         console.timeEnd("get all gisjoins")
+    //         console.log(msg.data.GISJOINS)
+    //     }
+    // }.bind(this);
 });
 map.on("move", function (e) {
     parent.setGlobalPosition(map.getCenter(), MAPNUMBER);
