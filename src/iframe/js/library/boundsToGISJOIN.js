@@ -11,8 +11,10 @@ const BoundsToGISJOIN = {
         const datasource = level === "tract" ? this.tractBuckets : this.countyBuckets;
         if(datasource){
             const data = {};
-            for(const geohash of geohashes)
-                data[geohash] = datasource[geohash];
+            for(const geohash of geohashes){
+                if(datasource[geohash])
+                    data[geohash] = datasource[geohash];
+            }
             return data;
         }
         return {};

@@ -35,15 +35,18 @@ onconnect = function (p) {
 
     const performQuery = (query, senderID) => {
         const cached = loader.getCachedData(Object.keys(query))
-        if (cached.data.length) {
-            queryResponse(cached)
+        if (cached) {
+            if (cached.data.length) {
+                queryResponse(cached)
+            }
+            for (const geohash of cached.geohashes)
+                delete query[geohash];
         }
-        for (const geohash of cached.geohashes)
-            delete query[geohash];
         loader.getNonCachedData(query, (data) => queryResponse(data, senderID))
     }
 
     port.onmessage = function (msg) {
+        console.log("here99")
         const data = msg.data;
         const sID = data.senderID;
         switch (data.type) {

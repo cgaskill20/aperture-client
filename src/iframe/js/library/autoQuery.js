@@ -6,8 +6,6 @@
  * @notes Work in progress!
  */
 
-const { features } = require("process");
-
 class AutoQuery {
     static GISJOINWorker = new SharedWorker('js/library/GISJOINQueryWorker.js');
     /**
@@ -171,6 +169,8 @@ class AutoQuery {
             this.bindConstraintsAndQuery(q)
         }
         else {
+            let relevantGISJOINS = [];
+            let relevantData = [];
             const sessionID = Math.random().toString(36).substring(2, 15);
             AutoQuery.GISJOINWorker.port.postMessage({
                 type: "query",
@@ -181,6 +181,10 @@ class AutoQuery {
             })
             AutoQuery.GISJOINWorker.port.onmessage = msg => {
                 if (msg.data.senderID === sessionID && msg.data.type === "data") {
+                    if(Object.keys(msg.data.data).length)
+                        this.geohashCache = [...new Set([...Object.keys(msg.data.data),...this.geohashCache])];
+                    else
+                        return
                     this.backgroundLoader.port.postMessage({
                         senderID: sessionID,
                         type: "query",
@@ -191,9 +195,17 @@ class AutoQuery {
                         const data = msgBg.data;
                         if(data.senderID === sessionID && data.type === "data"){
                             //populate cache
-                            this.geohashCache = [...new Set([...data.data.geohashes,...this.geohashCache])];
-                            q.push({ "$match": { "GISJOIN": { "$in": data.data.GISJOINS } } });
-                            this.bindConstraintsAndQuery(q,data.data.data /*hmmmmm...*/);
+                            console.log(data.data.data)
+                            relevantGISJOINS = [...new Set([...data.data.GISJOINS,...relevantGISJOINS])];
+                            relevantData = [...new Set([...data.data.data,...relevantData])];
+                            if(relevantGISJOINS.length > 100){
+                                this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": relevantGISJOINS } } }],relevantData);
+                                relevantGISJOINS = [];
+                            }
+                        }
+                        else if(data.senderID === sessionID && data.type === "end"){
+                            if(relevantGISJOINS.length)
+                                this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": relevantGISJOINS } } }],relevantData);
                         }
                     }
                 }
@@ -203,7 +215,6 @@ class AutoQuery {
 
     bindConstraintsAndQuery(q,forcedGeometry){
         q = q.concat(this.buildConstraintPipeline());
-        console.log(q)
         this.queryWorker.port.postMessage({
             type: "query",
             collection: this.collection,

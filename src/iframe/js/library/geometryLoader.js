@@ -25,18 +25,20 @@ class GeometryLoader {
 
     //public functions ------------------------
     getCachedData(geohashes){
-        const geohashesCached = Object.keys(this.cache).reduce((accumulate,current) => {
-            if(!accumulate) 
-                accumulate = [];
+        if(!Object.keys(this.cache).length)
+            return null;
+        console.log(Object.keys(this.cache))
+        const geohashesCached = Object.keys(this.cache).filter((current) => {
             if(geohashes.includes(current)) 
-                accumulate.push(current)
+                return true
+            return false
         });
-
+        console.log(geohashesCached)
         let resultList = [];
         let resultGISJOINS = [];
         for(const gh of geohashesCached){
             resultList = this.addListToListNoDuplicates(this.cache[gh],resultList)
-            resultGISJOINS = this.addListToListNoDuplicates(this.cache[gh].GISJOIN,resultGISJOINS)
+            resultGISJOINS = this.addListToListNoDuplicates(this.cache[gh].map(f => {return f.GISJOIN}),resultGISJOINS)
         }
 
         return {
@@ -58,13 +60,17 @@ class GeometryLoader {
         const stream = this.querier.getStreamForQuery(null,null,this.collection,JSON.stringify(q));
         stream.on('data', (r) => {
             const data = JSON.parse(r.getData());
-            const geohash = invertedMap[data.GISJOIN];
+            const geohashes = invertedMap[data.GISJOIN];
             responseFunction({
-                geohashes: [geohash],
+                geohashes: geohashes,
                 GISJOINS: [data.GISJOIN],
                 data: [data]
             });
-            this.cache[geohash] = this.addListToListNoDuplicates(this.cache[geohash],[data]);
+            for(const geohash of geohashes){
+                if(!this.cache[geohash]) 
+                    this.cache[geohash] = []
+                this.cache[geohash] = this.addListToListNoDuplicates(this.cache[geohash],[data]);
+            }
         });
         stream.on('end', (e) => {
             responseFunction("END");
@@ -73,9 +79,16 @@ class GeometryLoader {
 
     getInvertedGeohashGISJOINMap(geohashesGISJOINS){
         const reverse = {};
-        for(const geohash in geohashesGISJOINS)
-            for(const GISJOIN of geohashesGISJOINS[geohash])
-                reverse[GISJOIN] = [...reverse[GISJOIN],geohash];
+        for(const geohash in geohashesGISJOINS){
+            console.log(geohashesGISJOINS)
+            console.log(geohash)
+            console.log(geohashesGISJOINS[geohash])
+            for(const GISJOIN of geohashesGISJOINS[geohash]){
+                if(!reverse[GISJOIN])
+                    reverse[GISJOIN] = [];
+                reverse[GISJOIN] = this.addListToListNoDuplicates([geohash],reverse[GISJOIN]);
+            }
+        }
         return reverse;
     }   
 

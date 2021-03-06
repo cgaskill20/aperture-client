@@ -58,8 +58,8 @@ const dataExplorationGroup = L.layerGroup().addTo(map);
 const dataModelingGroup = L.layerGroup();
 window.dataModelingGroup = dataModelingGroup;
 
-const backgroundTract = new SharedWorker("js/library/GeometryWorker.js");
-const backgroundCounty = new SharedWorker("js/library/GeometryWorker.js");
+const backgroundTract = new SharedWorker("js/library/geometryLoaderWorker.js");
+const backgroundCounty = new SharedWorker("js/library/geometryLoaderWorker.js");
 backgroundTract.port.postMessage({
     senderID: null,
     type: "config",
@@ -70,6 +70,9 @@ backgroundCounty.port.postMessage({
     type: "config",
     collection: "county_geo_GISJOIN"
 });
+backgroundCounty.onerror = (e) => console.log
+backgroundCounty.port.onmessageerror = (e) => console.log
+console.log(backgroundCounty)
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty
 
@@ -182,8 +185,6 @@ ReactDOM.render(e(ModelMenu), modelContainer);
 let j = 0;
 map.on("moveend zoomend", function (e) {
     updateLayers();
-    backgroundCounty.runQuery();
-    backgroundTract.runQuery();
     // console.time("get all gisjoins")
     // gisjoinworker.port.postMessage({
     //     type: "query",
