@@ -1,30 +1,17 @@
 let darkMode = true;
 function switchImageSources() {
-	let dropdownArrow = document.getElementsByClassName("dropdown-arrow");
-	let tooltipIcon = document.getElementsByClassName("tool-tip");
-	let moonIcon = document.getElementsByClassName("moon-icon");
+	let dropdownArrow = Array.prototype.slice.call(document.getElementsByClassName("dropdown-arrow"));
+	let tooltipIcon = Array.prototype.slice.call(document.getElementsByClassName("tool-tip"));
+	let moonIcon = Array.prototype.slice.call(document.getElementsByClassName("moon-icon"));
 	if(darkMode) {
-		// dropdownArrow.forEach(element => element.src="../../images/Dropdown_White.png");
-		for(let i = 0; i < dropdownArrow.length; i++) {
-	 		dropdownArrow[i].src="../../images/Dropdown_White.png";
-		}
-		for(let i = 0; i < tooltipIcon.length; i++) {
-			tooltipIcon[i].src="../../images/Info_White.png";
-		}
-		for(let i = 0; i < moonIcon.length; i++) {
-			moonIcon[i].src="../../images/Moon_White.png";
-		}
+		dropdownArrow.forEach(element => element.src="../../images/Dropdown_White.png");
+		tooltipIcon.forEach(element => element.src="../../images/Info_White.png");
+		moonIcon.forEach(element => element.src="../../images/Moon_White.png");
 	}
 	else {
-		for(let i = 0; i < dropdownArrow.length; i++) {
-			dropdownArrow[i].src="../../images/Dropdown_Black.png";
-		}
-		for(let i = 0; i < tooltipIcon.length; i++) {
-			tooltipIcon[i].src="../../images/Info_Black.png";
-		}
-		for(let i = 0; i < moonIcon.length; i++) {
-			moonIcon[i].src="../../images/Moon_Black.png";
-		}
+		dropdownArrow.forEach(element => element.src="../../images/Dropdown_Black.png");
+		tooltipIcon.forEach(element => element.src="../../images/Info_Black.png");
+		moonIcon.forEach(element => element.src="../../images/Moon_Black.png");
 	}
 	darkMode = !darkMode;
 }
