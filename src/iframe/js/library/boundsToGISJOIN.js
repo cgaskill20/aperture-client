@@ -13,7 +13,6 @@ const BoundsToGISJOIN = {
             .then(response => response.json())
             .then(data => {
                 BoundsToGISJOIN.buckets = data
-                console.log(`Loaded ${collection} buckets`)
             }
             );
     },

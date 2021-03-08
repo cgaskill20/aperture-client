@@ -132,7 +132,6 @@ class SmartQuerier {
       */
     wrapResponseCallback(collection, callback) {
         let onResponseCallback = (response) => {
-            console.log("hereee")
             const data = JSON.parse(response.getData());
             this.addToCache(collection, data);
             callback(data);
