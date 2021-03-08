@@ -180,14 +180,12 @@ class AutoQuery {
                 bounds: this.map.getBounds(),
                 blacklist: this.geohashCache
             })
-            console.log(`sID: ${sessionID} - queried.`)
             const responseListener = msg => {
                 const data = msg.data;
                 //check that the data is sent from this querier
                 if (data.senderID !== sessionID)
                     return;
                 if (data.type === "data") {
-                    console.log(`sID: ${sessionID} - received ${data.data.data.length}`)
                     //populate records & cache with no duplicates
                     relevantData = this.addToExistingFeaturesNoDuplicates(relevantData, data.data.data);
                     this.geohashCache = [...new Set([...data.data.geohashes, ...this.geohashCache])];
@@ -197,7 +195,6 @@ class AutoQuery {
                     }
                 }
                 else if (data.type === "end") {
-                    console.log(`sID: ${sessionID} - ended`)
                     //close the listener
                     this.backgroundLoader.port.removeEventListener("message", responseListener);
                     if (relevantData.length)
@@ -273,10 +270,13 @@ class AutoQuery {
       */
     renderData(data, forcedGeometry) {
         if (this.linked) {
-            const GeoJSON = forcedGeometry.find(feature => feature.GISJOIN === data.GISJOIN);
+            const GeoJSONRef = forcedGeometry.find(feature => feature.GISJOIN === data.GISJOIN);
+            const GeoJSON = JSON.parse(JSON.stringify(GeoJSONRef));
             if (!GeoJSON)
                 return;
             Util.normalizeFeatureID(GeoJSON)
+            if(this.layerIDs.find(id => id.split("_")[0] === GeoJSON.id))
+                return;
             GeoJSON.id = `${GeoJSON.id}_${data.id}`
             if (this.layerIDs.includes(GeoJSON.id))
                 return;

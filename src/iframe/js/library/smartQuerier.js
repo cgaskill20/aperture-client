@@ -109,8 +109,7 @@ class SmartQuerier {
      */
     query(collection, queryParams, onDataCallback, onStreamEndCallback) {
         this.attachGISJOINIgnorePipeline(collection, queryParams);
-        const stream = this.querier.getStreamForQuery(SmartQuerier.dbMachine, 
-            SmartQuerier.dbPort, collection, JSON.stringify(queryParams));
+        const stream = this.querier.getStreamForQuery(collection, JSON.stringify(queryParams));
 
         stream.on('data', this.wrapResponseCallback(collection, onDataCallback));
         stream.on('end', onStreamEndCallback);
@@ -133,6 +132,7 @@ class SmartQuerier {
       */
     wrapResponseCallback(collection, callback) {
         let onResponseCallback = (response) => {
+            console.log("hereee")
             const data = JSON.parse(response.getData());
             this.addToCache(collection, data);
             callback(data);
