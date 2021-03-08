@@ -1,6 +1,7 @@
 //webworker that takes a list of geohashes (with their corresponding GISJOINS), and return 
 importScripts('../grpc/GRPC_Querier/grpc_querier.bundle.js');
 importScripts('./geometryLoader.js');
+importScripts('./GeometryLoaderJob.js');
 importScripts('./boundsToGISJOIN.js');
 importScripts('./geohash_util.js');
 
@@ -8,7 +9,6 @@ onconnect = function (p) {
     var port = p.ports[0];
     let loader;
     let id;
-    let currentJobs = [];
 
     const errorMessage = (msg, senderID) => {
         console.log(`${id} - sender: ${senderID}, ERR: ${msg}`)
@@ -20,9 +20,6 @@ onconnect = function (p) {
     }
 
     const queryEndResponse = (senderID) => {
-        currentJobs = currentJobs.filter(job => {
-            return job.sID !== senderID;
-        })
         console.log(`${id} - sending END response to senderID: ${senderID}`)
         port.postMessage({
             senderID: senderID,
@@ -88,10 +85,6 @@ onconnect = function (p) {
                     queryEndResponse(sID);
                     break;
                 }
-                currentJobs = [...new Set([...Object.keys(queryData).map(gh => {
-                    return { sID: sID, geohash: gh }
-                }), ...currentJobs])];
-                console.log(currentJobs)
                 performQuery(queryData, sID)
                 break;
         }
