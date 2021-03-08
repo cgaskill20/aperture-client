@@ -7,7 +7,6 @@
  */
 
 class AutoQuery {
-    static GISJOINWorker = new SharedWorker('js/library/GISJOINQueryWorker.js');
     /**
       * Constructs the instance of the autoquerier to a specific layer
       * @memberof AutoQuery
@@ -35,6 +34,7 @@ class AutoQuery {
         if (this.data.linkedGeometry) { //linked geometry stuff
             this.linked = this.data.linkedGeometry;
             this.backgroundLoader = this.linked === "tract_geo_140mb" ? window.backgroundTract : window.backgroundCounty;
+            this.backgroundLoader.port.start();
             this.geohashCache = [];
         }
 
@@ -172,32 +172,41 @@ class AutoQuery {
         else {
             let relevantGISJOINS = [];
             let relevantData = [];
-            const sessionID = Math.random().toString(36).substring(2, 15);
+            //create random id to represent the session
+            const sessionID = Math.random().toString(36).substring(2, 6);
             this.backgroundLoader.port.postMessage({
                 type: "query",
                 senderID: sessionID,
                 bounds: this.map.getBounds(),
                 blacklist: this.geohashCache
             })
-            this.backgroundLoader.port.onmessage = msg => {
+            console.log(`sID: ${sessionID} - queried.`)
+            const responseListener = msg => {
                 const data = msg.data;
-                console.log(data)
-                if (data.senderID === sessionID && data.type === "data") {
-                    //populate cache
-                    console.log(data.data.data)
-                    relevantGISJOINS = [...new Set([...data.data.GISJOINS, ...relevantGISJOINS])];
-                    relevantData = [...new Set([...data.data.data, ...relevantData])];
-                    this.geohashCache = [...new Set([...data.data.geohashes, ...this.geohashCache])];
-                    if (relevantGISJOINS.length > 100) {
-                        this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": relevantGISJOINS } } }], relevantData);
-                        relevantGISJOINS = [];
+                //check that the data is sent from this querier
+                if (data.senderID === sessionID) {
+                    if (data.type === "data") {
+                        console.log(`sID: ${sessionID} - received ${data.data.data.length}`)
+                        //populate records & cache with no duplicates
+                        relevantGISJOINS = [...new Set([...data.data.GISJOINS, ...relevantGISJOINS])];
+                        relevantData = [...new Set([...data.data.data, ...relevantData])];
+                        this.geohashCache = [...new Set([...data.data.geohashes, ...this.geohashCache])];
+                        if (relevantGISJOINS.length > 100) { 
+                            this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": relevantGISJOINS } } }], relevantData);
+                            relevantGISJOINS = [];
+                            relevantData = [];
+                        }
+                    }
+                    else if (data.type === "end") {
+                        console.log(`sID: ${sessionID} - ended`)
+                        //close the listener
+                        this.backgroundLoader.port.removeEventListener("message",responseListener);
+                        if (relevantGISJOINS.length)
+                            this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": relevantGISJOINS } } }], relevantData);
                     }
                 }
-                else if (data.senderID === sessionID && data.type === "end") {
-                    if (relevantGISJOINS.length)
-                        this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": relevantGISJOINS } } }], relevantData);
-                }
             }
+            this.backgroundLoader.port.addEventListener("message", responseListener)
         }
     }
 

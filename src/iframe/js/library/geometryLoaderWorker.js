@@ -8,6 +8,7 @@ onconnect = function (p) {
     var port = p.ports[0];
     let loader;
     let id;
+    let currentJobs = [];
 
     const errorMessage = (msg, senderID) => {
         console.log(`${id} - sender: ${senderID}, ERR: ${msg}`)
@@ -19,6 +20,9 @@ onconnect = function (p) {
     }
 
     const queryEndResponse = (senderID) => {
+        currentJobs = currentJobs.filter(job => {
+            return job.sID !== senderID;
+        })
         console.log(`${id} - sending END response to senderID: ${senderID}`)
         port.postMessage({
             senderID: senderID,
@@ -44,13 +48,17 @@ onconnect = function (p) {
         if (cached) {
             if (cached.data.length) {
                 console.log(`${id} - found ${cached.data.length} records in cache for sender ${senderID}`)
-                queryResponse(cached,senderID)
+                queryResponse(cached, senderID)
             }
             for (const geohash of cached.geohashes)
                 delete query[geohash];
         }
-        if(Object.keys(query).length)
+        if (Object.keys(query).length) {
             loader.getNonCachedData(query, (data) => queryResponse(data, senderID))
+        }
+        else {
+            queryEndResponse(senderID)
+        }
     }
 
     port.onmessage = function (msg) {
@@ -75,11 +83,15 @@ onconnect = function (p) {
                 );
                 console.log(`${id} - found ${Object.keys(queryData).length} geohashes that match bounds for sender ${sID}`)
                 //check to make sure map of geohashes & gisjoins is any good
-                if(!Object.keys(queryData).length){
+                if (!Object.keys(queryData).length) {
                     console.log(`${id} - No geohashes match for sender: ${sID}, sending END`)
                     queryEndResponse(sID);
                     break;
                 }
+                currentJobs = [...new Set([...Object.keys(queryData).map(gh => {
+                    return { sID: sID, geohash: gh }
+                }), ...currentJobs])];
+                console.log(currentJobs)
                 performQuery(queryData, sID)
                 break;
         }
