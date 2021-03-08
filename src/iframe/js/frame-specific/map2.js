@@ -72,7 +72,7 @@ randID = Math.random().toString(36).substring(2, 15);
 backgroundCounty.port.postMessage({
     senderID: null,
     type: "config",
-    collection: "county_geo_GISJOIN", 
+    collection: "county_geo_30mb", 
     id: bgCountyId
 });
 window.backgroundTract = backgroundTract;
