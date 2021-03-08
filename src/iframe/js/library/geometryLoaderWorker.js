@@ -1,6 +1,6 @@
 //webworker that takes a list of geohashes (with their corresponding GISJOINS), and return 
 importScripts('../grpc/GRPC_Querier/grpc_querier.bundle.js');
-importScripts('./glTemp.js');
+importScripts('./geometryLoader.js');
 importScripts('./GeometryLoaderJob.js');
 importScripts('./boundsToGISJOIN.js');
 importScripts('./geohash_util.js');
