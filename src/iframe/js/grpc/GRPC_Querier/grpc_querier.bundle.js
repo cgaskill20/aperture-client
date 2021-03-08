@@ -2637,7 +2637,7 @@ SustainQuerier = {
       * @return {Object}
       *         The gRPC query stream
       */
-    getStreamForQuery: function (host, port, collection, query) {
+    getStreamForQuery: function (collection, query) {
         const request = new DirectRequest();
         request.setCollection(collection);
         request.setQuery(query);

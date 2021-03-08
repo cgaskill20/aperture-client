@@ -212,6 +212,7 @@ class SmartQuerier {
       * @method addToCache
       */
     addToCache(collection, data) {
+        return; //disabling this for until we can standardize things between query libs
         let bucket = this.getGISJOINBucket(collection, data.GISJOIN);
         bucket.push(data);
 

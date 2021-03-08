@@ -54,7 +54,7 @@
         const invertedMap = this.getInvertedGeohashGISJOINMap(geohashesGISJOINS);
         const GISJOINS = Object.keys(invertedMap);
         const q = [{ "$match": { "GISJOIN": { "$in": GISJOINS } } }];
-        const stream = this.querier.getStreamForQuery(null,null,this.collection,JSON.stringify(q));
+        const stream = this.querier.getStreamForQuery(this.collection,JSON.stringify(q));
         stream.on('data', (r) => {
             const data = JSON.parse(r.getData());
             const geohashes = invertedMap[data.GISJOIN];

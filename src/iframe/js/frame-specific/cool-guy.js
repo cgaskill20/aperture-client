@@ -34,7 +34,7 @@ const process = () => {
     const barray = geoboundsToGeoJSONPoly(bounds.bounds);
     q.push({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }); //only get geometry in viewport
     q.push({ $project: { "_id":0,"GISJOIN":1 } })
-    const stream = querier.getStreamForQuery(SmartQuerier.dbMachine, SmartQuerier.dbPort, "county_geo_GISJOIN", JSON.stringify(q));
+    const stream = querier.getStreamForQuery("county_geo_GISJOIN", JSON.stringify(q));
     stream.on('data', function (r) {
         const data = JSON.parse(r.getData());
         results[bounds.geohash].push(data.GISJOIN)

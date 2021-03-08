@@ -20,7 +20,7 @@ const AutoMenu = {
     build: async function (menuMetaData, overwrite) {
         return new Promise(((resolve) => {
             let catalog = {};
-            const stream = AutoMenu._sustainQuerier.getStreamForQuery(null, null, "Metadata", "[]");
+            const stream = AutoMenu._sustainQuerier.getStreamForQuery("Metadata", "[]");
             stream.on('data', (r) => {
                 const data = JSON.parse(r.getData());
                 catalog[data.collection] = data; // do da data dance
