@@ -212,13 +212,13 @@ class SmartQuerier {
       */
     addToCache(collection, data) {
         return; //disabling this for until we can standardize things between query libs
-        let bucket = this.getGISJOINBucket(collection, data.GISJOIN);
-        bucket.push(data);
+        // let bucket = this.getGISJOINBucket(collection, data.GISJOIN);
+        // bucket.push(data);
 
-        let cbucket = this.getCollectionBucket(collection);
-        if (Object.keys(cbucket).length > 10) {
-            delete cbucket[Object.keys(cbucket)[0]];
-        }
+        // let cbucket = this.getCollectionBucket(collection);
+        // if (Object.keys(cbucket).length > 10) {
+        //     delete cbucket[Object.keys(cbucket)[0]];
+        // }
     }
 
     /** 
