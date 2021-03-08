@@ -1,8 +1,8 @@
 const MAPNUMBER = 2;
 const e = React.createElement;
 
-
 //const queryAlertText = document.getElementById('queryInfoText');
+
 
 //--------------
 const standardTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -58,11 +58,26 @@ const dataExplorationGroup = L.layerGroup().addTo(map);
 const dataModelingGroup = L.layerGroup();
 window.dataModelingGroup = dataModelingGroup;
 
-const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
-const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
-
+let bgTractId = "bgTract";
+let bgCountyId = "bgCounty";
+const backgroundTract = new SharedWorker("js/library/geometryLoaderWorker.js", {name: `Background tract worker: ${bgTractId}`});
+const backgroundCounty = new SharedWorker("js/library/geometryLoaderWorker.js", {name: `Background county worker: ${bgCountyId}`});
+backgroundTract.port.postMessage({
+    senderID: null,
+    type: "config",
+    collection: "tract_geo_140mb",
+    id: bgTractId
+});
+randID = Math.random().toString(36).substring(2, 15);
+backgroundCounty.port.postMessage({
+    senderID: null,
+    type: "config",
+    collection: "county_geo_30mb", 
+    id: bgCountyId
+});
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty
+
 
 map.on('click', function () {
     closeNav();
@@ -168,11 +183,9 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
 
 const modelContainer = document.getElementById("model-container");
 ReactDOM.render(e(ModelMenu), modelContainer);
-
+let j = 0;
 map.on("moveend zoomend", function (e) {
     updateLayers();
-    backgroundCounty.runQuery();
-    backgroundTract.runQuery();
 });
 map.on("move", function (e) {
     parent.setGlobalPosition(map.getCenter(), MAPNUMBER);

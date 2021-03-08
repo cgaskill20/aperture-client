@@ -7,6 +7,7 @@
  */
 
 class AutoQuery {
+    static queryWorker = new SharedWorker('js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
     /**
       * Constructs the instance of the autoquerier to a specific layer
       * @memberof AutoQuery
@@ -18,7 +19,6 @@ class AutoQuery {
         this.data = layerData;
         this.collection = layerData.collection;
         this.map = layerData.map();
-        this.queryWorker = new SharedWorker('js/library/queryWorker.js'); //init querier
 
         this.constraintData = {};
         this.constraintState = {};
@@ -33,11 +33,9 @@ class AutoQuery {
 
         if (this.data.linkedGeometry) { //linked geometry stuff
             this.linked = this.data.linkedGeometry;
-            this.backgroundLoader = this.linked === "tract_geo_GISJOIN" ? window.backgroundTract : window.backgroundCounty;
-            this.backgroundLoader.addNewResultListener(function (updates) {
-                if (this.enabled)
-                    this.listenForLinkedGeometryUpdates(updates);
-            }.bind(this));
+            this.backgroundLoader = this.linked === "tract_geo_140mb" ? window.backgroundTract : window.backgroundCounty;
+            this.backgroundLoader.port.start();
+            this.geohashCache = [];
         }
 
         this.color = layerData.color;
@@ -63,9 +61,10 @@ class AutoQuery {
       */
     onRemove() {
         this.clearMapLayers();
-        this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
+        AutoQuery.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
         this.layerIDs = [];
         this.enabled = false;
+        this.geohashCache = [];
     }
 
     /**
@@ -101,21 +100,7 @@ class AutoQuery {
                 this.constraintData[constraint][value] = isActive;
                 break;
         }
-
         this.reQuery();
-    }
-
-    /**
-      * Waits for geometry updates from an external source, then automatically
-      * runs a query with the given geometry.
-      * This is only used for layers with linked geometry (census tracts, counties)
-      * @memberof AutoQuery
-      * @method listenForLinkedGeometryUpdates
-      * @param {Array<GeoJSON>} updates array of GeoJSON fields which each must
-      *  constain a "GISJOIN" property.
-      */
-    listenForLinkedGeometryUpdates(updates) {
-        this.query(updates);
     }
 
     /**
@@ -127,6 +112,7 @@ class AutoQuery {
     reQuery() {
         if (this.enabled) {
             this.clearMapLayers();
+            this.geohashCache = [];
             this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
             this.query();
         }
@@ -175,35 +161,91 @@ class AutoQuery {
       * which can overide any automatic stuff. This parameter is ONLY used when
       * new features come in with @method listenForLinkedGeometryUpdates
       */
-    query(forcedGeometry) {
+    query() {
         let q = [];
         if (!this.linked) {
             const b = this.map.wrapLatLngBounds(this.map.getBounds());
             const barray = Util.leafletBoundsToGeoJSONPoly(b);
             q.push({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }); //only get geometry in viewport
+            this.bindConstraintsAndQuery(q)
         }
         else {
-            // if (!forcedGeometry)
-            //     this.backgroundLoader.runQuery();
-            const GISJOINS = forcedGeometry ? this.backgroundLoader.convertArrayToGISJOINS(forcedGeometry) : this.backgroundLoader.getCachedGISJOINS();
-            q.push({ "$match": { "GISJOIN": { "$in": GISJOINS } } });
-        }
-        q = q.concat(this.buildConstraintPipeline());
+            let relevantGISJOINS = [];
+            let relevantData = [];
+            //create random id to represent the session
+            const sessionID = Math.random().toString(36).substring(2, 6);
+            this.backgroundLoader.port.postMessage({
+                type: "query",
+                senderID: sessionID,
+                bounds: this.map.getBounds(),
+                blacklist: this.geohashCache
+            })
+            const responseListener = msg => {
+                const data = msg.data;
+                //check that the data is sent from this querier
+                if (data.senderID !== sessionID)
+                    return;
+                if (data.type === "data") {
+                    //populate records & cache with no duplicates
+                    relevantData = this.addToExistingFeaturesNoDuplicates(relevantData, data.data.data);
+                    this.geohashCache = [...new Set([...data.data.geohashes, ...this.geohashCache])];
+                    if (relevantData.length > 100) {
+                        this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": this.pullGISJOINSFromArray(relevantData) } } }], relevantData);
+                        relevantData = [];
+                    }
+                }
+                else if (data.type === "end") {
+                    //close the listener
+                    this.backgroundLoader.port.removeEventListener("message", responseListener);
+                    if (relevantData.length)
+                        this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": this.pullGISJOINSFromArray(relevantData) } } }], relevantData);
+                }
 
-        this.queryWorker.port.postMessage({
+            }
+            this.backgroundLoader.port.addEventListener("message", responseListener)
+        }
+    }
+
+    bindConstraintsAndQuery(q, forcedGeometry) {
+        const sessionID = Math.random().toString(36).substring(2, 6);
+        q = q.concat(this.buildConstraintPipeline());
+        AutoQuery.queryWorker.port.postMessage({
             type: "query",
             collection: this.collection,
             queryParams: q,
+            senderID: sessionID
         });
 
-        this.queryWorker.port.onmessage = msg => {
-            if (msg.data.type === "data") {
-                Util.normalizeFeatureID(msg.data.data);
-                if (!this.layerIDs.includes(msg.data.data.id)) {
-                    this.renderData(msg.data.data, forcedGeometry);
+        const responseListener = msg => {
+            const data = msg.data;
+            if (data.senderID !== sessionID)
+                return;
+            if (data.type === "data") {
+                const dataFromServer = data.data;
+                Util.normalizeFeatureID(dataFromServer);
+                if (!this.layerIDs.includes(dataFromServer.id)) {
+                    this.renderData(dataFromServer, forcedGeometry);
                 }
             }
+            else if (data.type === "end") {
+                AutoQuery.queryWorker.port.removeEventListener("message", responseListener);
+            }
         }
+
+        AutoQuery.queryWorker.port.addEventListener("message", responseListener);
+    }
+
+    addToExistingFeaturesNoDuplicates(existingFeatures, newFeatures) {
+        const newFeaturesNoDuplicates = newFeatures.filter(nFeature => {
+            return !existingFeatures.find(eFeature => eFeature.GISJOIN === nFeature.GISJOIN)
+        });
+        return existingFeatures.concat(newFeaturesNoDuplicates)
+    }
+
+    pullGISJOINSFromArray(arr) {
+        return arr.map(feature => {
+            return feature.GISJOIN;
+        });
     }
 
     /**
@@ -228,10 +270,13 @@ class AutoQuery {
       */
     renderData(data, forcedGeometry) {
         if (this.linked) {
-            const GeoJSON = JSON.parse(JSON.stringify(this.backgroundLoader.getGeometryFromGISJOIN(data.GISJOIN, forcedGeometry)));
+            const GeoJSONRef = forcedGeometry.find(feature => feature.GISJOIN === data.GISJOIN);
+            const GeoJSON = JSON.parse(JSON.stringify(GeoJSONRef));
             if (!GeoJSON)
                 return;
             Util.normalizeFeatureID(GeoJSON)
+            if(this.layerIDs.find(id => id.split("_")[0] === GeoJSON.id))
+                return;
             GeoJSON.id = `${GeoJSON.id}_${data.id}`
             if (this.layerIDs.includes(GeoJSON.id))
                 return;
@@ -439,6 +484,7 @@ class AutoQuery {
         return returnText + "</ul>";
     }
 }
+AutoQuery.queryWorker.port.start(); //needed to allow addEventListener()
 
 try {
     module.exports = {

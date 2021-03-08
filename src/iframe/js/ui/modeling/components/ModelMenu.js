@@ -77,7 +77,7 @@ class ModelMenu extends React.Component {
 
     populateCatalog() {
         const q = [];
-        const stream = this._sustainQuerier.getStreamForQuery("lattice-46", 27017, "model_catalogue", JSON.stringify(q));
+        const stream = this._sustainQuerier.getStreamForQuery("model_catalogue", JSON.stringify(q));
         const catalog = {};
         stream.on('data', function (r) {
             const data = JSON.parse(r.getData());
@@ -297,7 +297,7 @@ class ModelMenu extends React.Component {
         const refinedData = data.map(d => {
             return d.kMeansClusteringResponse;
         })
-        this.modelManager = new ClusterManager(refinedData, window.map, window.dataModelingGroup, "county_geo_GISJOIN");
+        this.modelManager = new ClusterManager(refinedData, window.map, window.dataModelingGroup, "county_geo_30mb");
 
     }
 

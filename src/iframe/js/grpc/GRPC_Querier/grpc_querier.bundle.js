@@ -2600,7 +2600,7 @@ W.MethodType={UNARY:"unary",SERVER_STREAMING:"server_streaming"};
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],6:[function(require,module,exports){
-const {Query, CompoundRequest, JsonModelRequest} = require("./sustain_pb.js")
+const {Query, CompoundRequest, JsonModelRequest, DirectRequest} = require("./sustain_pb.js")
 const {SustainClient, JsonProxyClient} = require('./sustain_grpc_web_pb.js');
 
 /**
@@ -2637,15 +2637,11 @@ SustainQuerier = {
       * @return {Object}
       *         The gRPC query stream
       */
-    getStreamForQuery: function (host, port, collection, query) {
-        const request = new CompoundRequest();
-        const q = new Query();
-        q.setHost(host);
-        q.setPort(port);
-        q.setCollection(collection);
-        q.setQuery(query);
-        request.setFirstQuery(q);
-        return this.service.compoundQuery(request, {});
+    getStreamForQuery: function (collection, query) {
+        const request = new DirectRequest();
+        request.setCollection(collection);
+        request.setQuery(query);
+        return this.service.directQuery(request, {});
     },
 
     /**
@@ -3401,6 +3397,81 @@ proto.sustain.SustainPromiseClient.prototype.modelQuery =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.sustain.DirectRequest,
+ *   !proto.sustain.DirectResponse>}
+ */
+const methodDescriptor_Sustain_DirectQuery = new grpc.web.MethodDescriptor(
+  '/sustain.Sustain/DirectQuery',
+  grpc.web.MethodType.SERVER_STREAMING,
+  proto.sustain.DirectRequest,
+  proto.sustain.DirectResponse,
+  /**
+   * @param {!proto.sustain.DirectRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.sustain.DirectResponse.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.sustain.DirectRequest,
+ *   !proto.sustain.DirectResponse>}
+ */
+const methodInfo_Sustain_DirectQuery = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.sustain.DirectResponse,
+  /**
+   * @param {!proto.sustain.DirectRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.sustain.DirectResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.sustain.DirectRequest} request The request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.sustain.DirectResponse>}
+ *     The XHR Node Readable Stream
+ */
+proto.sustain.SustainClient.prototype.directQuery =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/sustain.Sustain/DirectQuery',
+      request,
+      metadata || {},
+      methodDescriptor_Sustain_DirectQuery);
+};
+
+
+/**
+ * @param {!proto.sustain.DirectRequest} request The request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.sustain.DirectResponse>}
+ *     The XHR Node Readable Stream
+ */
+proto.sustain.SustainPromiseClient.prototype.directQuery =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/sustain.Sustain/DirectQuery',
+      request,
+      metadata || {},
+      methodDescriptor_Sustain_DirectQuery);
+};
+
+
 module.exports = proto.sustain;
 
 
@@ -3431,6 +3502,8 @@ goog.exportSymbol('proto.sustain.DatasetRequest', null, global);
 goog.exportSymbol('proto.sustain.DatasetRequest.Dataset', null, global);
 goog.exportSymbol('proto.sustain.DatasetResponse', null, global);
 goog.exportSymbol('proto.sustain.Decade', null, global);
+goog.exportSymbol('proto.sustain.DirectRequest', null, global);
+goog.exportSymbol('proto.sustain.DirectResponse', null, global);
 goog.exportSymbol('proto.sustain.IntraDatasetOp', null, global);
 goog.exportSymbol('proto.sustain.JoinOperator', null, global);
 goog.exportSymbol('proto.sustain.JsonModelRequest', null, global);
@@ -4451,19 +4524,12 @@ proto.sustain.ModelResponse.prototype.hasLinearregressionresponse = function() {
  * @constructor
  */
 proto.sustain.KMeansClusteringRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.sustain.KMeansClusteringRequest.repeatedFields_, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
 goog.inherits(proto.sustain.KMeansClusteringRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   proto.sustain.KMeansClusteringRequest.displayName = 'proto.sustain.KMeansClusteringRequest';
 }
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.sustain.KMeansClusteringRequest.repeatedFields_ = [4];
-
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -4495,8 +4561,7 @@ proto.sustain.KMeansClusteringRequest.toObject = function(includeInstance, msg) 
   var f, obj = {
     clustercount: jspb.Message.getFieldWithDefault(msg, 1, 0),
     maxiterations: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    resolution: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    featuresList: jspb.Message.getRepeatedField(msg, 4)
+    resolution: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -4544,10 +4609,6 @@ proto.sustain.KMeansClusteringRequest.deserializeBinaryFromReader = function(msg
     case 3:
       var value = /** @type {!proto.sustain.CensusResolution} */ (reader.readEnum());
       msg.setResolution(value);
-      break;
-    case 4:
-      var value = /** @type {string} */ (reader.readString());
-      msg.addFeatures(value);
       break;
     default:
       reader.skipField();
@@ -4599,13 +4660,6 @@ proto.sustain.KMeansClusteringRequest.serializeBinaryToWriter = function(message
       f
     );
   }
-  f = message.getFeaturesList();
-  if (f.length > 0) {
-    writer.writeRepeatedString(
-      4,
-      f
-    );
-  }
 };
 
 
@@ -4651,35 +4705,6 @@ proto.sustain.KMeansClusteringRequest.prototype.getResolution = function() {
 /** @param {!proto.sustain.CensusResolution} value */
 proto.sustain.KMeansClusteringRequest.prototype.setResolution = function(value) {
   jspb.Message.setProto3EnumField(this, 3, value);
-};
-
-
-/**
- * repeated string features = 4;
- * @return {!Array.<string>}
- */
-proto.sustain.KMeansClusteringRequest.prototype.getFeaturesList = function() {
-  return /** @type {!Array.<string>} */ (jspb.Message.getRepeatedField(this, 4));
-};
-
-
-/** @param {!Array.<string>} value */
-proto.sustain.KMeansClusteringRequest.prototype.setFeaturesList = function(value) {
-  jspb.Message.setField(this, 4, value || []);
-};
-
-
-/**
- * @param {!string} value
- * @param {number=} opt_index
- */
-proto.sustain.KMeansClusteringRequest.prototype.addFeatures = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 4, value, opt_index);
-};
-
-
-proto.sustain.KMeansClusteringRequest.prototype.clearFeaturesList = function() {
-  this.setFeaturesList([]);
 };
 
 
@@ -8436,6 +8461,317 @@ proto.sustain.Query.prototype.getQuery = function() {
 /** @param {string} value */
 proto.sustain.Query.prototype.setQuery = function(value) {
   jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.DirectRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.DirectRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.DirectRequest.displayName = 'proto.sustain.DirectRequest';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.sustain.DirectRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.sustain.DirectRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.sustain.DirectRequest} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.sustain.DirectRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    collection: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    query: jspb.Message.getFieldWithDefault(msg, 2, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.sustain.DirectRequest}
+ */
+proto.sustain.DirectRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.sustain.DirectRequest;
+  return proto.sustain.DirectRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.sustain.DirectRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.sustain.DirectRequest}
+ */
+proto.sustain.DirectRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setCollection(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setQuery(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.sustain.DirectRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.sustain.DirectRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.sustain.DirectRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.sustain.DirectRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getCollection();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+  f = message.getQuery();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string collection = 1;
+ * @return {string}
+ */
+proto.sustain.DirectRequest.prototype.getCollection = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/** @param {string} value */
+proto.sustain.DirectRequest.prototype.setCollection = function(value) {
+  jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional string query = 2;
+ * @return {string}
+ */
+proto.sustain.DirectRequest.prototype.getQuery = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/** @param {string} value */
+proto.sustain.DirectRequest.prototype.setQuery = function(value) {
+  jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.sustain.DirectResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.sustain.DirectResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.sustain.DirectResponse.displayName = 'proto.sustain.DirectResponse';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.sustain.DirectResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.sustain.DirectResponse.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.sustain.DirectResponse} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.sustain.DirectResponse.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    data: jspb.Message.getFieldWithDefault(msg, 1, "")
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.sustain.DirectResponse}
+ */
+proto.sustain.DirectResponse.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.sustain.DirectResponse;
+  return proto.sustain.DirectResponse.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.sustain.DirectResponse} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.sustain.DirectResponse}
+ */
+proto.sustain.DirectResponse.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setData(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.sustain.DirectResponse.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.sustain.DirectResponse.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.sustain.DirectResponse} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.sustain.DirectResponse.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getData();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string data = 1;
+ * @return {string}
+ */
+proto.sustain.DirectResponse.prototype.getData = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/** @param {string} value */
+proto.sustain.DirectResponse.prototype.setData = function(value) {
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 

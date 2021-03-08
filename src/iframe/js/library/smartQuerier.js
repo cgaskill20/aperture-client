@@ -80,7 +80,7 @@ class SmartQuerier {
     static bucketMaxSize = 100;
 
     // Collections whose queries should not be changed.
-    static unmodifiableCollections = ['tract_geo_GISJOIN', 'county_geo_GISJOIN'];
+    static unmodifiableCollections = ['tract_geo_140mb', 'county_geo_30mb'];
 
     /**
       * Constructs a SmartQuerier.
@@ -109,8 +109,7 @@ class SmartQuerier {
      */
     query(collection, queryParams, onDataCallback, onStreamEndCallback) {
         this.attachGISJOINIgnorePipeline(collection, queryParams);
-        const stream = this.querier.getStreamForQuery(SmartQuerier.dbMachine, 
-            SmartQuerier.dbPort, collection, JSON.stringify(queryParams));
+        const stream = this.querier.getStreamForQuery(collection, JSON.stringify(queryParams));
 
         stream.on('data', this.wrapResponseCallback(collection, onDataCallback));
         stream.on('end', onStreamEndCallback);
@@ -212,13 +211,14 @@ class SmartQuerier {
       * @method addToCache
       */
     addToCache(collection, data) {
-        let bucket = this.getGISJOINBucket(collection, data.GISJOIN);
-        bucket.push(data);
+        return; //disabling this for until we can standardize things between query libs
+        // let bucket = this.getGISJOINBucket(collection, data.GISJOIN);
+        // bucket.push(data);
 
-        let cbucket = this.getCollectionBucket(collection);
-        if (Object.keys(cbucket).length > 10) {
-            delete cbucket[Object.keys(cbucket)[0]];
-        }
+        // let cbucket = this.getCollectionBucket(collection);
+        // if (Object.keys(cbucket).length > 10) {
+        //     delete cbucket[Object.keys(cbucket)[0]];
+        // }
     }
 
     /** 
