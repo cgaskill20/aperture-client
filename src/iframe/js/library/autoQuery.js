@@ -7,6 +7,7 @@
  */
 
 class AutoQuery {
+    static queryWorker = new SharedWorker('js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
     /**
       * Constructs the instance of the autoquerier to a specific layer
       * @memberof AutoQuery
@@ -18,7 +19,6 @@ class AutoQuery {
         this.data = layerData;
         this.collection = layerData.collection;
         this.map = layerData.map();
-        this.queryWorker = new SharedWorker('js/library/queryWorker.js'); //init querier
 
         this.constraintData = {};
         this.constraintState = {};
@@ -61,7 +61,7 @@ class AutoQuery {
       */
     onRemove() {
         this.clearMapLayers();
-        this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
+        AutoQuery.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
         this.layerIDs = [];
         this.enabled = false;
         this.geohashCache = [];
@@ -184,48 +184,71 @@ class AutoQuery {
             const responseListener = msg => {
                 const data = msg.data;
                 //check that the data is sent from this querier
-                if (data.senderID === sessionID) {
-                    if (data.type === "data") {
-                        console.log(`sID: ${sessionID} - received ${data.data.data.length}`)
-                        //populate records & cache with no duplicates
-                        relevantGISJOINS = [...new Set([...data.data.GISJOINS, ...relevantGISJOINS])];
-                        relevantData = [...new Set([...data.data.data, ...relevantData])];
-                        this.geohashCache = [...new Set([...data.data.geohashes, ...this.geohashCache])];
-                        if (relevantGISJOINS.length > 100) { 
-                            this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": relevantGISJOINS } } }], relevantData);
-                            relevantGISJOINS = [];
-                            relevantData = [];
-                        }
-                    }
-                    else if (data.type === "end") {
-                        console.log(`sID: ${sessionID} - ended`)
-                        //close the listener
-                        this.backgroundLoader.port.removeEventListener("message",responseListener);
-                        if (relevantGISJOINS.length)
-                            this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": relevantGISJOINS } } }], relevantData);
+                if (data.senderID !== sessionID)
+                    return;
+                if (data.type === "data") {
+                    console.log(`sID: ${sessionID} - received ${data.data.data.length}`)
+                    //populate records & cache with no duplicates
+                    relevantData = this.addToExistingFeaturesNoDuplicates(relevantData, data.data.data);
+                    this.geohashCache = [...new Set([...data.data.geohashes, ...this.geohashCache])];
+                    if (relevantData.length > 100) {
+                        this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": this.pullGISJOINSFromArray(relevantData) } } }], relevantData);
+                        relevantData = [];
                     }
                 }
+                else if (data.type === "end") {
+                    console.log(`sID: ${sessionID} - ended`)
+                    //close the listener
+                    this.backgroundLoader.port.removeEventListener("message", responseListener);
+                    if (relevantData.length)
+                        this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": this.pullGISJOINSFromArray(relevantData) } } }], relevantData);
+                }
+
             }
             this.backgroundLoader.port.addEventListener("message", responseListener)
         }
     }
 
     bindConstraintsAndQuery(q, forcedGeometry) {
+        const sessionID = Math.random().toString(36).substring(2, 6);
         q = q.concat(this.buildConstraintPipeline());
-        this.queryWorker.port.postMessage({
+        AutoQuery.queryWorker.port.postMessage({
             type: "query",
             collection: this.collection,
             queryParams: q,
+            senderID: sessionID
         });
 
-        this.queryWorker.port.onmessage = msg => {
-            if (msg.data.type === "data") {
-                Util.normalizeFeatureID(msg.data.data);
-                if (!this.layerIDs.includes(msg.data.data.id)) {
-                    this.renderData(msg.data.data, forcedGeometry);
+        const responseListener = msg => {
+            const data = msg.data;
+            if (data.senderID !== sessionID)
+                return;
+            if (data.type === "data") {
+                const dataFromServer = data.data;
+                Util.normalizeFeatureID(dataFromServer);
+                if (!this.layerIDs.includes(dataFromServer.id)) {
+                    this.renderData(dataFromServer, forcedGeometry);
                 }
             }
+            else if (data.type === "end") {
+                AutoQuery.queryWorker.port.removeEventListener("message", responseListener);
+            }
         }
+
+        AutoQuery.queryWorker.port.addEventListener("message", responseListener);
+    }
+
+    addToExistingFeaturesNoDuplicates(existingFeatures, newFeatures) {
+        const newFeaturesNoDuplicates = newFeatures.filter(nFeature => {
+            return !existingFeatures.find(eFeature => eFeature.GISJOIN === nFeature.GISJOIN)
+        });
+        return existingFeatures.concat(newFeaturesNoDuplicates)
+    }
+
+    pullGISJOINSFromArray(arr) {
+        return arr.map(feature => {
+            return feature.GISJOIN;
+        });
     }
 
     /**
@@ -461,6 +484,7 @@ class AutoQuery {
         return returnText + "</ul>";
     }
 }
+AutoQuery.queryWorker.port.start(); //needed to allow addEventListener()
 
 try {
     module.exports = {

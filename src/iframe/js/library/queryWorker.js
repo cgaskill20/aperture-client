@@ -12,8 +12,8 @@ onconnect = function(p) {
             console.log(msg.data.queryParams)
             querier.query(msg.data.collection, 
                           msg.data.queryParams, 
-                          data => { port.postMessage({ type: "data", data: data }); console.log("data")}, 
-                          end => { port.postMessage({ type: "end" }); console.log("end!!!!!!!!!!!!!")});
+                          data => { port.postMessage({ type: "data", data: data, senderID: msg.data.senderID });}, 
+                          end => { port.postMessage({ type: "end", senderID: msg.data.senderID });});
         } else if (msg.data.type === "kill") {
             querier.killAllStreamsOverCollection(msg.data.collection);
         }
