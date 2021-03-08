@@ -113,5 +113,10 @@ class Chart {
     unhide(viewIndex) {
         this.views[viewIndex].svg.style("display", "block");
     }
+
+    // To be overriden in subclasses.
+    makeNewView(node, width, height) { }
+    rerender(width, height, viewIndex) { }
+    changeData(data) { }
 }
 

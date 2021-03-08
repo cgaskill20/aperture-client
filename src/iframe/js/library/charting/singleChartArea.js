@@ -6,12 +6,11 @@
   * @author Pierce Smith
   */
 class SingleChartArea {
-    static MAX_SIMULTANEOUS_CHARTS = 6;
-    static MIN_CHART_SIZE = 300;
+    static runningID = 0;
 
     constructor() {
-        this.availableContainers = [];
-        this.visibleContainers = [];
+        this.viewIndex = SingleChartArea.runningID++;
+        this.charts = [];
     }
 
     attachTo(node) {
@@ -25,26 +24,11 @@ class SingleChartArea {
         this.usageMessage.className = "chart-usage-message";
         this.usageMessage.style.display = "none";
         this.parentNode.appendChild(this.usageMessage);
-
-        this.attachChartContainers(this.container);
-    }
-
-    attachChartContainers(node) {
-        for (let i = this.availableContainers.length; i < SingleChartArea.MAX_SIMULTANEOUS_CHARTS; i++) {
-            let containerNode = document.createElement("div");
-            containerNode.className = "chart-container";
-            node.appendChild(containerNode);
-
-            let containerObject = new ChartContainer(containerNode, i);
-            containerObject.hide();
-            this.availableContainers.push(containerObject);
-        }
     }
 
     addChart(chart) {
-        this.availableContainers.forEach(container => {
-            container.addChart(chart);
-        });
+        this.charts.push(chart);
+        chart.addTo(this.container);
     }
 
     rerender(newWidth, newHeight) {
@@ -52,7 +36,9 @@ class SingleChartArea {
             this.showUsageMessage();
         } else {
             this.hideUsageMessage();
-            this.resizeContainers(newWidth, newHeight);
+            this.charts.forEach(chart => {
+                chart.rerender(newWidth, newHeight, this.viewIndex);
+            });
         }
     }
 
@@ -64,36 +50,12 @@ class SingleChartArea {
         this.usageMessage.style.display = "none";
     }
 
-    resizeContainers(newWidth, newHeight) {
-        let availableSpace = this.parentNode.clientHeight;
-
-        let i = 0;
-        // Show containers we have space for
-        for (; (i * SingleChartArea.MIN_CHART_SIZE) < availableSpace; i++) {
-            this.availableContainers[i].unhide();
-        }
-
-        // Hide the rest
-        for (; i < this.availableContainers.length; i++) {
-            this.availableContainers[i].hide();
-        }
-
-        this.visibleContainers = this.availableContainers.filter(container => !container.hidden);
-        this.visibleContainers.forEach(container => {
-            container.resize(newWidth, newHeight / this.visibleContainers.length);
-        });
-    }
-
     tellNumberOfCharts(chartCount) {
         this.possibleChartCount = chartCount;
     }
 
     tellEmptyCharts(inaccessibleList) {
         this.hasNothingToRender = inaccessibleList.length === this.possibleChartCount;
-
-        this.visibleContainers.forEach(container => {
-            container.setForbiddenIndices(inaccessibleList);
-        });
     }
     
     toggleVisible() {
