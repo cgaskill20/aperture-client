@@ -183,22 +183,9 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
 
 const modelContainer = document.getElementById("model-container");
 ReactDOM.render(e(ModelMenu), modelContainer);
-//const gisjoinworker = new SharedWorker('js/library/GISJOINQueryWorker.js')
 let j = 0;
 map.on("moveend zoomend", function (e) {
     updateLayers();
-    // console.time("get all gisjoins")
-    // gisjoinworker.port.postMessage({
-    //     type: "query",
-    //     bounds: map.getBounds(),
-    //     resolution: "county"
-    // });
-    // gisjoinworker.port.onmessage = function (msg) {
-    //     if (msg.data.type == "data") {
-    //         console.timeEnd("get all gisjoins")
-    //         console.log(msg.data.GISJOINS)
-    //     }
-    // }.bind(this);
 });
 map.on("move", function (e) {
     parent.setGlobalPosition(map.getCenter(), MAPNUMBER);
