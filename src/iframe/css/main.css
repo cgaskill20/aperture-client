@@ -1,0 +1,79 @@
+.colorMode1 {
+  background-color: var(--backgroundColor-colorMode-1);
+  color: var(--color-colorMode-1);
+  transition: 0.3s;
+}
+
+.colorMode2 {
+  background-color: var(--backgroundColor-colorMode-2);
+  color: var(--color-colorMode-2);
+  transition: 0.3s;
+}
+
+.customBorder {
+  border: var(--border-customBorder);
+  border-radius: 3px;
+}
+
+.btn-outline-dark {
+  color: var(--bootstrapButtonsColor) !important;
+  border-color: var(--bootstrapButtonsColor) !important;
+}
+
+.btn-outline-dark:hover {
+  color: var(--bootstrapButtonsHover) !important;
+  background-color: var(--bootstrapButtonsColor) !important;
+  border-color: var(--bootstrapButtonsColor) !important;
+}
+
+.btn-outline-light.focus,.btn-outline-light:focus {
+  box-shadow: var(--bootstrapButtonsFocus) !important;
+}
+
+.bs-tooltip-auto[x-placement^=top] .arrow::before,.bs-tooltip-top .arrow::before {
+  border-top-color: var(--tooltip-arrow-color) !important;
+}
+
+.tooltip-inner {
+  background-color: var(--backgroundColor-colorMode-2) !important;
+  color: var(--color-colorMode-2) !important;
+  border: var(--border-customBorder) !important;
+}
+
+#main {
+  position: absolute;
+  z-index: 2000;
+  padding: 16px;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif;
+}
+
+.map {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.nav-tabs {
+  top: 0;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+.leaflet-fade-anim .leaflet-tile, .leaflet-zoom-anim .leaflet-zoom-animated {
+    will-change: auto !important;
+}

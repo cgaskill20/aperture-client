@@ -1,45 +1,4 @@
-body {
-    width: 100%;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    overflow: hidden;
-    font-family: 'Roboto', sans-serif;
-}
-
-.map {
-    position: relative;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.queryInfo {
-    margin: 10px;
-    background-color: white;
-    padding: 8px;
-    border-radius: 3px;
-    border: 2px solid rgba(0, 0, 0, 0.2);
-}
-
-#queryInfoText {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 22px;
-    color: #333;
-}
-
-#main {
-  position: absolute;
-  z-index: 2000;
-  padding: 16px;
-}
-
 .sidebar {
-  background-color: #f1f1f1;
   opacity: 0.85;
   z-index: 2001;
   height: 100%;
@@ -48,7 +7,7 @@ body {
   top: 0;
   left: 0;
   overflow-x: hidden;
-  transition: 0.7s;
+  transition: 0.3s;
   max-width: 870px;
 }
 
@@ -61,26 +20,12 @@ body {
   transition: 0.3s;
 }
 
-.nav-tabs {
-  top: 0;
-  margin: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-bottom: 20px;
-  padding: 15px;
-}
-
 .menuColumn {
-    background-color: #f1f1f1;
-    color: #111;
     height: 100%;
     margin: 2px;
 }
 
-.menuColumn .categoryName {
-    background-color: #f1f1f1;
-    color: #111;
+.categoryName {
     position: relative;
     top: 0;
     width: 100%;
@@ -97,7 +42,6 @@ body {
 
 .menuHeader{
     padding: 10px;
-    background-color: #f1f1f1;
 }
 
 .menuHeaderLabel{
@@ -105,18 +49,11 @@ body {
     border-bottom-width: thin;
     padding-top: 10px;
     font-size: 18px;
-    background-color: #f1f1f1;
-    color: #111;
     cursor: pointer;
 }
 
 .content-section {
-  background-color: #fbfbfb;
-  color: #414141;
-  transition: 0.5s;
   margin: 10px;
-  border: 1px solid #dddddd;
-  border-radius: 3px;
   max-height: 18vh;
   overflow-y: auto;
 }
@@ -129,7 +66,7 @@ body {
 }
 
 .slider-section {
-  padding: 10px;
+  padding: 10px 17px;
 }
 
 .slider-title {
@@ -177,7 +114,6 @@ body {
 
 .checkboxConstraintLabel{
     padding: 5px;
-    background-color: #0074d9;
     text-align: left;
     color: white;
 }
@@ -187,20 +123,17 @@ body {
     padding-bottom: 2px;
 }
 
-.menuHeaderContainer {
+.menuHeaderContainer{
     padding: 5px;
 }
 
 .layerContainer{
-    background-color: #ddd;
     margin: 5px;
     padding: 0;
     cursor: default;
 }
 
 .layerSelector{
-    color: #111;
-    background-color: #f1f1f1;
     padding: 8px;
 }
 
@@ -208,18 +141,13 @@ body {
     overflow-y: auto;
     max-height: 45vh;
     padding: 10px;
-    background-color: #ffffff;
 }
 
-.checkboxContainer {
-    background-color: white;
-    border-radius: 3px;
+.checkboxContainer{
     margin-bottom: 15px;
 }
 
-.sliderContainer {
-    background-color: white;
-    border-radius: 3px;
+.sliderContainer{
     padding: 5px;
     margin-bottom: 15px;
 }
@@ -229,18 +157,9 @@ body {
     margin-top: 5px;
 }
 
-.dropdown-arrow {
-    cursor: pointer;
-    margin-left: 5px;
-    height: 18px;
-    width: 18px;
-}
-
 .collapsible, .attributionContainer, #clearFeatures {
-    background-color: #DDD;
     cursor: pointer;
     padding: 10px;
-    border-radius: 3px;
     margin-top: 5px;
     width: 100%;
     border: none;
@@ -248,30 +167,6 @@ body {
     outline: none;
     font-size: 15px;
 }
-
-#clearFeatures {
-    color: white;
-    background-color: red;
-    border: none;
-    border-radius: 3px;
-    margin-top: 5px;
-    cursor: pointer;
-    font-size: 15px;
-    text-align: left;
-    outline: none;
-}
-
-.attributionContainer .attribution {
-    display: none;
-    font-size: 12px;
-    overflow-wrap: break-word;
-}
-
-.attributionContainer .clickableAttr {
-    text-decoration: none;
-    font-size: 15px;
-}
-
 .vertical-center {
     margin: 0;
     position: absolute;
@@ -285,9 +180,6 @@ body {
     position: absolute;
     top:12.5%;
     right:12.5%;
-    border: 1px solid #dddddd;
-    border-radius: 6px;
-    background-color: #f8f8f8;
     z-index: 9999;
     padding: 10px;
     max-width: 40vw;
@@ -298,7 +190,6 @@ body {
 .editConstraintsHeader {
     top: 0;
     padding: 10px;
-    color: #111;
     font-size: 20px;
     width: 100%;
 }
@@ -306,13 +197,10 @@ body {
 .editConstraintArea {
     overflow: auto;
     max-height: 40vh;
-    border: 1px solid #dddddd;
-    border-radius: 3px;
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
     padding-top: 10px;
-    background-color: #f1f1f1;
 }
 
 .editConstraintsConstraint {
@@ -320,7 +208,7 @@ body {
     padding-left: 20px;
 }
 
-.saveAndCloseConstraints {
+.saveAndCloseConstraints{
     bottom: 25px;
     left: 85%;
     position: sticky;
@@ -332,51 +220,6 @@ body {
 
 .constraintCloseButton {
   padding: 10px;
-}
-
-.constraintCheckbox {
-}
-
-.leaflet-fade-anim .leaflet-tile, .leaflet-zoom-anim .leaflet-zoom-animated {
-    will-change: auto !important;
-}
-
-.overlay {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-
-}
-
-.overlay .box{
-    width: 100%;
-    height: 100%;
-    border: 3px solid #4286f4;
-    box-sizing: border-box;
-}
-
-.overlay .box .option{
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: white;
-    border: 3px solid #4286f4;
-    position: absolute;
-}
-
-.overlay .box .option.top-right {
-    right: -5px;
-    top: -5px;
-    cursor: nesw-resize;
-}
-
-.tool-tip {
-    cursor: pointer;
-    height: 18px;
-    width: 18px;
-    float: right;
-    margin-top: 2px;
-    margin-right: 15px;
 }
 
 .modelSelect{
@@ -431,22 +274,4 @@ body {
 
 .clusterLegendField:hover{
     filter: brightness(0.4)
-}
-
-.graph-pic {
-  cursor: pointer;
-  height: 25px;
-  width: 25px;
-  margin: 15px;
-  margin-left: 30px;
-}
-
-.graph-button-pic {
-  height: 25px;
-  width: 25px;
-}
-
-.close-button-pic {
-  height: 25px;
-  width: 25px;
 }
