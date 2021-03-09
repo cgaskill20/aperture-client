@@ -7,10 +7,17 @@
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin="" />
     <script src="../../node_modules/leaflet/dist/leaflet.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/IframeStyle.css">
-    
+
+    <link rel="stylesheet" type="text/css" href="css/variables.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/darkModeSwitch.css">
+    <link rel="stylesheet" type="text/css" href="css/imageStyles.css">
+    <link rel="stylesheet" type="text/css" href="css/dataExploration.css">
+    <link rel="stylesheet" type="text/css" href="css/queries.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="js/third-party/nouislider.min.js"></script>
+
     <link rel="stylesheet" type="text/css" href="css/third-party/nouislider.min.css">
     <link rel="stylesheet" type="text/css" href="css/third-party/bootstrap4-toggle.min.css">
 
@@ -43,44 +50,24 @@
 
     <script src="js/ui/menuGenerator.js"></script>
 </head>
-
 <body>
     <div class="leaflet-bottom leaflet-right"></div>
-    <div id="sidebar-id" class="sidebar">
+    <div id="sidebar-id" class="sidebar colorMode1">
         <div class="nav-tabs">
-
-
-
-<!--           <div class="btn-group" role='group'>
-
-            <button type="button" id='nav-graph-button' class="btn btn-outline-dark" disabled><img src="/images/graph.png" class="graph-button-pic"></button>
-
-            <div class="btn-group btn-group-toggle" id="nav-radio-group" data-toggle="buttons">
-              <label class="btn btn-outline-dark active">
-                <input type="radio" id="nav-data-exploration-button" autocomplete="off" checked> Data Exploration
-              </label>
-              <label class="btn btn-outline-dark">
-                <input type="radio" id="nav-modeling-button" autocomplete="off"> Modeling
-              </label>
-              <label class="btn btn-outline-dark">
-                <input type="radio" id="nav-validation-button" autocomplete="off"> Validation
-              </label>
+        <div class="theme-switch-wrapper">
+            <img class="moon-icon" src="../../images/Moon_Black.png">
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider round"></div>
+            </label>
+        </div>
+            <div class="btn-group" id="nav-group-id" role="group" aria-label="Basic example">
+              <button type="button" id='nav-graph-button' class="btn btn-outline-dark color-change">Graphing</button>
+              <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark color-change">Data Exploration</button>
+              <button type="button" id='nav-modeling-button' class="btn btn-outline-dark color-change">Modeling</button>
+              <button type="button" id='nav-validation-button' class="btn btn-outline-dark color-change">Validation</button>
+              <button type="button" id='nav-close-button' class="btn btn-outline-dark color-change">Close</button>
             </div>
-
-            <button type="button" id='nav-close-button' class="btn btn-outline-dark">Close</button>
-
-          </div> -->
-
-
-            <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" id='nav-graph-button' class="btn btn-outline-dark"><img src="../../images/graph.png" class="graph-button-pic"></button>
-              <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark">Data Exploration</button>
-              <button type="button" id='nav-modeling-button' class="btn btn-outline-dark">Modeling</button>
-              <button type="button" id='nav-validation-button' class="btn btn-outline-dark">Validation</button>
-              <button type="button" id='nav-close-button' class="btn btn-outline-dark">Close</button>
-            </div>
-
-
         </div>
         <div id="sidebar-container"></div>
         <div id="model-container">
@@ -88,7 +75,7 @@
     </div>
 
     <div id="main">
-      <button class="btn" style="border-color: #343a40;" id='nav-menu-button'>☰ Menu</button>
+      <button class="btn btn-outline-dark-custom" id='nav-menu-button'>☰ Menu</button>
     </div>
 
     <div id="map" class="sidebar-map"></div>
@@ -101,7 +88,6 @@
     <script src="js/third-party/popper.min.js"></script>
     <script src="js/third-party/bootstrap4-toggle.min.js"></script>
     <script src="js/third-party/bootstrap.min.js"></script>
-
 
     <!-- React Lib Prod-->
     <script src="js/third-party/react/prod/react.production.min.js"></script>
@@ -118,5 +104,8 @@
 
     <!-- Frame JS, Load Last! -->
     <script src="js/frame-specific/map2.js"></script>
+    <script src="js/frame-specific/UI-Buttons.js"></script>
+    <script src="js/frame-specific/darkMode.js"></script>
+    <script src="js/frame-specific/switchImageSources.js"></script>
     <script src="js/control/mouseDown.js"></script>
 </body>

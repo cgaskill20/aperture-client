@@ -164,9 +164,7 @@ class AutoQuery {
     query() {
         if(this.linked){
             const mapZoom = this.map.getZoom();
-            if(mapZoom < 7)
-                return;
-            if(this.linked === "tract_geo_140mb" && mapZoom < 10)
+            if(mapZoom < 7 || (this.linked === "tract_geo_140mb" && mapZoom < 10))
                 return;
         }
         let q = [];
@@ -177,7 +175,6 @@ class AutoQuery {
             this.bindConstraintsAndQuery(q)
         }
         else {
-            let relevantGISJOINS = [];
             let relevantData = [];
             //create random id to represent the session
             const sessionID = Math.random().toString(36).substring(2, 6);
