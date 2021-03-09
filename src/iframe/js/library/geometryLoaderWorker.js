@@ -4,7 +4,7 @@ importScripts('./geometryLoader.js');
 importScripts('./GeometryLoaderJob.js');
 importScripts('./boundsToGISJOIN.js');
 importScripts('./geohash_util.js');
-importScripts('https://unpkg.com/dexie@latest/dist/dexie.js');
+importScripts('../third-party/dexie.min.js');
 
 onconnect = function (p) {
     var port = p.ports[0];
