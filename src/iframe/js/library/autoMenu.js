@@ -18,29 +18,24 @@ const AutoMenu = {
       * @returns {JSON} JSON which can be used with menuGenerator.js to build a menu
       */
     build: async function (menuMetaData, overwrite) {
-        return new Promise(resolve => {
-            //stream the metadata catalog in
-            const q = [];
-            const stream = this._sustainQuerier.getStreamForQuery("lattice-46", 27017, "Metadata", JSON.stringify(q));
+        return new Promise(((resolve) => {
             let catalog = {};
-            stream.on('data', function (r) {
+            const stream = AutoMenu._sustainQuerier.getStreamForQuery("Metadata", "[]");
+            stream.on('data', (r) => {
                 const data = JSON.parse(r.getData());
-                catalog[data.collection] = data;
-            }.bind(this));
-
-
-            stream.on('end', function (end) {
+                catalog[data.collection] = data; // do da data dance
+            });
+            stream.on('end', () => {
                 //build it
                 const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
 
                 //return it
                 resolve({
                     ...autoMenu,
-                    ...overwrite //overwrite using the ... operarator
+                    ...overwrite,
                 });
-
-            }.bind(this));
-        });
+            });
+        }));
     },
 
     /**
@@ -57,35 +52,35 @@ const AutoMenu = {
 
                 //These are hardcoded for now
                 let autoMenuLayer = {};
-                if(metadata.level){
+                if (metadata.level) {
                     autoMenuLayer["group"] = "Tract, County, & State Data";
                     autoMenuLayer["subGroup"] = metadata.level === "tract" ? "Tract Level" : "County Level";
-                    autoMenuLayer["linkedGeometry"] = metadata.level === "tract" ? "tract_geo_GISJOIN" : "county_geo_GISJOIN";
+                    autoMenuLayer["linkedGeometry"] = metadata.level === "tract" ? "tract_geo_140mb" : "county_geo_30mb";
                     autoMenuLayer["joinProperty"] = "GISJOIN";
                 }
-                else{
+                else {
                     autoMenuLayer["group"] = "Infrastructure & Natural Features";
                     autoMenuLayer["subGroup"] = "Auto Generated";
                 }
 
-                if(metadata.icon)
+                if (metadata.icon)
                     autoMenuLayer["icon"] = metadata.icon;
-                
-                if(metadata.info)
+
+                if (metadata.info)
                     autoMenuLayer["info"] = metadata.info;
-                
-                if(metadata.color){
-                    if(typeof metadata.color === "string"){
+
+                if (metadata.color) {
+                    if (typeof metadata.color === "string") {
                         autoMenuLayer["color"] = {
                             style: "solid",
                             colorCode: metadata.color
                         };
                     }
-                    else{
+                    else {
                         autoMenuLayer["color"] = metadata.color;
                     }
                 }
-                else{
+                else {
                     autoMenuLayer["color"] = autoMenuLayer["color"] = {
                         style: "solid",
                         colorCode: "#000000"
@@ -119,7 +114,7 @@ const AutoMenu = {
             const fieldIndex = this.arrayIndexOf(constraint.name, metadata.fieldMetadata);
             const constraintName = constraint.name;
             if (fieldIndex !== -1) {
-                const hideByDefaultMask = { 
+                const hideByDefaultMask = {
                     hideByDefault: false
                 }
                 // console.log("----------------")
@@ -136,7 +131,7 @@ const AutoMenu = {
             }
             constraint = this.convertFromDefault(constraint);
             constraint = this.buildStandardConstraint(constraint);
-            if(constraint){
+            if (constraint) {
                 //console.log(constraint);
                 result[constraintName] = constraint;
             }
@@ -183,7 +178,7 @@ const AutoMenu = {
         }
         else if (constraint.type === "DATE" || constraint.type === "date") {
             constraint.type = "date";
-            switch(typeof(constraint.maxDate)){
+            switch (typeof (constraint.maxDate)) {
                 case 'string':
                     constraint.min = new Date(constraint.minDate).getTime();
                     constraint.max = new Date(constraint.maxDate).getTime();
@@ -193,11 +188,11 @@ const AutoMenu = {
                     constraint.max = constraint.maxDate;
                     break;
                 case 'object':
-                    if(constraint.maxDate.$numberLong){
+                    if (constraint.maxDate.$numberLong) {
                         constraint.min = Number(constraint.minDate.$numberLong);
                         constraint.max = Number(constraint.maxDate.$numberLong);
                     }
-                    else{
+                    else {
                         console.error("Cannot deal with date field!");
                         console.error(constraint);
                     }
@@ -239,36 +234,36 @@ const AutoMenu = {
                 ...result
             }
             result.type = "slider";
-        
+
             result.range = [constraint.min, constraint.max];
             result.default = result.range;
-            
 
-            if(result.range[0] === result.range[1] || !constraint.max) //error check
+
+            if (result.range[0] === result.range[1] || !constraint.max) //error check
                 return null;
-            
 
-            if(constraint.type === "date")
+
+            if (constraint.type === "date")
                 result.isDate = true;
         }
         else if (constraint.type = "multiselect") {
             result.type = "multiselector";
             result.options = constraint.values;
-            if(!result.options || result.options.length < 1)
+            if (!result.options || result.options.length < 1)
                 return null;
         }
         else if (constraint.type = "select") {
             result.type = "selector";
             result.options = constraint.values;
 
-            if(!result.options || result.options.length < 1)
+            if (!result.options || result.options.length < 1)
                 return null;
         }
-        
+
 
         result.hide = constraint.hideByDefault;
 
-        
+
         return result;
     }
 }

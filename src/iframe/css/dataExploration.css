@@ -115,10 +115,10 @@
 .checkboxConstraintLabel{
     padding: 5px;
     text-align: left;
-    color:white;
+    color: white;
 }
 
-.checkboxConstraintContainer{
+.checkboxConstraintContainer {
     padding: 5px;
     padding-bottom: 2px;
 }
@@ -187,8 +187,8 @@
     min-width: 20vw;
 }
 
-.editConstraintsHeader{
-    top:0;
+.editConstraintsHeader {
+    top: 0;
     padding: 10px;
     font-size: 20px;
     width: 100%;
@@ -203,7 +203,7 @@
     padding-top: 10px;
 }
 
-.editConstraintsConstraint{
+.editConstraintsConstraint {
     padding: 1px;
     padding-left: 20px;
 }
@@ -212,7 +212,10 @@
     bottom: 25px;
     left: 85%;
     position: sticky;
+}
 
+.clusterContainer {
+    display: none;
 }
 
 .constraintCloseButton {

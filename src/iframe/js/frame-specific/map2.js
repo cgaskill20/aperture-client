@@ -1,6 +1,8 @@
 const MAPNUMBER = 2;
+const e = React.createElement;
 
 //const queryAlertText = document.getElementById('queryInfoText');
+
 
 //--------------
 const standardTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -52,11 +54,84 @@ var markers = L.markerClusterGroup({
 });
 map.addLayer(markers);
 
-const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
-const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
+const dataExplorationGroup = L.layerGroup().addTo(map);
+const dataModelingGroup = L.layerGroup();
+window.dataModelingGroup = dataModelingGroup;
 
+let bgTractId = "bgTract";
+let bgCountyId = "bgCounty";
+const backgroundTract = new SharedWorker("js/library/geometryLoaderWorker.js", {name: `Background tract worker: ${bgTractId}`});
+const backgroundCounty = new SharedWorker("js/library/geometryLoaderWorker.js", {name: `Background county worker: ${bgCountyId}`});
+backgroundTract.port.postMessage({
+    senderID: null,
+    type: "config",
+    collection: "tract_geo_140mb",
+    id: bgTractId
+});
+randID = Math.random().toString(36).substring(2, 15);
+backgroundCounty.port.postMessage({
+    senderID: null,
+    type: "config",
+    collection: "county_geo_30mb", 
+    id: bgCountyId
+});
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty
+
+
+map.on('click', function () {
+    closeNav();
+});
+
+document.getElementById('nav-menu-button').addEventListener('click', openNav);
+document.getElementById('nav-close-button').addEventListener('click', closeNav);
+document.getElementById('nav-data-exploration-button').addEventListener('click', showDataExploration);
+document.getElementById('nav-modeling-button').addEventListener('click', showModeling);
+document.getElementById('nav-validation-button').addEventListener('click', showValidation);
+document.getElementById('nav-graph-button').addEventListener('click', showGraph);
+
+// $('#nav-close-button').on('click', closeNav);
+// $('#nav-data-exploration-button').on('click', showDataExploration);
+// $('#nav-modeling-button').on('click', showModeling);
+// $('#nav-validation-button').on('click', showValidation);
+
+function openNav() {
+  document.getElementById("sidebar-id").style.width = "52vw";
+  document.getElementById("main").style.opacity = "0";
+}
+
+function closeNav() {
+  document.getElementById("sidebar-id").style.width = "0";
+  document.getElementById("main").style.opacity = "1";
+}
+
+function showDataExploration() {
+    document.getElementById("sidebar-container").style.display = "grid";
+    document.getElementById("model-container").style.display = "none";
+    document.getElementById("clusterLegendContainer").style.display = "none";
+    map.removeLayer(dataModelingGroup)
+    map.addLayer(dataExplorationGroup)
+}
+
+function showModeling() {
+    document.getElementById("sidebar-container").style.display = "none";
+    document.getElementById("model-container").style.display = "block";
+    document.getElementById("clusterLegendContainer").style.display = "block";
+    map.addLayer(dataModelingGroup)
+    map.removeLayer(dataExplorationGroup)
+}
+
+function showValidation() {
+    document.getElementById("sidebar-container").style.display = "none";
+    document.getElementById("model-container").style.display = "none";
+}
+
+function showGraph() {
+    document.getElementById("sidebar-id").style.width = "0";
+    document.getElementById("main").style.opacity = "1";
+    document.getElementById("overlay1").style.display =  document.getElementById("overlay1").style.display == "none" ? "block" : "none";
+}
+
 
 const overwrite = { //leaving this commented cause it explains the schema really well 
     // "covid_county": {
@@ -93,7 +168,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
     // },
 }
 
-RenderInfrastructure.config(map, markers, overwrite, {
+window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplorationGroup, overwrite, {
     queryAlertText: document.getElementById('queryInfoText'),
     maxElements: 10000,
     maxLayers: 20,
@@ -106,10 +181,12 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
     MenuGenerator.generate(finalData, document.getElementById("sidebar-container"));
 });
 
-parent.addEventListener('updateMaps', function () {
+const modelContainer = document.getElementById("model-container");
+ReactDOM.render(e(ModelMenu), modelContainer);
+let j = 0;
+map.on("moveend zoomend", function (e) {
     updateLayers();
 });
-
 map.on("move", function (e) {
     parent.setGlobalPosition(map.getCenter(), MAPNUMBER);
 });
@@ -125,6 +202,7 @@ parent.setterFunctions.push({
     setterFunc: thisMapsSetter,
     mapNum: MAPNUMBER
 });
+let chartSystem = new ChartSystem(map, "json/graphPriority.json");
 setTimeout(function () {
     map.setView([map.wrapLatLng(parent.view).lat, map.wrapLatLng(parent.view).lng - 0.0002], map.getZoom());
 }, 1); //this is a terrible fix but it works for now
