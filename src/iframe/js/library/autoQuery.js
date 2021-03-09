@@ -162,6 +162,7 @@ class AutoQuery {
       * new features come in with @method listenForLinkedGeometryUpdates
       */
     query() {
+        console.log(map.getZoom())
         let q = [];
         if (!this.linked) {
             const b = this.map.wrapLatLngBounds(this.map.getBounds());

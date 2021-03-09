@@ -184,7 +184,7 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
 const modelContainer = document.getElementById("model-container");
 ReactDOM.render(e(ModelMenu), modelContainer);
 let j = 0;
-map.on("moveend zoomend", function (e) {
+map.on("moveend", function (e) {
     updateLayers();
 });
 map.on("move", function (e) {
