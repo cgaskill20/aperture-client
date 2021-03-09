@@ -40,6 +40,10 @@ class SingleChartArea {
         this.graphButtonArea.appendChild(this.scatterplotButton);
         this.graphButtonArea.appendChild(this.lineGraphButton);
 
+        this.addGraphBox.appendChild(this.addGraphMessage);
+        this.addGraphBox.appendChild(this.graphButtonArea);
+        this.parentNode.appendChild(this.addGraphBox);
+
         this.usageMessage = document.createElement("p");
         this.usageMessage.innerText = "Enable data exploration to begin graphing";
         this.usageMessage.className = "chart-usage-message";
