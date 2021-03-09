@@ -23,7 +23,7 @@ class GeometryLoader {
         this.cache = [];
         this.db = new Dexie(collection);
         this.db.version(1).stores({
-            data: 'geohash,featureTable'
+            data: 'geohash' //only need to index the geohash field
         });
     }
 
