@@ -3,7 +3,7 @@
   * A class that represents an HTML element which can hold and dynamically
   * display multiple charts.
   * 
-  * @author Pierce Smith
+  * @author Pierce Smith, Matt Young (mostly Pierce Smith)
   */
 class SingleChartArea {
     static runningID = 0;
