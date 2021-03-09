@@ -29,6 +29,11 @@ class SingleChartArea {
     addChart(chart) {
         this.charts.push(chart);
         chart.addTo(this.container);
+        chart.hide(this.viewIndex);
+    }
+
+    showChart(index) {
+        this.charts[index].unhide(this.viewIndex);
     }
 
     rerender(newWidth, newHeight) {
@@ -39,6 +44,7 @@ class SingleChartArea {
             this.charts.forEach(chart => {
                 chart.rerender(newWidth, newHeight, this.viewIndex);
             });
+            this.showChart(1);
         }
     }
 

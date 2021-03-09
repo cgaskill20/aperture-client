@@ -56,7 +56,7 @@ END OF TERMS AND CONDITIONS
 */
 
 class SingleChartManager {
-    constructor(catalog, chartArea) {
+    constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
         this.charts = {};
         this.chartArea = chartArea;
         let graphable = catalog.map(e => Object.keys(e.constraints)).flat();
@@ -64,7 +64,7 @@ class SingleChartManager {
         this.constraints = catalog.map(e => e.constraints);
         this.constraints.forEach(constraint => {
             for (let feature in constraint) {
-                this.charts[feature] = new LineGraph();
+                this.charts[feature] = new chartType();
                 this.charts[feature].setTitle(constraint[feature].label);
                 this.chartArea.addChart(this.charts[feature]);
             }

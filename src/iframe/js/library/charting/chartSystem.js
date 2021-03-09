@@ -56,15 +56,23 @@ END OF TERMS AND CONDITIONS
 */
 
 const ChartingType = {
-    SINGLE: {
-        name: "single",
+    LINE: {
+        name: "line",
         managerType: SingleChartManager,
         areaType: SingleChartArea,
+        chartType: LineGraph,
+    },
+    HISTOGRAM: {
+        name: "histogram",
+        managerType: SingleChartManager,
+        areaType: SingleChartArea,
+        chartType: Histogram,
     },
     SCATTERPLOT: {
         name: "scatterplot",
         managerType: ScatterplotManager,
         areaType: ScatterplotArea,
+        chartType: Scatterplot,
     },
 }
 
@@ -72,34 +80,72 @@ class ChartSystem {
     constructor(map, chartCatalogFilename) {
         this.map = map;
 
-        this.currentMode = ChartingType.SINGLE;
-
         this.filter = new MapDataFilter();
         RenderInfrastructure.useFilter(this.filter);
 
-        this.resizable = new resizable(500, 300, "white");
-        this.chartManagers = {};
-        this.chartAreas = {};
+        this.chartFrames = [];
 
         this.validFeatureManager = new ValidFeatureManager([]);
 
+        this.resizable = new resizable(400, 300, "white");
+        this.resizable.setResizeCallback((width, height) => {
+            this.chartFrames.forEach(frame => {
+                frame.resize();
+            });
+        });
+
         $.getJSON(chartCatalogFilename, (catalog) => {
             this.initializeUpdateHooks();
-
-            for (let typeName in ChartingType) {
-                let type = ChartingType[typeName];
-                this.chartAreas[type.name] = new type.areaType();
-                this.resizable.addChartArea(type.name, this.chartAreas[type.name]);
-                if (type.name != this.currentMode.name) {
-                    this.chartAreas[type.name].toggleVisible();
-                }
-                this.chartManagers[type.name] = new type.managerType(catalog, this.chartAreas[type.name], this.validFeatureManager, this);
-            }
-
+            this.catalog = catalog;
             this.graphable = catalog.map(e => Object.keys(e.constraints)).flat();
+
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // An example for how to use this interface
+            //
+            // ChartSystem::getChartFrame(ChartingType) returns a ChartFrame:
+            // * Use .getDOMNode on the frame to get its associated node.
+            //   You can do whatever you need to it.
+            //   The selector for the node is by default `div.<TypeName>-chart-container`.
+            //   For instance, if you make a chart of type ChartingType.HISTOGRAM, the
+            //   selector for the node is `div.histogram-chart-container`.
+            // * Use .setSize on the frame to change its size; 
+            //   do not set width and height styles directly.
+            // * The frames are tied to the resizable. Whenever the resizable
+            //   changes size, the frames update their size automatically to
+            //   the width and height last passed to setSize.
+            //
+            // Keep in mind the ChartSystem is a (loosely enforced) singleton class.
+            // The single instance of it exists in map2.js.
+            // (see line 58 in map2.js)
+            // I would recommend putting changes that mess with the UI in a separate
+            // class rather than this one, perhaps one that encapsulates a ChartSystem 
+            // instance and pull in the single ChartSystem instance from map2.js.
+            //
+            // Also, there's an odd bug in the LineGraph that only makes it work
+            // like 50% of the time. I don't know why yet.
+            //
+            // Delete this example code if you need to.
+
+            let chart = this.getChartFrame(ChartingType.HISTOGRAM);
+            this.resizable.boxDocument.appendChild(chart.getDOMNode());
         });
 
         this.doNotUpdate = false;
+
+    }
+
+    getChartFrame(type) {
+        let node = document.createElement("div");
+        node.className = `${type.name}-chart-area`;
+
+        let area = new type.areaType();
+        area.attachTo(node);
+        let manager = new type.managerType(this.catalog, area, this.validFeatureManager, this, type.chartType);
+        let frame = new ChartFrame(node, area, manager);
+
+        this.chartFrames.push(frame);
+
+        return frame;
     }
 
     initializeUpdateHooks() {
@@ -113,7 +159,7 @@ class ChartSystem {
         }
 
         let values = this.getValues();
-        this.chartManagers[this.currentMode.name].update(values);
+        this.chartFrames.forEach(frame => { frame.manager.update(values); });
 
         this.doNotUpdate = true;
         window.setTimeout(() => { this.doNotUpdate = false; }, 200);

@@ -74,7 +74,6 @@ class resizable {
         this.backgroundColor = backgroundColor;
         this.isDown = false;
         this.isResizing = false;
-        this.chartAreas = {};
         this.createOverlay();
         this.resizeListeners();
         this.movementListeners();
@@ -172,9 +171,13 @@ class resizable {
             this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
         }
 
-        for (let areaName in this.chartAreas) {
-            this.chartAreas[areaName].rerender(this.width, this.height);
+        if (this.onResizeCallback) {
+            this.onResizeCallback(this.width, this.height);
         }
+    }
+
+    setResizeCallback(cb) {
+        this.onResizeCallback = cb;
     }
 
     /**
