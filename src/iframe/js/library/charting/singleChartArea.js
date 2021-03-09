@@ -43,12 +43,6 @@ class SingleChartArea {
         this.addGraphBox.appendChild(this.addGraphMessage);
         this.addGraphBox.appendChild(this.graphButtonArea);
         this.parentNode.appendChild(this.addGraphBox);
-
-        this.usageMessage = document.createElement("p");
-        this.usageMessage.innerText = "Enable data exploration to begin graphing";
-        this.usageMessage.className = "chart-usage-message";
-        this.usageMessage.style.display = "none";
-        this.parentNode.appendChild(this.usageMessage);
     }
 
     addChart(chart) {
@@ -63,22 +57,12 @@ class SingleChartArea {
 
     rerender(newWidth, newHeight) {
         if (this.hasNothingToRender) {
-            this.showUsageMessage();
         } else {
-            this.hideUsageMessage();
             this.charts.forEach(chart => {
                 chart.rerender(newWidth, newHeight, this.viewIndex);
             });
             this.showChart(1);
         }
-    }
-
-    showUsageMessage() {
-        this.usageMessage.style.display = "inline";
-    }
-
-    hideUsageMessage() {
-        this.usageMessage.style.display = "none";
     }
 
     tellNumberOfCharts(chartCount) {
