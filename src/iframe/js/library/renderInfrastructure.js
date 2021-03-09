@@ -71,7 +71,7 @@ class RenderInfrastructure {
         let layers = [];
         const newLayer = L.geoJson(geoJsonData, {
             style: function (feature) {
-                let weight = 3;
+                let weight = 1;
                 let fillOpacity = 0.2;
                 let name = Util.getNameFromGeoJsonFeature(feature, indexData);
                 if (datasource[name] && datasource[name]["border"] !== null && datasource[name]["border"] !== undefined)

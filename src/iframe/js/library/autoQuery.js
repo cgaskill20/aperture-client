@@ -164,8 +164,12 @@ class AutoQuery {
     query() {
         if(this.linked){
             const mapZoom = this.map.getZoom();
-            if(mapZoom < 7 || (this.linked === "tract_geo_140mb" && mapZoom < 10))
-                return;
+            if(this.linked === "tract_geo_140mb" && mapZoom < 10){
+                map.setZoom(10);
+            }
+            else if(mapZoom < 7){
+                map.setZoom(7);
+            }
         }
         let q = [];
         if (!this.linked) {
