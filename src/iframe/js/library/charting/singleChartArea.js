@@ -19,6 +19,27 @@ class SingleChartArea {
         this.container.className = "single-chart-area";
         this.parentNode.appendChild(this.container);
 
+        this.addGraphBox = document.createElement("div");
+        this.addGraphBox.className = "colorMode1 customBorder graph-box";
+        this.addGraphMessage = document.createElement("p");
+        this.addGraphMessage.className = "add-graph-message";
+        this.addGraphMessage.innerText = "Add a graph...";
+
+        this.graphButtonArea = document.createElement("div");
+        this.histogramButton = document.createElement("button");
+        this.histogramButton.className = "btn btn-outline-dark graph-button";
+        this.histogramButton.innerText = "Histogram";
+        this.scatterplotButton = document.createElement("button");
+        this.scatterplotButton.className = "btn btn-outline-dark graph-button";
+        this.scatterplotButton.innerText = "Scatterplot";
+        this.lineGraphButton = document.createElement("button");
+        this.lineGraphButton.className = "btn btn-outline-dark graph-button";
+        this.lineGraphButton.innerText = "Line Graph";
+
+        this.graphButtonArea.appendChild(this.histogramButton);
+        this.graphButtonArea.appendChild(this.scatterplotButton);
+        this.graphButtonArea.appendChild(this.lineGraphButton);
+
         this.usageMessage = document.createElement("p");
         this.usageMessage.innerText = "Enable data exploration to begin graphing";
         this.usageMessage.className = "chart-usage-message";
