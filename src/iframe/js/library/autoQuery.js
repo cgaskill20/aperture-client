@@ -162,7 +162,13 @@ class AutoQuery {
       * new features come in with @method listenForLinkedGeometryUpdates
       */
     query() {
-        console.log(map.getZoom())
+        if(this.linked){
+            const mapZoom = this.map.getZoom();
+            if(mapZoom < 7)
+                return;
+            if(this.linked === "tract_geo_140mb" && mapZoom < 10)
+                return;
+        }
         let q = [];
         if (!this.linked) {
             const b = this.map.wrapLatLngBounds(this.map.getBounds());
