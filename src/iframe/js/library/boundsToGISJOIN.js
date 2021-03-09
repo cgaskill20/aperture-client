@@ -26,7 +26,7 @@ const BoundsToGISJOIN = {
         if (datasource) {
             const data = {};
             for (const geohash of geohashes) {
-                if (datasource[geohash])
+                if (datasource[geohash] && datasource[geohash].length)
                     data[geohash] = datasource[geohash];
             }
             return data;

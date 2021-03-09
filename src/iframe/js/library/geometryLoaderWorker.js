@@ -10,7 +10,7 @@ onconnect = function (p) {
     var port = p.ports[0];
     let loader;
     let id;
-    console.log = function() {} //remove this is you want logging
+    //console.log = function() {} //remove this is you want logging
 
     const errorMessage = (msg, senderID) => {
         console.log(`${id} - sender: ${senderID}, ERR: ${msg}`)
@@ -77,8 +77,8 @@ onconnect = function (p) {
                     break;
                 }
                 const queryData = BoundsToGISJOIN.boundsToData(
-                    msg.data.bounds,
-                    msg.data.blacklist
+                    data.bounds,
+                    data.blacklist
                 );
                 console.log(`${id} - found ${Object.keys(queryData).length} geohashes that match bounds for sender ${sID}`)
                 //check to make sure map of geohashes & gisjoins is any good
