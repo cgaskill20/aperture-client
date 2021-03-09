@@ -28,12 +28,15 @@ class SingleChartArea {
         this.graphButtonArea = document.createElement("div");
         this.histogramButton = document.createElement("button");
         this.histogramButton.className = "btn btn-outline-dark graph-button";
+        this.histogramButton.id = "histogram-button-id";
         this.histogramButton.innerText = "Histogram";
         this.scatterplotButton = document.createElement("button");
         this.scatterplotButton.className = "btn btn-outline-dark graph-button";
+        this.scatterplotButton.id = "scatterplot-button-id";
         this.scatterplotButton.innerText = "Scatterplot";
         this.lineGraphButton = document.createElement("button");
         this.lineGraphButton.className = "btn btn-outline-dark graph-button";
+        this.lineGraphButton.id = "linegraph-button-id";
         this.lineGraphButton.innerText = "Line Graph";
 
         this.graphButtonArea.appendChild(this.histogramButton);
