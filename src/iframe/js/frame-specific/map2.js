@@ -1,8 +1,11 @@
 const MAPNUMBER = 2;
 const e = React.createElement;
 
-//const queryAlertText = document.getElementById('queryInfoText');
-
+const DEV = true;
+if(DEV){
+    AutoQuery.minCountyZoom = 19;
+    AutoQuery.minTractZoom = 19;
+}
 
 //--------------
 const standardTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {

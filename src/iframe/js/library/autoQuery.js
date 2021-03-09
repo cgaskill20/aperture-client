@@ -8,6 +8,8 @@
 
 class AutoQuery {
     static queryWorker = new SharedWorker('js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
+    static minCountyZoom = 8;
+    static minTractZoom = 10;
     /**
       * Constructs the instance of the autoquerier to a specific layer
       * @memberof AutoQuery
@@ -164,11 +166,11 @@ class AutoQuery {
     query() {
         if(this.linked){
             const mapZoom = this.map.getZoom();
-            if(this.linked === "tract_geo_140mb" && mapZoom < 10){
-                map.setZoom(10);
+            if(this.linked === "tract_geo_140mb" && mapZoom < AutoQuery.minTractZoom){
+                map.setZoom(AutoQuery.minTractZoom);
             }
-            else if(mapZoom < 7){
-                map.setZoom(7);
+            else if(mapZoom < AutoQuery.minCountyZoom){
+                map.setZoom(AutoQuery.minCountyZoom);
             }
         }
         let q = [];

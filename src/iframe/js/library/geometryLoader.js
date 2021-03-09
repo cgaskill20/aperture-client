@@ -6,7 +6,7 @@
  * @notes Work in progress!
  */
 
- class GeometryLoader {
+class GeometryLoader {
     /**
       * Constructor which initializes the GeometryLoader
       * @memberof GeometryLoader
@@ -21,25 +21,30 @@
         this.collection = collection;
 
         this.cache = [];
+        this.db = new Dexie(collection);
+        this.db.version(1).stores({
+            data: 'geohash,featureTable'
+        });
     }
 
     //public functions ------------------------
-    getCachedData(geohashes){
-        if(!Object.keys(this.cache).length)
+    async getCachedData(geohashes) {
+        const relevantItemsCollection = await this.db.data.filter((item) => {
+            return geohashes.includes(item.geohash);
+        })
+        const relevantItems = await relevantItemsCollection.toArray();
+        if (!relevantItems)
             return null;
-        const geohashesCached = Object.keys(this.cache).filter((current) => {
-            if(geohashes.includes(current)) 
-                return true
-            return false
-        });
         let resultList = [];
         let resultGISJOINS = [];
-        for(const gh of geohashesCached){
-            resultList = this.addListToListNoDuplicates(this.cache[gh],resultList)
-            resultGISJOINS = this.addListToListNoDuplicates(this.cache[gh].map(f => {return f.GISJOIN}),resultGISJOINS)
+        let relevantGeohashes = [];
+        for (const item of relevantItems) {
+            relevantGeohashes = this.addListToListNoDuplicates([item.geohash], relevantGeohashes)
+            resultList = this.addListToListNoDuplicates(item.featureTable, resultList)
+            resultGISJOINS = this.addListToListNoDuplicates(item.featureTable.map(f => { return f.GISJOIN }), resultGISJOINS)
         }
         return {
-            geohashes: geohashesCached,
+            geohashes: relevantGeohashes,
             GISJOINS: resultGISJOINS,
             data: resultList
         }
@@ -54,8 +59,9 @@
         const invertedMap = this.getInvertedGeohashGISJOINMap(geohashesGISJOINS);
         const GISJOINS = Object.keys(invertedMap);
         const q = [{ "$match": { "GISJOIN": { "$in": GISJOINS } } }];
-        const stream = this.querier.getStreamForQuery(this.collection,JSON.stringify(q));
-        stream.on('data', (r) => {
+        const stream = this.querier.getStreamForQuery(this.collection, JSON.stringify(q));
+        const miniCache = [];
+        stream.on('data', async (r) => {
             const data = JSON.parse(r.getData());
             const geohashes = invertedMap[data.GISJOIN];
             responseFunction({
@@ -63,32 +69,38 @@
                 GISJOINS: [data.GISJOIN],
                 data: [data]
             });
-            for(const geohash of geohashes){
-                if(!this.cache[geohash]) 
-                    this.cache[geohash] = []
-                this.cache[geohash] = this.addListToListNoDuplicates(this.cache[geohash],[data]);
+            for (const geohash of geohashes) {
+                if (!miniCache[geohash])
+                    miniCache[geohash] = []
+                miniCache[geohash] = this.addListToListNoDuplicates(miniCache[geohash], [data]);
             }
         });
         stream.on('end', (e) => {
+            for (const geohash in miniCache) {
+                this.db.data.put({
+                    geohash: geohash,
+                    featureTable: miniCache[geohash]
+                });
+            }
             responseFunction("END");
             return;
         });
     }
 
-    getInvertedGeohashGISJOINMap(geohashesGISJOINS){
+    getInvertedGeohashGISJOINMap(geohashesGISJOINS) {
         const reverse = {};
-        for(const geohash in geohashesGISJOINS){
-            for(const GISJOIN of geohashesGISJOINS[geohash]){
-                if(!reverse[GISJOIN])
+        for (const geohash in geohashesGISJOINS) {
+            for (const GISJOIN of geohashesGISJOINS[geohash]) {
+                if (!reverse[GISJOIN])
                     reverse[GISJOIN] = [];
-                reverse[GISJOIN] = this.addListToListNoDuplicates([geohash],reverse[GISJOIN]);
+                reverse[GISJOIN] = this.addListToListNoDuplicates([geohash], reverse[GISJOIN]);
             }
         }
         return reverse;
-    }   
+    }
 
-    addListToListNoDuplicates(listToAdd,list){
-        return [...new Set([...listToAdd,...list])];
+    addListToListNoDuplicates(listToAdd, list) {
+        return [...new Set([...listToAdd, ...list])];
     }
 }
 
