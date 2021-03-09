@@ -3,8 +3,8 @@ const e = React.createElement;
 
 const DEV = true;
 if(DEV){
-    AutoQuery.minCountyZoom = 19;
-    AutoQuery.minTractZoom = 19;
+    AutoQuery.minCountyZoom = 1;
+    AutoQuery.minTractZoom = 1;
 }
 
 //--------------
