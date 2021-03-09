@@ -29,10 +29,9 @@ class GeometryLoader {
 
     //public functions ------------------------
     async getCachedData(geohashes) {
-        const relevantItemsCollection = await this.db.data.filter((item) => {
-            return geohashes.includes(item.geohash);
-        })
-        const relevantItems = await relevantItemsCollection.toArray();
+        const relevantItems = await this.db.data.where("geohash")
+                                    .anyOf(geohashes)
+                                    .toArray();
         if (!relevantItems)
             return null;
         let resultList = [];
