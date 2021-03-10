@@ -21,9 +21,10 @@ class SingleChartArea {
 
         this.addGraphBox = document.createElement("div");
         this.addGraphBox.className = "colorMode1 customBorder add-graph-box";
+        this.addGraphBox.id = "graph-controller";
         this.addGraphMessage = document.createElement("p");
         this.addGraphMessage.className = "add-graph-message";
-        this.addGraphMessage.innerText = "Add a graph...";
+        this.addGraphMessage.innerText = "Add a...";
 
         this.graphButtonArea = document.createElement("div");
         this.graphButtonArea.id = "graph-button-area"
