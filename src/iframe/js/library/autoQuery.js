@@ -219,7 +219,9 @@ class AutoQuery {
     bindConstraintsAndQuery(q, forcedGeometry) {
         const sessionID = Math.random().toString(36).substring(2, 6);
         q = q.concat(this.buildConstraintPipeline());
-        q.push(this.addMongoProject())
+        //outputs from query may only be $projected if the data is not GeoJSON
+        if(this.linked)
+            q.push(this.addMongoProject())
         AutoQuery.queryWorker.port.postMessage({
             type: "query",
             collection: this.collection,
@@ -318,7 +320,7 @@ class AutoQuery {
         indexData[this.collection].popup = this.buildPopup();
         if (this.getIcon())
             indexData[this.collection]["iconAddr"] = `../../images/map-icons/${this.getIcon()}.png`;
-
+        
         indexData[this.collection]["border"] = this.color.border;
         indexData[this.collection]["opacity"] = this.color.opacity;
 
