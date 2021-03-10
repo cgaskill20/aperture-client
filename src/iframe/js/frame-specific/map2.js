@@ -98,9 +98,48 @@ function showValidation() {
     document.getElementById("sidebar-container").style.display = "none";
 }
 
+let buttonsOn = false;
 function showGraph() {
     chartSystem.toggleVisible();
+    if(!buttonsOn) {
+        ChartButtons.makeButtonsWork(this.chartSystem); //FIXME where should I call this? This is pretty egregious.
+        buttonsOn = true;
+    }
 }
+
+
+
+
+
+const ChartButtons = {
+
+    makeButtonsWork(chartSystem) {
+        document.getElementById('histogram-button-id').addEventListener('click', createHistogram);
+        document.getElementById('scatterplot-button-id').addEventListener('click', createScatterplot);
+        document.getElementById('linegraph-button-id').addEventListener('click', createLinegraph);
+
+        function createHistogram() {
+            console.log("createHistogram() clicked");
+            let chart = chartSystem.getChartFrame(ChartingType.HISTOGRAM);
+            chartSystem.resizable.boxDocument.appendChild(chart.getDOMNode());
+        }
+
+        function createScatterplot() {
+            console.log("createScatterplot() clicked");
+        }
+
+        function createLinegraph() {
+            console.log("createLinegraph() clicked");
+        }
+    }
+
+}
+
+
+
+
+
+
 
 const overwrite = { //leaving this commented cause it explains the schema really well 
     // "covid_county": {
