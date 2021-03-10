@@ -61,6 +61,8 @@ class Histogram extends Chart {
         this.binNum = 10;
         this.changeBins(this.binNum);
         this.colorScale = () => "steelblue";
+        this.kdeEnabled = true;
+        this.kde = new KernelDensityEstimator();
     }
 
     rerender(newWidth, newHeight, viewIndex) {
@@ -102,6 +104,16 @@ class Histogram extends Chart {
             .attr("y", 12)
             .attr("text-anchor", "middle")
             .text(this.title);
+
+        if (this.kdeEnabled) {
+            view.line = d3.line()
+                .curve(d3.curveBasis)
+                .x(d => view.x(d[0]))
+                .y(d => view.y(d[1]));
+            view.svg.select("path#kdecurve")
+                .datum(this.kde.estimate(view.x.ticks(30), this.data))
+                .attr("d", view.line);
+        }
     }
 
     changeBins(binNum) {
@@ -139,6 +151,11 @@ class Histogram extends Chart {
         view.svg.append("g").attr("id", "xAxis");
         view.svg.append("g").attr("id", "yAxis");
         view.svg.append("text").attr("id", "title");
+        view.svg.append("path").attr("id", "kdecurve")
+            .attr("fill", "none")
+            .attr("stroke", "#000")
+            .attr("stroke-width", 1.5)
+            .attr("stroke-linejoin", "round");
 
         return view;
     }

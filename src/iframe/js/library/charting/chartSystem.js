@@ -126,7 +126,7 @@ class ChartSystem {
             //
             // Delete this example code if you need to.
 
-            let chart = this.getChartFrame(ChartingType.HISTOGRAM);
+            let chart = this.getChartFrame(ChartingType.LINE);
             this.resizable.boxDocument.appendChild(chart.getDOMNode());
         });
 
