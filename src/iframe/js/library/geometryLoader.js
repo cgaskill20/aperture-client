@@ -30,9 +30,9 @@ class GeometryLoader {
     //public functions ------------------------
     async getCachedData(geohashes) {
         const relevantItems = await this.db.data.where("geohash")
-                                    .anyOf(geohashes)
-                                    .toArray();
-        if (!relevantItems)
+            .anyOf(geohashes)
+            .toArray();
+        if (!relevantItems.length)
             return null;
         let resultList = [];
         let resultGISJOINS = [];
@@ -55,9 +55,10 @@ class GeometryLoader {
       * @method getData
       */
     getNonCachedData(geohashesGISJOINS, responseFunction) {
+        return;
         const invertedMap = this.getInvertedGeohashGISJOINMap(geohashesGISJOINS);
         const GISJOINS = Object.keys(invertedMap);
-        const q = [{ "$match": { "GISJOIN": { "$in": GISJOINS } } }];
+        const q = [/*{ "$match": { "GISJOIN": { "$in": GISJOINS } } }*/];
         const stream = this.querier.getStreamForQuery(this.collection, JSON.stringify(q));
         const miniCache = [];
         stream.on('data', async (r) => {
@@ -75,6 +76,7 @@ class GeometryLoader {
             }
         });
         stream.on('end', (e) => {
+            console.log("e")
             for (const geohash in miniCache) {
                 this.db.data.put({
                     geohash: geohash,
@@ -82,6 +84,62 @@ class GeometryLoader {
                 });
             }
             responseFunction("END");
+            return;
+        });
+    }
+
+    async getPreloadedBuckets() {
+        return new Promise(((resolve) => {
+            const waitForExist = () => {
+                if(!BoundsToGISJOIN.buckets || !Object.keys(BoundsToGISJOIN.buckets).length){
+                    setTimeout(function(){
+                        waitForExist();
+                    }, 150);
+                }
+                else{
+                    resolve(BoundsToGISJOIN.buckets);
+                }
+            }
+            waitForExist();
+        }));
+    }
+
+    async preloadData(callback) {
+        const preloadedBuckets = await this.getPreloadedBuckets();
+        const testDBExistence = await this.getCachedData(Object.keys(preloadedBuckets).slice(0,10));
+        console.log(testDBExistence)
+        if(testDBExistence){
+            console.log("DB already exists!")
+            callback();
+            return;
+        }
+        console.log("Preloading everything")
+        const invertedMap = this.getInvertedGeohashGISJOINMap(preloadedBuckets);
+        const total = Object.keys(invertedMap).length;
+        const q = [];
+        const stream = this.querier.getStreamForQuery(this.collection, JSON.stringify(q));
+        const miniCache = [];
+        stream.on('data', async (r) => {
+            const data = JSON.parse(r.getData());
+            const geohashes = invertedMap[data.GISJOIN];
+            for (const geohash of geohashes) {
+                if (!miniCache[geohash])
+                    miniCache[geohash] = []
+                miniCache[geohash] = this.addListToListNoDuplicates(miniCache[geohash], [data]);
+            }
+        });
+        stream.on('end', (e) => {
+            let toPut = [];
+            for (const geohash in miniCache) {
+                toPut.push({
+                    geohash: geohash,
+                    featureTable: miniCache[geohash]
+                });
+            }
+            this.db.data.bulkPut(toPut).then(done => {
+                console.log("DB is ready!")
+                callback();
+            })
             return;
         });
     }

@@ -36,7 +36,6 @@ class AutoQuery {
         if (this.data.linkedGeometry) { //linked geometry stuff
             this.linked = this.data.linkedGeometry;
             this.backgroundLoader = this.linked === "tract_geo_140mb" ? window.backgroundTract : window.backgroundCounty;
-            this.backgroundLoader.port.start();
             this.geohashCache = [];
         }
 

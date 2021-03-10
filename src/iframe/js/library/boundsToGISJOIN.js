@@ -12,6 +12,7 @@ const BoundsToGISJOIN = {
         fetch(jURL)
             .then(response => response.json())
             .then(data => {
+                console.log("loaded")
                 BoundsToGISJOIN.buckets = data
             }
             );

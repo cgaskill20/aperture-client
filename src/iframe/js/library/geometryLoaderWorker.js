@@ -10,7 +10,7 @@ onconnect = function (p) {
     var port = p.ports[0];
     let loader;
     let id;
-    console.log = function() {} //remove this is you want logging
+    //console.log = function() {} //remove this is you want logging
 
     const errorMessage = (msg, senderID) => {
         console.log(`${id} - sender: ${senderID}, ERR: ${msg}`)
@@ -68,6 +68,9 @@ onconnect = function (p) {
                 loader = new GeometryLoader(data.collection);
                 BoundsToGISJOIN.config(data.collection);
                 id = data.id;
+                loader.preloadData(() => {
+                    queryEndResponse(sID)
+                });
                 console.log(`${id} - set to use ${data.collection} collection.`)
                 break;
             case "query":

@@ -67,21 +67,40 @@ let bgTractId = "bgTract";
 let bgCountyId = "bgCounty";
 const backgroundTract = new SharedWorker("js/library/geometryLoaderWorker.js", {name: `Background tract worker: ${bgTractId}`});
 const backgroundCounty = new SharedWorker("js/library/geometryLoaderWorker.js", {name: `Background county worker: ${bgCountyId}`});
+backgroundTract.port.start();
+backgroundCounty.port.start();
+let waitingOn = 2;
+const configFinishedListener = msg => {
+    const data = msg.data;
+    console.log("hereree")
+    //check that the data is sent from this querier
+    if (data.type !== "end" && (data.senderID !== "tractConfig" || data.senderID !== "countyConfig"))
+        return;
+    waitingOn -= 1;
+    if(!waitingOn){
+        document.getElementById("waiter").style.display = "none";
+        console.log("APERTRUE IS READY")
+        backgroundTract.port.removeEventListener("message", configFinishedListener)
+        backgroundCounty.port.removeEventListener("message", configFinishedListener)
+    }
+}
+backgroundTract.port.addEventListener("message", configFinishedListener)
+backgroundCounty.port.addEventListener("message", configFinishedListener)
 backgroundTract.port.postMessage({
-    senderID: null,
+    senderID: "tractConfig",
     type: "config",
     collection: "tract_geo_140mb",
     id: bgTractId
 });
 randID = Math.random().toString(36).substring(2, 15);
 backgroundCounty.port.postMessage({
-    senderID: null,
+    senderID: "countyConfig",
     type: "config",
     collection: "county_geo_30mb", 
     id: bgCountyId
 });
 window.backgroundTract = backgroundTract;
-window.backgroundCounty = backgroundCounty
+window.backgroundCounty = backgroundCounty;
 
 
 map.on('click', function () {
