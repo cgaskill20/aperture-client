@@ -135,8 +135,11 @@ class ChartSystem {
     }
 
     getChartFrame(type) {
+        // let chartBox = document.createElement("div");
+        // chartBox.className = "colorMode1 customBorder";
         let node = document.createElement("div");
         node.className = `${type.name}-chart-area`;
+        // chartBox.appendChild(node);
 
         let area = new type.areaType();
         area.attachTo(node);
