@@ -18,36 +18,6 @@ class SingleChartArea {
         this.container = document.createElement("div");
         this.container.className = "single-chart-area";
         this.parentNode.appendChild(this.container);
-
-        this.addGraphBox = document.createElement("div");
-        this.addGraphBox.className = "colorMode1 customBorder add-graph-box";
-        this.addGraphBox.id = "graph-controller";
-        this.addGraphMessage = document.createElement("p");
-        this.addGraphMessage.className = "add-graph-message";
-        this.addGraphMessage.innerText = "Add a...";
-
-        this.graphButtonArea = document.createElement("div");
-        this.graphButtonArea.id = "graph-button-area"
-        this.histogramButton = document.createElement("button");
-        this.histogramButton.className = "btn btn-outline-dark graph-button";
-        this.histogramButton.id = "histogram-button-id";
-        this.histogramButton.innerText = "Histogram";
-        this.scatterplotButton = document.createElement("button");
-        this.scatterplotButton.className = "btn btn-outline-dark graph-button";
-        this.scatterplotButton.id = "scatterplot-button-id";
-        this.scatterplotButton.innerText = "Scatterplot";
-        this.lineGraphButton = document.createElement("button");
-        this.lineGraphButton.className = "btn btn-outline-dark graph-button";
-        this.lineGraphButton.id = "linegraph-button-id";
-        this.lineGraphButton.innerText = "Line Graph";
-
-        this.graphButtonArea.appendChild(this.histogramButton);
-        this.graphButtonArea.appendChild(this.scatterplotButton);
-        this.graphButtonArea.appendChild(this.lineGraphButton);
-
-        this.addGraphBox.appendChild(this.addGraphMessage);
-        this.addGraphBox.appendChild(this.graphButtonArea);
-        this.parentNode.appendChild(this.addGraphBox);
     }
 
     addChart(chart) {
