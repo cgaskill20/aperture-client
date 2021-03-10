@@ -55,8 +55,6 @@ map.addLayer(markers);
 const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
 const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
 
-const chartSystem = new ChartSystem(map, "json/graphPriority.json");
-
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty
 
@@ -69,12 +67,6 @@ document.getElementById('nav-close-button').addEventListener('click', closeNav);
 document.getElementById('nav-data-exploration-button').addEventListener('click', showDataExploration);
 document.getElementById('nav-modeling-button').addEventListener('click', showModeling);
 document.getElementById('nav-validation-button').addEventListener('click', showValidation);
-document.getElementById('nav-graph-button').addEventListener('click', showGraph);
-
-// $('#nav-close-button').on('click', closeNav);
-// $('#nav-data-exploration-button').on('click', showDataExploration);
-// $('#nav-modeling-button').on('click', showModeling);
-// $('#nav-validation-button').on('click', showValidation);
 
 function openNav() {
   document.getElementById("sidebar-id").style.width = "52vw";
@@ -96,10 +88,6 @@ function showModeling() {
 
 function showValidation() {
     document.getElementById("sidebar-container").style.display = "none";
-}
-
-function showGraph() {
-    chartSystem.toggleVisible();
 }
 
 const overwrite = { //leaving this commented cause it explains the schema really well 

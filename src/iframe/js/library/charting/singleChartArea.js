@@ -3,7 +3,7 @@
   * A class that represents an HTML element which can hold and dynamically
   * display multiple charts.
   * 
-  * @author Pierce Smith
+  * @author Pierce Smith, Matt Young (mostly Pierce Smith)
   */
 class SingleChartArea {
     static runningID = 0;
@@ -18,12 +18,6 @@ class SingleChartArea {
         this.container = document.createElement("div");
         this.container.className = "single-chart-area";
         this.parentNode.appendChild(this.container);
-
-        this.usageMessage = document.createElement("p");
-        this.usageMessage.innerText = "Enable data exploration to begin graphing";
-        this.usageMessage.className = "chart-usage-message";
-        this.usageMessage.style.display = "none";
-        this.parentNode.appendChild(this.usageMessage);
     }
 
     addChart(chart) {
@@ -38,22 +32,12 @@ class SingleChartArea {
 
     rerender(newWidth, newHeight) {
         if (this.hasNothingToRender) {
-            this.showUsageMessage();
         } else {
-            this.hideUsageMessage();
             this.charts.forEach(chart => {
                 chart.rerender(newWidth, newHeight, this.viewIndex);
             });
             this.showChart(1);
         }
-    }
-
-    showUsageMessage() {
-        this.usageMessage.style.display = "inline";
-    }
-
-    hideUsageMessage() {
-        this.usageMessage.style.display = "none";
     }
 
     tellNumberOfCharts(chartCount) {
