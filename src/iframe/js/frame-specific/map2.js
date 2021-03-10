@@ -102,7 +102,7 @@ let buttonsOn = false;
 function showGraph() {
     chartSystem.toggleVisible();
     if(!buttonsOn) {
-        ChartButtons.makeButtonsWork(this.chartSystem); //FIXME where should I call this? This is pretty egregious.
+        ChartButtons.makeButtonsWork(chartSystem); //FIXME where should I call this? This is pretty egregious.
         buttonsOn = true;
     }
 }

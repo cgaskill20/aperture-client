@@ -20,12 +20,13 @@ class SingleChartArea {
         this.parentNode.appendChild(this.container);
 
         this.addGraphBox = document.createElement("div");
-        this.addGraphBox.className = "colorMode1 customBorder graph-box";
+        this.addGraphBox.className = "colorMode1 customBorder add-graph-box";
         this.addGraphMessage = document.createElement("p");
         this.addGraphMessage.className = "add-graph-message";
         this.addGraphMessage.innerText = "Add a graph...";
 
         this.graphButtonArea = document.createElement("div");
+        this.graphButtonArea.id = "graph-button-area"
         this.histogramButton = document.createElement("button");
         this.histogramButton.className = "btn btn-outline-dark graph-button";
         this.histogramButton.id = "histogram-button-id";
