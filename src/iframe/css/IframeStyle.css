@@ -32,6 +32,11 @@
   margin: 10px;
 }
 
+.chart-control {
+  display: flex;
+  flex-direction: row;
+}
+
 .temp-chart-box {
   padding: 10px;
   margin: 10px;
