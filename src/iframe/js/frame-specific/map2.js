@@ -1,8 +1,10 @@
 const MAPNUMBER = 2;
 const e = React.createElement;
 
-const DEV = true;
+const PAGE_URL = window.location.href;
+const DEV = PAGE_URL.includes("dev") || PAGE_URL.includes("127.0.0.1");
 if(DEV){
+    console.log("Aperture client set to DEV mode.")
     AutoQuery.minCountyZoom = 1;
     AutoQuery.minTractZoom = 1;
 }
