@@ -9,7 +9,7 @@ class SingleChartArea {
     static runningID = 0;
 
     constructor() {
-        this.viewIndex = SingleChartArea.runningID++;
+        this.viewIndex = SingleChartArea.runningID;
         this.charts = [];
     }
 
@@ -36,7 +36,7 @@ class SingleChartArea {
             this.charts.forEach(chart => {
                 chart.rerender(newWidth, newHeight, this.viewIndex);
             });
-            this.showChart(1);
+            this.showChart(1); //This is hard-coding to SVI
         }
     }
 
