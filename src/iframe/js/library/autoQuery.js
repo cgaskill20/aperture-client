@@ -219,6 +219,7 @@ class AutoQuery {
     bindConstraintsAndQuery(q, forcedGeometry) {
         const sessionID = Math.random().toString(36).substring(2, 6);
         q = q.concat(this.buildConstraintPipeline());
+        q.push(this.addMongoProject())
         AutoQuery.queryWorker.port.postMessage({
             type: "query",
             collection: this.collection,
@@ -357,6 +358,16 @@ class AutoQuery {
         }
 
         return pipeline;
+    }
+
+    addMongoProject(){
+        let project = {GISJOIN:1};
+        for (const constraintName in this.constraintState) {
+            if (this.constraintState[constraintName]) {
+                project[constraintName] = 1
+            }
+        }
+        return {"$project": project};
     }
 
     /**

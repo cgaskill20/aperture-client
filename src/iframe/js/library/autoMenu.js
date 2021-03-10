@@ -22,10 +22,12 @@ const AutoMenu = {
             let catalog = {};
             const stream = AutoMenu._sustainQuerier.getStreamForQuery("Metadata", "[]");
             stream.on('data', (r) => {
+                console.log("d")
                 const data = JSON.parse(r.getData());
                 catalog[data.collection] = data; // do da data dance
             });
             stream.on('end', () => {
+                console.log("end")
                 //build it
                 const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
 
