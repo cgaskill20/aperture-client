@@ -1674,6 +1674,7 @@ END OF TERMS AND CONDITIONS
 class LineGraph extends Chart {
 
     rerender(width, height, viewIndex) {
+        this.changeData();
         let view = this.views[viewIndex];
 
         view.width = width;
@@ -1684,11 +1685,11 @@ class LineGraph extends Chart {
         // { date: Date, value: number }
         // view.x and view.y will need to change if this isn't the case.
         view.x = d3.scaleUtc()
-            .domain(d3.extent(this.data, d => d.date))
+            .domain(d3.extent(this.data, d => d.date)).nice()
             .range([view.margin.left, width - view.margin.right]);
 
         view.y = d3.scaleLinear()
-            .domain([0, 100000]).nice()
+            .domain([0, d3.max(this.data, d => d.value)]).nice()
             .range([height - view.margin.bottom, view.margin.top]);
 
         view.xAxis = g => g
@@ -1726,8 +1727,8 @@ class LineGraph extends Chart {
         this.rerenderAllViews();
         */
         
-        this.data = bsdata.map(kv => { return { value: kv.avg, date: kv.d } } );
-        this.rerenderAllViews();
+        this.data = bsdata.map(kv => { return { value: kv.avg, date: new Date(kv.d) } } );
+        //this.rerenderAllViews();
     }
 
     setTitle(title) {
@@ -1741,7 +1742,7 @@ class LineGraph extends Chart {
         view.height = height;
         view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
 
-        view.margin = { top: 50, right: 20, bottom: 30, left: 40 };
+        view.margin = { top: 50, right: 20, bottom: 30, left: 50 };
 
         view.svg.append("g").attr("id", "xAxis");
         view.svg.append("g").attr("id", "yAxis");
