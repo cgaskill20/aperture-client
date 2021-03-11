@@ -114,7 +114,7 @@ class AutoQuery {
         if (this.enabled) {
             this.clearMapLayers();
             this.geohashCache = [];
-            this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
+            AutoQuery.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
             this.query();
         }
     }
