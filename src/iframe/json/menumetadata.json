@@ -69,12 +69,13 @@
   },
   {
     "collection": "transmission_lines_geo",
-    "label": "Power Transmission Lines"
+    "label": "Power Transmission Lines",
+    "subGroup": "Energy Infrastructure"
   },
   {
     "collection": "svi_county_GISJOIN",
     "level": "county",
-    "label": "Social Vulnerability Index (County)",
+    "label": "Social Vulnerability Index County",
     "subGroup": "Social Vulnerability Index",
     "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
     "color": {
@@ -90,8 +91,7 @@
         "label": "Social Vulnerability Index",
         "name": "RPL_THEMES",
         "type": "range",
-        "step": 0.05,
-        "max": 0.9997
+        "step": 0.05
       }
     ]
   },
@@ -103,7 +103,7 @@
   {
     "collection": "svi_tract_GISJOIN",
     "level": "tract",
-    "label": "Social Vulnerability Index (Tract)",
+    "label": "Social Vulnerability Index Tract",
     "subGroup": "Social Vulnerability Index",
     "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
     "color": {
@@ -120,8 +120,7 @@
         "label": "Social Vulnerability Index",
         "name": "RPL_THEMES",
         "type": "range",
-        "step": 0.05,
-        "max": 0.9999
+        "step": 0.05
       }
     ]
   },
@@ -162,6 +161,7 @@
   {
     "collection": "public_schools",
     "icon": "school",
+    "subGroup": "Education",
     "fieldMetadata": [
       {
         "label": "Total Students",
@@ -193,6 +193,7 @@
   {
     "collection": "flood_zones_geo",
     "label": "Flood Zone",
+    "subGroup": "Floods",
     "color": {
       "style": "sequential",
       "variable": "properties.FLD_ZONE",
@@ -207,25 +208,9 @@
     ]
   },
   {
-    "collection": "tract_total_population",
-    "level": "tract",
-    "color": {
-      "style": "gradient",
-      "variable": "2010_total_population",
-      "border": 1
-    },
-    "fieldMetadata": [
-      {
-        "name": "2010_total_population",
-        "type": "range",
-        "step": 10,
-        "max": 9994.0
-      }
-    ]
-  },
-  {
     "collection": "fire_stations_geo",
     "icon": "fire_station",
+    "subGroup": "Emergency Infrastructure",
     "label": "Fire Stations"
   },
   {
@@ -244,28 +229,10 @@
     ]
   },
   {
-    "collection": "air_quality_avg",
-    "level": "tract",
-    "label": "Particulate Matter Air Quality Index",
-    "color": {
-      "style": "gradient",
-      "variable": "avgAqi",
-      "border": 1
-    },
-    "fieldMetadata": [
-      {
-        "name": "avgAqi",
-        "label": "Average",
-        "type": "range",
-        "min": 2.1098477667778845,
-        "max": 158.35387318384656
-      }
-    ]
-  },
-  {
     "collection": "hospitals_geo",
     "icon": "hospital",
     "label": "Hospitals",
+    "subGroup": "Emergency Infrastructure",
     "fieldMetadata": [
       {
         "name": "properties.BEDS",
@@ -282,13 +249,15 @@
   },
   {
     "collection": "electrical_substations_geo",
-    "icon": "hospital",
-    "label": "Electrical Substations"
+    "icon": "substation",
+    "label": "Electrical Substations",
+    "subGroup": "Energy Infrastructure"
   },
   {
     "collection": "power_plants_geo",
     "icon": "power_plant",
     "label": "Power Plants",
+    "subGroup": "Energy Infrastructure",
     "fieldMetadata": [
       {
         "name": "properties.ENERGY_SRC",
@@ -299,7 +268,8 @@
   },
   {
     "collection": "natural_gas_pipelines_geo",
-    "label": "Natural Gas Pipelines"
+    "label": "Natural Gas Pipelines",
+    "subGroup": "Energy Infrastructure"
   },
   {
     "collection":"risk_county",
