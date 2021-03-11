@@ -10,7 +10,7 @@ onconnect = function (p) {
     var port = p.ports[0];
     let loader;
     let id;
-    //console.log = function() {} //remove this is you want logging
+    console.log = function() {} //remove this is you want logging
 
     const errorMessage = (msg, senderID) => {
         console.log(`${id} - sender: ${senderID}, ERR: ${msg}`)
@@ -43,9 +43,6 @@ onconnect = function (p) {
     }
 
     const performQuery = async (query, senderID) => {
-        const thisJob = new GeometryLoaderJob(senderID,query);
-        console.log(JSON.parse(JSON.stringify(GeometryLoaderJob.allJobs)))
-        query = thisJob.geohashes;
         const cached = await loader.getCachedData(query)
         if (cached) {
             if (cached.data.length) {
@@ -57,7 +54,6 @@ onconnect = function (p) {
         if (query.length) {
             //console.error("db was missing a geohash - fatal error")
         }
-        thisJob.done();
         queryEndResponse(senderID)
     }
 
