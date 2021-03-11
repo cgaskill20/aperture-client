@@ -15,30 +15,35 @@ class GeometryLoaderJob {
         this.senderID = senderID;
         this.geohashes = filteredGeohashes;
         this.dependents = [];
-        allJobs.push(this);
+        GeometryLoaderJob.allJobs.push(this);
     }
 
     //we dont want geohashes being re-queried, so filter out the ones currently querying
     filterGeohashList(geohashList){
         //this part lets another job know that it's needs to return for another job
-        let uniqueGeohashes = [];
         for(const job of GeometryLoaderJob.allJobs){
+            let nonUniqueGeohashes = [];
             for(const geohash of geohashList){
                 if(job.geohashes.includes(geohash)){
-                    
+                    nonUniqueGeohashes.push(geohash);
+                    job.addDependent(this.senderID,geohash)
                 }
             }
+            geohashList = geohashList.filter(geohash => !this.nonUniqueGeohashes.includes(geohash))
         }
-        return uniqueGeohashes;
+        return geohashList;
     }
 
     addDependent(senderID, geohash){
-
+        this.dependents.push({
+            senderID: senderID,
+            geohash: geohash
+        });
     }
 
     done(){
-        GeometryLoaderJob.geohashesBeingLoaded = GeometryLoaderJob.geohashesBeingLoaded.filter(geohash => {
-            return !this.geohashes.includes(geohash);
+        GeometryLoaderJob.allJobs = GeometryLoaderJob.allJobs.filter(job => {
+            return job !== this;
         });
     }
 }

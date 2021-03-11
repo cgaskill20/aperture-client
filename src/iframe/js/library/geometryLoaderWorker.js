@@ -43,18 +43,21 @@ onconnect = function (p) {
     }
 
     const performQuery = async (query, senderID) => {
-        const cached = await loader.getCachedData(Object.keys(query))
+        const thisJob = new GeometryLoaderJob(senderID,query);
+        console.log(JSON.parse(JSON.stringify(GeometryLoaderJob.allJobs)))
+        query = thisJob.geohashes;
+        const cached = await loader.getCachedData(query)
         if (cached) {
             if (cached.data.length) {
                 console.log(`${id} - found ${cached.data.length} records in cache for sender ${senderID}`)
                 queryResponse(cached, senderID)
             }
-            for (const geohash of cached.geohashes)
-                delete query[geohash];
+            query = query.filter(geohash => !cached.geohashes.includes(geohash))
         }
-        if (Object.keys(query).length) {
-            console.error("db was missing a geohash - fatal error")
+        if (query.length) {
+            //console.error("db was missing a geohash - fatal error")
         }
+        thisJob.done();
         queryEndResponse(senderID)
     }
 
@@ -91,13 +94,13 @@ onconnect = function (p) {
                     errorMessage("You must set up the worker with the 'config' message!", sID);
                     break;
                 }
-                const queryData = BoundsToGISJOIN.boundsToData(
+                const queryData = BoundsToGISJOIN.boundsToLengthNGeohashes(
                     data.bounds,
                     data.blacklist
                 );
-                console.log(`${id} - found ${Object.keys(queryData).length} geohashes that match bounds for sender ${sID}`)
+                console.log(`${id} - found ${queryData.length} geohashes that match bounds for sender ${sID}`)
                 //check to make sure map of geohashes & gisjoins is any good
-                if (!Object.keys(queryData).length) {
+                if (!queryData.length) {
                     console.log(`${id} - No geohashes match for sender: ${sID}, sending END`)
                     queryEndResponse(sID);
                     break;

@@ -19,10 +19,7 @@ const BoundsToGISJOIN = {
     },
 
     boundsToData: function (bounds, blacklist) {
-        let geohashes = this.boundsToLengthNGeohashes(bounds);
-        geohashes = geohashes.filter((geohash) => {
-            return !blacklist.includes(geohash);
-        });
+        let geohashes = this.boundsToLengthNGeohashes(bounds,blacklist);
         const datasource = this.buckets;
         if (datasource) {
             const data = {};
@@ -43,14 +40,18 @@ const BoundsToGISJOIN = {
         return []
     },
 
-    boundsToLengthNGeohashes: function (bounds) {
+    boundsToLengthNGeohashes: function (bounds,blacklist) {
         const geohashCorners = {
             sw: encode_geohash(bounds._southWest.lat, bounds._southWest.lng, this.geohashResolution),
             se: encode_geohash(bounds._southWest.lat, bounds._northEast.lng, this.geohashResolution),
             nw: encode_geohash(bounds._northEast.lat, bounds._southWest.lng, this.geohashResolution),
             ne: encode_geohash(bounds._northEast.lat, bounds._northEast.lng, this.geohashResolution)
         }
-        return this.fillInSpace(geohashCorners)
+        return this.fillInSpace(geohashCorners).filter((geohash) => {
+            return !blacklist.includes(geohash);
+        }).filter((geohash) => {
+            return this.buckets[geohash] && this.buckets[geohash].length !== 0;
+        });
     },
 
     fillInSpace: function (corners) {
