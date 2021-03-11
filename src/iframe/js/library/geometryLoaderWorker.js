@@ -53,11 +53,18 @@ onconnect = function (p) {
                 delete query[geohash];
         }
         if (Object.keys(query).length) {
-            loader.getNonCachedData(query, (data) => queryResponse(data, senderID))
+            console.error("db was missing a geohash - fatal error")
         }
-        else {
-            queryEndResponse(senderID)
-        }
+        queryEndResponse(senderID)
+    }
+
+    const configStatusResponse = (status, senderID) => {
+        console.log(`${id} - sending preload status response @${status.pctDone}% to sender ${senderID}`);
+        port.postMessage({
+            senderID: senderID,
+            type: "configStatus",
+            status: status
+        });
     }
 
     port.onmessage = function (msg) {
@@ -68,9 +75,14 @@ onconnect = function (p) {
                 loader = new GeometryLoader(data.collection);
                 BoundsToGISJOIN.config(data.collection);
                 id = data.id;
-                loader.preloadData(() => {
-                    queryEndResponse(sID)
-                });
+                loader.preloadData(
+                    (status) => { 
+                        configStatusResponse(status,sID)
+                    },
+                    () => {
+                        queryEndResponse(sID)
+                    }
+                );
                 console.log(`${id} - set to use ${data.collection} collection.`)
                 break;
             case "query":

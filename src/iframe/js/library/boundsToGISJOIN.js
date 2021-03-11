@@ -8,7 +8,7 @@ const BoundsToGISJOIN = {
     geohashResolution: 3,
 
     config: function (collection) {
-        const jURL = collection === "tract_geo_140mb" ? pathsToBuckets.tracts : pathsToBuckets.counties;
+        const jURL = collection === "tract_geo_140mb_no_2d_index" ? pathsToBuckets.tracts : pathsToBuckets.counties;
         fetch(jURL)
             .then(response => response.json())
             .then(data => {

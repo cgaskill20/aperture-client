@@ -297,7 +297,7 @@ class ModelMenu extends React.Component {
         const refinedData = data.map(d => {
             return d.kMeansClusteringResponse;
         })
-        this.modelManager = new ClusterManager(refinedData, window.map, window.dataModelingGroup, "county_geo_30mb");
+        this.modelManager = new ClusterManager(refinedData, window.map, window.dataModelingGroup, "county_geo_30mb_no_2d_index");
 
     }
 

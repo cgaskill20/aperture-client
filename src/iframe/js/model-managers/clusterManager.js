@@ -17,7 +17,7 @@ class ClusterManager {
         this.clusters = [];
 
         this.linked = linkedGeometry;
-        this.backgroundLoader = this.linked === "tract_geo_140mb" ? window.backgroundTract : window.backgroundCounty;
+        this.backgroundLoader = this.linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
         this.backgroundLoader.addNewResultListener(this.listenForLinkedGeometryUpdates);
 
         if(document.getElementById("model-container").style.display = "block") 

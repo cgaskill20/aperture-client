@@ -35,7 +35,7 @@ class AutoQuery {
 
         if (this.data.linkedGeometry) { //linked geometry stuff
             this.linked = this.data.linkedGeometry;
-            this.backgroundLoader = this.linked === "tract_geo_140mb" ? window.backgroundTract : window.backgroundCounty;
+            this.backgroundLoader = this.linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
             this.geohashCache = [];
         }
 
@@ -165,7 +165,7 @@ class AutoQuery {
     query() {
         if(this.linked){
             const mapZoom = this.map.getZoom();
-            if(this.linked === "tract_geo_140mb" && mapZoom < AutoQuery.minTractZoom){
+            if(this.linked === "tract_geo_140mb_no_2d_index" && mapZoom < AutoQuery.minTractZoom){
                 map.setZoom(AutoQuery.minTractZoom);
             }
             else if(mapZoom < AutoQuery.minCountyZoom){

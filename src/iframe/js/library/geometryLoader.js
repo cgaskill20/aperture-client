@@ -49,44 +49,44 @@ class GeometryLoader {
         }
     }
 
-    /**
-      * Gets data within viewport, and does lots of stuff with it
-      * @memberof GeometryLoader
-      * @method getData
-      */
-    getNonCachedData(geohashesGISJOINS, responseFunction) {
-        return;
-        const invertedMap = this.getInvertedGeohashGISJOINMap(geohashesGISJOINS);
-        const GISJOINS = Object.keys(invertedMap);
-        const q = [/*{ "$match": { "GISJOIN": { "$in": GISJOINS } } }*/];
-        const stream = this.querier.getStreamForQuery(this.collection, JSON.stringify(q));
-        const miniCache = [];
-        stream.on('data', async (r) => {
-            const data = JSON.parse(r.getData());
-            const geohashes = invertedMap[data.GISJOIN];
-            responseFunction({
-                geohashes: geohashes,
-                GISJOINS: [data.GISJOIN],
-                data: [data]
-            });
-            for (const geohash of geohashes) {
-                if (!miniCache[geohash])
-                    miniCache[geohash] = []
-                miniCache[geohash] = this.addListToListNoDuplicates(miniCache[geohash], [data]);
-            }
-        });
-        stream.on('end', (e) => {
-            console.log("e")
-            for (const geohash in miniCache) {
-                this.db.data.put({
-                    geohash: geohash,
-                    featureTable: miniCache[geohash]
-                });
-            }
-            responseFunction("END");
-            return;
-        });
-    }
+    // /**
+    //   * Gets data within viewport, and does lots of stuff with it
+    //   * @memberof GeometryLoader
+    //   * @method getData
+    //   */
+    // getNonCachedData(geohashesGISJOINS, responseFunction) {
+    //     return;
+    //     const invertedMap = this.getInvertedGeohashGISJOINMap(geohashesGISJOINS);
+    //     const GISJOINS = Object.keys(invertedMap);
+    //     const q = [/*{ "$match": { "GISJOIN": { "$in": GISJOINS } } }*/];
+    //     const stream = this.querier.getStreamForQuery(this.collection, JSON.stringify(q));
+    //     const miniCache = [];
+    //     stream.on('data', async (r) => {
+    //         const data = JSON.parse(r.getData());
+    //         const geohashes = invertedMap[data.GISJOIN];
+    //         responseFunction({
+    //             geohashes: geohashes,
+    //             GISJOINS: [data.GISJOIN],
+    //             data: [data]
+    //         });
+    //         for (const geohash of geohashes) {
+    //             if (!miniCache[geohash])
+    //                 miniCache[geohash] = []
+    //             miniCache[geohash] = this.addListToListNoDuplicates(miniCache[geohash], [data]);
+    //         }
+    //     });
+    //     stream.on('end', (e) => {
+    //         console.log("e")
+    //         for (const geohash in miniCache) {
+    //             this.db.data.put({
+    //                 geohash: geohash,
+    //                 featureTable: miniCache[geohash]
+    //             });
+    //         }
+    //         responseFunction("END");
+    //         return;
+    //     });
+    // }
 
     async getPreloadedBuckets() {
         return new Promise(((resolve) => {
@@ -104,24 +104,32 @@ class GeometryLoader {
         }));
     }
 
-    async preloadData(callback) {
+    async preloadData(statusCallback,endCallback) {
         const preloadedBuckets = await this.getPreloadedBuckets();
         const testDBExistence = await this.getCachedData(Object.keys(preloadedBuckets).slice(0,10));
-        console.log(testDBExistence)
         if(testDBExistence){
-            console.log("DB already exists!")
-            callback();
+            console.log("DB exists, no preload required")
+            endCallback();
             return;
         }
-        console.log("Preloading everything")
+        console.log("Preloading database")
         const invertedMap = this.getInvertedGeohashGISJOINMap(preloadedBuckets);
         const total = Object.keys(invertedMap).length;
-        const q = [];
-        const stream = this.querier.getStreamForQuery(this.collection, JSON.stringify(q));
+        const stream = this.querier.getStreamForQuery(this.collection, '[]');
         const miniCache = [];
+        let numResponse = 0;
+        let prevPctDone = 0;
         stream.on('data', async (r) => {
             const data = JSON.parse(r.getData());
             const geohashes = invertedMap[data.GISJOIN];
+            numResponse++;
+            let pctDone = Math.floor(numResponse / total * 100);
+            if(pctDone > prevPctDone){
+                statusCallback({
+                    pctDone: pctDone
+                });
+                prevPctDone = pctDone;
+            }
             for (const geohash of geohashes) {
                 if (!miniCache[geohash])
                     miniCache[geohash] = []
@@ -130,6 +138,9 @@ class GeometryLoader {
         });
         stream.on('end', (e) => {
             let toPut = [];
+            statusCallback({
+                pctDone: 100
+            });
             for (const geohash in miniCache) {
                 toPut.push({
                     geohash: geohash,
@@ -138,7 +149,7 @@ class GeometryLoader {
             }
             this.db.data.bulkPut(toPut).then(done => {
                 console.log("DB is ready!")
-                callback();
+                endCallback();
             })
             return;
         });
