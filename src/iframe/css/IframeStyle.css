@@ -401,6 +401,11 @@ body {
   flex-direction: column;
 }
 
+foreignObject div input {
+    width: 200px;
+    height: 25px;
+}
+
 .chart-container {
   display: flex;
 }

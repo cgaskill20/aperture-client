@@ -145,7 +145,7 @@ class Histogram extends Chart {
         view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
 
         view.bins = d3.bin().thresholds(8)(this.data);
-        view.margin = { top: 20, right: 20, bottom: 30, left: 40 };
+        view.margin = { top: 60, right: 20, bottom: 30, left: 40 };
 
         view.svg.append("g").attr("id", "rects");
         view.svg.append("g").attr("id", "xAxis");
@@ -156,6 +156,21 @@ class Histogram extends Chart {
             .attr("stroke", "#000")
             .attr("stroke-width", 1.5)
             .attr("stroke-linejoin", "round");
+
+        let bandwidth = 0;
+        view.svg.append("foreignObject")
+            .attr("x", 20)
+            .attr("y", 20)
+            .attr("width", 200)
+            .attr("height", 40)
+            .append("xhtml:input")
+            .attr("name", "bwslider")
+            .attr("type", "range")
+            .attr("min", 0.1)
+            .attr("max", 10)
+            .attr("oninput", () => { bandwidth = this.value; });
+        this.bandwidth = bandwidth;
+
 
         return view;
     }
