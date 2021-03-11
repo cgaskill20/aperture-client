@@ -157,21 +157,38 @@ class Histogram extends Chart {
             .attr("stroke-width", 1.5)
             .attr("stroke-linejoin", "round");
 
-        let bandwidth = 0;
-        view.svg.append("foreignObject")
+        this.addBandwidthSlider(view.svg);
+
+        return view;
+    }
+
+    addBandwidthSlider(svg) {
+        svg.append("foreignObject")
             .attr("x", 20)
             .attr("y", 20)
-            .attr("width", 200)
+            .attr("width", 250)
             .attr("height", 40)
+            .append("xhtml:div")
             .append("xhtml:input")
             .attr("name", "bwslider")
             .attr("type", "range")
-            .attr("min", 0.1)
-            .attr("max", 10)
-            .attr("oninput", () => { bandwidth = this.value; });
-        this.bandwidth = bandwidth;
+            .attr("min", -1)
+            .attr("max", 2)
+            .attr("step", "any");
 
+        svg.select("foreignObject div")
+            .append("text")
 
-        return view;
+        let kde = this.kde;
+        let histogram = this;
+        svg.select("foreignObject input").node().oninput = function() { 
+            let transformedValue = Math.exp(this.value);
+            kde.setBandwidth(transformedValue); 
+
+            svg.select("foreignObject div text")
+                .text(transformedValue.toPrecision(2));
+
+            histogram.rerenderAllViews();
+        };
     }
 }

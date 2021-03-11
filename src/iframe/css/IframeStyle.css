@@ -403,7 +403,13 @@ body {
 
 foreignObject div input {
     width: 200px;
-    height: 25px;
+    height: 10px;
+    display: inline;
+}
+
+foreignObject div text {
+    position: absolute;
+    left: 200px;
 }
 
 .chart-container {
