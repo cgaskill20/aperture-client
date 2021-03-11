@@ -1,8 +1,13 @@
 const MAPNUMBER = 2;
 const e = React.createElement;
 
-//const queryAlertText = document.getElementById('queryInfoText');
-
+const PAGE_URL = window.location.href;
+const DEV = PAGE_URL.includes("dev") || PAGE_URL.includes("127.0.0.1");
+if (DEV) {
+    console.log("Aperture client set to DEV mode.")
+    AutoQuery.minCountyZoom = 1;
+    AutoQuery.minTractZoom = 1;
+}
 
 //--------------
 const standardTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -11,15 +16,15 @@ const standardTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles
 });
 
 const topoTiles = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
-	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	subdomains: 'abcd',
-	minZoom: 0,
-	maxZoom: 18,
-	ext: 'png'
+    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    subdomains: 'abcd',
+    minZoom: 0,
+    maxZoom: 18,
+    ext: 'png'
 });
 
 const satelliteTiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
     maxZoom: 18
 });
 
@@ -44,7 +49,7 @@ standardTiles.addTo(map);
 
 map.setView(map.wrapLatLng(parent.view), 11);
 
-const zoomControl = L.control.zoom({position:"topright"}).addTo(map);
+const zoomControl = L.control.zoom({ position: "topright" }).addTo(map);
 
 var markers = L.markerClusterGroup({
     showCoverageOnHover: false,
@@ -58,25 +63,92 @@ const dataExplorationGroup = L.layerGroup().addTo(map);
 const dataModelingGroup = L.layerGroup();
 window.dataModelingGroup = dataModelingGroup;
 
+
+// This gross block of code initializes the tract/county queriers. Its gross. Too bad!
 let bgTractId = "bgTract";
 let bgCountyId = "bgCounty";
-const backgroundTract = new SharedWorker("js/library/geometryLoaderWorker.js", {name: `Background tract worker: ${bgTractId}`});
-const backgroundCounty = new SharedWorker("js/library/geometryLoaderWorker.js", {name: `Background county worker: ${bgCountyId}`});
+const backgroundTract = new SharedWorker("js/library/geometryLoaderWorker.js", { name: `Background tract worker: ${bgTractId}` });
+const backgroundCounty = new SharedWorker("js/library/geometryLoaderWorker.js", { name: `Background county worker: ${bgCountyId}` });
+backgroundTract.port.start();
+backgroundCounty.port.start();
+let waitingOn = 2;
+let statusData = {
+    county: 0,
+    tract: 0
+}
+const statusToText = (status) => {
+    switch(status){
+        case -1:
+            return "finished.";
+        case 100:
+            return "finalizing.";
+        default:
+            return `${status}% done.`;
+    }
+}
+const rewriteStatus = () => {
+    let text = `Fetching details...`
+    if(statusData.county || statusData.tract){
+        text = `
+        Preloading data, this may take awhile:
+        <br>
+        County Shapes: ${statusToText(statusData.county)}
+        <br>
+        Census Tract Shapes: ${statusToText(statusData.tract)}
+    `;
+    }
+    document.getElementById("preloadStatus").innerHTML = text;
+}
+const configFinishedListener = msg => {
+    const data = msg.data;
+    //check that the data is sent from this querier
+    if (!(data.senderID !== "tractConfig" || data.senderID !== "countyConfig")) {
+        return;
+    }
+
+    if (data.type === "configStatus") {
+        if(data.senderID === "tractConfig"){
+            statusData.tract = data.status.pctDone;
+        }
+        else if(data.senderID === "countyConfig"){
+            statusData.county = data.status.pctDone;
+        }
+    }
+    else if (data.type === "end") {
+        if(data.senderID === "tractConfig"){
+            backgroundTract.port.removeEventListener("message", configFinishedListener)
+            statusData.tract = -1;
+        }
+        else if(data.senderID === "countyConfig"){
+            backgroundCounty.port.removeEventListener("message", configFinishedListener)
+            statusData.county = -1;
+        }
+        waitingOn--;
+        if (!waitingOn) {
+            document.getElementById("preloadBlocker").style.display = "none";
+        }
+    }
+    rewriteStatus();
+}
+backgroundTract.port.addEventListener("message", configFinishedListener)
+backgroundCounty.port.addEventListener("message", configFinishedListener)
 backgroundTract.port.postMessage({
-    senderID: null,
+    senderID: "tractConfig",
     type: "config",
-    collection: "tract_geo_140mb",
+    collection: "tract_geo_140mb_no_2d_index",
     id: bgTractId
 });
 randID = Math.random().toString(36).substring(2, 15);
 backgroundCounty.port.postMessage({
-    senderID: null,
+    senderID: "countyConfig",
     type: "config",
-    collection: "county_geo_30mb", 
+    collection: "county_geo_30mb_no_2d_index",
     id: bgCountyId
 });
+rewriteStatus();
 window.backgroundTract = backgroundTract;
-window.backgroundCounty = backgroundCounty
+window.backgroundCounty = backgroundCounty;
+// Gross code section is done now.
 
 
 map.on('click', function () {
@@ -96,13 +168,13 @@ document.getElementById('nav-graph-button').addEventListener('click', showGraph)
 // $('#nav-validation-button').on('click', showValidation);
 
 function openNav() {
-  document.getElementById("sidebar-id").style.width = "52vw";
-  document.getElementById("main").style.opacity = "0";
+    document.getElementById("sidebar-id").style.width = "52vw";
+    document.getElementById("main").style.opacity = "0";
 }
 
 function closeNav() {
-  document.getElementById("sidebar-id").style.width = "0";
-  document.getElementById("main").style.opacity = "1";
+    document.getElementById("sidebar-id").style.width = "0";
+    document.getElementById("main").style.opacity = "1";
 }
 
 function showDataExploration() {
@@ -129,7 +201,7 @@ function showValidation() {
 function showGraph() {
     document.getElementById("sidebar-id").style.width = "0";
     document.getElementById("main").style.opacity = "1";
-    document.getElementById("overlay1").style.display =  document.getElementById("overlay1").style.display == "none" ? "block" : "none";
+    document.getElementById("overlay1").style.display = document.getElementById("overlay1").style.display == "none" ? "block" : "none";
 }
 
 
@@ -184,7 +256,7 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
 const modelContainer = document.getElementById("model-container");
 ReactDOM.render(e(ModelMenu), modelContainer);
 let j = 0;
-map.on("moveend zoomend", function (e) {
+map.on("moveend", function (e) {
     updateLayers();
 });
 map.on("move", function (e) {
@@ -202,7 +274,7 @@ parent.setterFunctions.push({
     setterFunc: thisMapsSetter,
     mapNum: MAPNUMBER
 });
-let chartSystem = new ChartSystem(map, "json/graphPriority.json");
+//let chartSystem = new ChartSystem(map, "json/graphPriority.json");
 setTimeout(function () {
     map.setView([map.wrapLatLng(parent.view).lat, map.wrapLatLng(parent.view).lng - 0.0002], map.getZoom());
 }, 1); //this is a terrible fix but it works for now

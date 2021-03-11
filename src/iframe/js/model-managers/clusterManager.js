@@ -11,32 +11,70 @@ class ClusterManager {
         this.data = data;
         this.map = map;
         this.layerGroup = layerGroup;
-        this.listenForLinkedGeometryUpdates = this.listenForLinkedGeometryUpdates.bind(this)
-        this.sustainQuerier = sustain_querier(); //init querier
-
+        this.geohashCache = [];
         this.clusters = [];
-
         this.linked = linkedGeometry;
-        this.backgroundLoader = this.linked === "tract_geo_140mb" ? window.backgroundTract : window.backgroundCounty;
-        this.backgroundLoader.addNewResultListener(this.listenForLinkedGeometryUpdates);
+        this.backgroundLoader = this.linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
+        this.queryLinkedGeometry = this.queryLinkedGeometry.bind(this);
 
         if(document.getElementById("model-container").style.display = "block") 
             document.getElementById("clusterLegend").style.display = "block";
-        this.getData();
+        this.configurateClusters();
 
         this.currentClusterSelected = null;
     }
 
     clear(){ //basically a destructor
+        map.removeEventListener("moveend", this.queryLinkedGeometry);
         document.getElementById("clusterLegend").style.display = "none";
         for(const cluster of this.clusters){
             cluster.render.removeAllFeaturesFromMap();
         }
-        this.backgroundLoader.removeResultListener(this.listenForLinkedGeometryUpdates)
     }
 
-    listenForLinkedGeometryUpdates(updates) {
-        for (const feature of updates) {
+    queryLinkedGeometry(){
+        const sessionID = Math.random().toString(36).substring(2, 6);
+        this.backgroundLoader.port.postMessage({
+            type: "query",
+            senderID: sessionID,
+            bounds: this.map.getBounds(),
+            blacklist: this.geohashCache
+        });
+        let relevantData = [];
+        const responseListener = msg => {
+            const data = msg.data;
+            //check that the data is sent from this querier
+            if (data.senderID !== sessionID)
+                return;
+            if (data.type === "data") {
+                //populate records & cache with no duplicates
+                relevantData = this.addToExistingFeaturesNoDuplicates(relevantData, data.data.data);
+                this.geohashCache = [...new Set([...data.data.geohashes, ...this.geohashCache])];
+                if (relevantData.length > 100) {
+                    this.linkedGeometryUpdates(relevantData);
+                    relevantData = [];
+                }
+            }
+            else if (data.type === "end") {
+                //close the listener
+                this.backgroundLoader.port.removeEventListener("message", responseListener);
+                if (relevantData.length)
+                    this.linkedGeometryUpdates(relevantData);
+                relevantData = [];
+            }
+        }
+        this.backgroundLoader.port.addEventListener("message", responseListener)
+    }
+
+    addToExistingFeaturesNoDuplicates(existingFeatures, newFeatures) {
+        const newFeaturesNoDuplicates = newFeatures.filter(nFeature => {
+            return !existingFeatures.find(eFeature => eFeature.GISJOIN === nFeature.GISJOIN)
+        });
+        return existingFeatures.concat(newFeaturesNoDuplicates)
+    }
+
+    linkedGeometryUpdates(featureList) {
+        for (const feature of featureList) {
             const cluster = this.getClusterFromGISJOIN(feature.GISJOIN);
             if (cluster) {
                 cluster.render.renderGeoJson(feature, {
@@ -44,23 +82,14 @@ class ClusterManager {
                         color: cluster.color,
                         border: 0,
                         opacity: 0.4,
-                        // onClick: function (layer) {
-                        //     this.removeAllLayersApartFrom(layer)
-                        // }.bind(this),
-                        // onPopupRemove: function (layer) {
-                        //     this.reAddLayers();
-                        // }.bind(this)
+                        popup: `${Util.capitalizeString(cluster.color)} cluster`
                     }
                 });
             }
         }
     }
 
-    getCacheAndRender() {
-        this.listenForLinkedGeometryUpdates(this.backgroundLoader.getCache());
-    }
-
-    getData() {
+    configurateClusters() {
         this.removeAllLayers();
         this.clusters = [];
         const colors = ["#e6194B", "#f58231", "#ffe119", "#bfef45", "#3cb44b", "#42d4f4", "#4363d8", "#911eb4", "#f032e6", "#a9a9a9"];
@@ -78,6 +107,7 @@ class ClusterManager {
             j++;
             this.clusters.push(cluster);
 
+            //this is just cluster legend code (the thing at the bottom with the colors)
             const legendClick = document.createElement("div");
             legendClick.className = "clusterLegendField";
             legendClick.style.backgroundColor = colors[j - 1];
@@ -95,7 +125,8 @@ class ClusterManager {
             }.bind(this)
             document.getElementById("clusterLegend").appendChild(legendClick);
         }
-        this.getCacheAndRender();
+        map.addEventListener("moveend", this.queryLinkedGeometry);
+        this.queryLinkedGeometry();
     }
 
     getMaxPrediction(){

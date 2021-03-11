@@ -6,7 +6,7 @@
  * @notes Work in progress!
  */
 
- class GeometryLoader {
+class GeometryLoader {
     /**
       * Constructor which initializes the GeometryLoader
       * @memberof GeometryLoader
@@ -21,74 +21,122 @@
         this.collection = collection;
 
         this.cache = [];
+        this.db = new Dexie(collection);
+        this.db.version(1).stores({
+            data: 'geohash' //only need to index the geohash field
+        });
     }
 
     //public functions ------------------------
-    getCachedData(geohashes){
-        if(!Object.keys(this.cache).length)
+    async getCachedData(geohashes) {
+        const relevantItems = await this.db.data.where("geohash")
+            .anyOf(geohashes)
+            .toArray();
+        if (!relevantItems.length)
             return null;
-        const geohashesCached = Object.keys(this.cache).filter((current) => {
-            if(geohashes.includes(current)) 
-                return true
-            return false
-        });
         let resultList = [];
         let resultGISJOINS = [];
-        for(const gh of geohashesCached){
-            resultList = this.addListToListNoDuplicates(this.cache[gh],resultList)
-            resultGISJOINS = this.addListToListNoDuplicates(this.cache[gh].map(f => {return f.GISJOIN}),resultGISJOINS)
+        let relevantGeohashes = [];
+        for (const item of relevantItems) {
+            relevantGeohashes = this.addListToListNoDuplicates([item.geohash], relevantGeohashes)
+            resultList = this.addFeatureListToFeatureListNoDuplicates(item.featureTable, resultList)
+            resultGISJOINS = this.addListToListNoDuplicates(item.featureTable.map(f => { return f.GISJOIN }), resultGISJOINS)
         }
         return {
-            geohashes: geohashesCached,
+            geohashes: relevantGeohashes,
             GISJOINS: resultGISJOINS,
             data: resultList
         }
     }
 
-    /**
-      * Gets data within viewport, and does lots of stuff with it
-      * @memberof GeometryLoader
-      * @method getData
-      */
-    getNonCachedData(geohashesGISJOINS, responseFunction) {
-        const invertedMap = this.getInvertedGeohashGISJOINMap(geohashesGISJOINS);
-        const GISJOINS = Object.keys(invertedMap);
-        const q = [{ "$match": { "GISJOIN": { "$in": GISJOINS } } }];
-        const stream = this.querier.getStreamForQuery(this.collection,JSON.stringify(q));
-        stream.on('data', (r) => {
+    async getPreloadedBuckets() {
+        return new Promise(((resolve) => {
+            const waitForExist = () => {
+                if(!BoundsToGISJOIN.buckets || !Object.keys(BoundsToGISJOIN.buckets).length){
+                    setTimeout(function(){
+                        waitForExist();
+                    }, 150);
+                }
+                else{
+                    resolve(BoundsToGISJOIN.buckets);
+                }
+            }
+            waitForExist();
+        }));
+    }
+
+    async preloadData(statusCallback,endCallback) {
+        const preloadedBuckets = await this.getPreloadedBuckets();
+        const testDBExistence = await this.getCachedData(Object.keys(preloadedBuckets).slice(0,10));
+        if(testDBExistence){
+            console.log("DB exists, no preload required")
+            endCallback();
+            return;
+        }
+        console.log("Preloading database")
+        const invertedMap = this.getInvertedGeohashGISJOINMap(preloadedBuckets);
+        const total = Object.keys(invertedMap).length;
+        const stream = this.querier.getStreamForQuery(this.collection, '[]');
+        const miniCache = {};
+        let numResponse = 0;
+        let prevPctDone = 0;
+        stream.on('data', async (r) => {
             const data = JSON.parse(r.getData());
             const geohashes = invertedMap[data.GISJOIN];
-            responseFunction({
-                geohashes: geohashes,
-                GISJOINS: [data.GISJOIN],
-                data: [data]
-            });
-            for(const geohash of geohashes){
-                if(!this.cache[geohash]) 
-                    this.cache[geohash] = []
-                this.cache[geohash] = this.addListToListNoDuplicates(this.cache[geohash],[data]);
+            numResponse++;
+            let pctDone = Math.floor(numResponse / total * 100);
+            if(pctDone > prevPctDone){
+                statusCallback({
+                    pctDone: pctDone
+                });
+                prevPctDone = pctDone;
+            }
+            for (const geohash of geohashes) {
+                if (!miniCache[geohash])
+                    miniCache[geohash] = []
+                miniCache[geohash] = this.addListToListNoDuplicates(miniCache[geohash], [data]);
             }
         });
         stream.on('end', (e) => {
-            responseFunction("END");
+            let toPut = [];
+            statusCallback({
+                pctDone: 100
+            });
+            for (const geohash in miniCache) {
+                toPut.push({
+                    geohash: geohash,
+                    featureTable: miniCache[geohash]
+                });
+            }
+            this.db.data.bulkPut(toPut).then(done => {
+                console.log("DB is ready!")
+                endCallback();
+            })
             return;
         });
     }
 
-    getInvertedGeohashGISJOINMap(geohashesGISJOINS){
+    getInvertedGeohashGISJOINMap(geohashesGISJOINS) {
         const reverse = {};
-        for(const geohash in geohashesGISJOINS){
-            for(const GISJOIN of geohashesGISJOINS[geohash]){
-                if(!reverse[GISJOIN])
+        for (const geohash in geohashesGISJOINS) {
+            for (const GISJOIN of geohashesGISJOINS[geohash]) {
+                if (!reverse[GISJOIN])
                     reverse[GISJOIN] = [];
-                reverse[GISJOIN] = this.addListToListNoDuplicates([geohash],reverse[GISJOIN]);
+                reverse[GISJOIN] = this.addListToListNoDuplicates([geohash], reverse[GISJOIN]);
             }
         }
         return reverse;
-    }   
+    }
 
-    addListToListNoDuplicates(listToAdd,list){
-        return [...new Set([...listToAdd,...list])];
+    addListToListNoDuplicates(listToAdd, list) {
+        return [...new Set([...listToAdd, ...list])];
+    }
+
+    addFeatureListToFeatureListNoDuplicates(newFeatures, existingFeatures) {
+        const newFeaturesNoDuplicates = newFeatures.filter(nFeature => {
+            return !existingFeatures.find(eFeature => eFeature.GISJOIN === nFeature.GISJOIN)
+        });
+        return existingFeatures.concat(newFeaturesNoDuplicates)
     }
 }
 

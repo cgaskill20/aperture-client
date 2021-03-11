@@ -8,6 +8,8 @@
 
 class AutoQuery {
     static queryWorker = new SharedWorker('js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
+    static minCountyZoom = 8;
+    static minTractZoom = 10;
     /**
       * Constructs the instance of the autoquerier to a specific layer
       * @memberof AutoQuery
@@ -33,8 +35,7 @@ class AutoQuery {
 
         if (this.data.linkedGeometry) { //linked geometry stuff
             this.linked = this.data.linkedGeometry;
-            this.backgroundLoader = this.linked === "tract_geo_140mb" ? window.backgroundTract : window.backgroundCounty;
-            this.backgroundLoader.port.start();
+            this.backgroundLoader = this.linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
             this.geohashCache = [];
         }
 
@@ -113,7 +114,7 @@ class AutoQuery {
         if (this.enabled) {
             this.clearMapLayers();
             this.geohashCache = [];
-            this.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
+            AutoQuery.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
             this.query();
         }
     }
@@ -162,6 +163,15 @@ class AutoQuery {
       * new features come in with @method listenForLinkedGeometryUpdates
       */
     query() {
+        if(this.linked){
+            const mapZoom = this.map.getZoom();
+            if(this.linked === "tract_geo_140mb_no_2d_index" && mapZoom < AutoQuery.minTractZoom){
+                map.setZoom(AutoQuery.minTractZoom);
+            }
+            else if(mapZoom < AutoQuery.minCountyZoom){
+                map.setZoom(AutoQuery.minCountyZoom);
+            }
+        }
         let q = [];
         if (!this.linked) {
             const b = this.map.wrapLatLngBounds(this.map.getBounds());
@@ -170,7 +180,6 @@ class AutoQuery {
             this.bindConstraintsAndQuery(q)
         }
         else {
-            let relevantGISJOINS = [];
             let relevantData = [];
             //create random id to represent the session
             const sessionID = Math.random().toString(36).substring(2, 6);
@@ -199,6 +208,7 @@ class AutoQuery {
                     this.backgroundLoader.port.removeEventListener("message", responseListener);
                     if (relevantData.length)
                         this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": this.pullGISJOINSFromArray(relevantData) } } }], relevantData);
+                    relevantData = [];
                 }
 
             }
@@ -209,6 +219,9 @@ class AutoQuery {
     bindConstraintsAndQuery(q, forcedGeometry) {
         const sessionID = Math.random().toString(36).substring(2, 6);
         q = q.concat(this.buildConstraintPipeline());
+        //outputs from query may only be $projected if the data is not GeoJSON
+        if(this.linked)
+            q.push(this.addMongoProject())
         AutoQuery.queryWorker.port.postMessage({
             type: "query",
             collection: this.collection,
@@ -228,6 +241,7 @@ class AutoQuery {
                 }
             }
             else if (data.type === "end") {
+                forcedGeometry = null;
                 AutoQuery.queryWorker.port.removeEventListener("message", responseListener);
             }
         }
@@ -307,7 +321,7 @@ class AutoQuery {
         indexData[this.collection].popup = this.buildPopup();
         if (this.getIcon())
             indexData[this.collection]["iconAddr"] = `../../images/map-icons/${this.getIcon()}.png`;
-
+        
         indexData[this.collection]["border"] = this.color.border;
         indexData[this.collection]["opacity"] = this.color.opacity;
 
@@ -347,6 +361,16 @@ class AutoQuery {
         }
 
         return pipeline;
+    }
+
+    addMongoProject(){
+        let project = {GISJOIN:1};
+        for (const constraintName in this.constraintState) {
+            if (this.constraintState[constraintName]) {
+                project[constraintName] = 1
+            }
+        }
+        return {"$project": project};
     }
 
     /**

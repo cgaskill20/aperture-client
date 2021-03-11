@@ -80,7 +80,7 @@ class SmartQuerier {
     static bucketMaxSize = 100;
 
     // Collections whose queries should not be changed.
-    static unmodifiableCollections = ['tract_geo_140mb', 'county_geo_30mb'];
+    static unmodifiableCollections = ['tract_geo_140mb_no_2d_index', 'county_geo_30mb_no_2d_index'];
 
     /**
       * Constructs a SmartQuerier.

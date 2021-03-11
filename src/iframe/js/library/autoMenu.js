@@ -45,22 +45,20 @@ const AutoMenu = {
       */
     bindMenuToCatalog: function (menuMetaData, catalog) {
         let result = {};
-
         menuMetaData.forEach(metadata => {
             if (catalog[metadata.collection]) {
                 const catalogLayer = catalog[metadata.collection];
-
                 //These are hardcoded for now
                 let autoMenuLayer = {};
                 if (metadata.level) {
-                    autoMenuLayer["group"] = "Tract, County, & State Data";
-                    autoMenuLayer["subGroup"] = metadata.level === "tract" ? "Tract Level" : "County Level";
-                    autoMenuLayer["linkedGeometry"] = metadata.level === "tract" ? "tract_geo_140mb" : "county_geo_30mb";
+                    autoMenuLayer["group"] = metadata["group"] ? metadata["group"] : "Tract, County, & State Data";
+                    autoMenuLayer["subGroup"] = metadata["subGroup"] ? metadata["subGroup"] : metadata.level === "tract" ? "Miscellaneous Tract" : "Miscellaneous County";
+                    autoMenuLayer["linkedGeometry"] = metadata.level === "tract" ? "tract_geo_140mb_no_2d_index" : "county_geo_30mb_no_2d_index";
                     autoMenuLayer["joinProperty"] = "GISJOIN";
                 }
                 else {
                     autoMenuLayer["group"] = "Infrastructure & Natural Features";
-                    autoMenuLayer["subGroup"] = "Auto Generated";
+                    autoMenuLayer["subGroup"] = metadata["subGroup"] ? metadata["subGroup"] : "Miscellaneous";
                 }
 
                 if (metadata.icon)

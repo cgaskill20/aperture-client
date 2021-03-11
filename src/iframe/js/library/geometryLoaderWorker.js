@@ -4,6 +4,7 @@ importScripts('./geometryLoader.js');
 importScripts('./GeometryLoaderJob.js');
 importScripts('./boundsToGISJOIN.js');
 importScripts('./geohash_util.js');
+importScripts('../third-party/dexie.min.js');
 
 onconnect = function (p) {
     var port = p.ports[0];
@@ -41,22 +42,28 @@ onconnect = function (p) {
         });
     }
 
-    const performQuery = (query, senderID) => {
-        const cached = loader.getCachedData(Object.keys(query))
+    const performQuery = async (query, senderID) => {
+        const cached = await loader.getCachedData(query)
         if (cached) {
             if (cached.data.length) {
                 console.log(`${id} - found ${cached.data.length} records in cache for sender ${senderID}`)
                 queryResponse(cached, senderID)
             }
-            for (const geohash of cached.geohashes)
-                delete query[geohash];
+            query = query.filter(geohash => !cached.geohashes.includes(geohash))
         }
-        if (Object.keys(query).length) {
-            loader.getNonCachedData(query, (data) => queryResponse(data, senderID))
+        if (query.length) {
+            //console.error("db was missing a geohash - fatal error")
         }
-        else {
-            queryEndResponse(senderID)
-        }
+        queryEndResponse(senderID)
+    }
+
+    const configStatusResponse = (status, senderID) => {
+        console.log(`${id} - sending preload status response @${status.pctDone}% to sender ${senderID}`);
+        port.postMessage({
+            senderID: senderID,
+            type: "configStatus",
+            status: status
+        });
     }
 
     port.onmessage = function (msg) {
@@ -67,6 +74,14 @@ onconnect = function (p) {
                 loader = new GeometryLoader(data.collection);
                 BoundsToGISJOIN.config(data.collection);
                 id = data.id;
+                loader.preloadData(
+                    (status) => { 
+                        configStatusResponse(status,sID)
+                    },
+                    () => {
+                        queryEndResponse(sID)
+                    }
+                );
                 console.log(`${id} - set to use ${data.collection} collection.`)
                 break;
             case "query":
@@ -75,13 +90,13 @@ onconnect = function (p) {
                     errorMessage("You must set up the worker with the 'config' message!", sID);
                     break;
                 }
-                const queryData = BoundsToGISJOIN.boundsToData(
-                    msg.data.bounds,
-                    msg.data.blacklist
+                const queryData = BoundsToGISJOIN.boundsToLengthNGeohashes(
+                    data.bounds,
+                    data.blacklist
                 );
-                console.log(`${id} - found ${Object.keys(queryData).length} geohashes that match bounds for sender ${sID}`)
+                console.log(`${id} - found ${queryData.length} geohashes that match bounds for sender ${sID}`)
                 //check to make sure map of geohashes & gisjoins is any good
-                if (!Object.keys(queryData).length) {
+                if (!queryData.length) {
                     console.log(`${id} - No geohashes match for sender: ${sID}, sending END`)
                     queryEndResponse(sID);
                     break;
