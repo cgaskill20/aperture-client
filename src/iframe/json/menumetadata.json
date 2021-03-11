@@ -75,6 +75,7 @@
     "collection": "svi_county_GISJOIN",
     "level": "county",
     "label": "Social Vulnerability Index (County)",
+    "subGroup": "Social Vulnerability Index",
     "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
     "color": {
       "style": "gradient",
@@ -103,6 +104,7 @@
     "collection": "svi_tract_GISJOIN",
     "level": "tract",
     "label": "Social Vulnerability Index (Tract)",
+    "subGroup": "Social Vulnerability Index",
     "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
     "color": {
       "style": "gradient",
@@ -301,6 +303,7 @@
   },
   {
     "collection":"risk_county",
+    "subGroup": "National Risk Index",
     "level": "county",
     "info": "In the National Risk Index, risk is defined as the potential for negative impacts as a result of a natural hazard. It ranges from 0 (lowest risk) to 100 (highest risk).",
     "color":{
@@ -405,6 +408,7 @@
   },
   {
     "collection":"risk_tract",
+    "subGroup": "National Risk Index",
     "level": "tract",
     "info": "In the National Risk Index, risk is defined as the potential for negative impacts as a result of a natural hazard. It ranges from 0 (lowest risk) to 100 (highest risk).",
     "color":{
