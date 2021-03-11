@@ -139,7 +139,7 @@ class Scatterplot extends Chart {
         
         view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
 
-        view.margin = { top: 50, right: 50, bottom: 50, left: 50 };
+        view.margin = { top: 30, right: 50, bottom: 50, left: 10 };
 
         view.svg.append("g").attr("id", "xAxis");
         view.svg.append("g").attr("id", "yAxis");
