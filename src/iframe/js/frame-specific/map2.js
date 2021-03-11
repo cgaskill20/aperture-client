@@ -116,16 +116,16 @@ const configFinishedListener = msg => {
     }
     else if (data.type === "end") {
         if(data.senderID === "tractConfig"){
+            backgroundTract.port.removeEventListener("message", configFinishedListener)
             statusData.tract = -1;
         }
         else if(data.senderID === "countyConfig"){
+            backgroundCounty.port.removeEventListener("message", configFinishedListener)
             statusData.county = -1;
         }
         waitingOn--;
         if (!waitingOn) {
             document.getElementById("preloadBlocker").style.display = "none";
-            backgroundTract.port.removeEventListener("message", configFinishedListener)
-            backgroundCounty.port.removeEventListener("message", configFinishedListener)
         }
     }
     rewriteStatus();
