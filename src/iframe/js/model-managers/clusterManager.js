@@ -82,6 +82,7 @@ class ClusterManager {
                         color: cluster.color,
                         border: 0,
                         opacity: 0.4,
+                        popup: `${Util.capitalizeString(cluster.color)} cluster`
                     }
                 });
             }
@@ -125,6 +126,7 @@ class ClusterManager {
             document.getElementById("clusterLegend").appendChild(legendClick);
         }
         map.addEventListener("moveend", this.queryLinkedGeometry);
+        this.queryLinkedGeometry();
     }
 
     getMaxPrediction(){

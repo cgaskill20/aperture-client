@@ -21,6 +21,7 @@ class ModelMenu extends React.Component {
         this.populateCatalog();
 
         this.keyVal = 0;
+        this.resolutionKey = 0;
         this.state = {
             modelStatus: "none"
         }
@@ -99,8 +100,8 @@ class ModelMenu extends React.Component {
     catalogMap(catalog) {
         const ret = {};
         for (const entry in catalog) {
-            if (!this.whitelist.includes(entry))
-                continue;
+            // if (!this.whitelist.includes(entry))
+            //     continue;
             if (!ret[catalog[entry].category])
                 ret[catalog[entry].category] = {}
 
@@ -183,7 +184,8 @@ class ModelMenu extends React.Component {
     createResolution() {
         return e(ModelResolution, {
             options: this.getResolutionOptions(),
-            setResolution: this.setResolution
+            setResolution: this.setResolution,
+            key: this.resolutionKey
         })
     }
 
@@ -264,6 +266,7 @@ class ModelMenu extends React.Component {
         this.clearParameters();
         this.clearCollections();
         this.modelManager = null;
+        this.resolutionKey++;
     }
 
 
@@ -285,7 +288,7 @@ class ModelMenu extends React.Component {
             case "REGRESSION":
                 break;
             case "CLUSTERING":
-                //console.log(data)
+                console.log(data)
                 this.handleFullClusteringResponse(data);
                 break;
             default:
