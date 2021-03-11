@@ -39,7 +39,7 @@ class GeometryLoader {
         let relevantGeohashes = [];
         for (const item of relevantItems) {
             relevantGeohashes = this.addListToListNoDuplicates([item.geohash], relevantGeohashes)
-            resultList = this.addListToListNoDuplicates(item.featureTable, resultList)
+            resultList = this.addFeatureListToFeatureListNoDuplicates(item.featureTable, resultList)
             resultGISJOINS = this.addListToListNoDuplicates(item.featureTable.map(f => { return f.GISJOIN }), resultGISJOINS)
         }
         return {
@@ -48,45 +48,6 @@ class GeometryLoader {
             data: resultList
         }
     }
-
-    // /**
-    //   * Gets data within viewport, and does lots of stuff with it
-    //   * @memberof GeometryLoader
-    //   * @method getData
-    //   */
-    // getNonCachedData(geohashesGISJOINS, responseFunction) {
-    //     return;
-    //     const invertedMap = this.getInvertedGeohashGISJOINMap(geohashesGISJOINS);
-    //     const GISJOINS = Object.keys(invertedMap);
-    //     const q = [/*{ "$match": { "GISJOIN": { "$in": GISJOINS } } }*/];
-    //     const stream = this.querier.getStreamForQuery(this.collection, JSON.stringify(q));
-    //     const miniCache = [];
-    //     stream.on('data', async (r) => {
-    //         const data = JSON.parse(r.getData());
-    //         const geohashes = invertedMap[data.GISJOIN];
-    //         responseFunction({
-    //             geohashes: geohashes,
-    //             GISJOINS: [data.GISJOIN],
-    //             data: [data]
-    //         });
-    //         for (const geohash of geohashes) {
-    //             if (!miniCache[geohash])
-    //                 miniCache[geohash] = []
-    //             miniCache[geohash] = this.addListToListNoDuplicates(miniCache[geohash], [data]);
-    //         }
-    //     });
-    //     stream.on('end', (e) => {
-    //         console.log("e")
-    //         for (const geohash in miniCache) {
-    //             this.db.data.put({
-    //                 geohash: geohash,
-    //                 featureTable: miniCache[geohash]
-    //             });
-    //         }
-    //         responseFunction("END");
-    //         return;
-    //     });
-    // }
 
     async getPreloadedBuckets() {
         return new Promise(((resolve) => {
@@ -169,6 +130,13 @@ class GeometryLoader {
 
     addListToListNoDuplicates(listToAdd, list) {
         return [...new Set([...listToAdd, ...list])];
+    }
+
+    addFeatureListToFeatureListNoDuplicates(newFeatures, existingFeatures) {
+        const newFeaturesNoDuplicates = newFeatures.filter(nFeature => {
+            return !existingFeatures.find(eFeature => eFeature.GISJOIN === nFeature.GISJOIN)
+        });
+        return existingFeatures.concat(newFeaturesNoDuplicates)
     }
 }
 
