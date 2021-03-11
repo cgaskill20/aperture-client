@@ -318,12 +318,88 @@
     },
     "fieldMetadata": [
       {
-        "name": "RISK_SCORE",
-        "label": "Risk Index"
-      },
-      {
         "name": "RISK_RATNG",
         "label": "Risk Rating"
+      },
+      {
+        "name": "SOVI_RATNG",
+        "label": "Social Vulnerability Rating"
+      },
+      {
+        "name": "RESL_RATNG",
+        "label": "Community Resilience Rating"
+      },
+      {
+        "name": "AVLN_RISKR",
+        "label":"Avalanche Risk Rating"
+      },
+      {
+        "name": "CFLD_RISKR",
+        "label": "Coastal Flooding Risk Rating"
+      },
+      {
+        "name": "CWAV_RISKR",
+        "label": "Cold Wave Risk Rating"
+      },
+      {
+        "name": "DRGT_RISKR",
+        "label": "Drought Risk Rating"
+      },
+      {
+        "name": "ERQK_RISKR",
+        "label": "Earthquake Risk Rating"
+      },
+      {
+        "name": "HAIL_RISKR",
+        "label": "Hail Risk Rating"
+      },
+      {
+        "name": "HWAV_RISKR",
+        "label": "Heatwave Risk Rating"
+      },
+      {
+        "name": "HRCN_RISKR",
+        "label": "Hurricane Risk Rating"
+      },
+      {
+        "name": "ISTM_RISKR",
+        "label": "Ice Storm Risk Rating"
+      },
+      {
+        "name": "LNDS_RISKR",
+        "label": "Landslide Risk Rating"
+      },
+      {
+        "name": "LTNG_RISKR",
+        "label": "Lightning Risk Rating"
+      },
+      {
+        "name": "RFLD_RISKR",
+        "label": "Riverine Flooding Risk Rating"
+      },
+      {
+        "name": "SWND_RISKR",
+        "label": "Strong Wind Risk Rating"
+      },
+      {
+        "name": "TRND_RISKR",
+        "label": "Tornado Risk Rating"
+      },
+      {
+        "name": "TSUN_RISKR",
+        "label": "Tsunami Risk Rating"
+      },
+      {
+        "name": "VLCN_RISKR",
+        "label": "Volcanic Activity Risk Rating"
+      },
+      {
+        "name": "WFIR_RISKR",
+        "label": "Wildfire Risk Rating"
+      },
+      {
+        "name": "WNTW_RISKR",
+        "label": "Winter Weather Risk Rating"
       }
     ]
   },
@@ -346,12 +422,88 @@
     },
     "fieldMetadata": [
       {
-        "name": "RISK_SCORE",
-        "label": "Risk Index"
-      },
-      {
         "name": "RISK_RATNG",
         "label": "Risk Rating"
+      },
+      {
+        "name": "SOVI_RATNG",
+        "label": "Social Vulnerability Rating"
+      },
+      {
+        "name": "RESL_RATNG",
+        "label": "Community Resilience Rating"
+      },
+      {
+        "name": "AVLN_RISKR",
+        "label":"Avalanche Risk Rating"
+      },
+      {
+        "name": "CFLD_RISKR",
+        "label": "Coastal Flooding Risk Rating"
+      },
+      {
+        "name": "CWAV_RISKR",
+        "label": "Cold Wave Risk Rating"
+      },
+      {
+        "name": "DRGT_RISKR",
+        "label": "Drought Risk Rating"
+      },
+      {
+        "name": "ERQK_RISKR",
+        "label": "Earthquake Risk Rating"
+      },
+      {
+        "name": "HAIL_RISKR",
+        "label": "Hail Risk Rating"
+      },
+      {
+        "name": "HWAV_RISKR",
+        "label": "Heatwave Risk Rating"
+      },
+      {
+        "name": "HRCN_RISKR",
+        "label": "Hurricane Risk Rating"
+      },
+      {
+        "name": "ISTM_RISKR",
+        "label": "Ice Storm Risk Rating"
+      },
+      {
+        "name": "LNDS_RISKR",
+        "label": "Landslide Risk Rating"
+      },
+      {
+        "name": "LTNG_RISKR",
+        "label": "Lightning Risk Rating"
+      },
+      {
+        "name": "RFLD_RISKR",
+        "label": "Riverine Flooding Risk Rating"
+      },
+      {
+        "name": "SWND_RISKR",
+        "label": "Strong Wind Risk Rating"
+      },
+      {
+        "name": "TRND_RISKR",
+        "label": "Tornado Risk Rating"
+      },
+      {
+        "name": "TSUN_RISKR",
+        "label": "Tsunami Risk Rating"
+      },
+      {
+        "name": "VLCN_RISKR",
+        "label": "Volcanic Activity Risk Rating"
+      },
+      {
+        "name": "WFIR_RISKR",
+        "label": "Wildfire Risk Rating"
+      },
+      {
+        "name": "WNTW_RISKR",
+        "label": "Winter Weather Risk Rating"
       }
     ]
   }
