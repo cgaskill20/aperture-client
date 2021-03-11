@@ -57,8 +57,6 @@ END OF TERMS AND CONDITIONS
 
 class ScatterplotManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem) {
-        console.log(catalog);
-        this.catalog = catalog;
         this.chartArea = chartArea
         this.scatterplot = new Scatterplot();
         this.chartArea.addChart(this.scatterplot);
@@ -114,27 +112,8 @@ class ScatterplotManager {
                 y: yfeat[i].data,
             });
         }
-
-        let readableXName = this.catalog.find(e => {
-            for (let constraint in e.constraints) {
-                if (constraint === this.currentFeatures.x) {
-                    return true;
-                }
-            }
-            return false;
-        }).constraints[this.currentFeatures.x].label;
-
-        let readableYName = this.catalog.find(e => {
-            for (let constraint in e.constraints) {
-                if (constraint === this.currentFeatures.y) {
-                    return true;
-                }
-            }
-            return false;
-        }).constraints[this.currentFeatures.y].label;
-
-        data.x = readableXName;
-        data.y = readableYName;
+        data.x = this.currentFeatures.x;
+        data.y = this.currentFeatures.y;
         return data;
     }
 }
