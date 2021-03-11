@@ -1,71 +1,31 @@
-[
-  {
-    "collection": "future_heat",
-    "label": "Future Heatwaves",
-    "level": "county",
-    "color": {
-      "colorCode": "#FF0000",
-      "style": "solid"
-    },
-    "fieldMetadata": [
-      {
-        "name": "temp",
-        "label": "Heatwave Temperature",
-        "type": "range",
-        "unit": "farenheit"
-      },
-      {
-        "name": "year",
-        "label": "Years",
-        "type": "range",
-        "unit": "year"
-      }
-    ]
+[ {
+  "collection" : "future_heat",
+  "label": "Future Heatwaves",
+  "level": "county",
+  "color": {
+    "colorCode":"#FF0000",
+    "style":"solid"
   },
-  {
-    "collection": "tract_median_household_income",
-    "label": "Tract Median Household Income",
-    "level": "tract",
-    "color": {
-      "style": "gradient",
-      "variable": "2010_median_household_income",
-      "border": 1
-    },
-    "fieldMetadata": [
-      {
-        "name": "2000_median_household_income",
-        "max": 99899.0,
-        "type": "range",
-        "step": 100,
-        "unit": "dollars",
-        "hideByDefault": true
-      },
-      {
-        "name": "1990_median_household_income",
-        "max": 9982.0,
-        "type": "range",
-        "step": 100,
-        "unit": "dollars",
-        "hideByDefault": true
-      },
-      {
-        "name": "1980_median_household_income",
-        "max": 9994.0,
-        "type": "range",
-        "step": 100,
-        "unit": "dollars",
-        "hideByDefault": true
-      },
-      {
-        "name": "2010_median_household_income",
-        "label": "2010 Median Household Income",
-        "min": 2499.0,
-        "max": 200000,
-        "type": "range",
-        "step": 100,
-        "unit": "dollars"
-      }
-    ]
+  "fieldMetadata" : [ 
+    {
+    "name" : "temp",
+    "label": "Heatwave Temperature",
+    "type" : "range",
+    "unit": "farenheit"
+  }, {
+    "name" : "year",
+    "label": "Years",
+    "type" : "range",
+    "unit": "year"
+  } ]
+}, {
+  "collection" : "tract_median_household_income",
+  "label": "Tract Median Household Income",
+  "level": "tract",
+  "color": {
+    "style": "gradient",
+    "variable": "2010_median_household_income",
+    "border": 1
   },
   {
     "collection": "transmission_lines_geo",
@@ -95,10 +55,22 @@
       }
     ]
   },
-  {
-    "collection": "tract_race",
-    "level": "tract",
-    "label": "Tract Race Distribution"
+  "fieldMetadata" : [ {
+    "label":"Social Vulnerability Index",
+    "name" : "RPL_THEMES",
+    "type" : "range",
+    "step": 0.05,
+    "max" : 0.9999
+  }]
+}, {
+  "collection" : "tract_median_age",
+  "label": "Median Tract Age",
+  "level": "tract",
+  "color": {
+    "style": "gradient",
+    "gradient": ["#00FF00", "#FF0000"],
+    "variable": "median_age_total",
+    "border": 1
   },
   {
     "collection": "svi_tract_GISJOIN",
@@ -124,39 +96,18 @@
       }
     ]
   },
-  {
-    "collection": "tract_median_age",
-    "label": "Median Tract Age",
-    "level": "tract",
-    "color": {
-      "style": "gradient",
-      "gradient": [
-        "#00FF00",
-        "#FF0000"
-      ],
-      "variable": "median_age_total",
-      "border": 1
-    },
-    "fieldMetadata": [
-      {
-        "name": "median_age_female",
-        "type": "range",
-        "min": 6.2,
-        "max": 83.5
-      },
-      {
-        "name": "median_age_male",
-        "type": "range",
-        "min": 3.8,
-        "max": 85.2
-      },
-      {
-        "name": "median_age_total",
-        "type": "range",
-        "min": 5.8,
-        "max": 84.5
-      }
-    ]
+  "fieldMetadata" : [ {
+    "name" : "properties.FLD_ZONE",
+    "label": "Flood Zone Code",
+    "type" : "multiselect"
+      } ]
+}, {
+  "collection" : "tract_total_population",
+  "level":"tract",
+  "color": {
+    "style": "gradient",
+    "variable": "2010_total_population",
+    "border": 1
   },
   {
     "collection": "public_schools",

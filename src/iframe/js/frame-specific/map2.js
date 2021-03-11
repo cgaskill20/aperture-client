@@ -160,12 +160,6 @@ document.getElementById('nav-close-button').addEventListener('click', closeNav);
 document.getElementById('nav-data-exploration-button').addEventListener('click', showDataExploration);
 document.getElementById('nav-modeling-button').addEventListener('click', showModeling);
 document.getElementById('nav-validation-button').addEventListener('click', showValidation);
-document.getElementById('nav-graph-button').addEventListener('click', showGraph);
-
-// $('#nav-close-button').on('click', closeNav);
-// $('#nav-data-exploration-button').on('click', showDataExploration);
-// $('#nav-modeling-button').on('click', showModeling);
-// $('#nav-validation-button').on('click', showValidation);
 
 function openNav() {
     document.getElementById("sidebar-id").style.width = "52vw";
@@ -203,7 +197,6 @@ function showGraph() {
     document.getElementById("main").style.opacity = "1";
     document.getElementById("overlay1").style.display = document.getElementById("overlay1").style.display == "none" ? "block" : "none";
 }
-
 
 const overwrite = { //leaving this commented cause it explains the schema really well 
     // "covid_county": {
@@ -274,7 +267,7 @@ parent.setterFunctions.push({
     setterFunc: thisMapsSetter,
     mapNum: MAPNUMBER
 });
-//let chartSystem = new ChartSystem(map, "json/graphPriority.json");
+
 setTimeout(function () {
     map.setView([map.wrapLatLng(parent.view).lat, map.wrapLatLng(parent.view).lng - 0.0002], map.getZoom());
 }, 1); //this is a terrible fix but it works for now

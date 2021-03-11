@@ -37,13 +37,25 @@
     <script src="js/model-managers/cluster-helpers/clusterState.js"></script>
     <script src="js/model-managers/clusterManager.js"></script>
     <script src="js/model-managers/regressionManager.js"></script>
+    <!-- Charting includes -->
+    <script src="js/library/charting/chartFrame.js"></script>
+    <script src="js/library/charting/validFeatureManager.js"></script>
+    <script src="js/library/charting/chart.js"></script>
+    <script src="js/library/charting/histogram.js"></script>
+    <script src="js/library/charting/scatterplot.js"></script>
+    <script src="js/library/charting/lineGraph.js"></script>
+    <script src="js/library/charting/singleChartArea.js"></script>
+    <script src="js/library/charting/scatterplotArea.js"></script>
+    <script src="js/library/charting/singleChartManager.js"></script>
+    <script src="js/library/charting/scatterplotManager.js"></script>
+    <script src="js/library/charting/chartSystem.js"></script>
 
     <script src="js/library/apertureUtil.js"></script>
-    <script src="js/library/barChart.js"></script>
     <script src="js/library/resizable.js"></script>
     <script src="js/library/mapDataFilter.js"></script>
     <script src="js/library/chartSystem.js"></script>
     <script src="js/library/geohash_util.js"></script>
+
     <script src="js/library/renderInfrastructure.js"></script>
     <script src="js/library/autoQuery.js"></script>
     <script src="js/library/autoMenu.js"></script>
@@ -73,7 +85,6 @@
         <div id="model-container">
         </div>
     </div>
-
     <div id="main">
       <button class="btn btn-outline-dark-custom" id='nav-menu-button'>☰ Menu</button>
     </div>
@@ -107,9 +118,16 @@
     <script src="js/ui/modeling/components/ModelResolution.js"></script>
 
     <!-- Frame JS, Load Last! -->
+    <!--Required for this map to be controlled-->
     <script src="js/frame-specific/map2.js"></script>
     <script src="js/frame-specific/UI-Buttons.js"></script>
     <script src="js/frame-specific/darkMode.js"></script>
     <script src="js/frame-specific/switchImageSources.js"></script>
     <script src="js/control/mouseDown.js"></script>
+    <script src="js/library/charting/chartButtons.js"></script>
+
+    <script src="js/third-party/jquery-3.2.1.slim.min.js"></script>
+    <script src="js/third-party/popper.min.js"></script>
+    <script src="js/third-party/bootstrap4-toggle.min.js"></script>
+    <script src="js/third-party/bootstrap.min.js"></script>
 </body>

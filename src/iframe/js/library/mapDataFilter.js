@@ -5,7 +5,7 @@
 
 class MapDataFilter {
     constructor() {
-        this.msCacheMaxAge = 10000;
+        this.msCacheMaxAge = 100000;
         this.data = [];
     }
 
