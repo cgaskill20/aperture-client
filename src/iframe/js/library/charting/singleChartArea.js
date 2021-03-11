@@ -27,16 +27,21 @@ class SingleChartArea {
     }
 
     showChart(index) {
+        this.hideAll();
         this.charts[index].unhide(this.viewIndex);
     }
 
+    hideAll() {
+        this.charts.forEach(chart => {
+            chart.hide(this.viewIndex);
+        })
+    }
+
     rerender(newWidth, newHeight) {
-        if (this.hasNothingToRender) {
-        } else {
+        if (!this.hasNothingToRender) {
             this.charts.forEach(chart => {
                 chart.rerender(newWidth, newHeight, this.viewIndex);
             });
-            this.showChart(1); //This is hard-coding to SVI
         }
     }
 

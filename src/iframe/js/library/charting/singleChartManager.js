@@ -59,6 +59,7 @@ class SingleChartManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
         this.charts = {};
         this.chartArea = chartArea;
+        this.chartSystem = chartSystem;
         let graphable = catalog.map(e => Object.keys(e.constraints)).flat();
 
         this.constraints = catalog.map(e => e.constraints);
@@ -70,6 +71,13 @@ class SingleChartManager {
             }
         });
         this.chartArea.tellNumberOfCharts(graphable.length);
+    }
+
+    changeFeature(feature) {
+        let chartIndex = this.chartSystem.graphable.indexOf(feature);
+        if (chartIndex !== -1) {
+            this.chartArea.showChart(chartIndex);
+        }
     }
 
     update(values) {

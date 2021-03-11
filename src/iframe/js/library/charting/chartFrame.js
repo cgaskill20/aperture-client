@@ -20,5 +20,9 @@ class ChartFrame {
     resize() { 
         this.area.rerender(this.width, this.height);
     }
+
+    changeFeature(feature) {
+        this.manager.changeFeature(feature);
+    }
 }
 
