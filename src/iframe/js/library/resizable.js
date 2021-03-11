@@ -180,6 +180,10 @@ class resizable {
         this.onResizeCallback = cb;
     }
 
+    triggerResizeEvent() {
+        this.onResizeCallback(this.width, this.height);
+    }
+
     /**
      * Adds in the necessary listeners for the div to be moved
      * @memberof resizable

@@ -10,6 +10,7 @@ class SingleChartArea {
 
     constructor() {
         this.viewIndex = SingleChartArea.runningID;
+        this.currentIndex = 0;
         this.charts = [];
     }
 
@@ -17,7 +18,17 @@ class SingleChartArea {
         this.parentNode = node;
         this.container = document.createElement("div");
         this.container.className = "single-chart-area";
+
+        this.toggleAxisButton = document.createElement("div");
+        this.toggleAxisButton.className = "btn btn-outline-dark btn-xs";
+        this.toggleAxisButton.innerText = "Cycle X-Axis";
+        this.container.appendChild(this.toggleAxisButton);
+            
         this.parentNode.appendChild(this.container);
+    }
+
+    setFeatureToggleCallback(cb) {
+        this.toggleAxisButton.onclick = cb;
     }
 
     addChart(chart) {
@@ -28,6 +39,7 @@ class SingleChartArea {
 
     showChart(index) {
         this.hideAll();
+        this.currentIndex = index;
         this.charts[index].unhide(this.viewIndex);
     }
 

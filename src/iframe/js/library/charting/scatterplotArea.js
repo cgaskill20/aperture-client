@@ -66,11 +66,13 @@ class ScatterplotArea {
         this.parentNode.appendChild(this.container);
 
         this.changeXAxisButton = document.createElement("div");
-        this.changeXAxisButton.className = "scatterplot-change-x-axis-button";
+        this.changeXAxisButton.className = "btn btn-outline-dark btn-xs";
+        this.changeXAxisButton.innerText = "Cycle X-Axis";
         this.container.appendChild(this.changeXAxisButton);
 
         this.changeYAxisButton = document.createElement("div");
-        this.changeYAxisButton.className = "scatterplot-change-y-axis-button";
+        this.changeYAxisButton.className = "btn btn-outline-dark btn-xs";
+        this.changeYAxisButton.innerText = "Cycle Y-Axis";
         this.container.appendChild(this.changeYAxisButton);
     }
 

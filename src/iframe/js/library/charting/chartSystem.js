@@ -90,6 +90,7 @@ class ChartSystem {
         this.resizable = new resizable(400, 300, "white");
         this.resizable.setResizeCallback((width, height) => {
             this.chartFrames.forEach(frame => {
+                frame.setSize(width - 200, height - 200);
                 frame.resize();
             });
         });
@@ -154,6 +155,9 @@ class ChartSystem {
         if (this.doNotUpdate) {
             return;
         }
+        
+        // TODO: This needs to not suck
+        this.resizable.triggerResizeEvent();
 
         let values = this.getValues();
         this.chartFrames.forEach(frame => { frame.manager.update(values); });

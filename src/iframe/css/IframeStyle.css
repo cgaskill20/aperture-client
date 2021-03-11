@@ -47,8 +47,6 @@
 }
 
 .temp-chart-pics {
-  height: 300px;
-  width: 300px;
 }
 
 body {
@@ -448,6 +446,10 @@ body {
 .close-button-pic {
   height: 25px;
   width: 25px;
+}
+
+.histogram-chart-area {
+    width: 60%;
 }
 
 .single-chart-area {
