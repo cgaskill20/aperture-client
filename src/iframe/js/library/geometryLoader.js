@@ -116,7 +116,7 @@ class GeometryLoader {
         const invertedMap = this.getInvertedGeohashGISJOINMap(preloadedBuckets);
         const total = Object.keys(invertedMap).length;
         const stream = this.querier.getStreamForQuery(this.collection, '[]');
-        const miniCache = [];
+        const miniCache = {};
         let numResponse = 0;
         let prevPctDone = 0;
         stream.on('data', async (r) => {

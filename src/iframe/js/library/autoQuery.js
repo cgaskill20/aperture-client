@@ -208,6 +208,7 @@ class AutoQuery {
                     this.backgroundLoader.port.removeEventListener("message", responseListener);
                     if (relevantData.length)
                         this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": this.pullGISJOINSFromArray(relevantData) } } }], relevantData);
+                    relevantData = [];
                 }
 
             }
@@ -240,6 +241,7 @@ class AutoQuery {
                 }
             }
             else if (data.type === "end") {
+                forcedGeometry = null;
                 AutoQuery.queryWorker.port.removeEventListener("message", responseListener);
             }
         }
