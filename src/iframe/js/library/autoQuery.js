@@ -183,7 +183,7 @@ class AutoQuery {
             let relevantData = [];
             //create random id to represent the session
             const sessionID = Math.random().toString(36).substring(2, 6);
-            this.backgroundLoader.port.postMessage({
+            this.backgroundLoader.postMessage({
                 type: "query",
                 senderID: sessionID,
                 bounds: this.map.getBounds(),
@@ -205,14 +205,14 @@ class AutoQuery {
                 }
                 else if (data.type === "end") {
                     //close the listener
-                    this.backgroundLoader.port.removeEventListener("message", responseListener);
+                    this.backgroundLoader.removeEventListener("message", responseListener);
                     if (relevantData.length)
                         this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": this.pullGISJOINSFromArray(relevantData) } } }], relevantData);
                     relevantData = [];
                 }
 
             }
-            this.backgroundLoader.port.addEventListener("message", responseListener)
+            this.backgroundLoader.addEventListener("message", responseListener)
         }
     }
 

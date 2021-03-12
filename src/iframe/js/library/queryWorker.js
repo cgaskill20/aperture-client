@@ -4,7 +4,6 @@ importScripts('../grpc/GRPC_Querier/grpc_querier.bundle.js');
 const querier = getSustainQuerier();
 
 onmessage = function (msg) {
-    console.log("here")
     if (msg.data.type === "query") {
         //console.log(msg.data.queryParams)
         querier.query(msg.data.collection,
