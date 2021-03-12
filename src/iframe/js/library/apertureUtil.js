@@ -410,7 +410,7 @@ Util = {
         // ensure sampleSpacing is not zero, or else the bad will happen
         sampleSpacing = (sampleSpacing === 0) ? 1 : sampleSpacing;
 
-        for (let i = 0; i < points.length; i += sampleSpacing) {
+        for (let i = 0; i < points.length; i += 1) {
             if (bounds.contains(points[i])) {
                 return true;
             }

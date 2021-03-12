@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /**
  * @class AutoQuery
  * @file Query layers in a very general fashion

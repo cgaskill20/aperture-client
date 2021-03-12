@@ -109,6 +109,7 @@ class resizable {
 
         boxDocument.appendChild(boxResizer);
         overlayDocument.appendChild(boxDocument);
+        console.log(overlayDocument);
         document.body.appendChild(overlayDocument);
     }
 
@@ -233,7 +234,9 @@ class resizable {
         let currentlyVisible = this.overlayDocument.style.display === "block";
         if (currentlyVisible) {
             this.overlayDocument.style.display = "none";
+            console.log("sdfgdsf");
         } else {
+            console.log("sdfgdsf");
             this.overlayDocument.style.display = "block";
             for (let areaName in this.chartAreas) {
                 this.chartAreas[areaName].rerender(this.width, this.height);

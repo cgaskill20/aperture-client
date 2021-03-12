@@ -192,12 +192,6 @@ function showValidation() {
     document.getElementById("model-container").style.display = "none";
 }
 
-function showGraph() {
-    document.getElementById("sidebar-id").style.width = "0";
-    document.getElementById("main").style.opacity = "1";
-    document.getElementById("overlay1").style.display = document.getElementById("overlay1").style.display == "none" ? "block" : "none";
-}
-
 const overwrite = { //leaving this commented cause it explains the schema really well 
     // "covid_county": {
     //     "group": "Tract, County, & State Data",
@@ -239,6 +233,7 @@ window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplora
     maxLayers: 20,
     simplifyThreshold: 0.0001
 });
+const chartSystem = new ChartSystem(map, "json/graphPriority.json", window.renderInfrastructure);
 
 //where the magic happens
 $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the mongo server yet so query it locally

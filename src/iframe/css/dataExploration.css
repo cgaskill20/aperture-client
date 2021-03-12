@@ -327,7 +327,6 @@ body {
     margin-bottom: 10px;
 }
 
-<<<<<<< HEAD:src/iframe/css/dataExploration.css
 .modelCollection{
     background-color: #DDD;
     border-radius: 3px;
@@ -343,7 +342,8 @@ body {
     margin-left: 25px;
     margin-right: 25px;
     display: none;
-=======
+}
+
 .overlay {
     position: absolute;
     bottom: 0px;
@@ -366,6 +366,13 @@ body {
     background: #f8f8f8;
     border: 1px solid #777;
     position: absolute;
+}
+
+.overlay .box .option.top-right {
+    right: -5px;
+    top: -5px;
+    cursor: nesw-resize;
+}
 
 #clusterLegend{
     background-color: white;
@@ -387,7 +394,7 @@ body {
 }
 
 .clusterLegendField:hover{
-    filter: brightness(0.4)
+    filter: brightness(0.4);
 }
 
 .graph-pic {
@@ -435,4 +442,3 @@ body {
   background-color: #00f; /* oof */
   min-height: 25px;
 }
-

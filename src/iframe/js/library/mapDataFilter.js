@@ -5,7 +5,7 @@
 
 class MapDataFilter {
     constructor() {
-        this.msCacheMaxAge = 100000;
+        this.msCacheMaxAge = 10000000;
         this.data = [];
     }
 
@@ -80,7 +80,9 @@ class MapDataFilter {
      * found in the data set.
      */
     getModel(feature, bounds) {
+        console.log(this.data);
         let filteredData = this.filter(this.data, bounds);
+        console.log(filteredData);
 
         if (Array.isArray(feature)) {
             return this.getMultipleModel(feature, filteredData);
@@ -109,8 +111,8 @@ class MapDataFilter {
       */
     filter(data, bounds) {
         let filtered = data.filter(entry => Util.isInBounds(entry, bounds));
-        this.discardOldData(this.msCacheMaxAge);
-        return filtered;
+        //this.discardOldData(this.msCacheMaxAge);
+        return data;
     }
 
     /** Removes any data from the filter that is older in miliseconds than the

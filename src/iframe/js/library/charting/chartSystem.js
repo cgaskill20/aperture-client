@@ -77,11 +77,11 @@ const ChartingType = {
 }
 
 class ChartSystem {
-    constructor(map, chartCatalogFilename) {
+    constructor(map, chartCatalogFilename, renderInfrastructure) {
         this.map = map;
 
         this.filter = new MapDataFilter();
-        RenderInfrastructure.useFilter(this.filter);
+        renderInfrastructure.useFilter(this.filter);
 
         this.chartFrames = [];
 
@@ -99,33 +99,7 @@ class ChartSystem {
             this.initializeUpdateHooks();
             this.catalog = catalog;
             this.graphable = catalog.map(e => Object.keys(e.constraints)).flat();
-
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            // An example for how to use this interface
-            //
-            // ChartSystem::getChartFrame(ChartingType) returns a ChartFrame:
-            // * Use .getDOMNode on the frame to get its associated node.
-            //   You can do whatever you need to it.
-            //   The selector for the node is by default `div.<TypeName>-chart-container`.
-            //   For instance, if you make a chart of type ChartingType.HISTOGRAM, the
-            //   selector for the node is `div.histogram-chart-container`.
-            // * Use .setSize on the frame to change its size; 
-            //   do not set width and height styles directly.
-            // * The frames are tied to the resizable. Whenever the resizable
-            //   changes size, the frames update their size automatically to
-            //   the width and height last passed to setSize.
-            //
-            // Keep in mind the ChartSystem is a (loosely enforced) singleton class.
-            // The single instance of it exists in map2.js.
-            // (see line 58 in map2.js)
-            // I would recommend putting changes that mess with the UI in a separate
-            // class rather than this one, perhaps one that encapsulates a ChartSystem 
-            // instance and pull in the single ChartSystem instance from map2.js.
-            //
-            // Also, there's an odd bug in the LineGraph that only makes it work
-            // like 50% of the time. I don't know why yet.
-            //
-            // Delete this example code if you need to.
+            console.log(this.catalog);
         });
 
         this.doNotUpdate = false;
@@ -168,6 +142,7 @@ class ChartSystem {
 
     getValues() {
         let values = this.filter.getModel(this.graphable, this.map.getBounds());
+        console.log(values);
 
         // This arcane incantation gets a list of feature names for which there's actually data.
         // Don't ask.

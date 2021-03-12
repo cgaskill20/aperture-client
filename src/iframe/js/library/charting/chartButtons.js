@@ -1,4 +1,3 @@
-const chartSystem = new ChartSystem(map, "json/graphPriority.json");
 document.getElementById('nav-graph-button').addEventListener('click', showGraph);
 let buttonsOn = false;
 let maxGraphs = 4;
