@@ -8,8 +8,8 @@
 
 class AutoQuery {
     static queryWorker = new Worker('js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
-    static minCountyZoom = 8;
-    static minTractZoom = 10;
+    static minCountyZoom = 1;
+    static minTractZoom = 1;
     /**
       * Constructs the instance of the autoquerier to a specific layer
       * @memberof AutoQuery
