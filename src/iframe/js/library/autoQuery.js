@@ -7,7 +7,7 @@
  */
 
 class AutoQuery {
-    static queryWorker = new SharedWorker('js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
+    static queryWorker = new Worker('js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
     static minCountyZoom = 8;
     static minTractZoom = 10;
     /**
@@ -62,7 +62,7 @@ class AutoQuery {
       */
     onRemove() {
         this.clearMapLayers();
-        AutoQuery.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
+        AutoQuery.queryWorker.postMessage({ type: "kill", collection: this.collection });
         this.layerIDs = [];
         this.enabled = false;
         this.geohashCache = [];
@@ -114,7 +114,7 @@ class AutoQuery {
         if (this.enabled) {
             this.clearMapLayers();
             this.geohashCache = [];
-            AutoQuery.queryWorker.port.postMessage({ type: "kill", collection: this.collection });
+            AutoQuery.queryWorker.postMessage({ type: "kill", collection: this.collection });
             this.query();
         }
     }
@@ -183,7 +183,7 @@ class AutoQuery {
             let relevantData = [];
             //create random id to represent the session
             const sessionID = Math.random().toString(36).substring(2, 6);
-            this.backgroundLoader.port.postMessage({
+            this.backgroundLoader.postMessage({
                 type: "query",
                 senderID: sessionID,
                 bounds: this.map.getBounds(),
@@ -205,14 +205,14 @@ class AutoQuery {
                 }
                 else if (data.type === "end") {
                     //close the listener
-                    this.backgroundLoader.port.removeEventListener("message", responseListener);
+                    this.backgroundLoader.removeEventListener("message", responseListener);
                     if (relevantData.length)
                         this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": this.pullGISJOINSFromArray(relevantData) } } }], relevantData);
                     relevantData = [];
                 }
 
             }
-            this.backgroundLoader.port.addEventListener("message", responseListener)
+            this.backgroundLoader.addEventListener("message", responseListener)
         }
     }
 
@@ -222,7 +222,7 @@ class AutoQuery {
         //outputs from query may only be $projected if the data is not GeoJSON
         if(this.linked)
             q.push(this.addMongoProject())
-        AutoQuery.queryWorker.port.postMessage({
+        AutoQuery.queryWorker.postMessage({
             type: "query",
             collection: this.collection,
             queryParams: q,
@@ -242,11 +242,11 @@ class AutoQuery {
             }
             else if (data.type === "end") {
                 forcedGeometry = null;
-                AutoQuery.queryWorker.port.removeEventListener("message", responseListener);
+                AutoQuery.queryWorker.removeEventListener("message", responseListener);
             }
         }
 
-        AutoQuery.queryWorker.port.addEventListener("message", responseListener);
+        AutoQuery.queryWorker.addEventListener("message", responseListener);
     }
 
     addToExistingFeaturesNoDuplicates(existingFeatures, newFeatures) {
@@ -508,7 +508,8 @@ class AutoQuery {
         return returnText + "</ul>";
     }
 }
-AutoQuery.queryWorker.port.start(); //needed to allow addEventListener()
+//console.log(AutoQuery.queryWorker);
+//AutoQuery.queryWorker.port.start(); //needed to allow addEventListener()
 
 try {
     module.exports = {

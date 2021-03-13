@@ -34,7 +34,7 @@ class ClusterManager {
 
     queryLinkedGeometry(){
         const sessionID = Math.random().toString(36).substring(2, 6);
-        this.backgroundLoader.port.postMessage({
+        this.backgroundLoader.postMessage({
             type: "query",
             senderID: sessionID,
             bounds: this.map.getBounds(),
@@ -57,13 +57,13 @@ class ClusterManager {
             }
             else if (data.type === "end") {
                 //close the listener
-                this.backgroundLoader.port.removeEventListener("message", responseListener);
+                this.backgroundLoader.removeEventListener("message", responseListener);
                 if (relevantData.length)
                     this.linkedGeometryUpdates(relevantData);
                 relevantData = [];
             }
         }
-        this.backgroundLoader.port.addEventListener("message", responseListener)
+        this.backgroundLoader.addEventListener("message", responseListener)
     }
 
     addToExistingFeaturesNoDuplicates(existingFeatures, newFeatures) {
