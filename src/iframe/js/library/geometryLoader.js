@@ -16,193 +16,132 @@ class GeometryLoader {
       * @param {Number} maxSize represents the maximum size of this loader's cache. This should be smaller
       * for coarser grained geometry (counties) and higher for finer grained geometries (tracts) 
       */
-    constructor(collection, map, maxSize) {
-        this.map = map;
-        this.sustainQuerier = sustain_querier(); //init querier
+    constructor(collection) {
+        this.querier = sustain_querier();
         this.collection = collection;
-        this.maxSize = maxSize;
 
         this.cache = [];
-        this.tempCache = [];
-        this.listeners = [];
-        this.streams = [];
+        this.db = new Dexie(collection);
+        this.db.version(1).stores({
+            data: 'geohash' //only need to index the geohash field
+        });
     }
-
 
     //public functions ------------------------
-    /**
-      * Gets cached GISJOINS, which represent the readily available layers
-      * @memberof GeometryLoader
-      * @method getCachedGISJOINS
-      * @returns {Array<string>} array of GISJOINS
-      */
-    getCachedGISJOINS() {
-        return this.convertArrayToGISJOINS(this.cache);
-    }
-
-    /**
-      * Gets geometry from a GISJOIN
-      * @memberof GeometryLoader
-      * @method getGeometryFromGISJOIN
-      * @param {string} GISJOIN GISJOIN pertaining to the geometry we are looking fore
-      * @param {Array<GeoJSON>} arr OPTIONAL parameter. If this is not provided, the method will search the cache
-      * for the GISJOIN. If it is, it will search @param arr for the GISJOIN.
-      * @returns {GeoJSON} GeoJSON feature which matches the GISJOIN, null if it doesnt exist
-      */
-    getGeometryFromGISJOIN(GISJOIN, arr) {
-        const indx = arr ? this.indexInArray(GISJOIN, arr) : this.indexInCache(GISJOIN);
-        if (indx === -1)
+    async getCachedData(geohashes) {
+        const relevantItems = await this.db.data.where("geohash")
+            .anyOf(geohashes)
+            .toArray();
+        if (!relevantItems.length)
             return null;
-        return arr ? arr[indx] : this.cache[indx];
-    }
-
-    /**
-      * Adds a function listener that listens for new results.
-      * @memberof GeometryLoader
-      * @method addNewResultListener
-      * @param {Function} func function which will listen for new results. The function will be provided with a 
-      * array of GeoJSON features whenever new results come in.
-      */
-    addNewResultListener(func) {
-        this.listeners.push(func);
-    }
-
-    /**
-      * Gets all GISJOINS from an array of GeoJSON features
-      * @memberof GeometryLoader
-      * @method convertArrayToGISJOINS
-      * @param {Array<GeoJSON>} arr array of GeoJSON features
-      * @returns {Array<string>} of GISJOINS
-      */
-    convertArrayToGISJOINS(arr) {
-        let ret = [];
-        for (const obj of arr) {
-            ret.push(obj.GISJOIN);
+        let resultList = [];
+        let resultGISJOINS = [];
+        let relevantGeohashes = [];
+        for (const item of relevantItems) {
+            relevantGeohashes = this.addListToListNoDuplicates([item.geohash], relevantGeohashes)
+            resultList = this.addFeatureListToFeatureListNoDuplicates(item.featureTable, resultList)
+            resultGISJOINS = this.addListToListNoDuplicates(item.featureTable.map(f => { return f.GISJOIN }), resultGISJOINS)
         }
-        return ret;
-    }
-
-    /**
-      * Kills old streams and runs a query. This is called from an external file
-      * @memberof GeometryLoader
-      * @method runQuery
-      */
-    runQuery() {
-        this.killAllStreams();
-        this.getData();
-    }
-
-
-    //private functions -----------------------
-
-    /**
-      * Sends new results to all listeners
-      * @memberof GeometryLoader
-      * @method broadcastNewResults
-      * @param {Array<GeoJSON>} newResults array of GeoJSON features
-      */
-    broadcastNewResults(newResults) {
-        for (const callback of this.listeners) {
-            callback(newResults);
+        return {
+            geohashes: relevantGeohashes,
+            GISJOINS: resultGISJOINS,
+            data: resultList
         }
     }
 
-    /**
-      * Gets data within viewport, and does lots of stuff with it
-      * @memberof GeometryLoader
-      * @method getData
-      */
-    getData() {
-        const stream = this.sustainQuerier.getStreamForQuery("lattice-46", 27017, this.collection, JSON.stringify(this.getBasicSpatialQuery()));
-        this.streams.push(stream);
-        let newResults = [];
-        stream.on('data', function (r) {
+    async getPreloadedBuckets() {
+        return new Promise(((resolve) => {
+            const waitForExist = () => {
+                if(!BoundsToGISJOIN.buckets || !Object.keys(BoundsToGISJOIN.buckets).length){
+                    setTimeout(function(){
+                        waitForExist();
+                    }, 150);
+                }
+                else{
+                    resolve(BoundsToGISJOIN.buckets);
+                }
+            }
+            waitForExist();
+        }));
+    }
+
+    async preloadData(statusCallback,endCallback) {
+        const preloadedBuckets = await this.getPreloadedBuckets();
+        const testDBExistence = await this.getCachedData(Object.keys(preloadedBuckets).slice(0,10));
+        if(testDBExistence){
+            console.log("DB exists, no preload required")
+            endCallback();
+            return;
+        }
+        console.log("Preloading database")
+        const invertedMap = this.getInvertedGeohashGISJOINMap(preloadedBuckets);
+        const total = Object.keys(invertedMap).length;
+        const stream = this.querier.getStreamForQuery(this.collection, '[]');
+        const miniCache = {};
+        let numResponse = 0;
+        let prevPctDone = 0;
+        stream.on('data', async (r) => {
             const data = JSON.parse(r.getData());
-            Util.normalizeFeatureID(data);
-
-            //remove an existing refrence
-            const indexInCache = this.indexInCache(data.GISJOIN);
-            if (indexInCache !== -1) {
-                this.cache.splice(indexInCache, 1);
+            const geohashes = invertedMap[data.GISJOIN];
+            numResponse++;
+            let pctDone = Math.floor(numResponse / total * 100);
+            if(pctDone > prevPctDone){
+                statusCallback({
+                    pctDone: pctDone
+                });
+                prevPctDone = pctDone;
             }
-            else {
-                newResults.push(data);
+            for (const geohash of geohashes) {
+                if (!miniCache[geohash])
+                    miniCache[geohash] = []
+                miniCache[geohash] = this.addListToListNoDuplicates(miniCache[geohash], [data]);
             }
-
-            this.cache.unshift(data); //add it to the front of the arr
-
-            if (this.cache.length > this.maxSize) { //if length is too long, pop from end
-                this.cache.pop();
+        });
+        stream.on('end', (e) => {
+            let toPut = [];
+            statusCallback({
+                pctDone: 100
+            });
+            for (const geohash in miniCache) {
+                toPut.push({
+                    geohash: geohash,
+                    featureTable: miniCache[geohash]
+                });
             }
-        }.bind(this));
-        stream.on('end', function (r) {
-            this.broadcastNewResults(newResults);
-        }.bind(this));
+            this.db.data.bulkPut(toPut).then(done => {
+                console.log("DB is ready!")
+                endCallback();
+            })
+            return;
+        });
     }
 
-    /**
-      * Finds a GISJOINS' index in the cache
-      * @memberof GeometryLoader
-      * @method indexInCache
-      * @param {string} GISJOIN GISJOIN to search for
-      */
-    indexInCache(GISJOIN) {
-        return this.indexInArray(GISJOIN, this.cache);
-    }
-
-    /**
-      * Finds a GISJOINS' index in an array of GeoJSON
-      * @memberof GeometryLoader
-      * @method indexInArray
-      * @param {string} GISJOIN GISJOIN to search for
-      * @param {Array<GeoJSON>} arr array to search through
-      */
-    indexInArray(GISJOIN, arr) {
-        let indx = 0;
-        for (const obj of arr) {
-            if (obj.GISJOIN === GISJOIN) {
-                return indx;
+    getInvertedGeohashGISJOINMap(geohashesGISJOINS) {
+        const reverse = {};
+        for (const geohash in geohashesGISJOINS) {
+            for (const GISJOIN of geohashesGISJOINS[geohash]) {
+                if (!reverse[GISJOIN])
+                    reverse[GISJOIN] = [];
+                reverse[GISJOIN] = this.addListToListNoDuplicates([geohash], reverse[GISJOIN]);
             }
-            indx++;
         }
-        return -1;
+        return reverse;
     }
 
-    /**
-      * Kills all streams (queries) which are currently running
-      * @memberof GeometryLoader
-      * @method killAllStreams
-      */
-    killAllStreams() {
-        for (const stream of this.streams) {
-            stream.cancel();
-        }
-        this.streams = [];
+    addListToListNoDuplicates(listToAdd, list) {
+        return [...new Set([...listToAdd, ...list])];
     }
 
-    /**
-      * Gets GeoJSON bounds array of this classes' leaflet map
-      * @memberof GeometryLoader
-      * @method getMapBoundsArray
-      */
-    getMapBoundsArray() {
-        const b = this.map.wrapLatLngBounds(this.map.getBounds());
-        const barray = Util.leafletBoundsToGeoJSONPoly(b);
-        return barray;
-    }
-
-    /**
-      * Build a mongodb aggregation query to look for all geometry within the map's current viewport
-      * @memberof GeometryLoader
-      * @method getBasicSpatialQuery
-      */
-    getBasicSpatialQuery() {
-        return [{ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [this.getMapBoundsArray()] } } } } }];
+    addFeatureListToFeatureListNoDuplicates(newFeatures, existingFeatures) {
+        const newFeaturesNoDuplicates = newFeatures.filter(nFeature => {
+            return !existingFeatures.find(eFeature => eFeature.GISJOIN === nFeature.GISJOIN)
+        });
+        return existingFeatures.concat(newFeaturesNoDuplicates)
     }
 }
 
 try {
-  module.exports = {
-      GeometryLoader: GeometryLoader
-  }
+    module.exports = {
+        GeometryLoader: GeometryLoader
+    }
 } catch (e) { }

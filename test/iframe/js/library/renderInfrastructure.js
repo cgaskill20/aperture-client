@@ -7,6 +7,7 @@ const ctx = canvas.getContext('2d');
 global.$ = require('jquery');
 global.L = require('leaflet');
 global.simplify = require('../../../../src/iframe/js/third-party/simplify.js');
+const layerGroup = L.layerGroup();
 
 L.Map.prototype.setSize = function (width, height) {
     this._size = new L.Point(width, height);
@@ -52,46 +53,52 @@ global.grpc_querier = function(){
     };
 }
 
-
+let renderer;
 describe('RenderInfrastructure', function () {
     describe('config()', function () {
         it('should configurate the renderer', function () {
-            renderInfrastructure.RenderInfrastructure.config(testMap, testMap, jsonData, { timeout: 15, queryAlertText: elem2, attributeData: jsonData, simplifyThreshold: 0.001 });
-            assert.deepEqual(renderInfrastructure.RenderInfrastructure.map, testMap);
-            assert.deepEqual(renderInfrastructure.RenderInfrastructure.options.timeout, 15);
+            renderer = new renderInfrastructure.RenderInfrastructure(testMap, testMap, layerGroup, { timeout: 15, queryAlertText: elem2, attributeData: jsonData, simplifyThreshold: 0.001 });
+            global.window.renderInfrastructure = renderer;
+            assert.deepEqual(renderer.map, testMap);
+            assert.deepEqual(renderer.options.timeout, 15);
         });
     });
     let render;
     describe('renderGeoJson()', function () {
         it('should render geojson onto map', function () {
-            render = renderInfrastructure.RenderInfrastructure.renderGeoJson(sampleQuery);
-            assert.deepEqual(render.length, 2);
+            render = renderer.renderGeoJson(sampleQuery, {
+                "test":{
+                    "color": "red"
+                }
+            });
+            assert.deepEqual(render.length, 3);
         });
     });
     describe('removeSpecifiedLayersFromMap()', function () {
         it('removes some layers from the map', function () {
-            render = renderInfrastructure.RenderInfrastructure.removeSpecifiedLayersFromMap(render);
-            assert.deepEqual(Object.keys(testMap._layers).length, 2);
+            render = renderer.removeSpecifiedLayersFromMap(render);
+            assert.deepEqual(Object.keys(testMap._layers).length, 0);
         });
     });
     describe('removeAllFeaturesFromMap()', function () {
         it('removes all layers from the map', function () {
-            render = renderInfrastructure.RenderInfrastructure.renderGeoJson(sampleQuery);
-            render = renderInfrastructure.RenderInfrastructure.removeAllFeaturesFromMap();
+            render = renderer.renderGeoJson(sampleQuery,{
+                "test":{
+                    "color": "red"
+                }
+            });
+            render = renderer.removeAllFeaturesFromMap();
             assert.deepEqual(Object.keys(testMap._layers).length, 0);
         });
     });
     describe('getAttribute()', function () {
         it('gets attributes from a name', function () {
-            renderInfrastructure.RenderInfrastructure.config(testMap, testMap, jsonData, {  });
-            //console.log(renderInfrastructure.RenderInfrastructure.options.attributeData);
-            assert.deepEqual(renderInfrastructure.RenderInfrastructure.getAttribute("drinking_water", renderInfrastructure.ATTRIBUTE.icon), "noicon");
-            assert.deepEqual(renderInfrastructure.RenderInfrastructure.getAttribute("reservoir", renderInfrastructure.ATTRIBUTE.color), "#00FFFF");
-            assert.deepEqual(renderInfrastructure.RenderInfrastructure.getAttribute("dam", renderInfrastructure.ATTRIBUTE.icon), new L.Icon({
-                iconUrl: "../../../images/dam.png",
-                iconSize: [25, 25]
-            }));
-            assert.deepEqual(renderInfrastructure.RenderInfrastructure.getAttribute("reservoir", renderInfrastructure.ATTRIBUTE.color), "#00FFFF");
+            //render.config(testMap, testMap, jsonData, {  });
+            //console.log(render.options.attributeData);
+            assert.deepEqual(renderer.getAttribute("drinking_water", renderInfrastructure.ATTRIBUTE.icon), "noicon");
+            assert.deepEqual(renderer.getAttribute("reservoir", renderInfrastructure.ATTRIBUTE.color), "#000000");
+            assert.deepEqual(renderer.getAttribute("dam", renderInfrastructure.ATTRIBUTE.icon), "noicon");
+            assert.deepEqual(renderer.getAttribute("reservoir", renderInfrastructure.ATTRIBUTE.color), "#000000");
         });
     });
 });
