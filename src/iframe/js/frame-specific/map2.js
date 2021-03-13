@@ -65,85 +65,100 @@ window.dataModelingGroup = dataModelingGroup;
 
 
 // This gross block of code initializes the tract/county queriers. Its gross. Too bad!
+const preloadStatusContainer = document.getElementById("preloadStatus");
 let bgTractId = "bgTract";
 let bgCountyId = "bgCounty";
 const backgroundTract = new Worker("js/library/geometryLoaderWorker.js", { name: `Background tract worker: ${bgTractId}` });
 const backgroundCounty = new Worker("js/library/geometryLoaderWorker.js", { name: `Background county worker: ${bgCountyId}` });
-let waitingOn = 2;
-let statusData = {
-    county: 0,
-    tract: 0
-}
-const statusToText = (status) => {
-    switch(status){
-        case -1:
-            return "finished.";
-        case 100:
-            return "finalizing.";
-        default:
-            return `${status}% done.`;
-    }
-}
-const rewriteStatus = () => {
-    let text = `Fetching details...`
-    if(statusData.county || statusData.tract){
-        text = `
-        Preloading data, this may take awhile:
-        <br>
-        County Shapes: ${statusToText(statusData.county)}
-        <br>
-        Census Tract Shapes: ${statusToText(statusData.tract)}
-    `;
-    }
-    document.getElementById("preloadStatus").innerHTML = text;
-}
-const configFinishedListener = msg => {
-    const data = msg.data;
-    //check that the data is sent from this querier
-    if (!(data.senderID !== "tractConfig" || data.senderID !== "countyConfig")) {
-        return;
-    }
+ReactDOM.render(e(PreloadingMenu,{
+    loaders: [
+        {
+            id: bgTractId,
+            loader: backgroundTract,
+            collection: "tract_geo_140mb_no_2d_index"
+        },
+        {
+            id: bgCountyId,
+            loader: backgroundCounty,
+            collection: "county_geo_30mb_no_2d_index"
+        }
+    ]
+}), preloadStatusContainer);
+// let waitingOn = 2;
+// let statusData = {
+//     county: 0,
+//     tract: 0
+// }
+// const statusToText = (status) => {
+//     switch(status){
+//         case -1:
+//             return "finished.";
+//         case 100:
+//             return "finalizing.";
+//         default:
+//             return `${status}% done.`;
+//     }
+// }
+// const rewriteStatus = () => {
+//     let text = `Fetching details...`
+//     if(statusData.county || statusData.tract){
+//         text = `
+//         Preloading data, this may take awhile:
+//         <br>
+//         County Shapes: ${statusToText(statusData.county)}
+//         <br>
+//         Census Tract Shapes: ${statusToText(statusData.tract)}
+//     `;
+//     }
+//     document.getElementById("preloadStatus").innerHTML = text;
+// }
+// const configFinishedListener = msg => {
+//     const data = msg.data;
+//     //check that the data is sent from this querier
+//     if (!(data.senderID !== "tractConfig" || data.senderID !== "countyConfig")) {
+//         return;
+//     }
 
-    if (data.type === "configStatus") {
-        if(data.senderID === "tractConfig"){
-            statusData.tract = data.status.pctDone;
-        }
-        else if(data.senderID === "countyConfig"){
-            statusData.county = data.status.pctDone;
-        }
-    }
-    else if (data.type === "end") {
-        if(data.senderID === "tractConfig"){
-            backgroundTract.removeEventListener("message", configFinishedListener)
-            statusData.tract = -1;
-        }
-        else if(data.senderID === "countyConfig"){
-            backgroundCounty.removeEventListener("message", configFinishedListener)
-            statusData.county = -1;
-        }
-        waitingOn--;
-        if (!waitingOn) {
-            document.getElementById("preloadBlocker").style.display = "none";
-        }
-    }
-    rewriteStatus();
-}
-backgroundTract.addEventListener("message", configFinishedListener)
-backgroundCounty.addEventListener("message", configFinishedListener)
-backgroundTract.postMessage({
-    senderID: "tractConfig",
-    type: "config",
-    collection: "tract_geo_140mb_no_2d_index",
-    id: bgTractId
-});
-randID = Math.random().toString(36).substring(2, 15);
-backgroundCounty.postMessage({
-    senderID: "countyConfig",
-    type: "config",
-    collection: "county_geo_30mb_no_2d_index",
-    id: bgCountyId
-});
-rewriteStatus();
+//     if (data.type === "configStatus") {
+//         if(data.senderID === "tractConfig"){
+//             statusData.tract = data.status.pctDone;
+//         }
+//         else if(data.senderID === "countyConfig"){
+//             statusData.county = data.status.pctDone;
+//         }
+//     }
+//     else if (data.type === "end") {
+//         if(data.senderID === "tractConfig"){
+//             backgroundTract.removeEventListener("message", configFinishedListener)
+//             statusData.tract = -1;
+//         }
+//         else if(data.senderID === "countyConfig"){
+//             backgroundCounty.removeEventListener("message", configFinishedListener)
+//             statusData.county = -1;
+//         }
+//         waitingOn--;
+//         if (!waitingOn) {
+//             document.getElementById("preloadBlocker").style.display = "none";
+//         }
+//     }
+//     rewriteStatus();
+// }
+// backgroundTract.addEventListener("message", configFinishedListener)
+// backgroundCounty.addEventListener("message", configFinishedListener)
+// backgroundTract.postMessage({
+//     senderID: "tractConfig",
+//     type: "config",
+//     collection: "tract_geo_140mb_no_2d_index",
+//     id: bgTractId
+// });
+// randID = Math.random().toString(36).substring(2, 15);
+// backgroundCounty.postMessage({
+//     senderID: "countyConfig",
+//     type: "config",
+//     collection: "county_geo_30mb_no_2d_index",
+//     id: bgCountyId
+// });
+// rewriteStatus();
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty;
 // Gross code section is done now.
@@ -253,7 +268,7 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
 
 const modelContainer = document.getElementById("model-container");
 ReactDOM.render(e(ModelMenu), modelContainer);
-let j = 0;
+
 map.on("moveend", function (e) {
     updateLayers();
 });
