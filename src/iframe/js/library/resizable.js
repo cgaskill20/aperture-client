@@ -109,7 +109,6 @@ class resizable {
 
         boxDocument.appendChild(boxResizer);
         overlayDocument.appendChild(boxDocument);
-        console.log(overlayDocument);
         document.body.appendChild(overlayDocument);
     }
 

@@ -99,7 +99,6 @@ class ChartSystem {
             this.initializeUpdateHooks();
             this.catalog = catalog;
             this.graphable = catalog.map(e => Object.keys(e.constraints)).flat();
-            console.log(this.catalog);
         });
 
         this.doNotUpdate = false;
@@ -142,7 +141,6 @@ class ChartSystem {
 
     getValues() {
         let values = this.filter.getModel(this.graphable, this.map.getBounds());
-        console.log(values);
 
         // This arcane incantation gets a list of feature names for which there's actually data.
         // Don't ask.

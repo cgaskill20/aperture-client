@@ -438,6 +438,10 @@ Util = {
                 let point = [entry.geometry.coordinates[1], entry.geometry.coordinates[0]];
                 return bounds.contains(point);
             }
+            case Util.FEATURETYPE.polygon: {
+                bounds = Util.mirrorLatLngBounds(bounds);
+                return Util.arePointsApproximatelyInBounds(entry.geometry.coordinates[0], bounds);
+            }
             case Util.FEATURETYPE.multiPolygon: {
                 let polygons = entry.geometry.coordinates;
                 bounds = Util.mirrorLatLngBounds(bounds);
