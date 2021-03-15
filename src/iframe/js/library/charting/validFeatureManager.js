@@ -25,7 +25,6 @@ class ValidFeatureManager {
                 break;
             }
         }
-        console.log(this.validFeatures[currentIndex]);
         return this.validFeatures[currentIndex];
     }
 
