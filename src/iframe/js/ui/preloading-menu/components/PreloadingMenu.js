@@ -56,7 +56,7 @@ class PreloadingMenu extends React.Component {
             strokeWidth: 6,
             easing: 'easeInOut',
             duration: 1400,
-            color: '#0000FF',
+            color: '#4682B4',
             trailColor: '#eee',
             trailWidth: 1,
             svgStyle: null
