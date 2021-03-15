@@ -76,7 +76,7 @@ class SingleChartManager {
         this.chartArea.tellNumberOfCharts(graphable.length);
 
         this.chartArea.setFeatureToggleCallback(() => {
-            this.changeFeature(this.featureManager.getNextFeature(this.currentFeature, []));
+            this.cycleAxis("x");
         });
     }
 
@@ -85,6 +85,12 @@ class SingleChartManager {
         let chartIndex = this.chartSystem.graphable.indexOf(feature);
         if (chartIndex !== -1) {
             this.chartArea.showChart(chartIndex);
+        }
+    }
+
+    cycleAxis(axis) {
+        if (axis === "x") {
+            this.changeFeature(this.featureManager.getNextFeature(this.currentFeature, []));
         }
     }
 

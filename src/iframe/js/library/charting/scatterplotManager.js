@@ -86,6 +86,10 @@ class ScatterplotManager {
         }
         return this.validFeatures.getNextFeature(this.currentFeatures[axis], ignore);
     }
+
+    cycleAxis(axis) {
+        this.axisButtonCallback(axis);
+    }
     
     update(values) {
         let shouldUpdate = this.validFeatures.enoughFeaturesExist(2);
