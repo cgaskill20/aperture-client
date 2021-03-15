@@ -6,7 +6,7 @@ class PreloadingMenu extends React.Component {
         super(props);
 
         this.loaders = props.loaders;
-        this.loadersRemaining = props.loaders.length;
+        this.loadersRemaining = this.loaders.length;
         this.state = {
             status: this.loaders.map(loader => {
                 return {
@@ -17,6 +17,11 @@ class PreloadingMenu extends React.Component {
         }
         this.aggregateProgress = 0;
         this.loadingBar = null;
+        this.startListeners();
+    }
+
+    startListeners() {
+        // map listener with id's
         this.listeners = this.loaders.map(loader => {
             return {
                 id: loader.id,
@@ -24,11 +29,13 @@ class PreloadingMenu extends React.Component {
             }
         });
 
+        // add event listeners
         for (const listener of this.listeners) {
             const loader = this.loaders.find(loader => loader.id === listener.id);
             loader.loader.addEventListener("message", listener.listener)
         }
 
+        // send messages to worker config
         for (const loader of this.loaders) {
             loader.loader.postMessage({
                 senderID: loader.id,
@@ -40,28 +47,46 @@ class PreloadingMenu extends React.Component {
     }
 
     render() {
-        return e("div", null, this.renderProgress());
+        return e("div", null, ...this.renderProgress());
     }
 
     componentDidMount() {
-        this.loadingBar = new ldBar(
-            "#preloadingBar"
-        );
+        // create loading bar
+        this.loadingBar = new ProgressBar.Circle("#preloadBar", {
+            strokeWidth: 6,
+            easing: 'easeInOut',
+            duration: 1400,
+            color: '#0000FF',
+            trailColor: '#eee',
+            trailWidth: 1,
+            svgStyle: null
+          });
     }
 
-    componentDidUpdate(){
-        this.loadingBar.set(
-            this.aggregateProgress
-        );
+    componentDidUpdate() {
+        // update loadingbar after render() is called
+        this.loadingBar.animate(this.aggregateProgress / 100);  // Number from 0.0 to 1.0
     }
 
     renderProgress() {
         const aggregateStatus = this.state.status.reduce((acc, curr) => {
             return acc + curr.progress;
         }, 0) / this.state.status.length;
-        this.aggregateProgress = aggregateStatus;
-        return e("div", { id: "preloadingBar" });
+        this.aggregateProgress = Math.round(aggregateStatus);
+        return [
+            e("div", { id: "preloadBar" }),
+            e("br"),
+            e("div", {id: "preloadText"}, `${this.progressToText(this.aggregateProgress)}`)
+        ];
     }
+
+    progressToText(progress){
+        if(progress === 0)
+            return "Initializing."
+        if(progress === 100)
+            return "Finalizing."
+        return "Optimizing for your system."
+    }       
 
     progressListener(msg) {
         const data = msg.data;
@@ -72,7 +97,10 @@ class PreloadingMenu extends React.Component {
         if (!loaderIDs.includes(data.senderID)) {
             return;
         }
+        this.processMessage(data);
+    }
 
+    processMessage(data) {
         if (data.type === "configStatus") {
             this.setState({
                 status: this.state.status.map(loaderStatus => {
