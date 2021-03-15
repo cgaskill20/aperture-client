@@ -67,10 +67,8 @@ window.dataModelingGroup = dataModelingGroup;
 // This gross block of code initializes the tract/county queriers. Its gross. Too bad!
 let bgTractId = "bgTract";
 let bgCountyId = "bgCounty";
-const backgroundTract = new SharedWorker("js/library/geometryLoaderWorker.js", { name: `Background tract worker: ${bgTractId}` });
-const backgroundCounty = new SharedWorker("js/library/geometryLoaderWorker.js", { name: `Background county worker: ${bgCountyId}` });
-backgroundTract.port.start();
-backgroundCounty.port.start();
+const backgroundTract = new Worker("js/library/geometryLoaderWorker.js", { name: `Background tract worker: ${bgTractId}` });
+const backgroundCounty = new Worker("js/library/geometryLoaderWorker.js", { name: `Background county worker: ${bgCountyId}` });
 let waitingOn = 2;
 let statusData = {
     county: 0,
@@ -116,11 +114,11 @@ const configFinishedListener = msg => {
     }
     else if (data.type === "end") {
         if(data.senderID === "tractConfig"){
-            backgroundTract.port.removeEventListener("message", configFinishedListener)
+            backgroundTract.removeEventListener("message", configFinishedListener)
             statusData.tract = -1;
         }
         else if(data.senderID === "countyConfig"){
-            backgroundCounty.port.removeEventListener("message", configFinishedListener)
+            backgroundCounty.removeEventListener("message", configFinishedListener)
             statusData.county = -1;
         }
         waitingOn--;
@@ -130,16 +128,16 @@ const configFinishedListener = msg => {
     }
     rewriteStatus();
 }
-backgroundTract.port.addEventListener("message", configFinishedListener)
-backgroundCounty.port.addEventListener("message", configFinishedListener)
-backgroundTract.port.postMessage({
+backgroundTract.addEventListener("message", configFinishedListener)
+backgroundCounty.addEventListener("message", configFinishedListener)
+backgroundTract.postMessage({
     senderID: "tractConfig",
     type: "config",
     collection: "tract_geo_140mb_no_2d_index",
     id: bgTractId
 });
 randID = Math.random().toString(36).substring(2, 15);
-backgroundCounty.port.postMessage({
+backgroundCounty.postMessage({
     senderID: "countyConfig",
     type: "config",
     collection: "county_geo_30mb_no_2d_index",
@@ -262,7 +260,7 @@ parent.setterFunctions.push({
     setterFunc: thisMapsSetter,
     mapNum: MAPNUMBER
 });
-
+let chartSystem = new ChartSystem(map, "json/graphPriority.json");
 setTimeout(function () {
     map.setView([map.wrapLatLng(parent.view).lat, map.wrapLatLng(parent.view).lng - 0.0002], map.getZoom());
 }, 1); //this is a terrible fix but it works for now
