@@ -1,9 +1,3 @@
-.colorMode1 {
-  background-color: #f8f8f8;
-  color: #111;
-  transition: 0.3s;
-}
-
 .customBorder {
   border: 1px solid #777;
   border-radius: 3px;
