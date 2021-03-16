@@ -114,7 +114,7 @@ class Scatterplot extends Chart {
 
         view.svg.select("text#xAxisLabel")
             .attr("x", newWidth - view.margin.right)
-            .attr("y", newHeight - view.margin.bottom / 2)
+            .attr("y", newHeight - view.margin.bottom / 2 + 4)
             .attr("text-anchor", "end")
             .attr("font-size", "8pt")
             .text(this.data.x);
@@ -139,7 +139,7 @@ class Scatterplot extends Chart {
         
         view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
 
-        view.margin = { top: 50, right: 50, bottom: 50, left: 50 };
+        view.margin = { top: 20, right: 20, bottom: 50, left: 50 };
 
         view.svg.append("g").attr("id", "xAxis");
         view.svg.append("g").attr("id", "yAxis");

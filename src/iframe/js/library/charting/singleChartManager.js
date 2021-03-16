@@ -76,7 +76,7 @@ class SingleChartManager {
         this.chartArea.tellNumberOfCharts(graphable.length);
 
         this.chartArea.setFeatureToggleCallback(() => {
-            this.changeFeature(this.featureManager.getNextFeature(this.currentFeature, []));
+            this.cycleAxis("x");
         });
     }
 
@@ -88,31 +88,23 @@ class SingleChartManager {
         }
     }
 
-    update(values) {
-        this.reportEmptyCharts(values);
-        this.removeEmptyCharts(values);
-
-        for (let feature in values) {
-            this.charts[feature].changeData(values[feature].map(e => e.data), 5);
+    cycleAxis(axis) {
+        if (axis === "x") {
+            this.changeFeature(this.featureManager.getNextFeature(this.currentFeature, []));
         }
     }
 
-    reportEmptyCharts(values) {
-        let emptyCharts = Object.values(values).map((feature, i) => {
-            if (feature.length === 0) {
-                return i;
-            }
-            return -1;
-        });
-        emptyCharts = emptyCharts.filter(i => i !== -1);
-        this.chartArea.tellEmptyCharts(emptyCharts);
-    }
+    update(values) {
+        let enoughFeatures = this.featureManager.enoughFeaturesExist(1);
 
-    removeEmptyCharts(values) {
-        for (let feature in values) {
-            if (values[feature].length === 0) {
-                delete values[feature];
+        if (enoughFeatures) {
+            this.chartArea.hideNotEnoughFeaturesMessage();
+            for (let feature in values) {
+                this.charts[feature].changeData(values[feature].map(e => e.data), 5);
             }
+        } else {
+            this.chartArea.showNotEnoughFeaturesMessage();
+            this.chartArea.hideAll();
         }
     }
 }

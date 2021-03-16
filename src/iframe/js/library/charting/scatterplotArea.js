@@ -74,6 +74,10 @@ class ScatterplotArea {
         this.changeYAxisButton.className = "btn btn-outline-dark btn-xs";
         this.changeYAxisButton.innerText = "Cycle Y-Axis";
         this.container.appendChild(this.changeYAxisButton);
+
+        this.notEnoughFeaturesMessage = document.createElement("p");
+        this.notEnoughFeaturesMessage.innerText = "Enable two or more constraints to start graphing";
+        this.container.appendChild(this.notEnoughFeaturesMessage);
     }
 
     setChangeAxisButtonCallbacks(xCallback, yCallback) {
@@ -90,6 +94,14 @@ class ScatterplotArea {
         if (this.scatterplot) {
             this.scatterplot.rerender(newWidth, newHeight - 100, 0);
         }
+    }
+
+    showNotEnoughFeaturesMessage() {
+        this.notEnoughFeaturesMessage.style.display = "block";
+    }
+
+    hideNotEnoughFeaturesMessage() {
+        this.notEnoughFeaturesMessage.style.display = "none";
     }
 
     toggleVisible() {

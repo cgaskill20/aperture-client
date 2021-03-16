@@ -57,7 +57,8 @@ END OF TERMS AND CONDITIONS
 
 class ScatterplotManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem) {
-        this.chartArea = chartArea
+        this.catalog = catalog;
+        this.chartArea = chartArea;
         this.scatterplot = new Scatterplot();
         this.chartArea.addChart(this.scatterplot);
     
@@ -86,11 +87,16 @@ class ScatterplotManager {
         }
         return this.validFeatures.getNextFeature(this.currentFeatures[axis], ignore);
     }
+
+    cycleAxis(axis) {
+        this.axisButtonCallback(axis);
+    }
     
     update(values) {
         let shouldUpdate = this.validFeatures.enoughFeaturesExist(2);
 
         if (shouldUpdate) {
+            this.chartArea.hideNotEnoughFeaturesMessage();
             if (!this.currentFeatures.x) {
                 this.currentFeatures.x = this.validFeatures.getAnyFeature();
             }
@@ -98,6 +104,8 @@ class ScatterplotManager {
                 this.currentFeatures.y = this.validFeatures.getAnyFeature();
             }
             this.scatterplot.changeData(this.prepareData(values));
+        } else {
+            this.chartArea.showNotEnoughFeaturesMessage();
         }
     }
 
@@ -112,8 +120,28 @@ class ScatterplotManager {
                 y: yfeat[i].data,
             });
         }
-        data.x = this.currentFeatures.x;
-        data.y = this.currentFeatures.y;
+
+        let readableXName = this.catalog.find(e => {
+            for (let constraint in e.constraints) {
+                if (constraint === this.currentFeatures.x) {
+                    return true;
+                }
+            }
+            return false;
+        }).constraints[this.currentFeatures.x].label;
+
+        let readableYName = this.catalog.find(e => {
+            for (let constraint in e.constraints) {
+                if (constraint === this.currentFeatures.y) {
+                    return true;
+                }
+            }
+            return false;
+        }).constraints[this.currentFeatures.y].label;
+
+        data.x = readableXName;
+        data.y = readableYName;
+
         return data;
     }
 }

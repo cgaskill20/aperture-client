@@ -64,6 +64,10 @@ class Histogram extends Chart {
     }
 
     rerender(newWidth, newHeight, viewIndex) {
+        if (this.data.length === 0) {
+            return;
+        }
+
         let view = this.views[viewIndex];
 
         view.width = newWidth;
@@ -99,7 +103,7 @@ class Histogram extends Chart {
                 .attr("height", d => view.y(0) - view.y(d.length));
         view.svg.select("text#title")
             .attr("x", newWidth / 2)
-            .attr("y", 12)
+            .attr("y", 24)
             .attr("text-anchor", "middle")
             .text(this.title);
     }
@@ -133,7 +137,7 @@ class Histogram extends Chart {
         view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
 
         view.bins = d3.bin().thresholds(8)(this.data);
-        view.margin = { top: 20, right: 20, bottom: 30, left: 40 };
+        view.margin = { top: 30, right: 20, bottom: 20, left: 40 };
 
         view.svg.append("g").attr("id", "rects");
         view.svg.append("g").attr("id", "xAxis");
