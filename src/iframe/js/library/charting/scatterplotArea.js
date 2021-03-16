@@ -97,7 +97,7 @@ class ScatterplotArea {
     }
 
     showNotEnoughFeaturesMessage() {
-        this.notEnoughFeaturesMessage.style.display = "inline";
+        this.notEnoughFeaturesMessage.style.display = "block";
     }
 
     hideNotEnoughFeaturesMessage() {
