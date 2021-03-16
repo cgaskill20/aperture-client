@@ -24,5 +24,9 @@ class ChartFrame {
     changeFeature(feature) {
         this.manager.changeFeature(feature);
     }
+
+    cycleAxis(axis) {
+        this.manager.cycleAxis(axis);
+    }
 }
 
