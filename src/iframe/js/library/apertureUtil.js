@@ -410,7 +410,7 @@ Util = {
         // ensure sampleSpacing is not zero, or else the bad will happen
         sampleSpacing = (sampleSpacing === 0) ? 1 : sampleSpacing;
 
-        for (let i = 0; i < points.length; i += sampleSpacing) {
+        for (let i = 0; i < points.length; i += 1) {
             if (bounds.contains(points[i])) {
                 return true;
             }
@@ -437,6 +437,10 @@ Util = {
             case Util.FEATURETYPE.point: {
                 let point = [entry.geometry.coordinates[1], entry.geometry.coordinates[0]];
                 return bounds.contains(point);
+            }
+            case Util.FEATURETYPE.polygon: {
+                bounds = Util.mirrorLatLngBounds(bounds);
+                return Util.arePointsApproximatelyInBounds(entry.geometry.coordinates[0], bounds);
             }
             case Util.FEATURETYPE.multiPolygon: {
                 let polygons = entry.geometry.coordinates;

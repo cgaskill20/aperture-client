@@ -55,196 +55,102 @@ END OF TERMS AND CONDITIONS
 
 */
 
-/**
-* Library for the creation and alteration of floating divs
-* Author Jean-Marc
-*/
-class resizable {
-    minimum_size = 20;
-    // Allows us to add listeners to the unique overlays
-    static numOfInstances = 0;
-    // Each time a overlay is clicked its Z Index increases so it is seen above all other overlays
-    static zIndex = 1000;
-
-    constructor(defaultWidth, defaultHeight, backgroundColor){
-        resizable.numOfInstances += 1;
-        this.width = defaultWidth;
-        this.height = defaultHeight;
-        this.uniqueId = resizable.numOfInstances;
-        this.backgroundColor = backgroundColor;
-        this.isDown = false;
-        this.isResizing = false;
-        this.createOverlay();
-        this.resizeListeners();
-        this.movementListeners();
-    }
-    /**
-     * Generates the 3 necessary divs for the overlay and adds in the CSS based on its initialization variables
-     * @memberof resizable
-     * @method createOverlay()
-     * @returns 3 divs appended to the body of the HTML doc
-     */
-    createOverlay(){
-        const overlayDocument = document.createElement("div");
-        this.overlayDocument = overlayDocument;
-        overlayDocument.id = "overlay" + this.uniqueId;
-        overlayDocument.className = "overlay colorMode1 noTransitions";
-        overlayDocument.style.width = this.width + "px";
-        overlayDocument.style.height = this.height + "px";
-        overlayDocument.style.zIndex = resizable.zIndex;
-        overlayDocument.style.display = "none";
-        overlayDocument.style.opacity = .9;
-
-        const boxDocument = document.createElement("div");
-        this.boxDocument = boxDocument;
-        boxDocument.id = "box" + this.uniqueId;
-        boxDocument.className = "box";
-
-        // This is the button in the top right that allows the div's size to be altered
-        const boxResizer = document.createElement("div");
-        this.boxResizer = boxResizer;
-        boxResizer.id = "option" + this.uniqueId;
-        boxResizer.className = "option top-right";
-
-        boxDocument.appendChild(boxResizer);
-        overlayDocument.appendChild(boxDocument);
-        document.body.appendChild(overlayDocument);
-    }
-
-    /**
-     * Adds in the necessary listeners for the divs to be resized
-     * @memberof resizable
-     * @method resizeListeners()
-     * @returns 3 listeners for mousemovement
-     */
-    resizeListeners(){
-        this.boxResizer.addEventListener('mousedown', (e) => {
-            /**
-             * Since there are the same listeners for resizing and movement we need these booleans so that resizing does
-             * not also move the div around and vice-versa
-             */
-            this.isDown = true;
-            this.isResizing = true;
-            e.preventDefault();
-            let dimensions = this.calculateDimensions(e);
-            window.addEventListener('mousemove', (e) =>{
-                if(this.isDown && this.isResizing){
-                    this.changeBoxSize(e, dimensions);
-                }
-            });
-            window.addEventListener('mouseup', ()=>{
-                this.isDown = false;
-                this.isResizing = false;
-            });
-        });
-    }
-    /**
-     * Calculates dimensions for resize, only because the resize function needed less lines
-     * @memberof resizable
-     * @method calculateDimensions
-     * @param {event} e - the current position of the mouse
-     * @returns 4 listeners for mousemovement
-     */
-    calculateDimensions(e){
-        let dimensions = [];
-        //Calculates the width
-        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('width').replace('px', '')));
-        // Calculates the height
-        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('height').replace('px', '')));
-        // Calculates the Y coordinate
-        dimensions.push(this.overlayDocument.getBoundingClientRect().top);
-        // Calculates the mouse X and Y coordinate
-        dimensions.push(e.pageX);
-        dimensions.push(e.pageY);
-        return dimensions;
-    }
-
-    changeBoxSize(e, dimensions){
-        this.width = dimensions[0] + (e.pageX - dimensions[3]);
-        this.height = dimensions[1] - (e.pageY - dimensions[4]);
-        if (this.width > this.minimum_size) {
-            this.overlayDocument.style.width = this.width + 'px';
-        }
-        if (this.height > this.minimum_size) {
-            this.overlayDocument.style.height = this.height + 'px';
-            this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
-        }
-
-        if (this.onResizeCallback) {
-            this.onResizeCallback(this.width, this.height);
-        }
-    }
-
-    setResizeCallback(cb) {
-        this.onResizeCallback = cb;
-    }
-
-    triggerResizeEvent() {
-        this.onResizeCallback(this.width, this.height);
-    }
-
-    /**
-     * Adds in the necessary listeners for the div to be moved
-     * @memberof resizable
-     * @method movementListeners()
-     * @returns 4 listeners for mousemovement
-     */
-    movementListeners(){
-        let offset = [0,0];
-        let mousePosition;
-        this.overlayDocument.addEventListener('mousedown', ()=>{
-            resizable.zIndex += 1;
-            this.overlayDocument.style.zIndex = resizable.zIndex;
-        });
-
-        this.overlayDocument.addEventListener('mousedown', (e) => {
-            this.isDown = true;
-            offset = [
-                this.overlayDocument.offsetLeft - e.clientX,
-                this.overlayDocument.offsetTop - e.clientY
-            ];
-
-        }, true);
-
-        this.overlayDocument.addEventListener('mouseup', () => {
-            this.isDown = false;
-        }, true);
-
-        window.addEventListener('mousemove', (event) => {
-            if (this.isDown && !this.isResizing) {
-                mousePosition = this.moveBox(event, mousePosition, offset);
-            }
-        }, true);
-
-    }
-
-    moveBox(event, mousePosition, offset){
-        mousePosition = {
-            x : event.clientX,
-            y : event.clientY
-        };
-        this.overlayDocument.style.left = (mousePosition.x + offset[0]) + 'px';
-        this.overlayDocument.style.top  = (mousePosition.y + offset[1]) + 'px';
-        return mousePosition;
-    }
-
-    toggleVisible(){
-        let currentlyVisible = this.overlayDocument.style.display === "block";
-        if (currentlyVisible) {
-            this.overlayDocument.style.display = "none";
-            console.log("sdfgdsf");
-        } else {
-            console.log("sdfgdsf");
-            this.overlayDocument.style.display = "block";
-            for (let areaName in this.chartAreas) {
-                this.chartAreas[areaName].rerender(this.width, this.height);
-            }
-        }
-    }
-
-    addChartArea(type, chartArea) {
-        this.chartAreas[type] = chartArea;
-        chartArea.attachTo(this.boxDocument);
-    }
+const ChartingType = {
+    LINE: {
+        name: "line",
+        managerType: SingleChartManager,
+        areaType: SingleChartArea,
+        chartType: LineGraph,
+    },
+    HISTOGRAM: {
+        name: "histogram",
+        managerType: SingleChartManager,
+        areaType: SingleChartArea,
+        chartType: Histogram,
+    },
+    SCATTERPLOT: {
+        name: "scatterplot",
+        managerType: ScatterplotManager,
+        areaType: ScatterplotArea,
+        chartType: Scatterplot,
+    },
 }
 
+class ChartSystem {
+    constructor(map, chartCatalogFilename, renderInfrastructure) {
+        this.map = map;
+
+        this.filter = new MapDataFilter();
+        renderInfrastructure.useFilter(this.filter);
+
+        this.chartFrames = [];
+
+        this.validFeatureManager = new ValidFeatureManager([]);
+
+        this.resizable = new resizable(400, 300, "white");
+        this.resizable.setResizeCallback((width, height) => {
+            this.chartFrames.forEach(frame => {
+                frame.setSize(width - 200, height - 200);
+                frame.resize();
+            });
+        });
+
+        $.getJSON(chartCatalogFilename, (catalog) => {
+            this.initializeUpdateHooks();
+            this.catalog = catalog;
+            this.graphable = catalog.map(e => Object.keys(e.constraints)).flat();
+        });
+
+        this.doNotUpdate = false;
+
+    }
+
+    getChartFrame(type) {
+        let node = document.createElement("div");
+        node.className = `${type.name}-chart-area`;
+
+        let area = new type.areaType();
+        area.attachTo(node);
+        let manager = new type.managerType(this.catalog, area, this.validFeatureManager, this, type.chartType);
+        let frame = new ChartFrame(node, area, manager);
+
+        this.chartFrames.push(frame);
+
+        return frame;
+    }
+
+    initializeUpdateHooks() {
+        this.map.on('move', (e) => { this.update(); });
+        this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
+    }
+
+    update() {
+        if (this.doNotUpdate) {
+            return;
+        }
+        
+        // TODO: This needs to not suck
+        this.resizable.triggerResizeEvent();
+
+        let values = this.getValues();
+        this.chartFrames.forEach(frame => { frame.manager.update(values); });
+
+        this.doNotUpdate = true;
+        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
+    }
+
+    getValues() {
+        let values = this.filter.getModel(this.graphable, this.map.getBounds());
+
+        // This arcane incantation gets a list of feature names for which there's actually data.
+        // Don't ask.
+        let validFeatures = Object.entries(values).filter(kv => kv[1].length !== 0).map(kv => kv[0]);
+        this.validFeatureManager.update(validFeatures);
+
+        return values;
+    }
+
+    toggleVisible() {
+        this.resizable.toggleVisible();
+    }
+}
