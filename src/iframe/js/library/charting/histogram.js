@@ -55,12 +55,18 @@ END OF TERMS AND CONDITIONS
 
 */
 
+const HistogramType = {
+    QUANTITATIVE: 0,
+    CATEGORICAL: 1
+}
+
 class Histogram extends Chart {
     constructor() {
         super([]);
         this.binNum = 10;
         this.changeBins(this.binNum);
         this.colorScale = () => "steelblue";
+        this.renderType = HistogramType.QUANTITATIVE;
     }
 
     rerender(newWidth, newHeight, viewIndex) {
@@ -74,21 +80,33 @@ class Histogram extends Chart {
         view.height = newHeight;
         view.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
 
+        switch (this.renderType) {
+            case HistogramType.QUANTITATIVE: {
+                this.rerenderQuantitative(newWidth, newHeight, view);
+                break;
+            } case HistogramType.CATEGORICAL: {
+                this.rerenderCategorical(newWidth, newHeight, view);
+                break;
+            }
+        }
+    }
+
+    rerenderQuantitative(width, height, view) {   
         view.x = d3.scaleLinear()
-            .range([view.margin.left, newWidth - view.margin.right])
+            .range([view.margin.left, width - view.margin.right])
             .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1]);
 
         view.y = d3.scaleLinear()
-            .range([newHeight - view.margin.bottom, view.margin.top])
+            .range([height - view.margin.bottom, view.margin.top])
             .domain([0, d3.max(this.bins, d => d.length)]).nice();
 
         view.xAxis = g => g
-            .attr("transform", `translate(0,${newHeight - view.margin.bottom})`)
-            .call(d3.axisBottom(view.x).ticks(newWidth / 80).tickSizeOuter(0))
+            .attr("transform", `translate(0,${height - view.margin.bottom})`)
+            .call(d3.axisBottom(view.x).ticks(width / 80).tickSizeOuter(0))
 
         view.yAxis = g => g
             .attr("transform", `translate(${view.margin.left}, 0)`)
-            .call(d3.axisLeft(view.y).ticks(newHeight / 40))
+            .call(d3.axisLeft(view.y).ticks(height / 40))
 
         view.svg.select("g#xAxis").call(view.xAxis);
         view.svg.select("g#yAxis").call(view.yAxis);
@@ -102,20 +120,71 @@ class Histogram extends Chart {
                 .attr("y", d => view.y(d.length))
                 .attr("height", d => view.y(0) - view.y(d.length));
         view.svg.select("text#title")
-            .attr("x", newWidth / 2)
+            .attr("x", width / 2)
             .attr("y", 24)
             .attr("text-anchor", "middle")
             .text(this.title);
     }
 
-    changeBins(binNum) {
-        this.bins = d3.bin().thresholds(binNum)(this.data);
+    rerenderCategorical(width, height, view) {
+        view.x = d3.scaleBand()
+            .range([view.margin.left, width - view.margin.right])
+            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1]);
+
+        view.y = d3.scaleLinear()
+            .range([height - view.margin.bottom, view.margin.top])
+            .domain([0, d3.max(this.bins, d => d.length)]).nice();
+
+        view.xAxis = g => g
+            .attr("transform", `translate(0,${height - view.margin.bottom})`)
+            .call(d3.axisBottom(view.x).ticks(width / 80).tickSizeOuter(0))
+
+        view.yAxis = g => g
+            .attr("transform", `translate(${view.margin.left}, 0)`)
+            .call(d3.axisLeft(view.y).ticks(height / 40))
+
+        view.svg.select("g#xAxis").call(view.xAxis);
+        view.svg.select("g#yAxis").call(view.yAxis);
+        view.svg.select("g#rects")
+            .selectAll("rect")
+                .attr("fill", d => this.colorScale(d.x1))
+            .data(this.bins)
+            .join("rect")
+                .attr("x", d => view.x(d.x0) + 1)
+                .attr("width", d => Math.max(0, view.x(d.x1) - view.x(d.x0) - 1))
+                .attr("y", d => view.y(d.length))
+                .attr("height", d => view.y(0) - view.y(d.length));
+        view.svg.select("text#title")
+            .attr("x", width / 2)
+            .attr("y", 24)
+            .attr("text-anchor", "middle")
+            .text(this.title);
+        
+    }
+
+    changeBins(binNum, categories) {
+        if (this.renderType == HistogramType.CATEGORICAL) {
+            this.bins = d3.bin().thresholds((data, min, max) => {
+                [...new Set(categories)]
+            })(this.data);
+        } else {
+            this.bins = d3.bin().thresholds(binNum)(this.data);
+        }
         this.rerenderAllViews();
     }
 
     changeData(newData, binNum) {
+        this.renderType = HistogramType.QUALITATIVE;
         this.data = newData;
         this.changeBins(binNum);
+        this.rerenderAllViews();
+    }
+
+    changeDataCategorical(newData, categories) {
+        this.renderType = HistogramType.CATEGORICAL;
+        this.data = newData;
+        this.categories = categories;
+        this.changeBins(newData, categories);
         this.rerenderAllViews();
     }
 

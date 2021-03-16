@@ -92,6 +92,24 @@
     }
   },
   {
+    "collection": "risk_county",
+    "label": "County Risk Index",
+    "constraints": {
+        "RISK_RATNG": {
+            "label": "County Risk Score"
+        }
+    }
+  },
+  {
+    "collection": "risk_tract",
+    "label": "Tract Risk Index",
+    "constraints": {
+        "RISK_RATNG": {
+            "label": "Tract Risk Score"
+        }
+    }
+  },
+  {
     "collection": "public_schools",
     "label": "Public Schools",
     "constraints": {
