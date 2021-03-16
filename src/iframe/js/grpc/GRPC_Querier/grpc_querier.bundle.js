@@ -2602,7 +2602,9 @@ W.MethodType={UNARY:"unary",SERVER_STREAMING:"server_streaming"};
 },{}],6:[function(require,module,exports){
 const {Query, CompoundRequest, JsonModelRequest, DirectRequest} = require("./sustain_pb.js")
 const {SustainClient, JsonProxyClient} = require('./sustain_grpc_web_pb.js');
-
+const LATTICE_NUM = 100;
+const LATTICE_PORT = 31415;
+const LATTICE_URL = `http://lattice-${LATTICE_NUM}.cs.colostate.edu:${LATTICE_PORT}`;
 /**
  * @namespace SustainQuerier
  * @file Object used for performing gRPC queries
@@ -2616,8 +2618,8 @@ SustainQuerier = {
       * @method initialize
       */
     initialize: function () {
-        this.service = new SustainClient("http://lattice-2.cs.colostate.edu:9092", "sustainServer");
-        this.modelService = new JsonProxyClient("http://lattice-2.cs.colostate.edu:9092", "sustainServer");
+        this.service = new SustainClient(LATTICE_URL, "sustainServer");
+        this.modelService = new JsonProxyClient(LATTICE_URL, "sustainServer");
         return this;
     },
 
