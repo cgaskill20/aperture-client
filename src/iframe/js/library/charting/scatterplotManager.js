@@ -55,196 +55,93 @@ END OF TERMS AND CONDITIONS
 
 */
 
-/**
-* Library for the creation and alteration of floating divs
-* Author Jean-Marc
-*/
-class resizable {
-    minimum_size = 20;
-    // Allows us to add listeners to the unique overlays
-    static numOfInstances = 0;
-    // Each time a overlay is clicked its Z Index increases so it is seen above all other overlays
-    static zIndex = 1000;
+class ScatterplotManager {
+    constructor(catalog, chartArea, validFeatureManager, chartSystem) {
+        this.catalog = catalog;
+        this.chartArea = chartArea;
+        this.scatterplot = new Scatterplot();
+        this.chartArea.addChart(this.scatterplot);
+    
+        this.validFeatures = validFeatureManager;
+        this.currentFeatures = {};
 
-    constructor(defaultWidth, defaultHeight, backgroundColor){
-        resizable.numOfInstances += 1;
-        this.width = defaultWidth;
-        this.height = defaultHeight;
-        this.uniqueId = resizable.numOfInstances;
-        this.backgroundColor = backgroundColor;
-        this.isDown = false;
-        this.isResizing = false;
-        this.createOverlay();
-        this.resizeListeners();
-        this.movementListeners();
-    }
-    /**
-     * Generates the 3 necessary divs for the overlay and adds in the CSS based on its initialization variables
-     * @memberof resizable
-     * @method createOverlay()
-     * @returns 3 divs appended to the body of the HTML doc
-     */
-    createOverlay(){
-        const overlayDocument = document.createElement("div");
-        this.overlayDocument = overlayDocument;
-        overlayDocument.id = "overlay" + this.uniqueId;
-        overlayDocument.className = "overlay colorMode1 noTransitions";
-        overlayDocument.style.width = this.width + "px";
-        overlayDocument.style.height = this.height + "px";
-        overlayDocument.style.zIndex = resizable.zIndex;
-        overlayDocument.style.display = "none";
-        overlayDocument.style.opacity = .9;
+        this.system = chartSystem;
 
-        const boxDocument = document.createElement("div");
-        this.boxDocument = boxDocument;
-        boxDocument.id = "box" + this.uniqueId;
-        boxDocument.className = "box";
-
-        // This is the button in the top right that allows the div's size to be altered
-        const boxResizer = document.createElement("div");
-        this.boxResizer = boxResizer;
-        boxResizer.id = "option" + this.uniqueId;
-        boxResizer.className = "option top-right";
-
-        boxDocument.appendChild(boxResizer);
-        overlayDocument.appendChild(boxDocument);
-        document.body.appendChild(overlayDocument);
+        this.chartArea.setChangeAxisButtonCallbacks(
+            () => { this.axisButtonCallback("x"); },
+            () => { this.axisButtonCallback("y"); }
+        );
     }
 
-    /**
-     * Adds in the necessary listeners for the divs to be resized
-     * @memberof resizable
-     * @method resizeListeners()
-     * @returns 3 listeners for mousemovement
-     */
-    resizeListeners(){
-        this.boxResizer.addEventListener('mousedown', (e) => {
-            /**
-             * Since there are the same listeners for resizing and movement we need these booleans so that resizing does
-             * not also move the div around and vice-versa
-             */
-            this.isDown = true;
-            this.isResizing = true;
-            e.preventDefault();
-            let dimensions = this.calculateDimensions(e);
-            window.addEventListener('mousemove', (e) =>{
-                if(this.isDown && this.isResizing){
-                    this.changeBoxSize(e, dimensions);
-                }
-            });
-            window.addEventListener('mouseup', ()=>{
-                this.isDown = false;
-                this.isResizing = false;
-            });
-        });
-    }
-    /**
-     * Calculates dimensions for resize, only because the resize function needed less lines
-     * @memberof resizable
-     * @method calculateDimensions
-     * @param {event} e - the current position of the mouse
-     * @returns 4 listeners for mousemovement
-     */
-    calculateDimensions(e){
-        let dimensions = [];
-        //Calculates the width
-        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('width').replace('px', '')));
-        // Calculates the height
-        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('height').replace('px', '')));
-        // Calculates the Y coordinate
-        dimensions.push(this.overlayDocument.getBoundingClientRect().top);
-        // Calculates the mouse X and Y coordinate
-        dimensions.push(e.pageX);
-        dimensions.push(e.pageY);
-        return dimensions;
+    axisButtonCallback(axis) {
+        this.currentFeatures[axis] = this.nextValidFeatureForAxis(axis); 
+        this.update(this.system.getValues());
     }
 
-    changeBoxSize(e, dimensions){
-        this.width = dimensions[0] + (e.pageX - dimensions[3]);
-        this.height = dimensions[1] - (e.pageY - dimensions[4]);
-        if (this.width > this.minimum_size) {
-            this.overlayDocument.style.width = this.width + 'px';
-        }
-        if (this.height > this.minimum_size) {
-            this.overlayDocument.style.height = this.height + 'px';
-            this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
-        }
-
-        if (this.onResizeCallback) {
-            this.onResizeCallback(this.width, this.height);
-        }
-    }
-
-    setResizeCallback(cb) {
-        this.onResizeCallback = cb;
-    }
-
-    triggerResizeEvent() {
-        this.onResizeCallback(this.width, this.height);
-    }
-
-    /**
-     * Adds in the necessary listeners for the div to be moved
-     * @memberof resizable
-     * @method movementListeners()
-     * @returns 4 listeners for mousemovement
-     */
-    movementListeners(){
-        let offset = [0,0];
-        let mousePosition;
-        this.overlayDocument.addEventListener('mousedown', ()=>{
-            resizable.zIndex += 1;
-            this.overlayDocument.style.zIndex = resizable.zIndex;
-        });
-
-        this.overlayDocument.addEventListener('mousedown', (e) => {
-            this.isDown = true;
-            offset = [
-                this.overlayDocument.offsetLeft - e.clientX,
-                this.overlayDocument.offsetTop - e.clientY
-            ];
-
-        }, true);
-
-        this.overlayDocument.addEventListener('mouseup', () => {
-            this.isDown = false;
-        }, true);
-
-        window.addEventListener('mousemove', (event) => {
-            if (this.isDown && !this.isResizing) {
-                mousePosition = this.moveBox(event, mousePosition, offset);
+    nextValidFeatureForAxis(axis) {
+        let ignore = [];
+        for (let axisToIgnore in this.currentFeatures) {
+            if (axisToIgnore !== axis) {
+                ignore.push(this.currentFeatures[axisToIgnore]);
             }
-        }, true);
-
+        }
+        return this.validFeatures.getNextFeature(this.currentFeatures[axis], ignore);
     }
 
-    moveBox(event, mousePosition, offset){
-        mousePosition = {
-            x : event.clientX,
-            y : event.clientY
-        };
-        this.overlayDocument.style.left = (mousePosition.x + offset[0]) + 'px';
-        this.overlayDocument.style.top  = (mousePosition.y + offset[1]) + 'px';
-        return mousePosition;
+    cycleAxis(axis) {
+        this.axisButtonCallback(axis);
     }
+    
+    update(values) {
+        let shouldUpdate = this.validFeatures.enoughFeaturesExist(2);
 
-    toggleVisible(){
-        let currentlyVisible = this.overlayDocument.style.display === "block";
-        if (currentlyVisible) {
-            this.overlayDocument.style.display = "none";
-            console.log("sdfgdsf");
+        if (shouldUpdate) {
+            this.chartArea.hideNotEnoughFeaturesMessage();
+            if (!this.currentFeatures.x) {
+                this.currentFeatures.x = this.validFeatures.getAnyFeature();
+            }
+            if (!this.currentFeatures.y) {
+                this.currentFeatures.y = this.validFeatures.getAnyFeature();
+            }
+            this.scatterplot.changeData(this.prepareData(values));
         } else {
-            console.log("sdfgdsf");
-            this.overlayDocument.style.display = "block";
-            for (let areaName in this.chartAreas) {
-                this.chartAreas[areaName].rerender(this.width, this.height);
-            }
+            this.chartArea.showNotEnoughFeaturesMessage();
         }
     }
 
-    addChartArea(type, chartArea) {
-        this.chartAreas[type] = chartArea;
-        chartArea.attachTo(this.boxDocument);
+    prepareData(values) {
+        let data = [];
+        let xfeat = values[this.currentFeatures.x];
+        let yfeat = values[this.currentFeatures.y];
+        let shorterFeature = (xfeat.length > yfeat.length) ? yfeat : xfeat; 
+        for (let i = 0; i < shorterFeature.length; i++) {
+            data.push({
+                x: xfeat[i].data,
+                y: yfeat[i].data,
+            });
+        }
+
+        let readableXName = this.catalog.find(e => {
+            for (let constraint in e.constraints) {
+                if (constraint === this.currentFeatures.x) {
+                    return true;
+                }
+            }
+            return false;
+        }).constraints[this.currentFeatures.x].label;
+
+        let readableYName = this.catalog.find(e => {
+            for (let constraint in e.constraints) {
+                if (constraint === this.currentFeatures.y) {
+                    return true;
+                }
+            }
+            return false;
+        }).constraints[this.currentFeatures.y].label;
+
+        data.x = readableXName;
+        data.y = readableYName;
+
+        return data;
     }
 }
-

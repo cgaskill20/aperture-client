@@ -10,6 +10,10 @@
   transition: 0.3s;
 }
 
+.noTransitions {
+    transition: 0.0s;
+}
+
 .customBorder {
   border: var(--border-customBorder);
   border-radius: 3px;

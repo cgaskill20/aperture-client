@@ -5,7 +5,7 @@
 
 class MapDataFilter {
     constructor() {
-        this.msCacheMaxAge = 10000;
+        this.msCacheMaxAge = 10000000;
         this.data = [];
     }
 
@@ -109,6 +109,7 @@ class MapDataFilter {
       */
     filter(data, bounds) {
         let filtered = data.filter(entry => Util.isInBounds(entry, bounds));
+
         this.discardOldData(this.msCacheMaxAge);
         return filtered;
     }

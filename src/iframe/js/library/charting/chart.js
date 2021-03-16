@@ -55,196 +55,68 @@ END OF TERMS AND CONDITIONS
 
 */
 
-/**
-* Library for the creation and alteration of floating divs
-* Author Jean-Marc
-*/
-class resizable {
-    minimum_size = 20;
-    // Allows us to add listeners to the unique overlays
-    static numOfInstances = 0;
-    // Each time a overlay is clicked its Z Index increases so it is seen above all other overlays
-    static zIndex = 1000;
-
-    constructor(defaultWidth, defaultHeight, backgroundColor){
-        resizable.numOfInstances += 1;
-        this.width = defaultWidth;
-        this.height = defaultHeight;
-        this.uniqueId = resizable.numOfInstances;
-        this.backgroundColor = backgroundColor;
-        this.isDown = false;
-        this.isResizing = false;
-        this.createOverlay();
-        this.resizeListeners();
-        this.movementListeners();
-    }
-    /**
-     * Generates the 3 necessary divs for the overlay and adds in the CSS based on its initialization variables
-     * @memberof resizable
-     * @method createOverlay()
-     * @returns 3 divs appended to the body of the HTML doc
-     */
-    createOverlay(){
-        const overlayDocument = document.createElement("div");
-        this.overlayDocument = overlayDocument;
-        overlayDocument.id = "overlay" + this.uniqueId;
-        overlayDocument.className = "overlay colorMode1 noTransitions";
-        overlayDocument.style.width = this.width + "px";
-        overlayDocument.style.height = this.height + "px";
-        overlayDocument.style.zIndex = resizable.zIndex;
-        overlayDocument.style.display = "none";
-        overlayDocument.style.opacity = .9;
-
-        const boxDocument = document.createElement("div");
-        this.boxDocument = boxDocument;
-        boxDocument.id = "box" + this.uniqueId;
-        boxDocument.className = "box";
-
-        // This is the button in the top right that allows the div's size to be altered
-        const boxResizer = document.createElement("div");
-        this.boxResizer = boxResizer;
-        boxResizer.id = "option" + this.uniqueId;
-        boxResizer.className = "option top-right";
-
-        boxDocument.appendChild(boxResizer);
-        overlayDocument.appendChild(boxDocument);
-        document.body.appendChild(overlayDocument);
+/* The base class for all charts.
+ * This class takes care of bookkeeping for creating chart views and attaching
+ * these views to the DOM.
+ * 
+ * A chart view is a particular rendering of a chart. Views have their own size,
+ * but share all of the same data. 
+ * Users of Chart subclasses can call the addTo function on a DOM node to add a
+ * new view of the given chart to a particular node.
+ * 
+ * Hey, I'd like to make my own chart! How do I do it?
+ * Easy! Just follow these steps:
+ *  1) create a class that extends this one
+ *  2) create at least the following three functions in the derived class:
+ *     - makeNewView(node, width, height):
+ *       Sets up the basic variables to create a d3 chart, packages these into a view
+ *       object, and returns it.
+ *       (see an existing chart for examples - there is pretty much no set
+ *        format for the view object at all, there are no expectations on the
+ *        part of outside code for what a view object must contain)
+ *     - rerender(width, height, viewIndex):
+ *       Re-generates the view at viewIndex with the given width and height.
+ *       You will pretty much always start this method by getting the view
+ *       at that particular index. Then you'll probably call a bunch of d3
+ *       functions on the d3 objects you have stored in the view object. Again,
+ *       refer to an existing chart for examples.
+ *     - changeData(data):
+ *       Update the data in the graph with that passed into this function.
+ *       Every chart will need the data to be formatted a different way, and
+ *       this is at your discretion. For instance, the histogram simply
+ *       expects a list of values, the list also having an "x" property for the
+ *       data's human readable label. 
+ * @author Pierce Smith
+ */
+class Chart {
+    constructor(data) {
+        this.views = [];
+        this.data = data;
     }
 
-    /**
-     * Adds in the necessary listeners for the divs to be resized
-     * @memberof resizable
-     * @method resizeListeners()
-     * @returns 3 listeners for mousemovement
-     */
-    resizeListeners(){
-        this.boxResizer.addEventListener('mousedown', (e) => {
-            /**
-             * Since there are the same listeners for resizing and movement we need these booleans so that resizing does
-             * not also move the div around and vice-versa
-             */
-            this.isDown = true;
-            this.isResizing = true;
-            e.preventDefault();
-            let dimensions = this.calculateDimensions(e);
-            window.addEventListener('mousemove', (e) =>{
-                if(this.isDown && this.isResizing){
-                    this.changeBoxSize(e, dimensions);
-                }
-            });
-            window.addEventListener('mouseup', ()=>{
-                this.isDown = false;
-                this.isResizing = false;
-            });
-        });
-    }
-    /**
-     * Calculates dimensions for resize, only because the resize function needed less lines
-     * @memberof resizable
-     * @method calculateDimensions
-     * @param {event} e - the current position of the mouse
-     * @returns 4 listeners for mousemovement
-     */
-    calculateDimensions(e){
-        let dimensions = [];
-        //Calculates the width
-        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('width').replace('px', '')));
-        // Calculates the height
-        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('height').replace('px', '')));
-        // Calculates the Y coordinate
-        dimensions.push(this.overlayDocument.getBoundingClientRect().top);
-        // Calculates the mouse X and Y coordinate
-        dimensions.push(e.pageX);
-        dimensions.push(e.pageY);
-        return dimensions;
+    addTo(node) {
+        let view = this.makeNewView(node, 1000, 300);
+        this.views.push(view);
+        node.appendChild(view.svg.node());
     }
 
-    changeBoxSize(e, dimensions){
-        this.width = dimensions[0] + (e.pageX - dimensions[3]);
-        this.height = dimensions[1] - (e.pageY - dimensions[4]);
-        if (this.width > this.minimum_size) {
-            this.overlayDocument.style.width = this.width + 'px';
-        }
-        if (this.height > this.minimum_size) {
-            this.overlayDocument.style.height = this.height + 'px';
-            this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
-        }
-
-        if (this.onResizeCallback) {
-            this.onResizeCallback(this.width, this.height);
+    rerenderAllViews() {
+        for (let i = 0; i < this.views.length; i++) {
+            this.rerender(this.views[i].width, this.views[i].height, i);
         }
     }
 
-    setResizeCallback(cb) {
-        this.onResizeCallback = cb;
+    hide(viewIndex) {
+        this.views[viewIndex].svg.style("display", "none");
     }
 
-    triggerResizeEvent() {
-        this.onResizeCallback(this.width, this.height);
+    unhide(viewIndex) {
+        this.views[viewIndex].svg.style("display", "block");
     }
 
-    /**
-     * Adds in the necessary listeners for the div to be moved
-     * @memberof resizable
-     * @method movementListeners()
-     * @returns 4 listeners for mousemovement
-     */
-    movementListeners(){
-        let offset = [0,0];
-        let mousePosition;
-        this.overlayDocument.addEventListener('mousedown', ()=>{
-            resizable.zIndex += 1;
-            this.overlayDocument.style.zIndex = resizable.zIndex;
-        });
-
-        this.overlayDocument.addEventListener('mousedown', (e) => {
-            this.isDown = true;
-            offset = [
-                this.overlayDocument.offsetLeft - e.clientX,
-                this.overlayDocument.offsetTop - e.clientY
-            ];
-
-        }, true);
-
-        this.overlayDocument.addEventListener('mouseup', () => {
-            this.isDown = false;
-        }, true);
-
-        window.addEventListener('mousemove', (event) => {
-            if (this.isDown && !this.isResizing) {
-                mousePosition = this.moveBox(event, mousePosition, offset);
-            }
-        }, true);
-
-    }
-
-    moveBox(event, mousePosition, offset){
-        mousePosition = {
-            x : event.clientX,
-            y : event.clientY
-        };
-        this.overlayDocument.style.left = (mousePosition.x + offset[0]) + 'px';
-        this.overlayDocument.style.top  = (mousePosition.y + offset[1]) + 'px';
-        return mousePosition;
-    }
-
-    toggleVisible(){
-        let currentlyVisible = this.overlayDocument.style.display === "block";
-        if (currentlyVisible) {
-            this.overlayDocument.style.display = "none";
-            console.log("sdfgdsf");
-        } else {
-            console.log("sdfgdsf");
-            this.overlayDocument.style.display = "block";
-            for (let areaName in this.chartAreas) {
-                this.chartAreas[areaName].rerender(this.width, this.height);
-            }
-        }
-    }
-
-    addChartArea(type, chartArea) {
-        this.chartAreas[type] = chartArea;
-        chartArea.attachTo(this.boxDocument);
-    }
+    // To be overriden in subclasses.
+    makeNewView(node, width, height) { }
+    rerender(width, height, viewIndex) { }
+    changeData(data) { }
 }
 

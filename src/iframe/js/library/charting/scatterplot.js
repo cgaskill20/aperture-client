@@ -55,196 +55,108 @@ END OF TERMS AND CONDITIONS
 
 */
 
-/**
-* Library for the creation and alteration of floating divs
-* Author Jean-Marc
-*/
-class resizable {
-    minimum_size = 20;
-    // Allows us to add listeners to the unique overlays
-    static numOfInstances = 0;
-    // Each time a overlay is clicked its Z Index increases so it is seen above all other overlays
-    static zIndex = 1000;
-
-    constructor(defaultWidth, defaultHeight, backgroundColor){
-        resizable.numOfInstances += 1;
-        this.width = defaultWidth;
-        this.height = defaultHeight;
-        this.uniqueId = resizable.numOfInstances;
-        this.backgroundColor = backgroundColor;
-        this.isDown = false;
-        this.isResizing = false;
-        this.createOverlay();
-        this.resizeListeners();
-        this.movementListeners();
-    }
-    /**
-     * Generates the 3 necessary divs for the overlay and adds in the CSS based on its initialization variables
-     * @memberof resizable
-     * @method createOverlay()
-     * @returns 3 divs appended to the body of the HTML doc
-     */
-    createOverlay(){
-        const overlayDocument = document.createElement("div");
-        this.overlayDocument = overlayDocument;
-        overlayDocument.id = "overlay" + this.uniqueId;
-        overlayDocument.className = "overlay colorMode1 noTransitions";
-        overlayDocument.style.width = this.width + "px";
-        overlayDocument.style.height = this.height + "px";
-        overlayDocument.style.zIndex = resizable.zIndex;
-        overlayDocument.style.display = "none";
-        overlayDocument.style.opacity = .9;
-
-        const boxDocument = document.createElement("div");
-        this.boxDocument = boxDocument;
-        boxDocument.id = "box" + this.uniqueId;
-        boxDocument.className = "box";
-
-        // This is the button in the top right that allows the div's size to be altered
-        const boxResizer = document.createElement("div");
-        this.boxResizer = boxResizer;
-        boxResizer.id = "option" + this.uniqueId;
-        boxResizer.className = "option top-right";
-
-        boxDocument.appendChild(boxResizer);
-        overlayDocument.appendChild(boxDocument);
-        document.body.appendChild(overlayDocument);
+class Scatterplot extends Chart {
+    constructor() {
+        super([]);
     }
 
-    /**
-     * Adds in the necessary listeners for the divs to be resized
-     * @memberof resizable
-     * @method resizeListeners()
-     * @returns 3 listeners for mousemovement
-     */
-    resizeListeners(){
-        this.boxResizer.addEventListener('mousedown', (e) => {
-            /**
-             * Since there are the same listeners for resizing and movement we need these booleans so that resizing does
-             * not also move the div around and vice-versa
-             */
-            this.isDown = true;
-            this.isResizing = true;
-            e.preventDefault();
-            let dimensions = this.calculateDimensions(e);
-            window.addEventListener('mousemove', (e) =>{
-                if(this.isDown && this.isResizing){
-                    this.changeBoxSize(e, dimensions);
-                }
-            });
-            window.addEventListener('mouseup', ()=>{
-                this.isDown = false;
-                this.isResizing = false;
-            });
-        });
-    }
-    /**
-     * Calculates dimensions for resize, only because the resize function needed less lines
-     * @memberof resizable
-     * @method calculateDimensions
-     * @param {event} e - the current position of the mouse
-     * @returns 4 listeners for mousemovement
-     */
-    calculateDimensions(e){
-        let dimensions = [];
-        //Calculates the width
-        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('width').replace('px', '')));
-        // Calculates the height
-        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('height').replace('px', '')));
-        // Calculates the Y coordinate
-        dimensions.push(this.overlayDocument.getBoundingClientRect().top);
-        // Calculates the mouse X and Y coordinate
-        dimensions.push(e.pageX);
-        dimensions.push(e.pageY);
-        return dimensions;
-    }
+    rerender(newWidth, newHeight, viewIndex) {
+        let view = this.views[viewIndex];
 
-    changeBoxSize(e, dimensions){
-        this.width = dimensions[0] + (e.pageX - dimensions[3]);
-        this.height = dimensions[1] - (e.pageY - dimensions[4]);
-        if (this.width > this.minimum_size) {
-            this.overlayDocument.style.width = this.width + 'px';
-        }
-        if (this.height > this.minimum_size) {
-            this.overlayDocument.style.height = this.height + 'px';
-            this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
-        }
+        view.width = newWidth;
+        view.height = newHeight;
+        view.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
 
-        if (this.onResizeCallback) {
-            this.onResizeCallback(this.width, this.height);
-        }
-    }
+        view.x = d3.scaleLinear()
+            .domain(d3.extent(this.data, d => d.x)).nice()
+            .range([view.margin.left, view.width - view.margin.right])
 
-    setResizeCallback(cb) {
-        this.onResizeCallback = cb;
-    }
+        view.y = d3.scaleLinear()
+            .domain(d3.extent(this.data, d => d.y)).nice()
+            .range([view.height - view.margin.bottom, view.margin.top])
 
-    triggerResizeEvent() {
-        this.onResizeCallback(this.width, this.height);
+        view.xAxis = g => g
+            .attr("transform", `translate(0,${view.height - view.margin.bottom})`)
+            .call(d3.axisBottom(view.x).ticks(view.width / 80))
+            .call(g => g.select(".domain").remove())
+
+        view.yAxis = g => g
+            .attr("transform", `translate(${view.margin.left},0)`)
+            .call(d3.axisLeft(view.y))
+            .call(g => g.select(".domain").remove())
+
+        view.svg.select("g#points")
+            .selectAll("circle")
+            .data(this.data)
+            .join("circle")
+                .attr("cx", d => view.x(d.x))
+                .attr("cy", d => view.y(d.y))
+                .attr("r", 3);
+
+        view.svg.select("g#xAxis").call(view.xAxis);
+        view.svg.select("g#yAxis").call(view.yAxis);
+        view.svg.select("g#xGrid")
+            .selectAll("line")
+            .data(view.x.ticks())
+            .join("line")
+                .attr("x1", d => 0.5 + view.x(d))
+                .attr("x2", d => 0.5 + view.x(d))
+                .attr("y1", view.margin.top)
+                .attr("y2", view.height - view.margin.bottom)
+        view.svg.select("g#yGrid")
+            .selectAll("line")
+            .data(view.y.ticks())
+            .join("line")
+                .attr("y1", d => 0.5 + view.y(d))
+                .attr("y2", d => 0.5 + view.y(d))
+                .attr("x1", view.margin.left)
+                .attr("x2", view.width - view.margin.right);
+
+        view.svg.select("text#xAxisLabel")
+            .attr("x", newWidth - view.margin.right)
+            .attr("y", newHeight - view.margin.bottom / 2 + 4)
+            .attr("text-anchor", "end")
+            .attr("font-size", "8pt")
+            .text(this.data.x);
+
+        view.svg.select("text#yAxisLabel")
+            .attr("x", view.margin.left / 2)
+            .attr("y", view.margin.top / 2)
+            .attr("text-anchor", "start")
+            .attr("font-size", "8pt")
+            .text(this.data.y);
     }
 
-    /**
-     * Adds in the necessary listeners for the div to be moved
-     * @memberof resizable
-     * @method movementListeners()
-     * @returns 4 listeners for mousemovement
-     */
-    movementListeners(){
-        let offset = [0,0];
-        let mousePosition;
-        this.overlayDocument.addEventListener('mousedown', ()=>{
-            resizable.zIndex += 1;
-            this.overlayDocument.style.zIndex = resizable.zIndex;
-        });
-
-        this.overlayDocument.addEventListener('mousedown', (e) => {
-            this.isDown = true;
-            offset = [
-                this.overlayDocument.offsetLeft - e.clientX,
-                this.overlayDocument.offsetTop - e.clientY
-            ];
-
-        }, true);
-
-        this.overlayDocument.addEventListener('mouseup', () => {
-            this.isDown = false;
-        }, true);
-
-        window.addEventListener('mousemove', (event) => {
-            if (this.isDown && !this.isResizing) {
-                mousePosition = this.moveBox(event, mousePosition, offset);
-            }
-        }, true);
-
+    changeData(newData) {
+        this.data = newData;
+        this.rerenderAllViews();
     }
 
-    moveBox(event, mousePosition, offset){
-        mousePosition = {
-            x : event.clientX,
-            y : event.clientY
-        };
-        this.overlayDocument.style.left = (mousePosition.x + offset[0]) + 'px';
-        this.overlayDocument.style.top  = (mousePosition.y + offset[1]) + 'px';
-        return mousePosition;
-    }
+    makeNewView(node, width, height) {
+        let view = {};
+        view.width = width;
+        view.height = height;
+        
+        view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
 
-    toggleVisible(){
-        let currentlyVisible = this.overlayDocument.style.display === "block";
-        if (currentlyVisible) {
-            this.overlayDocument.style.display = "none";
-            console.log("sdfgdsf");
-        } else {
-            console.log("sdfgdsf");
-            this.overlayDocument.style.display = "block";
-            for (let areaName in this.chartAreas) {
-                this.chartAreas[areaName].rerender(this.width, this.height);
-            }
-        }
-    }
+        view.margin = { top: 20, right: 20, bottom: 50, left: 50 };
 
-    addChartArea(type, chartArea) {
-        this.chartAreas[type] = chartArea;
-        chartArea.attachTo(this.boxDocument);
+        view.svg.append("g").attr("id", "xAxis");
+        view.svg.append("g").attr("id", "yAxis");
+        view.svg.append("text").attr("id", "xAxisLabel");
+        view.svg.append("text").attr("id", "yAxisLabel");
+        view.svg.append("g").attr("id", "xGrid")
+            .attr("stroke", "grey")
+            .attr("stroke-opacity", 0.5);
+        view.svg.append("g").attr("id", "yGrid")
+            .attr("stroke", "grey")
+            .attr("stroke-opacity", 0.5);
+        view.svg.append("g").attr("id", "points")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 1.5)
+            .attr("fill", "none");
+
+        return view;
     }
 }
 
