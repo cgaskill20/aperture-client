@@ -1,0 +1,55 @@
+.modelSelect{
+    margin-bottom: 10px;
+    border-radius: 3px;
+}
+
+.modelParameter{
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+.modelCollection{
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+.modelButton{
+    margin-bottom: 10px;
+}
+
+#model-container{
+    margin-left: 25px;
+    margin-right: 25px;
+    display: none;
+}
+
+#clusterLegend{
+    background-color: white;
+    position: absolute;
+    bottom: 8%;
+    margin: auto;
+    z-index: 999999;
+    left: 50%;
+    padding: 10px;
+    display: none;
+    transform: translateX(-50%);
+}
+
+.clusterLegendField{
+    height: 6vh;
+    width: 6vh;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.clusterLegendField:hover{
+    filter: brightness(0.4)
+}
+
+.modelMenuHeader{
+    margin-bottom: 10px;
+}
+
+.modelCollectionCheckbox{
+    margin-left: 8px;
+}

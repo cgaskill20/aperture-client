@@ -23,6 +23,7 @@ class ModelCollection extends React.Component {
                 e("input", {
                     type: "checkbox", 
                     id:`${feature}_feature`, 
+                    className: "modelCollectionCheckbox",
                     defaultChecked: checked,
                     onChange: (e) => {this.props.setCollection(this.name,feature,e.target.checked)}
                 })
