@@ -57,7 +57,7 @@ END OF TERMS AND CONDITIONS
 
 class ScatterplotManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem) {
-        this.chartArea = chartArea
+        this.chartArea = chartArea;
         this.scatterplot = new Scatterplot();
         this.chartArea.addChart(this.scatterplot);
     
@@ -91,6 +91,7 @@ class ScatterplotManager {
         let shouldUpdate = this.validFeatures.enoughFeaturesExist(2);
 
         if (shouldUpdate) {
+            this.chartArea.hideNotEnoughFeaturesMessage();
             if (!this.currentFeatures.x) {
                 this.currentFeatures.x = this.validFeatures.getAnyFeature();
             }
@@ -98,6 +99,8 @@ class ScatterplotManager {
                 this.currentFeatures.y = this.validFeatures.getAnyFeature();
             }
             this.scatterplot.changeData(this.prepareData(values));
+        } else {
+            this.chartArea.showNotEnoughFeaturesMessage();
         }
     }
 

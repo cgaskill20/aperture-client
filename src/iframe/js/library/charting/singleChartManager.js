@@ -89,30 +89,16 @@ class SingleChartManager {
     }
 
     update(values) {
-        this.reportEmptyCharts(values);
-        this.removeEmptyCharts(values);
+        let enoughFeatures = this.featureManager.enoughFeaturesExist(1);
 
-        for (let feature in values) {
-            this.charts[feature].changeData(values[feature].map(e => e.data), 5);
-        }
-    }
-
-    reportEmptyCharts(values) {
-        let emptyCharts = Object.values(values).map((feature, i) => {
-            if (feature.length === 0) {
-                return i;
+        if (enoughFeatures) {
+            this.chartArea.hideNotEnoughFeaturesMessage();
+            for (let feature in values) {
+                this.charts[feature].changeData(values[feature].map(e => e.data), 5);
             }
-            return -1;
-        });
-        emptyCharts = emptyCharts.filter(i => i !== -1);
-        this.chartArea.tellEmptyCharts(emptyCharts);
-    }
-
-    removeEmptyCharts(values) {
-        for (let feature in values) {
-            if (values[feature].length === 0) {
-                delete values[feature];
-            }
+        } else {
+            this.chartArea.showNotEnoughFeaturesMessage();
+            this.chartArea.hideAll();
         }
     }
 }

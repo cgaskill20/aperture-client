@@ -1,6 +1,7 @@
 
 /* Reports information about which features are available for graphing (have data)
  * or not (don't have data).
+ * @author Pierce Smith
  */
 class ValidFeatureManager {
     constructor(valids, onChangeCallback) {

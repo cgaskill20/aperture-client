@@ -23,6 +23,10 @@ class SingleChartArea {
         this.toggleAxisButton.className = "btn btn-outline-dark btn-xs";
         this.toggleAxisButton.innerText = "Cycle X-Axis";
         this.container.appendChild(this.toggleAxisButton);
+
+        this.notEnoughFeaturesMessage = document.createElement("p");
+        this.notEnoughFeaturesMessage.innerText = "Enable one or more constraints to start graphing";
+        this.container.appendChild(this.notEnoughFeaturesMessage);
             
         this.parentNode.appendChild(this.container);
     }
@@ -50,11 +54,17 @@ class SingleChartArea {
     }
 
     rerender(newWidth, newHeight) {
-        if (!this.hasNothingToRender) {
-            this.charts.forEach(chart => {
-                chart.rerender(newWidth, newHeight, this.viewIndex);
-            });
-        }
+        this.charts.forEach(chart => {
+            chart.rerender(newWidth, newHeight, this.viewIndex);
+        });
+    }
+
+    showNotEnoughFeaturesMessage() {
+        this.notEnoughFeaturesMessage.style.display = "inline";
+    }
+
+    hideNotEnoughFeaturesMessage() {
+        this.notEnoughFeaturesMessage.style.display = "none";
     }
 
     tellNumberOfCharts(chartCount) {
