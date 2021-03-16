@@ -17,7 +17,12 @@ class ModelMenu extends React.Component {
         this.modelManager = null;
 
         this._sustainQuerier = sustain_querier();
-        this.whitelist = ["K_MEANS_CLUSTERING"];
+        this.whitelist = [
+            "K_MEANS_CLUSTERING", 
+            "BISECTING_K_MEANS",
+            "GAUSSIAN_MIXTURE",
+            "LATENT_DIRICHLET_ALLOCATION"
+        ];
         this.populateCatalog();
 
         this.keyVal = 0;
@@ -100,8 +105,8 @@ class ModelMenu extends React.Component {
     catalogMap(catalog) {
         const ret = {};
         for (const entry in catalog) {
-            // if (!this.whitelist.includes(entry))
-            //     continue;
+            if (!this.whitelist.includes(entry))
+                continue;
             if (!ret[catalog[entry].category])
                 ret[catalog[entry].category] = {}
 
