@@ -13,15 +13,15 @@ class ValidFeatureManager {
      * @param {Array<string>} barring An array of features that should be ignored
      * @returns {string} The next valid feature, if any in `barring` are ignored
      */
-    getNextFeature(current, barring, direction = 'next') {
+    getNextFeature(current, barring, direction = "next") {
         let currentIndex = this.validFeatures.indexOf(current);
         let oldIndex = currentIndex;
         while (true) {
-            if(direction === 'next') {
+            if(direction === "next") {
                 currentIndex = (currentIndex + 1) % this.validFeatures.length;
             }
             else {
-                currentIndex = currentIndex == 0 ? this.validFeatures.length-1 : (currentIndex - 1) % this.validFeatures.length;
+                currentIndex = currentIndex === 0 ? this.validFeatures.length-1 : (currentIndex - 1) % this.validFeatures.length;
             }
 
             let foundFeature = !barring.find(feature => { feature === this.validFeatures[currentIndex] });

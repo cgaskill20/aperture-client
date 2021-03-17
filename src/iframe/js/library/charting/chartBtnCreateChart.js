@@ -1,7 +1,3 @@
-let maxGraphs = 6;
-let totalGraphs = 0;
-let maxGraphsReached = false;
-
 /* Some things that are currently in the catalog:
     0: "temp"
     1: "RPL_THEMES"  // SVI
@@ -16,6 +12,10 @@ let maxGraphsReached = false;
     6: "2010_total_population"
     7: "avgAQI"
  */
+
+let maxGraphs = 6;
+let totalGraphs = 0;
+let maxGraphsReached = false;
 
 function createHistogram() {
     moreGraphsPossible();
@@ -79,5 +79,5 @@ function checkNumberOfGraphs() {
 function buttonsOnOff() {
     document.getElementById('histogram-button-id').disabled = maxGraphsReached;
     document.getElementById('scatterplot-button-id').disabled = maxGraphsReached;
-    // document.getElementById('linegraph-button-id').disabled = maxGraphsReached;
+    // document.getElementById('linegraph-button-id').disabled = maxGraphsReached; //FIXME comment in when linegraphs are implemented
 }

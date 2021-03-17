@@ -1,10 +1,10 @@
 let box1 = document.getElementById("box1");
 
 function createChartControl(chart, graphBox, type) {
-    if(type == 'scatterplot') {
+    if(type === 'scatterplot') {
         return chartControlFor2Vars(chart, graphBox);
     }
-    else if (type == 'histogram' || type == 'linegraph'){
+    else if (type === 'histogram' || type === 'linegraph'){
         return chartControlFor1Var(chart, graphBox);
     }
 }
@@ -36,9 +36,9 @@ function createChartControlGroup(chart, axis, dropdownTitle) {
     let chartControlGroup = document.createElement("div");
     chartControlGroup.className = "btn-group chart-control-button";
     chartControlGroup.role = "group";
-    let leftToggle = createSideToggle(chart, axis, "<");
+    let leftToggle = createSideToggle(chart, axis, '<');
     let chartDropdown = createDropdown(dropdownTitle);
-    let rightToggle = createSideToggle(chart, axis, ">");
+    let rightToggle = createSideToggle(chart, axis, '>');
     chartControlGroup.appendChild(leftToggle);
     chartControlGroup.appendChild(chartDropdown);
     chartControlGroup.appendChild(rightToggle);
@@ -50,7 +50,7 @@ function createSideToggle(chart, axis, arrowDirection) {
     sideToggle.className = "btn btn-outline-dark";
     sideToggle.type = "button";
     sideToggle.innerText = arrowDirection;
-    sideToggle.onclick = arrowDirection === '<' ? () => {chart.cycleAxis(axis, 'left')} : () => {chart.cycleAxis(axis)};
+    sideToggle.onclick = arrowDirection === '<' ? () => {chart.cycleAxis(axis, "previous")} : () => {chart.cycleAxis(axis)};
     return sideToggle;
 }
 
