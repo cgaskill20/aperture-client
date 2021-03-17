@@ -381,20 +381,6 @@ Util = {
         }
     },
 
-    /**
-      * Swaps the latitude and longitude on both edges of a latlng bounds object.
-      * @memberof Util
-      * @method mirrorLatLngBounds
-      * @param {(LatLng|Array<Number>)} the LatLng bounds
-      * @returns {(LatLng|Array<Number>)} the argument with the lat/lng properties switched on its northwest and southeast points
-      */
-    mirrorLatLngBounds(bounds) {
-        return L.latLngBounds( 
-            Util.mirrorLatLng(bounds.getNorthWest()), 
-            Util.mirrorLatLng(bounds.getSouthEast())
-        );
-    },
-
     /** 
       * Determines if a [lng,lat] point is within a leaflet bounds object. (This is used on the worker, where the leaflet bounds objects are broken)
       * @memberof Util
