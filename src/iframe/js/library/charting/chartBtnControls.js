@@ -58,7 +58,7 @@ function createDropdown(title) {
     let chartDropdown = document.createElement("div");
     chartDropdown.className = "btn-group";
     chartDropdown.role = "group";
-    let firstPart = "<button type='button' class='btn btn-outline-dark dropdown-toggle' type='button' " +
+    let firstPart = "<button type='button' disabled=true class='btn btn-outline-dark dropdown-toggle' type='button' " +
         "id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
     let lastPart = "</button> <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'> " +
             "<a class='dropdown-item' href='#'>Coming Soon</a>" +
