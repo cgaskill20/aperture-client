@@ -96,7 +96,7 @@ class ScatterplotManager {
         let shouldUpdate = this.validFeatures.enoughFeaturesExist(2);
 
         if (shouldUpdate) {
-            this.chartArea.hideNotEnoughFeaturesMessage();
+            // this.chartArea.hideNotEnoughFeaturesMessage();
             if (!this.currentFeatures.x) {
                 this.currentFeatures.x = this.validFeatures.getAnyFeature();
             }
@@ -105,7 +105,7 @@ class ScatterplotManager {
             }
             this.scatterplot.changeData(this.prepareData(values));
         } else {
-            this.chartArea.showNotEnoughFeaturesMessage();
+            // this.chartArea.showNotEnoughFeaturesMessage();
         }
     }
 
