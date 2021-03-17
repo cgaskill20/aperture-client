@@ -45,19 +45,6 @@ function createChartControlGroup(chart, axis, dropdownTitle) {
     return chartControlGroup;
 }
 
-function createCloseButton(graphBox) {
-    let closeButton = document.createElement("button");
-    closeButton.type = "button";
-    closeButton.className = "btn btn-outline-dark chart-control-button-close";
-    closeButton.addEventListener('click', function() {
-        box1.removeChild(graphBox);
-        totalGraphs--;
-        checkNumberOfGraphs();
-    });
-    closeButton.innerText = "Close";
-    return closeButton;
-}
-
 function createSideToggle(chart, axis, arrowDirection) {
     let sideToggle = document.createElement("button");
     sideToggle.className = "btn btn-outline-dark";
@@ -81,4 +68,17 @@ function createDropdown(title) {
         </div>";
     chartDropdown.innerHTML = firstPart + title + lastPart;
     return chartDropdown;
+}
+
+function createCloseButton(graphBox) {
+    let closeButton = document.createElement("button");
+    closeButton.type = "button";
+    closeButton.className = "btn btn-outline-dark chart-control-button-close";
+    closeButton.addEventListener('click', function() {
+        box1.removeChild(graphBox);
+        totalGraphs--;
+        checkNumberOfGraphs();
+    });
+    closeButton.innerText = "Close";
+    return closeButton;
 }
