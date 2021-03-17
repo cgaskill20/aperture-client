@@ -396,6 +396,18 @@ Util = {
     },
 
     /** 
+      * Determines if a [lng,lat] point is within a leaflet bounds object. (This is used on the worker, where the leaflet bounds objects are broken)
+      * @memberof Util
+      * @method contains
+      * @param {Array<LngLat>} point
+      * @param {Leaflet Bounds} bounds
+      * @returns {boolean} if the point is within the bounds
+      */
+    contains(point,bounds){
+        return point[0] < bounds._northEast.lng && point[0] > bounds._southWest.lng && point[1] < bounds._northEast.lat && point[1] > bounds._southWest.lat;
+    },
+
+    /** 
       * Given a list of points (in leaflet latlng form) and a leaftlet latlng
       * bounds, determine _approximately_ if at least one of the points is 
       * inside the bounds.
@@ -411,7 +423,7 @@ Util = {
         sampleSpacing = (sampleSpacing === 0) ? 1 : sampleSpacing;
 
         for (let i = 0; i < points.length; i += 1) {
-            if (bounds.contains(points[i])) {
+            if (this.contains(points[i], bounds)) {
                 return true;
             }
         }
@@ -439,12 +451,10 @@ Util = {
                 return bounds.contains(point);
             }
             case Util.FEATURETYPE.polygon: {
-                bounds = Util.mirrorLatLngBounds(bounds);
                 return Util.arePointsApproximatelyInBounds(entry.geometry.coordinates[0], bounds);
             }
             case Util.FEATURETYPE.multiPolygon: {
                 let polygons = entry.geometry.coordinates;
-                bounds = Util.mirrorLatLngBounds(bounds);
                 return polygons.find(polygon => Util.arePointsApproximatelyInBounds(polygon[0], bounds));
             }
         }
