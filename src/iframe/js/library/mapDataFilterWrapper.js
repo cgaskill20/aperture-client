@@ -16,7 +16,7 @@ const MapDataFilterWrapper = {
                 const data = msg.data;
                 if(data.type === "getResponse" && data.senderID === senderID){
                     filterWorker.removeEventListener("message", handleResponse);
-                    resolve(values);
+                    resolve(data.values);
                 }
             }
 
