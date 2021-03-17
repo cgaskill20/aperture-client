@@ -80,7 +80,7 @@ class ChartSystem {
     constructor(map, chartCatalogFilename, renderInfrastructure) {
         this.map = map;
 
-        this.filter = new MapDataFilter();
+        this.filter = MapDataFilterWrapper;
         renderInfrastructure.useFilter(this.filter);
 
         this.chartFrames = [];
@@ -124,7 +124,7 @@ class ChartSystem {
         this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
     }
 
-    update() {
+    async update() {
         if (this.doNotUpdate) {
             return;
         }
@@ -132,15 +132,15 @@ class ChartSystem {
         // TODO: This needs to not suck
         this.resizable.triggerResizeEvent();
 
-        let values = this.getValues();
+        let values = await this.getValues();
         this.chartFrames.forEach(frame => { frame.manager.update(values); });
 
         this.doNotUpdate = true;
         window.setTimeout(() => { this.doNotUpdate = false; }, 200);
     }
 
-    getValues() {
-        let values = this.filter.getModel(this.graphable, this.map.getBounds());
+    async getValues() {
+        let values = await this.filter.get(this.graphable, this.map.getBounds());
 
         // This arcane incantation gets a list of feature names for which there's actually data.
         // Don't ask.

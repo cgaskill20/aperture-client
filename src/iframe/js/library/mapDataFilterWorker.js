@@ -1,4 +1,5 @@
 importScripts('./mapDataFilter.js');
+importScripts('./apertureUtil.js')
 
 const filter = new MapDataFilter();
 
@@ -8,7 +9,12 @@ onmessage = function (msg) {
         filter.add(data.data);
     }
     else if (data.type === "get") {
-        querier.killAllStreamsOverCollection(msg.data.collection);
+        const values = filter.getModel(data.feature,data.bounds);
+        postMessage({
+            type: "getResponse",
+            senderID: data.senderID,
+            values: values
+        });
     }
 }
 
