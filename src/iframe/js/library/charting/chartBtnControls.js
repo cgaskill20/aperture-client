@@ -55,17 +55,16 @@ function createSideToggle(chart, axis, arrowDirection) {
 }
 
 function createDropdown(title) {
-    // title = "Coming Soon"; //FIXME delete this line when dropdown is implemented
     let chartDropdown = document.createElement("div");
     chartDropdown.className = "btn-group";
     chartDropdown.role = "group";
     let firstPart = "<button type='button' class='btn btn-outline-dark dropdown-toggle' type='button' " +
         "id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-    let lastPart = "</button> <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>\
-            <a class='dropdown-item' href='#'>Constraint 1</a>\
-            <a class='dropdown-item' href='#'>Constraint 2</a>\
-            <a class='dropdown-item' href='#'>Constraint 3</a>\
-        </div>";
+    let lastPart = "</button> <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'> " +
+            "<a class='dropdown-item' href='#'>Coming Soon</a>" +
+            "<a class='dropdown-item' href='#'>Coming Soon</a>" +
+            "<a class='dropdown-item' href='#'>Coming Soon</a>" +
+        "</div>";
     chartDropdown.innerHTML = firstPart + title + lastPart;
     return chartDropdown;
 }
