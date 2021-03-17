@@ -159,7 +159,6 @@ class Histogram extends Chart {
             .attr("y", 24)
             .attr("text-anchor", "middle")
             .text(this.title);
-        
     }
 
     changeBins(binNum, categories) {
@@ -174,7 +173,7 @@ class Histogram extends Chart {
     }
 
     changeData(newData, binNum) {
-        this.renderType = HistogramType.QUALITATIVE;
+        this.renderType = HistogramType.QUANTITATIVE;
         this.data = newData;
         this.changeBins(binNum);
         this.rerenderAllViews();

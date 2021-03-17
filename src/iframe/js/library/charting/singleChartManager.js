@@ -57,6 +57,8 @@ END OF TERMS AND CONDITIONS
 
 class SingleChartManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
+        this.catalog = catalog;
+
         this.charts = {};
         this.chartArea = chartArea;
         this.chartSystem = chartSystem;
@@ -99,13 +101,30 @@ class SingleChartManager {
 
         if (enoughFeatures) {
             this.chartArea.hideNotEnoughFeaturesMessage();
+
             for (let feature in values) {
+                let buckets = this.getCategoriesOfCategoricalFeature(feature);
+                if (buckets) {
+                    console.log(buckets);
+                    this.charts[feature].changeData(values[feature].map(e => e.data), buckets);
+                }
                 this.charts[feature].changeData(values[feature].map(e => e.data), 5);
             }
         } else {
             this.chartArea.showNotEnoughFeaturesMessage();
             this.chartArea.hideAll();
         }
+    }
+
+    // Returns undefined if the feature is not categorical.
+    getCategoriesOfCategoricalFeature(feature) {
+        this.catalog.forEach(collection => {
+            for (let constraints in collection) {
+                if (constraint.categorical) {
+                    return constraint.buckets;
+                }
+            }
+        });
     }
 }
 

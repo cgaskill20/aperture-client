@@ -96,7 +96,9 @@
     "label": "County Risk Index",
     "constraints": {
         "RISK_RATNG": {
-            "label": "County Risk Score"
+            "label": "County Risk Score",
+            "buckets": ["Very Low", "Relatively Low", "Relatively Moderate", "Relatively High", "Very High"],
+            "type": "categorical"
         }
     }
   },
@@ -105,7 +107,9 @@
     "label": "Tract Risk Index",
     "constraints": {
         "RISK_RATNG": {
-            "label": "Tract Risk Score"
+            "label": "Tract Risk Score",
+            "buckets": ["Very Low", "Relatively Low", "Relatively Moderate", "Relatively High", "Very High"],
+            "type": "categorical"
         }
     }
   },
