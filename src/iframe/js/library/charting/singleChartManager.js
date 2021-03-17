@@ -90,7 +90,7 @@ class SingleChartManager {
 
     cycleAxis(axis, direction) {
         if (axis === "x") {
-            this.changeFeature(this.featureManager.getNextFeature(this.currentFeature, []), direction);
+            this.changeFeature(this.featureManager.getNextFeature(this.currentFeature, [], direction));
         }
     }
 

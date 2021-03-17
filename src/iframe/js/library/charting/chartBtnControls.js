@@ -50,7 +50,7 @@ function createSideToggle(chart, axis, arrowDirection) {
     sideToggle.className = "btn btn-outline-dark";
     sideToggle.type = "button";
     sideToggle.innerText = arrowDirection;
-    sideToggle.onclick = arrowDirection === '<' ? () => {chart.cycleAxis(axis, "previous")} : () => {chart.cycleAxis(axis)};
+    sideToggle.onclick = arrowDirection === '<' ? () => {chart.cycleAxis(axis, "previous")} : () => {chart.cycleAxis(axis, "next")};
     return sideToggle;
 }
 
