@@ -21,7 +21,7 @@ class ValidFeatureManager {
                 currentIndex = (currentIndex + 1) % this.validFeatures.length;
             }
             else {
-                currentIndex = (currentIndex - 1) % this.validFeatures.length;
+                currentIndex = currentIndex == 0 ? this.validFeatures.length-1 : (currentIndex - 1) % this.validFeatures.length;
             }
 
             let foundFeature = !barring.find(feature => { feature === this.validFeatures[currentIndex] });
