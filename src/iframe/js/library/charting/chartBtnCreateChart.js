@@ -49,13 +49,14 @@ function createScatterplot() {
 
 function createLinegraph() {
     moreGraphsPossible();
+
+    let chart = chartSystem.getChartFrame(ChartingType.LINEGRAPH);
     let box1 = document.getElementById("box1");
 
     let graphBox = document.createElement("div");
     graphBox.className = "colorMode1 customBorder single-chart-box";
-    graphBox.appendChild(createChartControl(graphBox, 'linegraph'));
+    graphBox.appendChild(createChartControl(chart, graphBox, 'linegraph'));
 
-    let chart = chartSystem.getChartFrame(ChartingType.LINEGRAPH);
     graphBox.appendChild(chart.getDOMNode());
     box1.appendChild(graphBox);
 }
