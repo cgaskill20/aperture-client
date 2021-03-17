@@ -1,48 +1,3 @@
-.customBorder {
-  border: 1px solid #777;
-  border-radius: 3px;
-}
-
-.add-graph-box {
-  padding: 10px;
-  margin: 10px;
-}
-
-.add-graph-message {
-  display: flex;
-  justify-content: center;
-  font-size: 22px;
-  font-style: bold;
-}
-
-.graph-button-area {
-  margin: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.graph-button {
-  margin: 10px;
-}
-
-.chart-control {
-/*  display: flex;
-  flex-direction: row;*/
-}
-
-.temp-chart-box {
-  padding: 10px;
-  margin: 10px;
-  margin: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.temp-chart-pics {
-}
-
 body {
     width: 100%;
     height: 100vh;
@@ -306,34 +261,4 @@ body {
 
 .constraintCloseButton {
   padding: 10px;
-}
-
-.overlay {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    overflow: auto;
-}
-
-.overlay .box{
-    width: 100%;
-    height: 100%;
-    border: 1px solid #777;
-    border-radius: 3px;
-    box-sizing: border-box;
-}
-
-.overlay .box .option{
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: #f8f8f8;
-    border: 1px solid #777;
-    position: absolute;
-}
-
-.overlay .box .option.top-right {
-    right: -5px;
-    top: -5px;
-    cursor: nesw-resize;
 }
