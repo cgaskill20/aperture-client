@@ -1,5 +1,5 @@
 importScripts('./mapDataFilter.js');
-importScripts('./apertureUtil.js')
+importScripts('./apertureUtil.js');
 
 const filter = new MapDataFilter();
 
