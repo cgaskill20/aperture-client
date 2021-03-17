@@ -1,15 +1,16 @@
-let maxGraphs = 4;
+let maxGraphs = 6;
 let totalGraphs = 0;
 let maxGraphsReached = false;
 
 function createHistogram() {
     moreGraphsPossible();
 
+    let chart = chartSystem.getChartFrame(ChartingType.HISTOGRAM);
+
     let graphBox = document.createElement("div");
     graphBox.className = "colorMode1 customBorder single-chart-box";
     graphBox.appendChild(createChartControl(graphBox, 'histogram'));
 
-    let chart = chartSystem.getChartFrame(ChartingType.HISTOGRAM);
     graphBox.appendChild(chart.getDOMNode());
 
     /* Some things that are currently in the catalog:
@@ -75,5 +76,5 @@ function checkNumberOfGraphs() {
 function buttonsOnOff() {
     document.getElementById('histogram-button-id').disabled = maxGraphsReached;
     document.getElementById('scatterplot-button-id').disabled = maxGraphsReached;
-    document.getElementById('linegraph-button-id').disabled = maxGraphsReached;
+    // document.getElementById('linegraph-button-id').disabled = maxGraphsReached;
 }

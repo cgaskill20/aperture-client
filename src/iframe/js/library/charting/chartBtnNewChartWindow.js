@@ -32,6 +32,7 @@ function createAddChartArea() {
     lineGraphButton.className = "btn btn-outline-dark graph-button";
     lineGraphButton.id = "linegraph-button-id";
     lineGraphButton.innerText = "Line Graph";
+    lineGraphButton.disabled = true; //Remove this line once lineGraphs are implemented
 
     graphButtonArea.appendChild(histogramButton);
     graphButtonArea.appendChild(scatterplotButton);
