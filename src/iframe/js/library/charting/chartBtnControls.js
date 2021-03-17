@@ -50,12 +50,12 @@ function createSideToggle(chart, axis, arrowDirection) {
     sideToggle.className = "btn btn-outline-dark";
     sideToggle.type = "button";
     sideToggle.innerText = arrowDirection;
-    sideToggle.onclick = () => {chart.cycleAxis(axis)};
+    sideToggle.onclick = arrowDirection === '<' ? () => {chart.cycleAxis(axis, 'left')} : () => {chart.cycleAxis(axis)};
     return sideToggle;
 }
 
 function createDropdown(title) {
-    title = "Coming Soon"; //FIXME delete this line when dropdown is implemented
+    // title = "Coming Soon"; //FIXME delete this line when dropdown is implemented
     let chartDropdown = document.createElement("div");
     chartDropdown.className = "btn-group";
     chartDropdown.role = "group";

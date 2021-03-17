@@ -73,23 +73,23 @@ class ScatterplotManager {
         );
     }
 
-    axisButtonCallback(axis) {
-        this.currentFeatures[axis] = this.nextValidFeatureForAxis(axis); 
+    axisButtonCallback(axis, direction) {
+        this.currentFeatures[axis] = this.nextValidFeatureForAxis(axis, direction);
         this.update(this.system.getValues());
     }
 
-    nextValidFeatureForAxis(axis) {
+    nextValidFeatureForAxis(axis, direction) {
         let ignore = [];
         for (let axisToIgnore in this.currentFeatures) {
             if (axisToIgnore !== axis) {
                 ignore.push(this.currentFeatures[axisToIgnore]);
             }
         }
-        return this.validFeatures.getNextFeature(this.currentFeatures[axis], ignore);
+        return this.validFeatures.getNextFeature(this.currentFeatures[axis], ignore, direction);
     }
 
-    cycleAxis(axis) {
-        this.axisButtonCallback(axis);
+    cycleAxis(axis, direction) {
+        this.axisButtonCallback(axis, direction);
     }
     
     update(values) {
