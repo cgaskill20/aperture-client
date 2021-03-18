@@ -77,11 +77,10 @@ const ChartingType = {
 }
 
 class ChartSystem {
-    constructor(map, chartCatalogFilename, renderInfrastructure) {
+    constructor(map, chartCatalogFilename) {
         this.map = map;
 
         this.filter = MapDataFilterWrapper;
-        renderInfrastructure.useFilter(this.filter);
 
         this.chartFrames = [];
 

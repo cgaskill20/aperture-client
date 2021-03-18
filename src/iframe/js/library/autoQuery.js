@@ -74,6 +74,7 @@ class AutoQuery {
         this.layerIDs = [];
         this.enabled = false;
         this.geohashCache = [];
+        MapDataFilterWrapper.removeCollection(this.collection);
     }
 
     /**
@@ -321,6 +322,9 @@ class AutoQuery {
     renderGeoJSON(data) {
         if (!this.enabled)
             return;
+
+        MapDataFilterWrapper.add(data, this.collection);
+
         let indexData = {};
         indexData[this.collection] = {
             "color": this.getColor(data.properties),

@@ -1,13 +1,13 @@
 const filterWorker = new Worker("js/library/mapDataFilterWorker.js", { name: `Charting Filter` });
 
 const MapDataFilterWrapper = {
-    add: (data) => {
+    add: (data, collection) => {
         filterWorker.postMessage({
             type: "add",
-            data: data
+            data: data,
+            collection: collection
         });
     },
-
     get: async (feature, bounds) => {
         //create ID to know if response is for me
         const senderID = Math.random().toString(36).substring(2, 6);
@@ -29,5 +29,12 @@ const MapDataFilterWrapper = {
                 senderID: senderID
             });
         });
-    } 
+    }, 
+    removeCollection: (collection) => {
+        // boy this codebase is really good
+        filterWorker.postMessage({ 
+            type: "removeCollection",
+            collection: collection
+        });
+    },
 }
