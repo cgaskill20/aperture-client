@@ -5,6 +5,10 @@ globalThis.latticeNum =  Math.floor(Math.random() * 20) + 100;
 const PAGE_URL = window.location.href;
 const DEV = PAGE_URL.includes("dev") || PAGE_URL.includes("127.0.0.1");
 if (DEV) {
+    const overwriteLatticeNum = localStorage.getItem("latticeNum");
+    if(overwriteLatticeNum){
+        globalThis.latticeNum = overwriteLatticeNum;
+    }
     console.log("Aperture client set to DEV mode.")
     console.log(`Connected to lattice-${globalThis.latticeNum}`);
     AutoQuery.minCountyZoom = 1;
