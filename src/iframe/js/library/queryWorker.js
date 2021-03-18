@@ -1,7 +1,7 @@
 importScripts('./smartQuerier.js');
 importScripts('../grpc/GRPC_Querier/grpc_querier.bundle.js');
 
-const querier = getSustainQuerier();
+let querier;
 
 onmessage = function (msg) {
     if (msg.data.type === "query") {
@@ -12,6 +12,9 @@ onmessage = function (msg) {
             end => { postMessage({ type: "end", senderID: msg.data.senderID }); });
     } else if (msg.data.type === "kill") {
         querier.killAllStreamsOverCollection(msg.data.collection);
+    } else if (msg.data.type === "config") {
+        globalThis.latticeNum = msg.data.latticeNum;
+        querier = getSustainQuerier();
     }
 }
 

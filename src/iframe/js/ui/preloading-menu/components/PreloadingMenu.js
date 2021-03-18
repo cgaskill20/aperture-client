@@ -41,7 +41,8 @@ class PreloadingMenu extends React.Component {
                 senderID: loader.id,
                 type: "config",
                 collection: loader.collection,
-                id: loader.id
+                id: loader.id,
+                latticeNum: loader.latticeNum
             });
         }
     }

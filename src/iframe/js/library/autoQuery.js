@@ -8,6 +8,7 @@
 
 class AutoQuery {
     static queryWorker = new Worker('js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
+    static queryWorkerConfiged = false;
     static minCountyZoom = 1;
     static minTractZoom = 1;
     /**
@@ -18,6 +19,13 @@ class AutoQuery {
       * @param {string=} graphPipeID optional ID of a pipe to spit all queried data into
       */
     constructor(layerData, graphPipeID) {
+        if(!AutoQuery.queryWorkerConfiged){
+            AutoQuery.queryWorker.postMessage({
+                type: "config",
+                latticeNum: globalThis.latticeNum
+            });
+            AutoQuery.queryWorkerConfiged = true;
+        }
         this.data = layerData;
         this.collection = layerData.collection;
         this.map = layerData.map();
@@ -508,8 +516,6 @@ class AutoQuery {
         return returnText + "</ul>";
     }
 }
-//console.log(AutoQuery.queryWorker);
-//AutoQuery.queryWorker.port.start(); //needed to allow addEventListener()
 
 try {
     module.exports = {

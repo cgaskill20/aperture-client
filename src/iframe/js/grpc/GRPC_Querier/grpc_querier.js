@@ -14,8 +14,11 @@ SustainQuerier = {
       * @method initialize
       */
     initialize: function () {
-        this.service = new SustainClient("http://lattice-2.cs.colostate.edu:9092", "sustainServer");
-        this.modelService = new JsonProxyClient("http://lattice-2.cs.colostate.edu:9092", "sustainServer");
+        const LATTICE_NUM = globalThis.latticeNum;
+        const LATTICE_PORT = 31415;
+        const LATTICE_URL = `http://lattice-${LATTICE_NUM}.cs.colostate.edu:${LATTICE_PORT}`;
+        this.service = new SustainClient(LATTICE_URL, "sustainServer");
+        this.modelService = new JsonProxyClient(LATTICE_URL, "sustainServer");
         return this;
     },
 
