@@ -16,5 +16,8 @@ onmessage = function (msg) {
             values: values
         });
     }
+    else if (data.type === "removeCollection") {
+        filter.removeAllOverCollection(data.collection);
+    }
 }
 

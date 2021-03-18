@@ -15,23 +15,25 @@ class MapDataFilter {
       * 
       * @memberof MapDataFilter
       * @method add
-      * @param {(object|Array<object>)} newData - the data to add, as a direct response from the database
+      * @param {(object|Array<object>)} newData The data to add, as a direct response from the database
+      * @param {string} collection The collection the data is a part of
       */
-    add(newData) {
+    add(newData, collection) {
         if (Array.isArray(newData)) {
-            this.addMultiple(newData);
+            this.addMultiple(newData, collection);
         } else {
-            this.addSingle(newData);
+            this.addSingle(newData, collection);
         }
     }
 
     /** Inserts a single data element to the filter.
       * @memberof MapDataFilter
       * @method add
-      * @param {object} newData - the data to add, as a direct response from the database
+      * @param {object} newData The data to add, as a direct response from the database
+      * @param {string} collection The collection the data is a part of
       * @see add
       */
-    addSingle(newData) {
+    addSingle(newData, collection) {
         let entryAlreadyExists = this.data.find(entry => {
             if (newData.id) {
                 return entry.id === newData.id;
@@ -45,7 +47,7 @@ class MapDataFilter {
         }
 
         newData.entryTime = Date.now();
-        this.data.push(newData);
+        this.data.push({ collection: collection, entry: newData });
 
         if (this.newDataCallback) {
             this.newDataCallback(this.model(newData)); 
@@ -57,12 +59,13 @@ class MapDataFilter {
     /** Inserts an array of data elements into the filter.
       * @memberof MapDataFilter
       * @method addMultiple
-      * @param {Array<object>} newData - an array of data elements
+      * @param {Array<object>} newData An array of data elements
+      * @param {string} collection The collection the data is a part of
       * @see add
       */
-    addMultiple(newData) {
+    addMultiple(newData, collection) {
         for (let data of newData) {
-            this.addSingle(data);
+            this.addSingle(data, collection);
         }
     }
 
@@ -108,7 +111,7 @@ class MapDataFilter {
       * @returns {Array<object>} a subset of the data including only entries the filter is interested in
       */
     filter(data, bounds) {
-        let filtered = data.filter(entry => Util.isInBounds(entry, bounds));
+        let filtered = data.filter(datum => Util.isInBounds(datum.entry, bounds));
 
         this.discardOldData(this.msCacheMaxAge);
         return filtered;
@@ -121,7 +124,7 @@ class MapDataFilter {
       * @param {number} maxAge - the age, in milliseconds, that which any older data should be removed
       */
     discardOldData(maxAge) {
-        this.data = this.data.filter(entry => (Date.now() - entry.entryTime) < maxAge)
+        this.data = this.data.filter(datum => (Date.now() - datum.entry.entryTime) < maxAge)
     }
 
     /** Gets a model for a single feature.
@@ -137,9 +140,9 @@ class MapDataFilter {
         const model = {};
         model[feature] = [];
 
-        for (const entry of data) {
-            if (entry.properties[feature] !== undefined) {
-                model[feature].push(this.model(entry, feature));
+        for (const datum of data) {
+            if (datum.entry.properties[feature] !== undefined) {
+                model[feature].push(this.model(datum.entry, feature));
             }
         }
 
@@ -199,6 +202,15 @@ class MapDataFilter {
         }
 
         return model;
+    }
+
+    /** Removes all data in the filter over the given collection.
+      * @memberof MapDataFilter
+      * @method destroyAllOverCollection
+      * @param {string} collection The collection for which to remove data 
+     */
+    destroyAllOverCollection(collection) {
+        this.data = this.data.filter(e => e.collection !== collection);
     }
 
     /** Set a callback that fires whenever new data arrives. The callback will
