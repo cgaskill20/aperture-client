@@ -21,7 +21,8 @@ class ModelMenu extends React.Component {
             "K_MEANS_CLUSTERING", 
             "BISECTING_K_MEANS",
             "GAUSSIAN_MIXTURE",
-            "LATENT_DIRICHLET_ALLOCATION"
+            "LATENT_DIRICHLET_ALLOCATION",
+            "LINEAR_REGRESSION"
         ];
         this.populateCatalog();
 
@@ -92,6 +93,7 @@ class ModelMenu extends React.Component {
             catalog[data.type] = data;
         }.bind(this));
         stream.on('end', function (end) {
+            console.log(catalog)
             const catalogMap = this.catalogMap(catalog);
             //console.log(catalogMap)
             this.setState({
@@ -107,8 +109,8 @@ class ModelMenu extends React.Component {
     catalogMap(catalog) {
         const ret = {};
         for (const entry in catalog) {
-            if (!this.whitelist.includes(entry))
-                continue;
+            // if (!this.whitelist.includes(entry))
+            //     continue;
             if (!ret[catalog[entry].category])
                 ret[catalog[entry].category] = {}
 
@@ -239,7 +241,7 @@ class ModelMenu extends React.Component {
         );
     }
 
-    runModel() {
+    async runModel() {
         this.setState({
             modelStatus: "building"
         });
@@ -308,7 +310,6 @@ class ModelMenu extends React.Component {
             return d.kMeansClusteringResponse;
         })
         this.modelManager = new ClusterManager(refinedData, window.map, window.dataModelingGroup, "county_geo_30mb_no_2d_index");
-
     }
 
     convertCollectionsToCollectionsQuery() {
@@ -338,7 +339,7 @@ class ModelMenu extends React.Component {
         return this.state.config[this.state.modelCategory][this.state.modelType];
     }
 
-    getExtraRequestParams() {
+    async getExtraRequestParams() {
         switch (this.state.modelCategory) {
             case "REGRESSION":
                 return {
@@ -352,4 +353,11 @@ class ModelMenu extends React.Component {
                 return null;
         }
     }
+
+    // async getCurrentViewport(){
+    //     return new Promise(resolve => {
+    //         const collectionName = 
+    //         const stream = this._sustainQuerier.getStreamForQuery()
+    //     });
+    // }
 }
