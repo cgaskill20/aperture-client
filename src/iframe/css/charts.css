@@ -21,8 +21,26 @@
 }
 
 .chart-control {
-    /*  display: flex;
-      flex-direction: row;*/
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 10px;
+    border-bottom-style: double;
+    border-bottom-width: thin;
+    padding-bottom: 10px;
+}
+
+.chart-control-button {
+    margin: 0px 3px;
+}
+
+.chart-control-button-close {
+    margin: 0px 3px;
+}
+
+.left-toggle {
+    height: 15px;
+    width: 15px;
 }
 
 .temp-chart-box {

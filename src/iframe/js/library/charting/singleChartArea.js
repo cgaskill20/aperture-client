@@ -19,20 +19,20 @@ class SingleChartArea {
         this.container = document.createElement("div");
         this.container.className = "single-chart-area";
 
-        this.toggleAxisButton = document.createElement("div");
-        this.toggleAxisButton.className = "btn btn-outline-dark btn-xs";
-        this.toggleAxisButton.innerText = "Cycle X-Axis";
-        this.container.appendChild(this.toggleAxisButton);
-
-        this.notEnoughFeaturesMessage = document.createElement("p");
-        this.notEnoughFeaturesMessage.innerText = "Enable one or more constraints to start graphing";
-        this.container.appendChild(this.notEnoughFeaturesMessage);
+        // this.toggleAxisButton = document.createElement("div");
+        // this.toggleAxisButton.className = "btn btn-outline-dark btn-xs";
+        // this.toggleAxisButton.innerText = "Cycle X-Axis";
+        // this.container.appendChild(this.toggleAxisButton);
+        //
+        // this.notEnoughFeaturesMessage = document.createElement("p");
+        // this.notEnoughFeaturesMessage.innerText = "Enable one or more constraints to start graphing";
+        // this.container.appendChild(this.notEnoughFeaturesMessage);
             
         this.parentNode.appendChild(this.container);
     }
 
     setFeatureToggleCallback(cb) {
-        this.toggleAxisButton.onclick = cb;
+        // this.toggleAxisButton.onclick = cb;
     }
 
     addChart(chart) {
@@ -59,13 +59,13 @@ class SingleChartArea {
         });
     }
 
-    showNotEnoughFeaturesMessage() {
-        this.notEnoughFeaturesMessage.style.display = "inline";
-    }
-
-    hideNotEnoughFeaturesMessage() {
-        this.notEnoughFeaturesMessage.style.display = "none";
-    }
+    // showNotEnoughFeaturesMessage() {
+    //     this.notEnoughFeaturesMessage.style.display = "inline";
+    // }
+    //
+    // hideNotEnoughFeaturesMessage() {
+    //     this.notEnoughFeaturesMessage.style.display = "none";
+    // }
 
     tellNumberOfCharts(chartCount) {
         this.possibleChartCount = chartCount;

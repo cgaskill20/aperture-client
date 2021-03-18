@@ -88,9 +88,9 @@ class SingleChartManager {
         }
     }
 
-    cycleAxis(axis) {
+    cycleAxis(axis, direction) {
         if (axis === "x") {
-            this.changeFeature(this.featureManager.getNextFeature(this.currentFeature, []));
+            this.changeFeature(this.featureManager.getNextFeature(this.currentFeature, [], direction));
         }
     }
 
@@ -98,12 +98,12 @@ class SingleChartManager {
         let enoughFeatures = this.featureManager.enoughFeaturesExist(1);
 
         if (enoughFeatures) {
-            this.chartArea.hideNotEnoughFeaturesMessage();
+            // this.chartArea.hideNotEnoughFeaturesMessage();
             for (let feature in values) {
                 this.charts[feature].changeData(values[feature].map(e => e.data), 5);
             }
         } else {
-            this.chartArea.showNotEnoughFeaturesMessage();
+            // this.chartArea.showNotEnoughFeaturesMessage();
             this.chartArea.hideAll();
         }
     }
