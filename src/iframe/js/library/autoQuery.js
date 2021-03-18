@@ -519,10 +519,6 @@ class AutoQuery {
         }
         return returnText + "</ul>";
     }
-
-    useFilter(filt) {
-        this.dataFilter = filt;
-    }
 }
 
 try {
