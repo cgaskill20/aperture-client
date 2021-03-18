@@ -1,8 +1,6 @@
 const {Query, CompoundRequest, JsonModelRequest, DirectRequest} = require("./sustain_pb.js")
 const {SustainClient, JsonProxyClient} = require('./sustain_grpc_web_pb.js');
-const LATTICE_NUM = 100;
-const LATTICE_PORT = 31415;
-const LATTICE_URL = `http://lattice-${LATTICE_NUM}.cs.colostate.edu:${LATTICE_PORT}`;
+
 /**
  * @namespace SustainQuerier
  * @file Object used for performing gRPC queries
@@ -16,6 +14,9 @@ SustainQuerier = {
       * @method initialize
       */
     initialize: function () {
+        const LATTICE_NUM = globalThis.latticeNum;
+        const LATTICE_PORT = 31415;
+        const LATTICE_URL = `http://lattice-${LATTICE_NUM}.cs.colostate.edu:${LATTICE_PORT}`;
         this.service = new SustainClient(LATTICE_URL, "sustainServer");
         this.modelService = new JsonProxyClient(LATTICE_URL, "sustainServer");
         return this;

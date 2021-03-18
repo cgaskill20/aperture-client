@@ -7,7 +7,7 @@
 
 const AutoMenu = {
     //get the querier
-    _sustainQuerier: sustain_querier(),
+    _sustainQuerier: null,
 
     /**
       * Main, asyncronous function which is called by an external code block
@@ -18,6 +18,7 @@ const AutoMenu = {
       * @returns {JSON} JSON which can be used with menuGenerator.js to build a menu
       */
     build: async function (menuMetaData, overwrite) {
+        this._sustainQuerier = sustain_querier();
         return new Promise(((resolve) => {
             let catalog = {};
             const stream = AutoMenu._sustainQuerier.getStreamForQuery("Metadata", "[]");
