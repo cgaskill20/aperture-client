@@ -74,7 +74,7 @@ class AutoQuery {
         this.layerIDs = [];
         this.enabled = false;
         this.geohashCache = [];
-        MapDataFilterWrapper.remove(this.collection);
+        MapDataFilterWrapper.removeCollection(this.collection);
     }
 
     /**

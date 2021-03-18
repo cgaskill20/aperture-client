@@ -1,10 +1,11 @@
 const filterWorker = new Worker("js/library/mapDataFilterWorker.js", { name: `Charting Filter` });
 
 const MapDataFilterWrapper = {
-    add: (data) => {
+    add: (data, collection) => {
         filterWorker.postMessage({
             type: "add",
-            data: data
+            data: data,
+            collection: collection
         });
     },
     get: async (feature, bounds) => {

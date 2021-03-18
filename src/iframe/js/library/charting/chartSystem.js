@@ -132,6 +132,7 @@ class ChartSystem {
         this.resizable.triggerResizeEvent();
 
         let values = await this.getValues();
+        console.log(values);
         this.chartFrames.forEach(frame => { frame.manager.update(values); });
 
         this.doNotUpdate = true;
