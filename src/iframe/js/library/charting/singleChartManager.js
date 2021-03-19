@@ -80,11 +80,13 @@ class SingleChartManager {
         });
     }
 
-    changeFeature(feature) {
-        this.currentFeature = feature;
-        let chartIndex = this.chartSystem.graphable.indexOf(feature);
-        if (chartIndex !== -1) {
-            this.chartArea.showChart(chartIndex);
+    changeFeature(axis feature) {
+        if (axis === "x") {
+            this.currentFeature = feature;
+            let chartIndex = this.chartSystem.graphable.indexOf(feature);
+            if (chartIndex !== -1) {
+                this.chartArea.showChart(chartIndex);
+            }
         }
     }
 

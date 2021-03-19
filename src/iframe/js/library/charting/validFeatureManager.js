@@ -34,8 +34,16 @@ class ValidFeatureManager {
         return this.validFeatures[currentIndex];
     }
 
+    /* @returns {string} Any arbitrary feature that is valid
+     */
     getAnyFeature() {
         return this.validFeatures[0];
+    }
+
+    /* @returns {array<string>} An array containing all valid features
+     */
+    getAllFeatures() {
+        return this.validFeatures;
     }
 
     /* @param {number} count The number of features that we should at least have
