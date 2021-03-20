@@ -15,6 +15,10 @@
   --bootstrapButtonsColor: #343a40;
   --bootstrapButtonsHover: #fff;
   --bootstrapButtonsFocus: 0 0 0 .2rem rgba(52,58,64,.5);
+  --bootstrapButtonsDisabled: #343a40;
+  --bootstrapDropdownToggle_color: #fff;
+  --bootstrapDropdownToggle_background: #343a40;
+  --bootstrapDropdownToggle_border: #343a40;
   --tooltip-arrow-color: #111;
 }
 
@@ -27,5 +31,9 @@
   --bootstrapButtonsColor: #f8f9fa;
   --bootstrapButtonsHover: #212529;
   --bootstrapButtonsFocus: 0 0 0 .2rem rgba(249,249,250,.5);
+  --bootstrapButtonsDisabled: #f8f9fa;
+  --bootstrapDropdownToggle_color: #212529;
+  --bootstrapDropdownToggle_background: #f8f9fa;
+  --bootstrapDropdownToggle_border: #f8f9fa;
   --tooltip-arrow-color: #fff;
 }
