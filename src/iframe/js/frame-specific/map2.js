@@ -94,11 +94,6 @@ ReactDOM.render(e(PreloadingMenu,{
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty;
 
-
-// map.on('click', function () {
-//     closeNav();
-// });
-
 const overwrite = { //leaving this commented cause it explains the schema really well 
     // "covid_county": {
     //     "group": "Tract, County, & State Data",
