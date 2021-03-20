@@ -75,13 +75,17 @@ function createDropdown(title) {
     for(let i = 0; i < 3; i++) {
         let dropdownItem = document.createElement("a");
         dropdownItem.className = "dropdown-item";
-        dropdownItem.href = "#";
+        // dropdownItem.href = "#";
         dropdownItem.innerText = "Constraint " + i;
         dropdownMenu.appendChild(dropdownItem);
     }
 
     chartDropdown.appendChild(dropdownButton);
     chartDropdown.appendChild(dropdownMenu);
+
+    $(function () {
+        $('[data-toggle="dropdown"]').dropdown()
+    })
 
     return chartDropdown;
 }
