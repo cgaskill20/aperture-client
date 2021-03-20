@@ -7,7 +7,6 @@
 }
 
 .tool-tip {
-  content: ;
   cursor: pointer;
   height: 20px;
   width: 20px;
@@ -17,9 +16,7 @@
 }
 
 .moon-icon {
-  position: absolute;
-  left: 38px;
-  top: -4.5px;
+  margin-bottom: 10px;
   height: 23px;
   width: 23px;
 }

@@ -67,24 +67,25 @@
     <div class="leaflet-bottom leaflet-right"></div>
     <div id="sidebar-id" class="sidebar colorMode1">
         <div class="nav-tabs">
-        <div class="theme-switch-wrapper">
-            <img class="moon-icon" src="../../images/Moon_Black.png">
-            <label class="theme-switch" for="checkbox">
-                <input type="checkbox" id="checkbox" />
-                <div class="slider round"></div>
-            </label>
-        </div>
             <div class="btn-group" id="nav-group-id" role="group" aria-label="Basic example">
               <button type="button" id='nav-graph-button' class="btn btn-outline-dark color-change">Graphing</button>
               <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark color-change">Data Exploration</button>
               <button type="button" id='nav-modeling-button' class="btn btn-outline-dark color-change">Modeling</button>
-              <button type="button" id='nav-validation-button' class="btn btn-outline-dark color-change">Validation</button>
+<!--              <button type="button" id='nav-validation-button' class="btn btn-outline-dark color-change">Validation</button>-->
               <button type="button" id='nav-close-button' class="btn btn-outline-dark color-change">Close</button>
+            </div>
+            <div class="dark-mode-control">
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="checkbox">
+                        <input type="checkbox" id="checkbox" />
+                        <div class="slider round"></div>
+                    </label>
+                    <img class="moon-icon" src="../../images/Moon_Black.png">
+                </div>
             </div>
         </div>
         <div id="sidebar-container"></div>
-        <div id="model-container">
-        </div>
+        <div id="model-container"></div>
     </div>
     <div id="main">
       <button class="btn btn-outline-dark-custom" id='nav-menu-button'>☰ Menu</button>
