@@ -35,7 +35,7 @@ function createChartControlArea() {
 function createChartControlGroup(chart, axis, dropdownTitle) {
     let chartControlGroup = document.createElement("div");
     chartControlGroup.className = "btn-group chart-control-button";
-    chartControlGroup.role = "group";
+    chartControlGroup.setAttribute("role", "group");
     let leftToggle = createSideToggle(chart, axis, '<');
     let chartDropdown = createDropdown(dropdownTitle);
     let rightToggle = createSideToggle(chart, axis, '>');
@@ -57,15 +57,32 @@ function createSideToggle(chart, axis, arrowDirection) {
 function createDropdown(title) {
     let chartDropdown = document.createElement("div");
     chartDropdown.className = "btn-group";
-    chartDropdown.role = "group";
-    let firstPart = "<button type='button' disabled=true class='btn btn-outline-dark dropdown-toggle' type='button' " +
-        "id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-    let lastPart = "</button> <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'> " +
-            "<a class='dropdown-item' href='#'>Coming Soon</a>" +
-            "<a class='dropdown-item' href='#'>Coming Soon</a>" +
-            "<a class='dropdown-item' href='#'>Coming Soon</a>" +
-        "</div>";
-    chartDropdown.innerHTML = firstPart + title + lastPart;
+    chartDropdown.setAttribute("role", "group");
+
+    let dropdownButton = document.createElement("button");
+    dropdownButton.id = "drop-it-down";
+    dropdownButton.type = "button";
+    dropdownButton.className = "btn btn-outline-dark dropdown-toggle";
+    dropdownButton.setAttribute("data-toggle", "dropdown");
+    dropdownButton.setAttribute("aria-haspopup", "true");
+    dropdownButton.setAttribute("aria-expanded", "false");
+    dropdownButton.innerText = title;
+
+    let dropdownMenu = document.createElement("div");
+    dropdownMenu.className = "dropdown-menu";
+    dropdownMenu.setAttribute("aria-labelledby", "drop-it-down");
+
+    for(let i = 0; i < 3; i++) {
+        let dropdownItem = document.createElement("a");
+        dropdownItem.className = "dropdown-item";
+        dropdownItem.href = "#";
+        dropdownItem.innerText = "Constraint " + i;
+        dropdownMenu.appendChild(dropdownItem);
+    }
+
+    chartDropdown.appendChild(dropdownButton);
+    chartDropdown.appendChild(dropdownMenu);
+
     return chartDropdown;
 }
 
