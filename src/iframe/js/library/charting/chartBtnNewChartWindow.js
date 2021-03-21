@@ -14,9 +14,24 @@ function createAddChartArea() {
     let addGraphBox = document.createElement("div");
     addGraphBox.className = "colorMode1 customBorder add-graph-box";
     addGraphBox.id = "graph-controller";
+    let addGraphMessageDiv = document.createElement("div");
+    addGraphMessageDiv.className = "add-graph-message row justify-content-center";
+    let emptyCol = document.createElement("div");
+    emptyCol.className = "col-sm";
     let addGraphMessage = document.createElement("p");
-    addGraphMessage.className = "add-graph-message row justify-content-center";
+    addGraphMessage.className = "add-graph-message col-sm-auto";
     addGraphMessage.innerText = "Add a...";
+    let closeGraphArea = document.createElement("div");
+    closeGraphArea.className = "col-sm";
+    let closeGraphButton = document.createElement("button");
+    closeGraphButton.className = "btn btn-outline-dark close-graph-area-button";
+    closeGraphButton.innerText = "X";
+    closeGraphArea.appendChild(closeGraphButton);
+    addGraphMessageDiv.appendChild(emptyCol);
+    addGraphMessageDiv.appendChild(addGraphMessage);
+    addGraphMessageDiv.appendChild(closeGraphArea);
+
+
 
     let graphButtonArea = document.createElement("div");
     graphButtonArea.className = "graph-button-area row justify-content-center"
@@ -38,7 +53,7 @@ function createAddChartArea() {
     graphButtonArea.appendChild(scatterplotButton);
     graphButtonArea.appendChild(lineGraphButton);
 
-    addGraphBox.appendChild(addGraphMessage);
+    addGraphBox.appendChild(addGraphMessageDiv);
     addGraphBox.appendChild(graphButtonArea);
     document.getElementById('box1').appendChild(addGraphBox);
 }

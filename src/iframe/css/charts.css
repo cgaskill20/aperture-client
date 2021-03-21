@@ -19,6 +19,10 @@
     margin: 10px;
 }
 
+.close-graph-area-button {
+    float: right;
+}
+
 .chart-control {
     margin: 10px;
     border-bottom-style: double;
