@@ -21,12 +21,16 @@ class ChartFrame {
         this.area.rerender(this.width, this.height);
     }
 
-    changeFeature(feature) {
-        this.manager.changeFeature(feature);
+    changeFeature(axis, feature) {
+        this.manager.changeFeature(axis, feature);
     }
 
     cycleAxis(axis, direction) {
         this.manager.cycleAxis(axis, direction);
+    }
+
+    getValidFeatures() {
+        this.manager.featureManager.getAllFeatures();
     }
 }
 
