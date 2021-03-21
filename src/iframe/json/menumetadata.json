@@ -480,5 +480,58 @@
         "label": "Winter Weather Risk Rating"
       }
     ]
+  },
+  {
+    "collection": "tract_proximity",
+    "label": "Tract Proximity",
+    "subGroup": "Proximity",
+    "level": "tract",
+    "fieldMetadata": [
+        {
+          "name": "nearest_hospital",
+          "label": "Nearest Hospital (mi)",
+          "min": 0,
+          "max": 200,
+          "type": "range",
+          "step": 0.5,
+          "unit": "miles"
+        },
+        {
+          "name": "nearest_fire_station",
+          "label": "Nearest Fire Station (mi)",
+          "min": 0,
+          "max": 200,
+          "type": "range",
+          "step": 0.5,
+          "unit": "miles"
+        },
+        {
+          "name": "nearest_public_school",
+          "label": "Nearest Public School (mi)",
+          "min": 0,
+          "max": 200,
+          "type": "range",
+          "step": 0.5,
+          "unit": "miles"
+        },
+        {
+          "name": "nearest_electrical_substation",
+          "label": "Nearest Electrical Substation (mi)",
+          "min": 0,
+          "max": 200,
+          "type": "range",
+          "step": 0.5,
+          "unit": "miles"
+        },
+        {
+          "name": "nearest_power_plant",
+          "label": "Nearest Power Plant (mi)",
+          "min": 0,
+          "max": 200,
+          "type": "range",
+          "step": 0.5,
+          "unit": "miles"
+        }
+    ]
   }
 ]
