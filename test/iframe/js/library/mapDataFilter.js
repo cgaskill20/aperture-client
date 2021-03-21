@@ -47,10 +47,10 @@ describe('MapDataFilter', () => {
     describe('discardOldData()', () => {
         it('can remove data', (done) => {
             let filter = new mdf.MapDataFilter();
-            filter.add(exampleData);
+            filter.add(exampleData, "coll");
             setTimeout(() => { 
                 filter.discardOldData(100);
-                assert(filter.data.length === 0);
+                assert(filter.data.coll.length === 0);
                 done();
             }, 200);
         });
@@ -58,13 +58,13 @@ describe('MapDataFilter', () => {
         it('properly removes only outdated data', (done) => {
             let filter = new mdf.MapDataFilter();
 
-            filter.add(exampleData[0]);
-            setTimeout(() => { filter.add(exampleData[1]); }, 100);
-            setTimeout(() => { filter.add(exampleData[2]); }, 200);
+            filter.add(exampleData[0], "coll");
+            setTimeout(() => { filter.add(exampleData[1], "coll"); }, 100);
+            setTimeout(() => { filter.add(exampleData[2], "coll"); }, 200);
             setTimeout(() => { 
                 filter.discardOldData(150); 
-                assert(filter.data.length === 1);
-                assert(filter.data[0].properties.median_income === 16000);
+                assert(filter.data.coll.length === 1);
+                assert(filter.data.coll[0].properties.median_income === 16000);
                 done(); 
             }, 300);
         });

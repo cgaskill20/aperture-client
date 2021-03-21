@@ -163,13 +163,14 @@ describe('Util', function () {
                 [6, 1],
             ];
             let bounds = L.latLngBounds(
-                [3.5, 3],
-                [5.5, -3],
+                [3, 3.5],
+                [-3, 5.5],
             );
             let badbounds = L.latLngBounds(
-                [7.5, 3],
-                [8.5, -3],
+                [3, 7.5],
+                [-3, 8.5],
             );
+            console.log(badbounds);
             assert(util.Util.arePointsApproximatelyInBounds(points, bounds));
             assert(!util.Util.arePointsApproximatelyInBounds(points, badbounds));
         });
