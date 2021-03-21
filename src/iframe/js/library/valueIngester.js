@@ -55,112 +55,28 @@ END OF TERMS AND CONDITIONS
 
 */
 
-const ChartingType = {
-    LINE: {
-        name: "line",
-        managerType: SingleChartManager,
-        areaType: SingleChartArea,
-        chartType: LineGraph,
-    },
-    HISTOGRAM: {
-        name: "histogram",
-        managerType: SingleChartManager,
-        areaType: SingleChartArea,
-        chartType: Histogram,
-    },
-    SCATTERPLOT: {
-        name: "scatterplot",
-        managerType: ScatterplotManager,
-        areaType: ScatterplotArea,
-        chartType: Scatterplot,
-    },
-}
-
-class ChartSystem {
-    constructor(map, chartCatalogFilename) {
-        this.map = map;
-
-        this.filter = MapDataFilterWrapper;
-
-        this.chartFrames = [];
-
-        this.valueIngester = new ValueIngester(filter);
-
-        this.resizable = new resizable(400, 300, "white");
-        this.resizable.setResizeCallback((width, height) => {
-            this.chartFrames.forEach(frame => {
-                frame.setSize(width - 200, height - 200);
-                frame.resize();
-            });
-        });
-
-        $.getJSON(chartCatalogFilename, (catalog) => {
-            this.initializeUpdateHooks();
-            this.catalog = catalog;
-            this.graphable = catalog.map(e => Object.keys(e.constraints)).flat();
-        });
-
-        this.doNotUpdate = false;
-
-    }
-
-    getChartFrame(type) {
-        let node = document.createElement("div");
-        node.className = `${type.name}-chart-area`;
-
-        let area = new type.areaType();
-        area.attachTo(node);
-        let manager = new type.managerType(this.catalog, area, this.validFeatureManager, this, type.chartType);
-        let frame = new ChartFrame(node, area, manager);
-
-        this.chartFrames.push(frame);
-
-        return frame;
-    }
-
-    initializeUpdateHooks() {
-        this.map.on('move', (e) => { this.update(); });
-        this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
-    }
-
-    async update() {
-        if (this.doNotUpdate) {
-            return;
-        }
+/** Prepares and manages values coming from a filter.
+ */
+class ValueIngester {
+    constructor(filter) { 
+        this.filter = filter;
+        this.featureManager = new ValidFeatureManager([]);
         
-        // TODO: This needs to not suck
-        this.resizable.triggerResizeEvent();
-
-        this.valueIngester.setSamplingPercentage(this.getIdealSamplePercent(map.getZoom()));
-        let values = await this.valueIngester.getValues();
-        this.chartFrames.forEach(frame => { frame.manager.update(values); });
-
-        this.doNotUpdate = true;
-        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
+        this.setSamplingPercentage(1.0);
     }
 
-
-    getIdealSamplePercent(zoomAmount) {
-        // At around 7 zoom level, multiple states are visible.
-        // We should start reducing the sample percentage around here.
-        // At 5 zoom level, the entire contiguous US is visible. 
-        // The sample level should be very low here.
-        // This doesn't provide a very wide range of options, which is
-        // why this computation is so stilted.
-        if (zoomAmount > 7) {
-            return 1.0;
-        } else if (zoomAmount == 7) {
-            return 0.7;
-        } else if (zoomAmount == 6) {
-            return 0.5;
-        } else if (zoomAmount == 5) {
-            return 0.2;
-        } else {
-            return 0.1;
-        }
+    setSamplingPercentage(percent) {
+        this.samplingPercent = percent;
     }
 
-    toggleVisible() {
-        this.resizable.toggleVisible();
+    async getValues() {
+        let values = await this.filter.get(this.graphable, this.map.getBounds(), this.samplingPercent);
+
+        // This arcane incantation gets a list of feature names for which there's actually data.
+        // Don't ask.
+        let validFeatures = Object.entries(values).filter(kv => kv[1].length !== 0).map(kv => kv[0]);
+        this.featureManager.update(validFeatures);
+
+        return values;
     }
 }

@@ -84,14 +84,17 @@ class MapDataFilter {
      * feature, whose key is the name of the feature requested and whose 
      * value is a list of all of the values associated with that feature
      * found in the data set.
+     * @param {string} feature - the feature to model
+     * @param {Array<object>} data - the data to create the model from
+     * @param {number} samplePercent - Optional float between 0-1 describing what percent of the data to sample (1 by default)
      */
-    getModel(feature, bounds) {
+    getModel(feature, bounds, samplePercent) {
         let filteredData = this.filter(this.data, bounds);
 
         if (Array.isArray(feature)) {
-            return this.getMultipleModel(feature, filteredData);
+            return this.getMultipleModel(feature, filteredData, samplePercent);
         } else {
-            return this.getSingleModel(feature, filteredData);
+            return this.getSingleModel(feature, filteredData, samplePercent);
         }
     }
 
@@ -139,13 +142,17 @@ class MapDataFilter {
       * @method getSingleModel
       * @param {string} feature - the feature to model
       * @param {Array<object>} data - the data to create the model from
+      * @param {number} samplePercent - Optional float between 0-1 describing what percent of the data to sample (1 by default)
       * returns {object} the model
       */
-    getSingleModel(feature, data) {
+    getSingleModel(feature, data, samplePercent) {
         const model = {};
         model[feature] = [];
 
-        for (const datum of data) {
+        let step = samplePercent ? (1 / samplePercent) : 1;
+
+        for (let i = 0; i < data.length; i = Math.round(i + step)) {
+            let datum = data[i];
             if (datum.properties[feature] !== undefined) {
                 model[feature].push(this.model(datum, feature));
             }
@@ -170,6 +177,7 @@ class MapDataFilter {
             type: this.dataLocation(entry),
             locationName: entry.properties.NAME10,
             feature: feature,
+            GISJOIN: entry.properties.GISJOIN,
         };
     }
 
@@ -196,13 +204,14 @@ class MapDataFilter {
       * @method getSingleModel
       * @param {Array<string>} features The features to model
       * @param {Array<object>} data The data to create the model from
-      * returns {Array<object>} the models
+      * @param {number} samplePercent - Optional float between 0-1 describing what percent of the data to sample (1 by default)
+      * @returns {Array<object>} the models
       */
-    getMultipleModel(features, data) {
+    getMultipleModel(features, data, samplePercent) {
         let model = {};
 
         for (const feature of features) {
-            const singleModel = this.getSingleModel(feature, data);
+            const singleModel = this.getSingleModel(feature, data, samplePercent);
             model = { ...model, ...singleModel };
         }
 
