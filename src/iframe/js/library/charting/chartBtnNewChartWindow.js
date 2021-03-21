@@ -25,13 +25,12 @@ function createAddChartArea() {
     closeGraphArea.className = "col-sm";
     let closeGraphButton = document.createElement("button");
     closeGraphButton.className = "btn btn-outline-dark close-graph-area-button";
-    closeGraphButton.innerText = "X";
+    closeGraphButton.innerText = "Close";
+    closeGraphButton.addEventListener('click', showGraph);
     closeGraphArea.appendChild(closeGraphButton);
     addGraphMessageDiv.appendChild(emptyCol);
     addGraphMessageDiv.appendChild(addGraphMessage);
     addGraphMessageDiv.appendChild(closeGraphArea);
-
-
 
     let graphButtonArea = document.createElement("div");
     graphButtonArea.className = "graph-button-area row justify-content-center"
