@@ -21,51 +21,43 @@ function createHistogram() {
     moreGraphsPossible();
 
     let chart = chartSystem.getChartFrame(ChartingType.HISTOGRAM);
-    let box1 = document.getElementById("box1");
 
     let graphBox = document.createElement("div");
     graphBox.className = "colorMode1 customBorder single-chart-box";
     graphBox.appendChild(createChartControl(chart, graphBox, 'histogram'));
 
     graphBox.appendChild(chart.getDOMNode());
-    if(box1.childNodes.length === 1) {
-        box1.appendChild(graphBox);
-    }
-    else {
-        box1.insertBefore(graphBox, box1.childNodes[2]);
-    }
+    addTheGraph(graphBox);
 }
 
 function createScatterplot() {
     moreGraphsPossible();
 
     let chart = chartSystem.getChartFrame(ChartingType.SCATTERPLOT);
-    let box1 = document.getElementById("box1");
 
     let graphBox = document.createElement("div");
     graphBox.className = "colorMode1 customBorder single-chart-box";
     graphBox.appendChild(createChartControl(chart, graphBox, 'scatterplot'));
 
     graphBox.appendChild(chart.getDOMNode());
-    if(box1.childNodes.length === 1) {
-        box1.appendChild(graphBox);
-    }
-    else {
-        box1.insertBefore(graphBox, box1.childNodes[2]);
-    }
+    addTheGraph(graphBox);
 }
 
 function createLinegraph() {
     moreGraphsPossible();
 
     let chart = chartSystem.getChartFrame(ChartingType.LINEGRAPH);
-    let box1 = document.getElementById("box1");
 
     let graphBox = document.createElement("div");
     graphBox.className = "colorMode1 customBorder single-chart-box";
     graphBox.appendChild(createChartControl(chart, graphBox, 'linegraph'));
 
     graphBox.appendChild(chart.getDOMNode());
+    addTheGraph(graphBox);
+}
+
+function addTheGraph(graphBox) {
+    let box1 = document.getElementById("box1");
     if(box1.childNodes.length === 1) {
         box1.appendChild(graphBox);
     }
