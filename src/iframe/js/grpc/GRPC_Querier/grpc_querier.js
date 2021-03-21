@@ -1,4 +1,4 @@
-const {Query, CompoundRequest, JsonModelRequest, DirectRequest} = require("./sustain_pb.js")
+const {Query, CompoundRequest, JsonModelRequest, DirectRequest, JsonSlidingWindowRequest} = require("./sustain_pb.js")
 const {SustainClient, JsonProxyClient} = require('./sustain_grpc_web_pb.js');
 
 /**
@@ -121,12 +121,17 @@ SustainQuerier = {
         return this.service.compoundQuery(request, {});
     },
     
-    
     executeModelQuery: function (query) {
         const request = new JsonModelRequest();
         request.setJson(query);
         return this.modelService.modelQuery(request, {});
 	},
+
+    executeSlidingWindowQuery: function (query) {
+        const request = new JsonSlidingWindowRequest();
+        request.setJson(query);
+        return this.modelService.slidingWindowQuery(request, {});
+    }
 };
 
 /**

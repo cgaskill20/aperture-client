@@ -6,41 +6,71 @@ option java_outer_classname = "SustainQueryService";
 
 package sustain;
 
+// Used as a proxy service, allowing the front-end client to encapsulate a JSON-formatted
+// message into a gRPC message and send it to this JsonProxy service. This service then
+// takes that JSON-formatted message and converts it into an appropriate gRPC message,
+// as defined by the ModelRequest message type.
 service JsonProxy {
-    rpc ModelQuery(JsonModelRequest) returns (stream JsonModelResponse) {}
+  rpc ModelQuery(JsonModelRequest) returns (stream JsonModelResponse) {}
+  rpc SlidingWindowQuery(JsonSlidingWindowRequest) returns (stream JsonSlidingWindowResponse) {}
+}
+
+message JsonSlidingWindowRequest {
+  string json = 1;
+}
+
+message JsonSlidingWindowResponse {
+  string json = 2;
 }
 
 message JsonModelRequest {
-    string json = 1;
+  string json = 1;
 }
 
 message JsonModelResponse {
-    string json = 1;
+  string json = 1;
 }
 
 service Sustain {
-  // census query with MongoDB support
-  rpc CensusQuery (CensusRequest) returns (stream CensusResponse) {}
 
-  // Query Open Street Map Data
-  rpc OsmQuery (OsmRequest) returns (stream OsmResponse) {}
-
-  // Query datasets (hospitals, dams, natural_gas_pipelines, power_plants, transmission_lines, etc.
-  rpc DatasetQuery (DatasetRequest) returns (stream DatasetResponse) {}
-
-  // Query Social Vulnerability Index (SVI) values
-  rpc SviQuery (SviRequest) returns (stream SviResponse) {}
-
+  // Query multiple collections and join the results together
   rpc CompoundQuery (CompoundRequest) returns (stream CompoundResponse) {}
 
+  // Counts the number of documents in a MongoDB collection
+  rpc CountQuery (CountRequest) returns (stream CountResponse) {}
+
+  // Create a Spark Model on a collection
   rpc ModelQuery (ModelRequest) returns (stream ModelResponse) {}
 
+  // Issue a query directly from the gRPC client to MongoDB
   rpc DirectQuery (DirectRequest) returns (stream DirectResponse) {}
+
+  rpc SlidingWindowQuery (SlidingWindowRequest) returns (stream SlidingWindowResponse) {}
+
+  rpc EchoQuery (DirectRequest) returns (stream DirectResponse) {}
+}
+
+message SlidingWindowRequest {
+  repeated string gisJoins = 1;
+  string collection = 2;
+  string feature = 3;
+  int32 days = 4;
+}
+
+message SlidingWindowResponse {
+  string gisJoin = 1;
+  repeated string movingAverages = 2;
 }
 
 enum ModelType {
     K_MEANS_CLUSTERING = 0;
     LINEAR_REGRESSION = 1;
+    BISECTING_K_MEANS = 2;
+    GAUSSIAN_MIXTURE = 3;
+    POWER_ITERATION_CLUSTERING = 4;
+    LATENT_DIRICHLET_ALLOCATION = 5;
+    R_FOREST_REGRESSION = 6;
+    G_BOOST_REGRESSION = 7;
 }
 
 message ModelRequest {
@@ -48,6 +78,11 @@ message ModelRequest {
   repeated Collection collections = 2;
   KMeansClusteringRequest kMeansClusteringRequest = 3;
   LinearRegressionRequest linearRegressionRequest = 4;
+  BisectingKMeansRequest bisectingKMeansRequest = 5;
+  GaussianMixtureRequest gaussianMixtureRequest = 6;
+  LatentDirichletAllocationRequest latentDirichletAllocationRequest = 7;
+  RForestRegressionRequest rForestRegressionRequest = 8;
+  GBoostRegressionRequest gBoostRegressionRequest = 9;
 }
 
 message Collection {
@@ -59,8 +94,14 @@ message Collection {
 message ModelResponse {
   KMeansClusteringResponse kMeansClusteringResponse = 1;
   LinearRegressionResponse linearRegressionResponse = 2;
+  RForestRegressionResponse rForestRegressionResponse= 3;
+  GBoostRegressionResponse gBoostRegressionResponse = 4;
+  BisectingKMeansResponse bisectingKMeansResponse = 5;
+  GaussianMixtureResponse gaussianMixtureResponse = 6;
+  LatentDirichletAllocationResponse latentDirichletAllocationResponse = 7;
 }
 
+// Clustering
 message KMeansClusteringRequest {
   int32 clusterCount = 1;
   int32 maxIterations = 2;
@@ -72,6 +113,40 @@ message KMeansClusteringResponse {
   int32 prediction = 2; // cluster
 }
 
+message BisectingKMeansRequest {
+  int32 clusterCount = 1;
+  int32 maxIterations = 2;
+  CensusResolution resolution = 3;
+}
+
+message BisectingKMeansResponse {
+  string gisJoin = 1;
+  int32 prediction = 2; // cluster
+}
+
+message GaussianMixtureRequest {
+  int32 clusterCount = 1;
+  int32 maxIterations = 2;
+  CensusResolution resolution = 3;
+}
+
+message GaussianMixtureResponse {
+  string gisJoin = 1;
+  int32 prediction = 2; // cluster
+}
+
+message LatentDirichletAllocationRequest {
+  int32 clusterCount = 1;
+  int32 maxIterations = 2;
+  CensusResolution resolution = 3;
+}
+
+message LatentDirichletAllocationResponse {
+  string gisJoin = 1;
+  int32 prediction = 2; // cluster
+}
+
+// End of Clustering
 message LinearRegressionRequest {
   repeated string gisJoins = 2;
   string loss = 3;
@@ -96,94 +171,52 @@ message LinearRegressionResponse {
   repeated double objectiveHistory = 7;
 }
 
-message SviRequest {
-  string requestGeoJson = 1;
-  SpatialOp spatialOp = 2;
+message RForestRegressionRequest {
+  repeated string gisJoins = 1;
+  bool isBootstrap = 2;
+  double subsamplingRate = 3;
+  int32 numTrees = 4;
+  string featureSubsetStrategy = 5;
+  string impurity = 6;
+  int32 maxDepth = 7;
+  int32 maxBins = 8;
+  double trainSplit = 9;
+  double minInfoGain = 10;
+  int32 minInstancesPerNode = 11;
+  double minWeightFractionPerNode = 12;
 }
 
-message SviResponse {
-  string data = 1;
-  string responseGeoJson = 2; // geoJson associated with 'data'
+message RForestRegressionResponse {
+  string gisJoin = 1;
+  double rmse = 2;
+  double r2 = 3;
 }
 
-message DatasetRequest {
-  enum Dataset {
-    HOSPITALS = 0;
-    DAMS = 1;
-    ELECTRICAL_SUBSTATIONS = 2;
-    TRANSMISSION_LINES = 3;
-    NATURAL_GAS_PIPELINES = 4;
-    POWER_PLANTS = 5;
-    FIRE_STATIONS = 6;
-    FLOOD_ZONES = 7;
-  }
-  Dataset dataset = 1;
-  string requestGeoJson = 2;
-  SpatialOp spatialOp = 3;
-  map<string, string> requestParams = 4;
+message GBoostRegressionRequest {
+  repeated string gisJoins = 1;
+  double subsamplingRate = 2;
+  double stepSize = 3;
+  string featureSubsetStrategy = 4;
+  string impurity = 5;
+  int32 maxDepth = 6;
+  int32 maxBins = 7;
+  double trainSplit = 8;
+  double minInfoGain = 9;
+  int32 minInstancesPerNode = 10;
+  double minWeightFractionPerNode = 11;
+  string lossType = 12;
+  int32 maxIter = 13;
 }
 
-message DatasetResponse {
-  string response = 1;
-}
-
-message OsmRequest {
-  enum Dataset {
-    POINTS = 0;
-    LINES = 1;
-    MULTI_LINES = 2;
-    MULTI_POLYGONS = 3;
-    OTHER = 4;
-    ALL = 5;
-  }
-  Dataset dataset = 1;
-  string requestGeoJson = 2;
-  SpatialOp spatialOp = 3;
-  message OsmRequestParam {
-    string key = 1;
-    string value = 2;
-  }
-  repeated OsmRequestParam requestParams = 4;
-}
-
-message OsmResponse {
-  string response = 1;
-}
-
-message CensusRequest {
-  CensusResolution censusResolution = 1;
-  CensusFeature censusFeature = 2;
-  string requestGeoJson = 3; // bounding polygon
-  SpatialOp spatialOp = 4;
-}
-
-message CensusResponse {
-  string data = 1;
-  string responseGeoJson = 2; // geoJson associated with 'data'
+message GBoostRegressionResponse {
+  string gisJoin = 1;
+  double rmse = 2;
+  double r2 = 3;
 }
 
 enum SpatialOp {
   GeoWithin = 0;
   GeoIntersects = 1;
-}
-
-enum CensusFeature {
-  TotalPopulation = 0;
-  MedianHouseholdIncome = 1;
-  PopulationByAge = 2;
-  MedianAge = 3;
-  Poverty = 4;
-  Race = 5;
-}
-
-enum IntraDatasetOp {
-  INTERSECTION = 0;
-  UNION = 1;
-  OVERLAP = 2;
-}
-
-message DatasetEntry {
-  string entry = 1;
 }
 
 enum CensusResolution {
@@ -193,73 +226,60 @@ enum CensusResolution {
   Block = 3;
 }
 
-enum Decade {
-  _2010 = 0;
-  _2000 = 1;
-  _1990 = 2;
-  _1980 = 3;
-}
-
-message Predicate {
-  enum ComparisonOperator {
-    EQUAL = 0;
-    GREATER_THAN = 1;
-    LESS_THAN = 2;
-    GREATER_THAN_OR_EQUAL = 3;
-    LESS_THAN_OR_EQUAL = 4;
-  }
-  CensusFeature censusFeature = 1;
-  Decade decade = 2;
-  ComparisonOperator comparisonOp = 3;
-  double comparisonValue = 4;
-}
-
 enum JoinOperator {
-    INNER_JOIN = 0;
-    OUTER_JOIN = 1;
-    LEFT_JOIN = 2;
-    RIGHT_JOIN = 3;
+  INNER_JOIN = 0;
+  OUTER_JOIN = 1;
+  LEFT_JOIN = 2;
+  RIGHT_JOIN = 3;
 }
 
 enum ComparisonOperator {
-    EQUAL = 0;
-    GREATER_THAN = 1;
-    LESS_THAN = 2;
-    GREATER_THAN_OR_EQUAL = 3;
-    LESS_THAN_OR_EQUAL = 4;
-}
-
-message CompoundResponse {
-    string data = 1;
-    string geoJson = 2;
+  EQUAL = 0;
+  GREATER_THAN = 1;
+  LESS_THAN = 2;
+  GREATER_THAN_OR_EQUAL = 3;
+  LESS_THAN_OR_EQUAL = 4;
 }
 
 message CompoundRequest {
-    oneof FirstPredicate {
-        Query first_query = 1;
-        CompoundRequest first_compound_request = 2;
-    }
+  oneof FirstPredicate {
+    Query first_query = 1;
+    CompoundRequest first_compound_request = 2;
+  }
 
-    JoinOperator join = 3;
+  JoinOperator join = 3;
 
-    oneof SecondPredicate {
-        Query second_query = 4;
-        CompoundRequest second_compound_request = 5;
-    }
+  oneof SecondPredicate {
+    Query second_query = 4;
+    CompoundRequest second_compound_request = 5;
+  }
 }
 
+message CompoundResponse {
+  string data = 1;
+}
+
+
 message Query {
-    string host = 1;
-    int32 port = 2;
-    string collection = 3;
-    string query = 4; //This is a json representation of a mongodb query
+  string host = 1;          // MongoDB hostname
+  int32  port = 2;          // MongoDB port
+  string collection = 3;    // MongoDB collection
+  string query = 4;         // Json representation of a MongoDB query
+}
+
+message CountRequest {
+  string collection = 1;
+}
+
+message CountResponse {
+  int64 count = 1;
 }
 
 message DirectRequest {
-    string collection = 1;
-    string query = 2; //This is a json representation of a mongodb query
+  string collection = 1;
+  string query = 2; // JSON representation of a MongoDB query
 }
 
 message DirectResponse {
-    string data = 1;
+  string data = 1;
 }
