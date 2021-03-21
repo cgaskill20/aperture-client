@@ -80,7 +80,7 @@ class SingleChartManager {
         });
     }
 
-    changeFeature(axis feature) {
+    changeFeature(axis, feature) {
         if (axis === "x") {
             this.currentFeature = feature;
             let chartIndex = this.chartSystem.graphable.indexOf(feature);
@@ -92,7 +92,7 @@ class SingleChartManager {
 
     cycleAxis(axis, direction) {
         if (axis === "x") {
-            this.changeFeature(this.featureManager.getNextFeature(this.currentFeature, [], direction));
+            this.changeFeature(axis, this.featureManager.getNextFeature(this.currentFeature, [], direction));
         }
     }
 
