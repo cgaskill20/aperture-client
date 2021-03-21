@@ -486,6 +486,7 @@
     "label": "Tract Proximity",
     "subGroup": "Proximity",
     "level": "tract",
+    "color": "#4682B4",
     "fieldMetadata": [
         {
           "name": "nearest_hospital",
