@@ -91,7 +91,9 @@ class AutoQuery {
     updateConstraint(layer, constraint, value, isActive) {
         if (!constraint)
             return;
-
+        console.log("update constraint:")
+        console.log(`${constraint} - ${value}`)
+        let changed = false;
         switch (this.getConstraintType(constraint)) {
             case "slider":
                 if (Array.isArray(value))
@@ -99,18 +101,22 @@ class AutoQuery {
                         value[i] = Number(value[i]);
                 else
                     value = Number(value);
+                changed = !this.constraintData[constraint] || this.constraintData[constraint].join() !== value.join();
                 this.constraintData[constraint] = value;
                 break;
             case "selector":
+                changed = this.constraintData[constraint] !== value;
                 this.constraintData[constraint] = value;
                 break;
             case "multiselector":
                 if (!this.constraintData[constraint])
                     this.constraintData[constraint] = {};
+                changed = this.constraintData[constraint][value] !== isActive;
                 this.constraintData[constraint][value] = isActive;
                 break;
         }
-        this.reQuery();
+        if(changed)
+            this.reQuery();
     }
 
     /**
@@ -228,6 +234,7 @@ class AutoQuery {
     bindConstraintsAndQuery(q, forcedGeometry) {
         const sessionID = Math.random().toString(36).substring(2, 6);
         q = q.concat(this.buildConstraintPipeline());
+        console.log(q)
         //outputs from query may only be $projected if the data is not GeoJSON
         if(this.linked)
             q.push(this.addMongoProject())
