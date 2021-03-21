@@ -253,7 +253,6 @@ const MenuGenerator = {
         controlDiv.className = "content-section customBorder colorMode1";
         let controlGroup = document.createElement("div");
         controlGroup.className = "layer-control-button-group col-md-auto";
-        // controlGroup.appendChild(this.createControlGroupText());
         controlGroup.appendChild(this.createModal(layerLabel, layerConstraints, layerQuerier, constraintsObj, layerInfo));
         controlGroup.appendChild(this.resetConstraintButton(layerName));
         controlDiv.appendChild(controlGroup);
