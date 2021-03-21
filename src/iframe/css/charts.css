@@ -81,3 +81,16 @@
     top: -5px;
     cursor: nesw-resize;
 }
+
+.histogram-chart-area {
+    width: 80%;
+    margin: auto;
+}
+
+.single-chart-box {
+    margin: 10px;
+}
+
+.chart-container {
+    display: flex;
+}
