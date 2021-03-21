@@ -18,7 +18,7 @@ class ModelMenu extends React.Component {
 
         this._sustainQuerier = sustain_querier();
         this.whitelist = [
-            "K_MEANS_CLUSTERING", 
+            "K_MEANS_CLUSTERING",
             "BISECTING_K_MEANS",
             "GAUSSIAN_MIXTURE",
             "LATENT_DIRICHLET_ALLOCATION",
@@ -40,8 +40,8 @@ class ModelMenu extends React.Component {
             case "none":
                 return this.createModelBuilder();
             case "building":
-                return e("div", null, 
-                "Building your model, this may take awhile..."
+                return e("div", null,
+                    "Building your model, this may take awhile..."
                 );
             case "built":
                 return this.createModelBuilt()
@@ -52,31 +52,31 @@ class ModelMenu extends React.Component {
         return e("div", null,
             this.createModelSelect(),
             this.createResolution(),
-            e("div",{className: "menuHeaderLabel modelMenuHeader"}, "Features"),
+            e("div", { className: "menuHeaderLabel modelMenuHeader" }, "Features"),
             ...this.createCollections(),
-            e("div",{className: "menuHeaderLabel modelMenuHeader"}, "Hyperparameters"),
+            e("div", { className: "menuHeaderLabel modelMenuHeader" }, "Hyperparameters"),
             ...this.createParameters(),
             this.createModelRunButton(),
         );
     }
 
-    createModelBuilt(){
+    createModelBuilt() {
         return e("div", null,
-            e("div",{
-                style:{display:"block"}
-            },"Your model is done, check it out on the map!"),
+            e("div", {
+                style: { display: "block" }
+            }, "Your model is done, check it out on the map!"),
             e("br"),
             this.createResetButton()
         );
     }
 
-    createResetButton(){
+    createResetButton() {
         return e("button", { type: "button", className: "btn btn-outline-dark modelButton", onClick: this.restart },
             "Build a New Model"
         );
     }
 
-    restart(){
+    restart() {
         this.modelManager.clear();
         this.clearAll();
         this.setState({
@@ -251,10 +251,11 @@ class ModelMenu extends React.Component {
         q.collections = this.convertCollectionsToCollectionsQuery()
         q[this.getCurrentConfig().requestName] = {
             ...this.parameters,
-            ...this.getExtraRequestParams()
+            ...await this.getExtraRequestParams()
         };
 
         //console.log(JSON.stringify(q))
+        console.log(q)
         const stream = this._sustainQuerier.executeModelQuery(JSON.stringify(q));
         let resData = [];
         stream.on('data', function (r) {
@@ -295,6 +296,7 @@ class ModelMenu extends React.Component {
     handleFullResponse(data) {
         switch (this.state.modelCategory) {
             case "REGRESSION":
+                console.log(data)
                 break;
             case "CLUSTERING":
                 this.handleFullClusteringResponse(data);
@@ -308,7 +310,7 @@ class ModelMenu extends React.Component {
         const refinedData = data.map(d => {
             return d[Object.keys(d)[0]];
         })
-        this.modelManager = new ClusterManager(refinedData, window.map, window.dataModelingGroup, "county_geo_30mb_no_2d_index");
+        this.modelManager = new ClusterManager(refinedData, window.map, window.dataModelingGroup, this.getGeometryCollectionName());
     }
 
     convertCollectionsToCollectionsQuery() {
@@ -341,8 +343,9 @@ class ModelMenu extends React.Component {
     async getExtraRequestParams() {
         switch (this.state.modelCategory) {
             case "REGRESSION":
+                const GISJOINS = await this.getCurrentViewportGISJOINS();
                 return {
-                    "gisJoins": ["G0801230", "G0800690", "G0800130", "G0800590", "G0800470", "G0800140", "G0800010", "G0800190", "G0800310", "G0800490", "G0800570", "G0801070", "G0801170", "G5600010", "G5600070"]
+                    "gisJoins": GISJOINS
                 }
             case "CLUSTERING":
                 return {
@@ -353,10 +356,34 @@ class ModelMenu extends React.Component {
         }
     }
 
-    // async getCurrentViewport(){
-    //     return new Promise(resolve => {
-    //         const collectionName = 
-    //         const stream = this._sustainQuerier.getStreamForQuery()
-    //     });
-    // }
+    async getCurrentViewportGISJOINS() {
+        return new Promise(resolve => {
+            const collectionName = this.getGeometryCollectionName2dIndexed();
+            const b = map.wrapLatLngBounds(map.getBounds());
+            const barray = Util.leafletBoundsToGeoJSONPoly(b);
+            const q = [
+                { "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } },
+                { "$project": { GISJOIN: 1 } }
+            ];
+            const stream = this._sustainQuerier.getStreamForQuery(collectionName,JSON.stringify(q));
+
+            let GISJOINS = [];
+            stream.on('data', function (r) {
+                const data = JSON.parse(r.getData());
+                GISJOINS.push(data.GISJOIN)
+            });
+
+            stream.on('end', function (end) {
+                resolve(GISJOINS);
+            });
+        });
+    }
+
+    getGeometryCollectionName(){
+        return this.state.resolution === "Tract" ? "tract_geo_140mb_no_2d_index" : "county_geo_30mb_no_2d_index";
+    }
+
+    getGeometryCollectionName2dIndexed(){
+        return this.state.resolution === "Tract" ? "tract_geo_140mb" : "county_geo_30mb";
+    }
 }
