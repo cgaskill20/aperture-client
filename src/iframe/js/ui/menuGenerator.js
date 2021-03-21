@@ -200,7 +200,7 @@ const MenuGenerator = {
             };
             layerObj["onUpdate"] = function () { layerQuerier.query(); };
             layerObj["onAdd"] = function () { layerQuerier.onAdd(); };
-            layerObj["onRemove"] = function () { layerQuerier.onRemove(); this.resetConstraintsForLayer(layerName)}.bind(this);
+            layerObj["onRemove"] = function () { layerQuerier.onRemove(); };
         }
 
         const onAdd = layerObj["onAdd"];
