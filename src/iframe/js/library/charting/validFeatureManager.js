@@ -5,7 +5,12 @@
  */
 class ValidFeatureManager {
     constructor(valids, onChangeCallback) {
-        this.onChangeCallbacks = [ onChangeCallback ];
+        if(onChangeCallback !== undefined) {
+            this.onChangeCallbacks = [onChangeCallback];
+        }
+        else {
+            this.onChangeCallbacks = [];
+        }
         this.update(valids);
     }
 

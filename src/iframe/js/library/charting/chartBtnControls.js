@@ -55,7 +55,7 @@ function createSideToggle(chart, axis, arrowDirection) {
 }
 
 function createDropdown(chart, title, axis) {
-    let activeFeatures = chart.getValidFeatures();
+    // let activeFeatures = chart.getValidFeatures();
 
     let chartDropdown = document.createElement("div");
     chartDropdown.className = "btn-group";
@@ -74,14 +74,19 @@ function createDropdown(chart, title, axis) {
     dropdownMenu.className = "dropdown-menu";
     dropdownMenu.setAttribute("aria-labelledby", "drop-it-down");
 
-    activeFeatures.forEach(feature => {
-        let dropdownItem = document.createElement("a");
-        dropdownItem.className = "dropdown-item";
-        dropdownItem.onclick = ()=> {
-            chart.changeFeature(axis, feature);
+    chart.addNewFeatureCallback((activeFeatures) => {
+        while(dropdownMenu.firstChild) {
+            dropdownMenu.removeChild(dropdownMenu.firstChild);
         }
-        dropdownItem.innerText = feature;
-        dropdownMenu.appendChild(dropdownItem);
+        activeFeatures.forEach(feature => {
+            let dropdownItem = document.createElement("a");
+            dropdownItem.className = "dropdown-item";
+            dropdownItem.onclick = ()=> {
+                chart.changeFeature(axis, feature);
+            }
+            dropdownItem.innerText = feature;
+            dropdownMenu.appendChild(dropdownItem);
+        });
     });
 
     chartDropdown.appendChild(dropdownButton);
