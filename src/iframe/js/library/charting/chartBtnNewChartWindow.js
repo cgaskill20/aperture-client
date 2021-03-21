@@ -15,11 +15,11 @@ function createAddChartArea() {
     addGraphBox.className = "colorMode1 customBorder add-graph-box";
     addGraphBox.id = "graph-controller";
     let addGraphMessage = document.createElement("p");
-    addGraphMessage.className = "add-graph-message";
+    addGraphMessage.className = "add-graph-message row justify-content-center";
     addGraphMessage.innerText = "Add a...";
 
     let graphButtonArea = document.createElement("div");
-    graphButtonArea.id = "graph-button-area"
+    graphButtonArea.className = "graph-button-area row justify-content-center"
     let histogramButton = document.createElement("button");
     histogramButton.className = "btn btn-outline-dark graph-button";
     histogramButton.id = "histogram-button-id";

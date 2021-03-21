@@ -1,35 +1,30 @@
 let box1 = document.getElementById("box1");
 
 function createChartControl(chart, graphBox, type) {
-    if(type === 'scatterplot') {
-        return chartControlFor2Vars(chart, graphBox);
-    }
-    else if (type === 'histogram' || type === 'linegraph'){
-        return chartControlFor1Var(chart, graphBox);
-    }
-}
-
-function chartControlFor1Var(chart, graphBox) {
-    let chartControl = createChartControlArea();
-    chartControl.appendChild(createChartControlGroup(chart, 'x',"Constraint"));
-    chartControl.appendChild(createCloseButton(graphBox));
-    graphBox.appendChild(chartControl);
-    return chartControl;
-}
-
-function chartControlFor2Vars(chart, graphBox) {
-    let chartControl = createChartControlArea();
-    chartControl.appendChild(createChartControlGroup(chart, 'x', "X-Axis"));
-    chartControl.appendChild(createChartControlGroup(chart, 'y', "Y-Axis"));
-    chartControl.appendChild(createCloseButton(graphBox));
-    graphBox.appendChild(chartControl);
-    return chartControl;
-}
-
-function createChartControlArea() {
     let chartControl = document.createElement("div");
-    chartControl.className = "chart-control";
+    chartControl.className = "chart-control row justify-content-md-center";
+    let col1 = createEmptyColumn();
+    let col2 = createEmptyColumn();
+    let col3 = createEmptyColumn();
+    col2.className = "col-sm-auto";
+    if(type === 'scatterplot') {
+        col2.appendChild(createChartControlGroup(chart, 'x', "X-Axis"));
+        col2.appendChild(createChartControlGroup(chart, 'y', "Y-Axis"));
+    }
+    else {
+        col2.appendChild(createChartControlGroup(chart, 'x',"Constraint"));
+    }
+    col3.appendChild(createCloseButton(graphBox));
+    chartControl.appendChild(col1);
+    chartControl.appendChild(col2);
+    chartControl.appendChild(col3);
     return chartControl;
+}
+
+function createEmptyColumn() {
+    let emptyCol = document.createElement("div");
+    emptyCol.className = "col-sm"
+    return emptyCol;
 }
 
 function createChartControlGroup(chart, axis, dropdownTitle) {
@@ -78,7 +73,7 @@ function createDropdown(chart, title, axis) {
         }
         activeFeatures.forEach(feature => {
             let dropdownItem = document.createElement("a");
-            dropdownItem.className = "dropdown-item";
+            dropdownItem.className = "dropdown-item dropdown-menu-item-custom";
             dropdownItem.onclick = ()=> {
                 chart.changeFeature(axis, feature);
             }

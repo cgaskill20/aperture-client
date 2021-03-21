@@ -97,35 +97,3 @@ body {
     width: 60vh;
     height: 60vh;
 }
-
-.graph-pic {
-  cursor: pointer;
-  height: 25px;
-  width: 25px;
-  margin: 15px;
-  margin-left: 30px;
-}
-
-.graph-button-pic {
-  height: 25px;
-  width: 25px;
-}
-
-.close-button-pic {
-  height: 25px;
-  width: 25px;
-}
-
-.histogram-chart-area {
-    width: 80%;
-    margin: auto;
-}
-
-.single-chart-area {
-  display: flex;
-  flex-direction: column;
-}
-
-.chart-container {
-  display: flex;
-}
