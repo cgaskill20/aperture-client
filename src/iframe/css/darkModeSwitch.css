@@ -1,13 +1,16 @@
+.dark-mode-control{
+  margin-top: 6px;
+}
+
 .theme-switch-wrapper {
-  position: absolute;
-  right: 58px;
-  top: 25px;
+  padding: 5px;
+  float: right;
 }
 
 .theme-switch {
-  display: inline-block;
-  height: 17px;
   position: relative;
+  margin: auto;
+  height: 17px;
   width: 30px;
 }
 

@@ -1,43 +1,38 @@
 let box1 = document.getElementById("box1");
 
 function createChartControl(chart, graphBox, type) {
-    if(type === 'scatterplot') {
-        return chartControlFor2Vars(chart, graphBox);
-    }
-    else if (type === 'histogram' || type === 'linegraph'){
-        return chartControlFor1Var(chart, graphBox);
-    }
-}
-
-function chartControlFor1Var(chart, graphBox) {
-    let chartControl = createChartControlArea();
-    chartControl.appendChild(createChartControlGroup(chart, 'x',"Constraint"));
-    chartControl.appendChild(createCloseButton(graphBox));
-    graphBox.appendChild(chartControl);
-    return chartControl;
-}
-
-function chartControlFor2Vars(chart, graphBox) {
-    let chartControl = createChartControlArea();
-    chartControl.appendChild(createChartControlGroup(chart, 'x', "X-Axis"));
-    chartControl.appendChild(createChartControlGroup(chart, 'y', "Y-Axis"));
-    chartControl.appendChild(createCloseButton(graphBox));
-    graphBox.appendChild(chartControl);
-    return chartControl;
-}
-
-function createChartControlArea() {
     let chartControl = document.createElement("div");
-    chartControl.className = "chart-control";
+    chartControl.className = "chart-control row justify-content-md-center";
+    let col1 = createEmptyColumn();
+    let col2 = createEmptyColumn();
+    let col3 = createEmptyColumn();
+    col2.className = "col-sm-auto";
+    if(type === 'scatterplot') {
+        col2.appendChild(createChartControlGroup(chart, 'x', "X-Axis"));
+        col2.appendChild(createChartControlGroup(chart, 'y', "Y-Axis"));
+    }
+    else {
+        col2.appendChild(createChartControlGroup(chart, 'x',"Constraint"));
+    }
+    col3.appendChild(createCloseButton(graphBox));
+    chartControl.appendChild(col1);
+    chartControl.appendChild(col2);
+    chartControl.appendChild(col3);
     return chartControl;
+}
+
+function createEmptyColumn() {
+    let emptyCol = document.createElement("div");
+    emptyCol.className = "col-sm"
+    return emptyCol;
 }
 
 function createChartControlGroup(chart, axis, dropdownTitle) {
     let chartControlGroup = document.createElement("div");
     chartControlGroup.className = "btn-group chart-control-button";
-    chartControlGroup.role = "group";
+    chartControlGroup.setAttribute("role", "group");
     let leftToggle = createSideToggle(chart, axis, '<');
-    let chartDropdown = createDropdown(dropdownTitle);
+    let chartDropdown = createDropdown(chart, dropdownTitle, axis);
     let rightToggle = createSideToggle(chart, axis, '>');
     chartControlGroup.appendChild(leftToggle);
     chartControlGroup.appendChild(chartDropdown);
@@ -54,18 +49,46 @@ function createSideToggle(chart, axis, arrowDirection) {
     return sideToggle;
 }
 
-function createDropdown(title) {
+function createDropdown(chart, title, axis) {
     let chartDropdown = document.createElement("div");
     chartDropdown.className = "btn-group";
-    chartDropdown.role = "group";
-    let firstPart = "<button type='button' disabled=true class='btn btn-outline-dark dropdown-toggle' type='button' " +
-        "id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-    let lastPart = "</button> <div class='dropdown-menu' aria-labelledby='dropdownMenuButton'> " +
-            "<a class='dropdown-item' href='#'>Coming Soon</a>" +
-            "<a class='dropdown-item' href='#'>Coming Soon</a>" +
-            "<a class='dropdown-item' href='#'>Coming Soon</a>" +
-        "</div>";
-    chartDropdown.innerHTML = firstPart + title + lastPart;
+    chartDropdown.setAttribute("role", "group");
+
+    let dropdownButton = document.createElement("button");
+    dropdownButton.id = "drop-it-down";
+    dropdownButton.type = "button";
+    dropdownButton.className = "btn btn-outline-dark dropdown-toggle";
+    dropdownButton.setAttribute("data-toggle", "dropdown");
+    dropdownButton.setAttribute("aria-haspopup", "true");
+    dropdownButton.setAttribute("aria-expanded", "false");
+    dropdownButton.innerText = title;
+
+    let dropdownMenu = document.createElement("div");
+    dropdownMenu.className = "dropdown-menu";
+    dropdownMenu.setAttribute("aria-labelledby", "drop-it-down");
+
+    chart.addNewFeatureCallback((activeFeatures) => {
+        while(dropdownMenu.firstChild) {
+            dropdownMenu.removeChild(dropdownMenu.firstChild);
+        }
+        activeFeatures.forEach(feature => {
+            let dropdownItem = document.createElement("a");
+            dropdownItem.className = "dropdown-item dropdown-menu-item-custom";
+            dropdownItem.onclick = ()=> {
+                chart.changeFeature(axis, feature);
+            }
+            dropdownItem.innerText = feature;
+            dropdownMenu.appendChild(dropdownItem);
+        });
+    });
+
+    chartDropdown.appendChild(dropdownButton);
+    chartDropdown.appendChild(dropdownMenu);
+
+    $(function () {
+        $('[data-toggle="dropdown"]').dropdown()
+    })
+
     return chartDropdown;
 }
 

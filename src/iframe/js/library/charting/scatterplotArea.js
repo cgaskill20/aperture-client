@@ -65,16 +65,6 @@ class ScatterplotArea {
         this.container.className = "scatterplot-chart-area";
         this.parentNode.appendChild(this.container);
 
-        // this.changeXAxisButton = document.createElement("div");
-        // this.changeXAxisButton.className = "btn btn-outline-dark btn-xs";
-        // this.changeXAxisButton.innerText = "Cycle X-Axis";
-        // this.container.appendChild(this.changeXAxisButton);
-        //
-        // this.changeYAxisButton = document.createElement("div");
-        // this.changeYAxisButton.className = "btn btn-outline-dark btn-xs";
-        // this.changeYAxisButton.innerText = "Cycle Y-Axis";
-        // this.container.appendChild(this.changeYAxisButton);
-        //
         // this.notEnoughFeaturesMessage = document.createElement("p");
         // this.notEnoughFeaturesMessage.innerText = "Enable two or more constraints to start graphing";
         // this.container.appendChild(this.notEnoughFeaturesMessage);

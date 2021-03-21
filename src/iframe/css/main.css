@@ -19,31 +19,6 @@
   border-radius: 3px;
 }
 
-.btn-outline-dark {
-  color: var(--bootstrapButtonsColor) !important;
-  border-color: var(--bootstrapButtonsColor) !important;
-}
-
-.btn-outline-dark:hover {
-  color: var(--bootstrapButtonsHover) !important;
-  background-color: var(--bootstrapButtonsColor) !important;
-  border-color: var(--bootstrapButtonsColor) !important;
-}
-
-.btn-outline-light.focus,.btn-outline-light:focus {
-  box-shadow: var(--bootstrapButtonsFocus) !important;
-}
-
-.bs-tooltip-auto[x-placement^=top] .arrow::before,.bs-tooltip-top .arrow::before {
-  border-top-color: var(--tooltip-arrow-color) !important;
-}
-
-.tooltip-inner {
-  background-color: var(--backgroundColor-colorMode-2) !important;
-  color: var(--color-colorMode-2) !important;
-  border: var(--border-customBorder) !important;
-}
-
 #main {
   position: absolute;
   z-index: 2000;
@@ -68,14 +43,16 @@ body {
     height: 100%;
 }
 
-.nav-tabs {
-  top: 0;
-  margin: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-bottom: 20px;
-  padding: 15px;
+.ui-control {
+    padding: 15px;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+}
+
+.nav-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .leaflet-fade-anim .leaflet-tile, .leaflet-zoom-anim .leaflet-zoom-animated {
@@ -119,51 +96,4 @@ body {
     transform: translateX(-50%);
     width: 60vh;
     height: 60vh;
-}
-
-.graph-pic {
-  cursor: pointer;
-  height: 25px;
-  width: 25px;
-  margin: 15px;
-  margin-left: 30px;
-}
-
-.graph-button-pic {
-  height: 25px;
-  width: 25px;
-}
-
-.close-button-pic {
-  height: 25px;
-  width: 25px;
-}
-
-.histogram-chart-area {
-    width: 80%;
-    margin: auto;
-}
-
-.single-chart-area {
-  display: flex;
-  flex-direction: column;
-}
-
-.chart-container {
-  display: flex;
-}
-
-.chart-container-arrow {
-  min-width: 50px;
-  background-color: #f00;
-}
-
-.scatterplot-change-x-axis-button {
-  background-color: #f00;
-  min-height: 25px;
-}
-
-.scatterplot-change-y-axis-button {
-  background-color: #00f; /* oof */
-  min-height: 25px;
 }

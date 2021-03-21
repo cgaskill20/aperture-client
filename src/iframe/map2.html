@@ -16,6 +16,7 @@
     <link rel="stylesheet" type="text/css" href="css/queries.css">
     <link rel="stylesheet" type="text/css" href="css/modeling.css">
     <link rel="stylesheet" type="text/css" href="css/charts.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrapOverrides.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="js/third-party/nouislider.min.js"></script>
@@ -66,25 +67,31 @@
 <body>
     <div class="leaflet-bottom leaflet-right"></div>
     <div id="sidebar-id" class="sidebar colorMode1">
-        <div class="nav-tabs">
-        <div class="theme-switch-wrapper">
-            <img class="moon-icon" src="../../images/Moon_Black.png">
-            <label class="theme-switch" for="checkbox">
-                <input type="checkbox" id="checkbox" />
-                <div class="slider round"></div>
-            </label>
-        </div>
-            <div class="btn-group" id="nav-group-id" role="group" aria-label="Basic example">
-              <button type="button" id='nav-graph-button' class="btn btn-outline-dark color-change">Graphing</button>
-              <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark color-change">Data Exploration</button>
-              <button type="button" id='nav-modeling-button' class="btn btn-outline-dark color-change">Modeling</button>
-              <button type="button" id='nav-validation-button' class="btn btn-outline-dark color-change">Validation</button>
-              <button type="button" id='nav-close-button' class="btn btn-outline-dark color-change">Close</button>
+        <div class="container ui-control">
+            <div class="row justify-content-md-center">
+                <div class="col-lg FOR_GRID_ONLY"></div>
+                <div class = "nav-group col-lg-auto">
+                    <div class="btn-group" id="nav-group-id" role="group" aria-label="Basic example">
+                      <button type="button" id='nav-graph-button' class="btn btn-outline-dark color-change">Graphing</button>
+                      <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark color-change">Data Exploration</button>
+                      <button type="button" id='nav-modeling-button' class="btn btn-outline-dark color-change">Modeling</button>
+                      <button type="button" id='nav-validation-button' class="btn btn-outline-dark color-change disabled">Validation</button>
+                      <button type="button" id='nav-close-button' class="btn btn-outline-dark color-change">Close</button>
+                    </div>
+                </div>
+                <div class="dark-mode-control col-lg">
+                    <div class="theme-switch-wrapper">
+                        <label class="theme-switch" for="checkbox">
+                            <input type="checkbox" id="checkbox" />
+                            <div class="slider round"></div>
+                        </label>
+                        <img class="moon-icon" src="../../images/Moon_Black.png">
+                    </div>
+                </div>
             </div>
         </div>
         <div id="sidebar-container"></div>
-        <div id="model-container">
-        </div>
+        <div id="model-container"></div>
     </div>
     <div id="main">
       <button class="btn btn-outline-dark-custom" id='nav-menu-button'>☰ Menu</button>
@@ -122,7 +129,7 @@
     <!-- Frame JS, Load Last! -->
     <!--Required for this map to be controlled-->
     <script src="js/frame-specific/map2.js"></script>
-    <script src="js/frame-specific/UI-Buttons.js"></script>
+    <script src="js/frame-specific/navButtons.js"></script>
     <script src="js/frame-specific/darkMode.js"></script>
     <script src="js/frame-specific/switchImageSources.js"></script>
     <script src="js/control/mouseDown.js"></script>

@@ -5,7 +5,12 @@
  */
 class ValidFeatureManager {
     constructor(valids, onChangeCallback) {
-        this.onChangeCallback = onChangeCallback;
+        if(onChangeCallback !== undefined) {
+            this.onChangeCallbacks = [onChangeCallback];
+        }
+        else {
+            this.onChangeCallbacks = [];
+        }
         this.update(valids);
     }
 
@@ -34,8 +39,16 @@ class ValidFeatureManager {
         return this.validFeatures[currentIndex];
     }
 
+    /* @returns {string} Any arbitrary feature that is valid
+     */
     getAnyFeature() {
         return this.validFeatures[0];
+    }
+
+    /* @returns {array<string>} An array containing all valid features
+     */
+    getAllFeatures() {
+        return this.validFeatures;
     }
 
     /* @param {number} count The number of features that we should at least have
@@ -51,8 +64,12 @@ class ValidFeatureManager {
      */
     update(newValids) {
         this.validFeatures = newValids;
-        if (this.onChangeCallback) {
-            this.onChangeCallback(newValids);
-        }
+        this.onChangeCallbacks.forEach(cb => {
+            cb(newValids);
+        });
+    }
+
+    addCallback(callback) {
+        this.onChangeCallbacks.push(callback);
     }
 }
