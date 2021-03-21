@@ -91,7 +91,7 @@ class AutoQuery {
     updateConstraint(layer, constraint, value, isActive) {
         if (!constraint)
             return;
-
+        let changed = false;
         switch (this.getConstraintType(constraint)) {
             case "slider":
                 if (Array.isArray(value))
@@ -99,18 +99,22 @@ class AutoQuery {
                         value[i] = Number(value[i]);
                 else
                     value = Number(value);
+                changed = !this.constraintData[constraint] || this.constraintData[constraint].join() !== value.join();
                 this.constraintData[constraint] = value;
                 break;
             case "selector":
+                changed = this.constraintData[constraint] !== value;
                 this.constraintData[constraint] = value;
                 break;
             case "multiselector":
                 if (!this.constraintData[constraint])
                     this.constraintData[constraint] = {};
+                changed = this.constraintData[constraint][value] !== isActive;
                 this.constraintData[constraint][value] = isActive;
                 break;
         }
-        this.reQuery();
+        if(changed)
+            this.reQuery();
     }
 
     /**
