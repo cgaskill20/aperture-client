@@ -1,35 +1,55 @@
 let box1 = document.getElementById("box1");
 
 function createChartControl(chart, graphBox, type) {
+    let chartControl = document.createElement("div");
+    chartControl.className = "chart-control row justify-content-md-center";
     if(type === 'scatterplot') {
-        return chartControlFor2Vars(chart, graphBox);
+        return chartControlFor2Vars(chart, graphBox, chartControl);
     }
     else if (type === 'histogram' || type === 'linegraph'){
-        return chartControlFor1Var(chart, graphBox);
+        return chartControlFor1Var(chart, graphBox, chartControl);
     }
 }
 
-function chartControlFor1Var(chart, graphBox) {
-    let chartControl = createChartControlArea();
-    chartControl.appendChild(createChartControlGroup(chart, 'x',"Constraint"));
-    chartControl.appendChild(createCloseButton(graphBox));
+function organizeChartControl(chart, graphBox, chartControl) {
+}
+
+function chartControlFor1Var(chart, graphBox, chartControl) {
+    let col1 = createEmptyColumn();
+    let col2 = createEmptyColumn();
+    col2.className = "col-sm-auto";
+    let col3 = createEmptyColumn();
+    col2.appendChild(createChartControlGroup(chart, 'x',"Constraint"));
+    col3.appendChild(createCloseButton(graphBox));
+    chartControl.appendChild(col1);
+    chartControl.appendChild(col2);
+    chartControl.appendChild(col3);
     graphBox.appendChild(chartControl);
     return chartControl;
 }
 
-function chartControlFor2Vars(chart, graphBox) {
-    let chartControl = createChartControlArea();
-    chartControl.appendChild(createChartControlGroup(chart, 'x', "X-Axis"));
-    chartControl.appendChild(createChartControlGroup(chart, 'y', "Y-Axis"));
-    chartControl.appendChild(createCloseButton(graphBox));
+function chartControlFor2Vars(chart, graphBox, chartControl) {
+    let col1 = createEmptyColumn();
+    let col2 = createEmptyColumn();
+    col2.className = "col-sm-auto";
+    let col3 = createEmptyColumn();
+    col2.appendChild(createChartControlGroup(chart, 'x', "X-Axis"));
+    col2.appendChild(createChartControlGroup(chart, 'y', "Y-Axis"));
+    col3.appendChild(createCloseButton(graphBox))
+    chartControl.appendChild(col1);
+    chartControl.appendChild(col2);
+    chartControl.appendChild(col3);
+    // chartControl.appendChild(createChartControlGroup(chart, 'x', "X-Axis"));
+    // chartControl.appendChild(createChartControlGroup(chart, 'y', "Y-Axis"));
+    // chartControl.appendChild(createCloseButton(graphBox));
     graphBox.appendChild(chartControl);
     return chartControl;
 }
 
-function createChartControlArea() {
-    let chartControl = document.createElement("div");
-    chartControl.className = "chart-control";
-    return chartControl;
+function createEmptyColumn() {
+    let emptyCol = document.createElement("div");
+    emptyCol.className = "col-sm"
+    return emptyCol;
 }
 
 function createChartControlGroup(chart, axis, dropdownTitle) {

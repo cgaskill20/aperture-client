@@ -4,26 +4,22 @@
 }
 
 .add-graph-message {
-    display: flex;
-    justify-content: center;
     font-size: 22px;
 }
 
 .graph-button-area {
-    margin: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
 }
 
 .graph-button {
     margin: 10px;
 }
 
+.single-chart-box {
+    padding: 10px 30px;
+    margin: 10px;
+}
+
 .chart-control {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
     margin: 10px;
     border-bottom-style: double;
     border-bottom-width: thin;
@@ -35,6 +31,7 @@
 }
 
 .chart-control-button-close {
+    float: right;
     margin: 0px 3px;
 }
 
@@ -85,10 +82,6 @@
 .histogram-chart-area {
     width: 80%;
     margin: auto;
-}
-
-.single-chart-box {
-    margin: 10px;
 }
 
 .chart-container {
