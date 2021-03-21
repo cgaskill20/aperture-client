@@ -15,7 +15,7 @@
 }
 
 .single-chart-box {
-    padding: 10px 30px;
+    padding: 0px 30px;
     margin: 10px;
 }
 
@@ -32,7 +32,6 @@
 
 .chart-control-button-close {
     float: right;
-    margin: 0px 3px;
 }
 
 .dropdown-menu-item-custom{
