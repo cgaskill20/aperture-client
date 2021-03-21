@@ -28,7 +28,12 @@ function createHistogram() {
     graphBox.appendChild(createChartControl(chart, graphBox, 'histogram'));
 
     graphBox.appendChild(chart.getDOMNode());
-    box1.appendChild(graphBox);
+    if(box1.childNodes.length === 1) {
+        box1.appendChild(graphBox);
+    }
+    else {
+        box1.insertBefore(graphBox, box1.childNodes[2]);
+    }
 }
 
 function createScatterplot() {
@@ -42,7 +47,12 @@ function createScatterplot() {
     graphBox.appendChild(createChartControl(chart, graphBox, 'scatterplot'));
 
     graphBox.appendChild(chart.getDOMNode());
-    box1.appendChild(graphBox);
+    if(box1.childNodes.length === 1) {
+        box1.appendChild(graphBox);
+    }
+    else {
+        box1.insertBefore(graphBox, box1.childNodes[2]);
+    }
 }
 
 function createLinegraph() {
@@ -56,7 +66,12 @@ function createLinegraph() {
     graphBox.appendChild(createChartControl(chart, graphBox, 'linegraph'));
 
     graphBox.appendChild(chart.getDOMNode());
-    box1.appendChild(graphBox);
+    if(box1.childNodes.length === 1) {
+        box1.appendChild(graphBox);
+    }
+    else {
+        box1.insertBefore(graphBox, box1.childNodes[2]);
+    }
 }
 
 function moreGraphsPossible() {
