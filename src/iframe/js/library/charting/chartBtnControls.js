@@ -73,7 +73,7 @@ function createDropdown(chart, title, axis) {
         }
         activeFeatures.forEach(feature => {
             let dropdownItem = document.createElement("a");
-            dropdownItem.className = "dropdown-item";
+            dropdownItem.className = "dropdown-item dropdown-menu-item-custom";
             dropdownItem.onclick = ()=> {
                 chart.changeFeature(axis, feature);
             }

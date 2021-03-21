@@ -35,6 +35,10 @@
     margin: 0px 3px;
 }
 
+.dropdown-menu-item-custom{
+    cursor: pointer;
+}
+
 .left-toggle {
     height: 15px;
     width: 15px;
