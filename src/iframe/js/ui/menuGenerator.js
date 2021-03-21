@@ -476,8 +476,10 @@ const MenuGenerator = {
                 checkboxSelector.checked = defaultChecked;
                 //listen for reset
                 document.addEventListener(`${layerName}_reset_constraints`, () => {
-                    checkboxSelector.checked = defaultChecked;
-                    checkboxSelectorContainer.onchange();
+                    if(checkboxSelector.checked !== defaultChecked){
+                        checkboxSelector.checked = defaultChecked;
+                        checkboxSelectorContainer.onchange();
+                    }
                 });
                 checkboxSelector.name = constraint;
                 isFirstCheckbox = false;
