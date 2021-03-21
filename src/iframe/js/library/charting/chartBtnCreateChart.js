@@ -1,18 +1,3 @@
-/* Some things that are currently in the catalog:
-    0: "temp"
-    1: "RPL_THEMES"  // SVI
-                     // note: the chart system is stupid and can't tell
-                     // the difference between county and tract level SVI
-                     // at the moment, so this is only county SVI
-                     // /shrug
-    2: "2010_median_household_income"
-    3: "median_age_total"
-    4: "median_age_female"
-    5: "median_age_male"
-    6: "2010_total_population"
-    7: "avgAQI"
- */
-
 let maxGraphs = 6;
 let totalGraphs = 0;
 let maxGraphsReached = false;
