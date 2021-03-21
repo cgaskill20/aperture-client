@@ -95,15 +95,12 @@ body {
 
 .content-section {
   margin: 10px;
-  max-height: 18vh;
+  max-height: 30vh;
   overflow-y: auto;
 }
 
 .slider-individual {
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+    padding: 5px 10px;
 }
 
 .slider-section {
@@ -141,8 +138,17 @@ body {
   padding-left: 8px;
 }
 
-.modal-popout {
-  padding: 10px;
+.layer-control-button-group {
+    margin: 10px;
+}
+
+.reset-constraint-button {
+    float: right;
+}
+
+.control-group-text {
+    font-size: 15px;
+    text-align: left;
 }
 
 .sidebar .closebtn {
