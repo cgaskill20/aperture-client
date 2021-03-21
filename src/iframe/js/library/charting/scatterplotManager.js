@@ -75,7 +75,7 @@ class ScatterplotManager {
 
     changeFeature(axis, feature) {
         this.currentFeatures[axis] = feature;
-        this.udpate(this.system.getValues());
+        this.update(this.system.getValues());
     }
 
     axisButtonCallback(axis, direction) {
@@ -106,7 +106,7 @@ class ScatterplotManager {
                 this.currentFeatures.x = this.featureManager.getAnyFeature();
             }
             if (!this.currentFeatures.y) {
-                this.currentFeatures.y = this.validFeatures.getAnyFeature();
+                this.currentFeatures.y = this.featureManager.getAnyFeature();
             }
             this.scatterplot.changeData(this.prepareData(values));
         } else {
