@@ -62,7 +62,7 @@ class ScatterplotManager {
         this.scatterplot = new Scatterplot();
         this.chartArea.addChart(this.scatterplot);
     
-        this.validFeatures = validFeatureManager;
+        this.featureManager = validFeatureManager;
         this.currentFeatures = {};
 
         this.system = chartSystem;
@@ -71,6 +71,13 @@ class ScatterplotManager {
             () => { this.axisButtonCallback("x"); },
             () => { this.axisButtonCallback("y"); }
         );
+    }
+
+    changeFeature(axis, feature) {
+        this.currentFeatures[axis] = feature;
+        this.system.getValues().then((values) => {
+            this.update(values);
+        });
     }
 
     axisButtonCallback(axis, direction) {
@@ -87,7 +94,7 @@ class ScatterplotManager {
                 ignore.push(this.currentFeatures[axisToIgnore]);
             }
         }
-        return this.validFeatures.getNextFeature(this.currentFeatures[axis], ignore, direction);
+        return this.featureManager.getNextFeature(this.currentFeatures[axis], ignore, direction);
     }
 
     cycleAxis(axis, direction) {
@@ -95,15 +102,15 @@ class ScatterplotManager {
     }
     
     update(values) {
-        let shouldUpdate = this.validFeatures.enoughFeaturesExist(2);
+        let shouldUpdate = this.featureManager.enoughFeaturesExist(2);
 
         if (shouldUpdate) {
             // this.chartArea.hideNotEnoughFeaturesMessage();
             if (!this.currentFeatures.x) {
-                this.currentFeatures.x = this.validFeatures.getAnyFeature();
+                this.currentFeatures.x = this.featureManager.getAnyFeature();
             }
             if (!this.currentFeatures.y) {
-                this.currentFeatures.y = this.validFeatures.getAnyFeature();
+                this.currentFeatures.y = this.featureManager.getAnyFeature();
             }
             this.scatterplot.changeData(this.prepareData(values));
         } else {

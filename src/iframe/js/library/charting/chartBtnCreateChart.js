@@ -44,7 +44,6 @@ function createScatterplot() {
 
     graphBox.appendChild(chart.getDOMNode());
     box1.appendChild(graphBox);
-
 }
 
 function createLinegraph() {
