@@ -55,8 +55,6 @@ function createSideToggle(chart, axis, arrowDirection) {
 }
 
 function createDropdown(chart, title, axis) {
-    // let activeFeatures = chart.getValidFeatures();
-
     let chartDropdown = document.createElement("div");
     chartDropdown.className = "btn-group";
     chartDropdown.setAttribute("role", "group");
