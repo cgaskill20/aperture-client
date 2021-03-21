@@ -18,20 +18,20 @@ describe('MapDataFilter', () => {
     describe('add()', () => {
         it('can add single data points', () => {
             let filter = new mdf.MapDataFilter();
-            filter.add(exampleData[0]);
-            assert(filter.data.length === 1);
-            assert(filter.data[0].properties.median_income === 44000);
-            filter.add(exampleData[1]);
-            assert(filter.data.length === 2);
-            assert(filter.data[1].properties.median_income === 43000);
+            filter.add(exampleData[0], "income");
+            assert(filter.data.income.length === 1);
+            assert(filter.data.income[0].properties.median_income === 44000);
+            filter.add(exampleData[1], "income");
+            assert(filter.data.income.length === 2);
+            assert(filter.data.income[1].properties.median_income === 43000);
         });
         it ('can add multiple data points', () => {
             let filter = new mdf.MapDataFilter();
-            filter.add(exampleData);
-            assert(filter.data.length === exampleData.length);
-            assert(filter.data[0].properties.median_income === 44000);
-            assert(filter.data[5].properties.median_income === 8000);
-            assert(filter.data[6].properties.population === 7000);
+            filter.add(exampleData, "coll");
+            assert(filter.data.coll.length === exampleData.length);
+            assert(filter.data.coll[0].properties.median_income === 44000);
+            assert(filter.data.coll[5].properties.median_income === 8000);
+            assert(filter.data.coll[6].properties.population === 7000);
         });
     });
     
