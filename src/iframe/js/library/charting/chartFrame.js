@@ -30,7 +30,7 @@ class ChartFrame {
     }
 
     getValidFeatures() {
-        this.manager.featureManager.getAllFeatures();
+        return this.manager.featureManager.getAllFeatures();
     }
 }
 

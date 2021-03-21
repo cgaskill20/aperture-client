@@ -77,18 +77,12 @@ function createDropdown(chart, title, axis) {
     activeFeatures.forEach(feature => {
         let dropdownItem = document.createElement("a");
         dropdownItem.className = "dropdown-item";
-        dropdownItem.href = chart.changeFeature(axis, feature);
+        dropdownItem.onclick = ()=> {
+            chart.changeFeature(axis, feature);
+        }
         dropdownItem.innerText = feature;
         dropdownMenu.appendChild(dropdownItem);
     });
-
-    // for(let i = 0; i < 3; i++) {
-    //     let dropdownItem = document.createElement("a");
-    //     dropdownItem.className = "dropdown-item";
-    //     // dropdownItem.href = "#";
-    //     dropdownItem.innerText = "Constraint " + i;
-    //     dropdownMenu.appendChild(dropdownItem);
-    // }
 
     chartDropdown.appendChild(dropdownButton);
     chartDropdown.appendChild(dropdownMenu);
