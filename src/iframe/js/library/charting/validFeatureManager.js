@@ -5,7 +5,7 @@
  */
 class ValidFeatureManager {
     constructor(valids, onChangeCallback) {
-        this.onChangeCallback = onChangeCallback;
+        this.onChangeCallbacks = [ onChangeCallback ];
         this.update(valids);
     }
 
@@ -59,8 +59,12 @@ class ValidFeatureManager {
      */
     update(newValids) {
         this.validFeatures = newValids;
-        if (this.onChangeCallback) {
-            this.onChangeCallback(newValids);
-        }
+        this.onChangeCallbacks.forEach(cb => {
+            cb(newValids);
+        });
+    }
+
+    addCallback(callback) {
+        this.onChangeCallbacks.push(callback);
     }
 }

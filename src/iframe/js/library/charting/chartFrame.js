@@ -32,5 +32,9 @@ class ChartFrame {
     getValidFeatures() {
         return this.manager.featureManager.getAllFeatures();
     }
+
+    addNewFeatureCallback(callback) {
+        this.manager.featureManager.addCallback(callback);
+    }
 }
 
