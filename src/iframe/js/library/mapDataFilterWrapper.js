@@ -8,7 +8,7 @@ const MapDataFilterWrapper = {
             collection: collection
         });
     },
-    get: async (feature, bounds, samplingPercent) => {
+    get: async (feature, bounds) => {
         //create ID to know if response is for me
         const senderID = Math.random().toString(36).substring(2, 6);
         return new Promise((resolve, reject) => {
@@ -26,7 +26,6 @@ const MapDataFilterWrapper = {
                 type: "get",
                 feature: feature,
                 bounds: bounds,
-                samplingPercent: samplingPercent,
                 senderID: senderID
             });
         });

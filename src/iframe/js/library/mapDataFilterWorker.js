@@ -9,7 +9,7 @@ onmessage = function (msg) {
         filter.add(data.data, data.collection);
     }
     else if (data.type === "get") {
-        const values = filter.getModel(data.feature, data.bounds, data.samplingPercent);
+        const values = filter.getModel(data.feature,data.bounds);
         postMessage({
             type: "getResponse",
             senderID: data.senderID,

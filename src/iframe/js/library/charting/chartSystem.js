@@ -84,7 +84,7 @@ class ChartSystem {
 
         this.chartFrames = [];
 
-        this.valueIngester = new ValueIngester(this.filter);
+        this.validFeatureManager = new ValidFeatureManager([]);
 
         this.resizable = new resizable(400, 300, "white");
         this.resizable.setResizeCallback((width, height) => {
@@ -110,7 +110,7 @@ class ChartSystem {
 
         let area = new type.areaType();
         area.attachTo(node);
-        let manager = new type.managerType(this.catalog, area, this.valueIngester.featureManager, this, type.chartType);
+        let manager = new type.managerType(this.catalog, area, this.validFeatureManager, this, type.chartType);
         let frame = new ChartFrame(node, area, manager);
 
         this.chartFrames.push(frame);
@@ -131,9 +131,7 @@ class ChartSystem {
         // TODO: This needs to not suck
         this.resizable.triggerResizeEvent();
 
-        this.valueIngester.setSamplingPercentage(this.getIdealSamplePercent(this.map.getZoom()));
         let values = await this.getValues();
-
         this.chartFrames.forEach(frame => { frame.manager.update(values); });
 
         this.doNotUpdate = true;
@@ -141,25 +139,14 @@ class ChartSystem {
     }
 
     async getValues() {
-        return this.valueIngester.getValuesInBound(this.graphable, this.map.getBounds());
-    }
+        let values = await this.filter.get(this.graphable, this.map.getBounds());
 
-    getIdealSamplePercent(zoomAmount) {
-        // At around 8 zoom level, multiple states start becoming visible.
-        // We should start reducing the sample percentage around here.
-        // At 5 zoom level, the entire contiguous US is visible. 
-        // The sample level should be very low here.
-        // This doesn't provide a very wide range of options, which is
-        // why this computation is so stilted.
-        if (zoomAmount > 8) {
-            return 1.0;
-        } else if (zoomAmount == 8) {
-            return 0.5;
-        } else if (zoomAmount == 7) {
-            return 0.3;
-        } else {
-            return 0.1;
-        }
+        // This arcane incantation gets a list of feature names for which there's actually data.
+        // Don't ask.
+        let validFeatures = Object.entries(values).filter(kv => kv[1].length !== 0).map(kv => kv[0]);
+        this.validFeatureManager.update(validFeatures);
+
+        return values;
     }
 
     toggleVisible() {
