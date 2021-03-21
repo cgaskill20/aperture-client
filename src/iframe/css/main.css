@@ -68,14 +68,16 @@ body {
     height: 100%;
 }
 
-.nav-tabs {
-  top: 0;
-  margin: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-bottom: 20px;
-  padding: 15px;
+.ui-control {
+    padding: 15px;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+}
+
+.nav-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .leaflet-fade-anim .leaflet-tile, .leaflet-zoom-anim .leaflet-zoom-animated {
@@ -151,19 +153,4 @@ body {
 
 .chart-container {
   display: flex;
-}
-
-.chart-container-arrow {
-  min-width: 50px;
-  background-color: #f00;
-}
-
-.scatterplot-change-x-axis-button {
-  background-color: #f00;
-  min-height: 25px;
-}
-
-.scatterplot-change-y-axis-button {
-  background-color: #00f; /* oof */
-  min-height: 25px;
 }
