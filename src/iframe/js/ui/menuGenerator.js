@@ -244,6 +244,10 @@ const MenuGenerator = {
         return layerContainer;
     },
 
+    resetConstraintsForLayer: function(layerName){
+        document.dispatchEvent(new CustomEvent(`${layerName}_reset_constraints`));
+    },
+
     createModal: function (layerLabel, layerConstraints, layerQuerier, constraintsObj, layerInfo) {
         const modalDiv = document.createElement("div");
         modalDiv.className = "modal-popout";
@@ -371,7 +375,6 @@ const MenuGenerator = {
     },
 
     createSliderContainer: function (constraint, constraintObj, layerObj, layerName) {
-
         const sliderContainer = document.createElement("div");
         sliderContainer.className = "slider-individual";
         sliderContainer.id = constraint;
@@ -400,10 +403,16 @@ const MenuGenerator = {
                 sliderLabel.innerHTML += " - " + (isDate ? (new Date(Number(values[i]))).toUTCString().substr(0, 16) : (step < 1 ? values[i] : Math.floor(values[i])));
             }
         });
+
+        //listen for reset
+        document.addEventListener(`${layerName}_reset_constraints`, () => {
+            slider.noUiSlider.reset();
+        });
+
         const onConstraintChange = layerObj['onConstraintChange'];
         if (onConstraintChange) {
             onConstraintChange(layerName, constraint, slider.noUiSlider.get());
-            slider.noUiSlider.on('change', function (values) {
+            slider.noUiSlider.on('set', function (values) {
                 onConstraintChange(layerName, constraint, values);
             });
         }
@@ -434,7 +443,13 @@ const MenuGenerator = {
                 const checkboxSelector = document.createElement("input");
                 checkboxSelector.type = type;
                 checkboxSelector.id = Util.spaceToUnderScore(option);
-                checkboxSelector.checked = type === "radio" ? isFirstCheckbox : true;
+                const defaultChecked = type === "radio" ? isFirstCheckbox : true;
+                checkboxSelector.checked = defaultChecked;
+                //listen for reset
+                document.addEventListener(`${layerName}_reset_constraints`, () => {
+                    checkboxSelector.checked = defaultChecked;
+                    checkboxSelectorContainer.onchange();
+                });
                 checkboxSelector.name = constraint;
                 isFirstCheckbox = false;
                 const labelForRadioSelector = document.createElement("label");
