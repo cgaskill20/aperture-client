@@ -75,12 +75,16 @@ class ScatterplotManager {
 
     changeFeature(axis, feature) {
         this.currentFeatures[axis] = feature;
-        this.system.getValues().then((values)=>this.update(values));
+        this.system.getValues().then((values) => {
+            this.update(values);
+        });
     }
 
     axisButtonCallback(axis, direction) {
         this.currentFeatures[axis] = this.nextValidFeatureForAxis(axis, direction);
-        this.system.getValues().then((values)=>this.update(values));
+        this.system.getValues().then((values) => {
+            this.update(values);
+        });
     }
 
     nextValidFeatureForAxis(axis, direction) {

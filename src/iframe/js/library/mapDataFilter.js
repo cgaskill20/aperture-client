@@ -129,7 +129,9 @@ class MapDataFilter {
       * @param {number} maxAge - the age, in milliseconds, that which any older data should be removed
       */
     discardOldData(maxAge) {
-        this.data = this.data.filter(datum => (Date.now() - datum.entryTime) < maxAge)
+        this.data = Object.fromEntries(Object.entries(this.data).map(kv => { 
+            return [kv[0], kv[1].filter(datum => ((Date.now() - datum.entryTime) < maxAge))];
+        }));
     }
 
     /** Gets a model for a single feature.

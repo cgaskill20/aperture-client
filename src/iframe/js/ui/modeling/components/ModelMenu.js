@@ -295,7 +295,6 @@ class ModelMenu extends React.Component {
             case "REGRESSION":
                 break;
             case "CLUSTERING":
-                console.log(data)
                 this.handleFullClusteringResponse(data);
                 break;
             default:
@@ -305,7 +304,7 @@ class ModelMenu extends React.Component {
 
     handleFullClusteringResponse(data) {
         const refinedData = data.map(d => {
-            return d.kMeansClusteringResponse;
+            return d[Object.keys(d)[0]];
         })
         this.modelManager = new ClusterManager(refinedData, window.map, window.dataModelingGroup, "county_geo_30mb_no_2d_index");
 
