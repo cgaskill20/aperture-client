@@ -1,6 +1,7 @@
 .add-graph-box {
-    padding: 10px;
-    margin: 10px;
+    padding: 20px;
+    border-bottom-style: double;
+    border-bottom-width: thin;
 }
 
 .add-graph-message {
@@ -66,9 +67,9 @@
 .overlay .box{
     width: 100%;
     height: 100%;
-    border: 1px solid #777;
-    border-radius: 3px;
-    box-sizing: border-box;
+    /*border: 1px solid #777;*/
+    /*border-radius: 3px;*/
+    /*box-sizing: border-box;*/
 }
 
 .overlay .box .option{
