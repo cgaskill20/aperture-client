@@ -28,7 +28,6 @@ function createHistogram() {
     graphBox.appendChild(createChartControl(chart, graphBox, 'histogram'));
 
     graphBox.appendChild(chart.getDOMNode());
-    chart.changeFeature("2010_median_household_income"); //FIXME this is hard-coded from Pierce
     box1.appendChild(graphBox);
 }
 
