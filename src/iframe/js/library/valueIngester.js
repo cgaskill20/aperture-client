@@ -69,8 +69,8 @@ class ValueIngester {
         this.samplingPercent = percent;
     }
 
-    async getValues() {
-        let values = await this.filter.get(this.graphable, this.map.getBounds(), this.samplingPercent);
+    async getValuesInBound(features, bounds) {
+        let values = await this.filter.get(features, bounds, this.samplingPercent);
 
         // This arcane incantation gets a list of feature names for which there's actually data.
         // Don't ask.
