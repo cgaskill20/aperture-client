@@ -37,7 +37,7 @@ function createChartControlGroup(chart, axis, dropdownTitle) {
     chartControlGroup.className = "btn-group chart-control-button";
     chartControlGroup.setAttribute("role", "group");
     let leftToggle = createSideToggle(chart, axis, '<');
-    let chartDropdown = createDropdown(dropdownTitle);
+    let chartDropdown = createDropdown(chart, dropdownTitle, axis);
     let rightToggle = createSideToggle(chart, axis, '>');
     chartControlGroup.appendChild(leftToggle);
     chartControlGroup.appendChild(chartDropdown);
@@ -54,7 +54,9 @@ function createSideToggle(chart, axis, arrowDirection) {
     return sideToggle;
 }
 
-function createDropdown(title) {
+function createDropdown(chart, title, axis) {
+    let activeFeatures = chart.getValidFeatures();
+
     let chartDropdown = document.createElement("div");
     chartDropdown.className = "btn-group";
     chartDropdown.setAttribute("role", "group");
@@ -72,13 +74,21 @@ function createDropdown(title) {
     dropdownMenu.className = "dropdown-menu";
     dropdownMenu.setAttribute("aria-labelledby", "drop-it-down");
 
-    for(let i = 0; i < 3; i++) {
+    activeFeatures.forEach(feature => {
         let dropdownItem = document.createElement("a");
         dropdownItem.className = "dropdown-item";
-        // dropdownItem.href = "#";
-        dropdownItem.innerText = "Constraint " + i;
+        dropdownItem.href = chart.changeFeature(axis, feature);
+        dropdownItem.innerText = feature;
         dropdownMenu.appendChild(dropdownItem);
-    }
+    });
+
+    // for(let i = 0; i < 3; i++) {
+    //     let dropdownItem = document.createElement("a");
+    //     dropdownItem.className = "dropdown-item";
+    //     // dropdownItem.href = "#";
+    //     dropdownItem.innerText = "Constraint " + i;
+    //     dropdownMenu.appendChild(dropdownItem);
+    // }
 
     chartDropdown.appendChild(dropdownButton);
     chartDropdown.appendChild(dropdownMenu);
