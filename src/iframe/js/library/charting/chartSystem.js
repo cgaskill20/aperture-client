@@ -99,7 +99,7 @@ class ChartSystem {
             this.catalog = catalog;
             this.graphable = catalog.map(e => {
                 return Object.entries(e.constraints).map(kv => {
-                    return new Feature(kv[0], e.collection, kv[1].label);
+                    return Feature.compose(e.collection, kv[0], kv[1].label);
                 })
             }).flat();
             console.log(this.graphable);

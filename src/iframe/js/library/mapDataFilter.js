@@ -145,11 +145,11 @@ class MapDataFilter {
       */
     getSingleModel(feature, data) {
         const model = {};
-        model[feature.getFullName()] = [];
+        model[feature.fullName] = [];
 
         for (const datum of data) {
             if (datum.properties[feature.name] !== undefined) {
-                model[feature.getFullName()].push(this.model(datum, feature));
+                model[feature.fullName].push(this.model(datum, feature));
             }
         }
 

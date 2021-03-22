@@ -63,17 +63,12 @@ class SingleChartManager {
         this.featureManager = validFeatureManager;
         this.currentFeature = this.featureManager.getAnyFeature();
 
-        let graphable = catalog.map(e => Object.keys(e.constraints)).flat();
-
-        this.constraints = catalog.map(e => e.constraints);
-        this.constraints.forEach(constraint => {
-            for (let feature in constraint) {
-                this.charts[feature] = new chartType();
-                this.charts[feature].setTitle(constraint[feature].label);
-                this.chartArea.addChart(this.charts[feature]);
-            }
-        });
-        this.chartArea.tellNumberOfCharts(graphable.length);
+        this.chartSystem.graphable.forEach(feature => {
+            this.charts[feature.fullName] = new chartType();
+            this.charts[feature.fullName].setTitle(feature.friendlyName);
+            this.chartArea.addChart(this.charts[feature.fullName]);
+        })
+        this.chartArea.tellNumberOfCharts(this.chartSystem.graphable.length);
 
         this.chartArea.setFeatureToggleCallback(() => {
             this.cycleAxis("x");
@@ -97,6 +92,7 @@ class SingleChartManager {
     }
 
     update(values) {
+        console.log(values);
         let enoughFeatures = this.featureManager.enoughFeaturesExist(1);
 
         if (enoughFeatures) {

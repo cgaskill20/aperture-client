@@ -1,33 +1,17 @@
 
-/** A simple data transfer object to store a feature name and its collection.
- *  Also contains some utility functions.
- */
 class Feature {
-    /** Build a Feature object.
-     *  @param {string} collection The name of the collection
-     *  @param {string} name The name of the feature
-     *  @param {string} friendlyName A human-readable version of the feature name
-     */
-    constructor(collection, name, friendlyName) {
-        this.collection = collection;
-        this.name = name;
-        this.friendlyName = friendlyName;
+    static featurePattern = /(.+)::(.+)::(.+)/;
+
+    static compose(collection, name, friendlyName) {
+        return `${collection}::${name}::${friendlyName}`;
     }
     
-    /** The full name of a feature includes the name of its collection and the
-     *  feature's own name.
-     *  For instance, the name of county SVI is "svi_county::RPL_THEMES".
-     */
-    getFullName() {
-        return `${collection}/${name}`;
-    }
-
     /** Extract just the collection from a full feature name.
      *  @param {string} fullName The full name of a feature (collection + name);
      *  @returns {string} Just the collection name
      */
-    static getCollectionFromFullName(fullName) {
-        return fullName.substring(0, fullName.indexOf('/'));
+    static getCollection(fullName) {
+        return fullName.match(Feature.featurePattern)[1];
     }
     
     /** Extract just the feature name from a full feature name.
@@ -35,7 +19,15 @@ class Feature {
      *  @param {string} fullName The full name of a feature (collection + name);
      *  @returns {string} Just the feature name
      */
-    static getFeatureNameFromFullName(fullName) {
-        return fullName.substring(fullName.indexOf('/') + 1);
+    static getName(fullName) {
+        return fullName.match(Feature.featurePattern)[2];
+    }
+
+    /** Extract just the human-readable name from a full feature name.
+     *  @param {string} fullName The full name of a feature (collection + name);
+     *  @returns {string} Just the human-readable name
+     */
+    static getFriendlyName(fullName) {
+        return fullName.match(Feature.featurePattern)[3];
     }
 }
