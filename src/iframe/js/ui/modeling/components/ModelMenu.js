@@ -31,6 +31,7 @@ class ModelMenu extends React.Component {
         this.state = {
             modelStatus: "none"
         }
+        this.recentGeometry = [];
     }
 
 
@@ -296,7 +297,7 @@ class ModelMenu extends React.Component {
     handleFullResponse(data) {
         switch (this.state.modelCategory) {
             case "REGRESSION":
-                console.log(data)
+                this.handleFullRegressionResponse(data);
                 break;
             case "CLUSTERING":
                 this.handleFullClusteringResponse(data);
@@ -311,6 +312,13 @@ class ModelMenu extends React.Component {
             return d[Object.keys(d)[0]];
         })
         this.modelManager = new ClusterManager(refinedData, window.map, window.dataModelingGroup, this.getGeometryCollectionName());
+    }
+
+    handleFullRegressionResponse(data){
+        const refinedData = data.map(d => {
+            return d[Object.keys(d)[0]];
+        });
+        this.modelManager = new RegressionManager(refinedData, window.map,window.dataModelingGroup, this.recentGeometry);
     }
 
     convertCollectionsToCollectionsQuery() {
@@ -357,21 +365,22 @@ class ModelMenu extends React.Component {
     }
 
     async getCurrentViewportGISJOINS() {
+        this.recentGeometry = [];
         return new Promise(resolve => {
             const collectionName = this.getGeometryCollectionName2dIndexed();
             const b = map.wrapLatLngBounds(map.getBounds());
             const barray = Util.leafletBoundsToGeoJSONPoly(b);
             const q = [
-                { "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } },
-                { "$project": { GISJOIN: 1 } }
+                { "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }
             ];
             const stream = this._sustainQuerier.getStreamForQuery(collectionName,JSON.stringify(q));
 
             let GISJOINS = [];
             stream.on('data', function (r) {
                 const data = JSON.parse(r.getData());
-                GISJOINS.push(data.GISJOIN)
-            });
+                this.recentGeometry.push(data);
+                GISJOINS.push(data.GISJOIN);
+            }.bind(this));
 
             stream.on('end', function (end) {
                 resolve(GISJOINS);
