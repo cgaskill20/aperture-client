@@ -66,7 +66,7 @@ const ChartingType = {
         name: "histogram",
         managerType: SingleChartManager,
         areaType: SingleChartArea,
-        chartType: Histogram,
+        chartType: LineGraph,
     },
     SCATTERPLOT: {
         name: "scatterplot",

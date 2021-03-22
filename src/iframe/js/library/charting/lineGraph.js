@@ -1,3 +1,5 @@
+
+
 /* 
 
 Software in the Sustain Ecosystem are Released Under Terms of Apache Software License 
@@ -58,6 +60,7 @@ END OF TERMS AND CONDITIONS
 class LineGraph extends Chart {
 
     rerender(width, height, viewIndex) {
+        this.data = tempdata;
         let view = this.views[viewIndex];
 
         view.width = width;
@@ -67,12 +70,13 @@ class LineGraph extends Chart {
         // This will only work if the data comes in like this:
         // { date: Date, value: number }
         // view.x and view.y will need to change if this isn't the case.
+        console.log(tempdata);
         view.x = d3.scaleUtc()
-            .domain(d3.extent(this.data, d => d.date))
+            .domain(d3.extent(this.data, d => new Date(d.date.$date)))
             .range([view.margin.left, width - view.margin.right]);
 
         view.y = d3.scaleLinear()
-            .domain([0, d3.max(this.data, d => d.value)]).nice()
+            .domain([0, d3.max(this.data, d => d.avg)]).nice()
             .range([height - view.margin.bottom, view.margin.top]);
 
         view.xAxis = g => g
@@ -85,9 +89,9 @@ class LineGraph extends Chart {
             .call(g => g.select(".domain").remove());
 
         view.line = d3.line()
-            .defined(d => !isNaN(d.value))
-            .x(d => view.x(d.date))
-            .y(d => view.y(d.value))
+            .defined(d => !isNaN(d.avg))
+            .x(d => view.x(d.date.$date))
+            .y(d => view.y(d.avg))
 
         view.svg.select("g#xAxis").call(view.xAxis);
         view.svg.select("g#yAxis").call(view.yAxis);
@@ -102,10 +106,7 @@ class LineGraph extends Chart {
     }
     
     changeData(data) {
-        let wrongData = data.map(e => { return { date: new Date(Math.round((Math.random() * (1 << 63)))), value: e }});
-        wrongData.sort((a, b) => a.date - b.date );
-        console.log(wrongData);
-        this.data = wrongData;
+        this.data = tempdata;
         this.rerenderAllViews();
     }
 

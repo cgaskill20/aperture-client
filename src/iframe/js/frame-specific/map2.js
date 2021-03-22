@@ -167,3 +167,10 @@ parent.setterFunctions.push({
 setTimeout(function () {
     map.setView([map.wrapLatLng(parent.view).lat, map.wrapLatLng(parent.view).lng - 0.0002], map.getZoom());
 }, 1); //this is a terrible fix but it works for now
+
+let s = sustain_querier().executeSlidingWindowQuery('{ gisJoins:[ "G1700310", "G5300610", "G0600590", "G5300610", "G1700310", "G5300610", "G0400130", "G5300610", "G5300610", "G5300610", "G1700310", "G0600370", "G0400130", "G0600590" ], collection: "covid_county_formatted", feature:"deaths", days:30}');
+let tempdata;
+s.on('data', (data) => { 
+    tempdata = JSON.parse(JSON.parse(data.getJson()).movingAverages[0]).movingAverages; 
+    console.log(JSON.parse(data.getJson()).gisJoin);
+});
