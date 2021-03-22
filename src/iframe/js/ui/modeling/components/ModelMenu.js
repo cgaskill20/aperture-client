@@ -94,7 +94,7 @@ class ModelMenu extends React.Component {
             catalog[data.type] = data;
         }.bind(this));
         stream.on('end', function (end) {
-            console.log(catalog)
+            //console.log(catalog)
             const catalogMap = this.catalogMap(catalog);
             //console.log(catalogMap)
             this.setState({
