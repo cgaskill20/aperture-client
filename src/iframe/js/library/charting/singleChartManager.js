@@ -64,9 +64,9 @@ class SingleChartManager {
         this.currentFeature = this.featureManager.getAnyFeature();
 
         this.chartSystem.graphable.forEach(feature => {
-            this.charts[feature.fullName] = new chartType();
-            this.charts[feature.fullName].setTitle(feature.friendlyName);
-            this.chartArea.addChart(this.charts[feature.fullName]);
+            this.charts[feature] = new chartType();
+            this.charts[feature].setTitle(Feature.getFriendlyName(feature));
+            this.chartArea.addChart(this.charts[feature]);
         })
         this.chartArea.tellNumberOfCharts(this.chartSystem.graphable.length);
 
@@ -92,7 +92,6 @@ class SingleChartManager {
     }
 
     update(values) {
-        console.log(values);
         let enoughFeatures = this.featureManager.enoughFeaturesExist(1);
 
         if (enoughFeatures) {

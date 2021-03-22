@@ -1,3 +1,5 @@
+importScripts('./charting/feature.js');
+
 /**
  * @class  MapDataFilter
  * @author Pierce Smith
@@ -145,11 +147,11 @@ class MapDataFilter {
       */
     getSingleModel(feature, data) {
         const model = {};
-        model[feature.fullName] = [];
+        model[feature] = [];
 
         for (const datum of data) {
-            if (datum.properties[feature.name] !== undefined) {
-                model[feature.fullName].push(this.model(datum, feature));
+            if (datum.properties[Feature.getName(feature)] !== undefined) {
+                model[feature].push(this.model(datum, feature));
             }
         }
 
@@ -168,7 +170,7 @@ class MapDataFilter {
       */
     model(entry, feature) { 
         return { 
-            data: entry.properties[feature.name],
+            data: entry.properties[Feature.getName(feature)],
             type: this.dataLocation(entry),
             locationName: entry.properties.NAME10,
             feature: feature,

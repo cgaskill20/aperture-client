@@ -130,26 +130,8 @@ class ScatterplotManager {
             });
         }
 
-        let readableXName = this.catalog.find(e => {
-            for (let constraint in e.constraints) {
-                if (constraint === this.currentFeatures.x) {
-                    return true;
-                }
-            }
-            return false;
-        }).constraints[this.currentFeatures.x].label;
-
-        let readableYName = this.catalog.find(e => {
-            for (let constraint in e.constraints) {
-                if (constraint === this.currentFeatures.y) {
-                    return true;
-                }
-            }
-            return false;
-        }).constraints[this.currentFeatures.y].label;
-
-        data.x = readableXName;
-        data.y = readableYName;
+        data.x = Feature.getFriendlyName(this.currentFeatures.x);
+        data.y = Feature.getFriendlyName(this.currentFeatures.y);
 
         return data;
     }

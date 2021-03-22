@@ -102,7 +102,6 @@ class ChartSystem {
                     return Feature.compose(e.collection, kv[0], kv[1].label);
                 })
             }).flat();
-            console.log(this.graphable);
         });
 
         this.doNotUpdate = false;
@@ -149,6 +148,7 @@ class ChartSystem {
         // This arcane incantation gets a list of feature names for which there's actually data.
         // Don't ask.
         let validFeatures = Object.entries(values).filter(kv => kv[1].length !== 0).map(kv => kv[0]);
+
         this.validFeatureManager.update(validFeatures);
 
         return values;
