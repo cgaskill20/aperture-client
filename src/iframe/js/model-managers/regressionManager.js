@@ -53,4 +53,9 @@ class RegressionManager {
         }
         return Math.floor(normalized * RegressionManager.gradientRes);
     }
+
+    clear(){ //basically a destructor
+        this.renderableData = null;
+        this.renderer.removeAllFeaturesFromMap();
+    }
 }
