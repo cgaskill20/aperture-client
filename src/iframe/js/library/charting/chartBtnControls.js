@@ -70,7 +70,7 @@ function createDropdown(chart, title, axis) {
             dropdownItem.onclick = ()=> {
                 chart.changeFeature(axis, feature);
             }
-            dropdownItem.innerText = feature;
+            dropdownItem.innerText = Feature.getFriendlyName(feature);
             dropdownMenu.appendChild(dropdownItem);
         });
     });
