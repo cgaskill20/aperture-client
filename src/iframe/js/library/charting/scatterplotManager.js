@@ -124,8 +124,11 @@ class ScatterplotManager {
         let yfeat = values[this.currentFeatures.y];
         let shorterFeature = (xfeat.length > yfeat.length) ? yfeat : xfeat; 
 
+        if (xfeat[0].type !== yfeat[0].type) {
+            return [];
+        }
+
         let joins = shorterFeature.map(d => d.GISJOIN);
-        
         joins.forEach(gisjoin => {
             data.push({
                 x: xfeat.find(d => d.GISJOIN === gisjoin).data,
