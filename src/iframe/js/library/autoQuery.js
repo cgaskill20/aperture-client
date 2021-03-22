@@ -327,6 +327,7 @@ class AutoQuery {
         if (!this.enabled)
             return;
 
+        console.log(data);
         MapDataFilterWrapper.add(data, this.collection);
 
         let indexData = {};

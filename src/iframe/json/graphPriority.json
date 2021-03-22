@@ -136,5 +136,26 @@
         "color scheme": []
       }
     }
+  }, 
+  {
+    "collection": "tract_proximity",
+    "label": "Tract Proximity",
+    "constraints": {
+      "nearest_hospital": {
+        "label": "Nearest Hospital (mi)"
+      },
+      "nearest_fire_station": {
+        "label": "Nearest Fire Station (mi)"
+      },
+      "nearest_public_school": {
+        "label": "Nearest Public School (mi)"
+      },
+      "nearest_electrical_substation": {
+        "label": "Nearest Electrical Substation (mi)"
+      },
+      "nearest_power_plant": {
+        "label": "Nearest Power Plant (mi)"
+      }
+    }
   }
 ]
