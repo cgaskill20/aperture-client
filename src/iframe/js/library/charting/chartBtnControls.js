@@ -23,22 +23,28 @@ function createChartControl(chart, graphBox, type) {
 
 function createEmptyColumn() {
     let emptyCol = document.createElement("div");
-    emptyCol.className = "col-sm"
+    emptyCol.className = "col-sm";
     return emptyCol;
 }
 
 function createChartControlGroup(chart, axis, dropdownTitle) {
-    let chartControlGroup = document.createElement("div");
-    chartControlGroup.className = "btn-group chart-control-button";
-    chartControlGroup.setAttribute("role", "group");
+    let chartControlButtonGroup = createChartControlButtonGroup();
     let leftToggle = createSideToggle(chart, axis, '<');
     let chartDropdown = createDropdown(chart, dropdownTitle, axis);
     let rightToggle = createSideToggle(chart, axis, '>');
-    chartControlGroup.appendChild(leftToggle);
-    chartControlGroup.appendChild(chartDropdown);
-    chartControlGroup.appendChild(rightToggle);
-    return chartControlGroup;
+    chartControlButtonGroup.appendChild(leftToggle);
+    chartControlButtonGroup.appendChild(chartDropdown);
+    chartControlButtonGroup.appendChild(rightToggle);
+    return chartControlButtonGroup;
 }
+
+function createChartControlButtonGroup() {
+    let chartControlButtonGroup = document.createElement("div");
+    chartControlButtonGroup.className = "btn-group chart-control-button";
+    chartControlButtonGroup.setAttribute("role", "group");
+    return chartControlButtonGroup;
+}
+
 
 function createSideToggle(chart, axis, arrowDirection) {
     let sideToggle = document.createElement("button");
@@ -50,22 +56,9 @@ function createSideToggle(chart, axis, arrowDirection) {
 }
 
 function createDropdown(chart, title, axis) {
-    let chartDropdown = document.createElement("div");
-    chartDropdown.className = "btn-group";
-    chartDropdown.setAttribute("role", "group");
-
-    let dropdownButton = document.createElement("button");
-    dropdownButton.id = "drop-it-down";
-    dropdownButton.type = "button";
-    dropdownButton.className = "btn btn-outline-dark dropdown-toggle";
-    dropdownButton.setAttribute("data-toggle", "dropdown");
-    dropdownButton.setAttribute("aria-haspopup", "true");
-    dropdownButton.setAttribute("aria-expanded", "false");
-    dropdownButton.innerText = title;
-
-    let dropdownMenu = document.createElement("div");
-    dropdownMenu.className = "dropdown-menu";
-    dropdownMenu.setAttribute("aria-labelledby", "drop-it-down");
+    let chartDropdown = createChartDropdown();
+    let dropdownButton = createDropdownButton(title);
+    let dropdownMenu = createDropdownMenu();
 
     chart.addNewFeatureCallback((activeFeatures) => {
         while(dropdownMenu.firstChild) {
@@ -90,6 +83,32 @@ function createDropdown(chart, title, axis) {
     })
 
     return chartDropdown;
+}
+
+function createChartDropdown() {
+    let chartDropdown = document.createElement("div");
+    chartDropdown.className = "btn-group";
+    chartDropdown.setAttribute("role", "group");
+    return chartDropdown;
+}
+
+function createDropdownButton(title) {
+    let dropdownButton = document.createElement("button");
+    dropdownButton.id = "drop-it-down";
+    dropdownButton.type = "button";
+    dropdownButton.className = "btn btn-outline-dark dropdown-toggle";
+    dropdownButton.setAttribute("data-toggle", "dropdown");
+    dropdownButton.setAttribute("aria-haspopup", "true");
+    dropdownButton.setAttribute("aria-expanded", "false");
+    dropdownButton.innerText = title;
+    return dropdownButton;
+}
+
+function createDropdownMenu() {
+    let dropdownMenu = document.createElement("div");
+    dropdownMenu.className = "dropdown-menu";
+    dropdownMenu.setAttribute("aria-labelledby", "drop-it-down");
+    return dropdownMenu;
 }
 
 function createCloseButton(graphBox) {

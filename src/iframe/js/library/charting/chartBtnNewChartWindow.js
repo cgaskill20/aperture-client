@@ -12,35 +12,54 @@ function showGraph() {
 
 function createAddChartArea() {
     let addGraphBox = document.createElement("div");
-    addGraphBox.className = "colorMode1 customBorder add-graph-box";
+    addGraphBox.className = "colorMode1 add-graph-box";
     addGraphBox.id = "graph-controller";
-    let addGraphMessage = document.createElement("p");
-    addGraphMessage.className = "add-graph-message row justify-content-center";
-    addGraphMessage.innerText = "Add a...";
+    addGraphBox.appendChild(makeGraphButtonGroup());
+    document.getElementById('box1').appendChild(addGraphBox);
+}
 
+function makeGraphButtonGroup() {
+    let graphButtonAreaDiv = document.createElement("div");
+    graphButtonAreaDiv.className = "row justify-content-center";
+    graphButtonAreaDiv.appendChild(createGraphButtonArea());
+    return graphButtonAreaDiv;
+}
+
+function createGraphButtonArea() {
     let graphButtonArea = document.createElement("div");
-    graphButtonArea.className = "graph-button-area row justify-content-center"
-    let histogramButton = document.createElement("button");
-    histogramButton.className = "btn btn-outline-dark graph-button";
-    histogramButton.id = "histogram-button-id";
-    histogramButton.innerText = "Histogram";
-    let scatterplotButton = document.createElement("button");
-    scatterplotButton.className = "btn btn-outline-dark graph-button";
-    scatterplotButton.id = "scatterplot-button-id";
-    scatterplotButton.innerText = "Scatterplot";
-    let lineGraphButton = document.createElement("button");
-    lineGraphButton.className = "btn btn-outline-dark graph-button";
-    lineGraphButton.id = "linegraph-button-id";
-    lineGraphButton.innerText = "Line Graph";
-    lineGraphButton.disabled = true; //FIXME Remove this line once lineGraphs are implemented
+    graphButtonArea.className = "btn-group";
+    graphButtonArea.setAttribute("role", "group");
+    createGraphButtons(graphButtonArea);
+    return graphButtonArea;
+}
+
+function createGraphButtons(graphButtonArea) {
+    let histogramButton = makeGraphButton("histogram-button-id", "Histogram");
+    let scatterplotButton = makeGraphButton("scatterplot-button-id", "Scatterplot");
+    let lineGraphButton = makeGraphButton("linegraph-button-id", "Line Graph", true);
+    let closeGraphButton = makeCloseButton();
 
     graphButtonArea.appendChild(histogramButton);
     graphButtonArea.appendChild(scatterplotButton);
     graphButtonArea.appendChild(lineGraphButton);
+    graphButtonArea.appendChild(closeGraphButton);
+}
 
-    addGraphBox.appendChild(addGraphMessage);
-    addGraphBox.appendChild(graphButtonArea);
-    document.getElementById('box1').appendChild(addGraphBox);
+function makeGraphButton(id, name, disable = false) {
+    let button = document.createElement("button");
+    button.className = "btn btn-outline-dark";
+    button.id = id;
+    button.innerText = name;
+    button.disabled = disable;
+    return button;
+}
+
+function makeCloseButton() {
+    let closeGraphButton = document.createElement("button");
+    closeGraphButton.className = "btn btn-outline-dark";
+    closeGraphButton.innerText = "Close";
+    closeGraphButton.addEventListener('click', showGraph);
+    return closeGraphButton;
 }
 
 function makeButtonsWork() {
