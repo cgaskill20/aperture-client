@@ -16,7 +16,7 @@ class Feature {
     
     /** The full name of a feature includes the name of its collection and the
      *  feature's own name.
-     *  For instance, the name of county SVI is "svi_county/RPL_THEMES".
+     *  For instance, the name of county SVI is "svi_county::RPL_THEMES".
      */
     getFullName() {
         return `${collection}/${name}`;

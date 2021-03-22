@@ -97,7 +97,12 @@ class ChartSystem {
         $.getJSON(chartCatalogFilename, (catalog) => {
             this.initializeUpdateHooks();
             this.catalog = catalog;
-            this.graphable = catalog.map(e => Object.keys(e.constraints)).flat();
+            this.graphable = catalog.map(e => {
+                return Object.entries(e.constraints).map(kv => {
+                    return new Feature(kv[0], e.collection, kv[1].label);
+                })
+            }).flat();
+            console.log(this.graphable);
         });
 
         this.doNotUpdate = false;
