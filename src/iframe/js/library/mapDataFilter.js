@@ -181,6 +181,7 @@ class MapDataFilter {
             type: this.dataLocation(entry),
             locationName: entry.properties.NAME10,
             feature: feature,
+            GISJOIN: entry.properties.GISJOIN,
         };
     }
 

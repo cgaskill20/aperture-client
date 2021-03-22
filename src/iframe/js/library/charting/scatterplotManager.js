@@ -123,12 +123,15 @@ class ScatterplotManager {
         let xfeat = values[this.currentFeatures.x];
         let yfeat = values[this.currentFeatures.y];
         let shorterFeature = (xfeat.length > yfeat.length) ? yfeat : xfeat; 
-        for (let i = 0; i < shorterFeature.length; i++) {
+
+        let joins = shorterFeature.map(d => d.GISJOIN);
+        
+        joins.forEach(gisjoin => {
             data.push({
-                x: xfeat[i].data,
-                y: yfeat[i].data,
+                x: xfeat.find(d => d.GISJOIN === gisjoin).data,
+                y: yfeat.find(d => d.GISJOIN === gisjoin).data,
             });
-        }
+        });
 
         data.x = Feature.getFriendlyName(this.currentFeatures.x);
         data.y = Feature.getFriendlyName(this.currentFeatures.y);
