@@ -21,12 +21,19 @@ function createAddChartArea() {
 function makeGraphButtonGroup() {
     let graphButtonAreaDiv = document.createElement("div");
     graphButtonAreaDiv.className = "row justify-content-center";
+    graphButtonAreaDiv.appendChild(createGraphButtonArea());
+    return graphButtonAreaDiv;
+}
 
+function createGraphButtonArea() {
     let graphButtonArea = document.createElement("div");
-    graphButtonArea.className = "btn-group justify-content-center";
+    graphButtonArea.className = "btn-group";
     graphButtonArea.setAttribute("role", "group");
-    graphButtonAreaDiv.appendChild(graphButtonArea);
+    createGraphButtons(graphButtonArea);
+    return graphButtonArea;
+}
 
+function createGraphButtons(graphButtonArea) {
     let histogramButton = makeGraphButton("histogram-button-id", "Histogram");
     let scatterplotButton = makeGraphButton("scatterplot-button-id", "Scatterplot");
     let lineGraphButton = makeGraphButton("linegraph-button-id", "Line Graph", true);
@@ -36,9 +43,6 @@ function makeGraphButtonGroup() {
     graphButtonArea.appendChild(scatterplotButton);
     graphButtonArea.appendChild(lineGraphButton);
     graphButtonArea.appendChild(closeGraphButton);
-    graphButtonAreaDiv.appendChild(graphButtonArea);
-
-    return graphButtonAreaDiv;
 }
 
 function makeGraphButton(id, name, disable = false) {
