@@ -10,10 +10,19 @@ class RegressionManager {
         const colorGradient = new Gradient();
         colorGradient.setGradient("#4d6dbd", "#509bc7", "#f0d55d", "#e07069", "#c7445d");
         colorGradient.setMidpoint(RegressionManager.gradientRes);
+        this.metric = this.getMetric(data);
         this.colorGradient = colorGradient.getArray();
         this.render();
     }
     //work in progress
+
+    getMetric(data){
+        const check = Object.keys(data[0]);
+        if(check.includes("rmse")){
+            return "rmse";
+        }
+        return "rmseResidual";
+    }
 
     bindDataAndGeometry(data, geometry) {
         return data.map(result => {
@@ -25,8 +34,8 @@ class RegressionManager {
 
     getRMSEMinMax() {
         return {
-            min: this.renderableData.reduce((a, curr) => { return Math.min(a, curr.properties.rmseResidual) }, Infinity), 
-            max: this.renderableData.reduce((a, curr) => { return Math.max(a, curr.properties.rmseResidual) }, -1)
+            min: this.renderableData.reduce((a, curr) => { return Math.min(a, curr.properties[this.metric]) }, Infinity), 
+            max: this.renderableData.reduce((a, curr) => { return Math.max(a, curr.properties[this.metric]) }, -1)
         }
     }
 
@@ -37,7 +46,7 @@ class RegressionManager {
                 "Regression": {
                     border: 0,
                     opacity: 0.4,
-                    color: this.colorGradient[this.normalizeGradientPos(minMax, feature.properties.rmseResidual)]
+                    color: this.colorGradient[this.normalizeGradientPos(minMax, feature.properties[this.metric])]
                 }
             }));
         }
