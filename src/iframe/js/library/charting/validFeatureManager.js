@@ -1,10 +1,16 @@
 
 /* Reports information about which features are available for graphing (have data)
  * or not (don't have data).
+ * @author Pierce Smith
  */
 class ValidFeatureManager {
     constructor(valids, onChangeCallback) {
-        this.onChangeCallback = onChangeCallback;
+        if(onChangeCallback !== undefined) {
+            this.onChangeCallbacks = [onChangeCallback];
+        }
+        else {
+            this.onChangeCallbacks = [];
+        }
         this.update(valids);
     }
 
@@ -12,11 +18,16 @@ class ValidFeatureManager {
      * @param {Array<string>} barring An array of features that should be ignored
      * @returns {string} The next valid feature, if any in `barring` are ignored
      */
-    getNextFeature(current, barring) {
+    getNextFeature(current, barring, direction = "next") {
         let currentIndex = this.validFeatures.indexOf(current);
         let oldIndex = currentIndex;
         while (true) {
-            currentIndex = (currentIndex + 1) % this.validFeatures.length;
+            if(direction === "next") {
+                currentIndex = (currentIndex + 1) % this.validFeatures.length;
+            }
+            else {
+                currentIndex = currentIndex === 0 ? this.validFeatures.length-1 : (currentIndex - 1) % this.validFeatures.length;
+            }
 
             let foundFeature = !barring.find(feature => { feature === this.validFeatures[currentIndex] });
             foundFeature = foundFeature || currentIndex === oldIndex;
@@ -25,12 +36,19 @@ class ValidFeatureManager {
                 break;
             }
         }
-        console.log(this.validFeatures[currentIndex]);
         return this.validFeatures[currentIndex];
     }
 
+    /* @returns {string} Any arbitrary feature that is valid
+     */
     getAnyFeature() {
         return this.validFeatures[0];
+    }
+
+    /* @returns {array<string>} An array containing all valid features
+     */
+    getAllFeatures() {
+        return this.validFeatures;
     }
 
     /* @param {number} count The number of features that we should at least have
@@ -46,8 +64,12 @@ class ValidFeatureManager {
      */
     update(newValids) {
         this.validFeatures = newValids;
-        if (this.onChangeCallback) {
-            this.onChangeCallback(newValids);
-        }
+        this.onChangeCallbacks.forEach(cb => {
+            cb(newValids);
+        });
+    }
+
+    addCallback(callback) {
+        this.onChangeCallbacks.push(callback);
     }
 }

@@ -66,6 +66,10 @@ class Histogram extends Chart {
     }
 
     rerender(newWidth, newHeight, viewIndex) {
+        if (this.data.length === 0) {
+            return;
+        }
+
         let view = this.views[viewIndex];
 
         view.width = newWidth;
@@ -101,7 +105,7 @@ class Histogram extends Chart {
                 .attr("height", d => view.y(0) - view.y(d.length));
         view.svg.select("text#title")
             .attr("x", newWidth / 2)
-            .attr("y", 12)
+            .attr("y", 24)
             .attr("text-anchor", "middle")
             .text(this.title);
 

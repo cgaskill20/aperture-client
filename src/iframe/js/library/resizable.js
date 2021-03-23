@@ -88,10 +88,9 @@ class resizable {
         const overlayDocument = document.createElement("div");
         this.overlayDocument = overlayDocument;
         overlayDocument.id = "overlay" + this.uniqueId;
-        overlayDocument.className = "overlay";
+        overlayDocument.className = "overlay colorMode1 noTransitions";
         overlayDocument.style.width = this.width + "px";
         overlayDocument.style.height = this.height + "px";
-        overlayDocument.style.background = this.backgroundColor;
         overlayDocument.style.zIndex = resizable.zIndex;
         overlayDocument.style.display = "none";
         overlayDocument.style.opacity = .9;
@@ -178,6 +177,10 @@ class resizable {
 
     setResizeCallback(cb) {
         this.onResizeCallback = cb;
+    }
+
+    triggerResizeEvent() {
+        this.onResizeCallback(this.width, this.height);
     }
 
     /**

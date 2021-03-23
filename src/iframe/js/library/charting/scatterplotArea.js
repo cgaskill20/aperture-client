@@ -65,18 +65,14 @@ class ScatterplotArea {
         this.container.className = "scatterplot-chart-area";
         this.parentNode.appendChild(this.container);
 
-        this.changeXAxisButton = document.createElement("div");
-        this.changeXAxisButton.className = "scatterplot-change-x-axis-button";
-        this.container.appendChild(this.changeXAxisButton);
-
-        this.changeYAxisButton = document.createElement("div");
-        this.changeYAxisButton.className = "scatterplot-change-y-axis-button";
-        this.container.appendChild(this.changeYAxisButton);
+        // this.notEnoughFeaturesMessage = document.createElement("p");
+        // this.notEnoughFeaturesMessage.innerText = "Enable two or more constraints to start graphing";
+        // this.container.appendChild(this.notEnoughFeaturesMessage);
     }
 
     setChangeAxisButtonCallbacks(xCallback, yCallback) {
-        this.changeXAxisButton.onclick = xCallback;
-        this.changeYAxisButton.onclick = yCallback;
+        // this.changeXAxisButton.onclick = xCallback;
+        // this.changeYAxisButton.onclick = yCallback;
     }
 
     addChart(chart) {
@@ -89,6 +85,14 @@ class ScatterplotArea {
             this.scatterplot.rerender(newWidth, newHeight - 100, 0);
         }
     }
+
+    // showNotEnoughFeaturesMessage() {
+    //     this.notEnoughFeaturesMessage.style.display = "block";
+    // }
+    //
+    // hideNotEnoughFeaturesMessage() {
+    //     this.notEnoughFeaturesMessage.style.display = "none";
+    // }
 
     toggleVisible() {
         if (this.container.style.display === "none") {

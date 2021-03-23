@@ -1,6 +1,19 @@
 const MAPNUMBER = 2;
+const e = React.createElement;
+globalThis.latticeNum =  Math.floor(Math.random() * 20) + 100;
 
-//const queryAlertText = document.getElementById('queryInfoText');
+const PAGE_URL = window.location.href;
+const DEV = PAGE_URL.includes("dev") || PAGE_URL.includes("127.0.0.1");
+if (DEV) {
+    const overwriteLatticeNum = localStorage.getItem("latticeNum");
+    if(overwriteLatticeNum){
+        globalThis.latticeNum = overwriteLatticeNum;
+    }
+    console.log("Aperture client set to DEV mode.")
+    console.log(`Connected to lattice-${globalThis.latticeNum}`);
+    AutoQuery.minCountyZoom = 1;
+    AutoQuery.minTractZoom = 1;
+}
 
 //--------------
 const standardTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -9,15 +22,15 @@ const standardTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles
 });
 
 const topoTiles = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
-	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	subdomains: 'abcd',
-	minZoom: 0,
-	maxZoom: 18,
-	ext: 'png'
+    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    subdomains: 'abcd',
+    minZoom: 0,
+    maxZoom: 18,
+    ext: 'png'
 });
 
 const satelliteTiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
     maxZoom: 18
 });
 
@@ -42,7 +55,7 @@ standardTiles.addTo(map);
 
 map.setView(map.wrapLatLng(parent.view), 11);
 
-const zoomControl = L.control.zoom({position:"topright"}).addTo(map);
+const zoomControl = L.control.zoom({ position: "topright" }).addTo(map);
 
 var markers = L.markerClusterGroup({
     showCoverageOnHover: false,
@@ -52,55 +65,34 @@ var markers = L.markerClusterGroup({
 });
 map.addLayer(markers);
 
-const backgroundTract = new GeometryLoader("tract_geo_GISJOIN", window.map, 300);
-const backgroundCounty = new GeometryLoader("county_geo_GISJOIN", window.map, 50);
+const dataExplorationGroup = L.layerGroup().addTo(map);
+const dataModelingGroup = L.layerGroup();
+window.dataModelingGroup = dataModelingGroup;
 
-const chartSystem = new ChartSystem(map, "json/graphPriority.json");
 
+const preloadStatusContainer = document.getElementById("preloadStatus");
+let bgTractId = "bgTract";
+let bgCountyId = "bgCounty";
+const backgroundTract = new Worker("js/library/geometryLoaderWorker.js", { name: `Background tract worker: ${bgTractId}` });
+const backgroundCounty = new Worker("js/library/geometryLoaderWorker.js", { name: `Background county worker: ${bgCountyId}` });
+ReactDOM.render(e(PreloadingMenu,{
+    loaders: [
+        {
+            id: bgTractId,
+            loader: backgroundTract,
+            collection: "tract_geo_140mb_no_2d_index",
+            latticeNum: globalThis.latticeNum
+        },
+        {
+            id: bgCountyId,
+            loader: backgroundCounty,
+            collection: "county_geo_30mb_no_2d_index",
+            latticeNum: globalThis.latticeNum
+        }
+    ]
+}), preloadStatusContainer);
 window.backgroundTract = backgroundTract;
-window.backgroundCounty = backgroundCounty
-
-map.on('click', function () {
-    closeNav();
-});
-
-document.getElementById('nav-menu-button').addEventListener('click', openNav);
-document.getElementById('nav-close-button').addEventListener('click', closeNav);
-document.getElementById('nav-data-exploration-button').addEventListener('click', showDataExploration);
-document.getElementById('nav-modeling-button').addEventListener('click', showModeling);
-document.getElementById('nav-validation-button').addEventListener('click', showValidation);
-document.getElementById('nav-graph-button').addEventListener('click', showGraph);
-
-// $('#nav-close-button').on('click', closeNav);
-// $('#nav-data-exploration-button').on('click', showDataExploration);
-// $('#nav-modeling-button').on('click', showModeling);
-// $('#nav-validation-button').on('click', showValidation);
-
-function openNav() {
-  document.getElementById("sidebar-id").style.width = "52vw";
-  document.getElementById("main").style.opacity = "0";
-}
-
-function closeNav() {
-  document.getElementById("sidebar-id").style.width = "0";
-  document.getElementById("main").style.opacity = "1";
-}
-
-function showDataExploration() {
-    document.getElementById("sidebar-container").style.display = "grid";
-}
-
-function showModeling() {
-    document.getElementById("sidebar-container").style.display = "none";
-}
-
-function showValidation() {
-    document.getElementById("sidebar-container").style.display = "none";
-}
-
-function showGraph() {
-    chartSystem.toggleVisible();
-}
+window.backgroundCounty = backgroundCounty;
 
 const overwrite = { //leaving this commented cause it explains the schema really well 
     // "covid_county": {
@@ -137,12 +129,13 @@ const overwrite = { //leaving this commented cause it explains the schema really
     // },
 }
 
-RenderInfrastructure.config(map, markers, overwrite, {
+window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplorationGroup, overwrite, {
     queryAlertText: document.getElementById('queryInfoText'),
     maxElements: 10000,
     maxLayers: 20,
     simplifyThreshold: 0.0001
 });
+const chartSystem = new ChartSystem(map, "json/graphPriority.json", window.renderInfrastructure);
 
 //where the magic happens
 $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the mongo server yet so query it locally
@@ -150,10 +143,12 @@ $.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the 
     MenuGenerator.generate(finalData, document.getElementById("sidebar-container"));
 });
 
-parent.addEventListener('updateMaps', function () {
+const modelContainer = document.getElementById("model-container");
+ReactDOM.render(e(ModelMenu), modelContainer);
+
+map.on("moveend", function (e) {
     updateLayers();
 });
-
 map.on("move", function (e) {
     parent.setGlobalPosition(map.getCenter(), MAPNUMBER);
 });

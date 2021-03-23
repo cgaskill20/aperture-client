@@ -1,10 +1,10 @@
-const {Query, CompoundRequest} = require("./sustain_pb.js")
-const {SustainClient} = require('./sustain_grpc_web_pb.js');
+const {Query, CompoundRequest, JsonModelRequest, DirectRequest, JsonSlidingWindowRequest} = require("./sustain_pb.js")
+const {SustainClient, JsonProxyClient} = require('./sustain_grpc_web_pb.js');
 
 /**
  * @namespace SustainQuerier
  * @file Object used for performing gRPC queries
- * @author Kevin Bruhwiler
+ * @author Kevin Bruhwiler & Daniel Reynolds
  */
 SustainQuerier = {
     /**
@@ -14,7 +14,11 @@ SustainQuerier = {
       * @method initialize
       */
     initialize: function () {
-        this.service = new SustainClient("http://lattice-2.cs.colostate.edu:9092", "sustainServer");
+        const LATTICE_NUM = globalThis.latticeNum;
+        const LATTICE_PORT = 31415;
+        const LATTICE_URL = `http://lattice-${LATTICE_NUM}.cs.colostate.edu:${LATTICE_PORT}`;
+        this.service = new SustainClient(LATTICE_URL, "sustainServer");
+        this.modelService = new JsonProxyClient(LATTICE_URL, "sustainServer");
         return this;
     },
 
@@ -34,15 +38,11 @@ SustainQuerier = {
       * @return {Object}
       *         The gRPC query stream
       */
-    getStreamForQuery: function (host, port, collection, query) {
-        const request = new CompoundRequest();
-        const q = new Query();
-        q.setHost(host);
-        q.setPort(port);
-        q.setCollection(collection);
-        q.setQuery(query);
-        request.setFirstQuery(q);
-        return this.service.compoundQuery(request, {});
+    getStreamForQuery: function (collection, query) {
+        const request = new DirectRequest();
+        request.setCollection(collection);
+        request.setQuery(query);
+        return this.service.directQuery(request, {});
     },
 
     /**
@@ -119,7 +119,19 @@ SustainQuerier = {
      */
     executeCompoundQuery: function (request) {
         return this.service.compoundQuery(request, {});
+    },
+    
+    executeModelQuery: function (query) {
+        const request = new JsonModelRequest();
+        request.setJson(query);
+        return this.modelService.modelQuery(request, {});
 	},
+
+    executeSlidingWindowQuery: function (query) {
+        const request = new JsonSlidingWindowRequest();
+        request.setJson(query);
+        return this.modelService.slidingWindowQuery(request, {});
+    }
 };
 
 /**

@@ -59,6 +59,10 @@ class SingleChartManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
         this.charts = {};
         this.chartArea = chartArea;
+        this.chartSystem = chartSystem;
+        this.featureManager = validFeatureManager;
+        this.currentFeature = this.featureManager.getAnyFeature();
+
         let graphable = catalog.map(e => Object.keys(e.constraints)).flat();
 
         this.constraints = catalog.map(e => e.constraints);
@@ -70,33 +74,39 @@ class SingleChartManager {
             }
         });
         this.chartArea.tellNumberOfCharts(graphable.length);
+
+        this.chartArea.setFeatureToggleCallback(() => {
+            this.cycleAxis("x");
+        });
     }
 
-    update(values) {
-        this.reportEmptyCharts(values);
-        this.removeEmptyCharts(values);
-
-        for (let feature in values) {
-            this.charts[feature].changeData(values[feature].map(e => e.data), 5);
+    changeFeature(axis, feature) {
+        if (axis === "x") {
+            this.currentFeature = feature;
+            let chartIndex = this.chartSystem.graphable.indexOf(feature);
+            if (chartIndex !== -1) {
+                this.chartArea.showChart(chartIndex);
+            }
         }
     }
 
-    reportEmptyCharts(values) {
-        let emptyCharts = Object.values(values).map((feature, i) => {
-            if (feature.length === 0) {
-                return i;
-            }
-            return -1;
-        });
-        emptyCharts = emptyCharts.filter(i => i !== -1);
-        this.chartArea.tellEmptyCharts(emptyCharts);
+    cycleAxis(axis, direction) {
+        if (axis === "x") {
+            this.changeFeature(axis, this.featureManager.getNextFeature(this.currentFeature, [], direction));
+        }
     }
 
-    removeEmptyCharts(values) {
-        for (let feature in values) {
-            if (values[feature].length === 0) {
-                delete values[feature];
+    update(values) {
+        let enoughFeatures = this.featureManager.enoughFeaturesExist(1);
+
+        if (enoughFeatures) {
+            // this.chartArea.hideNotEnoughFeaturesMessage();
+            for (let feature in values) {
+                this.charts[feature].changeData(values[feature].map(e => e.data), 5);
             }
+        } else {
+            // this.chartArea.showNotEnoughFeaturesMessage();
+            this.chartArea.hideAll();
         }
     }
 }

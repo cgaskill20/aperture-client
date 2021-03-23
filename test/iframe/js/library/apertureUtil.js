@@ -60,9 +60,22 @@ describe('Util', function () {
             assert.deepEqual(util.Util.underScoreToSpace("test1_test2_Test3"), "test1 test2 Test3");
         });
     });
+    describe('camelCaseToSpaced()', function () {
+        it('converts camelcase to spaces', function () {
+            assert.deepEqual(util.Util.camelCaseToSpaced("test1Test2Test3"), "Test1 Test2 Test3");
+            assert.deepEqual(util.Util.camelCaseToSpaced("test1 Test2Test3"), "test1 Test2Test3");
+        });
+    });
     describe('spaceToUnderScore()', function () {
         it('converts spaces to underscores', function () {
             assert.deepEqual(util.Util.spaceToUnderScore("test1 test2 Test3"), "test1_test2_Test3");
+        });
+    });
+    describe('cleanUpString()', function () {
+        it('cleans up variableNameString', function () {
+            assert.deepEqual(util.Util.cleanUpString("test1Test2Test3"), "Test1 Test2 Test3");
+            assert.deepEqual(util.Util.cleanUpString("test1_Test2_Test3"), "Test1 Test2 Test3");
+            assert.deepEqual(util.Util.cleanUpString("test1 test2 test3"), "Test1 Test2 Test3");
         });
     });
     describe('createGeoJsonObj()', function () {
@@ -150,13 +163,14 @@ describe('Util', function () {
                 [6, 1],
             ];
             let bounds = L.latLngBounds(
-                [3.5, 3],
-                [5.5, -3],
+                [3, 3.5],
+                [-3, 5.5],
             );
             let badbounds = L.latLngBounds(
-                [7.5, 3],
-                [8.5, -3],
+                [3, 7.5],
+                [-3, 8.5],
             );
+            console.log(badbounds);
             assert(util.Util.arePointsApproximatelyInBounds(points, bounds));
             assert(!util.Util.arePointsApproximatelyInBounds(points, badbounds));
         });

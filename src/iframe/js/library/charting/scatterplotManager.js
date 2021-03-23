@@ -57,11 +57,12 @@ END OF TERMS AND CONDITIONS
 
 class ScatterplotManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem) {
-        this.chartArea = chartArea
+        this.catalog = catalog;
+        this.chartArea = chartArea;
         this.scatterplot = new Scatterplot();
         this.chartArea.addChart(this.scatterplot);
     
-        this.validFeatures = validFeatureManager;
+        this.featureManager = validFeatureManager;
         this.currentFeatures = {};
 
         this.system = chartSystem;
@@ -72,32 +73,48 @@ class ScatterplotManager {
         );
     }
 
-    axisButtonCallback(axis) {
-        this.currentFeatures[axis] = this.nextValidFeatureForAxis(axis); 
-        this.update(this.system.getValues());
+    changeFeature(axis, feature) {
+        this.currentFeatures[axis] = feature;
+        this.system.getValues().then((values) => {
+            this.update(values);
+        });
     }
 
-    nextValidFeatureForAxis(axis) {
+    axisButtonCallback(axis, direction) {
+        this.currentFeatures[axis] = this.nextValidFeatureForAxis(axis, direction);
+        this.system.getValues().then((values) => {
+            this.update(values);
+        });
+    }
+
+    nextValidFeatureForAxis(axis, direction) {
         let ignore = [];
         for (let axisToIgnore in this.currentFeatures) {
             if (axisToIgnore !== axis) {
                 ignore.push(this.currentFeatures[axisToIgnore]);
             }
         }
-        return this.validFeatures.getNextFeature(this.currentFeatures[axis], ignore);
+        return this.featureManager.getNextFeature(this.currentFeatures[axis], ignore, direction);
+    }
+
+    cycleAxis(axis, direction) {
+        this.axisButtonCallback(axis, direction);
     }
     
     update(values) {
-        let shouldUpdate = this.validFeatures.enoughFeaturesExist(2);
+        let shouldUpdate = this.featureManager.enoughFeaturesExist(2);
 
         if (shouldUpdate) {
+            // this.chartArea.hideNotEnoughFeaturesMessage();
             if (!this.currentFeatures.x) {
-                this.currentFeatures.x = this.validFeatures.getAnyFeature();
+                this.currentFeatures.x = this.featureManager.getAnyFeature();
             }
             if (!this.currentFeatures.y) {
-                this.currentFeatures.y = this.validFeatures.getAnyFeature();
+                this.currentFeatures.y = this.featureManager.getAnyFeature();
             }
             this.scatterplot.changeData(this.prepareData(values));
+        } else {
+            // this.chartArea.showNotEnoughFeaturesMessage();
         }
     }
 
@@ -112,8 +129,28 @@ class ScatterplotManager {
                 y: yfeat[i].data,
             });
         }
-        data.x = this.currentFeatures.x;
-        data.y = this.currentFeatures.y;
+
+        let readableXName = this.catalog.find(e => {
+            for (let constraint in e.constraints) {
+                if (constraint === this.currentFeatures.x) {
+                    return true;
+                }
+            }
+            return false;
+        }).constraints[this.currentFeatures.x].label;
+
+        let readableYName = this.catalog.find(e => {
+            for (let constraint in e.constraints) {
+                if (constraint === this.currentFeatures.y) {
+                    return true;
+                }
+            }
+            return false;
+        }).constraints[this.currentFeatures.y].label;
+
+        data.x = readableXName;
+        data.y = readableYName;
+
         return data;
     }
 }

@@ -3,13 +3,14 @@
   * A class that represents an HTML element which can hold and dynamically
   * display multiple charts.
   * 
-  * @author Pierce Smith
+  * @author Pierce Smith, Matt Young (mostly Pierce Smith)
   */
 class SingleChartArea {
     static runningID = 0;
 
     constructor() {
-        this.viewIndex = SingleChartArea.runningID++;
+        this.viewIndex = SingleChartArea.runningID;
+        this.currentIndex = 0;
         this.charts = [];
     }
 
@@ -17,13 +18,16 @@ class SingleChartArea {
         this.parentNode = node;
         this.container = document.createElement("div");
         this.container.className = "single-chart-area";
-        this.parentNode.appendChild(this.container);
 
-        this.usageMessage = document.createElement("p");
-        this.usageMessage.innerText = "Enable data exploration to begin graphing";
-        this.usageMessage.className = "chart-usage-message";
-        this.usageMessage.style.display = "none";
-        this.parentNode.appendChild(this.usageMessage);
+        // this.notEnoughFeaturesMessage = document.createElement("p");
+        // this.notEnoughFeaturesMessage.innerText = "Enable one or more constraints to start graphing";
+        // this.container.appendChild(this.notEnoughFeaturesMessage);
+            
+        this.parentNode.appendChild(this.container);
+    }
+
+    setFeatureToggleCallback(cb) {
+        // this.toggleAxisButton.onclick = cb;
     }
 
     addChart(chart) {
@@ -33,28 +37,30 @@ class SingleChartArea {
     }
 
     showChart(index) {
+        this.hideAll();
+        this.currentIndex = index;
         this.charts[index].unhide(this.viewIndex);
     }
 
+    hideAll() {
+        this.charts.forEach(chart => {
+            chart.hide(this.viewIndex);
+        })
+    }
+
     rerender(newWidth, newHeight) {
-        if (this.hasNothingToRender) {
-            this.showUsageMessage();
-        } else {
-            this.hideUsageMessage();
-            this.charts.forEach(chart => {
-                chart.rerender(newWidth, newHeight, this.viewIndex);
-            });
-            this.showChart(1);
-        }
+        this.charts.forEach(chart => {
+            chart.rerender(newWidth, newHeight, this.viewIndex);
+        });
     }
 
-    showUsageMessage() {
-        this.usageMessage.style.display = "inline";
-    }
-
-    hideUsageMessage() {
-        this.usageMessage.style.display = "none";
-    }
+    // showNotEnoughFeaturesMessage() {
+    //     this.notEnoughFeaturesMessage.style.display = "inline";
+    // }
+    //
+    // hideNotEnoughFeaturesMessage() {
+    //     this.notEnoughFeaturesMessage.style.display = "none";
+    // }
 
     tellNumberOfCharts(chartCount) {
         this.possibleChartCount = chartCount;
