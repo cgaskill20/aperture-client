@@ -124,7 +124,7 @@ class ScatterplotManager {
         let yfeat = values[this.currentFeatures.y];
         let shorterFeature = (xfeat.length > yfeat.length) ? yfeat : xfeat; 
 
-        if (xfeat[0].type !== yfeat[0].type) {
+        if (shorterFeature.length === 0 || xfeat[0].type !== yfeat[0].type) {
             return [];
         }
 
