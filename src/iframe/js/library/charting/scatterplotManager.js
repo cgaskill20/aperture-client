@@ -135,8 +135,8 @@ class ScatterplotManager {
             
             if (xEntry && yEntry) {
                 data.push({
-                    x: xfeat.find(d => d.GISJOIN === gisjoin).data,
-                    y: yfeat.find(d => d.GISJOIN === gisjoin).data,
+                    x: xEntry.data,
+                    y: yEntry.data,
                 });
             }
         });
