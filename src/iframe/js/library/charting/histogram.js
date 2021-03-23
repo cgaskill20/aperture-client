@@ -110,12 +110,13 @@ class Histogram extends Chart {
             .text(this.title);
 
         if (this.kdeEnabled) {
+            let maxBarHeight = d3.max(this.bins, d => d.length);
             view.line = d3.line()
                 .curve(d3.curveBasis)
                 .x(d => view.x(d[0]))
                 .y(d => view.y(d[1]));
             view.svg.select("path#kdecurve")
-                .datum(this.kde.estimate(view.x.ticks(30), this.data))
+                .datum(this.kde.estimate(view.x.ticks(30), this.data).map(e => [e[0], e[1] * maxBarHeight]))
                 .attr("d", view.line);
         }
     }

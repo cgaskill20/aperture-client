@@ -199,7 +199,6 @@ class resizable {
 
         this.overlayDocument.addEventListener('mousedown', (e) => {
             // Do not initiate dragging if we've clicked an <input> element
-            console.log(document.elementFromPoint(e.clientX, e.clientY));
             if (document.elementFromPoint(e.clientX, e.clientY).tagName === "INPUT") {
                 this.isDown = false;
             } else {
