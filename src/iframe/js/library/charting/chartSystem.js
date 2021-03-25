@@ -97,7 +97,11 @@ class ChartSystem {
         $.getJSON(chartCatalogFilename, (catalog) => {
             this.initializeUpdateHooks();
             this.catalog = catalog;
-            this.graphable = catalog.map(e => Object.keys(e.constraints)).flat();
+            this.graphable = catalog.map(e => {
+                return Object.entries(e.constraints).map(kv => {
+                    return Feature.compose(e.collection, kv[0], kv[1].label);
+                })
+            }).flat();
         });
 
         this.doNotUpdate = false;
@@ -144,6 +148,7 @@ class ChartSystem {
         // This arcane incantation gets a list of feature names for which there's actually data.
         // Don't ask.
         let validFeatures = Object.entries(values).filter(kv => kv[1].length !== 0).map(kv => kv[0]);
+
         this.validFeatureManager.update(validFeatures);
 
         return values;

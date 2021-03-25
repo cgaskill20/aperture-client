@@ -1,3 +1,5 @@
+importScripts('./charting/feature.js');
+
 /**
  * @class  MapDataFilter
  * @author Pierce Smith
@@ -115,7 +117,9 @@ class MapDataFilter {
       */
     filter(data, bounds) {
         // oh god
-        let filtered = Object.values(data).map(coll => coll.filter(datum => Util.isInBounds(datum, bounds))).flat();
+        let filtered = Object.entries(data).map(kv => { 
+            return { collection: kv[0], data: kv[1].filter(datum => Util.isInBounds(datum, bounds)) };
+        });
 
         // Now that unchecking collections nukes whole parts of the dataset, this probably isn't necessary
         //this.discardOldData(this.msCacheMaxAge);
@@ -144,14 +148,19 @@ class MapDataFilter {
       * returns {object} the model
       */
     getSingleModel(feature, data) {
+        let featureCollection = Feature.getCollection(feature);
+        let featureName = Feature.getName(feature);
+
         const model = {};
         model[feature] = [];
 
-        for (const datum of data) {
-            if (datum.properties[feature] !== undefined) {
-                model[feature].push(this.model(datum, feature));
-            }
-        }
+        data.forEach(entry => {
+            entry.data.forEach(datum => {
+                if (entry.collection === featureCollection && datum.properties[featureName]) {
+                    model[feature].push(this.model(datum, feature));
+                }
+            });
+        });
 
         return model;
     }
@@ -168,10 +177,11 @@ class MapDataFilter {
       */
     model(entry, feature) { 
         return { 
-            data: entry.properties[feature],
+            data: entry.properties[Feature.getName(feature)],
             type: this.dataLocation(entry),
             locationName: entry.properties.NAME10,
             feature: feature,
+            GISJOIN: entry.properties.GISJOIN,
         };
     }
 

@@ -123,33 +123,26 @@ class ScatterplotManager {
         let xfeat = values[this.currentFeatures.x];
         let yfeat = values[this.currentFeatures.y];
         let shorterFeature = (xfeat.length > yfeat.length) ? yfeat : xfeat; 
-        for (let i = 0; i < shorterFeature.length; i++) {
-            data.push({
-                x: xfeat[i].data,
-                y: yfeat[i].data,
-            });
+
+        if (shorterFeature.length === 0 || xfeat[0].type !== yfeat[0].type) {
+            return [];
         }
 
-        let readableXName = this.catalog.find(e => {
-            for (let constraint in e.constraints) {
-                if (constraint === this.currentFeatures.x) {
-                    return true;
-                }
+        let joins = shorterFeature.map(d => d.GISJOIN);
+        joins.forEach(gisjoin => {
+            let xEntry = xfeat.find(d => d.GISJOIN === gisjoin);
+            let yEntry = yfeat.find(d => d.GISJOIN === gisjoin);
+            
+            if (xEntry && yEntry) {
+                data.push({
+                    x: xEntry.data,
+                    y: yEntry.data,
+                });
             }
-            return false;
-        }).constraints[this.currentFeatures.x].label;
+        });
 
-        let readableYName = this.catalog.find(e => {
-            for (let constraint in e.constraints) {
-                if (constraint === this.currentFeatures.y) {
-                    return true;
-                }
-            }
-            return false;
-        }).constraints[this.currentFeatures.y].label;
-
-        data.x = readableXName;
-        data.y = readableYName;
+        data.x = Feature.getFriendlyName(this.currentFeatures.x);
+        data.y = Feature.getFriendlyName(this.currentFeatures.y);
 
         return data;
     }
