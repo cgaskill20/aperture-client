@@ -61,6 +61,8 @@ class Histogram extends Chart {
         this.binNum = 10;
         this.changeBins(this.binNum);
         this.colorScale = () => "steelblue";
+        this.kdeEnabled = false;
+        this.kde = new KernelDensityEstimator();
     }
 
     rerender(newWidth, newHeight, viewIndex) {
@@ -106,6 +108,23 @@ class Histogram extends Chart {
             .attr("y", 24)
             .attr("text-anchor", "middle")
             .text(this.title);
+
+        if (this.kdeEnabled) {
+            let maxBarHeight = d3.max(this.bins, d => d.length);
+            let kdePoints = this.kde.normalize(this.kde.estimate(view.x.ticks(30), this.data), maxBarHeight);
+
+            view.kdeLine = d3.line()
+                .curve(d3.curveBasis)
+                .x(d => view.x(d[0]))
+                .y(d => view.y(d[1]));
+            view.svg.select("path#kdecurve")
+                .datum(kdePoints)
+                .attr("d", view.kdeLine)
+                .attr("display", "default");
+        } else {
+            view.svg.select("path#kdecurve")
+                .attr("display", "none");
+        }
     }
 
     changeBins(binNum) {
@@ -137,13 +156,73 @@ class Histogram extends Chart {
         view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
 
         view.bins = d3.bin().thresholds(8)(this.data);
-        view.margin = { top: 30, right: 20, bottom: 20, left: 40 };
+        view.margin = { top: 60, right: 20, bottom: 30, left: 40 };
 
         view.svg.append("g").attr("id", "rects");
         view.svg.append("g").attr("id", "xAxis");
         view.svg.append("g").attr("id", "yAxis");
         view.svg.append("text").attr("id", "title");
+        view.svg.append("path").attr("id", "kdecurve")
+            .attr("fill", "none")
+            .attr("stroke", "#000")
+            .attr("stroke-width", 1.5)
+            .attr("stroke-linejoin", "round");
+
+        this.addBandwidthSlider(view.svg);
+        this.addKDEToggle(view.svg);
 
         return view;
+    }
+
+    addBandwidthSlider(svg) {
+        svg.append("foreignObject")
+            .attr("x", 20)
+            .attr("y", 20)
+            .attr("width", 300)
+            .attr("height", 40)
+            .append("xhtml:div")
+            .append("xhtml:input")
+            .attr("name", "bwslider")
+            .attr("type", "range")
+            .attr("min", -1)
+            .attr("max", 2)
+            .attr("step", "any")
+            .attr("id", "kdeSlider");
+
+        svg.select("foreignObject div")
+            .append("text")
+
+        let kde = this.kde;
+        let histogram = this;
+        svg.select("foreignObject input#kdeSlider").node().oninput = function() { 
+            if (histogram.kdeEnabled) {
+                let transformedValue = Math.exp(this.value);
+                kde.setBandwidth(transformedValue); 
+
+                svg.select("foreignObject div text")
+                    .text(`${transformedValue.toPrecision(2)}`)
+
+                histogram.rerenderAllViews();
+            }
+        };
+    }
+
+    addKDEToggle(svg) {
+        svg.append("foreignObject")
+            .attr("x", 0)
+            .attr("y", 20)
+            .attr("width", 50)
+            .attr("height", 50)
+            .append("xhtml:div")
+            .append("xhtml:input")
+            .attr("type", "checkbox")
+            .attr("id", "kdeToggle");
+
+        let histogram = this;
+        let checkboxNode = svg.select("foreignObject input#kdeToggle").node();
+        checkboxNode.onclick = function() { 
+            histogram.kdeEnabled = checkboxNode.checked;
+            histogram.rerenderAllViews();
+        };
     }
 }
