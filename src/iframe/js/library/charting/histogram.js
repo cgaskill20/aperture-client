@@ -119,7 +119,11 @@ class Histogram extends Chart {
                 .y(d => view.y(d[1]));
             view.svg.select("path#kdecurve")
                 .datum(kdePoints)
-                .attr("d", view.kdeLine);
+                .attr("d", view.kdeLine)
+                .attr("display", "default");
+        } else {
+            view.svg.select("path#kdecurve")
+                .attr("display", "none");
         }
     }
 
@@ -165,6 +169,7 @@ class Histogram extends Chart {
             .attr("stroke-linejoin", "round");
 
         this.addBandwidthSlider(view.svg);
+        this.addKDEToggle(view.svg);
 
         return view;
     }
@@ -181,20 +186,41 @@ class Histogram extends Chart {
             .attr("type", "range")
             .attr("min", -1)
             .attr("max", 2)
-            .attr("step", "any");
+            .attr("step", "any")
+            .attr("id", "kdeSlider");
 
         svg.select("foreignObject div")
             .append("text")
 
         let kde = this.kde;
         let histogram = this;
-        svg.select("foreignObject input").node().oninput = function() { 
+        svg.select("foreignObject input#kdeSlider").node().oninput = function() { 
             let transformedValue = Math.exp(this.value);
             kde.setBandwidth(transformedValue); 
 
             svg.select("foreignObject div text")
                 .text(`${transformedValue.toPrecision(2)}`)
 
+            histogram.rerenderAllViews();
+        };
+    }
+
+    addKDEToggle(svg) {
+        svg.append("foreignObject")
+            .attr("x", 0)
+            .attr("y", 20)
+            .attr("width", 100)
+            .attr("height", 100)
+            .append("xhtml:div")
+            .append("xhtml:input")
+            .attr("type", "checkbox")
+            .attr("id", "kdeToggle");
+
+        let histogram = this;
+        let checkboxNode = svg.select("foreignObject input#kdeToggle").node();
+        checkboxNode.onclick = function() { 
+            console.log(checkboxNode.checked);
+            histogram.kdeEnabled = checkboxNode.checked;
             histogram.rerenderAllViews();
         };
     }
