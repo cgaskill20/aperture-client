@@ -286,7 +286,7 @@ body {
 .overlay .box{
     width: 100%;
     height: 100%;
-    border: 3px solid #4286f4;
+    border: 1px solid #eee;
     box-sizing: border-box;
 }
 
