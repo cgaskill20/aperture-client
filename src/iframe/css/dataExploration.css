@@ -337,7 +337,7 @@ body {
   flex-direction: column;
 }
 
-foreignObject div input {
+foreignObject div #kdeSlider {
     width: 200px;
     height: 10px;
     display: inline;

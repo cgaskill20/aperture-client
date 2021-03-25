@@ -61,7 +61,7 @@ class Histogram extends Chart {
         this.binNum = 10;
         this.changeBins(this.binNum);
         this.colorScale = () => "steelblue";
-        this.kdeEnabled = true;
+        this.kdeEnabled = false;
         this.kde = new KernelDensityEstimator();
     }
 
@@ -195,13 +195,15 @@ class Histogram extends Chart {
         let kde = this.kde;
         let histogram = this;
         svg.select("foreignObject input#kdeSlider").node().oninput = function() { 
-            let transformedValue = Math.exp(this.value);
-            kde.setBandwidth(transformedValue); 
+            if (histogram.kdeEnabled) {
+                let transformedValue = Math.exp(this.value);
+                kde.setBandwidth(transformedValue); 
 
-            svg.select("foreignObject div text")
-                .text(`${transformedValue.toPrecision(2)}`)
+                svg.select("foreignObject div text")
+                    .text(`${transformedValue.toPrecision(2)}`)
 
-            histogram.rerenderAllViews();
+                histogram.rerenderAllViews();
+            }
         };
     }
 
@@ -209,8 +211,8 @@ class Histogram extends Chart {
         svg.append("foreignObject")
             .attr("x", 0)
             .attr("y", 20)
-            .attr("width", 100)
-            .attr("height", 100)
+            .attr("width", 50)
+            .attr("height", 50)
             .append("xhtml:div")
             .append("xhtml:input")
             .attr("type", "checkbox")
@@ -219,7 +221,6 @@ class Histogram extends Chart {
         let histogram = this;
         let checkboxNode = svg.select("foreignObject input#kdeToggle").node();
         checkboxNode.onclick = function() { 
-            console.log(checkboxNode.checked);
             histogram.kdeEnabled = checkboxNode.checked;
             histogram.rerenderAllViews();
         };
