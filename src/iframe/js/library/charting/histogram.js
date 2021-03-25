@@ -111,13 +111,15 @@ class Histogram extends Chart {
 
         if (this.kdeEnabled) {
             let maxBarHeight = d3.max(this.bins, d => d.length);
-            view.line = d3.line()
+            let kdePoints = this.kde.normalize(this.kde.estimate(view.x.ticks(30), this.data), maxBarHeight);
+
+            view.kdeLine = d3.line()
                 .curve(d3.curveBasis)
                 .x(d => view.x(d[0]))
                 .y(d => view.y(d[1]));
             view.svg.select("path#kdecurve")
-                .datum(this.kde.estimate(view.x.ticks(30), this.data).map(e => [e[0], e[1] * maxBarHeight]))
-                .attr("d", view.line);
+                .datum(kdePoints)
+                .attr("d", view.kdeLine);
         }
     }
 
@@ -171,7 +173,7 @@ class Histogram extends Chart {
         svg.append("foreignObject")
             .attr("x", 20)
             .attr("y", 20)
-            .attr("width", 250)
+            .attr("width", 300)
             .attr("height", 40)
             .append("xhtml:div")
             .append("xhtml:input")
@@ -191,7 +193,7 @@ class Histogram extends Chart {
             kde.setBandwidth(transformedValue); 
 
             svg.select("foreignObject div text")
-                .text(transformedValue.toPrecision(2));
+                .text(`${transformedValue.toPrecision(2)}`)
 
             histogram.rerenderAllViews();
         };
