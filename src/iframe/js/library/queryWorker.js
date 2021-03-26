@@ -13,7 +13,6 @@ onmessage = function (msg) {
     } else if (msg.data.type === "kill") {
         querier.killAllStreamsOverCollection(msg.data.collection);
     } else if (msg.data.type === "config") {
-        globalThis.latticeNum = msg.data.latticeNum;
         querier = getSustainQuerier();
     }
 }

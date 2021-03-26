@@ -1,16 +1,10 @@
 const MAPNUMBER = 2;
 const e = React.createElement;
-globalThis.latticeNum =  Math.floor(Math.random() * 20) + 100;
 
 const PAGE_URL = window.location.href;
 const DEV = PAGE_URL.includes("dev") || PAGE_URL.includes("127.0.0.1");
 if (DEV) {
-    const overwriteLatticeNum = localStorage.getItem("latticeNum");
-    if(overwriteLatticeNum){
-        globalThis.latticeNum = overwriteLatticeNum;
-    }
     console.log("Aperture client set to DEV mode.")
-    console.log(`Connected to lattice-${globalThis.latticeNum}`);
     AutoQuery.minCountyZoom = 1;
     AutoQuery.minTractZoom = 1;
 }
@@ -80,14 +74,12 @@ ReactDOM.render(e(PreloadingMenu,{
         {
             id: bgTractId,
             loader: backgroundTract,
-            collection: "tract_geo_140mb_no_2d_index",
-            latticeNum: globalThis.latticeNum
+            collection: "tract_geo_140mb_no_2d_index"
         },
         {
             id: bgCountyId,
             loader: backgroundCounty,
-            collection: "county_geo_30mb_no_2d_index",
-            latticeNum: globalThis.latticeNum
+            collection: "county_geo_30mb_no_2d_index"
         }
     ]
 }), preloadStatusContainer);

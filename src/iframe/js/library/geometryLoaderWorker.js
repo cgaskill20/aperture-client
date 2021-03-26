@@ -67,7 +67,6 @@ onmessage = function (msg) {
     const sID = data.senderID;
     switch (data.type) {
         case "config":
-            globalThis.latticeNum = data.latticeNum;
             loader = new GeometryLoader(data.collection);
             BoundsToGISJOIN.config(data.collection);
             id = data.id;
