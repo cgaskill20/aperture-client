@@ -1,5 +1,7 @@
-'use strict';
-class ModelResolution extends React.Component {
+import React, { Component } from 'react';
+const e = React.createElement;
+
+export default class ModelResolution extends React.Component {
     constructor(props) {
         super(props);
         this.onResolutionChange = this.onResolutionChange.bind(this);

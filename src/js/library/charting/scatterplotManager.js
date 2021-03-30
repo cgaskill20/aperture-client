@@ -55,7 +55,9 @@ END OF TERMS AND CONDITIONS
 
 */
 
-class ScatterplotManager {
+import Scatterplot from "./scatterplot";
+
+export default class ScatterplotManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem) {
         this.catalog = catalog;
         this.chartArea = chartArea;

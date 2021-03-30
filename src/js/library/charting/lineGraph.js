@@ -55,7 +55,9 @@ END OF TERMS AND CONDITIONS
 
 */
 
-class LineGraph extends Chart {
+import Chart from "./chart";
+
+export default class LineGraph extends Chart {
 
     rerender(width, height, viewIndex) {
         this.changeData();

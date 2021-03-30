@@ -55,7 +55,20 @@ END OF TERMS AND CONDITIONS
 
 */
 
-const ChartingType = {
+import SingleChartManager from "./singleChartManager";
+import SingleChartArea from "./singleChartArea";
+import LineGraph from "./lineGraph";
+import Histogram from "./histogram";
+import Scatterplot from "./scatterplot";
+import ScatterplotManager from "./scatterplotManager";
+import ScatterplotArea from "./scatterplotArea";
+import ValidFeatureManager from "./validFeatureManager";
+import Feature from "./feature";
+import resizable from "../resizable";
+import ChartFrame from "./chartFrame";
+import MapDataFilterWrapper from "../mapDataFilterWrapper"
+
+export const ChartingType = {
     LINE: {
         name: "line",
         managerType: SingleChartManager,
@@ -76,7 +89,7 @@ const ChartingType = {
     },
 }
 
-class ChartSystem {
+export default class ChartSystem {
     constructor(map, chartCatalogFilename) {
         this.map = map;
 

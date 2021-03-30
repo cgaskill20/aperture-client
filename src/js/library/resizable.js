@@ -59,7 +59,7 @@ END OF TERMS AND CONDITIONS
 * Library for the creation and alteration of floating divs
 * Author Jean-Marc
 */
-class resizable {
+export default class resizable {
     minimum_size = 20;
     // Allows us to add listeners to the unique overlays
     static numOfInstances = 0;

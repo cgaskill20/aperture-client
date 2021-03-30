@@ -1,5 +1,7 @@
-'use strict';
-class ModelParameter extends React.Component {
+import React, { Component } from 'react';
+const e = React.createElement;
+
+export default class ModelParameter extends React.Component {
     constructor(props) {
         super(props);
         // console.log(this.props)

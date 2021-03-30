@@ -3,7 +3,7 @@
  * or not (don't have data).
  * @author Pierce Smith
  */
-class ValidFeatureManager {
+export default class ValidFeatureManager {
     constructor(valids, onChangeCallback) {
         if(onChangeCallback !== undefined) {
             this.onChangeCallbacks = [onChangeCallback];

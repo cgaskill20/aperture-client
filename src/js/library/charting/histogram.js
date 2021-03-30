@@ -55,7 +55,10 @@ END OF TERMS AND CONDITIONS
 
 */
 
-class Histogram extends Chart {
+import Chart from "./chart";
+import KernelDensityEstimator from "./kernelDensityEstimator"
+
+export default class Histogram extends Chart {
     constructor() {
         super([]);
         this.binNum = 10;

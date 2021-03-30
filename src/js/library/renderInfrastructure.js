@@ -27,7 +27,7 @@ const DEFAULTOPTIONS = {
  * Where the Rendering/Management related functions are
  * @namespace RenderInfrastructure
 */
-class RenderInfrastructure {
+export default class RenderInfrastructure {
     /**
      * Sets up instance of renderer
      * @memberof RenderInfrastructure

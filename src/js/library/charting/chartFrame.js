@@ -1,4 +1,4 @@
-class ChartFrame {
+export default class ChartFrame {
     constructor(node, area, manager) {
         this.node = node;
         this.area = area;

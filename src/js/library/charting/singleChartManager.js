@@ -55,7 +55,7 @@ END OF TERMS AND CONDITIONS
 
 */
 
-class SingleChartManager {
+export default class SingleChartManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
         this.charts = {};
         this.chartArea = chartArea;

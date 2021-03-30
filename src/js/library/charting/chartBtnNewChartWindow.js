@@ -1,3 +1,5 @@
+import { createHistogram, createScatterplot, createLinegraph} from "./chartBtnCreateChart";
+
 document.getElementById('nav-graph-button').addEventListener('click', showGraph);
 let buttonsOn = false;
 

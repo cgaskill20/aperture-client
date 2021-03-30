@@ -55,7 +55,9 @@ END OF TERMS AND CONDITIONS
 
 */
 
-class Scatterplot extends Chart {
+import Chart from "./chart";
+
+export default class Scatterplot extends Chart {
     constructor() {
         super([]);
     }

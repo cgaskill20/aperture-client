@@ -1,3 +1,69 @@
+import ChartSystem from "./src/js/library/charting/chartSystem"
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
+
+import ModelMenu from "./src/js/ui/modeling/components/ModelMenu";
+import PreloadingMenu from "./src/js/ui/preloading-menu/components/PreloadingMenu"
+
+import {sustain_querier} from "./src/js/grpc/GRPC_Querier/grpc_querier.js";
+
+import AutoQuery from "./src/js/library/autoQuery.js";
+import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
+
+
+require("./src/css/variables.css");
+require("./src/css/darkModeSwitch.css");
+require("./src/css/imageStyles.css");
+require("./src/css/dataExploration.css");
+require("./src/css/queries.css");
+require("./src/css/modeling.css");
+require("./src/css/charts.css");
+require("./src/css/bootstrapOverrides.css");
+require("./src/css/third-party/nouislider.min.css");
+require("./src/css/third-party/bootstrap4-toggle.min.css");
+require("./src/css/third-party/bootstrap.min.css");
+require("./src/css/third-party/MarkerCluster.css");
+require("./src/css/third-party/MarkerCluster.Default.css");
+require("./src/css/third-party/chart.css");
+
+require("osmtogeojson");
+
+require("./src/js/third-party/nouislider.min.js");
+require("./src/js/third-party/simplify.js");
+require("./src/js/third-party/leaflet.markercluster.js");
+require("./src/js/third-party/d3.min.js");
+require("./src/js/third-party/progressbar.min.js");
+require("./src/js/third-party/popper.min.js");
+require("./src/js/third-party/bootstrap4-toggle.min.js");
+require("bootstrap");
+
+require("./src/js/model-managers/cluster-helpers/clusterState.js");
+require("./src/js/model-managers/clusterManager.js");
+require("./src/js/model-managers/regressionManager.js");
+
+require("./src/js/library/smartQuerier.js");
+
+require("./src/js/library/apertureUtil.js");
+require("./src/js/library/resizable.js");
+require("./src/js/library/mapDataFilterWrapper.js");
+require("./src/js/library/geohash_util.js");
+
+require("./src/js/library/autoMenu.js");
+
+require("./src/js/ui/menuGenerator.js");
+
+
+
+
 const MAPNUMBER = 2;
 const e = React.createElement;
 
@@ -43,7 +109,7 @@ const map = L.map('map2', {
     zoomControl: false
 });
 window.map = map;
-map.setView([40.573733,-105.086559], 11);
+map.setView([40.573733, -105.086559], 11);
 
 L.control.layers(baseMaps).addTo(map);
 standardTiles.addTo(map);
@@ -68,7 +134,7 @@ let bgTractId = "bgTract";
 let bgCountyId = "bgCounty";
 const backgroundTract = new Worker("src/js/library/geometryLoaderWorker.js", { name: `Background tract worker: ${bgTractId}` });
 const backgroundCounty = new Worker("src/js/library/geometryLoaderWorker.js", { name: `Background county worker: ${bgCountyId}` });
-ReactDOM.render(e(PreloadingMenu,{
+ReactDOM.render(e(PreloadingMenu, {
     loaders: [
         {
             id: bgTractId,
@@ -147,14 +213,9 @@ map.on("zoomend", function () {
     parent.setGlobalPositionFORCE(map.getCenter(), MAPNUMBER);
 });
 
-// //-----------
-// var thisMapsSetter = function (view, zoom) {
-//     map.setView(map.wrapLatLng(parent.view), map.getZoom());
-// }
-// parent.setterFunctions.push({
-//     setterFunc: thisMapsSetter,
-//     mapNum: MAPNUMBER
-// });
-// setTimeout(function () {
-//     map.setView([map.wrapLatLng(parent.view).lat, map.wrapLatLng(parent.view).lng - 0.0002], map.getZoom());
-// }, 1); //this is a terrible fix but it works for now
+require("./src/js/static/navButtons.js");
+require("./src/js/static/darkMode.js");
+require("./src/js/static/switchImageSources.js");
+require("./src/js/library/charting/chartBtnNewChartWindow.js");
+require("./src/js/library/charting/chartBtnCreateChart.js");
+require("./src/js/library/charting/chartBtnControls.js");

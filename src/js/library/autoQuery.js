@@ -1,3 +1,5 @@
+import Gradient from "../third-party/Gradient"
+import MapDataFilterWrapper from "./mapDataFilterWrapper"
 /**
  * @class AutoQuery
  * @file Query layers in a very general fashion
@@ -6,7 +8,7 @@
  * @notes Work in progress!
  */
 
-class AutoQuery {
+export default class AutoQuery {
     static queryWorker = new Worker('src/js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
     static queryWorkerConfiged = false;
     static minCountyZoom = 1;

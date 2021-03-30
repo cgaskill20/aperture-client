@@ -2,7 +2,9 @@ let maxGraphs = 6;
 let totalGraphs = 0;
 let maxGraphsReached = false;
 
-function createHistogram() {
+import { ChartingType } from "./chartSystem"
+
+export function createHistogram() {
     moreGraphsPossible();
 
     let chart = chartSystem.getChartFrame(ChartingType.HISTOGRAM);
@@ -15,7 +17,7 @@ function createHistogram() {
     addTheGraph(graphBox);
 }
 
-function createScatterplot() {
+export function createScatterplot() {
     moreGraphsPossible();
 
     let chart = chartSystem.getChartFrame(ChartingType.SCATTERPLOT);
@@ -28,7 +30,7 @@ function createScatterplot() {
     addTheGraph(graphBox);
 }
 
-function createLinegraph() {
+export function createLinegraph() {
     moreGraphsPossible();
 
     let chart = chartSystem.getChartFrame(ChartingType.LINEGRAPH);

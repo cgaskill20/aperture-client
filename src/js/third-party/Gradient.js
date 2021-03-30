@@ -1,5 +1,5 @@
 //pulled from: https://github.com/Adrinlol/javascript-color-gradient#readme
-class Gradient {
+export default class Gradient {
     constructor(gradients = '', maxNum = 10, colors = ['', ''], intervals = []) {
 
         const setColors = props => {

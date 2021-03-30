@@ -1,5 +1,11 @@
-'use strict';
-class ModelMenu extends React.Component {
+import React, { Component } from 'react';
+const e = React.createElement;
+import ModelCollection from "./ModelCollection";
+import ModelParameter from "./ModelParameter";
+import ModelResolution from "./ModelResolution";
+import {sustain_querier} from "./src/js/grpc/GRPC_Querier/grpc_querier.js";
+
+export default class ModelMenu extends React.Component {
     constructor(props) {
         super(props);
 

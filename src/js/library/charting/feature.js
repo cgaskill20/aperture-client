@@ -1,5 +1,5 @@
 
-class Feature {
+export default class Feature {
     static featurePattern = /(.+)::(.+)::(.+)/;
 
     static compose(collection, name, friendlyName) {

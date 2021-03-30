@@ -1,5 +1,5 @@
 
-class KernelDensityEstimator {
+export default class KernelDensityEstimator {
     constructor() {
         // Default kernel is the epanechnikov kernel
         this.setKernel(this.epanechnikov);

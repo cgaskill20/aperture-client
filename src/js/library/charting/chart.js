@@ -88,7 +88,7 @@ END OF TERMS AND CONDITIONS
  *       data's human readable label. 
  * @author Pierce Smith
  */
-class Chart {
+export default class Chart {
     constructor(data) {
         this.views = [];
         this.data = data;

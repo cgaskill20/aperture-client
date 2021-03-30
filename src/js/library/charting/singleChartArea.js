@@ -5,7 +5,7 @@
   * 
   * @author Pierce Smith, Matt Young (mostly Pierce Smith)
   */
-class SingleChartArea {
+export default class SingleChartArea {
     static runningID = 0;
 
     constructor() {

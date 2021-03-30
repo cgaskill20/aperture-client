@@ -1,7 +1,8 @@
-'use strict';
+import React, { Component } from 'react';
+import ProgressBar from '../../../third-party/progressbar.min.js';
+const e = React.createElement;
 
-
-class PreloadingMenu extends React.Component {
+export default class PreloadingMenu extends React.Component {
     constructor(props) {
         super(props);
 

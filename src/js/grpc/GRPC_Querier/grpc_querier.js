@@ -6,7 +6,7 @@ const {SustainClient, JsonProxyClient} = require('./sustain_grpc_web_pb.js');
  * @file Object used for performing gRPC queries
  * @author Kevin Bruhwiler & Daniel Reynolds
  */
-SustainQuerier = {
+const SustainQuerier = {
     /**
       * Initialize the SustainQuerier object and service
       *
@@ -141,7 +141,7 @@ SustainQuerier = {
   * @return {SustainQuerier} 
   *         The sustainQuerier object
   */
-sustain_querier = function() {
+export const sustain_querier = function() {
     const sustainQuerier = SustainQuerier;
     sustainQuerier.initialize();
     return sustainQuerier;

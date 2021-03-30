@@ -1,6 +1,6 @@
 const filterWorker = new Worker("src/js/library/mapDataFilterWorker.js", { name: `Charting Filter` });
 
-const MapDataFilterWrapper = {
+export default {
     add: (data, collection) => {
         filterWorker.postMessage({
             type: "add",

@@ -55,7 +55,7 @@ END OF TERMS AND CONDITIONS
 
 */
 
-class ScatterplotArea {
+export default class ScatterplotArea {
     constructor() {
     }
 

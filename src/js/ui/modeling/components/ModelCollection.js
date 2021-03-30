@@ -1,5 +1,7 @@
-'use strict';
-class ModelCollection extends React.Component {
+import React, { Component } from 'react';
+const e = React.createElement;
+
+export default class ModelCollection extends React.Component {
     constructor(props) {
         super(props);
         this.name = this.props.config.name;
