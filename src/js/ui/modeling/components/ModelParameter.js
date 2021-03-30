@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 const e = React.createElement;
+import noUiSlider from "../../../third-party/nouislider.min.js";
 
 export default class ModelParameter extends React.Component {
     constructor(props) {
