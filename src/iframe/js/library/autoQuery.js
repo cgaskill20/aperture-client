@@ -21,8 +21,7 @@ class AutoQuery {
     constructor(layerData, graphPipeID) {
         if(!AutoQuery.queryWorkerConfiged){
             AutoQuery.queryWorker.postMessage({
-                type: "config",
-                latticeNum: globalThis.latticeNum
+                type: "config"
             });
             AutoQuery.queryWorkerConfiged = true;
         }
