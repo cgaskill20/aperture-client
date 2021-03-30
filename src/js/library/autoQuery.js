@@ -7,7 +7,7 @@
  */
 
 class AutoQuery {
-    static queryWorker = new Worker('js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
+    static queryWorker = new Worker('src/js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
     static queryWorkerConfiged = false;
     static minCountyZoom = 1;
     static minTractZoom = 1;
@@ -335,7 +335,7 @@ class AutoQuery {
 
         indexData[this.collection].popup = this.buildPopup();
         if (this.getIcon())
-            indexData[this.collection]["iconAddr"] = `../../images/map-icons/${this.getIcon()}.png`;
+            indexData[this.collection]["iconAddr"] = `./images/map-icons/${this.getIcon()}.png`;
         
         indexData[this.collection]["border"] = this.color.border;
         indexData[this.collection]["opacity"] = this.color.opacity;

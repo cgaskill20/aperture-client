@@ -324,7 +324,7 @@ const MenuGenerator = {
 
     createDropdown: function (layerConstraints) {
         const dropdown = document.createElement("img");
-        dropdown.src = "../../images/Dropdown_Black.png";
+        dropdown.src = "./images/Dropdown_Black.png";
         dropdown.className = "dropdown-arrow";
         dropdown.style.transform = layerConstraints.style.display === "none" ? "rotate(0deg)" : "rotate(180deg)";
         dropdown.onclick = function () {
@@ -337,7 +337,7 @@ const MenuGenerator = {
     createTooltip: function(layerInfo) {
         const title = layerInfo;
         const tooltip = document.createElement("span");
-        tooltip.innerHTML = "<img src='../../images/Info_Black.png' class='tool-tip' data-toggle='tooltip'\
+        tooltip.innerHTML = "<img src='./images/Info_Black.png' class='tool-tip' data-toggle='tooltip'\
         data-placement='top' container='body' title=\'" + title + "\'>";
         $(function () {
           $('[data-toggle="tooltip"]').tooltip()

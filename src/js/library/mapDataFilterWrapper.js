@@ -1,4 +1,4 @@
-const filterWorker = new Worker("js/library/mapDataFilterWorker.js", { name: `Charting Filter` });
+const filterWorker = new Worker("src/js/library/mapDataFilterWorker.js", { name: `Charting Filter` });
 
 const MapDataFilterWrapper = {
     add: (data, collection) => {

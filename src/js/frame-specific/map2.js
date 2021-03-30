@@ -43,11 +43,10 @@ const map = L.map('map2', {
     zoomControl: false
 });
 window.map = map;
+map.setView([40.573733,-105.086559], 11);
 
 L.control.layers(baseMaps).addTo(map);
 standardTiles.addTo(map);
-
-map.setView(map.wrapLatLng(parent.view), 11);
 
 const zoomControl = L.control.zoom({ position: "topright" }).addTo(map);
 
@@ -67,8 +66,8 @@ window.dataModelingGroup = dataModelingGroup;
 const preloadStatusContainer = document.getElementById("preloadStatus");
 let bgTractId = "bgTract";
 let bgCountyId = "bgCounty";
-const backgroundTract = new Worker("js/library/geometryLoaderWorker.js", { name: `Background tract worker: ${bgTractId}` });
-const backgroundCounty = new Worker("js/library/geometryLoaderWorker.js", { name: `Background county worker: ${bgCountyId}` });
+const backgroundTract = new Worker("src/js/library/geometryLoaderWorker.js", { name: `Background tract worker: ${bgTractId}` });
+const backgroundCounty = new Worker("src/js/library/geometryLoaderWorker.js", { name: `Background county worker: ${bgCountyId}` });
 ReactDOM.render(e(PreloadingMenu,{
     loaders: [
         {
@@ -127,10 +126,10 @@ window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplora
     maxLayers: 20,
     simplifyThreshold: 0.0001
 });
-const chartSystem = new ChartSystem(map, "json/graphPriority.json", window.renderInfrastructure);
+const chartSystem = new ChartSystem(map, "src/json/graphPriority.json", window.renderInfrastructure);
 
 //where the magic happens
-$.getJSON("json/menumetadata.json", async function (mdata) { //this isnt on the mongo server yet so query it locally
+$.getJSON("src/json/menumetadata.json", async function (mdata) { //this isnt on the mongo server yet so query it locally
     const finalData = await AutoMenu.build(mdata, overwrite);
     MenuGenerator.generate(finalData, document.getElementById("sidebar-container"));
 });
@@ -148,14 +147,14 @@ map.on("zoomend", function () {
     parent.setGlobalPositionFORCE(map.getCenter(), MAPNUMBER);
 });
 
-//-----------
-var thisMapsSetter = function (view, zoom) {
-    map.setView(map.wrapLatLng(parent.view), map.getZoom());
-}
-parent.setterFunctions.push({
-    setterFunc: thisMapsSetter,
-    mapNum: MAPNUMBER
-});
-setTimeout(function () {
-    map.setView([map.wrapLatLng(parent.view).lat, map.wrapLatLng(parent.view).lng - 0.0002], map.getZoom());
-}, 1); //this is a terrible fix but it works for now
+// //-----------
+// var thisMapsSetter = function (view, zoom) {
+//     map.setView(map.wrapLatLng(parent.view), map.getZoom());
+// }
+// parent.setterFunctions.push({
+//     setterFunc: thisMapsSetter,
+//     mapNum: MAPNUMBER
+// });
+// setTimeout(function () {
+//     map.setView([map.wrapLatLng(parent.view).lat, map.wrapLatLng(parent.view).lng - 0.0002], map.getZoom());
+// }, 1); //this is a terrible fix but it works for now

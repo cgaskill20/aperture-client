@@ -1,6 +1,6 @@
 {
     "water_works": {
-        "iconAddr": "../../../images/water_works.png",
+        "iconAddr": ".././images/water_works.png",
         "color": "black",
         "defaultRender": true,
         "query":"man_made=water_works",
@@ -8,7 +8,7 @@
         "grpc":"OSMRequest"
     },
     "wastewater_plant": {
-        "iconAddr": "../../../images/sewage.png",
+        "iconAddr": ".././images/sewage.png",
         "color": "#FF00FF",
         "defaultRender": false,
         "query":"man_made=wastewater_plant",
@@ -48,7 +48,7 @@
         "grpc":"OSMRequest"
     },
     "lock_gate": {
-        "iconAddr": "../../../images/lock_gate.png",
+        "iconAddr": ".././images/lock_gate.png",
         "color": "#FF0000",
         "defaultRender":true,
         "query":"waterway=lock_gate",
@@ -56,7 +56,7 @@
         "grpc":"OSMRequest"
     },
     "weir": {
-        "iconAddr": "../../../images/weir.png",
+        "iconAddr": ".././images/weir.png",
         "color": "#FF0000",
         "defaultRender":false,
         "query":"waterway=weir",
@@ -71,7 +71,7 @@
         "grpc":"OSMRequest"
     },
     "water": {
-        "iconAddr": "../../../images/reservoir-lake.png",
+        "iconAddr": ".././images/reservoir-lake.png",
         "color": "#00FFFF",
         "defaultRender":false,
         "query":"natural=water",
@@ -79,23 +79,23 @@
         "grpc":"OSMRequest"
     },
     "reservoir": {
-        "iconAddr": "../../../images/reservoir-lake.png",
+        "iconAddr": ".././images/reservoir-lake.png",
         "color": "#00FFFF",
         "groupMem":"Water (Man Made)"
     },
     "basin": {
-        "iconAddr": "../../../images/reservoir-lake.png",
+        "iconAddr": ".././images/reservoir-lake.png",
         "color": "#00FFFF",
         "groupMem":"Water (Natural)"
     },
     "pond":{
         "color": "#00FFFF",
-        "iconAddr": "../../../images/reservoir-lake.png",
+        "iconAddr": ".././images/reservoir-lake.png",
         "groupMem":"Water (Natural)"
     },
     "lake":{
         "color": "#00FFFF",
-        "iconAddr": "../../../images/reservoir-lake.png",
+        "iconAddr": ".././images/reservoir-lake.png",
         "groupMem":"Water (Natural)"
     },
     "Natural_Gas_Pipeline": {
@@ -109,7 +109,7 @@
         "popup": "A(n) @@TYPEPIPE@@ natural gas pipeline operated by @@Operator@@."
     },
     "substation":{
-        "iconAddr": "../../../images/substation.png",
+        "iconAddr": ".././images/substation.png",
         "defaultRender":false,
         "query": "custom=substation",
         "grpc":"DatasetRequest",
@@ -188,7 +188,7 @@
         "popup": "Areas subject to a one percent or greater annual chance of flooding in any given year that also have additional hazards associated with velocity wave action"
     },
     "dam": {
-        "iconAddr": "../../../images/dam.png",
+        "iconAddr": ".././images/dam.png",
         "color": "#FF0000",
         "defaultRender":false,
         "query":"custom=dam",
@@ -199,7 +199,7 @@
         "popup": "@@NAME@@ dam, located along the @@RIVER@@, standing @@DAM_HEIGHT@@ feet high, located in @@COUNTY@@ county, @@STATE@@. This dam primarily affects @@CITYAFFECT@@, @@NIDSTATE@@."
     },
     "power_plant":{
-        "iconAddr": "../../../images/power_plant.png",
+        "iconAddr": ".././images/power_plant.png",
         "defaultRender":false,
         "query": "custom=power_plant",
         "queryURL":"https://geodata.epa.gov/arcgis/rest/services/OEI/FRS_PowerPlants/MapServer/12/query?where=1%3D1&outFields=*&geometry={{BOUNDS}}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",
@@ -208,7 +208,7 @@
         "popup": "@@PLANT_NAME@@ power plant, which produces energy through @@ENERGY_SRC_DESC1@@"
     },
     "fire_station":{
-        "iconAddr": "../../../images/fire_station.png",
+        "iconAddr": ".././images/fire_station.png",
         "defaultRender":false,
         "query": "custom=fire_station",
         "grpc":"DatasetRequest",
@@ -218,7 +218,7 @@
         "popup": "@@NAME@@, located in @@CITY@@, @@STATE@@."
     },
     "hospital":{
-        "iconAddr": "../../../images/hospital.png",
+        "iconAddr": ".././images/hospital.png",
         "defaultRender":false,
         "query": "custom=hosptial",
         "grpc":"DatasetRequest",
@@ -228,7 +228,7 @@
         "popup": "@@NAME@@, a @@OWNER@@ hospital with @@BEDS@@ beds, located in @@CITY@@, @@STATE@@."
     },
     "urgent_care":{
-        "iconAddr": "../../../images/urgent_care.png",
+        "iconAddr": ".././images/urgent_care.png",
         "defaultRender":false,
         "query": "custom=urgent_care",
         "queryURL": "https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/Urgent_Care_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&geometry={{BOUNDS}}&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&f=geojson",

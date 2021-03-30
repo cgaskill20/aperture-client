@@ -1,33 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <link rel="shortcut icon" href="#" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="src/dependencies/style.css">
-    <script src='src/dependencies/controller.js'></script>
-    <script src='src/dependencies/pipe.js'></script>
-    <script src="src/dependencies/index.html.js"></script>
 
-    <title>Aperture</title>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin="" />
+    <script src="./node_modules/leaflet/dist/leaflet.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="src/css/variables.css">
+    <link rel="stylesheet" type="text/css" href="src/css/main.css">
+    <link rel="stylesheet" type="text/css" href="src/css/darkModeSwitch.css">
+    <link rel="stylesheet" type="text/css" href="src/css/imageStyles.css">
+    <link rel="stylesheet" type="text/css" href="src/css/dataExploration.css">
+    <link rel="stylesheet" type="text/css" href="src/css/queries.css">
+    <link rel="stylesheet" type="text/css" href="src/css/modeling.css">
+    <link rel="stylesheet" type="text/css" href="src/css/charts.css">
+    <link rel="stylesheet" type="text/css" href="src/css/bootstrapOverrides.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="src/js/third-party/nouislider.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="src/css/third-party/nouislider.min.css">
+    <link rel="stylesheet" type="text/css" href="src/css/third-party/bootstrap4-toggle.min.css">
+    <link rel="stylesheet" type="text/css" href="src/css/third-party/bootstrap.min.css">
+
+    <script src="../../node_modules/osmtogeojson/osmtogeojson.js"></script>
+    <script src="src/js/third-party/simplify.js"></script>
+    <script src="src/js/grpc/GRPC_Querier/grpc_querier.bundle.js"></script>
+    <script src="src/js/library/smartQuerier.js"></script>
+    <link rel="stylesheet" type="text/css" href="src/css/third-party/MarkerCluster.css">
+    <link rel="stylesheet" type="text/css" href="src/css/third-party/MarkerCluster.Default.css">
+    <link rel="stylesheet" type="text/css" href="src/css/third-party/chart.css">
+    <script src="src/js/third-party/leaflet.markercluster.js"></script>
+    <script src="src/js/third-party/Gradient.js"></script>
+    <script src="src/js/third-party/d3.min.js"></script>
+    <script src="src/js/third-party/progressbar.min.js"></script>
+
+    <script src="src/js/model-managers/cluster-helpers/clusterState.js"></script>
+    <script src="src/js/model-managers/clusterManager.js"></script>
+    <script src="src/js/model-managers/regressionManager.js"></script>
+    <!-- Charting includes -->
+    <script src="src/js/library/charting/feature.js"></script>
+    <script src="src/js/library/charting/chartFrame.js"></script>
+    <script src="src/js/library/charting/validFeatureManager.js"></script>
+    <script src="src/js/library/charting/kernelDensityEstimator.js"></script>
+    <script src="src/js/library/charting/chart.js"></script>
+    <script src="src/js/library/charting/histogram.js"></script>
+    <script src="src/js/library/charting/scatterplot.js"></script>
+    <script src="src/js/library/charting/lineGraph.js"></script>
+    <script src="src/js/library/charting/singleChartArea.js"></script>
+    <script src="src/js/library/charting/scatterplotArea.js"></script>
+    <script src="src/js/library/charting/singleChartManager.js"></script>
+    <script src="src/js/library/charting/scatterplotManager.js"></script>
+    <script src="src/js/library/charting/chartSystem.js"></script>
+
+    <script src="src/js/library/apertureUtil.js"></script>
+    <script src="src/js/library/resizable.js"></script>
+    <script src="src/js/library/mapDataFilterWrapper.js"></script>
+    <script src="src/js/library/geohash_util.js"></script>
+
+    <script src="src/js/library/renderInfrastructure.js"></script>
+    <script src="src/js/library/autoQuery.js"></script>
+    <script src="src/js/library/autoMenu.js"></script>
+
+    <script src="src/js/ui/menuGenerator.js"></script>
 </head>
 <body>
-    <div class="mapContainer" style="padding: 0px">
-        
-       <!--<div id="mMap1" style="height: 50%; width:50%; float:left">
-            <iframe src="src/iframe/map1.html"></iframe>
-        </div>-->
-        <div id="mMap2" style="height: 100%; width:100%; float:right">
-            <iframe src="src/iframe/map2.html"></iframe>
+    <div class="leaflet-bottom leaflet-right"></div>
+    <div id="sidebar-id" class="sidebar colorMode1">
+        <div class="container ui-control">
+            <div class="row justify-content-md-center">
+                <div class="col-lg FOR_GRID_ONLY"></div>
+                <div class = "nav-group col-lg-auto">
+                    <div class="btn-group" id="nav-group-id" role="group" aria-label="Basic example">
+                      <button type="button" id='nav-graph-button' class="btn btn-outline-dark color-change">Graphing</button>
+                      <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark color-change">Data Exploration</button>
+                      <button type="button" id='nav-modeling-button' class="btn btn-outline-dark color-change">Modeling</button>
+                      <button type="button" id='nav-validation-button' class="btn btn-outline-dark color-change disabled">Validation</button>
+                      <button type="button" id='nav-close-button' class="btn btn-outline-dark color-change">Close</button>
+                    </div>
+                </div>
+                <div class="dark-mode-control col-lg">
+                    <div class="theme-switch-wrapper">
+                        <label class="theme-switch" for="checkbox">
+                            <input type="checkbox" id="checkbox" />
+                            <div class="slider round"></div>
+                        </label>
+                        <img class="moon-icon" src="./images/Moon_Black.png">
+                    </div>
+                </div>
+            </div>
         </div>
-        <!--
-		<div id="mMap3" style="height: 50%; width:50%; float:left">
-            <iframe src="src/iframe/map3.html"></iframe>
+        <div id="sidebar-container"></div>
+        <div id="model-container"></div>
+    </div>
+    <div id="main">
+      <button class="btn btn-outline-dark-custom" id='nav-menu-button'>☰ Menu</button>
+    </div>
+    <div id="preloadBlocker">
+        <div id="preloadStatus">
+            
         </div>
-		<div id="mMap4" style="height: 50%; width:50%; float:left">
-            <iframe src="src/iframe/map4.html"></iframe>
-        </div>-->
-	</div>
-	<div class="tiles-loading"></div>
+    </div>
+    <div id="map" class="sidebar-map"></div>
+    <div id='map2' class='map'></div>
+    
+    <div id="clusterLegendContainer">
+      <div id="clusterLegend"></div>
+    </div>
+
+    <script src="src/js/third-party/popper.min.js"></script>
+    <script src="src/js/third-party/bootstrap4-toggle.min.js"></script>
+    <script src="src/js/third-party/bootstrap.min.js"></script>
+
+    <!-- React Lib Prod-->
+    <script src="src/js/third-party/react/prod/react.production.min.js"></script>
+    <script src="src/js/third-party/react/prod/react-dom.production.min.js"></script>
+    <!-- React Lib Dev -->
+    <!-- <script src="src/js/third-party/react/dev/react.development.js"></script>
+    <script src="src/js/third-party/react/dev/react-dom.development.js"></script> -->
+
+    <!-- React Components -->
+    <script src="src/js/ui/modeling/components/ModelMenu.js"></script>
+    <script src="src/js/ui/modeling/components/ModelParameter.js"></script>
+    <script src="src/js/ui/modeling/components/ModelCollection.js"></script>
+    <script src="src/js/ui/modeling/components/ModelResolution.js"></script>
+    <script src="src/js/ui/preloading-menu/components/PreloadingMenu.js"></script>
+
+    <!-- Frame JS, Load Last! -->
+    <!--Required for this map to be controlled-->
+    <script src="src/js/frame-specific/map2.js"></script>
+    <script src="src/js/frame-specific/navButtons.js"></script>
+    <script src="src/js/frame-specific/darkMode.js"></script>
+    <script src="src/js/frame-specific/switchImageSources.js"></script>
+    <script src="src/js/library/charting/chartBtnNewChartWindow.js"></script>
+    <script src="src/js/library/charting/chartBtnCreateChart.js"></script>
+    <script src="src/js/library/charting/chartBtnControls.js"></script>
+
+    <script src="src/js/third-party/jquery-3.2.1.slim.min.js"></script>
+    <script src="src/js/third-party/popper.min.js"></script>
+    <script src="src/js/third-party/bootstrap4-toggle.min.js"></script>
+    <script src="src/js/third-party/bootstrap.min.js"></script>
 </body>
-</html>
