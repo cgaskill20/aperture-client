@@ -6,19 +6,20 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
 import ModelMenu from "./src/js/ui/modeling/components/ModelMenu";
 import PreloadingMenu from "./src/js/ui/preloading-menu/components/PreloadingMenu"
 
-import {sustain_querier} from "./src/js/grpc/GRPC_Querier/grpc_querier.js";
+import { sustain_querier } from "./src/js/grpc/GRPC_Querier/grpc_querier.js";
 
 import AutoQuery from "./src/js/library/autoQuery.js";
 import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
-
+import AutoMenu from "./src/js/library/autoMenu.js";
+import MenuGenerator, { updateLayers } from "./src/js/ui/menuGenerator.js";
 
 require("./src/css/variables.css");
 require("./src/css/darkModeSwitch.css");
@@ -57,9 +58,6 @@ require("./src/js/library/resizable.js");
 require("./src/js/library/mapDataFilterWrapper.js");
 require("./src/js/library/geohash_util.js");
 
-require("./src/js/library/autoMenu.js");
-
-require("./src/js/ui/menuGenerator.js");
 
 
 

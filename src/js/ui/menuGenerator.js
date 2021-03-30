@@ -1,3 +1,5 @@
+import AutoQuery from "../library/autoQuery";
+import noUiSlider from "../third-party/nouislider.min.js";
 /**
  * @namespace MenuGenerator
  * @file Build's menu UI for the Aperture Client
@@ -19,13 +21,13 @@ const DEFAULT_OBJECT = {
 }
 
 let updateQueue = {};
-function updateLayers() {
-    for (layerUpdate in updateQueue) {
+export function updateLayers() {
+    for (const layerUpdate in updateQueue) {
         updateQueue[layerUpdate](layerUpdate);
     }
 }
 
-const MenuGenerator = {
+export default {
     /** Generates the menu within a container
      * @memberof MenuGenerator
      * @method generate
@@ -53,7 +55,7 @@ const MenuGenerator = {
      */
     makeNested(json_map) {
         let columnsAndHeadings = {};
-        for (obj in json_map) {
+        for (const obj in json_map) {
             if (json_map[obj]["notAQueryableLayer"]) {
                 continue;
             }
@@ -100,7 +102,7 @@ const MenuGenerator = {
      * @param {JSON} nested_json_map nested JSON map from @method makeNested
      */
     addColumns(container, nested_json_map) {
-        for (obj in nested_json_map) {
+        for (const obj in nested_json_map) {
             const outerColumn = document.createElement("div");
 
             const newColumn = document.createElement("div");
@@ -123,8 +125,8 @@ const MenuGenerator = {
      * @param {JSON} nested_json_map nested JSON map from @method makeNested
      */
     addContentToColumns(nested_json_map) {
-        for (obj in nested_json_map) {
-            for (header in nested_json_map[obj]) {
+        for (const obj in nested_json_map) {
+            for (const header in nested_json_map[obj]) {
                 const column = document.getElementById(Util.spaceToUnderScore(obj));
                 if (!column) {
                     console.error("Error in column generation, could not find column!: " + obj);
@@ -144,7 +146,7 @@ const MenuGenerator = {
                 subGroup.appendChild(subGroupContainer);
 
                 //now add content to each header
-                for (layer in nested_json_map[obj][header]) {
+                for (const layer in nested_json_map[obj][header]) {
                     const layerName = layer;
                     const layerLabel = Util.capitalizeString(Util.underScoreToSpace(nested_json_map[obj][header][layer].label ? nested_json_map[obj][header][layer].label : layer));
                     const layerObj = nested_json_map[obj][header][layer];
@@ -224,7 +226,7 @@ const MenuGenerator = {
             layerConstraints.style.display = "none";
             let anyActiveConstraints = false;
 
-            for (constraint in layerObj["constraints"]) {
+            for (const constraint in layerObj["constraints"]) {
                 const constraintName = constraint;
                 const constraintDiv = this.createConstraintContainer(constraintName, layerName, layerObj, layerQuerier);
                 if(constraintDiv.style.display !== "none") {

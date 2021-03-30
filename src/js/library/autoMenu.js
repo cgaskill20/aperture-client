@@ -1,3 +1,5 @@
+import { sustain_querier } from "../grpc/GRPC_Querier/grpc_querier.js";
+
 /**
  * @namespace AutoMenu
  * @file Build a menu based on the metadata catalog & details provided by users about the metadata
@@ -5,7 +7,7 @@
  * @notes Work in progress!
  */
 
-const AutoMenu = {
+export default {
     //get the querier
     _sustainQuerier: null,
 
@@ -21,7 +23,7 @@ const AutoMenu = {
         this._sustainQuerier = sustain_querier();
         return new Promise(((resolve) => {
             let catalog = {};
-            const stream = AutoMenu._sustainQuerier.getStreamForQuery("Metadata", "[]");
+            const stream = this._sustainQuerier.getStreamForQuery("Metadata", "[]");
             stream.on('data', (r) => {
                 const data = JSON.parse(r.getData());
                 catalog[data.collection] = data; // do da data dance
