@@ -1,4 +1,4 @@
-const assert = require('assert');
+/*const assert = require('assert');
 var mdf = require('../../../../src/iframe/js/library/mapDataFilter.js');
 
 const exampleData = [
@@ -108,4 +108,4 @@ describe('MapDataFilter', () => {
             assert.equal(callbackedData.length, exampleData.length);
         });
     });
-});
+});*/
