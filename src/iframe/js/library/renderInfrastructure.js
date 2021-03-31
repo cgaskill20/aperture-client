@@ -63,9 +63,6 @@ class RenderInfrastructure {
         //console.log(geoJsonData)
         Util.fixGeoJSONID(geoJsonData);
 
-        if (this.dataFilter) {
-            this.dataFilter.add(geoJsonData);
-        }
 
         const datasource = indexData ? indexData : this.data;
         let layers = [];
@@ -241,11 +238,6 @@ class RenderInfrastructure {
         else {
             return "noicon";
         }
-    }
-
-
-    useFilter(filt) {
-        this.dataFilter = filt;
     }
 }
 

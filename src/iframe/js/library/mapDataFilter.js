@@ -1,3 +1,5 @@
+importScripts('./charting/feature.js');
+
 /**
  * @class  MapDataFilter
  * @author Pierce Smith
@@ -5,8 +7,8 @@
 
 class MapDataFilter {
     constructor() {
-        this.msCacheMaxAge = 10000;
-        this.data = [];
+        this.msCacheMaxAge = 10000000;
+        this.data = {};
     }
 
     /** Inserts a data element or array of data elements into the filter.
@@ -15,24 +17,26 @@ class MapDataFilter {
       * 
       * @memberof MapDataFilter
       * @method add
-      * @param {(object|Array<object>)} newData - the data to add, as a direct response from the database
+      * @param {(object|Array<object>)} newData The data to add, as a direct response from the database
+      * @param {string} collection The collection the data is a part of
       */
-    add(newData) {
+    add(newData, collection) {
         if (Array.isArray(newData)) {
-            this.addMultiple(newData);
+            this.addMultiple(newData, collection);
         } else {
-            this.addSingle(newData);
+            this.addSingle(newData, collection);
         }
     }
 
     /** Inserts a single data element to the filter.
       * @memberof MapDataFilter
       * @method add
-      * @param {object} newData - the data to add, as a direct response from the database
+      * @param {object} newData The data to add, as a direct response from the database
+      * @param {string} collection The collection the data is a part of
       * @see add
       */
-    addSingle(newData) {
-        let entryAlreadyExists = this.data.find(entry => {
+    addSingle(newData, collection) {
+        let entryAlreadyExists = Object.values(this.data).find(entry => {
             if (newData.id) {
                 return entry.id === newData.id;
             } else {
@@ -45,7 +49,10 @@ class MapDataFilter {
         }
 
         newData.entryTime = Date.now();
-        this.data.push(newData);
+        if (!this.data[collection]) {
+            this.data[collection] = [];
+        }
+        this.data[collection].push(newData);
 
         if (this.newDataCallback) {
             this.newDataCallback(this.model(newData)); 
@@ -57,12 +64,13 @@ class MapDataFilter {
     /** Inserts an array of data elements into the filter.
       * @memberof MapDataFilter
       * @method addMultiple
-      * @param {Array<object>} newData - an array of data elements
+      * @param {Array<object>} newData An array of data elements
+      * @param {string} collection The collection the data is a part of
       * @see add
       */
-    addMultiple(newData) {
+    addMultiple(newData, collection) {
         for (let data of newData) {
-            this.addSingle(data);
+            this.addSingle(data, collection);
         }
     }
 
@@ -103,13 +111,18 @@ class MapDataFilter {
       * is discarded.
       * @memberof MapDataFilter
       * @method filter
-      * @param {Array<object>} data - an array of raw data as passed into the `add` method
+      * @param {object} data An object collating raw data as passed into the `add` method
       * @param {Leaflet Bounds} bounds
       * @returns {Array<object>} a subset of the data including only entries the filter is interested in
       */
     filter(data, bounds) {
-        let filtered = data.filter(entry => Util.isInBounds(entry, bounds));
-        this.discardOldData(this.msCacheMaxAge);
+        // oh god
+        let filtered = Object.entries(data).map(kv => { 
+            return { collection: kv[0], data: kv[1].filter(datum => Util.isInBounds(datum, bounds)) };
+        });
+
+        // Now that unchecking collections nukes whole parts of the dataset, this probably isn't necessary
+        //this.discardOldData(this.msCacheMaxAge);
         return filtered;
     }
 
@@ -120,7 +133,9 @@ class MapDataFilter {
       * @param {number} maxAge - the age, in milliseconds, that which any older data should be removed
       */
     discardOldData(maxAge) {
-        this.data = this.data.filter(entry => (Date.now() - entry.entryTime) < maxAge)
+        this.data = Object.fromEntries(Object.entries(this.data).map(kv => { 
+            return [kv[0], kv[1].filter(datum => ((Date.now() - datum.entryTime) < maxAge))];
+        }));
     }
 
     /** Gets a model for a single feature.
@@ -133,14 +148,19 @@ class MapDataFilter {
       * returns {object} the model
       */
     getSingleModel(feature, data) {
+        let featureCollection = Feature.getCollection(feature);
+        let featureName = Feature.getName(feature);
+
         const model = {};
         model[feature] = [];
 
-        for (const entry of data) {
-            if (entry.properties[feature] !== undefined) {
-                model[feature].push(this.model(entry, feature));
-            }
-        }
+        data.forEach(entry => {
+            entry.data.forEach(datum => {
+                if (entry.collection === featureCollection && datum.properties[featureName]) {
+                    model[feature].push(this.model(datum, feature));
+                }
+            });
+        });
 
         return model;
     }
@@ -157,10 +177,11 @@ class MapDataFilter {
       */
     model(entry, feature) { 
         return { 
-            data: entry.properties[feature],
+            data: entry.properties[Feature.getName(feature)],
             type: this.dataLocation(entry),
             locationName: entry.properties.NAME10,
             feature: feature,
+            GISJOIN: entry.properties.GISJOIN,
         };
     }
 
@@ -198,6 +219,15 @@ class MapDataFilter {
         }
 
         return model;
+    }
+
+    /** Removes all data in the filter over the given collection.
+      * @memberof MapDataFilter
+      * @method destroyAllOverCollection
+      * @param {string} collection The collection for which to remove data 
+     */
+    removeAllOverCollection(collection) {
+        this.data[collection] = []; // have fun gc
     }
 
     /** Set a callback that fires whenever new data arrives. The callback will

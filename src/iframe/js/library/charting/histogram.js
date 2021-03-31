@@ -55,200 +55,174 @@ END OF TERMS AND CONDITIONS
 
 */
 
-/**
-* Library for the creation and alteration of floating divs
-* Author Jean-Marc
-*/
-class resizable {
-    minimum_size = 20;
-    // Allows us to add listeners to the unique overlays
-    static numOfInstances = 0;
-    // Each time a overlay is clicked its Z Index increases so it is seen above all other overlays
-    static zIndex = 1000;
-
-    constructor(defaultWidth, defaultHeight, backgroundColor){
-        resizable.numOfInstances += 1;
-        this.width = defaultWidth;
-        this.height = defaultHeight;
-        this.uniqueId = resizable.numOfInstances;
-        this.backgroundColor = backgroundColor;
-        this.isDown = false;
-        this.isResizing = false;
-        this.createOverlay();
-        this.resizeListeners();
-        this.movementListeners();
-    }
-    /**
-     * Generates the 3 necessary divs for the overlay and adds in the CSS based on its initialization variables
-     * @memberof resizable
-     * @method createOverlay()
-     * @returns 3 divs appended to the body of the HTML doc
-     */
-    createOverlay(){
-        const overlayDocument = document.createElement("div");
-        this.overlayDocument = overlayDocument;
-        overlayDocument.id = "overlay" + this.uniqueId;
-        overlayDocument.className = "overlay colorMode1 noTransitions";
-        overlayDocument.style.width = this.width + "px";
-        overlayDocument.style.height = this.height + "px";
-        overlayDocument.style.zIndex = resizable.zIndex;
-        overlayDocument.style.display = "none";
-        overlayDocument.style.opacity = .9;
-
-        const boxDocument = document.createElement("div");
-        this.boxDocument = boxDocument;
-        boxDocument.id = "box" + this.uniqueId;
-        boxDocument.className = "box";
-
-        // This is the button in the top right that allows the div's size to be altered
-        const boxResizer = document.createElement("div");
-        this.boxResizer = boxResizer;
-        boxResizer.id = "option" + this.uniqueId;
-        boxResizer.className = "option top-right";
-
-        boxDocument.appendChild(boxResizer);
-        overlayDocument.appendChild(boxDocument);
-        document.body.appendChild(overlayDocument);
+class Histogram extends Chart {
+    constructor() {
+        super([]);
+        this.binNum = 10;
+        this.changeBins(this.binNum);
+        this.colorScale = () => "steelblue";
+        this.kdeEnabled = false;
+        this.kde = new KernelDensityEstimator();
     }
 
-    /**
-     * Adds in the necessary listeners for the divs to be resized
-     * @memberof resizable
-     * @method resizeListeners()
-     * @returns 3 listeners for mousemovement
-     */
-    resizeListeners(){
-        this.boxResizer.addEventListener('mousedown', (e) => {
-            /**
-             * Since there are the same listeners for resizing and movement we need these booleans so that resizing does
-             * not also move the div around and vice-versa
-             */
-            this.isDown = true;
-            this.isResizing = true;
-            e.preventDefault();
-            let dimensions = this.calculateDimensions(e);
-            window.addEventListener('mousemove', (e) =>{
-                if(this.isDown && this.isResizing){
-                    this.changeBoxSize(e, dimensions);
-                }
-            });
-            window.addEventListener('mouseup', ()=>{
-                this.isDown = false;
-                this.isResizing = false;
-            });
-        });
-    }
-    /**
-     * Calculates dimensions for resize, only because the resize function needed less lines
-     * @memberof resizable
-     * @method calculateDimensions
-     * @param {event} e - the current position of the mouse
-     * @returns 4 listeners for mousemovement
-     */
-    calculateDimensions(e){
-        let dimensions = [];
-        //Calculates the width
-        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('width').replace('px', '')));
-        // Calculates the height
-        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('height').replace('px', '')));
-        // Calculates the Y coordinate
-        dimensions.push(this.overlayDocument.getBoundingClientRect().top);
-        // Calculates the mouse X and Y coordinate
-        dimensions.push(e.pageX);
-        dimensions.push(e.pageY);
-        return dimensions;
-    }
-
-    changeBoxSize(e, dimensions){
-        this.width = dimensions[0] + (e.pageX - dimensions[3]);
-        this.height = dimensions[1] - (e.pageY - dimensions[4]);
-        if (this.width > this.minimum_size) {
-            this.overlayDocument.style.width = this.width + 'px';
-        }
-        if (this.height > this.minimum_size) {
-            this.overlayDocument.style.height = this.height + 'px';
-            this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
+    rerender(newWidth, newHeight, viewIndex) {
+        if (this.data.length === 0) {
+            return;
         }
 
-        if (this.onResizeCallback) {
-            this.onResizeCallback(this.width, this.height);
-        }
-    }
+        let view = this.views[viewIndex];
 
-    setResizeCallback(cb) {
-        this.onResizeCallback = cb;
-    }
+        view.width = newWidth;
+        view.height = newHeight;
+        view.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
 
-    triggerResizeEvent() {
-        this.onResizeCallback(this.width, this.height);
-    }
+        view.x = d3.scaleLinear()
+            .range([view.margin.left, newWidth - view.margin.right])
+            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1]);
 
-    /**
-     * Adds in the necessary listeners for the div to be moved
-     * @memberof resizable
-     * @method movementListeners()
-     * @returns 4 listeners for mousemovement
-     */
-    movementListeners(){
-        let offset = [0,0];
-        let mousePosition;
-        this.overlayDocument.addEventListener('mousedown', ()=>{
-            resizable.zIndex += 1;
-            this.overlayDocument.style.zIndex = resizable.zIndex;
-        });
+        view.y = d3.scaleLinear()
+            .range([newHeight - view.margin.bottom, view.margin.top])
+            .domain([0, d3.max(this.bins, d => d.length)]).nice();
 
-        this.overlayDocument.addEventListener('mousedown', (e) => {
-            // Do not initiate dragging if we've clicked an <input> element
-            if (document.elementFromPoint(e.clientX, e.clientY).tagName === "INPUT") {
-                this.isDown = false;
-            } else {
-                this.isDown = true;
-            }
+        view.xAxis = g => g
+            .attr("transform", `translate(0,${newHeight - view.margin.bottom})`)
+            .call(d3.axisBottom(view.x).ticks(newWidth / 80).tickSizeOuter(0))
 
-            offset = [
-                this.overlayDocument.offsetLeft - e.clientX,
-                this.overlayDocument.offsetTop - e.clientY
-            ];
+        view.yAxis = g => g
+            .attr("transform", `translate(${view.margin.left}, 0)`)
+            .call(d3.axisLeft(view.y).ticks(newHeight / 40))
 
-        }, true);
+        view.svg.select("g#xAxis").call(view.xAxis);
+        view.svg.select("g#yAxis").call(view.yAxis);
+        view.svg.select("g#rects")
+            .selectAll("rect")
+                .attr("fill", d => this.colorScale(d.x1))
+            .data(this.bins)
+            .join("rect")
+                .attr("x", d => view.x(d.x0) + 1)
+                .attr("width", d => Math.max(0, view.x(d.x1) - view.x(d.x0) - 1))
+                .attr("y", d => view.y(d.length))
+                .attr("height", d => view.y(0) - view.y(d.length));
+        view.svg.select("text#title")
+            .attr("x", newWidth / 2)
+            .attr("y", 24)
+            .attr("text-anchor", "middle")
+            .text(this.title);
 
-        this.overlayDocument.addEventListener('mouseup', () => {
-            this.isDown = false;
-        }, true);
+        if (this.kdeEnabled) {
+            let maxBarHeight = d3.max(this.bins, d => d.length);
+            let kdePoints = this.kde.normalize(this.kde.estimate(view.x.ticks(30), this.data), maxBarHeight);
 
-        window.addEventListener('mousemove', (event) => {
-            if (this.isDown && !this.isResizing) {
-                mousePosition = this.moveBox(event, mousePosition, offset);
-            }
-        }, true);
-
-    }
-
-    moveBox(event, mousePosition, offset){
-        mousePosition = {
-            x : event.clientX,
-            y : event.clientY
-        };
-        this.overlayDocument.style.left = (mousePosition.x + offset[0]) + 'px';
-        this.overlayDocument.style.top  = (mousePosition.y + offset[1]) + 'px';
-        return mousePosition;
-    }
-
-    toggleVisible(){
-        let currentlyVisible = this.overlayDocument.style.display === "block";
-        if (currentlyVisible) {
-            this.overlayDocument.style.display = "none";
+            view.kdeLine = d3.line()
+                .curve(d3.curveBasis)
+                .x(d => view.x(d[0]))
+                .y(d => view.y(d[1]));
+            view.svg.select("path#kdecurve")
+                .datum(kdePoints)
+                .attr("d", view.kdeLine)
+                .attr("display", "default");
         } else {
-            this.overlayDocument.style.display = "block";
-            for (let areaName in this.chartAreas) {
-                this.chartAreas[areaName].rerender(this.width, this.height);
-            }
+            view.svg.select("path#kdecurve")
+                .attr("display", "none");
         }
     }
 
-    addChartArea(type, chartArea) {
-        this.chartAreas[type] = chartArea;
-        chartArea.attachTo(this.boxDocument);
+    changeBins(binNum) {
+        this.bins = d3.bin().thresholds(binNum)(this.data);
+        this.rerenderAllViews();
+    }
+
+    changeData(newData, binNum) {
+        this.data = newData;
+        this.changeBins(binNum);
+        this.rerenderAllViews();
+    }
+
+    setColors(start, end) {
+        this.colorScale = d3.scaleLinear()
+            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1])
+            .range([start, end]);
+    }
+
+    setTitle(title) {
+        this.title = title;
+        this.rerenderAllViews();
+    }
+
+    makeNewView(node, width, height) {
+        let view = {};
+        view.width = width;
+        view.height = height;
+        view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
+
+        view.bins = d3.bin().thresholds(8)(this.data);
+        view.margin = { top: 60, right: 20, bottom: 30, left: 40 };
+
+        view.svg.append("g").attr("id", "rects");
+        view.svg.append("g").attr("id", "xAxis");
+        view.svg.append("g").attr("id", "yAxis");
+        view.svg.append("text").attr("id", "title");
+        view.svg.append("path").attr("id", "kdecurve")
+            .attr("fill", "none")
+            .attr("stroke", "#000")
+            .attr("stroke-width", 1.5)
+            .attr("stroke-linejoin", "round");
+
+        this.addBandwidthSlider(view.svg);
+        this.addKDEToggle(view.svg);
+
+        return view;
+    }
+
+    addBandwidthSlider(svg) {
+        svg.append("foreignObject")
+            .attr("x", 20)
+            .attr("y", 20)
+            .attr("width", 300)
+            .attr("height", 40)
+            .append("xhtml:div")
+            .append("xhtml:input")
+            .attr("name", "bwslider")
+            .attr("type", "range")
+            .attr("min", -1)
+            .attr("max", 2)
+            .attr("step", "any")
+            .attr("id", "kdeSlider");
+
+        svg.select("foreignObject div")
+            .append("text")
+
+        let kde = this.kde;
+        let histogram = this;
+        svg.select("foreignObject input#kdeSlider").node().oninput = function() { 
+            if (histogram.kdeEnabled) {
+                let transformedValue = Math.exp(this.value);
+                kde.setBandwidth(transformedValue); 
+
+                svg.select("foreignObject div text")
+                    .text(`${transformedValue.toPrecision(2)}`)
+
+                histogram.rerenderAllViews();
+            }
+        };
+    }
+
+    addKDEToggle(svg) {
+        svg.append("foreignObject")
+            .attr("x", 0)
+            .attr("y", 20)
+            .attr("width", 50)
+            .attr("height", 50)
+            .append("xhtml:div")
+            .append("xhtml:input")
+            .attr("type", "checkbox")
+            .attr("id", "kdeToggle");
+
+        let histogram = this;
+        let checkboxNode = svg.select("foreignObject input#kdeToggle").node();
+        checkboxNode.onclick = function() { 
+            histogram.kdeEnabled = checkboxNode.checked;
+            histogram.rerenderAllViews();
+        };
     }
 }
-

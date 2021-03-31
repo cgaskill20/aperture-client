@@ -237,29 +237,62 @@ const MenuGenerator = {
                 layerConstraints.style.display = "none";
             }
 
-            layerConstraints.appendChild(this.createModal(layerLabel, layerConstraints, layerQuerier, layerObj["constraints"], layerInfo));
+            layerConstraints.appendChild(this.createControlSection(layerName, layerLabel, layerConstraints, layerQuerier, layerObj["constraints"], layerInfo));
             layerContainer.appendChild(layerConstraints);
             layerSelector.appendChild(this.createDropdown(layerConstraints));
         }
         return layerContainer;
     },
 
-    createModal: function (layerLabel, layerConstraints, layerQuerier, constraintsObj, layerInfo) {
-        const modalDiv = document.createElement("div");
-        modalDiv.className = "modal-popout";
+    resetConstraintsForLayer: function(layerName){
+        document.dispatchEvent(new CustomEvent(`${layerName}_reset_constraints`));
+    },
+
+    createControlSection(layerName, layerLabel, layerConstraints, layerQuerier, constraintsObj, layerInfo) {
+        let controlDiv = document.createElement("div");
+        controlDiv.className = "content-section customBorder colorMode1";
+        let controlGroup = document.createElement("div");
+        controlGroup.className = "layer-control-button-group col-md-auto";
+        controlGroup.appendChild(this.createModal(layerLabel, layerConstraints, layerQuerier, constraintsObj, layerInfo));
+        controlGroup.appendChild(this.resetConstraintButton(layerName));
+        controlDiv.appendChild(controlGroup);
+        return controlDiv;
+    },
+
+    createControlGroupText() {
+        const controlGroupTextDiv = document.createElement("div");
+        controlGroupTextDiv.className = "control-group-text";
+        const controlGroupText = document.createElement("p");
+        controlGroupText.innerText = "Layer Controls";
+        controlGroupTextDiv.appendChild(controlGroupText);
+        return controlGroupTextDiv;
+    },
+
+    resetConstraintButton: function(layerName) {
+        let resetButton = document.createElement("button");
+        resetButton.className = "btn btn-outline-dark reset-constraint-button";
+        resetButton.type = "button";
+        resetButton.innerText = "Reset Constraints";
+        resetButton.onclick = () => {
+            this.resetConstraintsForLayer(layerName);
+        }
+        return resetButton;
+    },
+
+    createModal: function (layerLabel, layerConstraints, layerQuerier, constraintsObj) {
         const modalButton = document.createElement("mod");
         modalButton.type = "modal-btn";
         modalButton.className = "btn btn-outline-dark";
         modalButton.role = "button";
         modalButton.href = "#";
-        modalButton.innerHTML = "☰ Advanced...";
+        modalButton.innerHTML = "Advanced";
+        // modalButton.innerHTML = "☰ Advanced...";
         modalButton.onclick = function () {
             MenuGenerator.selectOptions(layerLabel, layerConstraints, function (constraint, active) {
                 layerQuerier.constraintSetActive(constraint, active);
             }, constraintsObj);
         }
-        modalDiv.appendChild(modalButton);
-        return modalDiv;
+        return modalButton;
     },
 
     createConstraintContainer: function (constraintName, layerName, layerObj, layerQuerier) {
@@ -371,7 +404,6 @@ const MenuGenerator = {
     },
 
     createSliderContainer: function (constraint, constraintObj, layerObj, layerName) {
-
         const sliderContainer = document.createElement("div");
         sliderContainer.className = "slider-individual";
         sliderContainer.id = constraint;
@@ -400,10 +432,16 @@ const MenuGenerator = {
                 sliderLabel.innerHTML += " - " + (isDate ? (new Date(Number(values[i]))).toUTCString().substr(0, 16) : (step < 1 ? values[i] : Math.floor(values[i])));
             }
         });
+
+        //listen for reset
+        document.addEventListener(`${layerName}_reset_constraints`, () => {
+            slider.noUiSlider.reset();
+        });
+
         const onConstraintChange = layerObj['onConstraintChange'];
         if (onConstraintChange) {
             onConstraintChange(layerName, constraint, slider.noUiSlider.get());
-            slider.noUiSlider.on('change', function (values) {
+            slider.noUiSlider.on('set', function (values) {
                 onConstraintChange(layerName, constraint, values);
             });
         }
@@ -434,7 +472,15 @@ const MenuGenerator = {
                 const checkboxSelector = document.createElement("input");
                 checkboxSelector.type = type;
                 checkboxSelector.id = Util.spaceToUnderScore(option);
-                checkboxSelector.checked = type === "radio" ? isFirstCheckbox : true;
+                const defaultChecked = type === "radio" ? isFirstCheckbox : true;
+                checkboxSelector.checked = defaultChecked;
+                //listen for reset
+                document.addEventListener(`${layerName}_reset_constraints`, () => {
+                    if(checkboxSelector.checked !== defaultChecked){
+                        checkboxSelector.checked = defaultChecked;
+                        checkboxSelectorContainer.onchange();
+                    }
+                });
                 checkboxSelector.name = constraint;
                 isFirstCheckbox = false;
                 const labelForRadioSelector = document.createElement("label");

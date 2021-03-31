@@ -1,4 +1,4 @@
-const {Query, CompoundRequest, JsonModelRequest, DirectRequest} = require("./sustain_pb.js")
+const {Query, CompoundRequest, JsonModelRequest, DirectRequest, JsonSlidingWindowRequest} = require("./sustain_pb.js")
 const {SustainClient, JsonProxyClient} = require('./sustain_grpc_web_pb.js');
 
 /**
@@ -14,8 +14,11 @@ SustainQuerier = {
       * @method initialize
       */
     initialize: function () {
-        this.service = new SustainClient("http://lattice-2.cs.colostate.edu:9092", "sustainServer");
-        this.modelService = new JsonProxyClient("http://lattice-2.cs.colostate.edu:9092", "sustainServer");
+        //const LATTICE_NUM = globalThis.latticeNum;
+        const LATTICE_PORT = 31415;
+        const LATTICE_URL = `https://sustain.cs.colostate.edu:${LATTICE_PORT}`;
+        this.service = new SustainClient(LATTICE_URL, "sustainServer");
+        this.modelService = new JsonProxyClient(LATTICE_URL, "sustainServer");
         return this;
     },
 
@@ -118,12 +121,17 @@ SustainQuerier = {
         return this.service.compoundQuery(request, {});
     },
     
-    
     executeModelQuery: function (query) {
         const request = new JsonModelRequest();
         request.setJson(query);
         return this.modelService.modelQuery(request, {});
 	},
+
+    executeSlidingWindowQuery: function (query) {
+        const request = new JsonSlidingWindowRequest();
+        request.setJson(query);
+        return this.modelService.slidingWindowQuery(request, {});
+    }
 };
 
 /**

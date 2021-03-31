@@ -12,7 +12,7 @@ class ModelResolution extends React.Component {
     
     render() {
         return e("div", {className: "modelSelect"},
-            e("label", {htmlFor: "resPicker"}, `Resolution: `),
+            e("label", {htmlFor: "resPicker",  className: "menuHeaderLabel"}, `Resolution: `),
             this.buildResolution()
         );
     }

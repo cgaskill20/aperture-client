@@ -14,13 +14,15 @@
     <link rel="stylesheet" type="text/css" href="css/imageStyles.css">
     <link rel="stylesheet" type="text/css" href="css/dataExploration.css">
     <link rel="stylesheet" type="text/css" href="css/queries.css">
+    <link rel="stylesheet" type="text/css" href="css/modeling.css">
+    <link rel="stylesheet" type="text/css" href="css/charts.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrapOverrides.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="js/third-party/nouislider.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/third-party/nouislider.min.css">
     <link rel="stylesheet" type="text/css" href="css/third-party/bootstrap4-toggle.min.css">
-
     <link rel="stylesheet" type="text/css" href="css/third-party/bootstrap.min.css">
 
     <script src="../../node_modules/osmtogeojson/osmtogeojson.js"></script>
@@ -33,17 +35,31 @@
     <script src="js/third-party/leaflet.markercluster.js"></script>
     <script src="js/third-party/Gradient.js"></script>
     <script src="js/third-party/d3.min.js"></script>
+    <script src="js/third-party/progressbar.min.js"></script>
 
     <script src="js/model-managers/cluster-helpers/clusterState.js"></script>
     <script src="js/model-managers/clusterManager.js"></script>
     <script src="js/model-managers/regressionManager.js"></script>
+    <!-- Charting includes -->
+    <script src="js/library/charting/feature.js"></script>
+    <script src="js/library/charting/chartFrame.js"></script>
+    <script src="js/library/charting/validFeatureManager.js"></script>
+    <script src="js/library/charting/kernelDensityEstimator.js"></script>
+    <script src="js/library/charting/chart.js"></script>
+    <script src="js/library/charting/histogram.js"></script>
+    <script src="js/library/charting/scatterplot.js"></script>
+    <script src="js/library/charting/lineGraph.js"></script>
+    <script src="js/library/charting/singleChartArea.js"></script>
+    <script src="js/library/charting/scatterplotArea.js"></script>
+    <script src="js/library/charting/singleChartManager.js"></script>
+    <script src="js/library/charting/scatterplotManager.js"></script>
+    <script src="js/library/charting/chartSystem.js"></script>
 
     <script src="js/library/apertureUtil.js"></script>
-    <script src="js/library/barChart.js"></script>
     <script src="js/library/resizable.js"></script>
-    <script src="js/library/mapDataFilter.js"></script>
-    <script src="js/library/chartSystem.js"></script>
+    <script src="js/library/mapDataFilterWrapper.js"></script>
     <script src="js/library/geohash_util.js"></script>
+
     <script src="js/library/renderInfrastructure.js"></script>
     <script src="js/library/autoQuery.js"></script>
     <script src="js/library/autoMenu.js"></script>
@@ -53,27 +69,32 @@
 <body>
     <div class="leaflet-bottom leaflet-right"></div>
     <div id="sidebar-id" class="sidebar colorMode1">
-        <div class="nav-tabs">
-        <div class="theme-switch-wrapper">
-            <img class="moon-icon" src="../../images/Moon_Black.png">
-            <label class="theme-switch" for="checkbox">
-                <input type="checkbox" id="checkbox" />
-                <div class="slider round"></div>
-            </label>
-        </div>
-            <div class="btn-group" id="nav-group-id" role="group" aria-label="Basic example">
-              <button type="button" id='nav-graph-button' class="btn btn-outline-dark color-change">Graphing</button>
-              <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark color-change">Data Exploration</button>
-              <button type="button" id='nav-modeling-button' class="btn btn-outline-dark color-change">Modeling</button>
-              <button type="button" id='nav-validation-button' class="btn btn-outline-dark color-change">Validation</button>
-              <button type="button" id='nav-close-button' class="btn btn-outline-dark color-change">Close</button>
+        <div class="container ui-control">
+            <div class="row justify-content-md-center">
+                <div class="col-lg FOR_GRID_ONLY"></div>
+                <div class = "nav-group col-lg-auto">
+                    <div class="btn-group" id="nav-group-id" role="group" aria-label="Basic example">
+                      <button type="button" id='nav-graph-button' class="btn btn-outline-dark color-change">Graphing</button>
+                      <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark color-change">Data Exploration</button>
+                      <button type="button" id='nav-modeling-button' class="btn btn-outline-dark color-change">Modeling</button>
+                      <button type="button" id='nav-validation-button' class="btn btn-outline-dark color-change disabled">Validation</button>
+                      <button type="button" id='nav-close-button' class="btn btn-outline-dark color-change">Close</button>
+                    </div>
+                </div>
+                <div class="dark-mode-control col-lg">
+                    <div class="theme-switch-wrapper">
+                        <label class="theme-switch" for="checkbox">
+                            <input type="checkbox" id="checkbox" />
+                            <div class="slider round"></div>
+                        </label>
+                        <img class="moon-icon" src="../../images/Moon_Black.png">
+                    </div>
+                </div>
             </div>
         </div>
         <div id="sidebar-container"></div>
-        <div id="model-container">
-        </div>
+        <div id="model-container"></div>
     </div>
-
     <div id="main">
       <button class="btn btn-outline-dark-custom" id='nav-menu-button'>☰ Menu</button>
     </div>
@@ -105,11 +126,21 @@
     <script src="js/ui/modeling/components/ModelParameter.js"></script>
     <script src="js/ui/modeling/components/ModelCollection.js"></script>
     <script src="js/ui/modeling/components/ModelResolution.js"></script>
+    <script src="js/ui/preloading-menu/components/PreloadingMenu.js"></script>
 
     <!-- Frame JS, Load Last! -->
+    <!--Required for this map to be controlled-->
     <script src="js/frame-specific/map2.js"></script>
-    <script src="js/frame-specific/UI-Buttons.js"></script>
+    <script src="js/frame-specific/navButtons.js"></script>
     <script src="js/frame-specific/darkMode.js"></script>
     <script src="js/frame-specific/switchImageSources.js"></script>
     <script src="js/control/mouseDown.js"></script>
+    <script src="js/library/charting/chartBtnNewChartWindow.js"></script>
+    <script src="js/library/charting/chartBtnCreateChart.js"></script>
+    <script src="js/library/charting/chartBtnControls.js"></script>
+
+    <script src="js/third-party/jquery-3.2.1.slim.min.js"></script>
+    <script src="js/third-party/popper.min.js"></script>
+    <script src="js/third-party/bootstrap4-toggle.min.js"></script>
+    <script src="js/third-party/bootstrap.min.js"></script>
 </body>

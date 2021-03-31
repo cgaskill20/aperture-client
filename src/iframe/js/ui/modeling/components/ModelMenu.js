@@ -17,7 +17,12 @@ class ModelMenu extends React.Component {
         this.modelManager = null;
 
         this._sustainQuerier = sustain_querier();
-        this.whitelist = ["K_MEANS_CLUSTERING"];
+        this.whitelist = [
+            "K_MEANS_CLUSTERING", 
+            "BISECTING_K_MEANS",
+            "GAUSSIAN_MIXTURE",
+            "LATENT_DIRICHLET_ALLOCATION"
+        ];
         this.populateCatalog();
 
         this.keyVal = 0;
@@ -46,7 +51,9 @@ class ModelMenu extends React.Component {
         return e("div", null,
             this.createModelSelect(),
             this.createResolution(),
+            e("div",{className: "menuHeaderLabel modelMenuHeader"}, "Features"),
             ...this.createCollections(),
+            e("div",{className: "menuHeaderLabel modelMenuHeader"}, "Hyperparameters"),
             ...this.createParameters(),
             this.createModelRunButton(),
         );
@@ -63,7 +70,7 @@ class ModelMenu extends React.Component {
     }
 
     createResetButton(){
-        return e("button", { type: "button", className: "btn btn-danger modelButton", onClick: this.restart },
+        return e("button", { type: "button", className: "btn btn-outline-dark modelButton", onClick: this.restart },
             "Build a New Model"
         );
     }
@@ -100,8 +107,8 @@ class ModelMenu extends React.Component {
     catalogMap(catalog) {
         const ret = {};
         for (const entry in catalog) {
-            // if (!this.whitelist.includes(entry))
-            //     continue;
+            if (!this.whitelist.includes(entry))
+                continue;
             if (!ret[catalog[entry].category])
                 ret[catalog[entry].category] = {}
 
@@ -111,10 +118,10 @@ class ModelMenu extends React.Component {
     }
 
     createModelSelect() {
-        return e("div", { className: "modelSelect" },
-            e("label", { htmlFor: "categorySelector" }, "Select category: "),
+        return e("div", { className: "modelSelect colorMode1" },
+            e("label", { htmlFor: "categorySelector", className: "menuHeaderLabel modelMenuHeader" }, "Category"),
             this.createCategorySelector(),
-            e("label", { htmlFor: "typeSelector" }, "Select type: "),
+            e("label", { htmlFor: "typeSelector", className: "menuHeaderLabel modelMenuHeader" }, "Type"),
             this.createTypeSelector(),
         );
     }
@@ -227,7 +234,7 @@ class ModelMenu extends React.Component {
     }
 
     createModelRunButton() {
-        return e("button", { type: "button", className: "btn btn-primary modelButton", onClick: this.runModel },
+        return e("button", { type: "button", className: "btn btn-outline-dark modelButton", onClick: this.runModel },
             "Run Model"
         );
     }
@@ -288,7 +295,6 @@ class ModelMenu extends React.Component {
             case "REGRESSION":
                 break;
             case "CLUSTERING":
-                console.log(data)
                 this.handleFullClusteringResponse(data);
                 break;
             default:
@@ -298,7 +304,7 @@ class ModelMenu extends React.Component {
 
     handleFullClusteringResponse(data) {
         const refinedData = data.map(d => {
-            return d.kMeansClusteringResponse;
+            return d[Object.keys(d)[0]];
         })
         this.modelManager = new ClusterManager(refinedData, window.map, window.dataModelingGroup, "county_geo_30mb_no_2d_index");
 

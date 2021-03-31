@@ -8,6 +8,7 @@
 
 class AutoQuery {
     static queryWorker = new Worker('js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
+    static queryWorkerConfiged = false;
     static minCountyZoom = 1;
     static minTractZoom = 1;
     /**
@@ -18,6 +19,12 @@ class AutoQuery {
       * @param {string=} graphPipeID optional ID of a pipe to spit all queried data into
       */
     constructor(layerData, graphPipeID) {
+        if(!AutoQuery.queryWorkerConfiged){
+            AutoQuery.queryWorker.postMessage({
+                type: "config"
+            });
+            AutoQuery.queryWorkerConfiged = true;
+        }
         this.data = layerData;
         this.collection = layerData.collection;
         this.map = layerData.map();
@@ -66,6 +73,7 @@ class AutoQuery {
         this.layerIDs = [];
         this.enabled = false;
         this.geohashCache = [];
+        MapDataFilterWrapper.removeCollection(this.collection);
     }
 
     /**
@@ -82,7 +90,7 @@ class AutoQuery {
     updateConstraint(layer, constraint, value, isActive) {
         if (!constraint)
             return;
-
+        let changed = false;
         switch (this.getConstraintType(constraint)) {
             case "slider":
                 if (Array.isArray(value))
@@ -90,18 +98,22 @@ class AutoQuery {
                         value[i] = Number(value[i]);
                 else
                     value = Number(value);
+                changed = !this.constraintData[constraint] || this.constraintData[constraint].join() !== value.join();
                 this.constraintData[constraint] = value;
                 break;
             case "selector":
+                changed = this.constraintData[constraint] !== value;
                 this.constraintData[constraint] = value;
                 break;
             case "multiselector":
                 if (!this.constraintData[constraint])
                     this.constraintData[constraint] = {};
+                changed = this.constraintData[constraint][value] !== isActive;
                 this.constraintData[constraint][value] = isActive;
                 break;
         }
-        this.reQuery();
+        if(changed)
+            this.reQuery();
     }
 
     /**
@@ -313,6 +325,9 @@ class AutoQuery {
     renderGeoJSON(data) {
         if (!this.enabled)
             return;
+
+        MapDataFilterWrapper.add(data, this.collection);
+
         let indexData = {};
         indexData[this.collection] = {
             "color": this.getColor(data.properties),
@@ -508,8 +523,6 @@ class AutoQuery {
         return returnText + "</ul>";
     }
 }
-//console.log(AutoQuery.queryWorker);
-//AutoQuery.queryWorker.port.start(); //needed to allow addEventListener()
 
 try {
     module.exports = {

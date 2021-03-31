@@ -1,0 +1,61 @@
+.btn-outline-dark {
+    color: var(--bootstrapButtonsColor) !important;
+    border-color: var(--bootstrapButtonsColor) !important;
+}
+
+.btn-outline-dark:hover {
+    color: var(--bootstrapButtonsHover) !important;
+    background-color: var(--bootstrapButtonsColor) !important;
+    border-color: var(--bootstrapButtonsColor) !important;
+}
+
+.btn-outline-dark.focus,.btn-outline-dark:focus {
+    box-shadow: var(--bootstrapButtonsFocus) !important;
+}
+
+.btn-outline-dark.disabled,.btn-outline-dark:disabled {
+    color: var(--bootstrapButtonsDisabled) !important;
+}
+
+.btn-outline-dark:not(:disabled):not(.disabled).active,.btn-outline-dark:not(:disabled):not(.disabled):active,.show>.btn-outline-dark.dropdown-toggle {
+    color: var(--bootstrapDropdownToggle_color) !important;
+    background-color: var(--bootstrapDropdownToggle_background) !important;
+    border-color: var(--bootstrapDropdownToggle_border) !important;
+}
+
+.btn-outline-dark:not(:disabled):not(.disabled).active:focus,.btn-outline-dark:not(:disabled):not(.disabled):active:focus,.show>.btn-outline-dark.dropdown-toggle:focus {
+    box-shadow: var(--bootstrapButtonsFocus) !important;
+}
+
+.bs-tooltip-auto[x-placement^=top] .arrow::before,.bs-tooltip-top .arrow::before {
+    border-top-color: var(--tooltip-arrow-color) !important;
+}
+
+.tooltip-inner {
+    background-color: var(--backgroundColor-colorMode-2) !important;
+    color: var(--color-colorMode-2) !important;
+    border: var(--border-customBorder) !important;
+}
+
+.dropdown-item {
+    color: var(--color-colorMode-1) !important;
+}
+
+.dropdown-item:focus,.dropdown-item:hover {
+    color: var(--color-colorMode-1) !important;
+    background-color: var(--backgroundColor-colorMode-1) !important;
+}
+.dropdown-item.active,.dropdown-item:active {
+    color: var(--color-colorMode-1) !important;
+    background-color: var(--bootstrapPrimary) !important;
+}
+.dropdown-item.disabled,.dropdown-item:disabled {
+    color: var(--bootstrapButtonsDisabled) !important;
+}
+
+.dropdown-menu {
+    color: var(--color-colorMode-2) !important;
+    background-color: var(--backgroundColor-colorMode-2) !important;
+    border: var(--border-customBorder) !important;
+    border-radius: 3px !important;
+}
