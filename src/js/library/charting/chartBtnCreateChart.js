@@ -3,6 +3,7 @@ let totalGraphs = 0;
 let maxGraphsReached = false;
 
 import { ChartingType } from "./chartSystem"
+import { createChartControl } from "./chartBtnControls.js"
 
 export function createHistogram() {
     moreGraphsPossible();

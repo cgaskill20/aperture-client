@@ -1,6 +1,6 @@
 let box1 = document.getElementById("box1");
 
-function createChartControl(chart, graphBox, type) {
+export function createChartControl(chart, graphBox, type) {
     let chartControl = document.createElement("div");
     chartControl.className = "chart-control row justify-content-md-center";
     let col1 = createEmptyColumn();

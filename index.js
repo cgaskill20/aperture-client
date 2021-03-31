@@ -21,28 +21,27 @@ import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";
 import MenuGenerator, { updateLayers } from "./src/js/ui/menuGenerator.js";
 
-require("./src/css/variables.css");
-require("./src/css/darkModeSwitch.css");
-require("./src/css/imageStyles.css");
-require("./src/css/dataExploration.css");
-require("./src/css/queries.css");
-require("./src/css/modeling.css");
-require("./src/css/charts.css");
-require("./src/css/bootstrapOverrides.css");
-require("./src/css/third-party/nouislider.min.css");
-require("./src/css/third-party/bootstrap4-toggle.min.css");
-require("./src/css/third-party/bootstrap.min.css");
-require("./src/css/third-party/MarkerCluster.css");
-require("./src/css/third-party/MarkerCluster.Default.css");
-require("./src/css/third-party/chart.css");
+import "./src/css/variables.css";
+import "./src/css/darkModeSwitch.css";
+import "./src/css/imageStyles.css";
+import "./src/css/dataExploration.css";
+import "./src/css/queries.css";
+import "./src/css/modeling.css";
+import "./src/css/charts.css";
+import "./src/css/main.css";
+import "./src/css/bootstrapOverrides.css";
+import "./src/css/third-party/nouislider.min.css";
+import "./src/css/third-party/bootstrap4-toggle.min.css";
+import "./src/css/third-party/bootstrap.min.css";
+import "./src/css/third-party/MarkerCluster.css";
+import "./src/css/third-party/MarkerCluster.Default.css";
+import "./src/css/third-party/chart.css";
 
 require("osmtogeojson");
 
-require("./src/js/third-party/nouislider.min.js");
 require("./src/js/third-party/simplify.js");
 require("./src/js/third-party/leaflet.markercluster.js");
 require("./src/js/third-party/d3.min.js");
-require("./src/js/third-party/progressbar.min.js");
 require("./src/js/third-party/popper.min.js");
 require("./src/js/third-party/bootstrap4-toggle.min.js");
 require("bootstrap");
@@ -190,7 +189,7 @@ window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplora
     maxLayers: 20,
     simplifyThreshold: 0.0001
 });
-const chartSystem = new ChartSystem(map, "src/json/graphPriority.json", window.renderInfrastructure);
+window.chartSystem = new ChartSystem(map, "src/json/graphPriority.json", window.renderInfrastructure);
 
 //where the magic happens
 $.getJSON("src/json/menumetadata.json", async function (mdata) { //this isnt on the mongo server yet so query it locally
@@ -204,16 +203,9 @@ ReactDOM.render(e(ModelMenu), modelContainer);
 map.on("moveend", function (e) {
     updateLayers();
 });
-map.on("move", function (e) {
-    parent.setGlobalPosition(map.getCenter(), MAPNUMBER);
-});
-map.on("zoomend", function () {
-    parent.setGlobalPositionFORCE(map.getCenter(), MAPNUMBER);
-});
 
 require("./src/js/static/navButtons.js");
 require("./src/js/static/darkMode.js");
 require("./src/js/static/switchImageSources.js");
-require("./src/js/library/charting/chartBtnNewChartWindow.js");
-require("./src/js/library/charting/chartBtnCreateChart.js");
-require("./src/js/library/charting/chartBtnControls.js");
+
+import "./src/js/library/charting/chartBtnNewChartWindow.js";

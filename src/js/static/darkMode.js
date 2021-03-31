@@ -1,3 +1,5 @@
+import { switchImageSources } from "./switchImageSources";
+
 const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
 function switchTheme(e) {
 	document.getElementById("sidebar-id").style.transition = "0.3s";

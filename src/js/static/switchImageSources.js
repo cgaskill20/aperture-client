@@ -1,5 +1,5 @@
 let darkMode = true;
-function switchImageSources() {
+export function switchImageSources() {
 	let dropdownArrow = Array.prototype.slice.call(document.getElementsByClassName("dropdown-arrow"));
 	let tooltipIcon = Array.prototype.slice.call(document.getElementsByClassName("tool-tip"));
 	let moonIcon = Array.prototype.slice.call(document.getElementsByClassName("moon-icon"));
