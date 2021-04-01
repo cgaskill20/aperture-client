@@ -1,26 +1,3 @@
-import ChartSystem from "./src/js/library/charting/chartSystem"
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-    iconUrl: require('leaflet/dist/images/marker-icon.png'),
-    shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-});
-
-import ModelMenu from "./src/js/ui/modeling/components/ModelMenu";
-import PreloadingMenu from "./src/js/ui/preloading-menu/components/PreloadingMenu"
-
-import { sustain_querier } from "./src/js/grpc/GRPC_Querier/grpc_querier.js";
-
-import AutoQuery from "./src/js/library/autoQuery.js";
-import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
-import AutoMenu from "./src/js/library/autoMenu.js";
-import MenuGenerator, { updateLayers } from "./src/js/ui/menuGenerator.js";
-
 import "./src/css/variables.css";
 import "./src/css/darkModeSwitch.css";
 import "./src/css/imageStyles.css";
@@ -37,24 +14,33 @@ import "./src/css/third-party/MarkerCluster.css";
 import "./src/css/third-party/MarkerCluster.Default.css";
 import "./src/css/third-party/chart.css";
 
-require("osmtogeojson");
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 
-require("./src/js/third-party/simplify.js");
-require("./src/js/third-party/leaflet.markercluster.js");
-require("./src/js/third-party/d3.min.js");
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
+
+import ChartSystem from "./src/js/library/charting/chartSystem"
+import ModelMenu from "./src/js/ui/modeling/components/ModelMenu";
+import PreloadingMenu from "./src/js/ui/preloading-menu/components/PreloadingMenu"
+import AutoQuery from "./src/js/library/autoQuery.js";
+import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
+import AutoMenu from "./src/js/library/autoMenu.js";
+import MenuGenerator, { updateLayers } from "./src/js/ui/menuGenerator.js";
+
+
+import "./src/js/third-party/leaflet.markercluster.js";
 require("./src/js/third-party/popper.min.js");
 require("./src/js/third-party/bootstrap4-toggle.min.js");
 require("bootstrap");
-
-require("./src/js/model-managers/cluster-helpers/clusterState.js");
-require("./src/js/model-managers/clusterManager.js");
-require("./src/js/model-managers/regressionManager.js");
-
 require("./src/js/library/smartQuerier.js");
 
-require("./src/js/library/apertureUtil.js");
-require("./src/js/library/resizable.js");
-require("./src/js/library/geohash_util.js");
 
 
 

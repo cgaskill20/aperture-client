@@ -1,4 +1,5 @@
-class ClusterState {
+import RenderInfrastructure from "../../library/renderInfrastructure";
+export default class ClusterState {
     constructor(GISJOINS, color, layerGroup) {
         this.GISJOINS = GISJOINS;
         this.color = color;

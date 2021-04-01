@@ -6,7 +6,10 @@
  * @notes Work in progress!
  */
 
-class ClusterManager {
+import ClusterState from "./cluster-helpers/clusterState";
+import Util from "../library/apertureUtil";
+
+export default class ClusterManager {
     constructor(data, map, layerGroup, linkedGeometry) {
         this.data = data;
         this.map = map;

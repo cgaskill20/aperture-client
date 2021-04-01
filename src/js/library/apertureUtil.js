@@ -2,6 +2,8 @@
 * Where utility functions are
 * @namespace Util
 */
+import simplify from "../third-party/simplify.js";
+
 export default {
     //enums
     FEATURETYPE: {
@@ -434,7 +436,7 @@ export default {
         switch (featureType) {
             case this.FEATURETYPE.point: {
                 let point = [entry.geometry.coordinates[1], entry.geometry.coordinates[0]];
-                return bounds.contains(point);
+                return this.contains(point,bounds);
             }
             case this.FEATURETYPE.polygon: {
                 return this.arePointsApproximatelyInBounds(entry.geometry.coordinates[0], bounds);
