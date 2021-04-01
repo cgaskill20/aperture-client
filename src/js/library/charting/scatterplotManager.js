@@ -56,6 +56,7 @@ END OF TERMS AND CONDITIONS
 */
 
 import Scatterplot from "./scatterplot";
+import Feature from "./feature";
 
 export default class ScatterplotManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem) {
