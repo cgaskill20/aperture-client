@@ -51,7 +51,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "set-default-browser": "^1.0.1",
-    "three": "~0.125.0"
+    "three": "~0.125.0",
+    "worker-loader": "^3.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",

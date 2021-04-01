@@ -1,3 +1,5 @@
+import Feature from "./feature";
+
 let box1 = document.getElementById("box1");
 
 export function createChartControl(chart, graphBox, type) {

@@ -1,4 +1,6 @@
-const filterWorker = new Worker("src/js/library/mapDataFilterWorker.js", { name: `Charting Filter` });
+import Worker from "./mapDataFilterWorker.js"
+
+const filterWorker = new Worker();
 
 export default {
     add: (data, collection) => {

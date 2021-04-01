@@ -1,11 +1,12 @@
-importScripts('./charting/feature.js');
+import Feature from './charting/feature.js';
+import Util from './apertureUtil.js';
 
 /**
  * @class  MapDataFilter
  * @author Pierce Smith
  */
 
-class MapDataFilter {
+export default class MapDataFilter {
     constructor() {
         this.msCacheMaxAge = 10000000;
         this.data = {};

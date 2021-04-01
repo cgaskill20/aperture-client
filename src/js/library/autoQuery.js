@@ -1,6 +1,7 @@
 import Gradient from "../third-party/Gradient"
 import MapDataFilterWrapper from "./mapDataFilterWrapper"
 import Util from "./apertureUtil"
+import Worker from "./queryWorker.js"
 /**
  * @class AutoQuery
  * @file Query layers in a very general fashion
@@ -10,7 +11,7 @@ import Util from "./apertureUtil"
  */
 
 export default class AutoQuery {
-    static queryWorker = new Worker('src/js/library/queryWorker.js', { name: "Auto query worker" }); //init querier
+    static queryWorker = new Worker(); //init querier
     static queryWorkerConfiged = false;
     static minCountyZoom = 1;
     static minTractZoom = 1;

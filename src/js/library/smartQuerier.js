@@ -55,6 +55,8 @@ END OF TERMS AND CONDITIONS
 
 */
 
+import { sustain_querier } from "../grpc/GRPC_Querier/grpc_querier.js";
+
 let _querier;
 
 /**
@@ -62,7 +64,7 @@ let _querier;
   * ALL query requests should be made through this instance.
   * @returns {Object} the SmartQuerier that should be used for all requests
   */
-function getSustainQuerier() {
+export function getSustainQuerier() {
     if (!_querier) {
         _querier = new SmartQuerier()
     }

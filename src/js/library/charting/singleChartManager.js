@@ -55,6 +55,8 @@ END OF TERMS AND CONDITIONS
 
 */
 
+import Feature from "./feature";
+
 export default class SingleChartManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
         this.charts = {};

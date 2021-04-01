@@ -28,7 +28,37 @@ module.exports = {
         use: [
           'file-loader'
         ]
-      }
+      },
+      {
+        test: /\mapDataFilterWorker.js$/,
+        loader: "worker-loader",
+        options: {
+          filename: "[name].[contenthash].worker.js",
+          worker: {
+            type: "Worker",
+            options: {
+              type: "classic",
+              credentials: "omit",
+              name: "Chart Filter Worker"
+            },
+          },
+        },
+      },
+      {
+        test: /\queryWorker.js$/,
+        loader: "worker-loader",
+        options: {
+          filename: "[name].[contenthash].worker.js",
+          worker: {
+            type: "Worker",
+            options: {
+              type: "classic",
+              credentials: "omit",
+              name: "Query Worker"
+            },
+          },
+        },
+      },
     ]
   },
   watchOptions: {
