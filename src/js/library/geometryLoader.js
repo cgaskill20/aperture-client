@@ -5,8 +5,11 @@
  * @dependencies autoQuery.js
  * @notes Work in progress!
  */
+import { sustain_querier } from "../grpc/GRPC_Querier/grpc_querier.js";
+import Dexie from 'dexie';
+import BoundsToGISJOIN from './boundsToGISJOIN.js';
 
-class GeometryLoader {
+export default class GeometryLoader {
     /**
       * Constructor which initializes the GeometryLoader
       * @memberof GeometryLoader

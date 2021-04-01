@@ -125,12 +125,12 @@ const dataModelingGroup = L.layerGroup();
 window.dataExplorationGroup = dataExplorationGroup;
 window.dataModelingGroup = dataModelingGroup;
 
-
+import Worker from "./src/js/library/geometryLoaderWorker.js"
 const preloadStatusContainer = document.getElementById("preloadStatus");
 let bgTractId = "bgTract";
 let bgCountyId = "bgCounty";
-const backgroundTract = new Worker("src/js/library/geometryLoaderWorker.js", { name: `Background tract worker: ${bgTractId}` });
-const backgroundCounty = new Worker("src/js/library/geometryLoaderWorker.js", { name: `Background county worker: ${bgCountyId}` });
+const backgroundTract = new Worker();
+const backgroundCounty = new Worker();
 ReactDOM.render(e(PreloadingMenu, {
     loaders: [
         {

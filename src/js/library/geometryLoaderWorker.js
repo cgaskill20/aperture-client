@@ -1,12 +1,10 @@
 //webworker that takes a list of geohashes (with their corresponding GISJOINS), and return 
-importScripts('../grpc/GRPC_Querier/grpc_querier.bundle.js');
-importScripts('./geometryLoader.js');
-importScripts('./GeometryLoaderJob.js');
-importScripts('./boundsToGISJOIN.js');
-importScripts('./geohash_util.js');
-importScripts('../third-party/dexie.min.js');
+import GeometryLoader from './geometryLoader.js';
+import BoundsToGISJOIN from './boundsToGISJOIN.js';
 
 console.log = function () { } //remove this is you want logging
+let id;
+let loader;
 
 const errorMessage = (msg, senderID) => {
     console.log(`${id} - sender: ${senderID}, ERR: ${msg}`)

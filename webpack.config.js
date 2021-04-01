@@ -59,6 +59,21 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\geometryLoaderWorker.js$/,
+        loader: "worker-loader",
+        options: {
+          filename: "[name].[contenthash].worker.js",
+          worker: {
+            type: "Worker",
+            options: {
+              type: "classic",
+              credentials: "omit",
+              name: "Shapefile Worker"
+            },
+          },
+        },
+      },
     ]
   },
   watchOptions: {

@@ -1,19 +1,24 @@
+import {encode_geohash, geohash_adjacent} from './geohash_util.js';
+
 const pathsToBuckets = {
-    tracts: '../../json/tractGeohashBuckets.json',
-    counties: '../../json/countyGeohashBuckets.json'
+    tracts: '../../src/json/tractGeohashBuckets.json',
+    counties: '../../src/json/countyGeohashBuckets.json'
 }
 
-const BoundsToGISJOIN = {
+export default {
     buckets: null, //loaded at config
     geohashResolution: 3,
 
     config: function (collection) {
         const jURL = collection === "tract_geo_140mb_no_2d_index" ? pathsToBuckets.tracts : pathsToBuckets.counties;
         fetch(jURL)
-            .then(response => response.json())
+            .then( response => {
+                if (!response.ok) { throw response }
+                return response.json()  //we only get here if there is no error
+            })
             .then(data => {
                 console.log("loaded")
-                BoundsToGISJOIN.buckets = data
+                this.buckets = data
             }
             );
     },

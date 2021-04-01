@@ -51,7 +51,7 @@ function decode_geohash(geohash) {
   * @return {String} 
   *         A geohash string for length precision representing the latitude and longitiude
   */
-function encode_geohash(lat, lon, precision) {
+export function encode_geohash(lat, lon, precision) {
     // infer precision?
     if (typeof precision == 'undefined') {
         // refine geohash until it matches precision of supplied lat/lon
@@ -175,7 +175,7 @@ function geohash_bounds(geohash) {
   * @return {String} geohash 
   *         The neighboring geohash
   */
-function geohash_adjacent(geohash, direction) {
+export function geohash_adjacent(geohash, direction) {
     // based on github.com/davetroy/geohash-js
 
     geohash = geohash.toLowerCase();
