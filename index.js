@@ -54,7 +54,6 @@ require("./src/js/library/smartQuerier.js");
 
 require("./src/js/library/apertureUtil.js");
 require("./src/js/library/resizable.js");
-require("./src/js/library/mapDataFilterWrapper.js");
 require("./src/js/library/geohash_util.js");
 
 
@@ -123,6 +122,7 @@ map.addLayer(markers);
 
 const dataExplorationGroup = L.layerGroup().addTo(map);
 const dataModelingGroup = L.layerGroup();
+window.dataExplorationGroup = dataExplorationGroup;
 window.dataModelingGroup = dataModelingGroup;
 
 
@@ -204,8 +204,11 @@ map.on("moveend", function (e) {
     updateLayers();
 });
 
-require("./src/js/static/navButtons.js");
-require("./src/js/static/darkMode.js");
-require("./src/js/static/switchImageSources.js");
-
+import {closeNav} from "./src/js/static/navButtons";
+import "./src/js/static/darkMode.js";
 import "./src/js/library/charting/chartBtnNewChartWindow.js";
+
+map.on('click', function () {
+    closeNav();
+});
+

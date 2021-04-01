@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 const e = React.createElement;
+import Util from '../../../library/apertureUtil';
 
 export default class ModelCollection extends React.Component {
     constructor(props) {

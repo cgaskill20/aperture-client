@@ -3,7 +3,7 @@ const e = React.createElement;
 import ModelCollection from "./ModelCollection";
 import ModelParameter from "./ModelParameter";
 import ModelResolution from "./ModelResolution";
-import {sustain_querier} from "../../../grpc/GRPC_Querier/grpc_querier.js";
+import { sustain_querier } from "../../../grpc/GRPC_Querier/grpc_querier.js";
 
 export default class ModelMenu extends React.Component {
     constructor(props) {
@@ -24,7 +24,7 @@ export default class ModelMenu extends React.Component {
 
         this._sustainQuerier = sustain_querier();
         this.whitelist = [
-            "K_MEANS_CLUSTERING", 
+            "K_MEANS_CLUSTERING",
             "BISECTING_K_MEANS",
             "GAUSSIAN_MIXTURE",
             "LATENT_DIRICHLET_ALLOCATION"
@@ -45,8 +45,8 @@ export default class ModelMenu extends React.Component {
             case "none":
                 return this.createModelBuilder();
             case "building":
-                return e("div", null, 
-                "Building your model, this may take awhile..."
+                return e("div", null,
+                    "Building your model, this may take awhile..."
                 );
             case "built":
                 return this.createModelBuilt()
@@ -57,31 +57,31 @@ export default class ModelMenu extends React.Component {
         return e("div", null,
             this.createModelSelect(),
             this.createResolution(),
-            e("div",{className: "menuHeaderLabel modelMenuHeader"}, "Features"),
+            e("div", { className: "menuHeaderLabel modelMenuHeader" }, "Features"),
             ...this.createCollections(),
-            e("div",{className: "menuHeaderLabel modelMenuHeader"}, "Hyperparameters"),
+            e("div", { className: "menuHeaderLabel modelMenuHeader" }, "Hyperparameters"),
             ...this.createParameters(),
             this.createModelRunButton(),
         );
     }
 
-    createModelBuilt(){
+    createModelBuilt() {
         return e("div", null,
-            e("div",{
-                style:{display:"block"}
-            },"Your model is done, check it out on the map!"),
+            e("div", {
+                style: { display: "block" }
+            }, "Your model is done, check it out on the map!"),
             e("br"),
             this.createResetButton()
         );
     }
 
-    createResetButton(){
+    createResetButton() {
         return e("button", { type: "button", className: "btn btn-outline-dark modelButton", onClick: this.restart },
             "Build a New Model"
         );
     }
 
-    restart(){
+    restart() {
         this.modelManager.clear();
         this.clearAll();
         this.setState({

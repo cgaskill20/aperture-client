@@ -2,7 +2,7 @@
 * Where utility functions are
 * @namespace Util
 */
-Util = {
+export default {
     //enums
     FEATURETYPE: {
         point: 0,
@@ -19,7 +19,7 @@ Util = {
      */
     getLatLngFromGeoJsonFeature: function (feature) {
         let type = this.getFeatureType(feature);
-        latlng = [];
+        let latlng = [];
         if (type === this.FEATURETYPE.polygon) {
             let pos = L.latLngBounds(feature.geometry.coordinates[0]).getCenter();
             latlng.push(pos.lat);
@@ -430,18 +430,18 @@ Util = {
             return true;
         }
 
-        const featureType = Util.getFeatureType(entry);
+        const featureType = this.getFeatureType(entry);
         switch (featureType) {
-            case Util.FEATURETYPE.point: {
+            case this.FEATURETYPE.point: {
                 let point = [entry.geometry.coordinates[1], entry.geometry.coordinates[0]];
                 return bounds.contains(point);
             }
-            case Util.FEATURETYPE.polygon: {
-                return Util.arePointsApproximatelyInBounds(entry.geometry.coordinates[0], bounds);
+            case this.FEATURETYPE.polygon: {
+                return this.arePointsApproximatelyInBounds(entry.geometry.coordinates[0], bounds);
             }
-            case Util.FEATURETYPE.multiPolygon: {
+            case this.FEATURETYPE.multiPolygon: {
                 let polygons = entry.geometry.coordinates;
-                return polygons.find(polygon => Util.arePointsApproximatelyInBounds(polygon[0], bounds));
+                return polygons.find(polygon => this.arePointsApproximatelyInBounds(polygon[0], bounds));
             }
         }
 

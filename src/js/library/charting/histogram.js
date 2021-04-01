@@ -56,7 +56,8 @@ END OF TERMS AND CONDITIONS
 */
 
 import Chart from "./chart";
-import KernelDensityEstimator from "./kernelDensityEstimator"
+import KernelDensityEstimator from "./kernelDensityEstimator";
+import * as d3 from "../../third-party/d3.min.js";
 
 export default class Histogram extends Chart {
     constructor() {

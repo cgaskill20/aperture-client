@@ -4,6 +4,7 @@
 
 //legacy code, this giant library is being split up into smaller, more modular libraries like autoQuery.js and geometryLoader.js.
 //many functions are still useful though, and are used througout the project.
+import Util from "./apertureUtil"
 
 const FLYTOOPTIONS = { //for clicking on icons
     easeLinearity: 0.4,
@@ -87,7 +88,7 @@ export default class RenderInfrastructure {
                 return true;
             }.bind(this),
             onEachFeature: function (feature, layer) {
-                latlng = Util.getLatLngFromGeoJsonFeature(feature);
+                let latlng = Util.getLatLngFromGeoJsonFeature(feature);
                 if (latlng === -1) {
                     return;
                 }

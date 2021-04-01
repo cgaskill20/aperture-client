@@ -1,5 +1,7 @@
 import AutoQuery from "../library/autoQuery";
 import noUiSlider from "../third-party/nouislider.min.js";
+import Util from '../library/apertureUtil';
+
 /**
  * @namespace MenuGenerator
  * @file Build's menu UI for the Aperture Client

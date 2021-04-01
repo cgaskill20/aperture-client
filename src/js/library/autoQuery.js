@@ -1,5 +1,6 @@
 import Gradient from "../third-party/Gradient"
 import MapDataFilterWrapper from "./mapDataFilterWrapper"
+import Util from "./apertureUtil"
 /**
  * @class AutoQuery
  * @file Query layers in a very general fashion
@@ -9,7 +10,7 @@ import MapDataFilterWrapper from "./mapDataFilterWrapper"
  */
 
 export default class AutoQuery {
-    static queryWorker = new Worker('src/js/library/queryWorker.js', {name: "Auto query worker"}); //init querier
+    static queryWorker = new Worker('src/js/library/queryWorker.js', { name: "Auto query worker" }); //init querier
     static queryWorkerConfiged = false;
     static minCountyZoom = 1;
     static minTractZoom = 1;
@@ -21,7 +22,7 @@ export default class AutoQuery {
       * @param {string=} graphPipeID optional ID of a pipe to spit all queried data into
       */
     constructor(layerData, graphPipeID) {
-        if(!AutoQuery.queryWorkerConfiged){
+        if (!AutoQuery.queryWorkerConfiged) {
             AutoQuery.queryWorker.postMessage({
                 type: "config"
             });
@@ -114,7 +115,7 @@ export default class AutoQuery {
                 this.constraintData[constraint][value] = isActive;
                 break;
         }
-        if(changed)
+        if (changed)
             this.reQuery();
     }
 
@@ -177,12 +178,12 @@ export default class AutoQuery {
       * new features come in with @method listenForLinkedGeometryUpdates
       */
     query() {
-        if(this.linked){
+        if (this.linked) {
             const mapZoom = this.map.getZoom();
-            if(this.linked === "tract_geo_140mb_no_2d_index" && mapZoom < AutoQuery.minTractZoom){
+            if (this.linked === "tract_geo_140mb_no_2d_index" && mapZoom < AutoQuery.minTractZoom) {
                 map.setZoom(AutoQuery.minTractZoom);
             }
-            else if(mapZoom < AutoQuery.minCountyZoom){
+            else if (mapZoom < AutoQuery.minCountyZoom) {
                 map.setZoom(AutoQuery.minCountyZoom);
             }
         }
@@ -234,7 +235,7 @@ export default class AutoQuery {
         const sessionID = Math.random().toString(36).substring(2, 6);
         q = q.concat(this.buildConstraintPipeline());
         //outputs from query may only be $projected if the data is not GeoJSON
-        if(this.linked)
+        if (this.linked)
             q.push(this.addMongoProject())
         AutoQuery.queryWorker.postMessage({
             type: "query",
@@ -303,7 +304,7 @@ export default class AutoQuery {
             if (!GeoJSON)
                 return;
             Util.normalizeFeatureID(GeoJSON)
-            if(this.layerIDs.find(id => id.split("_")[0] === GeoJSON.id))
+            if (this.layerIDs.find(id => id.split("_")[0] === GeoJSON.id))
                 return;
             GeoJSON.id = `${GeoJSON.id}_${data.id}`
             if (this.layerIDs.includes(GeoJSON.id))
@@ -338,7 +339,7 @@ export default class AutoQuery {
         indexData[this.collection].popup = this.buildPopup();
         if (this.getIcon())
             indexData[this.collection]["iconAddr"] = `./images/map-icons/${this.getIcon()}.png`;
-        
+
         indexData[this.collection]["border"] = this.color.border;
         indexData[this.collection]["opacity"] = this.color.opacity;
 
@@ -380,14 +381,14 @@ export default class AutoQuery {
         return pipeline;
     }
 
-    addMongoProject(){
-        let project = {GISJOIN:1};
+    addMongoProject() {
+        let project = { GISJOIN: 1 };
         for (const constraintName in this.constraintState) {
             if (this.constraintState[constraintName]) {
                 project[constraintName] = 1
             }
         }
-        return {"$project": project};
+        return { "$project": project };
     }
 
     /**

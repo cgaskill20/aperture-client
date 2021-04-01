@@ -1,11 +1,11 @@
 
-export default class Feature {
+class Feature {
     static featurePattern = /(.+)::(.+)::(.+)/;
 
     static compose(collection, name, friendlyName) {
         return `${collection}::${name}::${friendlyName}`;
     }
-    
+
     /** Extract just the collection from a full feature name.
      *  @param {string} fullName The full name of a feature (collection + name);
      *  @returns {string} Just the collection name
@@ -13,7 +13,7 @@ export default class Feature {
     static getCollection(fullName) {
         return fullName.match(Feature.featurePattern)[1];
     }
-    
+
     /** Extract just the feature name from a full feature name.
      *  (i.e. remove the collection name).
      *  @param {string} fullName The full name of a feature (collection + name);
@@ -31,3 +31,6 @@ export default class Feature {
         return fullName.match(Feature.featurePattern)[3];
     }
 }
+
+
+export default Feature;
