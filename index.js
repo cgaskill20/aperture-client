@@ -110,8 +110,8 @@ let bgTractId = "bgTract";
 let bgCountyId = "bgCounty";
 const backgroundTract = new Worker();
 const backgroundCounty = new Worker();
-ReactDOM.render(React.createElement(PreloadingMenu, {
-    loaders: [
+ReactDOM.render((<PreloadingMenu 
+    loaders={[
         {
             id: bgTractId,
             loader: backgroundTract,
@@ -122,8 +122,8 @@ ReactDOM.render(React.createElement(PreloadingMenu, {
             loader: backgroundCounty,
             collection: "county_geo_30mb_no_2d_index"
         }
-    ]
-}), preloadStatusContainer);
+    ]}/>), 
+preloadStatusContainer);
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty;
 
@@ -177,7 +177,7 @@ $.getJSON("src/json/menumetadata.json", async function (mdata) { //this isnt on 
 });
 
 const modelContainer = document.getElementById("model-container");
-ReactDOM.render(React.createElement(ModelMenu), modelContainer);
+ReactDOM.render((<ModelMenu/>), modelContainer);
 
 map.on("moveend", function (e) {
     updateLayers();
