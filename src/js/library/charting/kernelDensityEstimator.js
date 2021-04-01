@@ -1,3 +1,4 @@
+import * as d3 from "../../third-party/d3.min.js";
 
 export default class KernelDensityEstimator {
     constructor() {
