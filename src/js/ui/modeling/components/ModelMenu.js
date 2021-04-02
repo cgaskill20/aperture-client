@@ -34,7 +34,7 @@ export default class ModelMenu extends React.Component {
         this.populateCatalog();
 
         this.keyVal = 0;
-        this.resolutionKey = 0;
+        this.resolutionKey = 999;
         this.state = {
             modelStatus: "none"
         }
