@@ -84,6 +84,5 @@ module.exports = {
     "jquery": "jQuery",
     "requirejs":"require"
   },
-  mode: "development",
 }
 

@@ -4,8 +4,8 @@
   "description": "The Aperture client for the Urban-Sustain project - http://urban-sustain.org/",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
-    "watch": "webpack --watch --config webpack.config.js",
+    "build": "webpack --mode 'production'",
+    "watch": "webpack --mode 'development' --watch --config webpack.config.js",
     "serve": "npm run watch & live-server --ignore='**/node_modules/**'",
     "test": "mocha --recursive -r jsdom-global/register",
     "coverage": "nyc --reporter=lcov npm run test"
