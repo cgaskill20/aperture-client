@@ -292,10 +292,10 @@ export default {
         modalButton.innerHTML = "Advanced";
         // modalButton.innerHTML = "☰ Advanced...";
         modalButton.onclick = function () {
-            MenuGenerator.selectOptions(layerLabel, layerConstraints, function (constraint, active) {
+            this.selectOptions(layerLabel, layerConstraints, function (constraint, active) {
                 layerQuerier.constraintSetActive(constraint, active);
             }, constraintsObj);
-        }
+        }.bind(this);
         return modalButton;
     },
 
