@@ -1,6 +1,6 @@
 import Feature from "./feature";
 
-let box1 = document.getElementById("box1");
+import { reduceTotalGraphs, checkNumberOfGraphs } from "./chartBtnCreateChart"
 
 export function createChartControl(chart, graphBox, type) {
     let chartControl = document.createElement("div");
@@ -114,12 +114,14 @@ function createDropdownMenu() {
 }
 
 function createCloseButton(graphBox) {
+    let resizableBox = document.getElementById("box1");
+
     let closeButton = document.createElement("button");
     closeButton.type = "button";
     closeButton.className = "btn btn-outline-dark chart-control-button-close";
     closeButton.addEventListener('click', function() {
-        box1.removeChild(graphBox);
-        totalGraphs--;
+        resizableBox.removeChild(graphBox);
+        reduceTotalGraphs(1);
         checkNumberOfGraphs();
     });
     closeButton.innerText = "Close";

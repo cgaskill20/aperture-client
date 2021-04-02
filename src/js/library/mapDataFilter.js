@@ -56,7 +56,7 @@ export default class MapDataFilter {
         this.data[collection].push(newData);
 
         if (this.newDataCallback) {
-            this.newDataCallback(this.model(newData)); 
+            this.newDataCallback(newData); 
         }
 
         return true;

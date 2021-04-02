@@ -5,6 +5,10 @@ let maxGraphsReached = false;
 import { ChartingType } from "./chartSystem"
 import { createChartControl } from "./chartBtnControls.js"
 
+export function reduceTotalGraphs(n) {
+    totalGraphs -= n;
+}
+
 export function createHistogram() {
     moreGraphsPossible();
 
@@ -59,7 +63,7 @@ function moreGraphsPossible() {
     checkNumberOfGraphs();
 }
 
-function checkNumberOfGraphs() {
+export function checkNumberOfGraphs() {
     if(totalGraphs >= maxGraphs) {
         maxGraphsReached = true;
     }
