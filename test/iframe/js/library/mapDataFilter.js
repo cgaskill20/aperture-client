@@ -72,28 +72,34 @@ describe('MapDataFilter', () => {
 
     describe('getModel()', () => {
         it('can create single models', () => {
+            let feature = "coll::median_income::x";
+
             let filter = new MapDataFilter();
-            filter.add(exampleData);
-            let model = filter.getModel('median_income');
-            assert(model.median_income.length === 6);
-            assert(model.median_income[1].data === 43000);
+            filter.add(exampleData, "coll");
+            let model = filter.getModel(feature);
+            assert(model[feature].length === 6);
+            assert(model[feature][1].data === 43000);
         });
 
         it('can create multiple models', () => {
+            let features = ['coll::median_income::x', 'coll::population::x'];
+
             let filter = new MapDataFilter();
-            filter.add(exampleData);
-            let model = filter.getModel(['median_income', 'population']);
-            assert(model.median_income.length === 6);
-            assert(model.population.length === 4);
+            filter.add(exampleData, "coll");
+            let model = filter.getModel(features);
+            assert(model[features[0]].length === 6);
+            assert(model[features[1]].length === 4);
         });
 
         it('properly records name and type', () => {
+            let features = ['coll::median_income::x', 'coll::population::x'];
+
             let filter = new MapDataFilter();
-            filter.add(exampleData);
-            let model = filter.getModel(['median_income', 'population']);
-            assert.equal(model.median_income[4].type, "tract");
-            assert.equal(model.median_income[4].locationName, "65.0");
-            assert.equal(model.median_income[5].type, "county");
+            filter.add(exampleData, "coll");
+            let model = filter.getModel(features);
+            assert.equal(model[features[0]][4].type, "tract");
+            assert.equal(model[features[0]][4].locationName, "65.0");
+            assert.equal(model[features[0]][5].type, "county");
         });
     });
 
@@ -102,7 +108,7 @@ describe('MapDataFilter', () => {
             let filter = new MapDataFilter();
 
             let callbackedData = [];
-            filter.onGetNewData((data) => { callbackedData.push(data); });
+            filter.onGetNewData((data) => { console.log(data); callbackedData.push(data); });
             filter.add(exampleData);
 
             assert.equal(callbackedData.length, exampleData.length);
