@@ -1,5 +1,4 @@
-
-class Feature {
+export default class Feature {
     static featurePattern = /(.+)::(.+)::(.+)/;
 
     static compose(collection, name, friendlyName) {
@@ -31,6 +30,3 @@ class Feature {
         return fullName.match(Feature.featurePattern)[3];
     }
 }
-
-
-export default Feature;

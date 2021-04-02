@@ -242,10 +242,3 @@ export default class MapDataFilter {
         this.newDataCallback = callback;
     }
 }
-
-
-try {
-    module.exports = {
-        MapDataFilter: MapDataFilter,
-    }
-} catch (e) { }

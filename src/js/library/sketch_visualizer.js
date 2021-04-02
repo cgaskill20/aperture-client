@@ -3,7 +3,8 @@
  * @file Responsible for querying sketch data and drawing it as square regions on a leaflet map
  * @author Kevin Bruhwiler
  */
-Sketch_Visualizer = {
+ import { decode_geohash, encode_geohash, geohash_bounds, geohash_adjacent, getGeohashBase } from './geohash_util';
+const Sketch_Visualizer = {
 
     /**
       * Initializes the Sketch_Visualizer object
@@ -264,14 +265,9 @@ Sketch_Visualizer = {
   * @return {Sketch_Visualizer} 
   *         A Sketch_Visualizer object
   */
-sketch_visualizer = function(percentageToColor) {
+export const sketch_visualizer = function(percentageToColor) {
     const sketchVisualizer = Sketch_Visualizer;
     sketchVisualizer.initialize(percentageToColor);
     return sketchVisualizer;
 };
 
-try{
-    module.exports = {
-        sketch_visualizer: sketch_visualizer
-    }
-} catch(e) { }

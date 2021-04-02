@@ -1,5 +1,5 @@
 const assert = require('assert');
-var mdf = require('../../../../src/iframe/js/library/mapDataFilter.js');
+import MapDataFilter from '../../../../src/js/library/mapDataFilter.js';
 
 const exampleData = [
     { properties: { median_income: 44000 }},
@@ -17,7 +17,7 @@ const exampleData = [
 describe('MapDataFilter', () => {
     describe('add()', () => {
         it('can add single data points', () => {
-            let filter = new mdf.MapDataFilter();
+            let filter = new MapDataFilter();
             filter.add(exampleData[0], "income");
             assert(filter.data.income.length === 1);
             assert(filter.data.income[0].properties.median_income === 44000);
@@ -26,7 +26,7 @@ describe('MapDataFilter', () => {
             assert(filter.data.income[1].properties.median_income === 43000);
         });
         it ('can add multiple data points', () => {
-            let filter = new mdf.MapDataFilter();
+            let filter = new MapDataFilter();
             filter.add(exampleData, "coll");
             assert(filter.data.coll.length === exampleData.length);
             assert(filter.data.coll[0].properties.median_income === 44000);
@@ -37,7 +37,7 @@ describe('MapDataFilter', () => {
     
     describe('clear()', () => {
         it('removes all data points from the filter', () => {
-            let filter = new mdf.MapDataFilter();
+            let filter = new MapDataFilter();
             filter.add(exampleData);
             filter.clear();
             assert(filter.data.length === 0);
@@ -46,7 +46,7 @@ describe('MapDataFilter', () => {
 
     describe('discardOldData()', () => {
         it('can remove data', (done) => {
-            let filter = new mdf.MapDataFilter();
+            let filter = new MapDataFilter();
             filter.add(exampleData, "coll");
             setTimeout(() => { 
                 filter.discardOldData(100);
@@ -56,7 +56,7 @@ describe('MapDataFilter', () => {
         });
 
         it('properly removes only outdated data', (done) => {
-            let filter = new mdf.MapDataFilter();
+            let filter = new MapDataFilter();
 
             filter.add(exampleData[0], "coll");
             setTimeout(() => { filter.add(exampleData[1], "coll"); }, 100);
@@ -72,7 +72,7 @@ describe('MapDataFilter', () => {
 
     describe('getModel()', () => {
         it('can create single models', () => {
-            let filter = new mdf.MapDataFilter();
+            let filter = new MapDataFilter();
             filter.add(exampleData);
             let model = filter.getModel('median_income');
             assert(model.median_income.length === 6);
@@ -80,7 +80,7 @@ describe('MapDataFilter', () => {
         });
 
         it('can create multiple models', () => {
-            let filter = new mdf.MapDataFilter();
+            let filter = new MapDataFilter();
             filter.add(exampleData);
             let model = filter.getModel(['median_income', 'population']);
             assert(model.median_income.length === 6);
@@ -88,7 +88,7 @@ describe('MapDataFilter', () => {
         });
 
         it('properly records name and type', () => {
-            let filter = new mdf.MapDataFilter();
+            let filter = new MapDataFilter();
             filter.add(exampleData);
             let model = filter.getModel(['median_income', 'population']);
             assert.equal(model.median_income[4].type, "tract");
@@ -99,7 +99,7 @@ describe('MapDataFilter', () => {
 
     describe('onGetNewData', () => {
         it('can set a data callback', () => {
-            let filter = new mdf.MapDataFilter();
+            let filter = new MapDataFilter();
 
             let callbackedData = [];
             filter.onGetNewData((data) => { callbackedData.push(data); });

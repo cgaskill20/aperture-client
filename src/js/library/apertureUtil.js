@@ -451,8 +451,3 @@ export default {
     }
 }
 
-try {
-    module.exports = {
-        Util: Util
-    }
-} catch (e) { }

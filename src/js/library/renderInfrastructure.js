@@ -11,7 +11,7 @@ const FLYTOOPTIONS = { //for clicking on icons
     duration: 0.25,
     maxZoom: 17
 };
-const ATTRIBUTE = { //attribute enums
+export const ATTRIBUTE = { //attribute enums
     icon: 'icon',
     color: 'color'
 }
@@ -38,7 +38,7 @@ export default class RenderInfrastructure {
      * @param {JSON} data - JSON that contains needed information for renderable things
      * @param {object} options - object with attributes
      */
-    constructor(map, markerLayer, layerGroup, options) { //basically a constructor
+    constructor(map, markerLayer, layerGroup, options) { 
         this.options = JSON.parse(JSON.stringify(DEFAULTOPTIONS));
         L.Util.setOptions(this, options);
         this.map = map;
@@ -241,12 +241,3 @@ export default class RenderInfrastructure {
         }
     }
 }
-
-//mocha-test stuff only down from here
-
-try {
-    module.exports = {
-        ATTRIBUTE: ATTRIBUTE,
-        RenderInfrastructure: RenderInfrastructure
-    }
-} catch (e) { }

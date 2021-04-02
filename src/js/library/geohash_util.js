@@ -6,7 +6,7 @@
 let Geohash = {};
 Geohash.base32 = '0123456789bcdefghjkmnpqrstuvwxyz';
 
-function getGeohashBase() {
+export function getGeohashBase() {
     return Geohash.base32;
 }
 
@@ -19,7 +19,7 @@ function getGeohashBase() {
   * @return {{lat: Number, lon: Number}} 
   *         The latitude and longitude at the center of the geohash
   */
-function decode_geohash(geohash) {
+export function decode_geohash(geohash) {
 
     var bounds = geohash_bounds(geohash); // <-- the hard work
     // now just determine the centre of the cell...
@@ -121,7 +121,7 @@ export function encode_geohash(lat, lon, precision) {
   * @return {sw: {lat: Number, lon: Number}, ne: {lat: Number, lon: Number}} 
   *         The latitude and longitude of the southwest and northeast corners of the geohash
   */
-function geohash_bounds(geohash) {
+export function geohash_bounds(geohash) {
     if (geohash.length === 0) throw new Error('Invalid geohash');
 
     geohash = geohash.toLowerCase();
@@ -210,14 +210,3 @@ export function geohash_adjacent(geohash, direction) {
     // append letter for direction to parent
     return parent + Geohash.base32.charAt(neighbour[direction][type].indexOf(lastCh));
 }
-
-try {
-    module.exports = {
-        decode_geohash: decode_geohash,
-        encode_geohash: encode_geohash,
-        geohash_bounds: geohash_bounds,
-        geohash_adjacent: geohash_adjacent,
-        getGeohashBase: getGeohashBase,
-        Geohash: Geohash
-    };
-} catch(e) { }

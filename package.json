@@ -7,7 +7,7 @@
     "build": "webpack --mode 'production'",
     "watch": "webpack --mode 'development' --watch --config webpack.config.js",
     "serve": "npm run watch & live-server --ignore='**/node_modules/**'",
-    "test": "mocha --recursive -r jsdom-global/register",
+    "test": "mocha --require @babel/register --recursive -r jsdom-global/register",
     "coverage": "nyc --reporter=lcov npm run test"
   },
   "repository": {
@@ -57,8 +57,10 @@
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-react": "^7.13.13",
+    "@babel/register": "^7.13.14",
     "babel-loader": "^8.2.2",
     "babel-preset-latest": "^6.24.1",
+    "babelify": "^10.0.0",
     "css-loader": "^1.0.0",
     "file-loader": "^6.2.0",
     "jsdoc-to-markdown": "^6.0.1",
