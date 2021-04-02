@@ -3,6 +3,7 @@ const e = React.createElement;
 import ModelCollection from "./ModelCollection";
 import ModelParameter from "./ModelParameter";
 import ModelResolution from "./ModelResolution";
+import Util from "../../../library/apertureUtil";
 import { sustain_querier } from "../../../grpc/GRPC_Querier/grpc_querier.js";
 import ClusterManager from "../../../model-managers/clusterManager"
 import RegressionManager from "../../../model-managers/regressionManager"

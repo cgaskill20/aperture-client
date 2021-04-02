@@ -1,4 +1,7 @@
-class RegressionManager {
+import RenderInfrastructure from "../library/renderInfrastructure";
+import Gradient from "../third-party/Gradient"
+
+export default class RegressionManager {
     static gradientRes = 32;
 
     constructor(data, map, layerGroup, geometry) {
