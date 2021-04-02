@@ -6,12 +6,13 @@ module.exports = {
   },
   module: {
     rules: [
-      { 
-        test: /\.js$/, 
-        exclude: /node_modules/, 
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
         use: [{
           loader: 'babel-loader'
-      }] 
+          //options are defined in .babelrc
+        }]
       },
       {
         test: /\.css$/,
@@ -21,9 +22,14 @@ module.exports = {
         ],
       },
       {
-        test: /\.png$/,
+        test: /\.(png|jpe?g|gif)$/i,
         use: [
-          'file-loader'
+          {
+            loader: 'file-loader',
+            options: {
+              esModule: false
+            }
+          }
         ]
       },
       {
@@ -78,7 +84,7 @@ module.exports = {
   },
   externals: {
     "jquery": "jQuery",
-    "requirejs":"require"
+    "requirejs": "require"
   },
 }
 
