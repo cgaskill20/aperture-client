@@ -60,7 +60,8 @@ END OF TERMS AND CONDITIONS
 * Author Jean-Marc
 */
 export default class resizable {
-    minimum_size = 20;
+    static minimum_width = 500;
+    static minimum_height = 100;
     // Allows us to add listeners to the unique overlays
     static numOfInstances = 0;
     // Each time a overlay is clicked its Z Index increases so it is seen above all other overlays
@@ -163,10 +164,10 @@ export default class resizable {
     changeBoxSize(e, dimensions){
         this.width = dimensions[0] + (e.pageX - dimensions[3]);
         this.height = dimensions[1] - (e.pageY - dimensions[4]);
-        if (this.width > this.minimum_size) {
+        if (this.width > resizable.minimum_width) {
             this.overlayDocument.style.width = this.width + 'px';
         }
-        if (this.height > this.minimum_size) {
+        if (this.height > resizable.minimum_height) {
             this.overlayDocument.style.height = this.height + 'px';
             this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
         }
