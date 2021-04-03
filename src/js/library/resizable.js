@@ -92,6 +92,7 @@ export default class resizable {
         overlayDocument.style.width = this.width + "px";
         overlayDocument.style.height = this.height + "px";
         overlayDocument.style.zIndex = resizable.zIndex;
+        overlayDocument.style.left = window.innerWidth - this.width + "px";
         overlayDocument.style.display = "none";
         overlayDocument.style.opacity = .9;
 
@@ -106,7 +107,7 @@ export default class resizable {
         boxResizer.id = "option" + this.uniqueId;
         boxResizer.className = "option top-right";
 
-        boxDocument.appendChild(boxResizer);
+        overlayDocument.appendChild(boxResizer);
         overlayDocument.appendChild(boxDocument);
         document.body.appendChild(overlayDocument);
     }
