@@ -116,7 +116,6 @@ export default class Histogram extends Chart {
         if (this.kdeEnabled) {
             let maxBarHeight = d3.max(this.bins, d => d.length);
             let kdePoints = this.kde.estimate(view.x.ticks(30), this.data, maxBarHeight);
-            console.log(kdePoints);
 
             view.kdeLine = d3.line()
                 .curve(d3.curveBasis)
@@ -189,8 +188,8 @@ export default class Histogram extends Chart {
             .append("xhtml:input")
             .attr("name", "bwslider")
             .attr("type", "range")
-            .attr("min", 0.1)
-            .attr("max", 1)
+            .attr("min", 0.4)
+            .attr("max", 10)
             .attr("step", "any")
             .attr("id", "kdeSlider");
 
