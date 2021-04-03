@@ -18,6 +18,7 @@ export default class ChartFrame {
     }
 
     resize() { 
+        console.log(this.height);
         this.area.rerender(this.width, this.height);
     }
 

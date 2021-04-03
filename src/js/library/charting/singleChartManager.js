@@ -97,12 +97,10 @@ export default class SingleChartManager {
         let enoughFeatures = this.featureManager.enoughFeaturesExist(1);
 
         if (enoughFeatures) {
-            // this.chartArea.hideNotEnoughFeaturesMessage();
             for (let feature in values) {
                 this.charts[feature].changeData(values[feature].map(e => e.data), 5);
             }
         } else {
-            // this.chartArea.showNotEnoughFeaturesMessage();
             this.chartArea.hideAll();
         }
     }
