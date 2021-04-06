@@ -117,7 +117,6 @@ export default class MapDataFilter {
       * @returns {Array<object>} a subset of the data including only entries the filter is interested in
       */
     filter(data, bounds) {
-        
         let filtered = Object.entries(data).map(kv => { 
             return { collection: kv[0], data: kv[1].filter(datum => Util.isInBounds(datum, bounds)) };
         });

@@ -55,132 +55,81 @@ END OF TERMS AND CONDITIONS
 
 */
 
-import SingleChartManager from "./singleChartManager";
-import SingleChartArea from "./singleChartArea";
-import LineGraph from "./lineGraph";
-import Histogram from "./histogram";
-import Scatterplot from "./scatterplot";
-import ScatterplotManager from "./scatterplotManager";
-import ScatterplotArea from "./scatterplotArea";
-import ValidFeatureManager from "./validFeatureManager";
-import Feature from "./feature";
-import resizable from "../resizable";
-import ChartFrame from "./chartFrame";
-import MapDataFilterWrapper from "../mapDataFilterWrapper"
-import CovidDataSource from "./covidDataSource"
+import Worker from "../queryWorker.js"
+import Util from "../apertureUtil.js"
 
-export const ChartingType = {
-    LINE: {
-        name: "line",
-        managerType: SingleChartManager,
-        areaType: SingleChartArea,
-        chartType: LineGraph,
-    },
-    HISTOGRAM: {
-        name: "histogram",
-        managerType: SingleChartManager,
-        areaType: SingleChartArea,
-        chartType: Histogram,
-    },
-    SCATTERPLOT: {
-        name: "scatterplot",
-        managerType: ScatterplotManager,
-        areaType: ScatterplotArea,
-        chartType: Scatterplot,
-    },
-}
-
-export default class ChartSystem {
-    constructor(map, chartCatalogFilename) {
+export default class CovidDataSource {
+    static queryWorker = new Worker();
+    static workerInitialized = false;
+    static dataCollection = "covid_county_formatted";
+    static gisjoinsAggregateTemplate = [{ $match: { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: []}}}}}, { $project: { GISJOIN: 1 }}];
+ 
+    // The leaflet map used to determine the viewport bounds.
+    constructor(map) {
         this.map = map;
+        this.ready = false;
+        this.initQuerier();
+    }
 
-        this.filter = MapDataFilterWrapper;
+    activate() {
+        this.ready = true;
+    }
 
-        this.chartFrames = [];
-        this.dataSources = this.createDataSources();
+    deactivate() {
+        this.ready = false;
+    }
 
-        this.validFeatureManager = new ValidFeatureManager([]);
+    getGisjoinAggregate() {
+        let bounds = Util.leafletBoundsToGeoJSONPoly(this.map.wrapLatLngBounds(this.map.getBounds()));
+        CovidDataSource.gisjoinsAggregateTemplate[0].$match.geometry.$geoIntersects.$geometry.coordinates = bounds;
+        return CovidDataSource.gisjoinsAggregateTemplate;
+    }
 
-        this.resizable = new resizable(400, 300, "white");
-        this.resizable.setResizeCallback((width, height) => {
-            this.chartFrames.forEach(frame => {
-                frame.setSize(width - 200, height - 200);
-                frame.resize();
+    initQuerier() {
+        if (!CovidDataSource.workerInitialized) {
+            CovidDataSource.queryWorker.postMessage({
+                type: "config"
             });
-        });
-
-        $.getJSON(chartCatalogFilename, (catalog) => {
-            this.initializeUpdateHooks();
-            this.catalog = catalog;
-            this.graphable = catalog.map(e => {
-                return Object.entries(e.constraints).map(kv => {
-                    return Feature.compose(e.collection, kv[0], kv[1].label);
-                })
-            }).flat();
-        });
-
-        this.doNotUpdate = false;
-
+            CovidDataSource.workerInitialized = true;
+        }
     }
 
-    createDataSources() {
-        let sources = []; 
-        sources.push(new CovidDataSource(this.map));
-        sources[0].activate();
-        return sources;
-    }
-
-    getChartFrame(type) {
-        let node = document.createElement("div");
-        node.className = `${type.name}-chart-area`;
-
-        let area = new type.areaType();
-        area.attachTo(node);
-        let manager = new type.managerType(this.catalog, area, this.validFeatureManager, this, type.chartType);
-        let frame = new ChartFrame(node, area, manager);
-
-        this.chartFrames.push(frame);
-
-        return frame;
-    }
-
-    initializeUpdateHooks() {
-        this.map.on('move', (e) => { this.update(); });
-        this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
-    }
-
-    async update() {
-        if (this.doNotUpdate) {
+    // Query and return a promise to COVID data for what's in the viewport.
+    // All parameters are optional.
+    async get(type, daysWindowSize) {
+        if (!this.ready) {
             return;
         }
-        
-        // TODO: This needs to not suck
-        this.resizable.triggerResizeEvent();
 
-        let values = await this.getValues();
+        if (!type || (type !== "cases" && type !== "deaths")) {
+            type = "cases";
+        }
 
-        this.dataSources.forEach(async source => {
-            console.log(await source.get());
+        if (!daysWindowSize) {
+            daysWindowSize = 7;
+        }
+
+        // Honestly, fairly clever idea Daniel
+        const sessionID = Math.random().toString(36).substring(2, 6);
+
+        console.log(this.getGisjoinAggregate());
+
+        CovidDataSource.queryWorker.postMessage({
+            type: "query",
+            collection: CovidDataSource.dataCollection,
+            queryParams: JSON.stringify(this.getGisjoinAggregate()),
+            senderID: sessionID
         });
-        this.chartFrames.forEach(frame => { frame.manager.update(values); });
 
-        this.doNotUpdate = true;
-        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
-    }
-
-    async getValues() {
-        let values = await this.filter.get(this.graphable, this.map.getBounds());
-
-        // This arcane incantation gets a list of feature names for which there's actually data.
-        // Don't ask.
-        let validFeatures = Object.entries(values).filter(kv => kv[1].length !== 0).map(kv => kv[0]);
-
-        this.validFeatureManager.update(validFeatures);
-
-        return values;
-    }
-
-    toggleVisible() {
-        this.resizable.toggleVisible();
+        const listener = msg => {
+            const data = msg.data;
+            if (data.senderID !== sessionID) {
+                return;
+            }
+            if (data.type == "data") {
+                const response = data.data;
+                console.log(response);
+            }
+        }
     }
 }
