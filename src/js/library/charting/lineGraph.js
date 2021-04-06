@@ -59,7 +59,6 @@ import Chart from "./chart";
 import * as d3 from "../../third-party/d3.min.js";
 
 export default class LineGraph extends Chart {
-
     rerender(width, height, viewIndex) {
         this.changeData();
         let view = this.views[viewIndex];

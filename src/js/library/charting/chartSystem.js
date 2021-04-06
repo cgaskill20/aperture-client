@@ -62,6 +62,8 @@ import Histogram from "./histogram";
 import Scatterplot from "./scatterplot";
 import ScatterplotManager from "./scatterplotManager";
 import ScatterplotArea from "./scatterplotArea";
+import LineChartManager from "./lineChartManager";
+import LineChartArea from "./lineChartArea";
 import ValidFeatureManager from "./validFeatureManager";
 import Feature from "./feature";
 import resizable from "../resizable";
@@ -89,8 +91,8 @@ export const DataSourceType = {
 export const ChartingType = {
     LINE: {
         name: "line",
-        managerType: SingleChartManager,
-        areaType: SingleChartArea,
+        managerType: LineChartManager,
+        areaType: LineChartArea,
         chartType: LineGraph,
         wantsSources: [ DataSourceType.COUNTY_COVID ],
     },
