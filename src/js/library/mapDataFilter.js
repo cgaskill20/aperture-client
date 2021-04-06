@@ -117,13 +117,11 @@ export default class MapDataFilter {
       * @returns {Array<object>} a subset of the data including only entries the filter is interested in
       */
     filter(data, bounds) {
-        // oh god
+        
         let filtered = Object.entries(data).map(kv => { 
             return { collection: kv[0], data: kv[1].filter(datum => Util.isInBounds(datum, bounds)) };
         });
 
-        // Now that unchecking collections nukes whole parts of the dataset, this probably isn't necessary
-        //this.discardOldData(this.msCacheMaxAge);
         return filtered;
     }
 

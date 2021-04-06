@@ -192,6 +192,7 @@ export default class AutoQuery {
         if (!this.linked) {
             const b = this.map.wrapLatLngBounds(this.map.getBounds());
             const barray = Util.leafletBoundsToGeoJSONPoly(b);
+            console.log(barray);
             q.push({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }); //only get geometry in viewport
             this.bindConstraintsAndQuery(q)
         }
