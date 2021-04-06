@@ -60,7 +60,6 @@ import * as d3 from "../../third-party/d3.min.js";
 
 export default class LineGraph extends Chart {
     rerender(width, height, viewIndex) {
-        console.log(this.data);
         let view = this.views[viewIndex];
 
         view.width = width;
@@ -105,7 +104,9 @@ export default class LineGraph extends Chart {
     }
     
     changeData(data) {
-        this.data = data.map(d => { return { value: avg, date: d.$date }});
+        console.log(data);
+        this.data = data.map(entry => { return { value: d.avg, date: d.date.$date }});
+        console.log(this.data);
         this.rerenderAllViews();
     }
 

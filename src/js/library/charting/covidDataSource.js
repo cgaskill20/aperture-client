@@ -100,8 +100,11 @@ export default class CovidDataSource {
 
             stream.on('end', () => {
                 stream.cancel();
+                console.log(results);
                 resolve(results);
             });
         });
     }
+
+    updateSupplement() { }
 }

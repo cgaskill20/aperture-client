@@ -57,7 +57,7 @@ END OF TERMS AND CONDITIONS
 
 export default class LineChartManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
-        this.chart = new chartType();
+        this.chart = new chartType([]);
         this.chartArea = chartArea;
         this.chartSystem = chartSystem;
 
@@ -67,6 +67,6 @@ export default class LineChartManager {
 
     update(values) {
         console.log(values);
-        chart.changeData(values);
+        this.chart.changeData(values);
     }
 }
