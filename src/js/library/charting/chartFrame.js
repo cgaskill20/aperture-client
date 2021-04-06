@@ -1,8 +1,9 @@
 export default class ChartFrame {
-    constructor(node, area, manager) {
+    constructor(node, area, manager, type) {
         this.node = node;
         this.area = area;
         this.manager = manager;
+        this.type = type;
 
         this.width = 400;
         this.height = 300;
@@ -35,6 +36,10 @@ export default class ChartFrame {
 
     addNewFeatureCallback(callback) {
         this.manager.featureManager.addCallback(callback);
+    }
+
+    getChartType() {
+        return this.type;
     }
 }
 

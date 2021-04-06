@@ -11,6 +11,10 @@ export default class ValidFeatureManager {
         else {
             this.onChangeCallbacks = [];
         }
+
+        if (valids === undefined) {
+            valids = [];
+        }
         this.update(valids);
     }
 

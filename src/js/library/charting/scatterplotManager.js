@@ -57,6 +57,7 @@ END OF TERMS AND CONDITIONS
 
 import Scatterplot from "./scatterplot";
 import Feature from "./feature";
+import { DataSourceType } from "./chartSystem";
 
 export default class ScatterplotManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem) {
@@ -78,14 +79,14 @@ export default class ScatterplotManager {
 
     changeFeature(axis, feature) {
         this.currentFeatures[axis] = feature;
-        this.system.getValues().then((values) => {
+        DataSourceType.MAP_FEATURES.sourceInstance.get().then((values) => {
             this.update(values);
         });
     }
 
     axisButtonCallback(axis, direction) {
         this.currentFeatures[axis] = this.nextValidFeatureForAxis(axis, direction);
-        this.system.getValues().then((values) => {
+        DataSourceType.MAP_FEATURES.sourceInstance.get().then((values) => {
             this.update(values);
         });
     }

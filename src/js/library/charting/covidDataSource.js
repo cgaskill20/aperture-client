@@ -66,26 +66,12 @@ export default class CovidDataSource {
     // The leaflet map used to determine the viewport bounds.
     constructor(map) {
         this.map = map;
-        this.ready = false;
         BoundsToGISJOIN.config("county_geo_140mb_no_2d_index");
-        BoundsToGISJOIN.geohashResolution = 3;
-    }
-
-    activate() {
-        this.ready = true;
-    }
-
-    deactivate() {
-        this.ready = false;
     }
 
     // Query and return a promise to COVID data for what's in the viewport.
     // All parameters are optional.
     async get(type, daysWindowSize) {
-        if (!this.ready) {
-            return;
-        }
-
         if (!type || (type !== "cases" && type !== "deaths")) {
             type = CovidDataSource.defaultType;
         }
@@ -104,15 +90,19 @@ export default class CovidDataSource {
             days: daysWindowSize
         }));
 
-        let results;
-        stream.on('data', data => {
-            results = JSON.parse(JSON.parse(data.getJson()).movingAverages[0]).movingAverages;
-            console.log(results);
-        });
+        return new Promise((resolve, reject) => {
+            let results = [];
+            stream.on('data', data => {
+                let response = JSON.parse(data.getJson());
+                console.log(response);
+                // Need to parse twice because the data is still double serialized for no reason
+                results.push({ data: JSON.parse(response.movingAverages[0]).movingAverages, GISJOIN: response.gisJoin });
+            });
 
-        stream.on('end', () => {
-            stream.cancel();
-            console.log('closing stream');
+            stream.on('end', () => {
+                stream.cancel();
+                resolve(results);
+            });
         });
     }
 }
