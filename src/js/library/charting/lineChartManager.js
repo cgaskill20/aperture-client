@@ -63,6 +63,8 @@ export default class LineChartManager {
 
         this.featureManager = { addCallback: () => {} };
         chartArea.addChart(this.chart);
+
+        this.chart.unhide(0);
     }
 
     update(values) {

@@ -62,6 +62,10 @@ export default class LineGraph extends Chart {
     rerender(width, height, viewIndex) {
         let view = this.views[viewIndex];
 
+        if (this.data.length === 0) {
+            return;
+        }
+
         view.width = width;
         view.height = height;
         view.svg.attr("viewBox", [0, 0, width, height]);
@@ -70,11 +74,11 @@ export default class LineGraph extends Chart {
         // { date: Date, value: number }
         // view.x and view.y will need to change if this isn't the case.
         view.x = d3.scaleUtc()
-            .domain(d3.extent(this.data, d => d.date)).nice()
+            .domain(d3.extent(this.data[0].data, d => d.date)).nice()
             .range([view.margin.left, width - view.margin.right]);
 
         view.y = d3.scaleLinear()
-            .domain([0, d3.max(this.data, d => d.value)]).nice()
+            .domain([0, d3.max(this.data, entry => d3.max(entry.data, d => d.value))]).nice()
             .range([height - view.margin.bottom, view.margin.top]);
 
         view.xAxis = g => g
@@ -93,19 +97,25 @@ export default class LineGraph extends Chart {
 
         view.svg.select("g#xAxis").call(view.xAxis);
         view.svg.select("g#yAxis").call(view.yAxis);
-        view.svg.select("path#line")
-            .datum(this.data)
-            .attr("d", view.line);
+        view.svg.select("g#lines")
+            .selectAll("path")
+            .data(this.data)
+            .join("path")
+            .style("mix-blend-mode", "multiply")
+            .attr("d", d => view.line(d.data));
         view.svg.select("text#title")
             .attr("x", width / 2)
             .attr("y", 12)
             .attr("text-anchor", "middle")
-            .text(this.title);
+            .text("COVID Cases by County");
     }
     
     changeData(data) {
-        console.log(data);
-        this.data = data.map(entry => { return { value: d.avg, date: d.date.$date }});
+        this.data = data.map(entry => { 
+            return { data: entry.data.map(d => { 
+                return { value: d.avg, date: d.date.$date };
+            }), gisJoin: entry.GISJOIN };
+        });
         console.log(this.data);
         this.rerenderAllViews();
     }
@@ -125,10 +135,12 @@ export default class LineGraph extends Chart {
 
         view.svg.append("g").attr("id", "xAxis");
         view.svg.append("g").attr("id", "yAxis");
-        view.svg.append("path").attr("id", "line")
+        view.svg.append("g").attr("id", "lines")
             .attr("fill", "none")
             .attr("stroke", "steelblue")
             .attr("stroke-width", 1.5)
+            .attr("stroke-linejoin", "round")
+            .attr("stroke-linecap", "round");
         view.svg.append("text").attr("id", "title");
 
         return view;
