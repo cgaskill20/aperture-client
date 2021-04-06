@@ -1,12 +1,13 @@
 const assert = require('assert');
-var renderInfrastructure = require('../../../../src/iframe/js/library/renderInfrastructure');
+import RenderInfrastructure, { ATTRIBUTE } from '../../../../src/js/library/renderInfrastructure';
+
 var jsdom = require('jsdom-global');
 const { createCanvas, loadImage } = require('canvas');
 const canvas = createCanvas(200, 200);
 const ctx = canvas.getContext('2d');
 global.$ = require('jquery');
 global.L = require('leaflet');
-global.simplify = require('../../../../src/iframe/js/third-party/simplify.js');
+global.simplify = require('../../../../src/js/third-party/simplify.js');
 const layerGroup = L.layerGroup();
 
 L.Map.prototype.setSize = function (width, height) {
@@ -57,7 +58,7 @@ let renderer;
 describe('RenderInfrastructure', function () {
     describe('config()', function () {
         it('should configurate the renderer', function () {
-            renderer = new renderInfrastructure.RenderInfrastructure(testMap, testMap, layerGroup, { timeout: 15, queryAlertText: elem2, attributeData: jsonData, simplifyThreshold: 0.001 });
+            renderer = new RenderInfrastructure(testMap, testMap, layerGroup, { timeout: 15, queryAlertText: elem2, attributeData: jsonData, simplifyThreshold: 0.001 });
             global.window.renderInfrastructure = renderer;
             assert.deepEqual(renderer.map, testMap);
             assert.deepEqual(renderer.options.timeout, 15);
@@ -95,10 +96,10 @@ describe('RenderInfrastructure', function () {
         it('gets attributes from a name', function () {
             //render.config(testMap, testMap, jsonData, {  });
             //console.log(render.options.attributeData);
-            assert.deepEqual(renderer.getAttribute("drinking_water", renderInfrastructure.ATTRIBUTE.icon), "noicon");
-            assert.deepEqual(renderer.getAttribute("reservoir", renderInfrastructure.ATTRIBUTE.color), "#000000");
-            assert.deepEqual(renderer.getAttribute("dam", renderInfrastructure.ATTRIBUTE.icon), "noicon");
-            assert.deepEqual(renderer.getAttribute("reservoir", renderInfrastructure.ATTRIBUTE.color), "#000000");
+            assert.deepEqual(renderer.getAttribute("drinking_water", ATTRIBUTE.icon), "noicon");
+            assert.deepEqual(renderer.getAttribute("reservoir", ATTRIBUTE.color), "#000000");
+            assert.deepEqual(renderer.getAttribute("dam", ATTRIBUTE.icon), "noicon");
+            assert.deepEqual(renderer.getAttribute("reservoir", ATTRIBUTE.color), "#000000");
         });
     });
 });
