@@ -192,7 +192,6 @@ export default class AutoQuery {
         if (!this.linked) {
             const b = this.map.wrapLatLngBounds(this.map.getBounds());
             const barray = Util.leafletBoundsToGeoJSONPoly(b);
-            console.log(barray);
             q.push({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }); //only get geometry in viewport
             this.bindConstraintsAndQuery(q)
         }
@@ -236,6 +235,7 @@ export default class AutoQuery {
     bindConstraintsAndQuery(q, forcedGeometry) {
         const sessionID = Math.random().toString(36).substring(2, 6);
         q = q.concat(this.buildConstraintPipeline());
+
         //outputs from query may only be $projected if the data is not GeoJSON
         if (this.linked)
             q.push(this.addMongoProject())

@@ -55,20 +55,20 @@ END OF TERMS AND CONDITIONS
 
 */
 
-import Worker from "../queryWorker.js"
-import Util from "../apertureUtil.js"
+import BoundsToGISJOIN from "../boundsToGISJOIN"
+import { sustain_querier } from "../../grpc/GRPC_Querier/grpc_querier"
 
 export default class CovidDataSource {
-    static queryWorker = new Worker();
-    static workerInitialized = false;
-    static dataCollection = "covid_county_formatted";
-    static gisjoinsAggregateTemplate = [{ $match: { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: []}}}}}, { $project: { GISJOIN: 1 }}];
- 
+    static querier = sustain_querier();
+    static defaultType = "cases";
+    static defaultDays = 7;
+
     // The leaflet map used to determine the viewport bounds.
     constructor(map) {
         this.map = map;
         this.ready = false;
-        this.initQuerier();
+        BoundsToGISJOIN.config("county_geo_140mb_no_2d_index");
+        BoundsToGISJOIN.geohashResolution = 3;
     }
 
     activate() {
@@ -79,21 +79,6 @@ export default class CovidDataSource {
         this.ready = false;
     }
 
-    getGisjoinAggregate() {
-        let bounds = Util.leafletBoundsToGeoJSONPoly(this.map.wrapLatLngBounds(this.map.getBounds()));
-        CovidDataSource.gisjoinsAggregateTemplate[0].$match.geometry.$geoIntersects.$geometry.coordinates = bounds;
-        return CovidDataSource.gisjoinsAggregateTemplate;
-    }
-
-    initQuerier() {
-        if (!CovidDataSource.workerInitialized) {
-            CovidDataSource.queryWorker.postMessage({
-                type: "config"
-            });
-            CovidDataSource.workerInitialized = true;
-        }
-    }
-
     // Query and return a promise to COVID data for what's in the viewport.
     // All parameters are optional.
     async get(type, daysWindowSize) {
@@ -102,34 +87,32 @@ export default class CovidDataSource {
         }
 
         if (!type || (type !== "cases" && type !== "deaths")) {
-            type = "cases";
+            type = CovidDataSource.defaultType;
         }
 
         if (!daysWindowSize) {
-            daysWindowSize = 7;
+            daysWindowSize = CovidDataSource.defaultDays;
         }
 
-        // Honestly, fairly clever idea Daniel
-        const sessionID = Math.random().toString(36).substring(2, 6);
+        let gisjoins = BoundsToGISJOIN.boundsToGISJOINS(this.map.getBounds(), []);
+        console.log(gisjoins);
+        
+        let stream = CovidDataSource.querier.executeSlidingWindowQuery(JSON.stringify({
+            gisJoins: gisjoins,
+            collection: "covid_county_formatted",
+            feature: type,
+            days: daysWindowSize
+        }));
 
-        console.log(this.getGisjoinAggregate());
-
-        CovidDataSource.queryWorker.postMessage({
-            type: "query",
-            collection: CovidDataSource.dataCollection,
-            queryParams: JSON.stringify(this.getGisjoinAggregate()),
-            senderID: sessionID
+        let results;
+        stream.on('data', data => {
+            results = JSON.parse(JSON.parse(data.getJson()).movingAverages[0]).movingAverages;
+            console.log(results);
         });
 
-        const listener = msg => {
-            const data = msg.data;
-            if (data.senderID !== sessionID) {
-                return;
-            }
-            if (data.type == "data") {
-                const response = data.data;
-                console.log(response);
-            }
-        }
+        stream.on('end', () => {
+            stream.cancel();
+            console.log('closing stream');
+        });
     }
 }
