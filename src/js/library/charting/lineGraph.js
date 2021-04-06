@@ -116,7 +116,6 @@ export default class LineGraph extends Chart {
                 return { value: d.avg, date: d.date.$date };
             }), gisJoin: entry.GISJOIN };
         });
-        console.log(this.data);
         this.rerenderAllViews();
     }
 
