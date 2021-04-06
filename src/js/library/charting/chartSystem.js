@@ -92,7 +92,7 @@ export const ChartingType = {
     LINE: {
         name: "line",
         managerType: LineChartManager,
-        areaType: LineChartArea,
+        areaType: SingleChartArea,
         chartType: LineGraph,
         wantsSources: [ DataSourceType.COUNTY_COVID ],
     },

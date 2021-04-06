@@ -94,8 +94,7 @@ export default class CovidDataSource {
             let results = [];
             stream.on('data', data => {
                 let response = JSON.parse(data.getJson());
-                console.log(response);
-                // Need to parse twice because the data is still double serialized for no reason
+                // Need to parse twice because the data is still double serialized for no reason yesssss
                 results.push({ data: JSON.parse(response.movingAverages[0]).movingAverages, GISJOIN: response.gisJoin });
             });
 

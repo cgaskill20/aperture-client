@@ -60,7 +60,7 @@ import * as d3 from "../../third-party/d3.min.js";
 
 export default class LineGraph extends Chart {
     rerender(width, height, viewIndex) {
-        this.changeData();
+        console.log(this.data);
         let view = this.views[viewIndex];
 
         view.width = width;
@@ -105,10 +105,7 @@ export default class LineGraph extends Chart {
     }
     
     changeData(data) {
-        let wrongData = data.map(e => { return { date: Math.round((Math.random() * (1 << 63))), value: e }});
-        wrongData.sort((a, b) => a.date - b.date );
-        console.log(wrongData);
-        this.data = wrongData;
+        this.data = data.map(d => { return { value: avg, date: d.$date }});
         this.rerenderAllViews();
     }
 
