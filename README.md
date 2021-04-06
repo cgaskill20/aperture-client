@@ -24,8 +24,7 @@ Aperture's client
         /static            # code that isn't really a library, and depends on a bunch of external items existing to be run
         /third-party       # where third-party css lives  
         /js                # where javascript for the frames live
-            /control           # js that affects the control of the frames, for instance, onclick listeners
-            /frame-specific    # js that is specific to a certain frame
+            /static            # js that other things dont depend on
             /grpc              # grpc related code, much of it auto-generated
             /library           # in-house library code, like query interfaces and such (this is where most of the code is)
                 /charting      # all the charting code
