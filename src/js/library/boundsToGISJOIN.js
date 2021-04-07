@@ -1,8 +1,8 @@
 import {encode_geohash, geohash_adjacent} from './geohash_util.js';
 
 const pathsToBuckets = {
-    tracts: '../../src/json/tractGeohashBuckets.json',
-    counties: '../../src/json/countyGeohashBuckets.json'
+    tracts: '../json/tractGeohashBuckets.json',
+    counties: '../json/countyGeohashBuckets.json'
 }
 
 export default {
