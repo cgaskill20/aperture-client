@@ -61,18 +61,19 @@
     position: absolute;
     bottom: 0px;
     left: 0px;
-    overflow: auto;
+    border: 1px solid #777;
+    border-radius: 3px;
+    box-sizing: border-box;
 }
 
 .overlay .box{
     width: 100%;
     height: 100%;
-    /*border: 1px solid #777;*/
-    /*border-radius: 3px;*/
-    /*box-sizing: border-box;*/
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
-.overlay .box .option{
+.overlay .option{
     width: 15px;
     height: 15px;
     border-radius: 50%;
@@ -81,7 +82,7 @@
     position: absolute;
 }
 
-.overlay .box .option.top-right {
+.overlay .option.top-right {
     right: -5px;
     top: -5px;
     cursor: nesw-resize;
