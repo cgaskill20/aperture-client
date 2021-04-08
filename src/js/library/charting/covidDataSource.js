@@ -57,6 +57,7 @@ END OF TERMS AND CONDITIONS
 
 import BoundsToGISJOIN from "../boundsToGISJOIN"
 import { sustain_querier } from "../../grpc/GRPC_Querier/grpc_querier"
+import Util from "../apertureUtil"
 
 export default class CovidDataSource {
     static querier = sustain_querier();
@@ -67,24 +68,30 @@ export default class CovidDataSource {
     // The leaflet map used to determine the viewport bounds.
     constructor(map) {
         this.map = map;
-        this.gisjoinAggregateTemplate = [{ $match: { geometry: { $geoIntersects: { $geometry: { coordinates: []}}}}}];
+        this.gisjoinAggregateTemplate = [{ $match: { geometry: { $geoIntersects: { $geometry: { type: "Polygon", coordinates: []}}}}}, { $project: { GISJOIN: 1 }}];
         BoundsToGISJOIN.config("county_geo_140mb_no_2d_index");
     }
 
     getGisjoinAggregate() {
-        let mapBounds = this.map.getBounds();
-        this.gisjoinAggregateTemplate[0].$match.geometry.$geoIntersects.$geometry.coordinates = mapBounds;
+        let mapBounds = Util.leafletBoundsToGeoJSONPoly(this.map.wrapLatLngBounds(this.map.getBounds()));
+        this.gisjoinAggregateTemplate[0].$match.geometry.$geoIntersects.$geometry.coordinates = [ mapBounds ];
         console.log(this.gisjoinAggregateTemplate);
         return this.gisjoinAggregateTemplate;
     }
 
-    getStreamResults(stream) {
+    // Returns an array containing every result that comes from the stream.
+    // The transformer is a function applied to each (parsed) element before
+    // it is placed into the array. The default is the identity function.
+    // The accessor is the NAME of the function to call on the raw response
+    // to get data out (it will probably be either 'getData' or 'getJson'). 
+    // The default is 'getData.'
+    getStreamResults(stream, transformer = x => x, accessor = 'getData') {
         return new Promise((resolve, reject) => {
             let results = [];
             stream.on('data', data => {
-                let response = JSON.parse(data.getJson());
-                // Need to parse twice because the data is still double serialized for no reason yesssss
-                results.push({ data: JSON.parse(response.movingAverages[0]).movingAverages, GISJOIN: response.gisJoin });
+                let response = JSON.parse(data[accessor]());
+                console.log(response);
+                results.push(transformer(response));
             });
 
             stream.on('end', () => {
@@ -104,22 +111,14 @@ export default class CovidDataSource {
         } else {
             let query = JSON.stringify(this.getGisjoinAggregate());
             let gisjoinQueryStream = CovidDataSource.querier.getStreamForQuery("county_geo_GISJOIN", query);
-            gisjoins = await this.getStreamResults(gisjoinQueryStream);
+            gisjoins = await this.getStreamResults(gisjoinQueryStream, r => r.GISJOIN);
         }
         return gisjoins;
     }
 
     // Query and return a promise to COVID data for what's in the viewport.
     // All parameters are optional.
-    async get(type, daysWindowSize) {
-        if (!type || (type !== "cases" && type !== "deaths")) {
-            type = CovidDataSource.defaultType;
-        }
-
-        if (!daysWindowSize) {
-            daysWindowSize = CovidDataSource.defaultDays;
-        }
-
+    async get(type = CovidDataSource.defaultType, daysWindowSize = CovidDataSource.defaultDays) {
         let gisjoins = await this.getGisjoins();
         console.log(gisjoins);
         
