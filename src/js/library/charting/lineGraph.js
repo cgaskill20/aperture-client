@@ -59,6 +59,11 @@ import Chart from "./chart";
 import * as d3 from "../../third-party/d3.min.js";
 
 export default class LineGraph extends Chart {
+    constructor() {
+        super([]);
+        this.mouseInGraph = false;
+    }
+
     rerender(width, height, viewIndex) {
         let view = this.views[viewIndex];
 
@@ -103,6 +108,7 @@ export default class LineGraph extends Chart {
             .join("path")
             .style("mix-blend-mode", "multiply")
             .attr("d", d => view.line(d.data));
+
         view.svg.select("text#title")
             .attr("x", width / 2)
             .attr("y", 12)
@@ -141,6 +147,43 @@ export default class LineGraph extends Chart {
             .attr("stroke-linejoin", "round")
             .attr("stroke-linecap", "round");
         view.svg.append("text").attr("id", "title");
+        view.svg.append("text").attr("id", "marker");
+
+        view.svg.on('mouseenter', event => {
+            this.mouseInGraph = true;
+        });
+
+        view.svg.on('mousemove', event => {
+            let rawMouse = d3.pointer(event, view.svg.node());
+            let mouse = [ view.x.invert(rawMouse[0]).valueOf(), view.y.invert(rawMouse[1]) ];
+
+            let dates = [];
+            this.data.forEach(county => {
+                county.data.forEach(entry => {
+                    dates.push(entry.date);
+                });
+            });
+
+            let searchDateIndex = d3.bisectCenter(dates, mouse[0]);
+            if (searchDateIndex > d3.min(this.data, d => d.data.length)) {
+                return;
+            }
+
+            let closest = d3.least(this.data, d => Math.abs(d.data[searchDateIndex].value - mouse[1]));
+
+            view.svg.select("g#lines").selectAll("path").each(function() {
+                d3.select(this).attr("stroke", s => { console.log(s); return s.gisJoin === closest.gisJoin ? '#a00' : '#eee' });
+            });
+
+            view.svg.select("text#marker")
+                .attr("x", rawMouse[0])
+                .attr("y", rawMouse[1] + 20)
+                .text(closest.gisJoin);
+        });
+
+        view.svg.on('mouseleave', event => {
+            this.mouseInGraph = false;
+        });
 
         return view;
     }

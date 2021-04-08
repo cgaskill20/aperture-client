@@ -12,10 +12,9 @@ export function createChartControl(chart, graphBox, type) {
     if (type === 'scatterplot') {
         col2.appendChild(createChartControlGroup(chart, 'x', "X-Axis"));
         col2.appendChild(createChartControlGroup(chart, 'y', "Y-Axis"));
-    }
-    else if (type === 'histogram') {
-        col2.appendChild(createChartControlGroup(chart, 'x',"Constraint"));
-    }
+    } else if (type === 'histogram') {
+        col2.appendChild(createChartControlGroup(chart, 'x', "Constraint"));
+    } 
     col3.appendChild(createCloseButton(graphBox));
     chartControl.appendChild(col1);
     chartControl.appendChild(col2);
