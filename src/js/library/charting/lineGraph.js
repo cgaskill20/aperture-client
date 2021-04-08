@@ -158,8 +158,12 @@ export default class LineGraph extends Chart {
             let mouse = [ view.x.invert(rawMouse[0]).valueOf(), view.y.invert(rawMouse[1]) ];
 
             let dates = [];
-            this.data[0].data.forEach(entry => {
-                dates.push(entry.date);
+            this.data.forEach(county => {
+                county.data.forEach(entry => {
+                    if (!dates.includes(entry.date)) {
+                        dates.push(entry.date);
+                    }
+                });
             });
 
             let searchDateIndex = d3.bisectCenter(dates, mouse[0]);
