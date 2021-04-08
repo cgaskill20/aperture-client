@@ -62,11 +62,51 @@ export default class CovidDataSource {
     static querier = sustain_querier();
     static defaultType = "cases";
     static defaultDays = 7;
+    static queryChangeZoomLevel = 7;
 
     // The leaflet map used to determine the viewport bounds.
     constructor(map) {
         this.map = map;
+        this.gisjoinAggregateTemplate = [{ $match: { geometry: { $geoIntersects: { $geometry: { coordinates: []}}}}}];
         BoundsToGISJOIN.config("county_geo_140mb_no_2d_index");
+    }
+
+    getGisjoinAggregate() {
+        let mapBounds = this.map.getBounds();
+        this.gisjoinAggregateTemplate[0].$match.geometry.$geoIntersects.$geometry.coordinates = mapBounds;
+        console.log(this.gisjoinAggregateTemplate);
+        return this.gisjoinAggregateTemplate;
+    }
+
+    getStreamResults(stream) {
+        return new Promise((resolve, reject) => {
+            let results = [];
+            stream.on('data', data => {
+                let response = JSON.parse(data.getJson());
+                // Need to parse twice because the data is still double serialized for no reason yesssss
+                results.push({ data: JSON.parse(response.movingAverages[0]).movingAverages, GISJOIN: response.gisJoin });
+            });
+
+            stream.on('end', () => {
+                stream.cancel();
+                console.log(results);
+                resolve(results);
+            });
+        });
+    }
+
+    async getGisjoins() {
+        let doGeocacheQuery = CovidDataSource.queryChangeZoomLevel > this.map.getZoom();
+
+        let gisjoins;
+        if (doGeocacheQuery) {
+            let gisjoins = BoundsToGISJOIN.boundsToGISJOINS(this.map.getBounds(), []);
+        } else {
+            let query = JSON.stringify(this.getGisjoinAggregate());
+            let gisjoinQueryStream = CovidDataSource.querier.getStreamForQuery("county_geo_GISJOIN", query);
+            gisjoins = await this.getStreamResults(gisjoinQueryStream);
+        }
+        return gisjoins;
     }
 
     // Query and return a promise to COVID data for what's in the viewport.
@@ -80,7 +120,7 @@ export default class CovidDataSource {
             daysWindowSize = CovidDataSource.defaultDays;
         }
 
-        let gisjoins = BoundsToGISJOIN.boundsToGISJOINS(this.map.getBounds(), []);
+        let gisjoins = await this.getGisjoins();
         console.log(gisjoins);
         
         let stream = CovidDataSource.querier.executeSlidingWindowQuery(JSON.stringify({
