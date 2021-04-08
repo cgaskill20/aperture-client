@@ -129,20 +129,8 @@ export default class CovidDataSource {
             days: daysWindowSize
         }));
 
-        return new Promise((resolve, reject) => {
-            let results = [];
-            stream.on('data', data => {
-                let response = JSON.parse(data.getJson());
-                // Need to parse twice because the data is still double serialized for no reason yesssss
-                results.push({ data: JSON.parse(response.movingAverages[0]).movingAverages, GISJOIN: response.gisJoin });
-            });
-
-            stream.on('end', () => {
-                stream.cancel();
-                console.log(results);
-                resolve(results);
-            });
-        });
+        let mvAccessor = r => { return { JSON.parse(r.movingAverages[0]).movingAverages, GISJOIN: r.gisJoin }};
+        return this.getStreamResults(stream, mvAccessor, 'getJson');
     }
 
     updateSupplement() { }
