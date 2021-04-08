@@ -158,10 +158,8 @@ export default class LineGraph extends Chart {
             let mouse = [ view.x.invert(rawMouse[0]).valueOf(), view.y.invert(rawMouse[1]) ];
 
             let dates = [];
-            this.data.forEach(county => {
-                county.data.forEach(entry => {
-                    dates.push(entry.date);
-                });
+            this.data[0].data.forEach(entry => {
+                dates.push(entry.date);
             });
 
             let searchDateIndex = d3.bisectCenter(dates, mouse[0]);
@@ -172,17 +170,24 @@ export default class LineGraph extends Chart {
             let closest = d3.least(this.data, d => Math.abs(d.data[searchDateIndex].value - mouse[1]));
 
             view.svg.select("g#lines").selectAll("path").each(function() {
-                d3.select(this).attr("stroke", s => { console.log(s); return s.gisJoin === closest.gisJoin ? '#a00' : '#eee' });
+                d3.select(this).attr("stroke", s => s.gisJoin === closest.gisJoin ? 'steelblue' : '#eee');
             });
 
             view.svg.select("text#marker")
+                .attr("display", "default")
                 .attr("x", rawMouse[0])
-                .attr("y", rawMouse[1] + 20)
+                .attr("y", rawMouse[1] - 20)
+                .attr("font-size", "smaller")
                 .text(closest.gisJoin);
         });
 
         view.svg.on('mouseleave', event => {
             this.mouseInGraph = false;
+
+            view.svg.select("text#marker").attr("display", "none");
+            view.svg.select("g#lines").selectAll("path").each(function() {
+                d3.select(this).attr("stroke", "steelblue");
+            });
         });
 
         return view;
