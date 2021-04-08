@@ -129,7 +129,7 @@ export default class CovidDataSource {
             days: daysWindowSize
         }));
 
-        let mvAccessor = r => { return { JSON.parse(r.movingAverages[0]).movingAverages, GISJOIN: r.gisJoin }};
+        let mvAccessor = r => { return { data: JSON.parse(r.movingAverages[0]).movingAverages, GISJOIN: r.gisJoin }};
         return this.getStreamResults(stream, mvAccessor, 'getJson');
     }
 

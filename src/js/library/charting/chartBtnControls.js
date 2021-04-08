@@ -9,11 +9,11 @@ export function createChartControl(chart, graphBox, type) {
     let col2 = createEmptyColumn();
     let col3 = createEmptyColumn();
     col2.className = "col-sm-auto";
-    if(type === 'scatterplot') {
+    if (type === 'scatterplot') {
         col2.appendChild(createChartControlGroup(chart, 'x', "X-Axis"));
         col2.appendChild(createChartControlGroup(chart, 'y', "Y-Axis"));
     }
-    else {
+    else if (type === 'histogram') {
         col2.appendChild(createChartControlGroup(chart, 'x',"Constraint"));
     }
     col3.appendChild(createCloseButton(graphBox));
