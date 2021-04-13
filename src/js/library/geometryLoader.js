@@ -55,12 +55,12 @@ export default class GeometryLoader {
     async getPreloadedBuckets() {
         return new Promise(((resolve) => {
             const waitForExist = () => {
-                if(!BoundsToGISJOIN.buckets || !Object.keys(BoundsToGISJOIN.buckets).length){
-                    setTimeout(function(){
+                if (!BoundsToGISJOIN.buckets || !Object.keys(BoundsToGISJOIN.buckets).length) {
+                    setTimeout(function () {
                         waitForExist();
                     }, 150);
                 }
-                else{
+                else {
                     resolve(BoundsToGISJOIN.buckets);
                 }
             }
@@ -68,10 +68,10 @@ export default class GeometryLoader {
         }));
     }
 
-    async preloadData(statusCallback,endCallback) {
+    async preloadData(statusCallback, endCallback) {
         const preloadedBuckets = await this.getPreloadedBuckets();
-        const testDBExistence = await this.getCachedData(Object.keys(preloadedBuckets).slice(0,10));
-        if(testDBExistence){
+        const testDBExistence = await this.getCachedData(Object.keys(preloadedBuckets).slice(0, 10));
+        if (testDBExistence) {
             console.log("DB exists, no preload required")
             endCallback();
             return;
@@ -88,7 +88,7 @@ export default class GeometryLoader {
             const geohashes = invertedMap[data.GISJOIN];
             numResponse++;
             let pctDone = Math.floor(numResponse / total * 100);
-            if(pctDone > prevPctDone){
+            if (pctDone > prevPctDone) {
                 statusCallback({
                     pctDone: pctDone
                 });
@@ -122,10 +122,12 @@ export default class GeometryLoader {
     getInvertedGeohashGISJOINMap(geohashesGISJOINS) {
         const reverse = {};
         for (const geohash in geohashesGISJOINS) {
-            for (const GISJOIN of geohashesGISJOINS[geohash]) {
-                if (!reverse[GISJOIN])
-                    reverse[GISJOIN] = [];
-                reverse[GISJOIN] = this.addListToListNoDuplicates([geohash], reverse[GISJOIN]);
+            if (Array.isArray(geohashesGISJOINS[geohash])) {
+                for (const GISJOIN of geohashesGISJOINS[geohash]) {
+                    if (!reverse[GISJOIN])
+                        reverse[GISJOIN] = [];
+                    reverse[GISJOIN] = this.addListToListNoDuplicates([geohash], reverse[GISJOIN]);
+                }
             }
         }
         return reverse;
