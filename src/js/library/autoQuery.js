@@ -13,8 +13,12 @@ import Worker from "./queryWorker.js"
 export default class AutoQuery {
     static queryWorker = new Worker(); //init querier
     static queryWorkerConfiged = false;
-    static minCountyZoom = 1;
-    static minTractZoom = 1;
+    static minCountyZoom = 8;
+    static minTractZoom = 10;
+    static blockers = {
+        tract: false,
+        county: false
+    }
     /**
       * Constructs the instance of the autoquerier to a specific layer
       * @memberof AutoQuery
@@ -181,11 +185,21 @@ export default class AutoQuery {
     query() {
         if (this.linked) {
             const mapZoom = this.map.getZoom();
-            if (this.linked === "tract_geo_140mb_no_2d_index" && mapZoom < AutoQuery.minTractZoom) {
-                map.setZoom(AutoQuery.minTractZoom);
+            if (this.linked === "tract_geo_140mb_no_2d_index") {
+                if (mapZoom < AutoQuery.minTractZoom) {
+                    AutoQuery.blockers.tract = true;
+                    return;
+                }
+                else{
+                    AutoQuery.blockers.tract = false;
+                }
             }
             else if (mapZoom < AutoQuery.minCountyZoom) {
-                map.setZoom(AutoQuery.minCountyZoom);
+                AutoQuery.blockers.county = true;
+                return;
+            }
+            else {
+                AutoQuery.blockers.county = false;
             }
         }
         let q = [];
