@@ -19,7 +19,7 @@ export default class AutoQuery {
         tract: false,
         county: false
     }
-    static blockerListeners = [];
+    static blockerListener = null;
     /**
       * Constructs the instance of the autoquerier to a specific layer
       * @memberof AutoQuery
@@ -272,7 +272,7 @@ export default class AutoQuery {
                 if (mapZoom < AutoQuery.minTractZoom) {
                     AutoQuery.blockers.tract = true;
                     if(oldBlockers !== JSON.stringify(AutoQuery.blockers)){
-                        AutoQuery.dispatchBlockers();
+                        AutoQuery.dispatchBlocker();
                     }
                     return false;
                 }
@@ -283,25 +283,26 @@ export default class AutoQuery {
             else if (mapZoom < AutoQuery.minCountyZoom) {
                 AutoQuery.blockers.county = true;
                 if(oldBlockers !== JSON.stringify(AutoQuery.blockers)){
-                    AutoQuery.dispatchBlockers();
+                    AutoQuery.dispatchBlocker();
                 }
                 return false;
             }
             else {
                 AutoQuery.blockers.county = false;
             }
+            if(oldBlockers !== JSON.stringify(AutoQuery.blockers)){
+                AutoQuery.dispatchBlocker();
+            }
         }
         return true;
     }
 
-    static addBlockerListener(listener) {
-        AutoQuery.blockerListeners.push(listener);
+    static setBlockerListener(listener) {
+        AutoQuery.blockerListener = listener;
     }
 
-    static dispatchBlockers() {
-        for (const listener of AutoQuery.blockerListeners) {
-            listener(AutoQuery.blockers);
-        }
+    static dispatchBlocker() {
+        AutoQuery.blockerListener(AutoQuery.blockers);
     }
 
     addToExistingFeaturesNoDuplicates(existingFeatures, newFeatures) {

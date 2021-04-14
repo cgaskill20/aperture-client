@@ -85,6 +85,6 @@ module.exports = {
   externals: {
     "jquery": "jQuery",
     "requirejs": "require"
-  },
+  }
 }
 
