@@ -8,7 +8,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/, /Worker.js$/],
         use: [{
           loader: 'babel-loader'
           //options are defined in .babelrc
@@ -36,7 +36,7 @@ module.exports = {
         test: /\mapDataFilterWorker.js$/,
         loader: "worker-loader",
         options: {
-          filename: "[name].[contenthash].worker.js",
+          filename: "[name].worker.js",
           worker: {
             type: "Worker",
             options: {
@@ -51,7 +51,7 @@ module.exports = {
         test: /\queryWorker.js$/,
         loader: "worker-loader",
         options: {
-          filename: "[name].[contenthash].worker.js",
+          filename: "[name].worker.js",
           worker: {
             type: "Worker",
             options: {
@@ -66,7 +66,7 @@ module.exports = {
         test: /\geometryLoaderWorker.js$/,
         loader: "worker-loader",
         options: {
-          filename: "[name].[contenthash].worker.js",
+          filename: "[name].worker.js",
           worker: {
             type: "Worker",
             options: {
