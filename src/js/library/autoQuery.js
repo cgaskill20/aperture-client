@@ -19,6 +19,7 @@ export default class AutoQuery {
         tract: false,
         county: false
     }
+    static blockerListeners = [];
     /**
       * Constructs the instance of the autoquerier to a specific layer
       * @memberof AutoQuery
@@ -183,24 +184,8 @@ export default class AutoQuery {
       * new features come in with @method listenForLinkedGeometryUpdates
       */
     query() {
-        if (this.linked) {
-            const mapZoom = this.map.getZoom();
-            if (this.linked === "tract_geo_140mb_no_2d_index") {
-                if (mapZoom < AutoQuery.minTractZoom) {
-                    AutoQuery.blockers.tract = true;
-                    return;
-                }
-                else{
-                    AutoQuery.blockers.tract = false;
-                }
-            }
-            else if (mapZoom < AutoQuery.minCountyZoom) {
-                AutoQuery.blockers.county = true;
-                return;
-            }
-            else {
-                AutoQuery.blockers.county = false;
-            }
+        if (!this.zoomIsValid()) {
+            return;
         }
         let q = [];
         if (!this.linked) {
@@ -277,6 +262,46 @@ export default class AutoQuery {
         }
 
         AutoQuery.queryWorker.addEventListener("message", responseListener);
+    }
+
+    zoomIsValid() {
+        if (this.linked) {
+            const oldBlockers = JSON.stringify(AutoQuery.blockers);
+            const mapZoom = this.map.getZoom();
+            if (this.linked === "tract_geo_140mb_no_2d_index") {
+                if (mapZoom < AutoQuery.minTractZoom) {
+                    AutoQuery.blockers.tract = true;
+                    if(oldBlockers !== JSON.stringify(AutoQuery.blockers)){
+                        AutoQuery.dispatchBlockers();
+                    }
+                    return false;
+                }
+                else {
+                    AutoQuery.blockers.tract = false;
+                }
+            }
+            else if (mapZoom < AutoQuery.minCountyZoom) {
+                AutoQuery.blockers.county = true;
+                if(oldBlockers !== JSON.stringify(AutoQuery.blockers)){
+                    AutoQuery.dispatchBlockers();
+                }
+                return false;
+            }
+            else {
+                AutoQuery.blockers.county = false;
+            }
+        }
+        return true;
+    }
+
+    static addBlockerListener(listener) {
+        AutoQuery.blockerListeners.push(listener);
+    }
+
+    static dispatchBlockers() {
+        for (const listener of AutoQuery.blockerListeners) {
+            listener(AutoQuery.blockers);
+        }
     }
 
     addToExistingFeaturesNoDuplicates(existingFeatures, newFeatures) {
