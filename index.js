@@ -44,7 +44,7 @@ require("bootstrap");
 require("./src/js/library/smartQuerier.js");
 
 const PAGE_URL = window.location.href;
-const DEV = PAGE_URL.includes("dev") || PAGE_URL.includes("127.0.0.1");
+const DEV = PAGE_URL.includes("localhost") || PAGE_URL.includes("127.0.0.1");
 if (DEV && !localStorage.getItem("noDev")) {
     console.log("Aperture client set to DEV mode.")
     AutoQuery.minCountyZoom = 1;

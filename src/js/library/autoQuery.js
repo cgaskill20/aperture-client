@@ -13,7 +13,7 @@ import Worker from "./queryWorker.js"
 export default class AutoQuery {
     static queryWorker = new Worker(); //init querier
     static queryWorkerConfiged = false;
-    static minCountyZoom = 8;
+    static minCountyZoom = 7;
     static minTractZoom = 10;
     static blockers = {
         tract: false,
@@ -271,9 +271,7 @@ export default class AutoQuery {
             if (this.linked === "tract_geo_140mb_no_2d_index") {
                 if (mapZoom < AutoQuery.minTractZoom) {
                     AutoQuery.blockers.tract = true;
-                    if(oldBlockers !== JSON.stringify(AutoQuery.blockers)){
-                        AutoQuery.dispatchBlocker();
-                    }
+                    this.checkAndDispatch(oldBlockers);
                     return false;
                 }
                 else {
@@ -282,19 +280,21 @@ export default class AutoQuery {
             }
             else if (mapZoom < AutoQuery.minCountyZoom) {
                 AutoQuery.blockers.county = true;
-                if(oldBlockers !== JSON.stringify(AutoQuery.blockers)){
-                    AutoQuery.dispatchBlocker();
-                }
+                this.checkAndDispatch(oldBlockers);
                 return false;
             }
             else {
                 AutoQuery.blockers.county = false;
             }
-            if(oldBlockers !== JSON.stringify(AutoQuery.blockers)){
-                AutoQuery.dispatchBlocker();
-            }
+            this.checkAndDispatch(oldBlockers);
         }
         return true;
+    }
+
+    checkAndDispatch(oldBlockers) {
+        if (oldBlockers !== JSON.stringify(AutoQuery.blockers)) {
+            AutoQuery.dispatchBlocker();
+        }
     }
 
     static setBlockerListener(listener) {
