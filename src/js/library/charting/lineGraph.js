@@ -120,7 +120,7 @@ export default class LineGraph extends Chart {
         this.data = data.map(entry => { 
             return { data: entry.data.map(d => { 
                 return { value: d.avg, date: d.date.$date };
-            }), gisJoin: entry.GISJOIN };
+            }), gisJoin: entry.GISJOIN, name: entry.name };
         });
         this.rerenderAllViews();
     }
@@ -182,7 +182,7 @@ export default class LineGraph extends Chart {
                 .attr("x", rawMouse[0])
                 .attr("y", rawMouse[1] - 20)
                 .attr("font-size", "smaller")
-                .text(closest.gisJoin);
+                .text(closest.name);
         });
 
         view.svg.on('mouseleave', event => {

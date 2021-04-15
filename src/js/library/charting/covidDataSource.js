@@ -68,7 +68,7 @@ export default class CovidDataSource {
     // The leaflet map used to determine the viewport bounds.
     constructor(map) {
         this.map = map;
-        this.gisjoinAggregateTemplate = [{ $match: { geometry: { $geoIntersects: { $geometry: { type: "Polygon", coordinates: []}}}}}, { $project: { GISJOIN: 1 }}];
+        this.gisjoinAggregateTemplate = [{ $match: { geometry: { $geoIntersects: { $geometry: { type: "Polygon", coordinates: []}}}}}, { $project: { GISJOIN: 1, properties: 1 }}];
         BoundsToGISJOIN.config("county_geo_140mb_no_2d_index");
     }
 
@@ -90,47 +90,59 @@ export default class CovidDataSource {
             let results = [];
             stream.on('data', data => {
                 let response = JSON.parse(data[accessor]());
-                console.log(response);
                 results.push(transformer(response));
             });
 
             stream.on('end', () => {
                 stream.cancel();
-                console.log(results);
                 resolve(results);
             });
         });
     }
 
-    async getGisjoins() {
-        let doGeocacheQuery = CovidDataSource.queryChangeZoomLevel > this.map.getZoom();
+    // Returns a list of counties in the viewport.
+    // Minimally, these will objects with a GISJOIN field. Additional fields to
+    // extract from the db response can be passed as a list into the properties
+    // argument.
+    // For instance, properties = [ "NAMELSAD10" ] will include the county name.
+    async getCounties(properties) {
+        let query = JSON.stringify(this.getGisjoinAggregate());
+        let queryStream = CovidDataSource.querier.getStreamForQuery("county_geo_GISJOIN", query);
+        let reduce = r => { 
+            console.log(r);
+            let result = { GISJOIN: r.GISJOIN };
+            for (let prop of properties) {
+                result[prop] = r.properties[prop];
+            }
+            return result;
+        };
 
-        let gisjoins;
-        if (doGeocacheQuery) {
-            let gisjoins = BoundsToGISJOIN.boundsToGISJOINS(this.map.getBounds(), []);
-        } else {
-            let query = JSON.stringify(this.getGisjoinAggregate());
-            let gisjoinQueryStream = CovidDataSource.querier.getStreamForQuery("county_geo_GISJOIN", query);
-            gisjoins = await this.getStreamResults(gisjoinQueryStream, r => r.GISJOIN);
-        }
-        return gisjoins;
+        return await this.getStreamResults(queryStream, reduce);
     }
 
     // Query and return a promise to COVID data for what's in the viewport.
-    // All parameters are optional.
+    // Type is the kind of data to query - either "cases" or "deaths".
+    // daysWindowDays is the size of the moving average window in days.
     async get(type = CovidDataSource.defaultType, daysWindowSize = CovidDataSource.defaultDays) {
-        let gisjoins = await this.getGisjoins();
-        console.log(gisjoins);
+        let counties = await this.getCounties([ "NAMELSAD10" ]);
+        console.log(counties);
         
         let stream = CovidDataSource.querier.executeSlidingWindowQuery(JSON.stringify({
-            gisJoins: gisjoins,
+            gisJoins: counties.map(c => c.GISJOIN),
             collection: "covid_county_formatted",
             feature: type,
             days: daysWindowSize
         }));
 
-        let mvAccessor = r => { return { data: JSON.parse(r.movingAverages[0]).movingAverages, GISJOIN: r.gisJoin }};
-        return this.getStreamResults(stream, mvAccessor, 'getJson');
+        let averagesTransform = r => { 
+            return { 
+                data: JSON.parse(r.movingAverages[0]).movingAverages, 
+                GISJOIN: r.gisJoin, 
+                name: counties.find(c => c.GISJOIN === r.gisJoin).NAMELSAD10
+            };
+        };
+
+        return this.getStreamResults(stream, averagesTransform, 'getJson');
     }
 
     updateSupplement() { }

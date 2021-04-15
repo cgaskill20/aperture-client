@@ -61,9 +61,10 @@ export default class LineChartManager {
         this.chartArea = chartArea;
         this.chartSystem = chartSystem;
 
+        // FIXME: This can this not suck please
         this.featureManager = { addCallback: () => {} };
-        chartArea.addChart(this.chart);
 
+        chartArea.addChart(this.chart);
         this.chart.unhide(0);
     }
 
