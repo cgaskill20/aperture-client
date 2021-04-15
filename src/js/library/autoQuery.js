@@ -14,7 +14,7 @@ export default class AutoQuery {
     static queryWorker = new Worker(); //init querier
     static queryWorkerConfiged = false;
     static minCountyZoom = 7;
-    static minTractZoom = 10;
+    static minTractZoom = 9;
     static blockers = {
         tract: false,
         county: false
