@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   entry: "./index.js",
   output: {
@@ -80,11 +82,11 @@ module.exports = {
     ]
   },
   watchOptions: {
-    ignored: "**/.*"
+    ignored: /node_modules/,
   },
   externals: {
     "jquery": "jQuery",
     "requirejs": "require"
-  },
+  }
 }
 

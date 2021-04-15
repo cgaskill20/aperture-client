@@ -6,8 +6,8 @@
   "scripts": {
     "build": "webpack --mode 'production'",
     "buildDev": "webpack --mode 'development'",
-    "watch": "webpack --mode 'development' --watch --config webpack.config.js",
-    "serve": "npm run watch & live-server --ignore='**/node_modules/**'",
+    "watch": "webpack --mode 'development' --watch",
+    "serve": "npm run watch & live-server --ignore='**/node_modules/**,**/src/**,**/images/**,./index.js'",
     "test": "mocha --require @babel/register --recursive -r jsdom-global/register",
     "coverage": "nyc --reporter=lcov npm run test"
   },
@@ -42,10 +42,6 @@
     "jsdom-global": "^3.0.2",
     "leaflet-timedimension": "^1.1.1",
     "leaflet.markercluster": "^1.5.0",
-    "live-server": "^1.2.1",
-    "mocha": "^7.1.0",
-    "mocha-jsdom": "^2.0.0",
-    "nyc": "^15.0.0",
     "osmtogeojson": "^3.0.0-beta.4",
     "popper.js": "^1.16.1",
     "react": "^17.0.2",
@@ -65,10 +61,15 @@
     "css-loader": "^1.0.0",
     "file-loader": "^6.2.0",
     "jsdoc-to-markdown": "^6.0.1",
+    "live-server": "^1.2.1",
+    "mocha": "^7.1.0",
+    "mocha-jsdom": "^2.0.0",
     "node-sass": "^4.14.1",
+    "nyc": "^15.0.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.0",
     "webpack": "^5.28.0",
+    "webpack-bundle-analyzer": "^4.4.1",
     "webpack-cli": "^4.6.0",
     "worker-loader": "^3.0.8"
   }
