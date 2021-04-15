@@ -55,6 +55,18 @@ END OF TERMS AND CONDITIONS
 
 */
 
+export const LineChartMessageType = {
+    // Change the type of feature plotted by the line chart.
+    // Has:
+    //  newType: either "cases" or "deaths"
+    CHANGE_TYPE: 0,
+
+    // Change the size of the moving average window in days
+    // Has:
+    //  days: a number > 0
+    CHANGE_WINDOW_SIZE: 1,
+}
+
 export default class LineChartManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
         this.chart = new chartType([]);
@@ -69,7 +81,22 @@ export default class LineChartManager {
     }
 
     update(values) {
-        console.log(values);
         this.chart.changeData(values);
+    }
+
+    passMessage(message) {
+        switch (message.type) {
+            case LineChartMessageType.CHANGE_TYPE: {
+                this.wantsType = message.newType;
+                break;
+            } case LineChartMessageType.CHANGE_WINDOW_SIZE: {
+                this.wantsWindowSize = message.days;
+                break;
+            }
+        }
+    }
+
+    getSourceParameters() {
+        return [this.wantsType, this.wantsWindowSize];
     }
 }

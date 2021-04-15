@@ -159,7 +159,6 @@ export default class ChartSystem {
         area.attachTo(node);
         let manager = new type.managerType(this.catalog, area, type.wantsSources[0].supplementObjectInstance, this, type.chartType);
         let frame = new ChartFrame(node, area, manager, type);
-
         this.chartFrames.push(frame);
 
         return frame;
@@ -181,7 +180,8 @@ export default class ChartSystem {
         Object.values(DataSourceType).forEach(async source => {
             this.chartFrames.forEach(async frame => {
                 if (frame.getChartType().wantsSources.find(wanted => wanted.name === source.name)) {
-                    frame.manager.update(await source.sourceInstance.get());
+                    let sourceParams = frame.manager.getSourceParameters();
+                    frame.manager.update(await source.sourceInstance.get(...sourceParams));
                     source.sourceInstance.updateSupplement(source.supplementObjectInstance);
                 }
             });

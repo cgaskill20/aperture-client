@@ -10,11 +10,13 @@ export function createChartControl(chart, graphBox, type) {
     let col3 = createEmptyColumn();
     col2.className = "col-sm-auto";
     if (type === 'scatterplot') {
-        col2.appendChild(createChartControlGroup(chart, 'x', "X-Axis"));
-        col2.appendChild(createChartControlGroup(chart, 'y', "Y-Axis"));
+        col2.appendChild(createChartAxisControlGroup(chart, 'x', "X-Axis"));
+        col2.appendChild(createChartAxisControlGroup(chart, 'y', "Y-Axis"));
     } else if (type === 'histogram') {
-        col2.appendChild(createChartControlGroup(chart, 'x', "Constraint"));
-    } 
+        col2.appendChild(createChartAxisControlGroup(chart, 'x', "Constraint"));
+    } else if (type === 'linegraph') {
+        col2.appendChild(createChartControlGroup(chart, 'feature', "Feature"));
+    }
     col3.appendChild(createCloseButton(graphBox));
     chartControl.appendChild(col1);
     chartControl.appendChild(col2);
@@ -28,14 +30,21 @@ function createEmptyColumn() {
     return emptyCol;
 }
 
-function createChartControlGroup(chart, axis, dropdownTitle) {
+function createChartAxisControlGroup(chart, axis, dropdownTitle) {
     let chartControlButtonGroup = createChartControlButtonGroup();
     let leftToggle = createSideToggle(chart, axis, '<');
-    let chartDropdown = createDropdown(chart, dropdownTitle, axis);
+    let chartDropdown = createFeatureDropdown(chart, dropdownTitle, axis);
     let rightToggle = createSideToggle(chart, axis, '>');
     chartControlButtonGroup.appendChild(leftToggle);
     chartControlButtonGroup.appendChild(chartDropdown);
     chartControlButtonGroup.appendChild(rightToggle);
+    return chartControlButtonGroup;
+}
+
+function createChartDropdownControl(chart, dropdownTitle) {
+    let chartControlButtonGroup = createChartControlButtonGroup();
+    let chartDropdown = createControlDropdown(chart, dropdownTitle, axis);
+    chartControlButtonGroup.appendChild(chartDropdown);
     return chartControlButtonGroup;
 }
 
@@ -56,7 +65,7 @@ function createSideToggle(chart, axis, arrowDirection) {
     return sideToggle;
 }
 
-function createDropdown(chart, title, axis) {
+function createFeatureDropdown(chart, title, axis) {
     let chartDropdown = createChartDropdown();
     let dropdownButton = createDropdownButton(title);
     let dropdownMenu = createDropdownMenu();
@@ -84,6 +93,14 @@ function createDropdown(chart, title, axis) {
     })
 
     return chartDropdown;
+}
+
+function createControlDropdown(options, ) {
+    let dropdown = createChartDropdown();
+
+    let dropdownButton = createDropdownButton(title);
+    let dropdownMenu = createDropdownMenu();
+
 }
 
 function createChartDropdown() {
