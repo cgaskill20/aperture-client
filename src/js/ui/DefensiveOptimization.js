@@ -12,6 +12,10 @@ function renderAlert(blocker, text) {
     }
 }
 
+function makeWarningText(resolution){
+    return `Can't query ${resolution} at this zoom level, please zoom in.`
+}
+
 export default function DefensiveOptimization(props) {
     const [blockers, setBlockers] = useState(AutoQuery.blockers);
     useEffect(() => {
@@ -26,7 +30,7 @@ export default function DefensiveOptimization(props) {
         }, 0) * HEIGHT_PER_ALERT).toString() + "px";
 
     return <div className={"warningContainer"} style={{ height: height }}>
-        {renderAlert(blockers.tract, "Can't Query Tracts at This Zoom Level, Please Zoom In")}
-        {renderAlert(blockers.county, "Can't Query Counties at This Zoom Level, Please Zoom In")}
+        {renderAlert(blockers.tract, makeWarningText("tracts"))}
+        {renderAlert(blockers.county, makeWarningText("counties"))}
     </div>
 }
