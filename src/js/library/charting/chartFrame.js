@@ -22,12 +22,8 @@ export default class ChartFrame {
         this.area.rerender(this.width, this.height);
     }
 
-    changeFeature(axis, feature) {
-        this.manager.changeFeature(axis, feature);
-    }
-
-    cycleAxis(axis, direction) {
-        this.manager.cycleAxis(axis, direction);
+    passMessage(message) {
+        this.manager.passMessage(message);
     }
 
     getValidFeatures() {

@@ -55,45 +55,17 @@ END OF TERMS AND CONDITIONS
 
 */
 
-export const LineChartMessageType = {
-    // Change the type of feature plotted by the line chart and/or the window size.
-    // Both properties are optional
+// Message types that are shared among all map feature based graphs.
+export const FeatureChartMessageType = {
+    // Cycles the given axis to the next valid feature
     // Has:
-    //  newType: either "cases" or "deaths"
-    //  newWindowSize: an integer > 0 in days
-    CHANGE_PARAMETERS: 0,
-}
+    //  axis: the axis to change - for histograms this is always "x", for scatterplots may be "x" or "y"
+    //  direction: either "next" or "prev"
+    CYCLE_AXIS: 0,
 
-export default class LineChartManager {
-    constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
-        this.chart = new chartType([]);
-        this.chartArea = chartArea;
-        this.chartSystem = chartSystem;
-
-        // FIXME: This can this not suck please
-        this.featureManager = { addCallback: () => {} };
-
-        chartArea.addChart(this.chart);
-        this.chart.unhide(0);
-    }
-
-    update(values) {
-        this.chart.changeData(values);
-    }
-
-    passMessage(message) {
-        switch (message.type) {
-            case LineChartMessageType.CHANGE_TYPE: {
-                this.wantsType = message.newType;
-                break;
-            } case LineChartMessageType.CHANGE_WINDOW_SIZE: {
-                this.wantsWindowSize = message.days;
-                break;
-            }
-        }
-    }
-
-    getSourceParameters() {
-        return [this.wantsType, this.wantsWindowSize];
-    }
-}
+    // Sets the given axis to the given feature
+    // Has:
+    //  axis: the axis to change - see CYCLE_AXIS
+    //  feature: the feature to set this axis to
+    SET_AXIS: 1,
+};

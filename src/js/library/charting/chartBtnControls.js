@@ -1,5 +1,6 @@
 import Feature from "./feature";
-
+import { FeatureChartMessageType } from "./featureChartMessageType"
+import { LineChartMessageType } from "./lineChartManager"
 import { reduceTotalGraphs, checkNumberOfGraphs } from "./chartBtnCreateChart"
 
 export function createChartControl(chart, graphBox, type) {
@@ -15,7 +16,7 @@ export function createChartControl(chart, graphBox, type) {
     } else if (type === 'histogram') {
         col2.appendChild(createChartAxisControlGroup(chart, 'x', "Constraint"));
     } else if (type === 'linegraph') {
-        col2.appendChild(createChartControlGroup(chart, 'feature', "Feature"));
+        col2.appendChild(createChartDropdownControl(chart, 'feature', "Feature"));
     }
     col3.appendChild(createCloseButton(graphBox));
     chartControl.appendChild(col1);
@@ -43,7 +44,7 @@ function createChartAxisControlGroup(chart, axis, dropdownTitle) {
 
 function createChartDropdownControl(chart, dropdownTitle) {
     let chartControlButtonGroup = createChartControlButtonGroup();
-    let chartDropdown = createControlDropdown(chart, dropdownTitle, axis);
+    let chartDropdown = createControlDropdown(chart, ["cases", "deaths"], LineChartMessageType.CHANGE_PARAMETERS, 'newType');
     chartControlButtonGroup.appendChild(chartDropdown);
     return chartControlButtonGroup;
 }
@@ -78,7 +79,7 @@ function createFeatureDropdown(chart, title, axis) {
             let dropdownItem = document.createElement("a");
             dropdownItem.className = "dropdown-item dropdown-menu-item-custom";
             dropdownItem.onclick = ()=> {
-                chart.changeFeature(axis, feature);
+                chart.passMessage({ type: FeatureChartMessageType.SET_AXIS, axis: axis, feature: feature });
             }
             dropdownItem.innerText = Feature.getFriendlyName(feature);
             dropdownMenu.appendChild(dropdownItem);
@@ -95,12 +96,29 @@ function createFeatureDropdown(chart, title, axis) {
     return chartDropdown;
 }
 
-function createControlDropdown(options, ) {
+function createControlDropdown(chart, options, messageType, messagePropertyName) {
     let dropdown = createChartDropdown();
-
-    let dropdownButton = createDropdownButton(title);
+    let dropdownButton = createDropdownButton("damn");
     let dropdownMenu = createDropdownMenu();
 
+    for (let opt of options) {
+        let item = document.createElement('a');
+        item.className = "dropdown-item dropdown-menu-item-custom";
+        item.onclick = () => {
+            let msg = { type: messageType };
+            msg[messagePropertyName] = opt;
+            chart.passMessage(msg);
+        };
+    }
+
+    chartDropdown.appendChild(dropdownButton);
+    chartDropdown.appendChild(dropdownMenu);
+
+    $(function () {
+        $('[data-toggle="dropdown"]').dropdown()
+    })
+
+    return chartDropdown;
 }
 
 function createChartDropdown() {

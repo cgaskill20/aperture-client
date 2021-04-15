@@ -58,6 +58,7 @@ END OF TERMS AND CONDITIONS
 import Scatterplot from "./scatterplot";
 import Feature from "./feature";
 import { DataSourceType } from "./chartSystem";
+import { FeatureChartMessageType } from "./featureChartMessageType";
 
 export default class ScatterplotManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem) {
@@ -119,6 +120,18 @@ export default class ScatterplotManager {
             this.scatterplot.changeData(this.prepareData(values));
         } else {
             this.chartArea.scatterplot.hide(0)
+        }
+    }
+
+    passMessage(message) {
+        switch (message.type) {
+            case FeatureChartMessageType.CYCLE_AXIS: {
+                this.cycleAxis(message.axis, message.direction);
+                break;
+            } case FeatureChartMessageType.SET_AXIS: {
+                this.changeFeature(message.axis, message.feature);
+                break;
+            }
         }
     }
 
