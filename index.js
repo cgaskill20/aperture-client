@@ -33,6 +33,7 @@ import AutoQuery from "./src/js/library/autoQuery.js";
 import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";
 import MenuGenerator, { updateLayers } from "./src/js/ui/menuGenerator.js";
+import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
 
 
 //idek what to do with theses files, things break if I try to make them import specific things
@@ -43,8 +44,8 @@ require("bootstrap");
 require("./src/js/library/smartQuerier.js");
 
 const PAGE_URL = window.location.href;
-const DEV = PAGE_URL.includes("dev") || PAGE_URL.includes("127.0.0.1");
-if (DEV) {
+const DEV = PAGE_URL.includes("localhost") || PAGE_URL.includes("127.0.0.1");
+if (DEV && !localStorage.getItem("noDev")) {
     console.log("Aperture client set to DEV mode.")
     AutoQuery.minCountyZoom = 1;
     AutoQuery.minTractZoom = 1;
@@ -178,6 +179,9 @@ $.getJSON("src/json/menumetadata.json", async function (mdata) { //this isnt on 
 
 const modelContainer = document.getElementById("model-container");
 ReactDOM.render((<ModelMenu/>), modelContainer);
+
+const queryBlockContainer = document.getElementById("query-block-container");
+ReactDOM.render((<DefensiveOptimization />), queryBlockContainer);
 
 map.on("moveend", function (e) {
     updateLayers();

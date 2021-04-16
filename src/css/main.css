@@ -97,3 +97,13 @@ body {
     width: 60vh;
     height: 60vh;
 }
+
+.warningContainer{
+  position: absolute;
+  z-index: 1999;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 12vh;
+  padding-left: 25px;
+}

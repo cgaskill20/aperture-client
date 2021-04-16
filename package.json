@@ -46,6 +46,7 @@
     "popper.js": "^1.16.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "reactstrap": "^8.9.0",
     "set-default-browser": "^1.0.1",
     "three": "~0.125.0"
   },
