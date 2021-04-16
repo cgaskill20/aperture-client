@@ -61,7 +61,7 @@ export default {
             if (json_map[obj]["notAQueryableLayer"]) {
                 continue;
             }
-            const mergeWithDefalt = { 
+            const mergeWithDefalt = {
                 //merge default and user-given object
                 ...DEFAULT_OBJECT,
                 ...json_map[obj]
@@ -73,7 +73,7 @@ export default {
                 columnsAndHeadings[mergeWithDefalt["group"]][mergeWithDefalt["subGroup"]] = {};
             }
             columnsAndHeadings[mergeWithDefalt["group"]][mergeWithDefalt["subGroup"]][obj] = mergeWithDefalt;
-        }        
+        }
         return columnsAndHeadings;
     },
 
@@ -94,7 +94,7 @@ export default {
             columns += perColPct + " ";
         container.style.gridTemplateColumns = columns; //set columns up
         container.style.height = "90%"
-    }, 
+    },
 
 
     /** Helper method for @method generate
@@ -189,7 +189,7 @@ export default {
         }
         layerSelector.appendChild(selectorLabel);
         layerSelector.appendChild(selector);
-        if(layerInfo !== "") {
+        if (layerInfo !== "") {
             layerSelector.appendChild(this.createTooltip(layerInfo));
         }
         layerContainer.appendChild(layerSelector);
@@ -231,13 +231,13 @@ export default {
             for (const constraint in layerObj["constraints"]) {
                 const constraintName = constraint;
                 const constraintDiv = this.createConstraintContainer(constraintName, layerName, layerObj, layerQuerier);
-                if(constraintDiv.style.display !== "none") {
+                if (constraintDiv.style.display !== "none") {
                     anyActiveConstraints = true;
                 }
                 layerConstraints.appendChild(constraintDiv);
             }
 
-            if(!anyActiveConstraints) {
+            if (!anyActiveConstraints) {
                 layerConstraints.style.display = "none";
             }
 
@@ -248,7 +248,7 @@ export default {
         return layerContainer;
     },
 
-    resetConstraintsForLayer: function(layerName){
+    resetConstraintsForLayer: function (layerName) {
         document.dispatchEvent(new CustomEvent(`${layerName}_reset_constraints`));
     },
 
@@ -272,7 +272,7 @@ export default {
         return controlGroupTextDiv;
     },
 
-    resetConstraintButton: function(layerName) {
+    resetConstraintButton: function (layerName) {
         let resetButton = document.createElement("button");
         resetButton.className = "btn btn-outline-dark reset-constraint-button";
         resetButton.type = "button";
@@ -337,13 +337,13 @@ export default {
         return dropdown;
     },
 
-    createTooltip: function(layerInfo) {
+    createTooltip: function (layerInfo) {
         const title = layerInfo;
         const tooltip = document.createElement("span");
         tooltip.innerHTML = "<img src='./images/Info_Black.png' class='tool-tip' data-toggle='tooltip'\
         data-placement='top' container='body' title=\'" + title + "\'>";
         $(function () {
-          $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="tooltip"]').tooltip()
         })
         return tooltip;
     },
@@ -367,7 +367,7 @@ export default {
         editDiv.appendChild(editConstraintArea)
 
 
-        for (let i = 0; i < layerConstraints.childNodes.length-1; i++) {
+        for (let i = 0; i < layerConstraints.childNodes.length - 1; i++) {
 
             const holderDiv = document.createElement("div");
             holderDiv.className = "editConstraintsConstraint";
@@ -406,6 +406,23 @@ export default {
         document.body.appendChild(editDiv);
     },
 
+    mapNumToString(num, stringToNumMap) {
+        if(!stringToNumMap){
+            return num;
+        }
+        return Object.keys(stringToNumMap)[Object.values(stringToNumMap).indexOf(Math.floor(Number(num)))];
+    },
+
+    valueToLabel(value){
+        return isDate ? 
+            (new Date(Number(value))).toUTCString().substr(0, 16) : 
+            (step < 1 ? 
+                value : 
+                typeof value === "number" ? 
+                    Math.floor(value) : 
+                    value);
+    },
+
     createSliderContainer: function (constraint, constraintObj, layerObj, layerName) {
         const sliderContainer = document.createElement("div");
         sliderContainer.className = "slider-individual";
@@ -429,12 +446,15 @@ export default {
         const name = Util.removePropertiesPrefix(Util.underScoreToSpace(constraintObj["label"] ? constraintObj["label"] : constraint));
         const step = constraintObj['step'] ? constraintObj['step'] : 1;
         const isDate = constraintObj['isDate'];
+        const selectToRangeMap = constraintObj['selectToRangeMap'];
         slider.noUiSlider.on('update', function (values) {
-            sliderLabel.innerHTML = name + ": " + (isDate ? (new Date(Number(values[0]))).toUTCString().substr(0, 16) : (step < 1 ? values[0] : Math.floor(values[0])));
+            const value0 = this.mapNumToString(values[0],selectToRangeMap);
+            sliderLabel.innerHTML = name + ": " + (isDate ? (new Date(Number(value0))).toUTCString().substr(0, 16) : (step < 1 ? value0 : typeof value0 === "number" ? Math.floor(value0) : value0));
             for (let i = 1; i < values.length; i++) {
-                sliderLabel.innerHTML += " - " + (isDate ? (new Date(Number(values[i]))).toUTCString().substr(0, 16) : (step < 1 ? values[i] : Math.floor(values[i])));
+                const valuei = this.mapNumToString(values[i],selectToRangeMap);
+                sliderLabel.innerHTML += " - " + (isDate ? (new Date(Number(valuei))).toUTCString().substr(0, 16) : (step < 1 ? valuei :typeof valuei === "number" ? Math.floor(valuei) : valuei));
             }
-        });
+        }.bind(this));
 
         //listen for reset
         document.addEventListener(`${layerName}_reset_constraints`, () => {
@@ -479,7 +499,7 @@ export default {
                 checkboxSelector.checked = defaultChecked;
                 //listen for reset
                 document.addEventListener(`${layerName}_reset_constraints`, () => {
-                    if(checkboxSelector.checked !== defaultChecked){
+                    if (checkboxSelector.checked !== defaultChecked) {
                         checkboxSelector.checked = defaultChecked;
                         checkboxSelectorContainer.onchange();
                     }
