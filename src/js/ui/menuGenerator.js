@@ -413,7 +413,7 @@ export default {
         return Object.keys(stringToNumMap)[Object.values(stringToNumMap).indexOf(Math.floor(Number(num)))];
     },
 
-    valueToLabel(value){
+    valueToLabel(value,step,isDate){
         return isDate ? 
             (new Date(Number(value))).toUTCString().substr(0, 16) : 
             (step < 1 ? 
@@ -449,10 +449,10 @@ export default {
         const selectToRangeMap = constraintObj['selectToRangeMap'];
         slider.noUiSlider.on('update', function (values) {
             const value0 = this.mapNumToString(values[0],selectToRangeMap);
-            sliderLabel.innerHTML = name + ": " + (isDate ? (new Date(Number(value0))).toUTCString().substr(0, 16) : (step < 1 ? value0 : typeof value0 === "number" ? Math.floor(value0) : value0));
+            sliderLabel.innerHTML = name + ": " + this.valueToLabel(value0,step,isDate);
             for (let i = 1; i < values.length; i++) {
                 const valuei = this.mapNumToString(values[i],selectToRangeMap);
-                sliderLabel.innerHTML += " - " + (isDate ? (new Date(Number(valuei))).toUTCString().substr(0, 16) : (step < 1 ? valuei :typeof valuei === "number" ? Math.floor(valuei) : valuei));
+                sliderLabel.innerHTML += " - " + this.valueToLabel(valuei,step,isDate);
             }
         }.bind(this));
 
