@@ -96,7 +96,7 @@ function createFeatureDropdown(chart, title, axis) {
     return chartDropdown;
 }
 
-function createControlDropdown(chart, options, messageType, messagePropertyName) {
+function createControlDropdown(chart, title, options, messageType, messagePropertyName) {
     let dropdown = createChartDropdown();
     let dropdownButton = createDropdownButton("damn");
     let dropdownMenu = createDropdownMenu();
