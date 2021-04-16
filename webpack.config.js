@@ -80,7 +80,7 @@ module.exports = {
     ]
   },
   watchOptions: {
-    ignored: "**/.*"
+    ignored: /node_modules/,
   },
   externals: {
     "jquery": "jQuery",
