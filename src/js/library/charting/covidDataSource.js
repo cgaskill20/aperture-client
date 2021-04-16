@@ -124,7 +124,6 @@ export default class CovidDataSource {
     // daysWindowDays is the size of the moving average window in days.
     async get(type = CovidDataSource.defaultType, daysWindowSize = CovidDataSource.defaultDays) {
         let counties = await this.getCounties([ "NAMELSAD10" ]);
-        console.log(type);
         
         let stream = CovidDataSource.querier.executeSlidingWindowQuery(JSON.stringify({
             gisJoins: counties.map(c => c.GISJOIN),

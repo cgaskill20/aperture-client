@@ -80,7 +80,7 @@ export default class LineGraph extends Chart {
         // { date: Date, value: number }
         // view.x and view.y will need to change if this isn't the case.
         view.x = d3.scaleUtc()
-            //.domain(d3.extent(this.data[0].data, d => d.date)).nice()
+            // FIXME: This is EXTREMELY inefficient
             .domain([d3.min(this.data, entry => d3.min(entry.data, d => d.date)), 
                      d3.max(this.data, entry => d3.max(entry.data, d => d.date))])
             .range([view.margin.left, width - view.margin.right]);
@@ -165,6 +165,10 @@ export default class LineGraph extends Chart {
         });
 
         view.svg.on('mousemove', event => {
+            if (this.data.length === 0) {
+                return;
+            }
+
             let rawMouse = d3.pointer(event, view.svg.node());
             let mouse = [ view.x.invert(rawMouse[0]).valueOf(), view.y.invert(rawMouse[1]) ];
 
@@ -181,7 +185,7 @@ export default class LineGraph extends Chart {
             let closest = d3.least(this.data, d => {
                 let entry = d.data[searchDateIndex];
                 if (!entry) {
-                    return undefined; // JAVASCRIPT EXCELLENCE AWARD 2021 
+                    return; // JAVASCRIPT EXCELLENCE AWARD 2021 
                 }   
 
                 return Math.abs(d.data[searchDateIndex].value - mouse[1])
