@@ -75,6 +75,8 @@ export default class LineChartManager {
 
         chartArea.addChart(this.chart);
         this.chart.unhide(0);
+
+        this.chartSystem.update();
     }
 
     update(values) {

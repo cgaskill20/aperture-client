@@ -81,7 +81,8 @@ export default class LineGraph extends Chart {
         // view.x and view.y will need to change if this isn't the case.
         view.x = d3.scaleUtc()
             //.domain(d3.extent(this.data[0].data, d => d.date)).nice()
-            .domain([d3.min(this.data, entry => d3.min(entry.data, d => d.date)])
+            .domain([d3.min(this.data, entry => d3.min(entry.data, d => d.date)), 
+                     d3.max(this.data, entry => d3.max(entry.data, d => d.date))])
             .range([view.margin.left, width - view.margin.right]);
 
         view.y = d3.scaleLinear()
@@ -125,10 +126,14 @@ export default class LineGraph extends Chart {
     changeData(data) {
         this.data = data.map(entry => { 
             return { data: entry.data.map(d => { 
-                return { value: d.avg, date: d.date.$date };
+                return { value: this.clamp(d.avg), date: d.date.$date };
             }), gisJoin: entry.GISJOIN, name: entry.name };
         });
         this.rerenderAllViews();
+    }
+
+    clamp(n) {
+        return n < 0 ? 0 : n;
     }
 
     setTitle(title) {
@@ -173,11 +178,14 @@ export default class LineGraph extends Chart {
             });
 
             let searchDateIndex = d3.bisectCenter(dates, mouse[0]);
-            if (searchDateIndex > d3.min(this.data, d => d.data.length)) {
-                return;
-            }
+            let closest = d3.least(this.data, d => {
+                let entry = d.data[searchDateIndex];
+                if (!entry) {
+                    return undefined; // JAVASCRIPT EXCELLENCE AWARD 2021 
+                }   
 
-            let closest = d3.least(this.data, d => Math.abs(d.data[searchDateIndex].value - mouse[1]));
+                return Math.abs(d.data[searchDateIndex].value - mouse[1])
+            });
 
             view.svg.select("g#lines").selectAll("path").each(function() {
                 d3.select(this).attr("stroke", s => s.gisJoin === closest.gisJoin ? 'steelblue' : '#eee');
