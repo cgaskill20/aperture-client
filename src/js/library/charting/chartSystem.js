@@ -113,6 +113,8 @@ export const ChartingType = {
 }
 
 export default class ChartSystem {
+    static MAX_CHART_HEIGHT = 350;
+
     constructor(map, chartCatalogFilename) {
         this.map = map;
 
@@ -121,7 +123,12 @@ export default class ChartSystem {
         this.resizable = new resizable(400, 300, "white");
         this.resizable.setResizeCallback((width, height) => {
             this.chartFrames.forEach(frame => {
-                frame.setSize(width - 200, height - 200);
+                let newHeight = height - 200;
+                if (newHeight > ChartSystem.MAX_CHART_HEIGHT) {
+                    newHeight = ChartSystem.MAX_CHART_HEIGHT;
+                }
+
+                frame.setSize(width - 200, newHeight);
                 frame.resize();
             });
         });

@@ -115,7 +115,7 @@ export default class Histogram extends Chart {
 
         if (this.kdeEnabled) {
             let maxBarHeight = d3.max(this.bins, d => d.length);
-            let kdePoints = this.kde.normalize(this.kde.estimate(view.x.ticks(30), this.data), maxBarHeight);
+            let kdePoints = this.kde.estimate(view.x.ticks(30), this.data, maxBarHeight);
 
             view.kdeLine = d3.line()
                 .curve(d3.curveBasis)
@@ -188,8 +188,8 @@ export default class Histogram extends Chart {
             .append("xhtml:input")
             .attr("name", "bwslider")
             .attr("type", "range")
-            .attr("min", -1)
-            .attr("max", 2)
+            .attr("min", 0.4)
+            .attr("max", 10)
             .attr("step", "any")
             .attr("id", "kdeSlider");
 
@@ -200,11 +200,10 @@ export default class Histogram extends Chart {
         let histogram = this;
         svg.select("foreignObject input#kdeSlider").node().oninput = function() { 
             if (histogram.kdeEnabled) {
-                let transformedValue = Math.exp(this.value);
-                kde.setBandwidth(transformedValue); 
+                kde.setBandwidth(this.value); 
 
                 svg.select("foreignObject div text")
-                    .text(`${transformedValue.toPrecision(2)}`)
+                    .text(`${Number.parseFloat(this.value).toPrecision(2)}`)
 
                 histogram.rerenderAllViews();
             }
