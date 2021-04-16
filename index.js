@@ -173,7 +173,9 @@ window.chartSystem = new ChartSystem(map, "src/json/graphPriority.json", window.
 
 //where the magic happens
 $.getJSON("src/json/menumetadata.json", async function (mdata) { //this isnt on the mongo server yet so query it locally
+    //console.log(JSON.parse(JSON.stringify(mdata)))
     const finalData = await AutoMenu.build(mdata, overwrite);
+    console.log(finalData)
     MenuGenerator.generate(finalData, document.getElementById("sidebar-container"));
 });
 

@@ -292,7 +292,15 @@
     "fieldMetadata": [
       {
         "name": "RISK_RATNG",
-        "label": "Risk Rating"
+        "label": "Risk Rating",
+        "type": "range",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "SOVI_RATNG",

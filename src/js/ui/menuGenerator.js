@@ -308,7 +308,6 @@ export default {
             container = this.createSliderContainer(constraintName, constraintObj, layerObj, layerName);
             container.className = "content-section slider-section colorMode1 customBorder";
         }
-
         else if (constraintObj["type"] === "selector") {
             container = this.createCheckboxContainer(constraintName, constraintObj, layerObj, layerName, "radio");
         }

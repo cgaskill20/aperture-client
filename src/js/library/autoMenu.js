@@ -131,6 +131,7 @@ export default {
                 // console.log("----------------")
             }
             constraint = this.convertFromDefault(constraint);
+            constraint = this.selectToRange(constraint);
             constraint = this.buildStandardConstraint(constraint);
             if (constraint) {
                 //console.log(constraint);
@@ -212,6 +213,21 @@ export default {
         return constraint;
     },
 
+    /**
+      * Helper function for @method buildConstraintsFromCatalog
+      * @memberof AutoMenu
+      * @method selectToRange
+      */
+    selectToRange: function (constraint) {
+        if (constraint.selectToRangeMap) {
+            constraint.step = 1;
+            const values = Object.values(constraint.selectToRangeMap);
+            constraint.min = Math.min(...values);
+            constraint.max = Math.max(...values);
+        }
+        return constraint;
+    },
+
 
     /**
       * Helper function for @method buildConstraintsFromCatalog
@@ -239,11 +255,14 @@ export default {
             result.range = [constraint.min, constraint.max];
             result.default = result.range;
 
-
             if (result.range[0] === result.range[1] || !constraint.max) //error check
                 return null;
 
-
+            if(constraint.selectToRangeMap){
+                result.options = constraint.values;
+                result.selectToRangeMap = constraint.selectToRangeMap;
+            }
+            
             if (constraint.type === "date")
                 result.isDate = true;
         }
@@ -264,7 +283,9 @@ export default {
 
         result.hide = constraint.hideByDefault;
 
-
+        if(result.selectToRangeMap){
+            console.log(result)
+        }
         return result;
     }
 }
