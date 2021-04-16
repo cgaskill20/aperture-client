@@ -1,4 +1,5 @@
-import Feature from "./feature";
+import Feature from "./feature"
+import ControlDropdown from "./controlDropdown"
 import { FeatureChartMessageType } from "./featureChartMessageType"
 import { LineChartMessageType } from "./lineChartManager"
 import { reduceTotalGraphs, checkNumberOfGraphs } from "./chartBtnCreateChart"
@@ -60,7 +61,7 @@ function createSideToggle(chart, axis, arrowDirection) {
     return sideToggle;
 }
 
-function createFeatureDropdown(chart, title, axis) {
+function createDropdown(chart, title, axis) {
     let chartDropdown = createChartDropdown();
     let dropdownButton = createDropdownButton(title);
     let dropdownMenu = createDropdownMenu();
@@ -79,31 +80,6 @@ function createFeatureDropdown(chart, title, axis) {
             dropdownMenu.appendChild(dropdownItem);
         });
     });
-
-    chartDropdown.appendChild(dropdownButton);
-    chartDropdown.appendChild(dropdownMenu);
-
-    $(function () {
-        $('[data-toggle="dropdown"]').dropdown()
-    })
-
-    return chartDropdown;
-}
-
-function createControlDropdown(chart, title, options, messageType, messagePropertyName) {
-    let dropdown = createChartDropdown();
-    let dropdownButton = createDropdownButton("damn");
-    let dropdownMenu = createDropdownMenu();
-
-    for (let opt of options) {
-        let item = document.createElement('a');
-        item.className = "dropdown-item dropdown-menu-item-custom";
-        item.onclick = () => {
-            let msg = { type: messageType };
-            msg[messagePropertyName] = opt;
-            chart.passMessage(msg);
-        };
-    }
 
     chartDropdown.appendChild(dropdownButton);
     chartDropdown.appendChild(dropdownMenu);
