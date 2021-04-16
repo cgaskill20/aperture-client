@@ -1,5 +1,6 @@
 import Feature from "./feature"
 import ControlDropdown from "./controlDropdown"
+import FeatureDropdown from "./featureDropdown"
 import { FeatureChartMessageType } from "./featureChartMessageType"
 import { LineChartMessageType } from "./lineChartManager"
 import { reduceTotalGraphs, checkNumberOfGraphs } from "./chartBtnCreateChart"
@@ -11,18 +12,49 @@ export function createChartControl(chart, graphBox, type) {
     let col2 = createEmptyColumn();
     let col3 = createEmptyColumn();
     col2.className = "col-sm-auto";
-    if (type === 'scatterplot') {
-        col2.appendChild(createChartAxisControlGroup(chart, 'x', "X-Axis"));
-        col2.appendChild(createChartAxisControlGroup(chart, 'y', "Y-Axis"));
-    } else if (type === 'histogram') {
-        col2.appendChild(createChartAxisControlGroup(chart, 'x', "Constraint"));
-    } else if (type === 'linegraph') {
+    
+    let controls = getControlsForType(chart, type);
+    for (let control of controls) {
+        col2.appendChild(control.getDOMNode());
     }
+
+    chart.addNewFeatureCallback(activeFeatures => {
+        for (let control of controls) {
+            control.setOptions(activeFeatures.map(feature => {
+                return { 
+                    name: Feature.getFriendlyName(feature),
+                    onclick: () => chart.passMessage({ 
+                        type: FeatureChartMessageType.SET_AXIS, 
+                        axis: control.getLinkedAxis(), 
+                        feature: feature,
+                    }),
+                };
+            }));
+        }
+    });
+
     col3.appendChild(createCloseButton(graphBox));
     chartControl.appendChild(col1);
     chartControl.appendChild(col2);
     chartControl.appendChild(col3);
     return chartControl;
+}
+
+function getControlsForType(chart, type) {
+    let controls = [];
+    switch (type) {
+         case 'scatterplot': {
+            controls.push(new FeatureDropdown(chart, "X-Axis", 'x'));
+            controls.push(new FeatureDropdown(chart, "Y-Axis", 'y'));
+            break;
+        } case 'histogram': {
+            controls.push(new FeatureDropdown(chart, "Feature", 'x'));
+            break;
+        } case 'linegraph': {
+            break;
+        }
+    }
+    return controls;
 }
 
 function createEmptyColumn() {

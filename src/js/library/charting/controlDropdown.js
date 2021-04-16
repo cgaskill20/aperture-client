@@ -2,12 +2,12 @@
 export default class ControlDropdown {
     constructor(frame, title) {
         this.chartControlButtonGroup = this.createChartControlButtonGroup();
-        let chartDropdown = this.createDropdown(chart, title);
+        let chartDropdown = this.createDropdown(frame, title);
         this.chartControlButtonGroup.appendChild(chartDropdown);
     }
 
     getDOMNode() {
-        return this.chartControlButtonsGroup;
+        return this.chartControlButtonGroup;
     }
 
     createChartControlButtonGroup() {
