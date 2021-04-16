@@ -304,7 +304,7 @@ export default {
 
         let container;
 
-        if (constraintObj["type"] === "slider") {
+        if (constraintObj["type"] === "slider" || (constraintObj["type"] === "multiselector" && constraintObj["selectToRangeMap"])) {
             container = this.createSliderContainer(constraintName, constraintObj, layerObj, layerName);
             container.className = "content-section slider-section colorMode1 customBorder";
         }
@@ -463,10 +463,26 @@ export default {
 
         const onConstraintChange = layerObj['onConstraintChange'];
         if (onConstraintChange) {
-            onConstraintChange(layerName, constraint, slider.noUiSlider.get());
-            slider.noUiSlider.on('set', function (values) {
-                onConstraintChange(layerName, constraint, values);
-            });
+            if(!selectToRangeMap) {
+                onConstraintChange(layerName, constraint, slider.noUiSlider.get());
+                slider.noUiSlider.on('set', function (values) {
+                    onConstraintChange(layerName, constraint, values);
+                });
+            }
+            else {
+                const allOptions = Object.keys(selectToRangeMap);
+                for(const optionName of allOptions) {
+                    onConstraintChange(layerName, constraint, optionName, true);
+                }
+                slider.noUiSlider.on('set', function (values) {
+                    const optionsSub = allOptions.filter(optionName => {
+                        return selectToRangeMap[optionName] >= Math.floor(Number(values[0])) && selectToRangeMap[optionName] <= Math.floor(Number(values[1]));
+                    });
+                    for(const optionName of allOptions) {
+                        onConstraintChange(layerName, constraint, optionName, optionsSub.includes(optionName));
+                    }
+                });
+            }
         }
         sliderContainer.appendChild(sliderLabel);
         sliderContainer.appendChild(slider);

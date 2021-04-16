@@ -271,6 +271,7 @@ export default {
                 result.max = constraint.max;
                 result.step = constraint.step;
                 result.range = [constraint.min, constraint.max];
+                result.default = result.range;
             }
             if (!result.options || result.options.length < 1)
                 return null;
