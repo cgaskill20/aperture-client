@@ -13,8 +13,13 @@ import Worker from "./queryWorker.js"
 export default class AutoQuery {
     static queryWorker = new Worker(); //init querier
     static queryWorkerConfiged = false;
-    static minCountyZoom = 1;
-    static minTractZoom = 1;
+    static minCountyZoom = 7;
+    static minTractZoom = 9;
+    static blockers = {
+        tract: false,
+        county: false
+    }
+    static blockerListener = null;
     /**
       * Constructs the instance of the autoquerier to a specific layer
       * @memberof AutoQuery
@@ -179,14 +184,8 @@ export default class AutoQuery {
       * new features come in with @method listenForLinkedGeometryUpdates
       */
     query() {
-        if (this.linked) {
-            const mapZoom = this.map.getZoom();
-            if (this.linked === "tract_geo_140mb_no_2d_index" && mapZoom < AutoQuery.minTractZoom) {
-                map.setZoom(AutoQuery.minTractZoom);
-            }
-            else if (mapZoom < AutoQuery.minCountyZoom) {
-                map.setZoom(AutoQuery.minCountyZoom);
-            }
+        if (!this.zoomIsValid()) {
+            return;
         }
         let q = [];
         if (!this.linked) {
@@ -263,6 +262,47 @@ export default class AutoQuery {
         }
 
         AutoQuery.queryWorker.addEventListener("message", responseListener);
+    }
+
+    zoomIsValid() {
+        if (this.linked) {
+            const oldBlockers = JSON.stringify(AutoQuery.blockers);
+            const mapZoom = this.map.getZoom();
+            if (this.linked === "tract_geo_140mb_no_2d_index") {
+                if (mapZoom < AutoQuery.minTractZoom) {
+                    AutoQuery.blockers.tract = true;
+                    this.checkAndDispatch(oldBlockers);
+                    return false;
+                }
+                else {
+                    AutoQuery.blockers.tract = false;
+                }
+            }
+            else if (mapZoom < AutoQuery.minCountyZoom) {
+                AutoQuery.blockers.county = true;
+                this.checkAndDispatch(oldBlockers);
+                return false;
+            }
+            else {
+                AutoQuery.blockers.county = false;
+            }
+            this.checkAndDispatch(oldBlockers);
+        }
+        return true;
+    }
+
+    checkAndDispatch(oldBlockers) {
+        if (oldBlockers !== JSON.stringify(AutoQuery.blockers)) {
+            AutoQuery.dispatchBlocker();
+        }
+    }
+
+    static setBlockerListener(listener) {
+        AutoQuery.blockerListener = listener;
+    }
+
+    static dispatchBlocker() {
+        AutoQuery.blockerListener(AutoQuery.blockers);
     }
 
     addToExistingFeaturesNoDuplicates(existingFeatures, newFeatures) {

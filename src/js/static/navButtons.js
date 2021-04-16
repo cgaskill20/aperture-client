@@ -18,6 +18,7 @@ export function closeNav() {
 
 function showDataExploration() {
     document.getElementById("sidebar-container").style.display = "grid";
+    document.getElementById("dataExplorationOverlay").style.display = "block";
     document.getElementById("model-container").style.display = "none";
     document.getElementById("clusterLegendContainer").style.display = "none";
     map.removeLayer(dataModelingGroup)
@@ -25,6 +26,7 @@ function showDataExploration() {
 }
 
 function showModeling() {
+    document.getElementById("dataExplorationOverlay").style.display = "none";
     document.getElementById("sidebar-container").style.display = "none";
     document.getElementById("model-container").style.display = "block";
     document.getElementById("clusterLegendContainer").style.display = "block";
