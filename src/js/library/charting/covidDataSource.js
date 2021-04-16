@@ -75,7 +75,6 @@ export default class CovidDataSource {
     getGisjoinAggregate() {
         let mapBounds = Util.leafletBoundsToGeoJSONPoly(this.map.wrapLatLngBounds(this.map.getBounds()));
         this.gisjoinAggregateTemplate[0].$match.geometry.$geoIntersects.$geometry.coordinates = [ mapBounds ];
-        console.log(this.gisjoinAggregateTemplate);
         return this.gisjoinAggregateTemplate;
     }
 

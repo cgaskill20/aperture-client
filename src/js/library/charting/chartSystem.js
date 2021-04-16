@@ -173,7 +173,7 @@ export default class ChartSystem {
 
     initializeUpdateHooks() {
         this.map.on('move', (e) => { this.update(); });
-        //this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
+        this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
     }
 
     async update() {
@@ -195,7 +195,7 @@ export default class ChartSystem {
         });
 
         this.doNotUpdate = true;
-        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
+        window.setTimeout(() => { this.doNotUpdate = false; }, 2000);
     }
 
 
