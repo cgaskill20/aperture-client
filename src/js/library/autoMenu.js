@@ -258,10 +258,6 @@ export default {
             if (result.range[0] === result.range[1] || !constraint.max) //error check
                 return null;
 
-            if (constraint.selectToRangeMap) {
-                result.options = constraint.values;
-                result.selectToRangeMap = constraint.selectToRangeMap;
-            }
 
             if (constraint.type === "date")
                 result.isDate = true;
@@ -269,6 +265,13 @@ export default {
         else if (constraint.type = "multiselect") {
             result.type = "multiselector";
             result.options = constraint.values;
+            if (constraint.selectToRangeMap) {
+                result.selectToRangeMap = constraint.selectToRangeMap;
+                result.min = constraint.min;
+                result.max = constraint.max;
+                result.step = constraint.step;
+                result.range = [constraint.min, constraint.max];
+            }
             if (!result.options || result.options.length < 1)
                 return null;
         }

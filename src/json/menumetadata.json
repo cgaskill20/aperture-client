@@ -293,7 +293,6 @@
       {
         "name": "RISK_RATNG",
         "label": "Risk Rating",
-        "type": "range",
         "selectToRangeMap": {
           "Very High": 4,
           "Relatively High": 3,
