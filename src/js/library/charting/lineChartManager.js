@@ -83,14 +83,30 @@ export default class LineChartManager {
 
     passMessage(message) {
         switch (message.type) {
-            case LineChartMessageType.CHANGE_TYPE: {
-                this.wantsType = message.newType;
-                break;
-            } case LineChartMessageType.CHANGE_WINDOW_SIZE: {
-                this.wantsWindowSize = message.days;
+            case LineChartMessageType.CHANGE_PARAMETERS: {
+                this.changeType(message.newType);
+                this.changeWindowSize(message.newWindowSize);
+                this.chartSystem.update();
+                this.chart.rerenderAllViews();
                 break;
             }
         }
+    }
+
+    changeType(newType) {
+        switch (newType) {
+            case "cases": {
+                this.chart.setTitle("COVID Cases by County");
+                break;
+            } case "deaths": {
+                this.chart.setTitle("COVID Mortality by County");
+            }
+        }
+        this.wantsType = newType;
+    }
+
+    changeWindowSize(newWindowSize) {
+        this.wantsWindowSize = newWindowSize;
     }
 
     getSourceParameters() {

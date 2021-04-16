@@ -109,7 +109,6 @@ export default class CovidDataSource {
         let query = JSON.stringify(this.getGisjoinAggregate());
         let queryStream = CovidDataSource.querier.getStreamForQuery("county_geo_GISJOIN", query);
         let reduce = r => { 
-            console.log(r);
             let result = { GISJOIN: r.GISJOIN };
             for (let prop of properties) {
                 result[prop] = r.properties[prop];
@@ -125,7 +124,7 @@ export default class CovidDataSource {
     // daysWindowDays is the size of the moving average window in days.
     async get(type = CovidDataSource.defaultType, daysWindowSize = CovidDataSource.defaultDays) {
         let counties = await this.getCounties([ "NAMELSAD10" ]);
-        console.log(counties);
+        console.log(type);
         
         let stream = CovidDataSource.querier.executeSlidingWindowQuery(JSON.stringify({
             gisJoins: counties.map(c => c.GISJOIN),

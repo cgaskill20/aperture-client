@@ -62,6 +62,7 @@ export default class LineGraph extends Chart {
     constructor() {
         super([]);
         this.mouseInGraph = false;
+        this.changeTitle("COVID Cases by County");
     }
 
     rerender(width, height, viewIndex) {
@@ -79,7 +80,8 @@ export default class LineGraph extends Chart {
         // { date: Date, value: number }
         // view.x and view.y will need to change if this isn't the case.
         view.x = d3.scaleUtc()
-            .domain(d3.extent(this.data[0].data, d => d.date)).nice()
+            //.domain(d3.extent(this.data[0].data, d => d.date)).nice()
+            .domain([d3.min(this.data, entry => d3.min(entry.data, d => d.date)])
             .range([view.margin.left, width - view.margin.right]);
 
         view.y = d3.scaleLinear()
@@ -113,7 +115,11 @@ export default class LineGraph extends Chart {
             .attr("x", width / 2)
             .attr("y", 12)
             .attr("text-anchor", "middle")
-            .text("COVID Cases by County");
+            .text(this.title);
+    }
+
+    changeTitle(title) {
+        this.title = title;
     }
     
     changeData(data) {

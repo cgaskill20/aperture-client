@@ -51,6 +51,25 @@ function getControlsForType(chart, type) {
             controls.push(new FeatureDropdown(chart, "Feature", 'x'));
             break;
         } case 'linegraph': {
+            controls.push(new ControlDropdown(chart, "Feature"));
+            controls[0].setOptions([{
+                    name: "Cases",
+                    onclick: () => {
+                        chart.passMessage({
+                            type: LineChartMessageType.CHANGE_PARAMETERS,
+                            newType: 'cases',
+                        });
+                    },
+                }, {
+                    name: "Mortality",
+                    onclick: () => {
+                        chart.passMessage({
+                            type: LineChartMessageType.CHANGE_PARAMETERS,
+                            newType: 'deaths',
+                        });
+                    },
+                },
+            ]);
             break;
         }
     }
