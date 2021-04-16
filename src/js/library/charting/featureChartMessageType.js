@@ -60,7 +60,7 @@ export const FeatureChartMessageType = {
     // Cycles the given axis to the next valid feature
     // Has:
     //  axis: the axis to change - for histograms this is always "x", for scatterplots may be "x" or "y"
-    //  direction: either "next" or "prev"
+    //  direction: either "next" or "previous"
     CYCLE_AXIS: 0,
 
     // Sets the given axis to the given feature

@@ -34,7 +34,6 @@ import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";
 import MenuGenerator, { updateLayers } from "./src/js/ui/menuGenerator.js";
 
-
 //idek what to do with theses files, things break if I try to make them import specific things
 import "./src/js/third-party/leaflet.markercluster.js";
 require("./src/js/third-party/popper.min.js");

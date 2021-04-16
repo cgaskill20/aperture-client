@@ -163,4 +163,8 @@ export default class ScatterplotManager {
 
         return data;
     }
+
+    getSourceParameters() {
+        return [];
+    }
 }

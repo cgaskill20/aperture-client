@@ -119,5 +119,9 @@ export default class SingleChartManager {
             }
         }
     }
+
+    getSourceParameters() {
+        return [];
+    }
 }
 

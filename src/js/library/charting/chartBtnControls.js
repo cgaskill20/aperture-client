@@ -16,7 +16,6 @@ export function createChartControl(chart, graphBox, type) {
     } else if (type === 'histogram') {
         col2.appendChild(createChartAxisControlGroup(chart, 'x', "Constraint"));
     } else if (type === 'linegraph') {
-        col2.appendChild(createChartDropdownControl(chart, 'feature', "Feature"));
     }
     col3.appendChild(createCloseButton(graphBox));
     chartControl.appendChild(col1);
@@ -42,13 +41,6 @@ function createChartAxisControlGroup(chart, axis, dropdownTitle) {
     return chartControlButtonGroup;
 }
 
-function createChartDropdownControl(chart, dropdownTitle) {
-    let chartControlButtonGroup = createChartControlButtonGroup();
-    let chartDropdown = createControlDropdown(chart, ["cases", "deaths"], LineChartMessageType.CHANGE_PARAMETERS, 'newType');
-    chartControlButtonGroup.appendChild(chartDropdown);
-    return chartControlButtonGroup;
-}
-
 function createChartControlButtonGroup() {
     let chartControlButtonGroup = document.createElement("div");
     chartControlButtonGroup.className = "btn-group chart-control-button";
@@ -62,7 +54,9 @@ function createSideToggle(chart, axis, arrowDirection) {
     sideToggle.className = "btn btn-outline-dark";
     sideToggle.type = "button";
     sideToggle.innerText = arrowDirection;
-    sideToggle.onclick = arrowDirection === '<' ? () => {chart.cycleAxis(axis, "previous")} : () => {chart.cycleAxis(axis, "next")};
+    sideToggle.onclick = arrowDirection === '<' ? 
+        () => { chart.passMessage({ type: FeatureChartMessageType.CYCLE_AXIS, axis: axis, direction: 'previous' }); } : 
+        () => { chart.passMessage({ type: FeatureChartMessageType.CYCLE_AXIS, axis: axis, direction: 'next'}); };
     return sideToggle;
 }
 
