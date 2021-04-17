@@ -292,87 +292,234 @@
     "fieldMetadata": [
       {
         "name": "RISK_RATNG",
-        "label": "Risk Rating"
+        "label": "Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "SOVI_RATNG",
-        "label": "Social Vulnerability Rating"
+        "label": "Social Vulnerability Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "RESL_RATNG",
-        "label": "Community Resilience Rating"
+        "label": "Community Resilience Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "AVLN_RISKR",
-        "label":"Avalanche Risk Rating"
+        "label":"Avalanche Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "CFLD_RISKR",
-        "label": "Coastal Flooding Risk Rating"
+        "label": "Coastal Flooding Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "CWAV_RISKR",
-        "label": "Cold Wave Risk Rating"
+        "label": "Cold Wave Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "DRGT_RISKR",
-        "label": "Drought Risk Rating"
+        "label": "Drought Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "ERQK_RISKR",
-        "label": "Earthquake Risk Rating"
+        "label": "Earthquake Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "HAIL_RISKR",
-        "label": "Hail Risk Rating"
+        "label": "Hail Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "HWAV_RISKR",
-        "label": "Heatwave Risk Rating"
+        "label": "Heatwave Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "HRCN_RISKR",
-        "label": "Hurricane Risk Rating"
+        "label": "Hurricane Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "ISTM_RISKR",
-        "label": "Ice Storm Risk Rating"
+        "label": "Ice Storm Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "LNDS_RISKR",
-        "label": "Landslide Risk Rating"
+        "label": "Landslide Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "LTNG_RISKR",
-        "label": "Lightning Risk Rating"
+        "label": "Lightning Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "RFLD_RISKR",
-        "label": "Riverine Flooding Risk Rating"
+        "label": "Riverine Flooding Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "SWND_RISKR",
-        "label": "Strong Wind Risk Rating"
+        "label": "Strong Wind Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "TRND_RISKR",
-        "label": "Tornado Risk Rating"
+        "label": "Tornado Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "TSUN_RISKR",
-        "label": "Tsunami Risk Rating"
+        "label": "Tsunami Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "VLCN_RISKR",
-        "label": "Volcanic Activity Risk Rating"
+        "label": "Volcanic Activity Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "WFIR_RISKR",
-        "label": "Wildfire Risk Rating"
+        "label": "Wildfire Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "WNTW_RISKR",
-        "label": "Winter Weather Risk Rating"
+        "label": "Winter Weather Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       }
     ]
   },
@@ -397,142 +544,235 @@
     "fieldMetadata": [
       {
         "name": "RISK_RATNG",
-        "label": "Risk Rating"
+        "label": "Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "SOVI_RATNG",
-        "label": "Social Vulnerability Rating"
+        "label": "Social Vulnerability Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "RESL_RATNG",
-        "label": "Community Resilience Rating"
+        "label": "Community Resilience Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "AVLN_RISKR",
-        "label":"Avalanche Risk Rating"
+        "label":"Avalanche Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "CFLD_RISKR",
-        "label": "Coastal Flooding Risk Rating"
+        "label": "Coastal Flooding Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "CWAV_RISKR",
-        "label": "Cold Wave Risk Rating"
+        "label": "Cold Wave Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "DRGT_RISKR",
-        "label": "Drought Risk Rating"
+        "label": "Drought Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "ERQK_RISKR",
-        "label": "Earthquake Risk Rating"
+        "label": "Earthquake Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "HAIL_RISKR",
-        "label": "Hail Risk Rating"
+        "label": "Hail Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "HWAV_RISKR",
-        "label": "Heatwave Risk Rating"
+        "label": "Heatwave Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "HRCN_RISKR",
-        "label": "Hurricane Risk Rating"
+        "label": "Hurricane Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "ISTM_RISKR",
-        "label": "Ice Storm Risk Rating"
+        "label": "Ice Storm Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "LNDS_RISKR",
-        "label": "Landslide Risk Rating"
+        "label": "Landslide Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "LTNG_RISKR",
-        "label": "Lightning Risk Rating"
+        "label": "Lightning Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "RFLD_RISKR",
-        "label": "Riverine Flooding Risk Rating"
+        "label": "Riverine Flooding Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "SWND_RISKR",
-        "label": "Strong Wind Risk Rating"
+        "label": "Strong Wind Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "TRND_RISKR",
-        "label": "Tornado Risk Rating"
+        "label": "Tornado Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "TSUN_RISKR",
-        "label": "Tsunami Risk Rating"
+        "label": "Tsunami Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "VLCN_RISKR",
-        "label": "Volcanic Activity Risk Rating"
+        "label": "Volcanic Activity Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "WFIR_RISKR",
-        "label": "Wildfire Risk Rating"
+        "label": "Wildfire Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
       },
       {
         "name": "WNTW_RISKR",
-        "label": "Winter Weather Risk Rating"
-      }
-    ]
-  },
-  {
-    "collection": "tract_proximity",
-    "label": "Tract Proximity",
-    "subGroup": "Proximity",
-    "level": "tract",
-    "color": "#4682B4",
-    "fieldMetadata": [
-        {
-          "name": "nearest_hospital",
-          "label": "Nearest Hospital (mi)",
-          "min": 0,
-          "max": 200,
-          "type": "range",
-          "step": 0.5,
-          "unit": "miles"
-        },
-        {
-          "name": "nearest_fire_station",
-          "label": "Nearest Fire Station (mi)",
-          "min": 0,
-          "max": 200,
-          "type": "range",
-          "step": 0.5,
-          "unit": "miles"
-        },
-        {
-          "name": "nearest_public_school",
-          "label": "Nearest Public School (mi)",
-          "min": 0,
-          "max": 200,
-          "type": "range",
-          "step": 0.5,
-          "unit": "miles"
-        },
-        {
-          "name": "nearest_electrical_substation",
-          "label": "Nearest Electrical Substation (mi)",
-          "min": 0,
-          "max": 200,
-          "type": "range",
-          "step": 0.5,
-          "unit": "miles"
-        },
-        {
-          "name": "nearest_power_plant",
-          "label": "Nearest Power Plant (mi)",
-          "min": 0,
-          "max": 200,
-          "type": "range",
-          "step": 0.5,
-          "unit": "miles"
+        "label": "Winter Weather Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
         }
+      }
     ]
   }
 ]

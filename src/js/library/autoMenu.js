@@ -131,6 +131,7 @@ export default {
                 // console.log("----------------")
             }
             constraint = this.convertFromDefault(constraint);
+            constraint = this.selectToRange(constraint);
             constraint = this.buildStandardConstraint(constraint);
             if (constraint) {
                 //console.log(constraint);
@@ -212,6 +213,21 @@ export default {
         return constraint;
     },
 
+    /**
+      * Helper function for @method buildConstraintsFromCatalog
+      * @memberof AutoMenu
+      * @method selectToRange
+      */
+    selectToRange: function (constraint) {
+        if (constraint.selectToRangeMap) {
+            constraint.step = 1;
+            const values = Object.values(constraint.selectToRangeMap);
+            constraint.min = Math.min(...values);
+            constraint.max = Math.max(...values);
+        }
+        return constraint;
+    },
+
 
     /**
       * Helper function for @method buildConstraintsFromCatalog
@@ -239,7 +255,6 @@ export default {
             result.range = [constraint.min, constraint.max];
             result.default = result.range;
 
-
             if (result.range[0] === result.range[1] || !constraint.max) //error check
                 return null;
 
@@ -250,6 +265,14 @@ export default {
         else if (constraint.type = "multiselect") {
             result.type = "multiselector";
             result.options = constraint.values;
+            if (constraint.selectToRangeMap) {
+                result.selectToRangeMap = constraint.selectToRangeMap;
+                result.min = constraint.min;
+                result.max = constraint.max;
+                result.step = constraint.step;
+                result.range = [constraint.min, constraint.max];
+                result.default = result.range;
+            }
             if (!result.options || result.options.length < 1)
                 return null;
         }
@@ -263,7 +286,6 @@ export default {
 
 
         result.hide = constraint.hideByDefault;
-
 
         return result;
     }

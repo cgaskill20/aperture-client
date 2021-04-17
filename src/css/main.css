@@ -102,8 +102,9 @@ body {
   position: absolute;
   z-index: 1999;
   bottom: 0;
-  left: 0;
+  right: 0;
   width: 0;
   height: 12vh;
-  padding-left: 25px;
+  padding-right: 460px;
+  margin-bottom: 10px;
 }

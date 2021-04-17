@@ -61,7 +61,7 @@ export default {
             if (json_map[obj]["notAQueryableLayer"]) {
                 continue;
             }
-            const mergeWithDefalt = { 
+            const mergeWithDefalt = {
                 //merge default and user-given object
                 ...DEFAULT_OBJECT,
                 ...json_map[obj]
@@ -73,7 +73,7 @@ export default {
                 columnsAndHeadings[mergeWithDefalt["group"]][mergeWithDefalt["subGroup"]] = {};
             }
             columnsAndHeadings[mergeWithDefalt["group"]][mergeWithDefalt["subGroup"]][obj] = mergeWithDefalt;
-        }        
+        }
         return columnsAndHeadings;
     },
 
@@ -94,7 +94,7 @@ export default {
             columns += perColPct + " ";
         container.style.gridTemplateColumns = columns; //set columns up
         container.style.height = "90%"
-    }, 
+    },
 
 
     /** Helper method for @method generate
@@ -189,7 +189,7 @@ export default {
         }
         layerSelector.appendChild(selectorLabel);
         layerSelector.appendChild(selector);
-        if(layerInfo !== "") {
+        if (layerInfo !== "") {
             layerSelector.appendChild(this.createTooltip(layerInfo));
         }
         layerContainer.appendChild(layerSelector);
@@ -231,13 +231,13 @@ export default {
             for (const constraint in layerObj["constraints"]) {
                 const constraintName = constraint;
                 const constraintDiv = this.createConstraintContainer(constraintName, layerName, layerObj, layerQuerier);
-                if(constraintDiv.style.display !== "none") {
+                if (constraintDiv.style.display !== "none") {
                     anyActiveConstraints = true;
                 }
                 layerConstraints.appendChild(constraintDiv);
             }
 
-            if(!anyActiveConstraints) {
+            if (!anyActiveConstraints) {
                 layerConstraints.style.display = "none";
             }
 
@@ -248,7 +248,7 @@ export default {
         return layerContainer;
     },
 
-    resetConstraintsForLayer: function(layerName){
+    resetConstraintsForLayer: function (layerName) {
         document.dispatchEvent(new CustomEvent(`${layerName}_reset_constraints`));
     },
 
@@ -272,7 +272,7 @@ export default {
         return controlGroupTextDiv;
     },
 
-    resetConstraintButton: function(layerName) {
+    resetConstraintButton: function (layerName) {
         let resetButton = document.createElement("button");
         resetButton.className = "btn btn-outline-dark reset-constraint-button";
         resetButton.type = "button";
@@ -304,11 +304,10 @@ export default {
 
         let container;
 
-        if (constraintObj["type"] === "slider") {
+        if (constraintObj["type"] === "slider" || (constraintObj["type"] === "multiselector" && constraintObj["selectToRangeMap"])) {
             container = this.createSliderContainer(constraintName, constraintObj, layerObj, layerName);
             container.className = "content-section slider-section colorMode1 customBorder";
         }
-
         else if (constraintObj["type"] === "selector") {
             container = this.createCheckboxContainer(constraintName, constraintObj, layerObj, layerName, "radio");
         }
@@ -338,13 +337,13 @@ export default {
         return dropdown;
     },
 
-    createTooltip: function(layerInfo) {
+    createTooltip: function (layerInfo) {
         const title = layerInfo;
         const tooltip = document.createElement("span");
         tooltip.innerHTML = "<img src='./images/Info_Black.png' class='tool-tip' data-toggle='tooltip'\
         data-placement='top' container='body' title=\'" + title + "\'>";
         $(function () {
-          $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="tooltip"]').tooltip()
         })
         return tooltip;
     },
@@ -368,7 +367,7 @@ export default {
         editDiv.appendChild(editConstraintArea)
 
 
-        for (let i = 0; i < layerConstraints.childNodes.length-1; i++) {
+        for (let i = 0; i < layerConstraints.childNodes.length - 1; i++) {
 
             const holderDiv = document.createElement("div");
             holderDiv.className = "editConstraintsConstraint";
@@ -407,6 +406,23 @@ export default {
         document.body.appendChild(editDiv);
     },
 
+    mapNumToString(num, stringToNumMap) {
+        if(!stringToNumMap){
+            return num;
+        }
+        return Object.keys(stringToNumMap)[Object.values(stringToNumMap).indexOf(Math.floor(Number(num)))];
+    },
+
+    valueToLabel(value,step,isDate){
+        return isDate ? 
+            (new Date(Number(value))).toUTCString().substr(0, 16) : 
+            (step < 1 ? 
+                value : 
+                typeof value === "number" ? 
+                    Math.floor(value) : 
+                    value);
+    },
+
     createSliderContainer: function (constraint, constraintObj, layerObj, layerName) {
         const sliderContainer = document.createElement("div");
         sliderContainer.className = "slider-individual";
@@ -430,12 +446,18 @@ export default {
         const name = Util.removePropertiesPrefix(Util.underScoreToSpace(constraintObj["label"] ? constraintObj["label"] : constraint));
         const step = constraintObj['step'] ? constraintObj['step'] : 1;
         const isDate = constraintObj['isDate'];
+        const selectToRangeMap = constraintObj['selectToRangeMap'];
         slider.noUiSlider.on('update', function (values) {
-            sliderLabel.innerHTML = name + ": " + (isDate ? (new Date(Number(values[0]))).toUTCString().substr(0, 16) : (step < 1 ? values[0] : Math.floor(values[0])));
+            const value0 = this.mapNumToString(values[0],selectToRangeMap);
+            let labelHtml = '';
+            labelHtml = `<div class='sliderLabel'>${name}:</div> <div class='sliderLabel'>${this.valueToLabel(value0,step,isDate)}`;
             for (let i = 1; i < values.length; i++) {
-                sliderLabel.innerHTML += " - " + (isDate ? (new Date(Number(values[i]))).toUTCString().substr(0, 16) : (step < 1 ? values[i] : Math.floor(values[i])));
+                const valuei = this.mapNumToString(values[i],selectToRangeMap);
+                labelHtml += ` -  ${this.valueToLabel(valuei,step,isDate)}`;
             }
-        });
+            labelHtml += "</div>";
+            sliderLabel.innerHTML = labelHtml;
+        }.bind(this));
 
         //listen for reset
         document.addEventListener(`${layerName}_reset_constraints`, () => {
@@ -444,10 +466,26 @@ export default {
 
         const onConstraintChange = layerObj['onConstraintChange'];
         if (onConstraintChange) {
-            onConstraintChange(layerName, constraint, slider.noUiSlider.get());
-            slider.noUiSlider.on('set', function (values) {
-                onConstraintChange(layerName, constraint, values);
-            });
+            if(!selectToRangeMap) {
+                onConstraintChange(layerName, constraint, slider.noUiSlider.get());
+                slider.noUiSlider.on('set', function (values) {
+                    onConstraintChange(layerName, constraint, values);
+                });
+            }
+            else {
+                const allOptions = Object.keys(selectToRangeMap);
+                for(const optionName of allOptions) {
+                    onConstraintChange(layerName, constraint, optionName, true);
+                }
+                slider.noUiSlider.on('set', function (values) {
+                    const optionsSub = allOptions.filter(optionName => {
+                        return selectToRangeMap[optionName] >= Math.floor(Number(values[0])) && selectToRangeMap[optionName] <= Math.floor(Number(values[1]));
+                    });
+                    for(const optionName of allOptions) {
+                        onConstraintChange(layerName, constraint, optionName, optionsSub.includes(optionName));
+                    }
+                });
+            }
         }
         sliderContainer.appendChild(sliderLabel);
         sliderContainer.appendChild(slider);
@@ -480,7 +518,7 @@ export default {
                 checkboxSelector.checked = defaultChecked;
                 //listen for reset
                 document.addEventListener(`${layerName}_reset_constraints`, () => {
-                    if(checkboxSelector.checked !== defaultChecked){
+                    if (checkboxSelector.checked !== defaultChecked) {
                         checkboxSelector.checked = defaultChecked;
                         checkboxSelectorContainer.onchange();
                     }
