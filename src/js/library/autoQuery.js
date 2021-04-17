@@ -450,6 +450,10 @@ export default class AutoQuery {
             }
             return false;
         }
+        else if(this.getConstraintType(constraintName) === "slider"){
+            const range = this.getConstraintMetadata(constraintName).range;
+            return !(constraintData[0] <= range[0] && range[1] <= constraintData[1]);
+        }
         else {
             return true;
         }
