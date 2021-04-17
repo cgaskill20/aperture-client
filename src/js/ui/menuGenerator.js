@@ -449,11 +449,14 @@ export default {
         const selectToRangeMap = constraintObj['selectToRangeMap'];
         slider.noUiSlider.on('update', function (values) {
             const value0 = this.mapNumToString(values[0],selectToRangeMap);
-            sliderLabel.innerHTML = name + ": " + this.valueToLabel(value0,step,isDate);
+            let labelHtml = '';
+            labelHtml = `<div class='sliderLabel'>${name}:</div> <div class='sliderLabel'>${this.valueToLabel(value0,step,isDate)}`;
             for (let i = 1; i < values.length; i++) {
                 const valuei = this.mapNumToString(values[i],selectToRangeMap);
-                sliderLabel.innerHTML += " - " + this.valueToLabel(valuei,step,isDate);
+                labelHtml += ` -  ${this.valueToLabel(valuei,step,isDate)}`;
             }
+            labelHtml += "</div>";
+            sliderLabel.innerHTML = labelHtml;
         }.bind(this));
 
         //listen for reset

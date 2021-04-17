@@ -269,3 +269,6 @@ body {
   padding: 10px;
 }
 
+.sliderLabel {
+    display: inline-block;
+}
