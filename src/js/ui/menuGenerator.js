@@ -453,7 +453,7 @@ export default {
             labelHtml = `<div class='sliderLabel'>${name}:</div> <div class='sliderLabel'>${this.valueToLabel(value0,step,isDate)}`;
             for (let i = 1; i < values.length; i++) {
                 const valuei = this.mapNumToString(values[i],selectToRangeMap);
-                labelHtml += ` -  ${this.valueToLabel(valuei,step,isDate)}`;
+                labelHtml += ` -  ${this.valueToLabel(valuei,step,isDate)}${constraintObj.plus && valuei >= constraintObj.range[1] ? '+' : ''}`;
             }
             labelHtml += "</div>";
             sliderLabel.innerHTML = labelHtml;
