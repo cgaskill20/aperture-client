@@ -38,7 +38,8 @@
         "type": "range",
         "step": 100,
         "unit": "dollars",
-        "hideByDefault": true
+        "hideByDefault": true,
+        "plus": true
       },
       {
         "name": "1990_median_household_income",
@@ -46,7 +47,8 @@
         "type": "range",
         "step": 100,
         "unit": "dollars",
-        "hideByDefault": true
+        "hideByDefault": true,
+        "plus": true
       },
       {
         "name": "1980_median_household_income",
@@ -54,16 +56,18 @@
         "type": "range",
         "step": 100,
         "unit": "dollars",
-        "hideByDefault": true
+        "hideByDefault": true,
+        "plus": true
       },
       {
         "name": "2010_median_household_income",
         "label": "2010 Median Household Income",
         "min": 2499.0,
-        "max": 200000,
+        "max": 120000,
         "type": "range",
         "step": 100,
-        "unit": "dollars"
+        "unit": "dollars",
+        "plus": true
       }
     ]
   },
@@ -177,7 +181,8 @@
         "label": "Faculty Count",
         "type": "range",
         "min": 0,
-        "max": 1419.0
+        "max": 200,
+        "plus": true
       },
       {
         "label": "Highest Grade Level",
@@ -240,7 +245,8 @@
         "name": "properties.BEDS",
         "type": "range",
         "min": 0,
-        "max": 1592.0
+        "max": 1000,
+        "plus": true
       },
       {
         "name": "properties.HELIPAD",

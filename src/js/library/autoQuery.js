@@ -106,7 +106,7 @@ export default class AutoQuery {
                 if (Array.isArray(value)){
                     for (let i = 0; i < value.length; i++) //change string to number
                         value[i] = Number(value[i]);
-                    if(mData.plus && value[value.length-1] >= mData.range[1] && value[0] > mData.range[0]) //maxed out on upper end
+                    if(mData.plus && value[value.length-1] >= mData.range[1] && value[0] > mData.range[0]) //maxed out on upper bound
                         value[value.length-1] = 2147483647;
                 }
                 else
@@ -238,7 +238,6 @@ export default class AutoQuery {
     bindConstraintsAndQuery(q, forcedGeometry) {
         const sessionID = Math.random().toString(36).substring(2, 6);
         q = q.concat(this.buildConstraintPipeline());
-        console.log(q)
         //outputs from query may only be $projected if the data is not GeoJSON
         if (this.linked)
             q.push(this.addMongoProject())
