@@ -454,10 +454,10 @@ export default {
         slider.noUiSlider.on('update', function (values) {
             const value0 = this.mapNumToValue(values[0],selectToRangeMap);
             let labelHtml = '';
-            labelHtml = `<div class='sliderLabel'>${name}:</div> <div class='sliderLabel'>${this.valueToLabel(value0,step,isDate)}`;
+            labelHtml = `<div class='sliderLabel'>${name}:</div> <div class='sliderLabel' style='font-weight: bold;'>${this.valueToLabel(value0,step,isDate)}`;
             for (let i = 1; i < values.length; i++) {
                 const valuei = this.mapNumToValue(values[i],selectToRangeMap);
-                labelHtml += ` -  ${this.valueToLabel(valuei,step,isDate)}${this.valueMaxed(valuei,constraintObj) ? '+' : ''}`;
+                labelHtml += ` ➔  ${this.valueToLabel(valuei,step,isDate)}${this.valueMaxed(valuei,constraintObj) ? '+' : ''}`;
             }
             labelHtml += "</div>";
             sliderLabel.innerHTML = labelHtml;
