@@ -406,9 +406,9 @@ export default {
         document.body.appendChild(editDiv);
     },
 
-    mapNumToString(num, stringToNumMap) {
+    mapNumToValue(num, stringToNumMap) {
         if(!stringToNumMap){
-            return num;
+            return Number(num);
         }
         return Object.keys(stringToNumMap)[Object.values(stringToNumMap).indexOf(Math.floor(Number(num)))];
     },
@@ -421,6 +421,10 @@ export default {
                 typeof value === "number" ? 
                     Math.floor(value) : 
                     value);
+    },
+
+    valueMaxed(value,constraintObj){
+        return constraintObj.plus && value >= constraintObj.range[1];
     },
 
     createSliderContainer: function (constraint, constraintObj, layerObj, layerName) {
@@ -448,12 +452,12 @@ export default {
         const isDate = constraintObj['isDate'];
         const selectToRangeMap = constraintObj['selectToRangeMap'];
         slider.noUiSlider.on('update', function (values) {
-            const value0 = this.mapNumToString(values[0],selectToRangeMap);
+            const value0 = this.mapNumToValue(values[0],selectToRangeMap);
             let labelHtml = '';
             labelHtml = `<div class='sliderLabel'>${name}:</div> <div class='sliderLabel'>${this.valueToLabel(value0,step,isDate)}`;
             for (let i = 1; i < values.length; i++) {
-                const valuei = this.mapNumToString(values[i],selectToRangeMap);
-                labelHtml += ` -  ${this.valueToLabel(valuei,step,isDate)}${constraintObj.plus && valuei >= constraintObj.range[1] ? '+' : ''}`;
+                const valuei = this.mapNumToValue(values[i],selectToRangeMap);
+                labelHtml += ` -  ${this.valueToLabel(valuei,step,isDate)}${this.valueMaxed(valuei,constraintObj) ? '+' : ''}`;
             }
             labelHtml += "</div>";
             sliderLabel.innerHTML = labelHtml;

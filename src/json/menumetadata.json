@@ -168,7 +168,9 @@
         "name": "properties.ENROLLMENT",
         "type": "range",
         "min": 0,
-        "max": 14286.0
+        "max": 4000,
+        "plus": true
+        
       },
       {
         "name": "properties.FT_TEACHER",
@@ -799,7 +801,8 @@
           "max": 30,
           "type": "range",
           "step": 0.5,
-          "unit": "miles"
+          "unit": "miles",
+          "plus": true
         },
         {
           "name": "nearest_public_school",
@@ -808,7 +811,8 @@
           "max": 30,
           "type": "range",
           "step": 0.5,
-          "unit": "miles"
+          "unit": "miles",
+          "plus": true
         },
         {
           "name": "nearest_electrical_substation",
@@ -817,7 +821,8 @@
           "max": 30,
           "type": "range",
           "step": 0.5,
-          "unit": "miles"
+          "unit": "miles",
+          "plus": true
         },
         {
           "name": "nearest_power_plant",
@@ -826,7 +831,8 @@
           "max": 30,
           "type": "range",
           "step": 0.5,
-          "unit": "miles"
+          "unit": "miles",
+          "plus": true
         }
     ]
   }
