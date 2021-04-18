@@ -251,13 +251,15 @@ export default {
                 ...result
             }
             result.type = "slider";
-
+            
             result.range = [constraint.min, constraint.max];
             result.default = result.range;
 
             if (result.range[0] === result.range[1] || !constraint.max) //error check
                 return null;
 
+            if (constraint.plus)
+                result.plus = constraint.plus;
 
             if (constraint.type === "date")
                 result.isDate = true;

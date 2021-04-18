@@ -102,9 +102,13 @@ export default class AutoQuery {
         let changed = false;
         switch (this.getConstraintType(constraint)) {
             case "slider":
-                if (Array.isArray(value))
+                const mData = this.getConstraintMetadata(constraint);
+                if (Array.isArray(value)){
                     for (let i = 0; i < value.length; i++) //change string to number
                         value[i] = Number(value[i]);
+                    if(mData.plus && value[value.length-1] >= mData.range[1] && value[0] > mData.range[0]) //maxed out on upper bound
+                        value[value.length-1] = 2147483647;
+                }
                 else
                     value = Number(value);
                 changed = !this.constraintData[constraint] || this.constraintData[constraint].join() !== value.join();
@@ -449,6 +453,10 @@ export default class AutoQuery {
                     return true;
             }
             return false;
+        }
+        else if(this.getConstraintType(constraintName) === "slider"){
+            const range = this.getConstraintMetadata(constraintName).range;
+            return !(constraintData[0] <= range[0] && range[1] <= constraintData[1]);
         }
         else {
             return true;
