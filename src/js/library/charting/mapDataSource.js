@@ -55,116 +55,23 @@ END OF TERMS AND CONDITIONS
 
 */
 
-import Scatterplot from "./scatterplot";
-import Feature from "./feature";
-import { DataSourceType } from "./chartSystem";
-import { FeatureChartMessageType } from "./featureChartMessageType";
+import MapDataFilterWrapper from "../mapDataFilterWrapper"
 
-export default class ScatterplotManager {
-    constructor(catalog, chartArea, validFeatureManager, chartSystem) {
-        this.catalog = catalog;
-        this.chartArea = chartArea;
-        this.scatterplot = new Scatterplot();
-        this.chartArea.addChart(this.scatterplot);
-    
-        this.featureManager = validFeatureManager;
-        this.currentFeatures = {};
-
-        this.system = chartSystem;
-
-        this.chartArea.setChangeAxisButtonCallbacks(
-            () => { this.axisButtonCallback("x"); },
-            () => { this.axisButtonCallback("y"); }
-        );
+export default class MapDataSource {
+    constructor(map, features) {
+        this.map = map;
+        this.features = features;
+        this.filter = MapDataFilterWrapper;
     }
 
-    changeFeature(axis, feature) {
-        this.currentFeatures[axis] = feature;
-        DataSourceType.MAP_FEATURES.sourceInstance.get().then((values) => {
-            this.update(values);
-        });
+    async get() {
+        this.values = await this.filter.get(this.features, this.map.getBounds());
+        return this.values;
     }
 
-    axisButtonCallback(axis, direction) {
-        this.currentFeatures[axis] = this.nextValidFeatureForAxis(axis, direction);
-        DataSourceType.MAP_FEATURES.sourceInstance.get().then((values) => {
-            this.update(values);
-        });
-    }
-
-    nextValidFeatureForAxis(axis, direction) {
-        let ignore = [];
-        for (let axisToIgnore in this.currentFeatures) {
-            if (axisToIgnore !== axis) {
-                ignore.push(this.currentFeatures[axisToIgnore]);
-            }
-        }
-        return this.featureManager.getNextFeature(this.currentFeatures[axis], ignore, direction);
-    }
-
-    cycleAxis(axis, direction) {
-        this.axisButtonCallback(axis, direction);
-    }
-    
-    update(values) {
-        let shouldUpdate = this.featureManager.enoughFeaturesExist(2);
-
-        if (shouldUpdate) {
-            this.chartArea.scatterplot.unhide(0)
-            if (!this.currentFeatures.x) {
-                this.currentFeatures.x = this.featureManager.getAnyFeature();
-            }
-            if (!this.currentFeatures.y) {
-                this.currentFeatures.y = this.featureManager.getAnyFeature();
-            }
-            this.scatterplot.changeData(this.prepareData(values));
-        } else {
-            this.chartArea.scatterplot.hide(0)
-        }
-    }
-
-    passMessage(message) {
-        switch (message.type) {
-            case FeatureChartMessageType.CYCLE_AXIS: {
-                this.cycleAxis(message.axis, message.direction);
-                break;
-            } case FeatureChartMessageType.SET_AXIS: {
-                this.changeFeature(message.axis, message.feature);
-                break;
-            }
-        }
-    }
-
-    prepareData(values) {
-        let data = [];
-        let xfeat = values[this.currentFeatures.x];
-        let yfeat = values[this.currentFeatures.y];
-        let shorterFeature = (xfeat.length > yfeat.length) ? yfeat : xfeat; 
-
-        if (shorterFeature.length === 0 || xfeat[0].type !== yfeat[0].type) {
-            return [];
-        }
-
-        let joins = shorterFeature.map(d => d.GISJOIN);
-        joins.forEach(gisjoin => {
-            let xEntry = xfeat.find(d => d.GISJOIN === gisjoin);
-            let yEntry = yfeat.find(d => d.GISJOIN === gisjoin);
-            
-            if (xEntry && yEntry) {
-                data.push({
-                    x: xEntry.data,
-                    y: yEntry.data,
-                });
-            }
-        });
-
-        data.x = Feature.getFriendlyName(this.currentFeatures.x);
-        data.y = Feature.getFriendlyName(this.currentFeatures.y);
-
-        return data;
-    }
-
-    getSourceParameters() {
-        return [];
+    // The supplement object for a MapDataSource is a validFeatureManager.
+    updateSupplement(featureManager) {
+        let validFeatures = Object.entries(this.values).filter(kv => kv[1].length !== 0).map(kv => kv[0]);
+        featureManager.update(validFeatures);
     }
 }

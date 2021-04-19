@@ -55,116 +55,92 @@ END OF TERMS AND CONDITIONS
 
 */
 
-import Scatterplot from "./scatterplot";
-import Feature from "./feature";
-import { DataSourceType } from "./chartSystem";
-import { FeatureChartMessageType } from "./featureChartMessageType";
+import BoundsToGISJOIN from "../boundsToGISJOIN"
+import { sustain_querier } from "../../grpc/GRPC_Querier/grpc_querier"
+import Util from "../apertureUtil"
 
-export default class ScatterplotManager {
-    constructor(catalog, chartArea, validFeatureManager, chartSystem) {
-        this.catalog = catalog;
-        this.chartArea = chartArea;
-        this.scatterplot = new Scatterplot();
-        this.chartArea.addChart(this.scatterplot);
-    
-        this.featureManager = validFeatureManager;
-        this.currentFeatures = {};
+export default class CovidDataSource {
+    static querier = sustain_querier();
+    static defaultType = "cases";
+    static defaultDays = 7;
+    static queryChangeZoomLevel = 7;
 
-        this.system = chartSystem;
-
-        this.chartArea.setChangeAxisButtonCallbacks(
-            () => { this.axisButtonCallback("x"); },
-            () => { this.axisButtonCallback("y"); }
-        );
+    // The leaflet map used to determine the viewport bounds.
+    constructor(map) {
+        this.map = map;
+        this.gisjoinAggregateTemplate = [{ $match: { geometry: { $geoIntersects: { $geometry: { type: "Polygon", coordinates: []}}}}}, { $project: { GISJOIN: 1, properties: 1 }}];
+        BoundsToGISJOIN.config("county_geo_140mb_no_2d_index");
     }
 
-    changeFeature(axis, feature) {
-        this.currentFeatures[axis] = feature;
-        DataSourceType.MAP_FEATURES.sourceInstance.get().then((values) => {
-            this.update(values);
+    getGisjoinAggregate() {
+        let mapBounds = Util.leafletBoundsToGeoJSONPoly(this.map.wrapLatLngBounds(this.map.getBounds()));
+        this.gisjoinAggregateTemplate[0].$match.geometry.$geoIntersects.$geometry.coordinates = [ mapBounds ];
+        return this.gisjoinAggregateTemplate;
+    }
+
+    // Returns an array containing every result that comes from the stream.
+    // The transformer is a function applied to each (parsed) element before
+    // it is placed into the array. The default is the identity function.
+    // The accessor is the NAME of the function to call on the raw response
+    // to get data out (it will probably be either 'getData' or 'getJson'). 
+    // The default is 'getData.'
+    getStreamResults(stream, transformer = x => x, accessor = 'getData') {
+        return new Promise((resolve, reject) => {
+            let results = [];
+            stream.on('data', data => {
+                let response = JSON.parse(data[accessor]());
+                results.push(transformer(response));
+            });
+
+            stream.on('end', () => {
+                stream.cancel();
+                resolve(results);
+            });
         });
     }
 
-    axisButtonCallback(axis, direction) {
-        this.currentFeatures[axis] = this.nextValidFeatureForAxis(axis, direction);
-        DataSourceType.MAP_FEATURES.sourceInstance.get().then((values) => {
-            this.update(values);
-        });
-    }
-
-    nextValidFeatureForAxis(axis, direction) {
-        let ignore = [];
-        for (let axisToIgnore in this.currentFeatures) {
-            if (axisToIgnore !== axis) {
-                ignore.push(this.currentFeatures[axisToIgnore]);
+    // Returns a list of counties in the viewport.
+    // Minimally, these will objects with a GISJOIN field. Additional fields to
+    // extract from the db response can be passed as a list into the properties
+    // argument.
+    // For instance, properties = [ "NAMELSAD10" ] will include the county name.
+    async getCounties(properties) {
+        let query = JSON.stringify(this.getGisjoinAggregate());
+        let queryStream = CovidDataSource.querier.getStreamForQuery("county_geo_GISJOIN", query);
+        let reduce = r => { 
+            let result = { GISJOIN: r.GISJOIN };
+            for (let prop of properties) {
+                result[prop] = r.properties[prop];
             }
-        }
-        return this.featureManager.getNextFeature(this.currentFeatures[axis], ignore, direction);
+            return result;
+        };
+
+        return await this.getStreamResults(queryStream, reduce);
     }
 
-    cycleAxis(axis, direction) {
-        this.axisButtonCallback(axis, direction);
-    }
-    
-    update(values) {
-        let shouldUpdate = this.featureManager.enoughFeaturesExist(2);
+    // Query and return a promise to COVID data for what's in the viewport.
+    // Type is the kind of data to query - either "cases" or "deaths".
+    // daysWindowDays is the size of the moving average window in days.
+    async get(type = CovidDataSource.defaultType, daysWindowSize = CovidDataSource.defaultDays) {
+        let counties = await this.getCounties([ "NAMELSAD10" ]);
+        
+        let stream = CovidDataSource.querier.executeSlidingWindowQuery(JSON.stringify({
+            gisJoins: counties.map(c => c.GISJOIN),
+            collection: "covid_county_formatted",
+            feature: type,
+            days: daysWindowSize
+        }));
 
-        if (shouldUpdate) {
-            this.chartArea.scatterplot.unhide(0)
-            if (!this.currentFeatures.x) {
-                this.currentFeatures.x = this.featureManager.getAnyFeature();
-            }
-            if (!this.currentFeatures.y) {
-                this.currentFeatures.y = this.featureManager.getAnyFeature();
-            }
-            this.scatterplot.changeData(this.prepareData(values));
-        } else {
-            this.chartArea.scatterplot.hide(0)
-        }
-    }
+        let averagesTransform = r => { 
+            return { 
+                data: JSON.parse(r.movingAverages[0]).movingAverages, 
+                GISJOIN: r.gisJoin, 
+                name: counties.find(c => c.GISJOIN === r.gisJoin).NAMELSAD10
+            };
+        };
 
-    passMessage(message) {
-        switch (message.type) {
-            case FeatureChartMessageType.CYCLE_AXIS: {
-                this.cycleAxis(message.axis, message.direction);
-                break;
-            } case FeatureChartMessageType.SET_AXIS: {
-                this.changeFeature(message.axis, message.feature);
-                break;
-            }
-        }
+        return this.getStreamResults(stream, averagesTransform, 'getJson');
     }
 
-    prepareData(values) {
-        let data = [];
-        let xfeat = values[this.currentFeatures.x];
-        let yfeat = values[this.currentFeatures.y];
-        let shorterFeature = (xfeat.length > yfeat.length) ? yfeat : xfeat; 
-
-        if (shorterFeature.length === 0 || xfeat[0].type !== yfeat[0].type) {
-            return [];
-        }
-
-        let joins = shorterFeature.map(d => d.GISJOIN);
-        joins.forEach(gisjoin => {
-            let xEntry = xfeat.find(d => d.GISJOIN === gisjoin);
-            let yEntry = yfeat.find(d => d.GISJOIN === gisjoin);
-            
-            if (xEntry && yEntry) {
-                data.push({
-                    x: xEntry.data,
-                    y: yEntry.data,
-                });
-            }
-        });
-
-        data.x = Feature.getFriendlyName(this.currentFeatures.x);
-        data.y = Feature.getFriendlyName(this.currentFeatures.y);
-
-        return data;
-    }
-
-    getSourceParameters() {
-        return [];
-    }
+    updateSupplement() { }
 }

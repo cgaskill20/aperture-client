@@ -238,6 +238,7 @@ export default class AutoQuery {
     bindConstraintsAndQuery(q, forcedGeometry) {
         const sessionID = Math.random().toString(36).substring(2, 6);
         q = q.concat(this.buildConstraintPipeline());
+
         //outputs from query may only be $projected if the data is not GeoJSON
         if (this.linked)
             q.push(this.addMongoProject())

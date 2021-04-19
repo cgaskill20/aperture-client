@@ -59,10 +59,18 @@ import Chart from "./chart";
 import * as d3 from "../../third-party/d3.min.js";
 
 export default class LineGraph extends Chart {
+    constructor() {
+        super([]);
+        this.mouseInGraph = false;
+        this.changeTitle("COVID Cases by County");
+    }
 
     rerender(width, height, viewIndex) {
-        this.changeData();
         let view = this.views[viewIndex];
+
+        if (this.data.length === 0) {
+            return;
+        }
 
         view.width = width;
         view.height = height;
@@ -72,11 +80,13 @@ export default class LineGraph extends Chart {
         // { date: Date, value: number }
         // view.x and view.y will need to change if this isn't the case.
         view.x = d3.scaleUtc()
-            .domain(d3.extent(this.data, d => d.date)).nice()
+            // FIXME: This is EXTREMELY inefficient
+            .domain([d3.min(this.data, entry => d3.min(entry.data, d => d.date)), 
+                     d3.max(this.data, entry => d3.max(entry.data, d => d.date))])
             .range([view.margin.left, width - view.margin.right]);
 
         view.y = d3.scaleLinear()
-            .domain([0, d3.max(this.data, d => d.value)]).nice()
+            .domain([0, d3.max(this.data, entry => d3.max(entry.data, d => d.value))]).nice()
             .range([height - view.margin.bottom, view.margin.top]);
 
         view.xAxis = g => g
@@ -95,22 +105,35 @@ export default class LineGraph extends Chart {
 
         view.svg.select("g#xAxis").call(view.xAxis);
         view.svg.select("g#yAxis").call(view.yAxis);
-        view.svg.select("path#line")
-            .datum(this.data)
-            .attr("d", view.line);
+        view.svg.select("g#lines")
+            .selectAll("path")
+            .data(this.data)
+            .join("path")
+            .style("mix-blend-mode", "multiply")
+            .attr("d", d => view.line(d.data));
+
         view.svg.select("text#title")
             .attr("x", width / 2)
             .attr("y", 12)
             .attr("text-anchor", "middle")
             .text(this.title);
     }
+
+    changeTitle(title) {
+        this.title = title;
+    }
     
     changeData(data) {
-        let wrongData = data.map(e => { return { date: Math.round((Math.random() * (1 << 63))), value: e }});
-        wrongData.sort((a, b) => a.date - b.date );
-        console.log(wrongData);
-        this.data = wrongData;
+        this.data = data.map(entry => { 
+            return { data: entry.data.map(d => { 
+                return { value: this.clamp(d.avg), date: d.date.$date };
+            }), gisJoin: entry.GISJOIN, name: entry.name };
+        });
         this.rerenderAllViews();
+    }
+
+    clamp(n) {
+        return n < 0 ? 0 : n;
     }
 
     setTitle(title) {
@@ -128,11 +151,66 @@ export default class LineGraph extends Chart {
 
         view.svg.append("g").attr("id", "xAxis");
         view.svg.append("g").attr("id", "yAxis");
-        view.svg.append("path").attr("id", "line")
+        view.svg.append("g").attr("id", "lines")
             .attr("fill", "none")
             .attr("stroke", "steelblue")
             .attr("stroke-width", 1.5)
+            .attr("stroke-linejoin", "round")
+            .attr("stroke-linecap", "round");
         view.svg.append("text").attr("id", "title");
+        view.svg.append("text").attr("id", "marker");
+
+        view.svg.on('mouseenter', event => {
+            this.mouseInGraph = true;
+        });
+
+        view.svg.on('mousemove', event => {
+            if (this.data.length === 0) {
+                return;
+            }
+
+            let rawMouse = d3.pointer(event, view.svg.node());
+            let mouse = [ view.x.invert(rawMouse[0]).valueOf(), view.y.invert(rawMouse[1]) ];
+
+            let dates = [];
+            this.data.forEach(county => {
+                county.data.forEach(entry => {
+                    if (!dates.includes(entry.date)) {
+                        dates.push(entry.date);
+                    }
+                });
+            });
+
+            let searchDateIndex = d3.bisectCenter(dates, mouse[0]);
+            let closest = d3.least(this.data, d => {
+                let entry = d.data[searchDateIndex];
+                if (!entry) {
+                    return; // JAVASCRIPT EXCELLENCE AWARD 2021 
+                }   
+
+                return Math.abs(d.data[searchDateIndex].value - mouse[1])
+            });
+
+            view.svg.select("g#lines").selectAll("path").each(function() {
+                d3.select(this).attr("stroke", s => s.gisJoin === closest.gisJoin ? 'steelblue' : '#eee');
+            });
+
+            view.svg.select("text#marker")
+                .attr("display", "default")
+                .attr("x", rawMouse[0])
+                .attr("y", rawMouse[1] - 20)
+                .attr("font-size", "smaller")
+                .text(closest.name);
+        });
+
+        view.svg.on('mouseleave', event => {
+            this.mouseInGraph = false;
+
+            view.svg.select("text#marker").attr("display", "none");
+            view.svg.select("g#lines").selectAll("path").each(function() {
+                d3.select(this).attr("stroke", "steelblue");
+            });
+        });
 
         return view;
     }

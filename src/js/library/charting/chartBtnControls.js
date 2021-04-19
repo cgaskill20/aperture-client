@@ -1,5 +1,8 @@
-import Feature from "./feature";
-
+import Feature from "./feature"
+import ControlDropdown from "./controlDropdown"
+import FeatureDropdown from "./featureDropdown"
+import { FeatureChartMessageType } from "./featureChartMessageType"
+import { LineChartMessageType } from "./lineChartManager"
 import { reduceTotalGraphs, checkNumberOfGraphs } from "./chartBtnCreateChart"
 
 export function createChartControl(chart, graphBox, type) {
@@ -9,18 +12,68 @@ export function createChartControl(chart, graphBox, type) {
     let col2 = createEmptyColumn();
     let col3 = createEmptyColumn();
     col2.className = "col-sm-auto";
-    if(type === 'scatterplot') {
-        col2.appendChild(createChartControlGroup(chart, 'x', "X-Axis"));
-        col2.appendChild(createChartControlGroup(chart, 'y', "Y-Axis"));
+    
+    let controls = getControlsForType(chart, type);
+    for (let control of controls) {
+        col2.appendChild(control.getDOMNode());
     }
-    else {
-        col2.appendChild(createChartControlGroup(chart, 'x',"Constraint"));
-    }
+
+    chart.addNewFeatureCallback(activeFeatures => {
+        for (let control of controls) {
+            control.setOptions(activeFeatures.map(feature => {
+                return { 
+                    name: Feature.getFriendlyName(feature),
+                    onclick: () => chart.passMessage({ 
+                        type: FeatureChartMessageType.SET_AXIS, 
+                        axis: control.getLinkedAxis(), 
+                        feature: feature,
+                    }),
+                };
+            }));
+        }
+    });
+
     col3.appendChild(createCloseButton(graphBox));
     chartControl.appendChild(col1);
     chartControl.appendChild(col2);
     chartControl.appendChild(col3);
     return chartControl;
+}
+
+function getControlsForType(chart, type) {
+    let controls = [];
+    switch (type) {
+         case 'scatterplot': {
+            controls.push(new FeatureDropdown(chart, "X-Axis", 'x'));
+            controls.push(new FeatureDropdown(chart, "Y-Axis", 'y'));
+            break;
+        } case 'histogram': {
+            controls.push(new FeatureDropdown(chart, "Feature", 'x'));
+            break;
+        } case 'linegraph': {
+            controls.push(new ControlDropdown(chart, "Feature"));
+            controls[0].setOptions([{
+                    name: "Cases",
+                    onclick: () => {
+                        chart.passMessage({
+                            type: LineChartMessageType.CHANGE_PARAMETERS,
+                            newType: 'cases',
+                        });
+                    },
+                }, {
+                    name: "Mortality",
+                    onclick: () => {
+                        chart.passMessage({
+                            type: LineChartMessageType.CHANGE_PARAMETERS,
+                            newType: 'deaths',
+                        });
+                    },
+                },
+            ]);
+            break;
+        }
+    }
+    return controls;
 }
 
 function createEmptyColumn() {
@@ -29,10 +82,10 @@ function createEmptyColumn() {
     return emptyCol;
 }
 
-function createChartControlGroup(chart, axis, dropdownTitle) {
+function createChartAxisControlGroup(chart, axis, dropdownTitle) {
     let chartControlButtonGroup = createChartControlButtonGroup();
     let leftToggle = createSideToggle(chart, axis, '<');
-    let chartDropdown = createDropdown(chart, dropdownTitle, axis);
+    let chartDropdown = createFeatureDropdown(chart, dropdownTitle, axis);
     let rightToggle = createSideToggle(chart, axis, '>');
     chartControlButtonGroup.appendChild(leftToggle);
     chartControlButtonGroup.appendChild(chartDropdown);
@@ -53,7 +106,9 @@ function createSideToggle(chart, axis, arrowDirection) {
     sideToggle.className = "btn btn-outline-dark";
     sideToggle.type = "button";
     sideToggle.innerText = arrowDirection;
-    sideToggle.onclick = arrowDirection === '<' ? () => {chart.cycleAxis(axis, "previous")} : () => {chart.cycleAxis(axis, "next")};
+    sideToggle.onclick = arrowDirection === '<' ? 
+        () => { chart.passMessage({ type: FeatureChartMessageType.CYCLE_AXIS, axis: axis, direction: 'previous' }); } : 
+        () => { chart.passMessage({ type: FeatureChartMessageType.CYCLE_AXIS, axis: axis, direction: 'next'}); };
     return sideToggle;
 }
 
@@ -70,7 +125,7 @@ function createDropdown(chart, title, axis) {
             let dropdownItem = document.createElement("a");
             dropdownItem.className = "dropdown-item dropdown-menu-item-custom";
             dropdownItem.onclick = ()=> {
-                chart.changeFeature(axis, feature);
+                chart.passMessage({ type: FeatureChartMessageType.SET_AXIS, axis: axis, feature: feature });
             }
             dropdownItem.innerText = Feature.getFriendlyName(feature);
             dropdownMenu.appendChild(dropdownItem);
