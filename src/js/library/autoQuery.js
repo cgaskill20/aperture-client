@@ -312,7 +312,6 @@ export default class AutoQuery {
 
     checkAndDispatch(oldBlockers) {
         if (oldBlockers !== JSON.stringify(AutoQuery.blockers)) {
-            console.log(AutoQuery.blockers)
             AutoQuery.dispatchBlocker();
         }
     }
