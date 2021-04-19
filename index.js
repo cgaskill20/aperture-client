@@ -34,6 +34,7 @@ import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";
 import MenuGenerator, { updateLayers } from "./src/js/ui/menuGenerator.js";
 import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
+import CurrentLocation from "./src/js/ui/CurrentLocation";
 
 
 //idek what to do with theses files, things break if I try to make them import specific things
@@ -182,6 +183,9 @@ ReactDOM.render((<ModelMenu/>), modelContainer);
 
 const queryBlockContainer = document.getElementById("query-block-container");
 ReactDOM.render((<DefensiveOptimization />), queryBlockContainer);
+
+const currentLocationContainer = document.getElementById("current-location");
+ReactDOM.render((<CurrentLocation map={map}/>),currentLocationContainer)
 
 map.on("moveend", function (e) {
     updateLayers();

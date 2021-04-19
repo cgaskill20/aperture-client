@@ -108,3 +108,19 @@ body {
   padding-right: 460px;
   margin-bottom: 10px;
 }
+
+.current-location{
+  position: absolute;
+  top: 150px;
+  right: 10px;
+  z-index: 800;
+}
+
+.currentLocationButton{
+  
+}
+
+.currentLocationButton .icon{
+  width: 25px;
+  height: 25px;
+}
