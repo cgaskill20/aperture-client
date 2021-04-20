@@ -24,7 +24,7 @@ export default function DefensiveOptimization(props) {
 
     const HEIGHT_PER_ALERT = 65;
     const height = (Object.values(blockers)
-        .map(curr => { return Number(curr) })
+        .map(curr => { return Number(curr !== 0) })
         .reduce((acc, curr) => {
             return acc + curr;
         }, 0) * HEIGHT_PER_ALERT).toString() + "px";
