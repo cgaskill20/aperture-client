@@ -284,6 +284,7 @@
     "collection": "flood_zones_geo",
     "label": "Flood Zone",
     "subGroup": "Floods",
+    "minZoom": 11,
     "color": {
       "style": "sequential",
       "variable": "properties.FLD_ZONE",
