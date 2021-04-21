@@ -33,14 +33,13 @@ export default function DefensiveOptimization(props) {
     const extraLineHeight = Object.keys(blockers).filter(curr => { 
         return curr.length > 9 && blockers[curr]
     }).length * HEIGHT_EXTRA_LINE;
-    
-
     const HEIGHT_PER_ALERT = 66;
     const height = (Object.values(blockers)
         .map(curr => { return Number(curr !== 0) })
         .reduce((acc, curr) => {
             return acc + curr;
         }, 0) * HEIGHT_PER_ALERT + extraLineHeight).toString() + "px";
+        
     return <div className={"warningContainer"} style={{ height: height }}>
         {renderBlockers(blockers)}
     </div>

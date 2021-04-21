@@ -61,7 +61,8 @@ export default class AutoQuery {
                 "tract" : "county"
             : this.data.label ?
                 this.data.label : Util.cleanUpString(this.collection);
-        this.minZoom = 10;
+
+        this.minZoom = this.data.minZoom;
         this.blocked = false;
         AutoQuery.blockers[this.blockerGroup] = 0;
     }
