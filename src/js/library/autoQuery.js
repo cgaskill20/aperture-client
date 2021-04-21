@@ -58,9 +58,13 @@ export default class AutoQuery {
 
         this.blockerGroup = this.data.linkedGeometry ?
             this.linked === "tract_geo_140mb_no_2d_index" ?
-                "tract" : "county"
+                "tracts" : "counties"
             : this.data.label ?
                 this.data.label : Util.cleanUpString(this.collection);
+                
+        if(this.blockerGroup.charAt(this.blockerGroup.length-1) !== "s"){
+            this.blockerGroup += "s";
+        }
 
         this.minZoom = this.data.minZoom;
         this.blocked = false;
