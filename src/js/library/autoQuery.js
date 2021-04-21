@@ -13,12 +13,7 @@ import Worker from "./queryWorker.js"
 export default class AutoQuery {
     static queryWorker = new Worker(); //init querier
     static queryWorkerConfiged = false;
-    static minCountyZoom = 7;
-    static minTractZoom = 9;
-    static blockers = {
-        tract: 0,
-        county: 0
-    }
+    static blockers = { }
     static blockerListener = null;
     /**
       * Constructs the instance of the autoquerier to a specific layer
@@ -60,10 +55,9 @@ export default class AutoQuery {
         this.colorCode = this.buildColorCode(layerData);
 
         this.graphPipeID = graphPipeID;
-        this.blockers = {
-            tract: false,
-            county: false
-        }
+        this.minZoom = 7;
+        this.blocked = false;
+        AutoQuery.blockers[this.collection] = 0;
     }
 
     /**
@@ -85,9 +79,8 @@ export default class AutoQuery {
         AutoQuery.queryWorker.postMessage({ type: "kill", collection: this.collection });
 
         const oldBlockers = JSON.stringify(AutoQuery.blockers);
-        AutoQuery.blockers.tract -= this.blockers.tract;
-        AutoQuery.blockers.county -= this.blockers.county;
-        this.blockers.tract = this.blockers.county = false;
+        AutoQuery.blockers[this.collection] -= this.blocked;
+        this.blocked = false;
         this.checkAndDispatch(oldBlockers);
         
         this.layerIDs = [];
@@ -284,27 +277,15 @@ export default class AutoQuery {
         if (this.linked) {
             const oldBlockers = JSON.stringify(AutoQuery.blockers);
             const mapZoom = this.map.getZoom();
-            if (this.linked === "tract_geo_140mb_no_2d_index") {
-                if (mapZoom < AutoQuery.minTractZoom) {
-                    AutoQuery.blockers.tract += !this.blockers.tract;
-                    this.blockers.tract = true;
-                    this.checkAndDispatch(oldBlockers);
-                    return false;
-                }
-                else {
-                    AutoQuery.blockers.tract -= this.blockers.tract;
-                    this.blockers.tract = false;
-                }
-            }
-            else if (mapZoom < AutoQuery.minCountyZoom) {
-                AutoQuery.blockers.county += !this.blockers.county;
-                this.blockers.county = true;
+            if (mapZoom < this.minZoom) {
+                AutoQuery.blockers[this.collection] += !this.blocked;
+                this.blocked = true;
                 this.checkAndDispatch(oldBlockers);
                 return false;
             }
             else {
-                AutoQuery.blockers.county -= this.blockers.county;
-                this.blockers.county = false;
+                AutoQuery.blockers[this.collection] -= this.blocked;
+                this.blocked = false;
             }
             this.checkAndDispatch(oldBlockers);
         }
