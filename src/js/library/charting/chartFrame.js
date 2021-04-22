@@ -106,6 +106,20 @@ export default class ChartFrame {
     }
 
     /** 
+     * Forces a complete refresh of all charts and data sources in the 
+     * This is a good thing to call after you've done something that modifies
+     * state in basically any charting component.
+     * Call this function conservatively. DON'T PLACE IT IN LOOPS (!), since it
+     * bypasses security measures that normally prevent the chartSystem from 
+     * being overwhelmed with update requests.
+     */
+    update() {
+        if (this.manager && this.manager.chartSystem) {
+            this.manager.chartSystem.update({ force: true });
+        }
+    }
+
+    /** 
      * Forces the chart to re-render itself, changing to the width and height
      * last set by setSize.
      * Since it forces a total re-render, it can also be used to update data

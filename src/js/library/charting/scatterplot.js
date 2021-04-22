@@ -59,6 +59,10 @@ import Chart from "./chart";
 import * as d3 from "../../third-party/d3.min.js";
 
 export default class Scatterplot extends Chart {
+    // In pixels.
+    static MINIMUM_HEIGHT = 200;
+    static MINIMUM_WIDTH = 100;
+
     constructor() {
         super([]);
     }
@@ -66,6 +70,8 @@ export default class Scatterplot extends Chart {
     rerender(newWidth, newHeight, viewIndex) {
         let view = this.views[viewIndex];
 
+        newWidth = newWidth < Scatterplot.MINIMUM_WIDTH ? Scatterplot.MINIMUM_WIDTH : newWidth;
+        newHeight = newHeight < Scatterplot.MINIMUM_HEIGHT ? Scatterplot.MINIMUM_HEIGHT : newHeight;
         view.width = newWidth;
         view.height = newHeight;
         view.svg.attr("viewBox", [0, 0, newWidth, newHeight]);

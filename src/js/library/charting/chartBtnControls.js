@@ -29,8 +29,7 @@ export function createChartControl(chart, graphBox, type) {
                             axis: control.getLinkedAxis(), 
                             feature: feature,
                         });
-                        // breaking all the rules :)
-                        chart.manager.chartSystem.update({ force: true });
+                        window.setTimeout(chart.update, 100);
                     },
                 };
             }));
