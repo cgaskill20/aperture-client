@@ -62,6 +62,7 @@ function getControlsForType(chart, type) {
                             type: LineChartMessageType.CHANGE_PARAMETERS,
                             newType: 'cases',
                         });
+                        chart.update();
                     },
                 }, {
                     name: "Mortality",
@@ -70,6 +71,7 @@ function getControlsForType(chart, type) {
                             type: LineChartMessageType.CHANGE_PARAMETERS,
                             newType: 'deaths',
                         });
+                        chart.update();
                     },
                 },
             ]);

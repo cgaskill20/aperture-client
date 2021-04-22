@@ -60,6 +60,8 @@ export default class ControlDropdown {
         this.chartControlButtonGroup = this.createChartControlButtonGroup();
         this.chartDropdown = this.createDropdown(frame, title);
         this.chartControlButtonGroup.appendChild(this.chartDropdown);
+
+        this.dropdownButton.onclick = () => frame.update();
     }
 
     getDOMNode() {
@@ -83,7 +85,7 @@ export default class ControlDropdown {
 
         $(function () {
             $('[data-toggle="dropdown"]').dropdown()
-        })
+        });
 
         return chartDropdown;
     }

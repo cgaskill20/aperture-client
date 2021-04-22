@@ -60,10 +60,6 @@ import KernelDensityEstimator from "./kernelDensityEstimator";
 import * as d3 from "../../third-party/d3.min.js";
 
 export default class Histogram extends Chart {
-    // In pixels.
-    static MINIMUM_HEIGHT = 200;
-    static MINIMUM_WIDTH = 100;
-
     constructor() {
         super([]);
         this.binNum = 10;
@@ -80,8 +76,8 @@ export default class Histogram extends Chart {
 
         let view = this.views[viewIndex];
 
-        newWidth = newWidth < Histogram.MINIMUM_WIDTH ? Histogram.MINIMUM_WIDTH : newWidth;
-        newHeight = newHeight < Histogram.MINIMUM_HEIGHT ? Histogram.MINIMUM_HEIGHT : newHeight;
+        newWidth = newWidth < Chart.MINIMUM_WIDTH ? Chart.MINIMUM_WIDTH : newWidth;
+        newHeight = newHeight < Chart.MINIMUM_HEIGHT ? Chart.MINIMUM_HEIGHT : newHeight;
         view.width = newWidth;
         view.height = newHeight;
 

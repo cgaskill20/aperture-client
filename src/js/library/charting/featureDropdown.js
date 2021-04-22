@@ -70,7 +70,6 @@ export default class FeatureDropdown extends ControlDropdown {
         this.chartControlButtonGroup.insertBefore(leftToggle, this.chartControlButtonGroup.firstChild);
         this.chartControlButtonGroup.appendChild(rightToggle);
 
-        this.dropdownButton.onclick = () => frame.update();
     }
 
     createSideToggle(chart, axis, arrowDirection) {
