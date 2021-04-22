@@ -164,17 +164,22 @@ export default class resizable {
     changeBoxSize(e, dimensions){
         this.width = dimensions[0] + (e.pageX - dimensions[3]);
         this.height = dimensions[1] - (e.pageY - dimensions[4]);
-        if (this.width > resizable.minimum_width) {
+
+        let enough_width = this.width > resizable.minimum_width;
+        let enough_height = this.height > resizable.minimum_height;
+
+        if (enough_width) {
             this.overlayDocument.style.width = this.width + 'px';
         }
-        if (this.height > resizable.minimum_height) {
+        if (enough_height) {
             this.overlayDocument.style.height = this.height + 'px';
             this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
         }
 
-        if (this.onResizeCallback) {
+        if (enough_width && enough_height && this.onResizeCallback) {
             this.onResizeCallback(this.width, this.height);
         }
+
     }
 
     setResizeCallback(cb) {
