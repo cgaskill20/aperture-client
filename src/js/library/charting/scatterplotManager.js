@@ -70,7 +70,7 @@ import ChartManager from "./chartManager"
  * @file Chart manager for scatterplots
  */
 export default class ScatterplotManager extends ChartManager {
-    constructor(catalog, chartArea, validFeatureManager, chartSystem) {
+    constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
         super(catalog, chartArea, validFeatureManager, chartSystem, chartType);
         this.scatterplot = new Scatterplot();
         this.chartArea.addChart(this.scatterplot);

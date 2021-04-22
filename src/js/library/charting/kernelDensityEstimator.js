@@ -29,9 +29,14 @@ export default class KernelDensityEstimator {
 
         let estimate = thresholds.map(t => [t, d3.mean(data, d => this.kernel(this.bandwidth)(t - d))]);
         estimate = estimate.map(e => [unnormalize(e[0]), unnormalize(e[1])]);
+        console.log(estimate);
 
         let maxEstimate = d3.max(estimate, d => d[1]);
-        let fit = d3.scaleLinear().domain([0, maxEstimate]).range([0, maxY]);
+        let minEstimate = d3.min(estimate, d => d[1]);
+        let fit = d3.scaleLinear()
+            .domain([minEstimate, maxEstimate])
+            .range([0, maxY]);
+
         estimate = estimate.map(e => [e[0], fit(e[1])]);
         return estimate;
     }

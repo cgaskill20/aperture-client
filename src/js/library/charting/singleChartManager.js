@@ -57,12 +57,13 @@ END OF TERMS AND CONDITIONS
 
 import Feature from "./feature"
 import { FeatureChartMessageType } from "./featureChartMessageType"
+import ChartManager from "./chartManager"
 
 /**
  * Manages histograms, which are "featured" charts (i.e. pull from in-view
  * map data).
  * See ChartManager for more information about what a chart manager does.
-
+ *
  * @author Pierce Smith
  * @file Chart manager for histograms
  */
