@@ -90,10 +90,11 @@ export default class ChartManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
         this.catalog = catalog;
         this.chartArea = chartArea;
-        this.chartSyste = chartSystem;
+        this.chartSystem = chartSystem;
         this.featureManager = validFeatureManager;
         this.chartType = chartType;
     }
 
-
+    // To be overriden in subclasses.
+    update(values) {}
 }
