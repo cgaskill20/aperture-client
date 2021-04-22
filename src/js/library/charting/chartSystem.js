@@ -154,7 +154,7 @@ export default class ChartSystem {
 
         this.chartFrames = [];
 
-        this.resizable = new resizable(400, 300, "white");
+        this.resizable = new resizable(resizable.minimum_width, resizable.minimum_height + 200, "white");
         this.resizable.setResizeCallback((width, height) => {
             this.chartFrames.forEach(frame => {
                 let newHeight = height - 200;
