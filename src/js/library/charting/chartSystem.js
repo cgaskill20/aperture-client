@@ -236,12 +236,14 @@ export default class ChartSystem {
      * It is safe to call this function from inside chart code.
      * @memberof ChartSystem
      * @method update
+     * @param {object=} parameters An optional object with extra information
+     * for this update event
      */
-    async update() {
-        if (this.doNotUpdate) {
+    async update(parameters = {}) {
+        if (this.doNotUpdate && !parameters.force) {
             return;
         }
-        
+
         // This is what forces the charts to re-render... very inelegant.
         // TODO: This needs to not suck
         this.resizable.triggerResizeEvent();
@@ -257,7 +259,7 @@ export default class ChartSystem {
         });
 
         this.doNotUpdate = true;
-        window.setTimeout(() => { this.doNotUpdate = false; }, 2000);
+        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
     }
 
 

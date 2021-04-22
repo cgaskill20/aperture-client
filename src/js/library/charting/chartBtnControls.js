@@ -23,11 +23,15 @@ export function createChartControl(chart, graphBox, type) {
             control.setOptions(activeFeatures.map(feature => {
                 return { 
                     name: Feature.getFriendlyName(feature),
-                    onclick: () => chart.passMessage({ 
-                        type: FeatureChartMessageType.SET_AXIS, 
-                        axis: control.getLinkedAxis(), 
-                        feature: feature,
-                    }),
+                    onclick: () => {
+                        chart.passMessage({ 
+                            type: FeatureChartMessageType.SET_AXIS, 
+                            axis: control.getLinkedAxis(), 
+                            feature: feature,
+                        });
+                        // breaking all the rules :)
+                        chart.manager.chartSystem.update({ force: true });
+                    },
                 };
             }));
         }
