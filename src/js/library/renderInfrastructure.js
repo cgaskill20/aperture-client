@@ -63,7 +63,7 @@ export default class RenderInfrastructure {
             Util.simplifyGeoJSON(geoJsonData, this.options.simplifyThreshold);
         }
         //console.log(geoJsonData)
-        
+
         Util.fixGeoJSONID(geoJsonData);
         if(specifiedId === -1){
             this.gisjoinUpdate(geoJsonData, indexData);
@@ -147,9 +147,6 @@ export default class RenderInfrastructure {
             indexData: JSON.parse(JSON.stringify(indexData)),
             properties: JSON.parse(JSON.stringify(geojson.properties))
         };
-        if(!thisRef.indexData[oldName].color){
-            //console.log(thisRef)
-        }
 
         if(index === -1){
             this.currentGISJOINLayers.push({
@@ -189,7 +186,7 @@ export default class RenderInfrastructure {
 
     refsToColor(refs){
         if(refs.length > 1){
-            return "#6b03fc";
+            return "#242B2E";
         }
         else{
             return refs[0].indexData[refs[0].name].color;
