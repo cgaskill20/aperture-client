@@ -163,7 +163,7 @@ export default class resizable {
             if (window.innerWidth - resizableX < resizable.offscreen_tolerance) {
                 this.overlayDocument.style.left = window.innerWidth - resizable.offscreen_tolerance + 'px';
             }
-            if (window.innerWidth - resizableY < resizable.offscreen_tolerance) {
+            if (window.innerHeight - resizableY < resizable.offscreen_tolerance) {
                 this.overlayDocument.style.top = window.innerHeight - resizable.offscreen_tolerance + 'px';
             }
         });
