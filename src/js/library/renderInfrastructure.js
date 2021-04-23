@@ -63,8 +63,8 @@ export default class RenderInfrastructure {
             Util.simplifyGeoJSON(geoJsonData, this.options.simplifyThreshold);
         }
         //console.log(geoJsonData)
+        
         Util.fixGeoJSONID(geoJsonData);
-
         if(specifiedId === -1){
             this.gisjoinUpdate(geoJsonData, indexData);
         }
@@ -147,6 +147,9 @@ export default class RenderInfrastructure {
             indexData: JSON.parse(JSON.stringify(indexData)),
             properties: JSON.parse(JSON.stringify(geojson.properties))
         };
+        if(!thisRef.indexData[oldName].color){
+            //console.log(thisRef)
+        }
 
         if(index === -1){
             this.currentGISJOINLayers.push({
@@ -163,6 +166,7 @@ export default class RenderInfrastructure {
             if(layer.refs.length > 1){
                 const dataToEdit = indexData[oldName];
                 dataToEdit.color = this.refsToColor(layer.refs);
+                dataToEdit.opacity = 0.5;
                 dataToEdit.popup = this.refsToPopup(layer.refs);
                 geojson.properties = this.refsToProperties(layer.refs);
                 const newName = this.refsToName(layer.refs);
@@ -185,7 +189,7 @@ export default class RenderInfrastructure {
 
     refsToColor(refs){
         if(refs.length > 1){
-            return "#4682B4";
+            return "#6b03fc";
         }
         else{
             return refs[0].indexData[refs[0].name].color;
