@@ -17,10 +17,21 @@ Aperture's client
 
 # Project Structure <a name="project_structure"></a>
     index.html    # main page of the client
+    index.js      # initizalization for the client
     /images       # where images for the client are stored
-    /src
-        /iframe           # Where the frame code is, read this directories' README for a full description
-        /dependencies     # index.html's dependencies
+    /src          # where the source code is
+        /css               # css
+        /static            # code that isn't really a library, and depends on a bunch of external items existing to be run
+        /third-party       # where third-party css lives  
+        /js                # where javascript for the frames live
+            /static            # js that other things dont depend on
+            /grpc              # grpc related code, much of it auto-generated
+            /library           # in-house library code, like query interfaces and such (this is where most of the code is)
+                /charting      # all the charting code
+            /model-managers    # rendering libraries for models
+            /third-party       # for third party JS libraries
+            /ui                # UI related code
+        /json     # where json live
     /test         # where mocha test code lives
 
 # How to Generate Documentation <a name="docs"></a>

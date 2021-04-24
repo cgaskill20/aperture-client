@@ -4,7 +4,7 @@ global.L = require('leaflet');
 require("leaflet-timedimension");
 
 var fs = require('fs');
-eval(fs.readFileSync('src/iframe/js/library/time-dimension.js')+'');
+eval(fs.readFileSync('src/js/library/time-dimension.js')+'');
 
 const elem = document.createElement('div');
 elem.style.cssText = 'width: "100%", height: "800px" ';

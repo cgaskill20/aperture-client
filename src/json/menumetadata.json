@@ -1,0 +1,929 @@
+[
+  {
+    "collection": "future_heat",
+    "label": "Future Heatwaves",
+    "level": "county",
+    "subGroup": "Climate",
+    "color": {
+      "colorCode": "#FF0000",
+      "style": "solid"
+    },
+    "fieldMetadata": [
+      {
+        "name": "temp",
+        "label": "Heatwave Temperature",
+        "type": "range",
+        "unit": "farenheit"
+      },
+      {
+        "name": "year",
+        "label": "Years",
+        "type": "range",
+        "unit": "year"
+      }
+    ]
+  },
+  {
+    "collection": "tract_median_household_income",
+    "label": "Tract Median Household Income",
+    "level": "tract",
+    "subGroup": "Income",
+    "color": {
+      "style": "gradient",
+      "variable": "2010_median_household_income",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "2000_median_household_income",
+        "max": 99899.0,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "hideByDefault": true,
+        "plus": true
+      },
+      {
+        "name": "1990_median_household_income",
+        "max": 9982.0,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "hideByDefault": true,
+        "plus": true
+      },
+      {
+        "name": "1980_median_household_income",
+        "max": 9994.0,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "hideByDefault": true,
+        "plus": true
+      },
+      {
+        "name": "2010_median_household_income",
+        "label": "2010 Median Household Income",
+        "min": 2499.0,
+        "max": 100000,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "plus": true
+      }
+    ]
+  },
+  {
+    "collection": "county_median_household_income",
+    "label": "County Median Household Income",
+    "level": "county",
+    "subGroup": "Income",
+    "color": {
+      "style": "gradient",
+      "variable": "2010_median_household_income",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "2000_median_household_income",
+        "max": 99899.0,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "hideByDefault": true,
+        "plus": true
+      },
+      {
+        "name": "1990_median_household_income",
+        "max": 9982.0,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "hideByDefault": true,
+        "plus": true
+      },
+      {
+        "name": "1980_median_household_income",
+        "max": 9994.0,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "hideByDefault": true,
+        "plus": true
+      },
+      {
+        "name": "2010_median_household_income",
+        "label": "2010 Median Household Income",
+        "min": 2499.0,
+        "max": 120000,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "plus": true
+      }
+    ]
+  },
+  {
+    "collection": "transmission_lines_geo",
+    "label": "Power Transmission Lines",
+    "subGroup": "Energy Infrastructure"
+  },
+  {
+    "collection": "svi_county_GISJOIN",
+    "level": "county",
+    "label": "Social Vulnerability Index County",
+    "subGroup": "Social Vulnerability Index",
+    "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
+    "color": {
+      "style": "gradient",
+      "gradient": [
+        "#00FF00",
+        "#FF0000"
+      ],
+      "variable": "RPL_THEMES"
+    },
+    "fieldMetadata": [
+      {
+        "label": "Social Vulnerability Index",
+        "name": "RPL_THEMES",
+        "type": "range",
+        "step": 0.05
+      }
+    ]
+  },
+  {
+    "collection": "svi_tract_GISJOIN",
+    "level": "tract",
+    "label": "Social Vulnerability Index Tract",
+    "subGroup": "Social Vulnerability Index",
+    "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
+    "color": {
+      "style": "gradient",
+      "gradient": [
+        "#00FF00",
+        "#FF0000"
+      ],
+      "variable": "RPL_THEMES",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "label": "Social Vulnerability Index",
+        "name": "RPL_THEMES",
+        "type": "range",
+        "step": 0.05
+      }
+    ]
+  },
+  {
+    "collection": "tract_median_age",
+    "label": "Median Tract Age",
+    "level": "tract",
+    "subGroup": "Age",
+    "color": {
+      "style": "gradient",
+      "gradient": [
+        "#00FF00",
+        "#FF0000"
+      ],
+      "variable": "median_age_total",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "median_age_female",
+        "type": "range",
+        "min": 6.2,
+        "max": 83.5
+      },
+      {
+        "name": "median_age_male",
+        "type": "range",
+        "min": 3.8,
+        "max": 85.2
+      },
+      {
+        "name": "median_age_total",
+        "type": "range",
+        "min": 5.8,
+        "max": 84.5
+      }
+    ]
+  },
+  {
+    "collection": "county_median_age",
+    "label": "Median County Age",
+    "level": "county",
+    "subGroup": "Age",
+    "color": {
+      "style": "gradient",
+      "gradient": [
+        "#00FF00",
+        "#FF0000"
+      ],
+      "variable": "median_age_total",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "median_age_female",
+        "type": "range",
+        "min": 6.2,
+        "max": 83.5
+      },
+      {
+        "name": "median_age_male",
+        "type": "range",
+        "min": 3.8,
+        "max": 85.2
+      },
+      {
+        "name": "median_age_total",
+        "type": "range",
+        "min": 5.8,
+        "max": 84.5
+      }
+    ]
+  },
+  {
+    "collection": "public_schools",
+    "icon": "school",
+    "subGroup": "Education",
+    "fieldMetadata": [
+      {
+        "label": "Total Students",
+        "name": "properties.ENROLLMENT",
+        "type": "range",
+        "min": 0,
+        "max": 4000,
+        "plus": true
+        
+      },
+      {
+        "name": "properties.FT_TEACHER",
+        "label": "Faculty Count",
+        "type": "range",
+        "min": 0,
+        "max": 200,
+        "plus": true
+      },
+      {
+        "label": "Highest Grade Level",
+        "name": "properties.END_GRADE",
+        "type": "multiselect",
+        "hideByDefault": true
+      },
+      {
+        "name": "properties.LEVEL_",
+        "type": "multiselect",
+        "label": "Level"
+      }
+    ]
+  },
+  {
+    "collection": "flood_zones_geo",
+    "label": "Flood Zone",
+    "subGroup": "Floods",
+    "minZoom": 11,
+    "color": {
+      "style": "sequential",
+      "variable": "properties.FLD_ZONE",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "properties.FLD_ZONE",
+        "label": "Flood Zone Code",
+        "type": "multiselect"
+      }
+    ]
+  },
+  {
+    "collection": "fire_stations_geo",
+    "icon": "fire_station",
+    "subGroup": "Emergency Infrastructure",
+    "label": "Fire Stations"
+  },
+  {
+    "collection": "dams_geo",
+    "color": "#FF0000",
+    "label": "Dams",
+    "icon": "dam",
+    "fieldMetadata": [
+      {
+        "name": "properties.STR_HEIGHT",
+        "label": "Height",
+        "type": "range",
+        "max": 770.0,
+        "unit": "feet"
+      }
+    ]
+  },
+  {
+    "collection": "hospitals_geo",
+    "icon": "hospital",
+    "label": "Hospitals",
+    "subGroup": "Emergency Infrastructure",
+    "fieldMetadata": [
+      {
+        "name": "properties.BEDS",
+        "type": "range",
+        "min": 0,
+        "max": 1000,
+        "plus": true
+      },
+      {
+        "name": "properties.HELIPAD",
+        "label": "Has Helipad",
+        "type": "select"
+      }
+    ]
+  },
+  {
+    "collection": "electrical_substations_geo",
+    "icon": "substation",
+    "label": "Electrical Substations",
+    "subGroup": "Energy Infrastructure"
+  },
+  {
+    "collection": "power_plants_geo",
+    "icon": "power_plant",
+    "label": "Power Plants",
+    "subGroup": "Energy Infrastructure",
+    "fieldMetadata": [
+      {
+        "name": "properties.ENERGY_SRC",
+        "type": "multiselect",
+        "label": "Energy Source"
+      }
+    ]
+  },
+  {
+    "collection": "natural_gas_pipelines_geo",
+    "label": "Natural Gas Pipelines",
+    "subGroup": "Energy Infrastructure"
+  },
+  {
+    "collection":"risk_county",
+    "subGroup": "National Risk Index",
+    "level": "county",
+    "info": "In the National Risk Index, risk is defined as the potential for negative impacts as a result of a natural hazard. It ranges from 0 (lowest risk) to 100 (highest risk).",
+    "color":{
+      "style": "sequential",
+      "variable": "RISK_RATNG",
+      "map":{
+        "Very High": "#c7445d",
+        "Relatively High": "#e07069",
+        "Relatively Moderate": "#f0d55d",
+        "Relatively Low": "#509bc7",
+        "Very Low": "#4d6dbd"
+      },
+      "border":1,
+      "opacity": 0.5
+    },
+    "fieldMetadata": [
+      {
+        "name": "RISK_RATNG",
+        "label": "Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "SOVI_RATNG",
+        "label": "Social Vulnerability Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "RESL_RATNG",
+        "label": "Community Resilience Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "AVLN_RISKR",
+        "label":"Avalanche Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "CFLD_RISKR",
+        "label": "Coastal Flooding Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "CWAV_RISKR",
+        "label": "Cold Wave Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "DRGT_RISKR",
+        "label": "Drought Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "ERQK_RISKR",
+        "label": "Earthquake Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "HAIL_RISKR",
+        "label": "Hail Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "HWAV_RISKR",
+        "label": "Heatwave Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "HRCN_RISKR",
+        "label": "Hurricane Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "ISTM_RISKR",
+        "label": "Ice Storm Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "LNDS_RISKR",
+        "label": "Landslide Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "LTNG_RISKR",
+        "label": "Lightning Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "RFLD_RISKR",
+        "label": "Riverine Flooding Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "SWND_RISKR",
+        "label": "Strong Wind Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "TRND_RISKR",
+        "label": "Tornado Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "TSUN_RISKR",
+        "label": "Tsunami Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "VLCN_RISKR",
+        "label": "Volcanic Activity Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "WFIR_RISKR",
+        "label": "Wildfire Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "WNTW_RISKR",
+        "label": "Winter Weather Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      }
+    ]
+  },
+  {
+    "collection":"risk_tract",
+    "subGroup": "National Risk Index",
+    "level": "tract",
+    "info": "In the National Risk Index, risk is defined as the potential for negative impacts as a result of a natural hazard. It ranges from 0 (lowest risk) to 100 (highest risk).",
+    "color":{
+      "style": "sequential",
+      "variable": "RISK_RATNG",
+      "map":{
+        "Very High": "#c7445d",
+        "Relatively High": "#e07069",
+        "Relatively Moderate": "#f0d55d",
+        "Relatively Low": "#509bc7",
+        "Very Low": "#4d6dbd"
+      },
+      "opacity": 0.5,
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "RISK_RATNG",
+        "label": "Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "SOVI_RATNG",
+        "label": "Social Vulnerability Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "RESL_RATNG",
+        "label": "Community Resilience Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "AVLN_RISKR",
+        "label":"Avalanche Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "CFLD_RISKR",
+        "label": "Coastal Flooding Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "CWAV_RISKR",
+        "label": "Cold Wave Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "DRGT_RISKR",
+        "label": "Drought Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "ERQK_RISKR",
+        "label": "Earthquake Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "HAIL_RISKR",
+        "label": "Hail Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "HWAV_RISKR",
+        "label": "Heatwave Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "HRCN_RISKR",
+        "label": "Hurricane Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "ISTM_RISKR",
+        "label": "Ice Storm Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "LNDS_RISKR",
+        "label": "Landslide Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "LTNG_RISKR",
+        "label": "Lightning Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "RFLD_RISKR",
+        "label": "Riverine Flooding Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "SWND_RISKR",
+        "label": "Strong Wind Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "TRND_RISKR",
+        "label": "Tornado Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "TSUN_RISKR",
+        "label": "Tsunami Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "VLCN_RISKR",
+        "label": "Volcanic Activity Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "WFIR_RISKR",
+        "label": "Wildfire Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      },
+      {
+        "name": "WNTW_RISKR",
+        "label": "Winter Weather Risk Rating",
+        "selectToRangeMap": {
+          "Very High": 4,
+          "Relatively High": 3,
+          "Relatively Moderate": 2,
+          "Relatively Low": 1,
+          "Very Low": 0
+        }
+      }
+    ]
+  },
+  {
+    "collection": "tract_proximity",
+    "label": "Tract Proximity",
+    "subGroup": "Proximity",
+    "level": "tract",
+    "color": "#4682B4",
+    "fieldMetadata": [
+        {
+          "name": "nearest_hospital",
+          "label": "Nearest Hospital (mi)",
+          "min": 0,
+          "max": 30,
+          "type": "range",
+          "step": 0.5,
+          "unit": "miles",
+          "plus": true
+        },
+        {
+          "name": "nearest_fire_station",
+          "label": "Nearest Fire Station (mi)",
+          "min": 0,
+          "max": 30,
+          "type": "range",
+          "step": 0.5,
+          "unit": "miles",
+          "plus": true
+        },
+        {
+          "name": "nearest_public_school",
+          "label": "Nearest Public School (mi)",
+          "min": 0,
+          "max": 30,
+          "type": "range",
+          "step": 0.5,
+          "unit": "miles",
+          "plus": true
+        },
+        {
+          "name": "nearest_electrical_substation",
+          "label": "Nearest Electrical Substation (mi)",
+          "min": 0,
+          "max": 30,
+          "type": "range",
+          "step": 0.5,
+          "unit": "miles",
+          "plus": true
+        },
+        {
+          "name": "nearest_power_plant",
+          "label": "Nearest Power Plant (mi)",
+          "min": 0,
+          "max": 30,
+          "type": "range",
+          "step": 0.5,
+          "unit": "miles",
+          "plus": true
+        }
+    ]
+  }
+]

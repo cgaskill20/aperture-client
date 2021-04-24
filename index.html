@@ -1,33 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <link rel="shortcut icon" href="#" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="src/dependencies/style.css">
-    <script src='src/dependencies/controller.js'></script>
-    <script src='src/dependencies/pipe.js'></script>
-    <script src="src/dependencies/index.html.js"></script>
-
     <title>Aperture</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin="" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
-    <div class="mapContainer" style="padding: 0px">
-        
-       <!--<div id="mMap1" style="height: 50%; width:50%; float:left">
-            <iframe src="src/iframe/map1.html"></iframe>
-        </div>-->
-        <div id="mMap2" style="height: 100%; width:100%; float:right">
-            <iframe src="src/iframe/map2.html"></iframe>
+    <div class="leaflet-bottom leaflet-right"></div>
+    <div id="sidebar-id" class="sidebar colorMode1">
+        <div class="container ui-control">
+            <div class="row justify-content-md-center">
+                <div class="col-lg FOR_GRID_ONLY"></div>
+                <div class = "nav-group col-lg-auto">
+                    <div class="btn-group" id="nav-group-id" role="group" aria-label="Basic example">
+                      <button type="button" id='nav-graph-button' class="btn btn-outline-dark color-change">Graphing</button>
+                      <button type="button" id='nav-data-exploration-button' class="btn btn-outline-dark color-change">Data Exploration</button>
+                      <button type="button" id='nav-modeling-button' class="btn btn-outline-dark color-change">Modeling</button>
+                      <button type="button" id='nav-validation-button' class="btn btn-outline-dark color-change disabled">Validation</button>
+                      <button type="button" id='nav-close-button' class="btn btn-outline-dark color-change">Close</button>
+                    </div>
+                </div>
+                <div class="dark-mode-control col-lg">
+                    <div class="theme-switch-wrapper">
+                        <label class="theme-switch" for="checkbox">
+                            <input type="checkbox" id="checkbox" />
+                            <div class="slider round"></div>
+                        </label>
+                        <img class="moon-icon" src="./images/Moon_Black.png">
+                    </div>
+                </div>
+            </div>
         </div>
-        <!--
-		<div id="mMap3" style="height: 50%; width:50%; float:left">
-            <iframe src="src/iframe/map3.html"></iframe>
+        <div id="sidebar-container"></div>
+        <div id="model-container"></div>
+    </div>
+    <div id="main">
+      <button class="btn btn-outline-dark-custom" id='nav-menu-button'>☰ Menu</button>
+    </div>
+    <div id="preloadBlocker">
+        <div id="preloadStatus">
+            
         </div>
-		<div id="mMap4" style="height: 50%; width:50%; float:left">
-            <iframe src="src/iframe/map4.html"></iframe>
-        </div>-->
-	</div>
-	<div class="tiles-loading"></div>
+    </div>
+    <div id="map" class="sidebar-map"></div>
+    <div id='map2' class='map'></div>
+    
+    <div id="clusterLegendContainer">
+      <div id="clusterLegend"></div>
+    </div>
+
+    <div id="dataExplorationOverlay">
+        <div id="query-block-container">
+
+        </div>
+    </div>
+
+
+    <!-- Frame JS, Load Last! -->
+    <!--Required for this map to be controlled-->
+    <script src="dist/bundle.js"></script>
 </body>
-</html>
