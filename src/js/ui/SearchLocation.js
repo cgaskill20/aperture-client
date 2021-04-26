@@ -20,24 +20,23 @@ async function geocode(search) {
     });
 }
 
+async function search(searchFor, map) {
+    if (searchFor.length) {
+        //my proudest lines :)
+        const addrRes = await geocode(searchFor);
+        const { xmin, xmax, ymin, ymax } = addrRes?.candidates[0]?.extent;
+        xmin && map.flyToBounds(L.latLngBounds(L.latLng(ymin, xmin), L.latLng(ymax, xmax)));
+    }
+}
+
 export default function SearchLocation(props) {
     const locationSearchRef = useRef(null);
     return <InputGroup>
         <InputGroupAddon addonType="prepend">
-            <Button onClick={async () => {
-                const search = locationSearchRef.current.value;
-                if (search.length) {
-                    const addrRes = await geocode(search);
-                    console.log(addrRes)
-                    const { xmin, xmax, ymin, ymax } = addrRes.candidates[0].extent;
-                    props.map.flyToBounds(L.latLngBounds(L.latLng(ymin, xmin),L.latLng(ymax, xmax)));
-                    
-                }
-            }
-            }>
+            <Button onClick={() => {search(locationSearchRef.current.value, props.map)}}>
                 🔍
             </Button>
         </InputGroupAddon>
-        <Input innerRef={locationSearchRef} placeholder="Search for a location..." />
+        <Input innerRef={locationSearchRef} placeholder="Search for a location..." onKeyPress={(e) => e.key === 'Enter' && search(locationSearchRef.current.value, props.map)}/>
     </InputGroup>;
 }
