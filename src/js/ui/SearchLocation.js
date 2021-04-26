@@ -3,7 +3,7 @@ import { InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reac
 import currentLocationIcon from '../../../images/current-location.svg';
 import L from 'leaflet';
 
-export function goToLocation(pos, map) {
+function goToLocation(pos, map) {
     map.flyTo({
         lat: pos.latitude,
         lng: pos.longitude
@@ -29,14 +29,37 @@ async function search(searchFor, map) {
     }
 }
 
+function goHome(){
+    return new Promise(resolve => {
+        navigator.geolocation.getCurrentPosition(pos => { 
+            goToLocation(pos.coords, map) 
+            resolve(true)
+        }, 
+        err => { 
+            resolve(false)
+        });
+    });
+}
+
+function renderGoHome(){
+    return <Button color="white" style={{
+        marginBottom: "7.5px"
+    }} onClick={goHome}>
+        🏠
+    </Button>;
+}
+
 export default function SearchLocation(props) {
     const locationSearchRef = useRef(null);
-    return <InputGroup>
-        <InputGroupAddon addonType="prepend">
-            <Button onClick={() => {search(locationSearchRef.current.value, props.map)}}>
-                🔍
-            </Button>
-        </InputGroupAddon>
-        <Input innerRef={locationSearchRef} placeholder="Search for a location..." onKeyPress={(e) => e.key === 'Enter' && search(locationSearchRef.current.value, props.map)}/>
-    </InputGroup>;
+    return <div>
+        {renderGoHome()}
+        <InputGroup>
+            <InputGroupAddon addonType="prepend">
+                <Button onClick={() => { search(locationSearchRef.current.value, props.map) }}>
+                    🔍
+                </Button>
+            </InputGroupAddon>
+            <Input innerRef={locationSearchRef} placeholder="Search for a location..." onKeyPress={(e) => e.key === 'Enter' && search(locationSearchRef.current.value, props.map)} />
+        </InputGroup>
+    </div>;
 }

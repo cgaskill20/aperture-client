@@ -34,7 +34,7 @@ import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";
 import MenuGenerator, { updateLayers } from "./src/js/ui/menuGenerator.js";
 import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
-import SearchLocation, { goToLocation } from "/src/js/ui/SearchLocation"
+import SearchLocation from "/src/js/ui/SearchLocation"
 
 
 //idek what to do with theses files, things break if I try to make them import specific things
@@ -87,7 +87,6 @@ const map = L.map('map2', {
 });
 window.map = map;
 map.setView([40.573733, -105.086559], 11);
-navigator.geolocation.getCurrentPosition(pos => { goToLocation(pos.coords, map) }, err => { console.error(err) });
 
 L.control.layers(baseMaps).addTo(map);
 standardTiles.addTo(map);
