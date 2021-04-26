@@ -117,7 +117,10 @@ body {
 }
 
 .currentLocationButton{
-  
+  background-color: white;
+  margin-bottom: 7.5px;
+  float: right;
+  border: 1px solid #ced4da !important;
 }
 
 .currentLocationButton .icon{

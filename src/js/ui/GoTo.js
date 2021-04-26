@@ -1,6 +1,5 @@
 import React, { Component, useEffect, useRef, useState } from 'react';
 import { InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reactstrap';
-import currentLocationIcon from '../../../images/current-location.svg';
 import L from 'leaflet';
 
 function goToLocation(pos, map) {
@@ -43,12 +42,7 @@ async function goHome() {
 
 function renderGoHome(locationPerms) {
     if (locationPerms) {
-        return <Button outline color="white" style={{
-            backgroundColor: "white",
-            marginBottom: "7.5px",
-            float: "right",
-            border: "1px solid #ced4da"
-        }} onClick={goHome}>
+        return <Button outline color="white" className="currentLocationButton" onClick={goHome}>
             🏠
         </Button>;
     }
