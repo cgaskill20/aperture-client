@@ -34,7 +34,7 @@ import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";
 import MenuGenerator, { updateLayers } from "./src/js/ui/menuGenerator.js";
 import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
-import GoTo from "/src/js/ui/GoTo"
+import GoTo from "./src/js/ui/GoTo"
 
 
 //idek what to do with theses files, things break if I try to make them import specific things
