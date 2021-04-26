@@ -111,7 +111,7 @@ body {
 
 .current-location{
   position: absolute;
-  top: 150px;
+  top: 140px;
   right: 10px;
   z-index: 800;
 }

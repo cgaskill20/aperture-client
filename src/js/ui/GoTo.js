@@ -29,37 +29,50 @@ async function search(searchFor, map) {
     }
 }
 
-function goHome(){
+async function goHome() {
     return new Promise(resolve => {
-        navigator.geolocation.getCurrentPosition(pos => { 
-            goToLocation(pos.coords, map) 
+        navigator.geolocation.getCurrentPosition(pos => {
+            goToLocation(pos.coords, map)
             resolve(true)
-        }, 
-        err => { 
-            resolve(false)
-        });
+        },
+            err => {
+                resolve(false)
+            });
     });
 }
 
-function renderGoHome(){
-    return <Button color="white" style={{
-        marginBottom: "7.5px"
-    }} onClick={goHome}>
-        🏠
-    </Button>;
+function renderGoHome(locationPerms) {
+    if (locationPerms) {
+        return <Button outline color="white" style={{
+            backgroundColor: "white",
+            marginBottom: "7.5px",
+            float: "right",
+            border: "1px solid #ced4da"
+        }} onClick={goHome}>
+            🏠
+        </Button>;
+    }
 }
 
 export default function SearchLocation(props) {
     const locationSearchRef = useRef(null);
+    const [locationPerms, setLocationPerms] = useState(false);
+    useEffect(() => {
+        goHome().then(res => { setLocationPerms(res) })
+    }, []);
     return <div>
-        {renderGoHome()}
+        {renderGoHome(locationPerms)}
         <InputGroup>
             <InputGroupAddon addonType="prepend">
                 <Button onClick={() => { search(locationSearchRef.current.value, props.map) }}>
                     🔍
                 </Button>
             </InputGroupAddon>
-            <Input innerRef={locationSearchRef} placeholder="Search for a location..." onKeyPress={(e) => e.key === 'Enter' && search(locationSearchRef.current.value, props.map)} />
+            <Input 
+                innerRef={locationSearchRef} 
+                placeholder="Search for a location..." 
+                onKeyPress={(e) => e.key === 'Enter' && search(locationSearchRef.current.value, props.map)} 
+            />
         </InputGroup>
     </div>;
 }
