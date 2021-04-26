@@ -19,12 +19,16 @@ async function geocode(search) {
     });
 }
 
+let prevSearch = null;
+let prevMapLoc = null;
 async function search(searchFor, map) {
-    if (searchFor.length) {
-        //my proudest lines :)
+    const mapCenter = JSON.stringify(map.getCenter());
+    if (searchFor.length && (searchFor !== prevSearch || mapCenter !== prevMapLoc)) {
+        prevSearch = searchFor;
         const addrRes = await geocode(searchFor);
         const { xmin, xmax, ymin, ymax } = addrRes?.candidates[0]?.extent;
         xmin && map.flyToBounds(L.latLngBounds(L.latLng(ymin, xmin), L.latLng(ymax, xmax)));
+        prevMapLoc = mapCenter;
     }
 }
 
