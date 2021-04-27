@@ -62,6 +62,11 @@ END OF TERMS AND CONDITIONS
 export default class resizable {
     static minimum_width = 500;
     static minimum_height = 100;
+
+    // Used to prevent the resizable from falling off-screen due to viewport resizing.
+    // If only this many pixels are on-screen at once in a given direction, push
+    // the resizable back into the viewport.
+    static offscreen_tolerance = 500
     // Allows us to add listeners to the unique overlays
     static numOfInstances = 0;
     // Each time a overlay is clicked its Z Index increases so it is seen above all other overlays
@@ -77,6 +82,7 @@ export default class resizable {
         this.isResizing = false;
         this.createOverlay();
         this.resizeListeners();
+        this.viewportResizeListeners();
         this.movementListeners();
     }
     /**
@@ -170,6 +176,29 @@ export default class resizable {
             });
         });
     }
+
+    /**
+     * Adds in listeners for viewport (i.e. browser window events), so that the
+     * resizable box stays within the viewport if it's being shrunk
+     * @memberof resizable
+     * @method viewportResizeListeners()
+     */
+    viewportResizeListeners() {
+        window.addEventListener('resize', e => {
+            let resizableX = this.overlayDocument.style.left;
+            let resizableY = this.overlayDocument.style.top;
+            resizableX = Number.parseInt(resizableX.substring(0, resizableX.length - 2));
+            resizableY = Number.parseInt(resizableY.substring(0, resizableY.length - 2));
+
+            if (window.innerWidth - resizableX < resizable.offscreen_tolerance) {
+                this.overlayDocument.style.left = window.innerWidth - resizable.offscreen_tolerance + 'px';
+            }
+            if (window.innerHeight - resizableY < resizable.offscreen_tolerance) {
+                this.overlayDocument.style.top = window.innerHeight - resizable.offscreen_tolerance + 'px';
+            }
+        });
+    }
+
     /**
      * Calculates dimensions for resize, only because the resize function needed less lines
      * @memberof resizable
@@ -209,19 +238,23 @@ export default class resizable {
             this.height = (old.height + heightDelta);
         }
 
-        if (this.width > resizable.minimum_width) {
+        let enough_width = this.width > resizable.minimum_width;
+        let enough_height = this.height > resizable.minimum_height;
+
+        if (enough_width) {
             this.overlayDocument.style.width = this.width + 'px';
             this.overlayDocument.style.left = leftOffset + 'px';
         }
 
-        if (this.height > resizable.minimum_height) {
+        if (enough_height) {
             this.overlayDocument.style.height = this.height + 'px';
             this.overlayDocument.style.top = topOffset + 'px';
         }
 
-        if (this.onResizeCallback) {
+        if (enough_width && enough_height && this.onResizeCallback) {
             this.onResizeCallback(this.width, this.height);
         }
+
     }
 
     setResizeCallback(cb) {
