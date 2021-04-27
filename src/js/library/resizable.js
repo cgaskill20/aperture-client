@@ -192,25 +192,31 @@ export default class resizable {
         let widthDelta = current.pageX - old.pageX;
         let heightDelta = current.pageY - old.pageY;
 
-        this.width = old.width + widthDelta;
-        this.height = old.height + heightDelta;
+        let leftOffset = old.x;
+        let topOffset = old.y;
+
+        if (relativeCorner === 'top_left' || relativeCorner === 'bot_left') {
+            this.width = (old.width - widthDelta);
+            leftOffset = (old.x + widthDelta);
+        } else {
+            this.width = (old.width + widthDelta);
+        }
+
+        if (relativeCorner === 'top_right' || relativeCorner === 'top_left') {
+            this.height = (old.height - heightDelta);
+            topOffset = (old.y + heightDelta);
+        } else {
+            this.height = (old.height + heightDelta);
+        }
 
         if (this.width > resizable.minimum_width) {
-            if (relativeCorner === 'top_left' || relativeCorner === 'bot_left') {
-                this.overlayDocument.style.width = (this.width - widthDelta * 2) + 'px';
-                this.overlayDocument.style.left = (old.x + widthDelta) + 'px';
-            } else {
-                this.overlayDocument.style.width = this.width + 'px';
-            }
+            this.overlayDocument.style.width = this.width + 'px';
+            this.overlayDocument.style.left = leftOffset + 'px';
         }
 
         if (this.height > resizable.minimum_height) {
-            if (relativeCorner === 'top_right' || relativeCorner === 'top_left') {
-                this.overlayDocument.style.height = (this.height - heightDelta * 2) + 'px';
-                this.overlayDocument.style.top = (old.y + heightDelta) + 'px';
-            } else {
-                this.overlayDocument.style.height = this.height + 'px';
-            }
+            this.overlayDocument.style.height = this.height + 'px';
+            this.overlayDocument.style.top = topOffset + 'px';
         }
 
         if (this.onResizeCallback) {
