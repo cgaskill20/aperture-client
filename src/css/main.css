@@ -111,14 +111,14 @@ body {
 
 .current-location{
   position: absolute;
-  top: 140px;
+  top: 10px;
   right: 10px;
   z-index: 800;
 }
 
 .currentLocationButton{
   background-color: white;
-  margin-bottom: 7.5px;
+  margin-top: 7.5px;
   float: right;
   border: 1px solid #ced4da !important;
 }

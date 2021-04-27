@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useRef, useState } from 'react';
 import { InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reactstrap';
 import L from 'leaflet';
+import $ from "jquery";
 
 function goToLocation(pos, map) {
     map.flyTo({
@@ -56,10 +57,14 @@ export default function SearchLocation(props) {
     const locationSearchRef = useRef(null);
     const [locationPerms, setLocationPerms] = useState(false);
     useEffect(() => {
-        goHome().then(res => { setLocationPerms(res) })
+        goHome().then(res => { 
+            setLocationPerms(res);
+            if(!res){
+                $(".leaflet-top.leaflet-right").css({ top: '49px' });
+            }
+         })
     }, []);
     return <div>
-        {renderGoHome(locationPerms)}
         <InputGroup>
             <InputGroupAddon addonType="prepend">
                 <Button onClick={() => { search(locationSearchRef.current.value, props.map) }}>
@@ -72,5 +77,6 @@ export default function SearchLocation(props) {
                 onKeyPress={(e) => e.key === 'Enter' && search(locationSearchRef.current.value, props.map)} 
             />
         </InputGroup>
+        {renderGoHome(locationPerms)}
     </div>;
 }
