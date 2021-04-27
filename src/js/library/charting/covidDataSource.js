@@ -59,11 +59,17 @@ import BoundsToGISJOIN from "../boundsToGISJOIN"
 import { sustain_querier } from "../../grpc/GRPC_Querier/grpc_querier"
 import Util from "../apertureUtil"
 
+export const CovidDataSourceFailureType = {
+    OK: 0,
+    ZOOM_TOO_LOW: 1,
+}
+
 export default class CovidDataSource {
     static querier = sustain_querier();
     static defaultType = "cases";
     static defaultDays = 7;
     static queryChangeZoomLevel = 7;
+    static zoomLimit = 9;
 
     // The leaflet map used to determine the viewport bounds.
     constructor(map) {
@@ -93,6 +99,7 @@ export default class CovidDataSource {
             });
 
             stream.on('end', () => {
+                results.failed = CovidDataSourceFailureType.OK;
                 stream.cancel();
                 resolve(results);
             });
@@ -121,25 +128,52 @@ export default class CovidDataSource {
     // Query and return a promise to COVID data for what's in the viewport.
     // Type is the kind of data to query - either "cases" or "deaths".
     // daysWindowDays is the size of the moving average window in days.
-    async get(type = CovidDataSource.defaultType, daysWindowSize = CovidDataSource.defaultDays) {
+    async get(type = CovidDataSource.defaultType, daysWindowSize = CovidDataSource.defaultDays, mapZoom) {
         let counties = await this.getCounties([ "NAMELSAD10" ]);
+
+        // Refuse to query if too zoomed out
+        if (mapZoom < CovidDataSource.zoomLimit) {
+            return {
+                failed: CovidDataSourceFailureType.ZOOM_TOO_LOW,
+            };
+        }
+
+        this.cancelCurrentStream();
         
-        let stream = CovidDataSource.querier.executeSlidingWindowQuery(JSON.stringify({
+        this.setCurrentStream(CovidDataSource.querier.executeSlidingWindowQuery(JSON.stringify({
             gisJoins: counties.map(c => c.GISJOIN),
             collection: "covid_county_formatted",
             feature: type,
             days: daysWindowSize
-        }));
+        })));
 
         let averagesTransform = r => { 
-            return { 
-                data: JSON.parse(r.movingAverages[0]).movingAverages, 
-                GISJOIN: r.gisJoin, 
-                name: counties.find(c => c.GISJOIN === r.gisJoin).NAMELSAD10
-            };
+            try { 
+                return { 
+                    data: JSON.parse(r.movingAverages[0]).movingAverages, 
+                    GISJOIN: r.gisJoin, 
+                    name: counties.find(c => c.GISJOIN === r.gisJoin).NAMELSAD10
+                };
+            // Sometimes data fails to deserialize for some reason...
+            // Not much we can do about it on the client.
+            } catch (e) {
+            }
         };
 
-        return this.getStreamResults(stream, averagesTransform, 'getJson');
+        return this.getStreamResults(this.currentStream, averagesTransform, 'getJson');
+    }
+
+    cancelCurrentStream() {
+        this.needsCancel = true;
+        if (this.currentStream) {
+            this.currentStream.cancel();
+            this.currentStream = undefined;
+        }
+    }
+
+    setCurrentStream(stream) {
+        this.currentStream = stream;
+        this.needsCancel = false;
     }
 
     updateSupplement() { }

@@ -63,6 +63,8 @@ export default class LineGraph extends Chart {
         super([]);
         this.mouseInGraph = false;
         this.changeTitle("COVID Cases by County");
+        this.defaultSubtitleParameters = ["Over a 7 day sliding average", "#666"];
+        this.changeSubtitle(...this.defaultSubtitleParameters);
     }
 
     rerender(width, height, viewIndex) {
@@ -114,22 +116,35 @@ export default class LineGraph extends Chart {
 
         view.svg.select("text#title")
             .attr("x", width / 2)
-            .attr("y", 12)
-            .attr("text-anchor", "middle")
             .text(this.title);
+
+        view.svg.select("text#subtitle")
+            .attr("x", width / 2)
+            .attr("fill", this.subtitleColor)
+            .text(this.subtitle);
     }
 
     changeTitle(title) {
         this.title = title;
     }
+
+    changeSubtitle(st, color) {
+        this.subtitle = st;
+        this.subtitleColor = color;
+    }
     
     changeData(data) {
-        this.data = data.map(entry => { 
-            return { data: entry.data.map(d => { 
-                return { value: this.clamp(d.avg), date: d.date.$date };
-            }), gisJoin: entry.GISJOIN, name: entry.name };
-        });
-        this.rerenderAllViews();
+        if (data.failed) {
+            this.changeSubtitle("! We can't query at this zoom level; please zoom in", "#f00");
+        } else {
+            this.changeSubtitle(...this.defaultSubtitleParameters);
+            this.data = data.filter(entry => entry).map(entry => { 
+                return { data: entry.data.map(d => { 
+                    return { value: this.clamp(d.avg), date: d.date.$date };
+                }), gisJoin: entry.GISJOIN, name: entry.name };
+            });
+            this.rerenderAllViews();
+        }
     }
 
     clamp(n) {
@@ -157,8 +172,15 @@ export default class LineGraph extends Chart {
             .attr("stroke-width", 1.5)
             .attr("stroke-linejoin", "round")
             .attr("stroke-linecap", "round");
-        view.svg.append("text").attr("id", "title");
+        view.svg.append("text").attr("id", "title")
+            .attr("y", 12)
+            .attr("text-anchor", "middle");
         view.svg.append("text").attr("id", "marker");
+        view.svg.append("text").attr("id", "subtitle")
+            .attr("y", 24)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "0.7em")
+            .attr("fill", "#666")
 
         view.svg.on('mouseenter', event => {
             this.mouseInGraph = true;

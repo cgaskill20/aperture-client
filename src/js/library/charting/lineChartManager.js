@@ -112,6 +112,6 @@ export default class LineChartManager {
     }
 
     getSourceParameters() {
-        return [this.wantsType, this.wantsWindowSize];
+        return [this.wantsType, this.wantsWindowSize, this.chartSystem.map.getZoom()];
     }
 }
