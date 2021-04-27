@@ -108,15 +108,41 @@ export default class resizable {
         boxDocument.id = "box" + this.uniqueId;
         boxDocument.className = "box";
 
-        // This is the button in the top right that allows the div's size to be altered
-        const boxResizer = document.createElement("div");
-        this.boxResizer = boxResizer;
-        boxResizer.id = "option" + this.uniqueId;
-        boxResizer.className = "option top-right";
+        this.boxResizers = this.makeResizers();
 
-        overlayDocument.appendChild(boxResizer);
+        Object.values(this.boxResizers).forEach(boxResizer => overlayDocument.appendChild(boxResizer));
         overlayDocument.appendChild(boxDocument);
         document.body.appendChild(overlayDocument);
+    }
+
+    /**
+     * Creates four resizer elements in the four corners of the box document.
+     * @memberof resizable
+     * @method makeResizers
+     * @returns {object} An object with "top-right", "bot-right", "top-left", and "bot-left"
+     * properties containing resizer elements
+     */
+    makeResizers() {
+        let resizers = {};
+        resizers.top_right = this.makeResizer("top-right");
+        resizers.top_left = this.makeResizer("top-left");
+        resizers.bot_right = this.makeResizer("bot-right");
+        resizers.bot_left = this.makeResizer("bot-left");
+        return resizers;
+    }
+
+    /**
+     * Creates a single resizable element with the given additional CSS class.
+     * @memberof resizable
+     * @method makeResizer
+     * @param {string} _class The name of the class to add
+     * @returns {DOMElement} The element for the resizable
+     */
+    makeResizer(_class) {
+        let resizer = document.createElement("div");
+        resizer.id = "option" + this.uniqueId;
+        resizer.className = "option " + _class;
+        return resizer;
     }
 
     /**
@@ -126,23 +152,27 @@ export default class resizable {
      * @returns 3 listeners for mousemovement
      */
     resizeListeners(){
-        this.boxResizer.addEventListener('mousedown', (e) => {
-            /**
-             * Since there are the same listeners for resizing and movement we need these booleans so that resizing does
-             * not also move the div around and vice-versa
-             */
-            this.isDown = true;
-            this.isResizing = true;
-            e.preventDefault();
-            let dimensions = this.calculateDimensions(e);
-            window.addEventListener('mousemove', (e) =>{
-                if(this.isDown && this.isResizing){
-                    this.changeBoxSize(e, dimensions);
-                }
-            });
-            window.addEventListener('mouseup', ()=>{
-                this.isDown = false;
-                this.isResizing = false;
+        Object.entries(this.boxResizers).forEach(r => {
+            let corner = r[0];
+            let boxResizable = r[1];
+            boxResizable.addEventListener('mousedown', (e) => {
+                /**
+                 * Since there are the same listeners for resizing and movement we need these booleans so that resizing does
+                 * not also move the div around and vice-versa
+                 */
+                this.isDown = true;
+                this.isResizing = true;
+                e.preventDefault();
+                let dimensions = this.calculateDimensions(e);
+                window.onmousemove = e => {
+                    if(this.isDown && this.isResizing){
+                        this.recomputeDimensionsAndResize(e, dimensions, corner);
+                    }
+                };
+                window.onmouseup = () => {
+                    this.isDown = false;
+                    this.isResizing = false;
+                };
             });
         });
     }
@@ -177,38 +207,57 @@ export default class resizable {
      * @returns 4 listeners for mousemovement
      */
     calculateDimensions(e){
-        let dimensions = [];
-        //Calculates the width
-        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('width').replace('px', '')));
-        // Calculates the height
-        dimensions.push(parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('height').replace('px', '')));
-        // Calculates the Y coordinate
-        dimensions.push(this.overlayDocument.getBoundingClientRect().top);
-        // Calculates the mouse X and Y coordinate
-        dimensions.push(e.pageX);
-        dimensions.push(e.pageY);
+        let dimensions = {};
+        dimensions.width = parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('width').replace('px', ''));
+        dimensions.height = parseFloat(getComputedStyle(this.overlayDocument, null).getPropertyValue('height').replace('px', ''));
+        dimensions.y = this.overlayDocument.getBoundingClientRect().top;
+        dimensions.x = this.overlayDocument.getBoundingClientRect().left;
+        dimensions.pageX = e.pageX;
+        dimensions.pageY = e.pageY;
         return dimensions;
     }
 
-    changeBoxSize(e, dimensions){
-        this.width = dimensions[0] + (e.pageX - dimensions[3]);
-        this.height = dimensions[1] - (e.pageY - dimensions[4]);
+    recomputeDimensionsAndResize(current, old, relativeCorner){
+        let widthDelta = current.pageX - old.pageX;
+        let heightDelta = current.pageY - old.pageY;
 
+        let leftOffset = old.x;
+        let topOffset = old.y;
+
+        if (relativeCorner === 'top_left' || relativeCorner === 'bot_left') {
+            this.width = (old.width - widthDelta);
+            leftOffset = (old.x + widthDelta);
+        } else {
+            this.width = (old.width + widthDelta);
+        }
+
+        if (relativeCorner === 'top_right' || relativeCorner === 'top_left') {
+            this.height = (old.height - heightDelta);
+            topOffset = (old.y + heightDelta);
+        } else {
+            this.height = (old.height + heightDelta);
+        }
+
+        this.resizeBox(topOffset, leftOffset);
+    }
+
+    resizeBox(topOffset, leftOffset) {
         let enough_width = this.width > resizable.minimum_width;
         let enough_height = this.height > resizable.minimum_height;
 
         if (enough_width) {
             this.overlayDocument.style.width = this.width + 'px';
+            this.overlayDocument.style.left = leftOffset + 'px';
         }
+
         if (enough_height) {
             this.overlayDocument.style.height = this.height + 'px';
-            this.overlayDocument.style.top = dimensions[2] + (e.pageY - dimensions[4]) + 'px';
+            this.overlayDocument.style.top = topOffset + 'px';
         }
 
         if (enough_width && enough_height && this.onResizeCallback) {
             this.onResizeCallback(this.width, this.height);
         }
-
     }
 
     setResizeCallback(cb) {
