@@ -55,116 +55,76 @@ END OF TERMS AND CONDITIONS
 
 */
 
-import Scatterplot from "./scatterplot";
-import Feature from "./feature";
-import { DataSourceType } from "./chartSystem";
-import { FeatureChartMessageType } from "./featureChartMessageType";
-
-export default class ScatterplotManager {
-    constructor(catalog, chartArea, validFeatureManager, chartSystem) {
-        this.catalog = catalog;
-        this.chartArea = chartArea;
-        this.scatterplot = new Scatterplot();
-        this.chartArea.addChart(this.scatterplot);
-    
-        this.featureManager = validFeatureManager;
-        this.currentFeatures = {};
-
-        this.system = chartSystem;
-
-        this.chartArea.setChangeAxisButtonCallbacks(
-            () => { this.axisButtonCallback("x"); },
-            () => { this.axisButtonCallback("y"); }
-        );
+export default class ControlDropdown {
+    constructor(frame, title) {
+        this.chartControlButtonGroup = this.createChartControlButtonGroup();
+        let chartDropdown = this.createDropdown(frame, title);
+        this.chartControlButtonGroup.appendChild(chartDropdown);
     }
 
-    changeFeature(axis, feature) {
-        this.currentFeatures[axis] = feature;
-        DataSourceType.MAP_FEATURES.sourceInstance.get().then((values) => {
-            this.update(values);
-        });
+    getDOMNode() {
+        return this.chartControlButtonGroup;
     }
 
-    axisButtonCallback(axis, direction) {
-        this.currentFeatures[axis] = this.nextValidFeatureForAxis(axis, direction);
-        DataSourceType.MAP_FEATURES.sourceInstance.get().then((values) => {
-            this.update(values);
-        });
+    createChartControlButtonGroup() {
+        let chartControlButtonGroup = document.createElement("div");
+        chartControlButtonGroup.className = "btn-group chart-control-button";
+        chartControlButtonGroup.setAttribute("role", "group");
+        return chartControlButtonGroup;
     }
 
-    nextValidFeatureForAxis(axis, direction) {
-        let ignore = [];
-        for (let axisToIgnore in this.currentFeatures) {
-            if (axisToIgnore !== axis) {
-                ignore.push(this.currentFeatures[axisToIgnore]);
-            }
-        }
-        return this.featureManager.getNextFeature(this.currentFeatures[axis], ignore, direction);
+    createDropdown(chart, title) {
+        let chartDropdown = this.createChartDropdown();
+        let dropdownButton = this.createDropdownButton(title);
+        this.dropdownMenu = this.createDropdownMenu();
+
+        chartDropdown.appendChild(dropdownButton);
+        chartDropdown.appendChild(this.dropdownMenu);
+
+        $(function () {
+            $('[data-toggle="dropdown"]').dropdown()
+        })
+
+        return chartDropdown;
     }
 
-    cycleAxis(axis, direction) {
-        this.axisButtonCallback(axis, direction);
-    }
-    
-    update(values) {
-        let shouldUpdate = this.featureManager.enoughFeaturesExist(2);
-
-        if (shouldUpdate) {
-            this.chartArea.scatterplot.unhide(0)
-            if (!this.currentFeatures.x) {
-                this.currentFeatures.x = this.featureManager.getAnyFeature();
-            }
-            if (!this.currentFeatures.y) {
-                this.currentFeatures.y = this.featureManager.getAnyFeature();
-            }
-            this.scatterplot.changeData(this.prepareData(values));
-        } else {
-            this.chartArea.scatterplot.hide(0)
-        }
+    createChartDropdown() {
+        let chartDropdown = document.createElement("div");
+        chartDropdown.className = "btn-group";
+        chartDropdown.setAttribute("role", "group");
+        return chartDropdown;
     }
 
-    passMessage(message) {
-        switch (message.type) {
-            case FeatureChartMessageType.CYCLE_AXIS: {
-                this.cycleAxis(message.axis, message.direction);
-                break;
-            } case FeatureChartMessageType.SET_AXIS: {
-                this.changeFeature(message.axis, message.feature);
-                break;
-            }
-        }
+    createDropdownButton(title) {
+        let dropdownButton = document.createElement("button");
+        dropdownButton.id = "drop-it-down";
+        dropdownButton.type = "button";
+        dropdownButton.className = "btn btn-outline-dark dropdown-toggle";
+        dropdownButton.setAttribute("data-toggle", "dropdown");
+        dropdownButton.setAttribute("aria-haspopup", "true");
+        dropdownButton.setAttribute("aria-expanded", "false");
+        dropdownButton.innerText = title;
+        return dropdownButton;
     }
 
-    prepareData(values) {
-        let data = [];
-        let xfeat = values[this.currentFeatures.x];
-        let yfeat = values[this.currentFeatures.y];
-        let shorterFeature = (xfeat.length > yfeat.length) ? yfeat : xfeat; 
+    createDropdownMenu() {
+        let dropdownMenu = document.createElement("div");
+        dropdownMenu.className = "dropdown-menu";
+        dropdownMenu.setAttribute("aria-labelledby", "drop-it-down");
+        return dropdownMenu;
+    }
 
-        if (shorterFeature.length === 0 || xfeat[0].type !== yfeat[0].type) {
-            return [];
+    setOptions(options) {
+        while (this.dropdownMenu.firstChild) {
+            this.dropdownMenu.removeChild(this.dropdownMenu.firstChild);
         }
 
-        let joins = shorterFeature.map(d => d.GISJOIN);
-        joins.forEach(gisjoin => {
-            let xEntry = xfeat.find(d => d.GISJOIN === gisjoin);
-            let yEntry = yfeat.find(d => d.GISJOIN === gisjoin);
-            
-            if (xEntry && yEntry) {
-                data.push({
-                    x: xEntry.data,
-                    y: yEntry.data,
-                });
-            }
-        });
-
-        data.x = Feature.getFriendlyName(this.currentFeatures.x);
-        data.y = Feature.getFriendlyName(this.currentFeatures.y);
-
-        return data;
-    }
-
-    getSourceParameters() {
-        return [];
+        for (let option of options) {
+            let dropdownItem = document.createElement("a");
+            dropdownItem.className = "dropdown-item dropdown-menu-item-custom";
+            dropdownItem.onclick = option.onclick
+            dropdownItem.innerText = option.name;
+            this.dropdownMenu.appendChild(dropdownItem);
+        }
     }
 }

@@ -27,8 +27,8 @@ export default {
         return {};
     },
 
-    boundsToGISJOINS: function (bounds) {
-        const geohashes = this.boundsToLengthNGeohashes(bounds);
+    boundsToGISJOINS: function (bounds, blacklist) {
+        const geohashes = this.boundsToLengthNGeohashes(bounds, blacklist);
         const datasource = this.buckets;
         if (datasource)
             return this.geohashesToGISJOINS(geohashes, datasource);

@@ -55,116 +55,34 @@ END OF TERMS AND CONDITIONS
 
 */
 
-import Scatterplot from "./scatterplot";
-import Feature from "./feature";
-import { DataSourceType } from "./chartSystem";
-import { FeatureChartMessageType } from "./featureChartMessageType";
+import ControlDropdown from "./controlDropdown"
+import { FeatureChartMessageType } from "./featureChartMessageType"
 
-export default class ScatterplotManager {
-    constructor(catalog, chartArea, validFeatureManager, chartSystem) {
-        this.catalog = catalog;
-        this.chartArea = chartArea;
-        this.scatterplot = new Scatterplot();
-        this.chartArea.addChart(this.scatterplot);
-    
-        this.featureManager = validFeatureManager;
-        this.currentFeatures = {};
+export default class FeatureDropdown extends ControlDropdown {
+    constructor(frame, title, axis) {
+        super(frame, title);
 
-        this.system = chartSystem;
+        this.axis = axis;
 
-        this.chartArea.setChangeAxisButtonCallbacks(
-            () => { this.axisButtonCallback("x"); },
-            () => { this.axisButtonCallback("y"); }
-        );
+        let leftToggle = this.createSideToggle(frame, axis, '<');
+        let rightToggle = this.createSideToggle(frame, axis, '>');
+        
+        this.chartControlButtonGroup.insertBefore(leftToggle, this.chartControlButtonGroup.firstChild);
+        this.chartControlButtonGroup.appendChild(rightToggle);
     }
 
-    changeFeature(axis, feature) {
-        this.currentFeatures[axis] = feature;
-        DataSourceType.MAP_FEATURES.sourceInstance.get().then((values) => {
-            this.update(values);
-        });
+    createSideToggle(chart, axis, arrowDirection) {
+        let sideToggle = document.createElement("button");
+        sideToggle.className = "btn btn-outline-dark";
+        sideToggle.type = "button";
+        sideToggle.innerText = arrowDirection;
+        sideToggle.onclick = arrowDirection === '<' ? 
+            () => { chart.passMessage({ type: FeatureChartMessageType.CYCLE_AXIS, axis: axis, direction: 'previous' }); } : 
+            () => { chart.passMessage({ type: FeatureChartMessageType.CYCLE_AXIS, axis: axis, direction: 'next'}); };
+        return sideToggle;
     }
 
-    axisButtonCallback(axis, direction) {
-        this.currentFeatures[axis] = this.nextValidFeatureForAxis(axis, direction);
-        DataSourceType.MAP_FEATURES.sourceInstance.get().then((values) => {
-            this.update(values);
-        });
-    }
-
-    nextValidFeatureForAxis(axis, direction) {
-        let ignore = [];
-        for (let axisToIgnore in this.currentFeatures) {
-            if (axisToIgnore !== axis) {
-                ignore.push(this.currentFeatures[axisToIgnore]);
-            }
-        }
-        return this.featureManager.getNextFeature(this.currentFeatures[axis], ignore, direction);
-    }
-
-    cycleAxis(axis, direction) {
-        this.axisButtonCallback(axis, direction);
-    }
-    
-    update(values) {
-        let shouldUpdate = this.featureManager.enoughFeaturesExist(2);
-
-        if (shouldUpdate) {
-            this.chartArea.scatterplot.unhide(0)
-            if (!this.currentFeatures.x) {
-                this.currentFeatures.x = this.featureManager.getAnyFeature();
-            }
-            if (!this.currentFeatures.y) {
-                this.currentFeatures.y = this.featureManager.getAnyFeature();
-            }
-            this.scatterplot.changeData(this.prepareData(values));
-        } else {
-            this.chartArea.scatterplot.hide(0)
-        }
-    }
-
-    passMessage(message) {
-        switch (message.type) {
-            case FeatureChartMessageType.CYCLE_AXIS: {
-                this.cycleAxis(message.axis, message.direction);
-                break;
-            } case FeatureChartMessageType.SET_AXIS: {
-                this.changeFeature(message.axis, message.feature);
-                break;
-            }
-        }
-    }
-
-    prepareData(values) {
-        let data = [];
-        let xfeat = values[this.currentFeatures.x];
-        let yfeat = values[this.currentFeatures.y];
-        let shorterFeature = (xfeat.length > yfeat.length) ? yfeat : xfeat; 
-
-        if (shorterFeature.length === 0 || xfeat[0].type !== yfeat[0].type) {
-            return [];
-        }
-
-        let joins = shorterFeature.map(d => d.GISJOIN);
-        joins.forEach(gisjoin => {
-            let xEntry = xfeat.find(d => d.GISJOIN === gisjoin);
-            let yEntry = yfeat.find(d => d.GISJOIN === gisjoin);
-            
-            if (xEntry && yEntry) {
-                data.push({
-                    x: xEntry.data,
-                    y: yEntry.data,
-                });
-            }
-        });
-
-        data.x = Feature.getFriendlyName(this.currentFeatures.x);
-        data.y = Feature.getFriendlyName(this.currentFeatures.y);
-
-        return data;
-    }
-
-    getSourceParameters() {
-        return [];
+    getLinkedAxis() {
+        return this.axis;
     }
 }

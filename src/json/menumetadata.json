@@ -3,6 +3,7 @@
     "collection": "future_heat",
     "label": "Future Heatwaves",
     "level": "county",
+    "subGroup": "Climate",
     "color": {
       "colorCode": "#FF0000",
       "style": "solid"
@@ -26,6 +27,57 @@
     "collection": "tract_median_household_income",
     "label": "Tract Median Household Income",
     "level": "tract",
+    "subGroup": "Income",
+    "color": {
+      "style": "gradient",
+      "variable": "2010_median_household_income",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "2000_median_household_income",
+        "max": 99899.0,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "hideByDefault": true,
+        "plus": true
+      },
+      {
+        "name": "1990_median_household_income",
+        "max": 9982.0,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "hideByDefault": true,
+        "plus": true
+      },
+      {
+        "name": "1980_median_household_income",
+        "max": 9994.0,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "hideByDefault": true,
+        "plus": true
+      },
+      {
+        "name": "2010_median_household_income",
+        "label": "2010 Median Household Income",
+        "min": 2499.0,
+        "max": 100000,
+        "type": "range",
+        "step": 100,
+        "unit": "dollars",
+        "plus": true
+      }
+    ]
+  },
+  {
+    "collection": "county_median_household_income",
+    "label": "County Median Household Income",
+    "level": "county",
+    "subGroup": "Income",
     "color": {
       "style": "gradient",
       "variable": "2010_median_household_income",
@@ -95,14 +147,11 @@
         "label": "Social Vulnerability Index",
         "name": "RPL_THEMES",
         "type": "range",
-        "step": 0.05
+        "step": 0.05,
+        "min": 0,
+        "max": 1
       }
     ]
-  },
-  {
-    "collection": "tract_race",
-    "level": "tract",
-    "label": "Tract Race Distribution"
   },
   {
     "collection": "svi_tract_GISJOIN",
@@ -124,7 +173,9 @@
         "label": "Social Vulnerability Index",
         "name": "RPL_THEMES",
         "type": "range",
-        "step": 0.05
+        "step": 0.05,
+        "min": 0,
+        "max": 1
       }
     ]
   },
@@ -132,6 +183,42 @@
     "collection": "tract_median_age",
     "label": "Median Tract Age",
     "level": "tract",
+    "subGroup": "Age",
+    "color": {
+      "style": "gradient",
+      "gradient": [
+        "#00FF00",
+        "#FF0000"
+      ],
+      "variable": "median_age_total",
+      "border": 1
+    },
+    "fieldMetadata": [
+      {
+        "name": "median_age_female",
+        "type": "range",
+        "min": 6.2,
+        "max": 83.5
+      },
+      {
+        "name": "median_age_male",
+        "type": "range",
+        "min": 3.8,
+        "max": 85.2
+      },
+      {
+        "name": "median_age_total",
+        "type": "range",
+        "min": 5.8,
+        "max": 84.5
+      }
+    ]
+  },
+  {
+    "collection": "county_median_age",
+    "label": "Median County Age",
+    "level": "county",
+    "subGroup": "Age",
     "color": {
       "style": "gradient",
       "gradient": [
@@ -201,6 +288,7 @@
     "collection": "flood_zones_geo",
     "label": "Flood Zone",
     "subGroup": "Floods",
+    "minZoom": 11,
     "color": {
       "style": "sequential",
       "variable": "properties.FLD_ZONE",

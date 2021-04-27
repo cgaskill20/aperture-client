@@ -38,7 +38,7 @@ function createGraphButtonArea() {
 function createGraphButtons(graphButtonArea) {
     let histogramButton = makeGraphButton("histogram-button-id", "Histogram");
     let scatterplotButton = makeGraphButton("scatterplot-button-id", "Scatterplot");
-    let lineGraphButton = makeGraphButton("linegraph-button-id", "Line Graph", true);
+    let lineGraphButton = makeGraphButton("linegraph-button-id", "Line Graph");
     let closeGraphButton = makeCloseButton();
 
     graphButtonArea.appendChild(histogramButton);

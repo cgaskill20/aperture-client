@@ -55,7 +55,8 @@ END OF TERMS AND CONDITIONS
 
 */
 
-import Feature from "./feature";
+import Feature from "./feature"
+import { FeatureChartMessageType } from "./featureChartMessageType"
 
 export default class SingleChartManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
@@ -103,6 +104,22 @@ export default class SingleChartManager {
         } else {
             this.chartArea.hideAll();
         }
+    }
+
+    passMessage(message) {
+        switch (message.type) {
+            case FeatureChartMessageType.CYCLE_AXIS: {
+                this.cycleAxis(message.axis, message.direction);
+                break;
+            } case FeatureChartMessageType.SET_AXIS: {
+                this.changeFeature(message.axis, message.feature);
+                break;
+            }
+        }
+    }
+
+    getSourceParameters() {
+        return [];
     }
 }
 

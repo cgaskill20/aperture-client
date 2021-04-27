@@ -38,7 +38,7 @@ export function createScatterplot() {
 export function createLinegraph() {
     moreGraphsPossible();
 
-    let chart = chartSystem.getChartFrame(ChartingType.LINEGRAPH);
+    let chart = chartSystem.getChartFrame(ChartingType.LINE);
 
     let graphBox = document.createElement("div");
     graphBox.className = "colorMode1 customBorder single-chart-box";
@@ -76,5 +76,5 @@ export function checkNumberOfGraphs() {
 function buttonsOnOff() {
     document.getElementById('histogram-button-id').disabled = maxGraphsReached;
     document.getElementById('scatterplot-button-id').disabled = maxGraphsReached;
-    // document.getElementById('linegraph-button-id').disabled = maxGraphsReached; //FIXME comment in when linegraphs are implemented
+    document.getElementById('linegraph-button-id').disabled = maxGraphsReached;
 }

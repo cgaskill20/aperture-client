@@ -62,30 +62,53 @@ import Histogram from "./histogram";
 import Scatterplot from "./scatterplot";
 import ScatterplotManager from "./scatterplotManager";
 import ScatterplotArea from "./scatterplotArea";
+import LineChartManager from "./lineChartManager";
+import LineChartArea from "./lineChartArea";
 import ValidFeatureManager from "./validFeatureManager";
 import Feature from "./feature";
 import resizable from "../resizable";
 import ChartFrame from "./chartFrame";
-import MapDataFilterWrapper from "../mapDataFilterWrapper"
+import CovidDataSource from "./covidDataSource"
+import MapDataSource from "./mapDataSource"
+
+export const DataSourceType = {
+    MAP_FEATURES: {
+        name: "map_features",
+        sourceType: MapDataSource,
+        sourceInstance: undefined,
+        supplementObjectType: ValidFeatureManager,
+        supplementObjectInstance: undefined,
+    },
+    COUNTY_COVID: {
+        name: "county_covid",
+        sourceType: CovidDataSource,
+        sourceInstance: undefined,
+        supplementObjectType: undefined,
+        supplementObjectInstance: undefined,
+    }
+}
 
 export const ChartingType = {
     LINE: {
         name: "line",
-        managerType: SingleChartManager,
+        managerType: LineChartManager,
         areaType: SingleChartArea,
         chartType: LineGraph,
+        wantsSources: [ DataSourceType.COUNTY_COVID ],
     },
     HISTOGRAM: {
         name: "histogram",
         managerType: SingleChartManager,
         areaType: SingleChartArea,
         chartType: Histogram,
+        wantsSources: [ DataSourceType.MAP_FEATURES ],
     },
     SCATTERPLOT: {
         name: "scatterplot",
         managerType: ScatterplotManager,
         areaType: ScatterplotArea,
         chartType: Scatterplot,
+        wantsSources: [ DataSourceType.MAP_FEATURES ],
     },
 }
 
@@ -95,11 +118,7 @@ export default class ChartSystem {
     constructor(map, chartCatalogFilename) {
         this.map = map;
 
-        this.filter = MapDataFilterWrapper;
-
         this.chartFrames = [];
-
-        this.validFeatureManager = new ValidFeatureManager([]);
 
         this.resizable = new resizable(400, 300, "white");
         this.resizable.setResizeCallback((width, height) => {
@@ -122,10 +141,21 @@ export default class ChartSystem {
                     return Feature.compose(e.collection, kv[0], kv[1].label);
                 })
             }).flat();
+
+            this.createDataSources();
         });
 
         this.doNotUpdate = false;
 
+    }
+
+    createDataSources() {
+        Object.values(DataSourceType).forEach(source => {
+            source.sourceInstance = new source.sourceType(this.map, this.graphable);
+            if (source.supplementObjectType) {
+                source.supplementObjectInstance = new source.supplementObjectType();
+            }
+        });
     }
 
     getChartFrame(type) {
@@ -134,9 +164,8 @@ export default class ChartSystem {
 
         let area = new type.areaType();
         area.attachTo(node);
-        let manager = new type.managerType(this.catalog, area, this.validFeatureManager, this, type.chartType);
-        let frame = new ChartFrame(node, area, manager);
-
+        let manager = new type.managerType(this.catalog, area, type.wantsSources[0].supplementObjectInstance, this, type.chartType);
+        let frame = new ChartFrame(node, area, manager, type);
         this.chartFrames.push(frame);
 
         return frame;
@@ -155,24 +184,20 @@ export default class ChartSystem {
         // TODO: This needs to not suck
         this.resizable.triggerResizeEvent();
 
-        let values = await this.getValues();
-        this.chartFrames.forEach(frame => { frame.manager.update(values); });
+        Object.values(DataSourceType).forEach(async source => {
+            this.chartFrames.forEach(async frame => {
+                if (frame.getChartType().wantsSources.find(wanted => wanted.name === source.name)) {
+                    let sourceParams = frame.manager.getSourceParameters();
+                    frame.manager.update(await source.sourceInstance.get(...sourceParams));
+                    source.sourceInstance.updateSupplement(source.supplementObjectInstance);
+                }
+            });
+        });
 
         this.doNotUpdate = true;
-        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
+        window.setTimeout(() => { this.doNotUpdate = false; }, 2000);
     }
 
-    async getValues() {
-        let values = await this.filter.get(this.graphable, this.map.getBounds());
-
-        // This arcane incantation gets a list of feature names for which there's actually data.
-        // Don't ask.
-        let validFeatures = Object.entries(values).filter(kv => kv[1].length !== 0).map(kv => kv[0]);
-
-        this.validFeatureManager.update(validFeatures);
-
-        return values;
-    }
 
     toggleVisible() {
         this.resizable.toggleVisible();

@@ -13,12 +13,7 @@ import Worker from "./queryWorker.js"
 export default class AutoQuery {
     static queryWorker = new Worker(); //init querier
     static queryWorkerConfiged = false;
-    static minCountyZoom = 7;
-    static minTractZoom = 9;
-    static blockers = {
-        tract: false,
-        county: false
-    }
+    static blockers = {}
     static blockerListener = null;
     /**
       * Constructs the instance of the autoquerier to a specific layer
@@ -60,6 +55,20 @@ export default class AutoQuery {
         this.colorCode = this.buildColorCode(layerData);
 
         this.graphPipeID = graphPipeID;
+
+        this.blockerGroup = this.data.linkedGeometry ?
+            this.linked === "tract_geo_140mb_no_2d_index" ?
+                "tracts" : "counties"
+            : this.data.label ?
+                this.data.label : Util.cleanUpString(this.collection);
+                
+        if(this.blockerGroup.charAt(this.blockerGroup.length-1) !== "s"){
+            this.blockerGroup += "s";
+        }
+
+        this.minZoom = this.data.minZoom;
+        this.blocked = false;
+        AutoQuery.blockers[this.blockerGroup] = 0;
     }
 
     /**
@@ -79,6 +88,12 @@ export default class AutoQuery {
     onRemove() {
         this.clearMapLayers();
         AutoQuery.queryWorker.postMessage({ type: "kill", collection: this.collection });
+
+        const oldBlockers = JSON.stringify(AutoQuery.blockers);
+        AutoQuery.blockers[this.blockerGroup] -= this.blocked;
+        this.blocked = false;
+        this.checkAndDispatch(oldBlockers);
+
         this.layerIDs = [];
         this.enabled = false;
         this.geohashCache = [];
@@ -103,11 +118,11 @@ export default class AutoQuery {
         switch (this.getConstraintType(constraint)) {
             case "slider":
                 const mData = this.getConstraintMetadata(constraint);
-                if (Array.isArray(value)){
+                if (Array.isArray(value)) {
                     for (let i = 0; i < value.length; i++) //change string to number
                         value[i] = Number(value[i]);
-                    if(mData.plus && value[value.length-1] >= mData.range[1] && value[0] > mData.range[0]) //maxed out on upper bound
-                        value[value.length-1] = 2147483647;
+                    if (mData.plus && value[value.length - 1] >= mData.range[1] && value[0] > mData.range[0]) //maxed out on upper bound
+                        value[value.length - 1] = 2147483647;
                 }
                 else
                     value = Number(value);
@@ -238,6 +253,7 @@ export default class AutoQuery {
     bindConstraintsAndQuery(q, forcedGeometry) {
         const sessionID = Math.random().toString(36).substring(2, 6);
         q = q.concat(this.buildConstraintPipeline());
+
         //outputs from query may only be $projected if the data is not GeoJSON
         if (this.linked)
             q.push(this.addMongoProject())
@@ -269,29 +285,20 @@ export default class AutoQuery {
     }
 
     zoomIsValid() {
-        if (this.linked) {
-            const oldBlockers = JSON.stringify(AutoQuery.blockers);
-            const mapZoom = this.map.getZoom();
-            if (this.linked === "tract_geo_140mb_no_2d_index") {
-                if (mapZoom < AutoQuery.minTractZoom) {
-                    AutoQuery.blockers.tract = true;
-                    this.checkAndDispatch(oldBlockers);
-                    return false;
-                }
-                else {
-                    AutoQuery.blockers.tract = false;
-                }
-            }
-            else if (mapZoom < AutoQuery.minCountyZoom) {
-                AutoQuery.blockers.county = true;
-                this.checkAndDispatch(oldBlockers);
-                return false;
-            }
-            else {
-                AutoQuery.blockers.county = false;
-            }
+        const oldBlockers = JSON.stringify(AutoQuery.blockers);
+        const mapZoom = this.map.getZoom();
+        if (mapZoom < this.minZoom) {
+            AutoQuery.blockers[this.blockerGroup] += !this.blocked;
+            this.blocked = true;
             this.checkAndDispatch(oldBlockers);
+            return false;
         }
+        else {
+            AutoQuery.blockers[this.blockerGroup] -= this.blocked;
+            this.blocked = false;
+        }
+        this.checkAndDispatch(oldBlockers);
+
         return true;
     }
 
@@ -454,7 +461,7 @@ export default class AutoQuery {
             }
             return false;
         }
-        else if(this.getConstraintType(constraintName) === "slider"){
+        else if (this.getConstraintType(constraintName) === "slider") {
             const range = this.getConstraintMetadata(constraintName).range;
             return !(constraintData[0] <= range[0] && range[1] <= constraintData[1]);
         }
@@ -519,9 +526,9 @@ export default class AutoQuery {
                 return this.colorCode;
             case "gradient":
                 const range = this.getConstraintMetadata(this.color.variable).range;
-                const normalizedValue = (value - range[0]) / (range[1] - range[0]);
+                const normalizedValue = Math.min(Math.max((value - range[0]) / (range[1] - range[0]), 0), 0.9999999);
                 const skewCorrectedValue = skewDir === "right" ? (1 - (Math.pow(1 - normalizedValue, skew))) : Math.pow(normalizedValue, skew); // https://www.desmos.com/calculator/gezo3xfbfj
-                const colorindex = Math.round(skewCorrectedValue * 32); //normalizes value on range. results in #1 - 32
+                const colorindex = Math.floor(skewCorrectedValue * 32); //normalizes value on range. results in #0 - 31
                 return this.colorCode[colorindex];
             case "sequential":
                 if (this.color.map)
