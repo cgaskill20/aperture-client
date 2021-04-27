@@ -238,10 +238,10 @@ export default class resizable {
             this.height = (old.height + heightDelta);
         }
 
-        this.resizeBox();
+        this.resizeBox(topOffset, leftOffset);
     }
 
-    resizeBox() {
+    resizeBox(topOffset, leftOffset) {
         let enough_width = this.width > resizable.minimum_width;
         let enough_height = this.height > resizable.minimum_height;
 
