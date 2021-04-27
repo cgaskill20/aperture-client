@@ -66,7 +66,7 @@ export default class resizable {
     // Used to prevent the resizable from falling off-screen due to viewport resizing.
     // If only this many pixels are on-screen at once in a given direction, push
     // the resizable back into the viewport.
-    static offscreen_tolerance = 100
+    static offscreen_tolerance = 500
     // Allows us to add listeners to the unique overlays
     static numOfInstances = 0;
     // Each time a overlay is clicked its Z Index increases so it is seen above all other overlays
