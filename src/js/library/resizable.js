@@ -166,7 +166,7 @@ export default class resizable {
                 let dimensions = this.calculateDimensions(e);
                 window.onmousemove = e => {
                     if(this.isDown && this.isResizing){
-                        this.changeBoxSize(e, dimensions, corner);
+                        this.recomputeDimensionsAndResize(e, dimensions, corner);
                     }
                 };
                 window.onmouseup = () => {
@@ -217,7 +217,7 @@ export default class resizable {
         return dimensions;
     }
 
-    changeBoxSize(current, old, relativeCorner){
+    recomputeDimensionsAndResize(current, old, relativeCorner){
         let widthDelta = current.pageX - old.pageX;
         let heightDelta = current.pageY - old.pageY;
 
@@ -238,6 +238,10 @@ export default class resizable {
             this.height = (old.height + heightDelta);
         }
 
+        this.resizeBox();
+    }
+
+    resizeBox() {
         let enough_width = this.width > resizable.minimum_width;
         let enough_height = this.height > resizable.minimum_height;
 
@@ -254,7 +258,6 @@ export default class resizable {
         if (enough_width && enough_height && this.onResizeCallback) {
             this.onResizeCallback(this.width, this.height);
         }
-
     }
 
     setResizeCallback(cb) {
