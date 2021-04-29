@@ -232,7 +232,9 @@ export default class ChartSystem {
     }
 
     initializeUpdateHooks() {
-        this.map.on('move', e => { this.update(); });
+        this.map.on('moveend', e => { 
+            this.update(); 
+        });
 
         this.map.on('zoomstart', e => { 
             this.doNotUpdate = true;
@@ -275,7 +277,9 @@ export default class ChartSystem {
                     if (!parameters.periodic) {
                         frame.passMessage({ type: CommonChartMessageType.NOTIFY_QUERY_STATE, started: true });
                     }
+
                     frame.manager.update(await source.sourceInstance.get(...sourceParams));
+
                     if (!parameters.periodic) {
                         frame.passMessage({ type: CommonChartMessageType.NOTIFY_QUERY_STATE, started: false });
                     }

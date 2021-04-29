@@ -149,6 +149,10 @@ export default class LineGraph extends Chart {
     }
     
     changeData(data) {
+        if (!data) {
+            this.rerenderAllViews();
+        }
+
         if (data.failed) {
             this.lastDataFailed = true;
             this.changeSubtitle({ text: "⚠️ We can't query at this zoom level; please zoom in.", color: "#f00" });
