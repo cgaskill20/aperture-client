@@ -244,10 +244,6 @@ export default class ChartSystem {
             this.doNotUpdate = false; 
             this.update(); 
         });
-
-        this.refreshTimer = window.setInterval(() => { 
-            this.update({ periodic: true }); }, 
-        2000);
     }
 
     /**
