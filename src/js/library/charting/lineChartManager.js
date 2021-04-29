@@ -56,6 +56,7 @@ END OF TERMS AND CONDITIONS
 */
 
 import ChartManager from "./chartManager"
+import { CommonChartMessageType } from "./chartSystem"
 
 export const LineChartMessageType = {
     // Change the type of feature plotted by the line chart and/or the window size.
@@ -109,6 +110,13 @@ export default class LineChartManager extends ChartManager {
                 this.chartSystem.update();
                 this.chart.rerenderAllViews();
                 break;
+            } case CommonChartMessageType.NOTIFY_QUERY_STATE: {
+                if (message.started) {
+                    this.chart.notifyQueryStarted();
+                } else {
+                    this.chart.notifyQueryEnded();
+                }
+                this.chart.rerenderAllViews();
             }
         }
     }
@@ -127,6 +135,7 @@ export default class LineChartManager extends ChartManager {
                 break;
             } case "deaths": {
                 this.chart.setTitle("COVID Mortality by County");
+                break;
             }
         }
         this.wantsType = newType;
