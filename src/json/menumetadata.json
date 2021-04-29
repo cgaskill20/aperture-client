@@ -1,7 +1,7 @@
 [
   {
     "collection": "future_heat",
-    "label": "Future Heatwaves",
+    "label": "Heatwaves",
     "level": "county",
     "subGroup": "Climate",
     "color": {
