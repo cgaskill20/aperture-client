@@ -71,6 +71,10 @@ import ChartFrame from "./chartFrame";
 import CovidDataSource from "./covidDataSource"
 import MapDataSource from "./mapDataSource"
 
+// An enumeration of each type of data source recognized by the ChartSystem.
+// See DataSource for more information about what a "data source" is.
+// DataSources are singleton with respect to each ChartSystem - only one
+// exists at a time, and it's stored within these objects.
 export const DataSourceType = {
     MAP_FEATURES: {
         name: "map_features",
@@ -88,6 +92,11 @@ export const DataSourceType = {
     }
 }
 
+// An enumeration of the each type of chart recognzied by the ChartSystem.
+// Each type has a type of manager, area, and chart, as well as a list of each
+// kind of DataSource it can use.  (At the moment, charts only support one data
+// source at a time.) These objects are passed into ChartSystem's getFrame
+// function to create new charts.
 export const ChartingType = {
     LINE: {
         name: "line",
@@ -112,15 +121,40 @@ export const ChartingType = {
     },
 }
 
+/**
+ * The brains that holds the entire charting operation together.
+ * Every chart lives underneath this class. All ChartFrames originate from
+ * this class. All data flows from this class to underlying charts. This class 
+ * is your only god. 
+ *
+ * A single instance of this is instantiated in index.js, which is used for all
+ * charting in Aperture. Creating another ChartSystem instance will create an 
+ * entirely new, isolated charting ecosystem, and may cause horrible issues as
+ * such a thing has not been properly tested.
+ *
+ * Construction of a ChartSystem automatically also creates a resizable. You
+ * do not need to manually create and attach any resizables.
+ *
+ * This class contains a few useful properties:
+ * - this.catalog: The charting catalog, in raw object form
+ * - this.graphable: A list of every graphable feature, as reported from the
+ *   charting catalog
+ * - this.resizable: The resizable that this ChartSystem lives in
+ *
+ * @author Pierce Smith and Matt Young
+ * @file An orchestrator for all charting operations
+ */
 export default class ChartSystem {
+    // In pixels.
     static MAX_CHART_HEIGHT = 350;
 
+    // Do not call this directly.
     constructor(map, chartCatalogFilename) {
         this.map = map;
 
         this.chartFrames = [];
 
-        this.resizable = new resizable(400, 300, "white");
+        this.resizable = new resizable(resizable.minimum_width, resizable.minimum_height + 200, "white");
         this.resizable.setResizeCallback((width, height) => {
             this.chartFrames.forEach(frame => {
                 let newHeight = height - 200;
@@ -149,6 +183,13 @@ export default class ChartSystem {
 
     }
 
+    /** 
+     * Initialize every needed data source for the ChartSytem's charts.
+     * This is only to be called once, and is done so in the constructor.
+     * Do not call this manually.
+     * @memberof ChartSystem
+     * @method createDataSource
+     */
     createDataSources() {
         Object.values(DataSourceType).forEach(source => {
             source.sourceInstance = new source.sourceType(this.map, this.graphable);
@@ -158,6 +199,17 @@ export default class ChartSystem {
         });
     }
 
+    /**
+     * Create a new chart frame for a given type of chart.
+     * This is how you are intended to put new charts into the UI. Call this,
+     * get a ChartFrame, and attach the frame's DOM node to some other node.
+     * See ChartFrame for a few more details.
+     * See chartBtnCreateChart.js for examples of how this function is used.
+     * @memberof ChartSystem
+     * @method getChartFrame
+     * @param type {object} A ChartType for the type of chart you wish to create
+     * @returns {object} A ChartFrame
+     */
     getChartFrame(type) {
         let node = document.createElement("div");
         node.className = `${type.name}-chart-area`;
@@ -172,15 +224,28 @@ export default class ChartSystem {
     }
 
     initializeUpdateHooks() {
-        this.map.on('move', (e) => { this.update(); });
+        this.map.on('move', e => { this.update(); });
+        this.map.on('zoomend', e => { this.update(); });
         this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
     }
 
-    async update() {
-        if (this.doNotUpdate) {
+    /**
+     * Refreshes every data source and re-renders every chart.
+     * If something related to data sources changes, this function should be
+     * called. It is also called naturally every 2 seconds, and whenever the
+     * map moves.
+     * It is safe to call this function from inside chart code.
+     * @memberof ChartSystem
+     * @method update
+     * @param {object=} parameters An optional object with extra information
+     * for this update event
+     */
+    async update(parameters = {}) {
+        if (this.doNotUpdate && !parameters.force) {
             return;
         }
-        
+
+        // This is what forces the charts to re-render... very inelegant.
         // TODO: This needs to not suck
         this.resizable.triggerResizeEvent();
 
@@ -195,10 +260,15 @@ export default class ChartSystem {
         });
 
         this.doNotUpdate = true;
-        window.setTimeout(() => { this.doNotUpdate = false; }, 2000);
+        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
     }
 
 
+    /**
+     * Toggle whether or not the charting window is visible.
+     * @memberof ChartSystem
+     * @method toggleVisible
+     */
     toggleVisible() {
         this.resizable.toggleVisible();
     }

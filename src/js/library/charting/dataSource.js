@@ -55,102 +55,44 @@ END OF TERMS AND CONDITIONS
 
 */
 
-import ChartManager from "./chartManager"
-
-export const LineChartMessageType = {
-    // Change the type of feature plotted by the line chart and/or the window size.
-    // Both properties are optional
-    // Has:
-    //  newType: either "cases" or "deaths"
-    //  newWindowSize: an integer > 0 in days
-    CHANGE_PARAMETERS: 0,
-}
-
 /**
- * Manages histograms, which are "featured" charts (i.e. pull from in-view
- * map data).
- * See ChartManager for more information about what a chart manager does.
+ * A DataSource is a source of data for charts. This class has no functionality
+ * on its own and is meant to be extended for each unique type of source.
+ *
+ * Usage is extremely simple. Call get() to get data. The format of the data,
+ * as well as any potential parameters to the function, are determined by each
+ * specific type of source. Consult documentation for this class's subclasses.
+ * MapDataSource and CovidDataSorce are examples.
+ *
+ * DataSources also have a notion of a supplement object. This is, very
+ * generally, an object that helps the source or relies on data from the source
+ * that cannot be acquired from get(). DataSources can interact with supplements
+ * through the updateSupplement method, which takes in the supplement object.
+ *
+ * Both get() and updateSupplement() are called automatically within the update
+ * routine of the ChartSystem.
  *
  * @author Pierce Smith
- * @file Chart manager for line charts
+ * @file Superclass for all data sources
  */
-export default class LineChartManager extends ChartManager {
-    constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
-        super(catalog, chartArea, validFeatureManager, chartSystem, chartType);
-        this.chart = new chartType([]);
-        this.chartArea = chartArea;
-        this.chartSystem = chartSystem;
-
-        // FIXME: This can this not suck please
-        this.featureManager = { addCallback: () => {} };
-
-        chartArea.addChart(this.chart);
-        this.chart.unhide(0);
-
-        this.chartSystem.update();
-    }
-
-    update(values) {
-        this.chart.changeData(values);
-    }
-
+export default class DataSource {
     /** 
-     * Handle a message. See LineChartMessageType above for the kinds of
-     * messages this can accept.
-     * @memberof LineChartManager
-     * @method passMessage
-     * @param {object} message A message as defined in LineChartMessageType
+     * Construct a DataSource. Takes in a Leaflet map, storing it in this.map.
+     * The map is not strictly necessary for every type of data source, but is
+     * so often useful that it is always settable in the constructor
+     * for convenience.
+     * @memberof DataSource
+     * @method constructor
+     * @param {Leaflet Map=} map The (optional) leaflet map that the source is
+     * associated with
      */
-    passMessage(message) {
-        switch (message.type) {
-            case LineChartMessageType.CHANGE_PARAMETERS: {
-                this.changeType(message.newType);
-                this.changeWindowSize(message.newWindowSize);
-                this.chartSystem.update();
-                this.chart.rerenderAllViews();
-                break;
-            }
-        }
+    constructor(map) {
+        this.map = map;
     }
 
-    /** 
-     * Define the type of data this chart should ask from its source, either
-     * "cases" or "deaths".
-     * @memberof LineChartManager
-     * @method changeType
-     * @param {string} newType Either "cases" or "deaths"
-     */
-    changeType(newType) {
-        switch (newType) {
-            case "cases": {
-                this.chart.setTitle("COVID Cases by County");
-                break;
-            } case "deaths": {
-                this.chart.setTitle("COVID Mortality by County");
-            }
-        }
-        this.wantsType = newType;
-    }
+    // To be overidden.
+    get() { }
 
-    /**
-     * Define the window size that this chart should ask from its source.
-     * @memberof LineChartManager
-     * @method changeWindowSize
-     * @param {number} newWindowSize A non-zero and non-negative number
-     */
-    changeWindowSize(newWindowSize) {
-        this.wantsWindowSize = newWindowSize;
-    }
-
-    /**
-     * Compiles the current data type and window size into a list of parameters
-     * that will be passed to the COVID data source.
-     * @memberof LineChartManager
-     * @method getSourceParameters
-     * @returns {array} An array where the first element is the data type, and
-     * the second is the window size
-     */
-    getSourceParameters() {
-        return [this.wantsType, this.wantsWindowSize, this.chartSystem.map.getZoom()];
-    }
+    // To be overidden.
+    updateSupplement() { }
 }

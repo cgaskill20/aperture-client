@@ -74,8 +74,11 @@ export default class LineGraph extends Chart {
             return;
         }
 
+        width = width < Chart.MINIMUM_WIDTH ? Chart.MINIMUM_WIDTH : width;
+        height = height < Chart.MINIMUM_HEIGHT ? Chart.MINIMUM_HEIGHT : height;
         view.width = width;
         view.height = height;
+
         view.svg.attr("viewBox", [0, 0, width, height]);
 
         // This will only work if the data comes in like this:
@@ -135,7 +138,7 @@ export default class LineGraph extends Chart {
     
     changeData(data) {
         if (data.failed) {
-            this.changeSubtitle("! We can't query at this zoom level; please zoom in", "#f00");
+            this.changeSubtitle("⚠️ We can't query at this zoom level; please zoom in.", "#f00");
         } else {
             this.changeSubtitle(...this.defaultSubtitleParameters);
             this.data = data.filter(entry => entry).map(entry => { 
