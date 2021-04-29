@@ -447,6 +447,7 @@ export default {
             connect: true,
         });
 
+        const defaultRange = JSON.stringify(slider.noUiSlider.get());
         const name = Util.removePropertiesPrefix(Util.underScoreToSpace(constraintObj["label"] ? constraintObj["label"] : constraint));
         const step = constraintObj['step'] ? constraintObj['step'] : 1;
         const isDate = constraintObj['isDate'];
@@ -461,6 +462,7 @@ export default {
             }
             labelHtml += "</div>";
             sliderLabel.innerHTML = labelHtml;
+            slider.firstElementChild.firstElementChild.firstElementChild.style.background = JSON.stringify(slider.noUiSlider.get()) === defaultRange ? "#a3a3a3" : "#007bff";
         }.bind(this));
 
         //listen for reset
