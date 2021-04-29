@@ -236,12 +236,10 @@ export default class ChartSystem {
 
         this.map.on('zoomstart', e => { 
             this.doNotUpdate = true;
-            console.log('update off');
         });
 
         this.map.on('zoomend', e => { 
             this.doNotUpdate = false; 
-            console.log('update on');
             this.update(); 
         });
 
