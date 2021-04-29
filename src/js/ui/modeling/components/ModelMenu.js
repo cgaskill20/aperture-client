@@ -33,6 +33,9 @@ export default class ModelMenu extends React.Component {
             "LATENT_DIRICHLET_ALLOCATION",
             "LINEAR_REGRESSION"
         ];
+        this.resolutionWhitelist = [
+            "County"
+        ];
         this.populateCatalog();
 
         this.keyVal = 0;
@@ -211,7 +214,7 @@ export default class ModelMenu extends React.Component {
     getResolutionOptions() {
         let ret = [];
         for (const collection of this.getCurrentConfig().collections)
-            if (!ret.includes(collection.resolution))
+            if (!ret.includes(collection.resolution) && this.resolutionWhitelist.includes(collection.resolution))
                 ret.push(collection.resolution);
         return ret;
     }
