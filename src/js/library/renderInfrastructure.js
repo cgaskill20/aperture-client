@@ -163,7 +163,7 @@ export default class RenderInfrastructure {
             if(layer.refs.length > 1){
                 const dataToEdit = indexData[oldName];
                 dataToEdit.color = this.refsToColor(layer.refs);
-                dataToEdit.opacity = 0.5;
+                dataToEdit.opacity = this.refsToOpacity(layer.refs);
                 dataToEdit.popup = this.refsToPopup(layer.refs);
                 geojson.properties = this.refsToProperties(layer.refs);
                 const newName = this.refsToName(layer.refs);
@@ -190,6 +190,15 @@ export default class RenderInfrastructure {
         }
         else{
             return refs[0].indexData[refs[0].name].color;
+        }
+    }
+
+    refsToOpacity(refs){
+        if(refs.length > 1){
+            return 0.5;
+        }
+        else{
+            return refs[0].indexData[refs[0].name].opacity;
         }
     }
 
@@ -250,7 +259,8 @@ export default class RenderInfrastructure {
                 const indexData = {
                     [this.refsToName(layer.refs)]: {
                         color: this.refsToColor(layer.refs),
-                        popup: this.refsToPopup(layer.refs)
+                        popup: this.refsToPopup(layer.refs),
+                        opacity: this.refsToOpacity(layer.refs)
                     }
                 }
                 if(layer.layerID != undefined){
