@@ -33,6 +33,9 @@ export default class ModelMenu extends React.Component {
             "LATENT_DIRICHLET_ALLOCATION",
             "LINEAR_REGRESSION"
         ];
+        this.resolutionWhitelist = [
+            "County"
+        ];
         this.populateCatalog();
 
         this.keyVal = 0;
@@ -105,12 +108,12 @@ export default class ModelMenu extends React.Component {
         stream.on('end', function (end) {
             //console.log(catalog)
             const catalogMap = this.catalogMap(catalog);
-            //console.log(catalogMap)
+            const categoryDefault = "CLUSTERING";
             this.setState({
                 catalog: catalog,
                 config: catalogMap,
-                modelCategory: Object.keys(catalogMap)[0],
-                modelType: Object.keys(catalogMap[Object.keys(catalogMap)[0]])[0],
+                modelCategory: categoryDefault,
+                modelType: Object.keys(catalogMap[categoryDefault])[0],
                 modelStatus: "none"
             })
         }.bind(this));
@@ -211,7 +214,7 @@ export default class ModelMenu extends React.Component {
     getResolutionOptions() {
         let ret = [];
         for (const collection of this.getCurrentConfig().collections)
-            if (!ret.includes(collection.resolution))
+            if (!ret.includes(collection.resolution) && this.resolutionWhitelist.includes(collection.resolution))
                 ret.push(collection.resolution);
         return ret;
     }

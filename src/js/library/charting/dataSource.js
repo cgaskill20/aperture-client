@@ -55,8 +55,44 @@ END OF TERMS AND CONDITIONS
 
 */
 
-export default class LineGraphManager {
-    constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
-        
+/**
+ * A DataSource is a source of data for charts. This class has no functionality
+ * on its own and is meant to be extended for each unique type of source.
+ *
+ * Usage is extremely simple. Call get() to get data. The format of the data,
+ * as well as any potential parameters to the function, are determined by each
+ * specific type of source. Consult documentation for this class's subclasses.
+ * MapDataSource and CovidDataSorce are examples.
+ *
+ * DataSources also have a notion of a supplement object. This is, very
+ * generally, an object that helps the source or relies on data from the source
+ * that cannot be acquired from get(). DataSources can interact with supplements
+ * through the updateSupplement method, which takes in the supplement object.
+ *
+ * Both get() and updateSupplement() are called automatically within the update
+ * routine of the ChartSystem.
+ *
+ * @author Pierce Smith
+ * @file Superclass for all data sources
+ */
+export default class DataSource {
+    /** 
+     * Construct a DataSource. Takes in a Leaflet map, storing it in this.map.
+     * The map is not strictly necessary for every type of data source, but is
+     * so often useful that it is always settable in the constructor
+     * for convenience.
+     * @memberof DataSource
+     * @method constructor
+     * @param {Leaflet Map=} map The (optional) leaflet map that the source is
+     * associated with
+     */
+    constructor(map) {
+        this.map = map;
     }
+
+    // To be overidden.
+    get() { }
+
+    // To be overidden.
+    updateSupplement() { }
 }

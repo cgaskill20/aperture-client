@@ -55,6 +55,9 @@ END OF TERMS AND CONDITIONS
 
 */
 
+import ChartManager from "./chartManager"
+import { CommonChartMessageType } from "./chartSystem"
+
 export const LineChartMessageType = {
     // Change the type of feature plotted by the line chart and/or the window size.
     // Both properties are optional
@@ -64,8 +67,17 @@ export const LineChartMessageType = {
     CHANGE_PARAMETERS: 0,
 }
 
-export default class LineChartManager {
+/**
+ * Manages histograms, which are "featured" charts (i.e. pull from in-view
+ * map data).
+ * See ChartManager for more information about what a chart manager does.
+ *
+ * @author Pierce Smith
+ * @file Chart manager for line charts
+ */
+export default class LineChartManager extends ChartManager {
     constructor(catalog, chartArea, validFeatureManager, chartSystem, chartType) {
+        super(catalog, chartArea, validFeatureManager, chartSystem, chartType);
         this.chart = new chartType([]);
         this.chartArea = chartArea;
         this.chartSystem = chartSystem;
@@ -83,6 +95,13 @@ export default class LineChartManager {
         this.chart.changeData(values);
     }
 
+    /** 
+     * Handle a message. See LineChartMessageType above for the kinds of
+     * messages this can accept.
+     * @memberof LineChartManager
+     * @method passMessage
+     * @param {object} message A message as defined in LineChartMessageType
+     */
     passMessage(message) {
         switch (message.type) {
             case LineChartMessageType.CHANGE_PARAMETERS: {
@@ -91,10 +110,24 @@ export default class LineChartManager {
                 this.chartSystem.update();
                 this.chart.rerenderAllViews();
                 break;
+            } case CommonChartMessageType.NOTIFY_QUERY_STATE: {
+                if (message.started) {
+                    this.chart.notifyQueryStarted();
+                } else {
+                    this.chart.notifyQueryEnded();
+                }
+                this.chart.rerenderAllViews();
             }
         }
     }
 
+    /** 
+     * Define the type of data this chart should ask from its source, either
+     * "cases" or "deaths".
+     * @memberof LineChartManager
+     * @method changeType
+     * @param {string} newType Either "cases" or "deaths"
+     */
     changeType(newType) {
         switch (newType) {
             case "cases": {
@@ -102,16 +135,31 @@ export default class LineChartManager {
                 break;
             } case "deaths": {
                 this.chart.setTitle("COVID Mortality by County");
+                break;
             }
         }
         this.wantsType = newType;
     }
 
+    /**
+     * Define the window size that this chart should ask from its source.
+     * @memberof LineChartManager
+     * @method changeWindowSize
+     * @param {number} newWindowSize A non-zero and non-negative number
+     */
     changeWindowSize(newWindowSize) {
         this.wantsWindowSize = newWindowSize;
     }
 
+    /**
+     * Compiles the current data type and window size into a list of parameters
+     * that will be passed to the COVID data source.
+     * @memberof LineChartManager
+     * @method getSourceParameters
+     * @returns {array} An array where the first element is the data type, and
+     * the second is the window size
+     */
     getSourceParameters() {
-        return [this.wantsType, this.wantsWindowSize];
+        return [this.wantsType, this.wantsWindowSize, this.chartSystem.map.getZoom()];
     }
 }
