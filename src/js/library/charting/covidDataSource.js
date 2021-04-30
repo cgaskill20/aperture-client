@@ -59,6 +59,11 @@ import { sustain_querier } from "../../grpc/GRPC_Querier/grpc_querier"
 import Util from "../apertureUtil"
 import DataSource from "./dataSource"
 
+export const CovidDataSourceFailureType = {
+    OK: 0,
+    ZOOM_TOO_LOW: 1,
+}
+
 /** 
  * A CovidDataSource makes special RPC requests to get COVID data for all
  * counties that are within the viewport of the given map.
@@ -71,6 +76,7 @@ export default class CovidDataSource extends DataSource {
     static defaultType = "cases";
     static defaultDays = 7;
     static queryChangeZoomLevel = 7;
+    static zoomLimit = 9;
 
     /**
      * Construct a new CovidDataSource.
@@ -120,6 +126,7 @@ export default class CovidDataSource extends DataSource {
             });
 
             stream.on('end', () => {
+                results.failed = CovidDataSourceFailureType.OK;
                 stream.cancel();
                 resolve(results);
             });
@@ -165,25 +172,52 @@ export default class CovidDataSource extends DataSource {
      * @param {number} daysWindowSize The size of the sliding window
      * @returns {array<object>} The data for each county in the map's viewport
      */
-    async get(type = CovidDataSource.defaultType, daysWindowSize = CovidDataSource.defaultDays) {
+    async get(type = CovidDataSource.defaultType, daysWindowSize = CovidDataSource.defaultDays, mapZoom) {
         let counties = await this.getCounties([ "NAMELSAD10" ]);
+
+        // Refuse to query if too zoomed out
+        if (mapZoom < CovidDataSource.zoomLimit) {
+            return {
+                failed: CovidDataSourceFailureType.ZOOM_TOO_LOW,
+            };
+        }
+
+        this.cancelCurrentStream();
         
-        let stream = CovidDataSource.querier.executeSlidingWindowQuery(JSON.stringify({
+        this.setCurrentStream(CovidDataSource.querier.executeSlidingWindowQuery(JSON.stringify({
             gisJoins: counties.map(c => c.GISJOIN),
             collection: "covid_county_formatted",
             feature: type,
             days: daysWindowSize
-        }));
+        })));
 
         let averagesTransform = r => { 
-            return { 
-                data: JSON.parse(r.movingAverages[0]).movingAverages, 
-                GISJOIN: r.gisJoin, 
-                name: counties.find(c => c.GISJOIN === r.gisJoin).NAMELSAD10
-            };
+            try { 
+                return { 
+                    data: JSON.parse(r.movingAverages[0]).movingAverages, 
+                    GISJOIN: r.gisJoin, 
+                    name: counties.find(c => c.GISJOIN === r.gisJoin).NAMELSAD10
+                };
+            // Sometimes data fails to deserialize for some reason...
+            // Not much we can do about it on the client.
+            } catch (e) {
+            }
         };
 
-        return this.getStreamResults(stream, averagesTransform, 'getJson');
+        return this.getStreamResults(this.currentStream, averagesTransform, 'getJson');
+    }
+
+    cancelCurrentStream() {
+        this.needsCancel = true;
+        if (this.currentStream) {
+            this.currentStream.cancel();
+            this.currentStream = undefined;
+        }
+    }
+
+    setCurrentStream(stream) {
+        this.currentStream = stream;
+        this.needsCancel = false;
     }
 
     // CovidDataSources have no supplement.

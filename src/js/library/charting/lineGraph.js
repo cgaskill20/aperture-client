@@ -59,10 +59,16 @@ import Chart from "./chart";
 import * as d3 from "../../third-party/d3.min.js";
 
 export default class LineGraph extends Chart {
+    static defaultSubtitleParameters = {
+        text: "Over a 7 day sliding average",
+        color: "#666"
+    };
+
     constructor() {
         super([]);
         this.mouseInGraph = false;
         this.changeTitle("COVID Cases by County");
+        this.changeSubtitle(LineGraph.defaultSubtitleParameters);
     }
 
     rerender(width, height, viewIndex) {
@@ -117,22 +123,57 @@ export default class LineGraph extends Chart {
 
         view.svg.select("text#title")
             .attr("x", width / 2)
-            .attr("y", 12)
-            .attr("text-anchor", "middle")
             .text(this.title);
+
+        view.svg.select("text#subtitle")
+            .attr("x", width / 2)
+            .attr("fill", this.subtitleColor)
+            .text(this.subtitle);
+
+        if (this.makingQuery && !this.lastDataFailed) {
+            view.svg.select("text#queryNotice")
+                .attr("display", "default");
+        } else {
+            view.svg.select("text#queryNotice")
+                .attr("display", "none");
+        }
     }
 
     changeTitle(title) {
         this.title = title;
     }
+
+    changeSubtitle(parameters) {
+        this.subtitle = parameters.text;
+        this.subtitleColor = parameters.color;
+    }
     
     changeData(data) {
-        this.data = data.map(entry => { 
-            return { data: entry.data.map(d => { 
-                return { value: this.clamp(d.avg), date: d.date.$date };
-            }), gisJoin: entry.GISJOIN, name: entry.name };
-        });
-        this.rerenderAllViews();
+        if (!data) {
+            this.rerenderAllViews();
+        }
+
+        if (data.failed) {
+            this.lastDataFailed = true;
+            this.changeSubtitle({ text: "⚠️ We can't query at this zoom level; please zoom in.", color: "#f00" });
+        } else {
+            this.lastDataFailed = false;
+            this.changeSubtitle(LineGraph.defaultSubtitleParameters);
+            this.data = data.filter(entry => entry).map(entry => { 
+                return { data: entry.data.map(d => { 
+                    return { value: this.clamp(d.avg), date: d.date.$date };
+                }), gisJoin: entry.GISJOIN, name: entry.name };
+            });
+            this.rerenderAllViews();
+        }
+    }
+
+    notifyQueryStarted() {
+        this.makingQuery = true;
+    }
+
+    notifyQueryEnded() {
+        this.makingQuery = false;
     }
 
     clamp(n) {
@@ -160,8 +201,21 @@ export default class LineGraph extends Chart {
             .attr("stroke-width", 1.5)
             .attr("stroke-linejoin", "round")
             .attr("stroke-linecap", "round");
-        view.svg.append("text").attr("id", "title");
+        view.svg.append("text").attr("id", "title")
+            .attr("y", 12)
+            .attr("text-anchor", "middle");
         view.svg.append("text").attr("id", "marker");
+        view.svg.append("text").attr("id", "subtitle")
+            .attr("y", 24)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "0.7em")
+            .attr("fill", "#666");
+        view.svg.append("text").attr("id", "queryNotice")
+            .attr("y", 12)
+            .attr("x", 12)
+            .attr("font-size", "0.7em")
+            .attr("fill", "#666")
+            .text("getting data...");
 
         view.svg.on('mouseenter', event => {
             this.mouseInGraph = true;
@@ -184,6 +238,8 @@ export default class LineGraph extends Chart {
                 });
             });
 
+            dates.sort();
+
             let searchDateIndex = d3.bisectCenter(dates, mouse[0]);
             let closest = d3.least(this.data, d => {
                 let entry = d.data[searchDateIndex];
@@ -198,9 +254,11 @@ export default class LineGraph extends Chart {
                 d3.select(this).attr("stroke", s => s.gisJoin === closest.gisJoin ? 'steelblue' : '#eee');
             });
 
+            let textSpaceTolerance = closest.name.length * 7;
+
             view.svg.select("text#marker")
                 .attr("display", "default")
-                .attr("x", rawMouse[0])
+                .attr("x", ((rawMouse[0] - this.views[0].width) > -textSpaceTolerance) ? rawMouse[0] - textSpaceTolerance : rawMouse[0])
                 .attr("y", rawMouse[1] - 20)
                 .attr("font-size", "smaller")
                 .text(closest.name);

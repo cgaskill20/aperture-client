@@ -90,7 +90,7 @@ export const DataSourceType = {
         supplementObjectType: undefined,
         supplementObjectInstance: undefined,
     }
-}
+};
 
 // An enumeration of the each type of chart recognzied by the ChartSystem.
 // Each type has a type of manager, area, and chart, as well as a list of each
@@ -119,7 +119,15 @@ export const ChartingType = {
         chartType: Scatterplot,
         wantsSources: [ DataSourceType.MAP_FEATURES ],
     },
-}
+};
+
+// Chart message types that any chart can accept.
+export const CommonChartMessageType = {
+    // Notify the chart that a query has started/ended.
+    // Has:
+    //  started: true if a query began, false if a query ended
+    NOTIFY_QUERY_STATE: 1 << 10,
+};
 
 /**
  * The brains that holds the entire charting operation together.
@@ -224,8 +232,18 @@ export default class ChartSystem {
     }
 
     initializeUpdateHooks() {
-        this.map.on('move', (e) => { this.update(); });
-        this.refreshTimer = window.setInterval(() => { this.update(); }, 2000);
+        this.map.on('moveend', e => { 
+            this.update(); 
+        });
+
+        this.map.on('zoomstart', e => { 
+            this.doNotUpdate = true;
+        });
+
+        this.map.on('zoomend', e => { 
+            this.doNotUpdate = false; 
+            this.update(); 
+        });
     }
 
     /**
@@ -252,7 +270,15 @@ export default class ChartSystem {
             this.chartFrames.forEach(async frame => {
                 if (frame.getChartType().wantsSources.find(wanted => wanted.name === source.name)) {
                     let sourceParams = frame.manager.getSourceParameters();
+                    if (!parameters.periodic) {
+                        frame.passMessage({ type: CommonChartMessageType.NOTIFY_QUERY_STATE, started: true });
+                    }
+
                     frame.manager.update(await source.sourceInstance.get(...sourceParams));
+
+                    if (!parameters.periodic) {
+                        frame.passMessage({ type: CommonChartMessageType.NOTIFY_QUERY_STATE, started: false });
+                    }
                     source.sourceInstance.updateSupplement(source.supplementObjectInstance);
                 }
             });
