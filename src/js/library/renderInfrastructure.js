@@ -135,7 +135,7 @@ export default class RenderInfrastructure {
 
 
     gisjoinUpdate(geojson, indexData){
-        const GISJOIN = geojson.properties.GISJOIN;
+        const GISJOIN = geojson?.properties?.GISJOIN;
         if(!GISJOIN){
             return;
         }
@@ -218,7 +218,7 @@ export default class RenderInfrastructure {
     }
 
     gisjoinUpdateLayer(geojson, layerID){
-        const GISJOIN = geojson.properties.GISJOIN;
+        const GISJOIN = geojson?.properties?.GISJOIN;
         if(!GISJOIN){
             return;
         }
