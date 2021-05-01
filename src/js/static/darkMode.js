@@ -10,6 +10,11 @@ function switchTheme(e) {
 	else {
 		document.documentElement.setAttribute('data-theme', 'light');
 	}
+
 	switchImageSources();
+
+    if (window.chartSystem) {
+        window.chartSystem.update()
+    }
 }
 toggleSwitch.addEventListener('change', switchTheme, false);
