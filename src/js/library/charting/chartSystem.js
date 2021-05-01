@@ -163,17 +163,7 @@ export default class ChartSystem {
         this.chartFrames = [];
 
         this.resizable = new resizable(resizable.minimum_width, resizable.minimum_height + 200, "white");
-        this.resizable.setResizeCallback((width, height) => {
-            this.chartFrames.forEach(frame => {
-                let newHeight = height - 200;
-                if (newHeight > ChartSystem.MAX_CHART_HEIGHT) {
-                    newHeight = ChartSystem.MAX_CHART_HEIGHT;
-                }
-
-                frame.setSize(width - 200, newHeight);
-                frame.resize();
-            });
-        });
+        this.resizable.setResizeCallback(this.rerenderAll.bind(this));
 
         $.getJSON(chartCatalogFilename, (catalog) => {
             this.initializeUpdateHooks();
@@ -232,7 +222,7 @@ export default class ChartSystem {
     }
 
     initializeUpdateHooks() {
-        this.map.on('moveend', e => { 
+        this.map.on('move', e => { 
             this.update(); 
         });
 
@@ -244,6 +234,10 @@ export default class ChartSystem {
             this.doNotUpdate = false; 
             this.update(); 
         });
+
+        window.setInterval(() => {
+            this.rerenderAll();
+        }, 1500);
     }
 
     /**
@@ -262,9 +256,7 @@ export default class ChartSystem {
             return;
         }
 
-        // This is what forces the charts to re-render... very inelegant.
-        // TODO: This needs to not suck
-        this.resizable.triggerResizeEvent();
+        this.rerenderAll();
 
         Object.values(DataSourceType).forEach(async source => {
             this.chartFrames.forEach(async frame => {
@@ -286,6 +278,22 @@ export default class ChartSystem {
 
         this.doNotUpdate = true;
         window.setTimeout(() => { this.doNotUpdate = false; }, 200);
+    }
+
+    rerenderAll(width, height) {
+        let hasNewDimensions = width && height;
+
+        this.chartFrames.forEach(frame => {
+            if (hasNewDimensions) {
+                let newHeight = height - 200;
+                if (newHeight > ChartSystem.MAX_CHART_HEIGHT) {
+                    newHeight = ChartSystem.MAX_CHART_HEIGHT;
+                }
+
+                frame.setSize(width - 200, newHeight);
+            }
+            frame.resize();
+        });
     }
 
 
