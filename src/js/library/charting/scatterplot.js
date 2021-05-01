@@ -122,6 +122,7 @@ export default class Scatterplot extends Chart {
             .attr("y", newHeight - view.margin.bottom / 2 + 4)
             .attr("text-anchor", "end")
             .attr("font-size", "8pt")
+            .attr("fill", this.getBasicThemeColor())
             .text(this.data.x);
 
         view.svg.select("text#yAxisLabel")
@@ -129,6 +130,7 @@ export default class Scatterplot extends Chart {
             .attr("y", view.margin.top / 2)
             .attr("text-anchor", "start")
             .attr("font-size", "8pt")
+            .attr("fill", this.getBasicThemeColor())
             .text(this.data.y);
     }
 

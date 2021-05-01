@@ -118,6 +118,18 @@ export default class Chart {
         this.views[viewIndex].svg.style("display", "block");
     }
 
+    isDarkMode() {
+        return document.querySelector('html').getAttribute('data-theme') === 'dark';
+    }
+
+    getBasicThemeColor() {
+        return this.isDarkMode() ? "#eee" : "#111";
+    }
+
+    getInvertedThemeColor() {
+        return this.isDarkMode() ? "#333" : "#ccc";
+    }
+
     // To be overriden in subclasses.
     makeNewView(node, width, height) { }
     rerender(width, height, viewIndex) { }
