@@ -60,8 +60,12 @@ export default class ControlDropdown {
         this.chartControlButtonGroup = this.createChartControlButtonGroup();
         this.chartDropdown = this.createDropdown(frame, title);
         this.chartControlButtonGroup.appendChild(this.chartDropdown);
+        
+        this.frame = frame;
 
-        this.dropdownButton.onclick = () => frame.update();
+        this.dropdownButton.onclick = () => {
+            frame.update();
+        }
     }
 
     getDOMNode() {
@@ -124,7 +128,10 @@ export default class ControlDropdown {
         for (let option of options) {
             let dropdownItem = document.createElement("a");
             dropdownItem.className = "dropdown-item dropdown-menu-item-custom";
-            dropdownItem.onclick = option.onclick
+            dropdownItem.onclick = () => {
+                option.onclick();
+                this.frame.update();
+            }
             dropdownItem.innerText = option.name;
             this.dropdownMenu.appendChild(dropdownItem);
         }
