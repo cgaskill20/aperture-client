@@ -118,11 +118,12 @@ export default class LineGraph extends Chart {
             .selectAll("path")
             .data(this.data)
             .join("path")
-            .style("mix-blend-mode", "multiply")
+            .style("mix-blend-mode", this.isDarkMode() ? "screen" : "multiply")
             .attr("d", d => view.line(d.data));
 
         view.svg.select("text#title")
             .attr("x", width / 2)
+            .attr("fill", this.getBasicThemeColor())
             .text(this.title);
 
         view.svg.select("text#subtitle")
@@ -201,7 +202,8 @@ export default class LineGraph extends Chart {
             .attr("stroke-width", 1.5)
             .attr("stroke-linejoin", "round")
             .attr("stroke-linecap", "round");
-        view.svg.append("text").attr("id", "title")
+        view.svg.append("text")
+            .attr("id", "title")
             .attr("y", 12)
             .attr("text-anchor", "middle");
         view.svg.append("text").attr("id", "marker");
@@ -225,6 +227,8 @@ export default class LineGraph extends Chart {
             if (this.data.length === 0) {
                 return;
             }
+
+            let chart = this;
 
             let rawMouse = d3.pointer(event, view.svg.node());
             let mouse = [ view.x.invert(rawMouse[0]).valueOf(), view.y.invert(rawMouse[1]) ];
@@ -251,7 +255,7 @@ export default class LineGraph extends Chart {
             });
 
             view.svg.select("g#lines").selectAll("path").each(function() {
-                d3.select(this).attr("stroke", s => s.gisJoin === closest.gisJoin ? 'steelblue' : '#eee');
+                d3.select(this).attr("stroke", s => s.gisJoin === closest.gisJoin ? 'steelblue' : chart.getInvertedThemeColor());
             });
 
             let textSpaceTolerance = closest.name.length * 7;
@@ -261,6 +265,7 @@ export default class LineGraph extends Chart {
                 .attr("x", ((rawMouse[0] - this.views[0].width) > -textSpaceTolerance) ? rawMouse[0] - textSpaceTolerance : rawMouse[0])
                 .attr("y", rawMouse[1] - 20)
                 .attr("font-size", "smaller")
+                .attr("fill", this.getBasicThemeColor())
                 .text(closest.name);
         });
 

@@ -114,6 +114,7 @@ export default class Histogram extends Chart {
             .attr("x", newWidth / 2)
             .attr("y", 24)
             .attr("text-anchor", "middle")
+            .attr("fill", this.getBasicThemeColor())
             .text(this.title);
 
         if (this.kdeEnabled) {
@@ -126,6 +127,7 @@ export default class Histogram extends Chart {
                 .y(d => view.y(d[1]));
             view.svg.select("path#kdecurve")
                 .datum(kdePoints)
+                .attr("stroke", this.getBasicThemeColor())
                 .attr("d", view.kdeLine)
                 .attr("display", "default");
         } else {
@@ -171,7 +173,6 @@ export default class Histogram extends Chart {
         view.svg.append("text").attr("id", "title");
         view.svg.append("path").attr("id", "kdecurve")
             .attr("fill", "none")
-            .attr("stroke", "#000")
             .attr("stroke-width", 1.5)
             .attr("stroke-linejoin", "round");
 

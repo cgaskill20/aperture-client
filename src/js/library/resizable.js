@@ -248,11 +248,15 @@ export default class resizable {
         if (enough_width) {
             this.overlayDocument.style.width = this.width + 'px';
             this.overlayDocument.style.left = leftOffset + 'px';
+        } else {
+            this.width = resizable.minimum_width;
         }
 
         if (enough_height) {
             this.overlayDocument.style.height = this.height + 'px';
             this.overlayDocument.style.top = topOffset + 'px';
+        } else {
+            this.height = resizable.minimum_height;
         }
 
         if (enough_width && enough_height && this.onResizeCallback) {
