@@ -43,7 +43,7 @@
     "label": "Tract Median Household Income",
     "constraints": {
       "2010_median_household_income": {
-        "label": "Median Household Income in 2000",
+        "label": "2010 Median Household Income (Tract)",
         "priority": 3,
         "graphTypes": ["bar", "histogram"],
         "buckets": [[2499,42000],[42000,81500],[81500,121000],[121000,160500],[160500,200000]],
@@ -52,31 +52,53 @@
     }
   },
   {
+    "collection": "county_median_household_income",
+    "constraints": {
+        "2010_median_household_income": {
+            "label": "2010 Median Household Income (County)"
+        }
+    }
+  },
+  {
     "collection": "tract_median_age",
     "label": "Median Tract Age",
     "constraints": {
       "median_age_total": {
-        "label": "Median age Male/Female",
+        "label": "Median age Male/Female (Tract)",
         "priority": 5,
         "graphTypes": ["bar", "histogram"],
         "buckets": [[0,18],[18,36],[36,54],[54,72],[72,90]],
         "color scheme": []
       },
       "median_age_female": {
-          "label": "Median age Female",
+          "label": "Median age Female (Tract)",
           "priority": 6,
           "graphTypes": ["bar", "histogram"],
           "buckets": [[0,18],[18,36],[36,54],[54,72],[72,90]],
           "color scheme": []
         },
         "median_age_male": {
-            "label": "Median age Male",
+            "label": "Median age Male (Tract)",
             "priority": 7,
             "graphTypes": ["bar", "histogram"],
             "buckets": [[0,18],[18,36],[36,54],[54,72],[72,90]],
             "color scheme": []
           }
       }
+  },
+  {
+    "collection": "county_median_age",
+    "constraints": {
+        "median_age_total": {
+            "label": "Median age Male/Female (County)"
+        },
+        "median_age_male": {
+            "label": "Median age Male (County)"
+        },
+        "median_age_female": {
+            "label": "Median age Female (County)"
+        }
+    }
   },
   {
     "collection": "tract_total_population",
