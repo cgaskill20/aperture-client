@@ -33,7 +33,7 @@
     "dexie": "^3.0.3",
     "fs": "0.0.1-security",
     "google-protobuf": "^3.11.4",
-    "grpc": "^1.24.3",
+    "grpc": "^1.24.9",
     "grpc-web": "^1.0.7",
     "iso8601-js-period": "^0.2.1",
     "jeezy": "^1.13.1",
