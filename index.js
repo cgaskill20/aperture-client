@@ -170,9 +170,12 @@ window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplora
 });
 window.chartSystem = new ChartSystem(map, "src/json/graphPriority.json", window.renderInfrastructure);
 
+
+import Query from './src/js/library/Query'
 //where the magic happens
 $.getJSON("src/json/menumetadata.json", async function (mdata) { //this isnt on the mongo server yet so query it locally
     const finalData = await AutoMenu.build(mdata, overwrite);
+    Query.init(finalData)
     MenuGenerator.generate(finalData, document.getElementById("sidebar-container"));
 });
 
