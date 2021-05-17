@@ -34,8 +34,9 @@ import AutoQuery from "./src/js/library/autoQuery.js";
 import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";
 import MenuGenerator, { updateLayers } from "./src/js/ui/menuGenerator.js";
-import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
-import GoTo from "./src/js/ui/GoTo"
+// import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
+// import GoTo from "./src/js/ui/GoTo"
+import Root from "./src/js/ui/Root";
 
 //idek what to do with theses files, things break if I try to make them import specific things
 import "./src/js/third-party/leaflet.markercluster.js";
@@ -176,14 +177,17 @@ $.getJSON("src/json/menumetadata.json", async function (mdata) { //this isnt on 
     MenuGenerator.generate(finalData, document.getElementById("sidebar-container"));
 });
 
+const uiRoot = document.getElementById("ui-root");
+ReactDOM.render((<Root/>), uiRoot);
+
 const modelContainer = document.getElementById("model-container");
 ReactDOM.render((<ModelMenu/>), modelContainer);
 
-const queryBlockContainer = document.getElementById("query-block-container");
-ReactDOM.render((<DefensiveOptimization />), queryBlockContainer);
+// const queryBlockContainer = document.getElementById("query-block-container");
+// ReactDOM.render((<DefensiveOptimization />), queryBlockContainer);
 
-const currentLocationContainer = document.getElementById("current-location");
-ReactDOM.render((<GoTo map={map}/>),currentLocationContainer)
+// const currentLocationContainer = document.getElementById("current-location");
+// ReactDOM.render((<GoTo map={map}/>),currentLocationContainer)
 
 map.on("moveend", function (e) {
     updateLayers();
