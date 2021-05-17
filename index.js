@@ -178,7 +178,7 @@ $.getJSON("src/json/menumetadata.json", async function (mdata) { //this isnt on 
 });
 
 const uiRoot = document.getElementById("ui-root");
-ReactDOM.render((<Root/>), uiRoot);
+ReactDOM.render((<Root map={map}/>), uiRoot);
 
 const modelContainer = document.getElementById("model-container");
 ReactDOM.render((<ModelMenu/>), modelContainer);

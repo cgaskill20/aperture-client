@@ -1,8 +1,8 @@
 import React, { createContext, useState, useContext } from "react";
 
-const GlobalStateContext = createContext({ globalState: {}, setGlobalState: {} });
+const GlobalStateContext = createContext([ {}, {} ]);
 
-export const GlobalStateProvider = (children, defaultValue) => {
+export const GlobalStateProvider = ({children, defaultValue = {}}) => {
     const [ globalState, setCompleteGlobalState ] = useState(defaultValue);
     const setGlobalState = (update) => {
         const newState = {
@@ -13,7 +13,7 @@ export const GlobalStateProvider = (children, defaultValue) => {
     }
 
     return (
-        <GlobalStateContext.Provider value={{ globalState, setGlobalState }}>
+        <GlobalStateContext.Provider value={[ globalState, setGlobalState ]}>
           {children}
         </GlobalStateContext.Provider>
     );
