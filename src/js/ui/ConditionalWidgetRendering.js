@@ -44,6 +44,10 @@ const ConditionalWidgetRendering = () => {
         );
     }
 
+    if (globalState.chartingOpen) {
+        //we will put the graphing stuff here
+    }
+
     return <div>
         {toRender}
     </div>
