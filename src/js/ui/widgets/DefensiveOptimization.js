@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Alert } from 'reactstrap';
-import AutoQuery from '../library/autoQuery';
+import AutoQuery from '../../library/autoQuery';
 
 
 function renderAlert(blocker, text, key) {

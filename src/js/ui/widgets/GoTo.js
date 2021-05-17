@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useRef, useState } from 'react';
 import { InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reactstrap';
-import { useGlobalState } from './global/GlobalState'
+import { useGlobalState } from '../global/GlobalState'
 import L from 'leaflet';
 import $ from "jquery";
 
