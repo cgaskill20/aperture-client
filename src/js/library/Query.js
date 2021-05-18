@@ -41,15 +41,37 @@ const Query = {
         const { collection } = query;
         query.pipeline = query.pipeline ?? []
         this._throwErrorsIfNeeded({ collection });
-        // if (!this.backgroundLoader) {
-        //     throw "Query namespace needs to be `init`ted!";
-        // }
+
 
         const linked = this.linked[query.collection];
         if (linked) { //making an edge case for this one cause it is fast as hell
             this._linkedQuery(linked, query);
         }
 
+        if (!query.callback) {
+            return await this._callbackToPromise(query);
+        }
+    },
+
+    async _callbackToPromise(query) {
+        return new Promise(resolve => {
+            let allData = [];
+            const callback = ({ event, payload }) => {
+                if (event === "data") {
+                    payload.data && Array.isArray(payload.data) ? allData.push(...payload.data) : allData.push(payload.data);
+                }
+                else if(event === "end"){
+                    const ret = {
+                        data: allData
+                    }
+                    if(payload.geohashBlacklist){
+                        ret.geohashBlacklist = payload.geohashBlacklist;
+                    }
+                    resolve(ret);
+                }
+            }
+            query.callback = callback;
+        });
     },
 
     _linkedQuery(linked, query) {
@@ -58,6 +80,7 @@ const Query = {
         this._throwErrorsIfNeeded({ granularity });
         const epsilon = 100;
         let waitingRoom = [];
+        let geohashes;
 
         const waitingRoomListener = (response) => {
             const { event, payload } = response;
@@ -68,6 +91,9 @@ const Query = {
                 }
             }
             else if (event === "end") {
+                if(payload.geohashes){
+                    geohashes = payload.geohashes;
+                }
                 if (waitingRoom.length) {
                     dumpWaitingRoom();
                 }
@@ -75,18 +101,22 @@ const Query = {
         }
 
         const dumpWaitingRoom = () => {
-            const queryClone = JSON.parse(JSON.stringify(query))
+            const queryDump = JSON.parse(JSON.stringify(query))
             const GISJOINS = waitingRoom.map(entry => entry.GISJOIN);
-            queryClone.pipeline = [{ "$match": { "GISJOIN": { "$in": GISJOINS } } }, ...queryClone.pipeline]
-            this._queryMongo(queryClone);
+            queryDump.pipeline = [{ "$match": { "GISJOIN": { "$in": GISJOINS } } }, ...queryDump.pipeline]
+            queryDump.callback = query.callback;
+            this._queryMongo(queryDump);
             waitingRoom = [];
         }
 
-        const queryClone = JSON.parse(JSON.stringify(query))
-        queryClone.collection = linked;
-        queryClone.callback = waitingRoomListener;
+        const queryLinked = JSON.parse(JSON.stringify(query))
+        queryLinked.collection = linked;
+        queryLinked.callback = waitingRoomListener;
         if (granularity === "coarse") {
-            this._queryCoarse(queryClone);
+            this._queryCoarse(queryLinked);
+        }
+        else if (granularity === "fine") {
+
         }
     },
 
@@ -160,9 +190,10 @@ const Query = {
             if (data.type === "data") {
                 const dataFromServer = data.data;
                 Util.normalizeFeatureID(dataFromServer);
-                console.log(dataFromServer)
+                query.callback({ event: "data", payload: { data: dataFromServer } })
             }
             else if (data.type === "end") {
+                query.callback({ event: "end" })
                 this.queryWorker.removeEventListener("message", responseListener);
             }
         }
