@@ -1,3 +1,5 @@
+import Worker from "./queryWorker.js"
+
 /**
  * @class Query
  * @file Makes queries and returns them
@@ -8,6 +10,7 @@ const Query = {
     linked: {},
     linkedCollections: [],
     backgroundLoader: null,
+    queryWorker = new Worker(),
     /**
       * Inits this namespace
       * @memberof Query
@@ -31,6 +34,8 @@ const Query = {
       */
     async makeQuery(query) {
         console.log(`in makeQuery`)
+        const { collection } = query;
+        this._throwErrorsIfNeeded({ collection });
         // if (!this.backgroundLoader) {
         //     throw "Query namespace needs to be `init`ted!";
         // }
@@ -45,24 +50,37 @@ const Query = {
     _linkedQuery(linked, query) {
         console.log(`in linkedQuery`)
         const { granularity } = query;
+        this._throwErrorsIfNeeded({ granularity });
         const epsilon = 100;
         let waitingRoom = [];
 
         const waitingRoomListener = (response) => {
-            console.log(response)
             const { event, payload } = response;
-            if(event === "data"){
-                payload.data && waitingRoom.push(payload.data); 
+            if (event === "data") {
+                payload.data && waitingRoom.push(payload.data);
+                if (waitingRoom.length >= epsilon) {
+                    dumpWaitingRoom();
+                }
             }
-            else if(event === "end") {
-
+            else if (event === "end") {
+                if (waitingRoom.length) {
+                    dumpWaitingRoom();
+                }
             }
         }
 
-        if (granularity === "coarse") {
+        const dumpWaitingRoom = () => {
             const queryClone = JSON.parse(JSON.stringify(query))
-            queryClone.collection = linked;
-            queryClone.callback = waitingRoomListener;
+            const GISJOINS = waitingRoom.map(entry => entry.GISJOIN);
+            queryClone.pipeline = [{ "$match": { "GISJOIN": { "$in": GISJOINS } } }, ...queryClone.pipeline]
+            this._queryMongo(queryClone);
+            waitingRoom = [];
+        }
+
+        const queryClone = JSON.parse(JSON.stringify(query))
+        queryClone.collection = linked;
+        queryClone.callback = waitingRoomListener;
+        if (granularity === "coarse") {
             this._queryCoarse(queryClone);
         }
     },
@@ -80,6 +98,7 @@ const Query = {
 
     _queryPreloadedData(query) {
         const { collection, bounds, geohashBlacklist, callback } = query;
+        this._throwErrorsIfNeeded({ collection, bounds, callback });
 
         const loader = this.backgroundLoader(collection);
         let newGeohashes = [];
@@ -117,8 +136,17 @@ const Query = {
 
     },
 
-    _queryMatch() {
+    _queryMongo(query) {
+        const { pipeline, collection } = query;
+        this._throwErrorsIfNeeded({ collection, pipeline });
+    },
 
+    _throwErrorsIfNeeded(obj) {
+        for (const [key, value] of Object.entries(obj)) {
+            if (value == null) {
+                throw new Error(`${key} cannot be null!`);
+            }
+        }
     }
 
     // addToExistingFeaturesNoDuplicates(existingFeatures, newFeatures) {
