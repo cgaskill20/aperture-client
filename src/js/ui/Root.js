@@ -22,7 +22,7 @@ const Root = ({ map }) => {
                 <GoTo />
             </div>
 
-            <div id="newSidebar" className="newSidebar">
+            <div>
                 <Sidebar/>
             </div>
 

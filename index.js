@@ -15,10 +15,6 @@ import "./src/css/third-party/MarkerCluster.css";
 import "./src/css/third-party/MarkerCluster.Default.css";
 import "./src/css/third-party/chart.css";
 
-
-import "./src/css/new/newMain.css";
-
-
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 

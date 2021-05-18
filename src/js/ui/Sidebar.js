@@ -19,6 +19,7 @@ const drawerWidth = 680;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        zIndex: 2001,
     },
     menuButton: {
         margin: theme.spacing(4),
