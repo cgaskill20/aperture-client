@@ -1,18 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
-import VolumeDown from '@material-ui/icons/VolumeDown';
-import VolumeUp from '@material-ui/icons/VolumeUp';
 
 const useStyles = makeStyles({
     root: {
-        width: 200,
+        width: 180,
     },
 });
 
-export default function ContinuousSlider() {
+export default function DESlider(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(30);
 
@@ -22,24 +19,10 @@ export default function ContinuousSlider() {
 
     return (
         <div className={classes.root}>
-            <Typography id="continuous-slider" gutterBottom>
-                Volume
+            <Typography id="continuous-slider">
+                {props.title}
             </Typography>
-            <Grid container spacing={2}>
-                <Grid item>
-                    <VolumeDown />
-                </Grid>
-                <Grid item xs>
-                    <Slider value={value} onChange={handleChange} aria-labelledby="continuous-slider" />
-                </Grid>
-                <Grid item>
-                    <VolumeUp />
-                </Grid>
-            </Grid>
-            <Typography id="disabled-slider" gutterBottom>
-                Disabled slider
-            </Typography>
-            <Slider disabled defaultValue={30} aria-labelledby="disabled-slider" />
+            <Slider value={value} onChange={handleChange} aria-labelledby="continuous-slider" />
         </div>
     );
 }
