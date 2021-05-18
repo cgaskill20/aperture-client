@@ -8,6 +8,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DECheckbox from "./DECheckbox"
 import DESlider from "./DESlider"
 import DESearchBar from './DESearchBar'
+import DEAccordion from "./DEAccordion";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,32 +26,31 @@ export default function DataExploration() {
     return (
         <div className={classes.root}>
             <DESearchBar/>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <Typography className={classes.heading}>Future Heatwaves</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <DECheckbox title="Heatwaves Checkbox 1"/>
-                    <DESlider title="Heatwaves Slider 1"/>
-                </AccordionDetails>
-            </Accordion>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel2a-content"
-                    id="panel2a-header"
-                >
-                    <Typography className={classes.heading}>Median Income</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <DESlider title="Income Slider 1"/>
-                </AccordionDetails>
-            </Accordion>
-
+            <DEAccordion
+                title="Future Heatwaves"
+                content={
+                    <box>
+                        <DECheckbox title="Heatwaves Checkbox 1" />
+                        <DECheckbox title="Heatwaves Checkbox 2" />
+                        <DECheckbox title="Heatwaves Checkbox 3" />
+                        <DESlider title="Heatwaves Slider 1" />
+                        <DESlider title="Heatwaves Slider 2" />
+                    </box>
+                }
+            />
+            <DEAccordion
+                title="Median Tract Income"
+                content={
+                    <box>
+                        <DECheckbox title="Median Income Checkbox 1" />
+                        <DECheckbox title="Median Income Checkbox 2" />
+                        <DECheckbox title="Median Income Checkbox 3" />
+                        <DECheckbox title="Median Income Checkbox 4" />
+                        <DESlider title="Median Income Slider 1" />
+                        <DESlider title="Median Income Slider 2" />
+                    </box>
+                }
+            />
         </div>
     );
 }
