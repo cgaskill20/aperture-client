@@ -21,9 +21,9 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
     },
     menuButton: {
-        marginRight: theme.spacing(2),
+        margin: theme.spacing(4),
         zIndex: 2002,
-        top: -30,
+        // top: -30,
     },
     hide: {
         display: 'none',
@@ -80,17 +80,14 @@ export default function PersistentDrawerLeft() {
         <div className={classes.root}>
             <Button
                 variant="outlined"
-                color="default"
-                className={classes.menuButton}
+                color="inherit"
+                className={clsx(classes.menuButton, open && classes.hide)}
                 startIcon={<MenuIcon />}
                 aria-label="open drawer"
                 onClick={handleDrawerOpen}
             >
                 Menu
             </Button>
-            {/*<IconButton aria-label="open drawer" onClick={handleDrawerOpen} className={classes.menuButton}>*/}
-            {/*    <MenuIcon />*/}
-            {/*</IconButton>*/}
             <Drawer
                 className={classes.drawer}
                 variant="persistent"
