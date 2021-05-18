@@ -7,6 +7,9 @@ const useStyles = makeStyles({
     root: {
         width: 180,
     },
+    text: {
+        align: "center",
+    }
 });
 
 export default function DESlider(props) {
@@ -19,7 +22,7 @@ export default function DESlider(props) {
 
     return (
         <div className={classes.root}>
-            <Typography id="continuous-slider">
+            <Typography id="continuous-slider" className={classes.text}>
                 {props.title}
             </Typography>
             <Slider value={value} onChange={handleChange} aria-labelledby="continuous-slider" />

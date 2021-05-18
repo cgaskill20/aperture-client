@@ -7,9 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DECheckbox from "./DECheckbox"
 import DESlider from "./DESlider"
-import SearchIcon from '@material-ui/icons/Search';
 import DESearchBar from './DESearchBar'
-import {InputBase, TextField} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {
