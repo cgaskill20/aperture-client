@@ -1,5 +1,6 @@
 import React, { Component, useEffect, useRef, useState } from 'react';
 import { InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reactstrap';
+import { useGlobalState } from '../global/GlobalState'
 import L from 'leaflet';
 import $ from "jquery";
 
@@ -53,28 +54,31 @@ function renderGoHome(locationPerms) {
     }
 }
 
-export default function SearchLocation(props) {
+export default function SearchLocation() {
+    const [globalState, setGlobalState] = useGlobalState();
     const locationSearchRef = useRef(null);
     const [locationPerms, setLocationPerms] = useState(false);
+
     useEffect(() => {
-        goHome().then(res => { 
+        goHome().then(res => {
             setLocationPerms(res);
-            if(!res){
+            if (!res) {
                 $(".leaflet-top.leaflet-right").css({ top: '49px' });
             }
-         })
+        })
     }, []);
+
     return <div>
         <InputGroup>
             <InputGroupAddon addonType="prepend">
-                <Button onClick={() => { search(locationSearchRef.current.value, props.map) }}>
+                <Button onClick={() => { search(locationSearchRef.current.value, globalState.map) }}>
                     🔍
                 </Button>
             </InputGroupAddon>
-            <Input 
-                innerRef={locationSearchRef} 
-                placeholder="Search for a location..." 
-                onKeyPress={(e) => e.key === 'Enter' && search(locationSearchRef.current.value, props.map)} 
+            <Input
+                innerRef={locationSearchRef}
+                placeholder="Search for a location..."
+                onKeyPress={(e) => e.key === 'Enter' && search(locationSearchRef.current.value, globalState.map)}
             />
         </InputGroup>
         {renderGoHome(locationPerms)}

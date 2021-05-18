@@ -29,13 +29,12 @@ L.Icon.Default.mergeOptions({
 
 import ChartSystem from "./src/js/library/charting/chartSystem"
 import ModelMenu from "./src/js/ui/modeling/components/ModelMenu";
-import PreloadingMenu from "./src/js/ui/preloading-menu/components/PreloadingMenu"
 import AutoQuery from "./src/js/library/autoQuery.js";
 import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";
 import MenuGenerator, { updateLayers } from "./src/js/ui/menuGenerator.js";
-import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
-import GoTo from "./src/js/ui/GoTo"
+// import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
+import Root from "./src/js/ui/Root";
 
 //idek what to do with theses files, things break if I try to make them import specific things
 import "./src/js/third-party/leaflet.markercluster.js";
@@ -110,20 +109,18 @@ let bgTractId = "bgTract";
 let bgCountyId = "bgCounty";
 const backgroundTract = new Worker();
 const backgroundCounty = new Worker();
-ReactDOM.render((<PreloadingMenu 
-    loaders={[
-        {
-            id: bgTractId,
-            loader: backgroundTract,
-            collection: "tract_geo_140mb_no_2d_index"
-        },
-        {
-            id: bgCountyId,
-            loader: backgroundCounty,
-            collection: "county_geo_30mb_no_2d_index"
-        }
-    ]}/>), 
-preloadStatusContainer);
+globalThis.loaders = [
+    {
+        id: bgTractId,
+        loader: backgroundTract,
+        collection: "tract_geo_140mb_no_2d_index"
+    },
+    {
+        id: bgCountyId,
+        loader: backgroundCounty,
+        collection: "county_geo_30mb_no_2d_index"
+    }
+];
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty;
 
@@ -176,14 +173,14 @@ $.getJSON("src/json/menumetadata.json", async function (mdata) { //this isnt on 
     MenuGenerator.generate(finalData, document.getElementById("sidebar-container"));
 });
 
+const uiRoot = document.getElementById("ui-root");
+ReactDOM.render((<Root map={map}/>), uiRoot);
+
 const modelContainer = document.getElementById("model-container");
 ReactDOM.render((<ModelMenu/>), modelContainer);
 
-const queryBlockContainer = document.getElementById("query-block-container");
-ReactDOM.render((<DefensiveOptimization />), queryBlockContainer);
-
-const currentLocationContainer = document.getElementById("current-location");
-ReactDOM.render((<GoTo map={map}/>),currentLocationContainer)
+// const queryBlockContainer = document.getElementById("query-block-container");
+// ReactDOM.render((<DefensiveOptimization />), queryBlockContainer);
 
 map.on("moveend", function (e) {
     updateLayers();

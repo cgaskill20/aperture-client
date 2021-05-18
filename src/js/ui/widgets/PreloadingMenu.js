@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ProgressBar from '../../../third-party/progressbar.min.js';
+import ProgressBar from '../../third-party/progressbar.min.js';
 const e = React.createElement;
 
 export default class PreloadingMenu extends React.Component {
@@ -122,7 +122,7 @@ export default class PreloadingMenu extends React.Component {
 
             this.loadersRemaining--;
             if (!this.loadersRemaining) {
-                document.getElementById("preloadBlocker").style.display = "none";
+                this.props.onFinish();
             }
         }
     }
