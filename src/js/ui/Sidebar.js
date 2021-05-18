@@ -2,17 +2,12 @@ import React from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import {Button} from "@material-ui/core";
+import TabSystem from "./TabSystem"
 
 const drawerWidth = 680;
 
@@ -22,9 +17,10 @@ const useStyles = makeStyles((theme) => ({
         zIndex: 2001,
     },
     menuButton: {
-        margin: theme.spacing(4),
+        margin: theme.spacing(5),
         zIndex: 2002,
-        // top: -30,
+        top: -20,
+        left: -20,
     },
     hide: {
         display: 'none',
@@ -38,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
         opacity: 0.85,
     },
     drawerHeader: {
-        //Put the Tab Navigation here
         display: 'flex',
         alignItems: 'center',
         padding: theme.spacing(0, 1),
@@ -64,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function PersistentDrawerLeft() {
+export default function Sidebar() {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -103,15 +98,7 @@ export default function PersistentDrawerLeft() {
                         <ChevronLeftIcon />
                     </IconButton>
                 </div>
-                <Divider />
-                <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
+                <TabSystem />
             </Drawer>
             <main
                 className={clsx(classes.content, {
