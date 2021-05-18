@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import {Paper} from "@material-ui/core";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import {Paper} from "@material-ui/core";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -57,7 +57,7 @@ export default function TabSystem() {
 
     return (
         <div className={classes.root}>
-            <Paper position="static" color="default">
+            <Paper>
                 <Tabs
                     value={value}
                     onChange={handleChange}

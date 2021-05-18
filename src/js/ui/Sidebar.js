@@ -2,14 +2,14 @@ import React from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import Divider from '@material-ui/core/Divider';
+import TabSystem from "./TabSystem"
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import {Button} from "@material-ui/core";
-import TabSystem from "./TabSystem"
+import Grid from '@material-ui/core/Grid';
 
-const drawerWidth = 680;
+const drawerWidth = 800;
 
 const useStyles = makeStyles((theme) => ({
     root: {
