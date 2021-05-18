@@ -21,7 +21,7 @@ const Query = {
         }
         this.linkedCollections = [...new Set(Object.values(this.linked))]
         this.backgroundLoader = (linked) => linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
-        console.log(this.linkedCollections)
+        console.log(this.linked)
     },
 
     /**
@@ -30,6 +30,7 @@ const Query = {
       * @param {JSON} query JSON that matches a query schema
       */
     async makeQuery(query) {
+        console.log(`in makeQuery`)
         // if (!this.backgroundLoader) {
         //     throw "Query namespace needs to be `init`ted!";
         // }
@@ -42,61 +43,91 @@ const Query = {
     },
 
     _linkedQuery(linked, query) {
-        const { bounds, callback, granularity, geohashBlacklist } = query;
+        console.log(`in linkedQuery`)
+        const { granularity } = query;
         const epsilon = 100;
-    },
+        let waitingRoom = [];
 
-    _queryCoarse(query, callbackTo = null) {
-        const { collection, bounds, geohashBlacklist, callback } = query;
-        callbackTo = callbackTo ?? callback
-        if (this.linkedCollections.includes(collection)) {
-            const loader = this.backgroundLoader(collection);
-            let newGeohashes = [];
-            const sessionID = Math.random().toString(36).substring(2, 6);
-
-            loader.postMessage({
-                type: "query",
-                senderID: sessionID,
-                bounds: bounds,
-                blacklist: geohashBlacklist ?? []
-            });
-
-            const responseListener = msg => {
-                const data = msg.data;
-                //check that the data is sent from this querier
-                if (data.senderID !== sessionID)
-                    return;
-
-                if (data.type === "data") {
-                    //populate records & cache with no duplicates
-                    callbackTo({ event: "data", data: data.data.data });
-                    newGeohashes = [...new Set([...data.data.geohashes, ...newGeohashes])];
-                }
-                else if (data.type === "end") {
-                    //close the listener
-                    loader.removeEventListener("message", responseListener);
-                    callbackTo({ event: "end", geohashes: newGeohashes });
-                }
+        const waitingRoomListener = (response) => {
+            console.log(response)
+            const { event, payload } = response;
+            if(event === "data"){
+                payload.data && waitingRoom.push(payload.data); 
+            }
+            else if(event === "end") {
 
             }
-            loader.addEventListener("message", responseListener)
+        }
+
+        if (granularity === "coarse") {
+            const queryClone = JSON.parse(JSON.stringify(query))
+            queryClone.collection = linked;
+            queryClone.callback = waitingRoomListener;
+            this._queryCoarse(queryClone);
+        }
+    },
+
+    _queryCoarse(query) {
+        console.log(`in queryCoarse`)
+        const { collection } = query;
+        if (this.linkedCollections.includes(collection)) {
+            this._queryPreloadedData(query)
         }
         else {
 
         }
     },
 
+    _queryPreloadedData(query) {
+        const { collection, bounds, geohashBlacklist, callback } = query;
+
+        const loader = this.backgroundLoader(collection);
+        let newGeohashes = [];
+        const sessionID = Math.random().toString(36).substring(2, 6);
+
+        loader.postMessage({
+            type: "query",
+            senderID: sessionID,
+            bounds: bounds,
+            blacklist: geohashBlacklist ?? []
+        });
+
+        const responseListener = msg => {
+            const data = msg.data;
+            //check that the data is sent from this querier
+            if (data.senderID !== sessionID)
+                return;
+
+            if (data.type === "data") {
+                //populate records & cache with no duplicates
+                callback({ event: "data", payload: { data: data.data.data } });
+                newGeohashes = [...new Set([...data.data.geohashes, ...newGeohashes])];
+            }
+            else if (data.type === "end") {
+                //close the listener
+                loader.removeEventListener("message", responseListener);
+                callback({ event: "end", payload: { geohashes: newGeohashes } });
+            }
+
+        }
+        loader.addEventListener("message", responseListener)
+    },
+
     _queryFine(query) {
 
     },
 
-    addToExistingFeaturesNoDuplicates(existingFeatures, newFeatures) {
-        const newFeaturesNoDuplicates = newFeatures.filter(nFeature => {
-            return !existingFeatures.find(eFeature => eFeature.GISJOIN === nFeature.GISJOIN)
-        });
-        return existingFeatures.concat(newFeaturesNoDuplicates)
-    },
+    _queryMatch() {
+
+    }
+
+    // addToExistingFeaturesNoDuplicates(existingFeatures, newFeatures) {
+    //     const newFeaturesNoDuplicates = newFeatures.filter(nFeature => {
+    //         return !existingFeatures.find(eFeature => eFeature.GISJOIN === nFeature.GISJOIN)
+    //     });
+    //     return existingFeatures.concat(newFeaturesNoDuplicates)
+    // },
 
 }
-
+window.Query = Query;
 export default Query;
