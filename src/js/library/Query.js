@@ -18,6 +18,7 @@ const Query = {
       * @param {JSON} queryableData JSON from automenu.js
       */
     init(queryableData) {
+        console.log("here")
         this.queryWorker.postMessage({
             type: "config"
         });
@@ -100,11 +101,27 @@ const Query = {
             }
         }
 
+        const dumpCallback = (d) => {
+            const { event, payload } = d;
+            if(event === "data"){
+                query.callback(d);
+            }
+            else if(event === "end"){
+                query.callback({
+                    event,
+                    payload: {
+                        ...payload,
+                        geohashes
+                    }
+                })
+            }
+        }
+
         const dumpWaitingRoom = () => {
             const queryDump = JSON.parse(JSON.stringify(query))
             const GISJOINS = waitingRoom.map(entry => entry.GISJOIN);
             queryDump.pipeline = [{ "$match": { "GISJOIN": { "$in": GISJOINS } } }, ...queryDump.pipeline]
-            queryDump.callback = query.callback;
+            queryDump.callback = dumpCallback;
             this._queryMongo(queryDump);
             waitingRoom = [];
         }
@@ -208,13 +225,6 @@ const Query = {
             }
         }
     }
-
-    // addToExistingFeaturesNoDuplicates(existingFeatures, newFeatures) {
-    //     const newFeaturesNoDuplicates = newFeatures.filter(nFeature => {
-    //         return !existingFeatures.find(eFeature => eFeature.GISJOIN === nFeature.GISJOIN)
-    //     });
-    //     return existingFeatures.concat(newFeaturesNoDuplicates)
-    // },
 
 }
 window.Query = Query;
