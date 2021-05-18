@@ -9,6 +9,8 @@ import DECheckbox from "./DECheckbox"
 import DESlider from "./DESlider"
 import DESearchBar from './DESearchBar'
 import DEAccordion from "./DEAccordion";
+import {Card, CardContent} from "@material-ui/core";
+import theme from "../global/GlobalTheme";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -17,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     heading: {
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
+    },
+    cardSpace: {
+        margin: theme.spacing(1),
     },
 }));
 
@@ -30,11 +35,20 @@ export default function DataExploration() {
                 title="Future Heatwaves"
                 content={
                     <box>
-                        <DECheckbox title="Heatwaves Checkbox 1" />
-                        <DECheckbox title="Heatwaves Checkbox 2" />
-                        <DECheckbox title="Heatwaves Checkbox 3" />
-                        <DESlider title="Heatwaves Slider 1" />
-                        <DESlider title="Heatwaves Slider 2" />
+                        <Card className={classes.cardSpace} variant="outlined">
+                            <CardContent>
+                                <DECheckbox title="Heatwaves Checkbox 1" />
+                                <DECheckbox title="Heatwaves Checkbox 2" />
+                                <DECheckbox title="Heatwaves Checkbox 3" />
+                            </CardContent>
+                        </Card>
+
+                        <Card className={classes.cardSpace} variant="outlined">
+                            <CardContent>
+                                <DESlider title="Heatwaves Slider 1" />
+                                <DESlider title="Heatwaves Slider 2" />
+                            </CardContent>
+                        </Card>
                     </box>
                 }
             />
@@ -42,12 +56,20 @@ export default function DataExploration() {
                 title="Median Tract Income"
                 content={
                     <box>
-                        <DECheckbox title="Median Income Checkbox 1" />
-                        <DECheckbox title="Median Income Checkbox 2" />
-                        <DECheckbox title="Median Income Checkbox 3" />
-                        <DECheckbox title="Median Income Checkbox 4" />
-                        <DESlider title="Median Income Slider 1" />
-                        <DESlider title="Median Income Slider 2" />
+                        <Card className={classes.cardSpace} variant="outlined">
+                            <CardContent>
+                                <DECheckbox title="Median Income Checkbox 1" />
+                                <DECheckbox title="Median Income Checkbox 2" />
+                                <DECheckbox title="Median Income Checkbox 3" />
+                                <DECheckbox title="Median Income Checkbox 4" />
+                            </CardContent>
+                        </Card>
+                        <Card className={classes.cardSpace} variant="outlined">
+                            <CardContent>
+                                <DESlider title="Median Income Slider 1" />
+                                <DESlider title="Median Income Slider 2" />
+                            </CardContent>
+                        </Card>
                     </box>
                 }
             />
