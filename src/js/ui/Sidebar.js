@@ -7,7 +7,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import {Button} from "@material-ui/core";
-import Grid from '@material-ui/core/Grid';
 
 const drawerWidth = 800;
 
@@ -37,8 +36,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         padding: theme.spacing(0, 1),
-        // necessary for content to be below app bar
-        ...theme.mixins.toolbar,
         justifyContent: 'flex-end',
     },
     content: {
