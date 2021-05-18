@@ -1,4 +1,5 @@
 import Worker from "./queryWorker.js"
+import Util from "./apertureUtil"
 
 /**
  * @class Query
@@ -10,13 +11,16 @@ const Query = {
     linked: {},
     linkedCollections: [],
     backgroundLoader: null,
-    queryWorker = new Worker(),
+    queryWorker: new Worker(),
     /**
       * Inits this namespace
       * @memberof Query
       * @param {JSON} queryableData JSON from automenu.js
       */
     init(queryableData) {
+        this.queryWorker.postMessage({
+            type: "config"
+        });
         for (const [collection, data] of Object.entries(queryableData)) {
             if (data.linkedGeometry) {
                 this.linked[collection] = data.linkedGeometry;
@@ -35,6 +39,7 @@ const Query = {
     async makeQuery(query) {
         console.log(`in makeQuery`)
         const { collection } = query;
+        query.pipeline = query.pipeline ?? []
         this._throwErrorsIfNeeded({ collection });
         // if (!this.backgroundLoader) {
         //     throw "Query namespace needs to be `init`ted!";
@@ -57,7 +62,7 @@ const Query = {
         const waitingRoomListener = (response) => {
             const { event, payload } = response;
             if (event === "data") {
-                payload.data && waitingRoom.push(payload.data);
+                payload.data && Array.isArray(payload.data) ? waitingRoom.push(...payload.data) : waitingRoom.push(payload.data);
                 if (waitingRoom.length >= epsilon) {
                     dumpWaitingRoom();
                 }
@@ -139,6 +144,30 @@ const Query = {
     _queryMongo(query) {
         const { pipeline, collection } = query;
         this._throwErrorsIfNeeded({ collection, pipeline });
+        console.log("query mongo")
+        const sessionID = Math.random().toString(36).substring(2, 6);
+        this.queryWorker.postMessage({
+            type: "query",
+            collection,
+            queryParams: pipeline,
+            senderID: sessionID
+        });
+
+        const responseListener = msg => {
+            const data = msg.data;
+            if (data.senderID !== sessionID)
+                return;
+            if (data.type === "data") {
+                const dataFromServer = data.data;
+                Util.normalizeFeatureID(dataFromServer);
+                console.log(dataFromServer)
+            }
+            else if (data.type === "end") {
+                this.queryWorker.removeEventListener("message", responseListener);
+            }
+        }
+
+        this.queryWorker.addEventListener("message", responseListener);
     },
 
     _throwErrorsIfNeeded(obj) {
