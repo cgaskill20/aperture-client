@@ -10,6 +10,10 @@
   transition: 0.3s;
 }
 
+.oldMenuButton {
+    margin-left: 100px;
+}
+
 .noTransitions {
     transition: 0.0s;
 }

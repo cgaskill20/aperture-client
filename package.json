@@ -29,6 +29,7 @@
     "browserify": "^16.5.0",
     "canvas": "^2.6.1",
     "chroma-js": "^2.1.0",
+    "clsx": "^1.1.1",
     "create-react-app": "^2.1.1",
     "d3": "^4.13.0",
     "data2grid": "^1.0.0",
