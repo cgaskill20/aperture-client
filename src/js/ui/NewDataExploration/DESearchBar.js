@@ -23,7 +23,7 @@ export default function DESearchBar() {
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        label="Search Datasets"
+                        label="Search Datasets..."
                         margin="normal"
                         variant="outlined"
                         InputProps={{ ...params.InputProps, type: 'search' }}
