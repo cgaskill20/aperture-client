@@ -20,4 +20,5 @@ export const datasetList = [
     {title: 'Air Quality Index'},
     {title: 'US Census'},
     {title: 'Dams'},
+    {title: 'SVI'},
 ];
