@@ -9,6 +9,7 @@ import Box from '@material-ui/core/Box';
 import NewDataExploration from "./NewDataExploration/NewDataExploration";
 import NewModeling from "./NewModeling/NewModeling";
 import NewValidation from "./NewValidation/NewValidation";
+import { useGlobalState } from "./global/GlobalState";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -53,8 +54,15 @@ const useStyles = makeStyles((theme) => ({
 export default function TabSystem() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    const [globalState, setGlobalState] = useGlobalState();
+    const valueMap = {
+        1: "dataExloration",
+        2: "modeling",
+        3: "validation"
+    }
 
     const handleChange = (event, newValue) => {
+        setGlobalState({ mode: valueMap[newValue] });
         setValue(newValue);
     };
 
