@@ -56,9 +56,9 @@ export default function TabSystem() {
     const [value, setValue] = React.useState(0);
     const [globalState, setGlobalState] = useGlobalState();
     const valueMap = {
-        1: "dataExloration",
-        2: "modeling",
-        3: "validation"
+        0: "dataExploration",
+        1: "modeling",
+        2: "validation"
     }
 
     const handleChange = (event, newValue) => {
