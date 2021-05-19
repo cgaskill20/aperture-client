@@ -4,7 +4,6 @@ import DECheckbox from "./DECheckbox"
 import DESlider from "./DESlider"
 import DESearchBar from './DESearchBar'
 import DEAccordion from "./DEAccordion";
-import {Card, CardContent} from "@material-ui/core";
 import DECard from "./DECard";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,12 +19,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function DataExploration() {
+export default function NewDataExploration() {
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
-            <DESearchBar/>
+            <DESearchBar />
             <DEAccordion
                 title="Future Heatwaves"
                 content={

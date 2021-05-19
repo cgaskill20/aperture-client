@@ -6,7 +6,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import DataExploration from "./DataExploration/DataExploration";
+import NewDataExploration from "./NewDataExploration/NewDataExploration";
+import NewModeling from "./NewModeling/NewModeling";
+import NewValidation from "./NewValidation/NewValidation";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -72,13 +74,13 @@ export default function TabSystem() {
                 </Tabs>
             </Paper>
             <TabPanel value={value} index={0}>
-                <DataExploration/>
+                <NewDataExploration />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Modeling
+                <NewModeling />
             </TabPanel>
             <TabPanel value={value} index={2}>
-                Validation
+                <NewValidation />
             </TabPanel>
         </div>
     );
