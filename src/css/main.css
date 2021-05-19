@@ -11,7 +11,9 @@
 }
 
 .oldMenuButton {
-    margin-left: 150px;
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
 }
 
 .noTransitions {
