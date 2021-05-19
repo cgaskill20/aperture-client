@@ -7,15 +7,18 @@ const useStyles = makeStyles({
     root: {
         width: 300,
     },
+    title: {
+        textAlign: "center",
+    },
 });
 
 function valuetext(value) {
-    return `${value}°C`;
+    return `${value}`;
 }
 
 export default function DESlider(props) {
     const classes = useStyles();
-    const [value, setValue] = React.useState([20, 66]);
+    const [value, setValue] = React.useState([12, 66]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -23,7 +26,7 @@ export default function DESlider(props) {
 
     return (
         <div className={classes.root}>
-            <Typography id="range-slider" gutterBottom>
+            <Typography className={classes.title} id="range-slider" gutterBottom>
                 {props.title}
             </Typography>
             <Slider

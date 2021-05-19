@@ -4,7 +4,7 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Paper} from "@material-ui/core";
+import {Paper, Switch} from "@material-ui/core";
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
@@ -22,6 +22,14 @@ const useStyles = makeStyles((theme) => ({
 export default function DEAccordion(props) {
     const classes = useStyles();
 
+    const [state, setState] = React.useState({
+        checked: false,
+    });
+
+    const handleChange = (event) => {
+        setState({ ...state, [event.target.name]: event.target.checked });
+    };
+
     return (
         <div className={classes.root}>
             <Paper elevation={1}>
@@ -35,8 +43,10 @@ export default function DEAccordion(props) {
                             aria-label="CheckLayer"
                             onClick={(event) => event.stopPropagation()}
                             onFocus={(event) => event.stopPropagation()}
-                            control={<Checkbox color="primary" />}
+                            onChange={handleChange}
+                            control={<Switch color="primary" />}
                             label={props.title}
+                            name="checked"
                         />
                     </AccordionSummary>
                     <AccordionDetails>
