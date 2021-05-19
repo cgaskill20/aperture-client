@@ -5,7 +5,7 @@ import DESlider from "./DESlider"
 import DESearchBar from './DESearchBar'
 import DEAccordion from "./DEAccordion";
 import DECard from "./DECard";
-import {Typography} from "@material-ui/core";
+import DELayerControls from "./DELayerControls";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,7 +58,7 @@ export default function NewDataExploration() {
             checkboxes: SVICheckboxes,
             sliders: SVISliders,
             text: "Social Vulnerability Index is calculated by the....yada yada yada. ",
-            url: "https://urban-sustain.org/services/operationalDatasets.php#svi"
+            url: "https://urban-sustain.org/services/operationalDatasets.php#census"
         };
 
     let MasterArray = [HWAccordion, MIAccordion, PSAccordion, SVIAccordion];
@@ -71,10 +71,7 @@ export default function NewDataExploration() {
                     <DEAccordion title={dataset.datasetName}
                         content={
                             <box>
-                                <Typography>
-                                    {dataset.text}
-                                    Find more info about this <a href={dataset.url} target="_blank">dataset</a> on our website.
-                                </Typography>
+                                <DELayerControls text={dataset.text} url={dataset.url}/>
                                 <DECard
                                     content={
                                         <box>

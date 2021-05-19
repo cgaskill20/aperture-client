@@ -5,6 +5,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import {Paper} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,18 +23,20 @@ export default function DEAccordion(props) {
 
     return (
         <div className={classes.root}>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <Typography className={classes.heading}>{props.title}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    {props.content}
-                </AccordionDetails>
-            </Accordion>
+            <Paper elevation={1}>
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <Typography className={classes.heading}>{props.title}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        {props.content}
+                    </AccordionDetails>
+                </Accordion>
+            </Paper>
         </div>
     );
 }
