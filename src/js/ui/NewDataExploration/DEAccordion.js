@@ -6,6 +6,8 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Paper} from "@material-ui/core";
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,7 +32,13 @@ export default function DEAccordion(props) {
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                     >
-                        <Typography className={classes.heading}>{props.title}</Typography>
+                        <FormControlLabel
+                            aria-label="CheckLayer"
+                            onClick={(event) => event.stopPropagation()}
+                            onFocus={(event) => event.stopPropagation()}
+                            control={<Checkbox color="primary" />}
+                            label={props.title}
+                        />
                     </AccordionSummary>
                     <AccordionDetails>
                         {props.content}
