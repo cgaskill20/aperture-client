@@ -5,16 +5,17 @@ import Slider from '@material-ui/core/Slider';
 
 const useStyles = makeStyles({
     root: {
-        width: 180,
+        width: 300,
     },
-    text: {
-        align: "center",
-    }
 });
+
+function valuetext(value) {
+    return `${value}°C`;
+}
 
 export default function DESlider(props) {
     const classes = useStyles();
-    const [value, setValue] = React.useState(30);
+    const [value, setValue] = React.useState([20, 66]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -22,10 +23,16 @@ export default function DESlider(props) {
 
     return (
         <div className={classes.root}>
-            <Typography id="continuous-slider" className={classes.text}>
+            <Typography id="range-slider" gutterBottom>
                 {props.title}
             </Typography>
-            <Slider value={value} onChange={handleChange} aria-labelledby="continuous-slider" />
+            <Slider
+                value={value}
+                onChange={handleChange}
+                valueLabelDisplay="auto"
+                aria-labelledby="range-slider"
+                getAriaValueText={valuetext}
+            />
         </div>
     );
 }
