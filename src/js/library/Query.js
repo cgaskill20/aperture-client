@@ -39,7 +39,7 @@ const Query = {
       */
     async makeQuery(query) {
         console.log(`in makeQuery`)
-        const { collection } = query;
+        const { collection, granularity } = query;
         query.pipeline = query.pipeline ?? []
         this._throwErrorsIfNeeded({ collection });
 
@@ -47,6 +47,12 @@ const Query = {
         const linked = this.linked[query.collection];
         if (linked) { //making an edge case for this one cause it is fast as hell
             this._linkedQuery(linked, query);
+        }
+        else if(granularity === "coarse"){
+            this._queryCoarse(query);
+        }
+        else if(granularity === "fine"){
+            this._queryFine(query);
         }
 
         if (!query.callback) {
@@ -61,11 +67,11 @@ const Query = {
                 if (event === "data") {
                     payload.data && Array.isArray(payload.data) ? allData.push(...payload.data) : allData.push(payload.data);
                 }
-                else if(event === "end"){
+                else if (event === "end") {
                     const ret = {
                         data: allData
                     }
-                    if(payload.geohashBlacklist){
+                    if (payload.geohashBlacklist) {
                         ret.geohashBlacklist = payload.geohashBlacklist;
                     }
                     resolve(ret);
@@ -82,6 +88,7 @@ const Query = {
         const epsilon = 100;
         let waitingRoom = [];
         let geohashes;
+        let waitingRoomDone = false;
 
         const waitingRoomListener = (response) => {
             const { event, payload } = response;
@@ -92,28 +99,39 @@ const Query = {
                 }
             }
             else if (event === "end") {
-                if(payload.geohashes){
+                waitingRoomDone = true;
+                if (payload.geohashes) {
                     geohashes = payload.geohashes;
                 }
                 if (waitingRoom.length) {
                     dumpWaitingRoom();
                 }
+                else {
+                    finished();
+                }
             }
+        }
+
+        const finished = () => {
+            const res = {
+                event: "end",
+                payload: {}
+            }
+            if(geohashes.length){
+                res.payload = {
+                    geohashes
+                }
+            }
+            query.callback(res)
         }
 
         const dumpCallback = (d) => {
             const { event, payload } = d;
-            if(event === "data"){
+            if (event === "data") {
                 query.callback(d);
             }
-            else if(event === "end"){
-                query.callback({
-                    event,
-                    payload: {
-                        ...payload,
-                        geohashes
-                    }
-                })
+            else if (event === "end" && waitingRoomDone) {
+                finished();
             }
         }
 
@@ -133,18 +151,21 @@ const Query = {
             this._queryCoarse(queryLinked);
         }
         else if (granularity === "fine") {
-
+            this._queryFine(queryLinked);
         }
     },
 
     _queryCoarse(query) {
         console.log(`in queryCoarse`)
-        const { collection } = query;
-        if (this.linkedCollections.includes(collection)) {
+        const { collection, bounds } = query;
+        if (bounds && this.linkedCollections.includes(collection)) {
             this._queryPreloadedData(query)
         }
-        else {
-
+        else if(bounds) {
+            //hard part
+        }
+        else{
+            this._queryFine(query);
         }
     },
 
@@ -185,7 +206,12 @@ const Query = {
     },
 
     _queryFine(query) {
-
+        const { bounds, pipeline } = query;
+        if(bounds){
+            const barray = Util.leafletBoundsToGeoJSONPoly(bounds);
+            pipeline.push({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } });
+        }
+        this._queryMongo(query)
     },
 
     _queryMongo(query) {
@@ -224,7 +250,7 @@ const Query = {
                 throw new Error(`${key} cannot be null!`);
             }
         }
-    }
+    },
 
 }
 window.Query = Query;
