@@ -14,10 +14,10 @@ export default function DECard(props) {
     const classes = useStyles();
 
     return (
-        <Card className={classes.root} variant="outlined">
-            <CardContent>
-                {props.content}
-            </CardContent>
-        </Card>
+            <Card className={classes.root}>
+                <CardContent>
+                    {props.content}
+                </CardContent>
+            </Card>
     );
 }

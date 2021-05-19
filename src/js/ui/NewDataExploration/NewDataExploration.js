@@ -5,6 +5,7 @@ import DESlider from "./DESlider"
 import DESearchBar from './DESearchBar'
 import DEAccordion from "./DEAccordion";
 import DECard from "./DECard";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles((theme) => ({
     root: {
