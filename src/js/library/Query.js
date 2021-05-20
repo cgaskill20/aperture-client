@@ -1,7 +1,7 @@
 import Worker from "./queryWorker.js"
 import Util from "./apertureUtil"
 import boundsToGISJOIN from "./boundsToGISJOIN"
-import { geohash_adjacent } from "./geohash_util"
+import { geohash_adjacent, geohash_bounds } from "./geohash_util"
 
 /**
  * @class Query
@@ -180,37 +180,65 @@ const Query = {
         this._throwErrorsIfNeeded({ bounds, geohashBlacklist });
         const geohashes = boundsToGISJOIN.boundsToLengthNGeohashes(bounds, geohashBlacklist);
         const geohashGroup = {}
-        for(const hash of geohashes){
+        const edges = {};
+        const dirs = ['n', 's', 'e', 'w'];
+
+        for (const hash of geohashes) {
             geohashGroup[hash] = -1;
         }
-        let newBounds = [];
 
         const groupsDone = () => !Object.values(geohashGroup).includes(-1);
 
         const spread = (geohash, groupNum) => {
-            console.log({geohash, groupNum})
             geohashGroup[geohash] = groupNum;
-            const dirs = ['n','s','e','w'];
-            for(const dir of dirs){
-                const adjDir = geohash_adjacent(geohash, dir) 
-                if(geohashGroup[adjDir] === -1){
+            for (const dir of dirs) {
+                const adjDir = geohash_adjacent(geohash, dir)
+                if (geohashGroup[adjDir] === -1) {
                     spread(adjDir, groupNum)
+                }
+                else if (geohashGroup[adjDir] == null) {
+                    edges[groupNum] = edges[groupNum] ?? new Set();
+                    const bounds = geohash_bounds(geohash);
+                    switch (dir) {
+                        case 'n':
+                            //top left, top right
+                            edges[groupNum].add([[bounds.sw.lon, bounds.ne.lat], [bounds.ne.lon, bounds.ne.lat]]);
+                            break;
+                        case 's':
+                            //bottom right, bottom left
+                            edges[groupNum].add([[bounds.ne.lon, bounds.sw.lat], [bounds.sw.lon, bounds.sw.lat]]);
+                            break;
+                        case 'e':
+                            // top right, bottom right
+                            edges[groupNum].add([[bounds.ne.lon, bounds.ne.lat], [bounds.ne.lon, bounds.sw.lat]]);
+                            break;
+                        case 'w':
+                            // bottom left, top left
+                            edges[groupNum].add([[bounds.sw.lon, bounds.sw.lat], [bounds.sw.lon, bounds.ne.lat]]);
+                            break;
+                    }
                 }
             }
         }
 
-        const makeGroups = () => {
+        const getGroups = () => {
             let groupNum = 0;
-            while(!groupsDone()){
+            while (!groupsDone()) {
                 const firstOffendor = Object.keys(geohashGroup)[Object.values(geohashGroup).indexOf(-1)]
-                spread(firstOffendor,groupNum)
+                spread(firstOffendor, groupNum)
                 groupNum++;
             }
-            
+            let groups = [];
+            for (let group = 0; group <= Math.max(...Object.values(geohashGroup)); group++) {
+                const thisGroup = Object.keys(geohashGroup).filter(geohash => geohashGroup[geohash] === group)
+                groups.push(thisGroup)
+            }
+            return groups;
         }
 
-        makeGroups();
-        console.log(geohashGroup)
+        const groups = getGroups();
+        console.log(edges)
+
 
         return [newBounds, geohashes];
     },
