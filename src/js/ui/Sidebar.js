@@ -3,14 +3,10 @@ import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import TabSystem from "./TabSystem"
-import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import SettingsIcon from '@material-ui/icons/Settings';
 import {Button} from "@material-ui/core";
 
-const drawerWidth = 800;
+const drawerWidth = 700;
 
 const useStyles = makeStyles((theme) => ({
     root: {
