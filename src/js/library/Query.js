@@ -168,14 +168,37 @@ const Query = {
         }
         else if (bounds) {
             //hard part
-            const [coarseBounds, newGeohashes] = this._makeBoundsGetGeohashes(query);
+            const [coarseBounds, newGeohashes] = this._getBoundsGetGeohashes(query);
+            
+            const coarseCallback = (d, ignoreEnd = true) => {
+                const { event, payload } = d;
+                if (event === "data") {
+                    //console.log(d)
+                    query.callback(d);
+                }
+                else if(event === "end" && !ignoreEnd){
+                    d.payload = {
+                        ...payload,
+                        geohashes: newGeohashes
+                    }
+                    query.callback(d)
+                }
+            }
+
+            coarseBounds.forEach((coarseBound, index) => {
+                const queryClone = JSON.parse(JSON.stringify(query))
+                //console.log({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: coarseBound } } } } })
+                queryClone.pipeline.unshift({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: coarseBound } } } } });
+                queryClone.callback = (d) => {coarseCallback(d, index !== coarseBounds.length-1)};
+                this._queryMongo(queryClone)
+            });
         }
         else {
             this._queryMongo(query);
         }
     },
 
-    _makeBoundsGetGeohashes(query) { //just another very complex space-filling algorithm...
+    _getBoundsGetGeohashes(query) { //just another very complex space-filling algorithm...
         const { bounds, geohashBlacklist } = query;
         this._throwErrorsIfNeeded({ bounds, geohashBlacklist });
         const geohashes = boundsToGISJOIN.boundsToLengthNGeohashes(bounds, geohashBlacklist);
@@ -313,7 +336,7 @@ const Query = {
         const { bounds, pipeline } = query;
         if (bounds) {
             const barray = Util.leafletBoundsToGeoJSONPoly(bounds);
-            pipeline.push({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } });
+            pipeline.unshift({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } });
         }
         this._queryMongo(query)
     },
