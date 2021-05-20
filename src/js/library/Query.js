@@ -221,47 +221,55 @@ const Query = {
             }
         }
 
-        const getGroups = () => {
+        const makeEdges = () => {
             let groupNum = 0;
             while (!groupsDone()) {
                 const firstOffendor = Object.keys(geohashGroup)[Object.values(geohashGroup).indexOf(-1)]
                 spread(firstOffendor, groupNum)
                 groupNum++;
             }
-            let groups = [];
-            for (let group = 0; group <= Math.max(...Object.values(geohashGroup)); group++) {
-                const thisGroup = Object.keys(geohashGroup).filter(geohash => geohashGroup[geohash] === group)
-                groups.push(thisGroup)
-            }
-            return groups;
         }
 
-        getGroups();
-        
+        makeEdges();
+
         const newBounds = Object.values(edges).map((edgeGroup) => {
             edgeGroup = [...edgeGroup]
-            let poly = [...edgeGroup[0]];
-            while(JSON.stringify(poly[0]) !== JSON.stringify(poly[poly.length-1])){
-                const finalPointInPoly = poly[poly.length-1];
-                poly.push(edgeGroup.find(edge => JSON.stringify(finalPointInPoly) === JSON.stringify(edge[0]))[1]);
-            }
-            
-            let recentGoodPoint = 0;
-            poly = poly.filter((point, index) => {
-                if(index === 0 || index === poly.length-1){
-                    return true;
-                }
-                if((poly[recentGoodPoint][0] === poly[index+1][0] || poly[recentGoodPoint][1] === poly[index+1][1])){
-                    return false;
-                }
-                recentGoodPoint = index;
-                return true;
-            });
-            console.log({poly})
-            return poly;
-        });
+            let edgeGroupCoverage = edgeGroup.map(() => false);
+            let polys = []
+            while (edgeGroupCoverage.includes(false)) {
+                const firstNonCoveredIndex = edgeGroupCoverage.indexOf(false);
+                let poly = [...edgeGroup[firstNonCoveredIndex]];
+                edgeGroupCoverage[firstNonCoveredIndex] = true;
 
-        console.log({newBounds})
+                while (JSON.stringify(poly[0]) !== JSON.stringify(poly[poly.length - 1])) {
+                    const finalPointInPoly = poly[poly.length - 1];
+                    poly.push(edgeGroup.find((edge, index) => {
+                        const isNext = JSON.stringify(finalPointInPoly) === JSON.stringify(edge[0])
+                        if (isNext) {
+                            edgeGroupCoverage[index] = true;
+                            return true;
+                        }
+                        return false;
+                    })[1]);
+                }
+
+                polys.push(poly)
+            }
+            polys = polys.sort((a,b) => b.length - a.length).map(poly => {
+                let recentGoodPoint = 0;
+                return poly.filter((point, index) => {
+                    if (index === 0 || index === poly.length - 1) {
+                        return true;
+                    }
+                    if ((poly[recentGoodPoint][0] === poly[index + 1][0] || poly[recentGoodPoint][1] === poly[index + 1][1])) {
+                        return false;
+                    }
+                    recentGoodPoint = index;
+                    return true;
+                });
+            })
+            return polys;
+        });
         return [newBounds, geohashes];
     },
 
