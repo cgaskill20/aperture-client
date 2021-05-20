@@ -179,68 +179,38 @@ const Query = {
         const { bounds, geohashBlacklist } = query;
         this._throwErrorsIfNeeded({ bounds, geohashBlacklist });
         const geohashes = boundsToGISJOIN.boundsToLengthNGeohashes(bounds, geohashBlacklist);
-        let geohashGroup = geohashes.map(() => -1); //parallel arr for geohashes
-        let geohashGroups = geohashes.map(() => []); 
+        const geohashGroup = {}
+        for(const hash of geohashes){
+            geohashGroup[hash] = -1;
+        }
         let newBounds = [];
 
+        const groupsDone = () => !Object.values(geohashGroup).includes(-1);
 
-        //gets bottom of shape, which 
-        const southWest = (startGeohash) => {
-            let currPos = startGeohash;
-            let furthestSouth = null;
-            let furthestWest = null;
-            while (!furthestSouth) {
-                const geohashSouth = geohash_adjacent(currPos, 's');
-                const southIndex = geohashes.indexOf(geohashSouth);
-                if (southIndex === -1) {
-                    furthestSouth = currPos;
-                    while (!furthestWest) {
-                        const geohashWest = geohash_adjacent(currPos, 'w');
-                        const westIndex = geohashes.indexOf(geohashWest);
-                        if (westIndex === -1) {
-                            furthestWest = currPos;
-                        }
-                        //console.log("moving left")
-                        currPos = geohashWest;
-                    }
-                }
-                //console.log("moving down")
-                currPos = geohashSouth;
-            }
-            return furthestWest;
-        }
-
-        const startingPositions = [...new Set(geohashes.map(geohash => southWest(geohash)))]
-
-        const populate = (startingPosition, group) => {
-            let border = [];
-            for(let recent = startingPosition; geohashes.includes(recent); recent = geohash_adjacent(recent,'e')){
-                border.push(recent)
-            }
-            let hitNorth = false;
-            while(!hitNorth){
-                for(const long of border){
-                    geohashGroups[geohashes.indexOf(long)].push(group)
-                }
-                let newBorder = [];
-                for(const long of border){
-                    const northN = geohash_adjacent(long,'n')
-                    if(!geohashes.includes(northN)){
-                        hitNorth = true;
-                    }
-                    newBorder.push(northN)
-                }
-                if(!hitNorth){
-                    border = newBorder;
+        const spread = (geohash, groupNum) => {
+            console.log({geohash, groupNum})
+            geohashGroup[geohash] = groupNum;
+            const dirs = ['n','s','e','w'];
+            for(const dir of dirs){
+                const adjDir = geohash_adjacent(geohash, dir) 
+                if(geohashGroup[adjDir] === -1){
+                    spread(adjDir, groupNum)
                 }
             }
         }
-        console.log({startingPositions})
-        startingPositions.forEach((startingPosition, group) => {
-            populate(startingPosition, group);
-            console.log({geohashes, geohashGroups})
-        });
 
+        const makeGroups = () => {
+            let groupNum = 0;
+            while(!groupsDone()){
+                const firstOffendor = Object.keys(geohashGroup)[Object.values(geohashGroup).indexOf(-1)]
+                spread(firstOffendor,groupNum)
+                groupNum++;
+            }
+            
+        }
+
+        makeGroups();
+        console.log(geohashGroup)
 
         return [newBounds, geohashes];
     },
