@@ -1,7 +1,8 @@
 import Gradient from "../third-party/Gradient"
 import MapDataFilterWrapper from "./mapDataFilterWrapper"
 import Util from "./apertureUtil"
-import Worker from "./queryWorker.js"
+import Query from "./Query"
+
 /**
  * @class AutoQuery
  * @file Query layers in a very general fashion
@@ -11,8 +12,6 @@ import Worker from "./queryWorker.js"
  */
 
 export default class AutoQuery {
-    static queryWorker = new Worker(); //init querier
-    static queryWorkerConfiged = false;
     static blockers = {}
     static blockerListener = null;
     /**
@@ -23,12 +22,6 @@ export default class AutoQuery {
       * @param {string=} graphPipeID optional ID of a pipe to spit all queried data into
       */
     constructor(layerData, graphPipeID) {
-        if (!AutoQuery.queryWorkerConfiged) {
-            AutoQuery.queryWorker.postMessage({
-                type: "config"
-            });
-            AutoQuery.queryWorkerConfiged = true;
-        }
         this.data = layerData;
         this.collection = layerData.collection;
         this.map = layerData.map();
@@ -43,11 +36,11 @@ export default class AutoQuery {
 
         this.constraintChangedFlag = false;
         this.enabled = false;
+        this.geohashCache = [];
 
         if (this.data.linkedGeometry) { //linked geometry stuff
             this.linked = this.data.linkedGeometry;
             this.backgroundLoader = this.linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
-            this.geohashCache = [];
         }
 
         this.color = layerData.color;
@@ -87,7 +80,6 @@ export default class AutoQuery {
       */
     onRemove() {
         this.clearMapLayers();
-        AutoQuery.queryWorker.postMessage({ type: "kill", collection: this.collection });
 
         const oldBlockers = JSON.stringify(AutoQuery.blockers);
         AutoQuery.blockers[this.blockerGroup] -= this.blocked;
@@ -154,7 +146,6 @@ export default class AutoQuery {
         if (this.enabled) {
             this.clearMapLayers();
             this.geohashCache = [];
-            AutoQuery.queryWorker.postMessage({ type: "kill", collection: this.collection });
             this.query();
         }
     }
@@ -206,82 +197,28 @@ export default class AutoQuery {
         if (!this.zoomIsValid()) {
             return;
         }
-        let q = [];
-        if (!this.linked) {
-            const b = this.map.wrapLatLngBounds(this.map.getBounds());
-            const barray = Util.leafletBoundsToGeoJSONPoly(b);
-            q.push({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }); //only get geometry in viewport
-            this.bindConstraintsAndQuery(q)
-        }
-        else {
-            let relevantData = [];
-            //create random id to represent the session
-            const sessionID = Math.random().toString(36).substring(2, 6);
-            this.backgroundLoader.postMessage({
-                type: "query",
-                senderID: sessionID,
-                bounds: this.map.getBounds(),
-                blacklist: this.geohashCache
-            })
-            const responseListener = msg => {
-                const data = msg.data;
-                //check that the data is sent from this querier
-                if (data.senderID !== sessionID)
-                    return;
-                if (data.type === "data") {
-                    //populate records & cache with no duplicates
-                    relevantData = this.addToExistingFeaturesNoDuplicates(relevantData, data.data.data);
-                    this.geohashCache = [...new Set([...data.data.geohashes, ...this.geohashCache])];
-                    if (relevantData.length > 100) {
-                        this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": this.pullGISJOINSFromArray(relevantData) } } }], relevantData);
-                        relevantData = [];
-                    }
-                }
-                else if (data.type === "end") {
-                    //close the listener
-                    this.backgroundLoader.removeEventListener("message", responseListener);
-                    if (relevantData.length)
-                        this.bindConstraintsAndQuery([{ "$match": { "GISJOIN": { "$in": this.pullGISJOINSFromArray(relevantData) } } }], relevantData);
-                    relevantData = [];
-                }
-
+        
+        const callback = (d) => {
+            const { event, payload } = d;
+            if(event === "data"){
+                this.renderGeoJSON(payload.data);
             }
-            this.backgroundLoader.addEventListener("message", responseListener)
-        }
-    }
-
-    bindConstraintsAndQuery(q, forcedGeometry) {
-        const sessionID = Math.random().toString(36).substring(2, 6);
-        q = q.concat(this.buildConstraintPipeline());
-
-        //outputs from query may only be $projected if the data is not GeoJSON
-        if (this.linked)
-            q.push(this.addMongoProject())
-        AutoQuery.queryWorker.postMessage({
-            type: "query",
+            else if(event === "info"){
+                payload.geohashes && this.geohashCache.push(...payload.geohashes);
+            }
+            else if(event === "end"){
+                //end
+            }
+        } 
+        console.log(this.geohashCache)
+        Query.makeQuery({
             collection: this.collection,
-            queryParams: q,
-            senderID: sessionID
+            pipeline: this.buildConstraintPipeline(),
+            granularity: "coarse",
+            callback,
+            bounds: this.map.getBounds(),
+            geohashBlacklist: this.geohashCache
         });
-
-        const responseListener = msg => {
-            const data = msg.data;
-            if (data.senderID !== sessionID)
-                return;
-            if (data.type === "data") {
-                const dataFromServer = data.data;
-                Util.normalizeFeatureID(dataFromServer);
-                if (!this.layerIDs.includes(dataFromServer.id)) {
-                    this.renderData(dataFromServer, forcedGeometry);
-                }
-            }
-            else if (data.type === "end") {
-                forcedGeometry = null;
-                AutoQuery.queryWorker.removeEventListener("message", responseListener);
-            }
-        }
-
-        AutoQuery.queryWorker.addEventListener("message", responseListener);
     }
 
     zoomIsValid() {
@@ -338,37 +275,6 @@ export default class AutoQuery {
         window.renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
         this.mapLayers = [];
         this.layerIDs = [];
-    }
-
-    /**
-      * Renders data from @method query 
-      * This is where the "linking" part of any linked geometry happens.
-      * @memberof AutoQuery
-      * @method renderData
-      * @param {object} data which either links or is rendered
-      * @param {Array<GeoJSON>} forcedGeometry OPTIONAL parameter, array of GeoJSON featues which
-      * overides any defaults in the linking process.
-      */
-    renderData(data, forcedGeometry) {
-        if (this.linked) {
-            const GeoJSONRef = forcedGeometry.find(feature => feature.GISJOIN === data.GISJOIN);
-            const GeoJSON = JSON.parse(JSON.stringify(GeoJSONRef));
-            if (!GeoJSON)
-                return;
-            Util.normalizeFeatureID(GeoJSON)
-            if (this.layerIDs.find(id => id.split("_")[0] === GeoJSON.id))
-                return;
-            GeoJSON.id = `${GeoJSON.id}_${data.id}`
-            if (this.layerIDs.includes(GeoJSON.id))
-                return;
-            GeoJSON.properties = {
-                ...GeoJSON.properties,
-                ...data
-            }
-            data = GeoJSON;
-        }
-
-        this.renderGeoJSON(data);
     }
 
     /**

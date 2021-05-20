@@ -29,6 +29,7 @@ const Query = {
                 this.linked[collection] = data.linkedGeometry;
             }
         }
+        console.log(queryableData)
         this.linkedCollections = [...new Set(Object.values(this.linked))]
         this.backgroundLoader = (linked) => linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
         console.log(this.linked)
@@ -65,16 +66,22 @@ const Query = {
     async _callbackToPromise(query) {
         return new Promise(resolve => {
             let allData = [];
+            let geohashes;
             const callback = ({ event, payload }) => {
                 if (event === "data") {
                     payload.data && Array.isArray(payload.data) ? allData.push(...payload.data) : allData.push(payload.data);
+                }
+                else if(event === "info"){
+                    if(payload.geohashes){
+                        geohashes = payload.geohashes;
+                    }
                 }
                 else if (event === "end") {
                     const ret = {
                         data: allData
                     }
-                    if (payload.geohashBlacklist) {
-                        ret.geohashBlacklist = payload.geohashBlacklist;
+                    if (geohashes) {
+                        ret.geohashes = geohashes;
                     }
                     resolve(ret);
                 }
@@ -100,13 +107,15 @@ const Query = {
                     dumpWaitingRoom();
                 }
             }
-            else if (event === "end") {
-                waitingRoomDone = true;
+            else if(event === "info"){
                 if (payload.geohashes) {
                     geohashes = payload.geohashes;
                 }
+            }
+            else if (event === "end") {
+                waitingRoomDone = true;
                 if (waitingRoom.length) {
-                    dumpWaitingRoom();
+                    dumpWaitingRoom(true);
                 }
                 else {
                     finished();
@@ -115,33 +124,39 @@ const Query = {
         }
 
         const finished = () => {
-            const res = {
-                event: "end",
-                payload: {}
-            }
-            if (geohashes.length) {
-                res.payload = {
-                    geohashes
-                }
-            }
-            query.callback(res)
+            query.callback({event: "info", payload: { geohashes }})
+            query.callback({event: "end"})
         }
 
-        const dumpCallback = (d) => {
-            const { event, payload } = d;
+        const dumpCallback = (d, ignoreEnd = true, waitingRoomSnapshot) => {
+            const { event } = d;
             if (event === "data") {
+                const complimentaryData = {...d.payload.data};
+                const realData = waitingRoomSnapshot.find(entry => entry.GISJOIN === complimentaryData.GISJOIN);
+                Util.normalizeFeatureID(realData);
+                realData.id = `${realData.id}_${complimentaryData.id}`
+                realData.properties = {
+                    ...realData.properties,
+                    ...complimentaryData,
+                }
+                d.payload.data = realData;
                 query.callback(d);
             }
-            else if (event === "end" && waitingRoomDone) {
+            else if (event === "end" && !ignoreEnd) {
+                waitingRoomSnapshot = null;
                 finished();
+            }
+            else if (event === "end") {
+                waitingRoomSnapshot = null;
             }
         }
 
-        const dumpWaitingRoom = () => {
+        const dumpWaitingRoom = (final = false) => {
             const queryDump = JSON.parse(JSON.stringify(query))
             const GISJOINS = waitingRoom.map(entry => entry.GISJOIN);
+            const waitingRoomSnapshot = JSON.parse(JSON.stringify(waitingRoom))
             queryDump.pipeline = [{ "$match": { "GISJOIN": { "$in": GISJOINS } } }, ...queryDump.pipeline]
-            queryDump.callback = dumpCallback;
+            queryDump.callback = (d) => { dumpCallback(d, !final, waitingRoomSnapshot) };
             this._queryMongo(queryDump);
             waitingRoom = [];
         }
@@ -169,25 +184,24 @@ const Query = {
         else if (bounds) {
             //hard part
             const [coarseBounds, newGeohashes] = this._getBoundsGetGeohashes(query);
-            
+            query.callback({
+                event: "info",
+                payload: {
+                    geohashes: newGeohashes
+                }
+            });
             const coarseCallback = (d, ignoreEnd = true) => {
                 const { event, payload } = d;
                 if (event === "data") {
-                    //console.log(d)
                     query.callback(d);
                 }
                 else if(event === "end" && !ignoreEnd){
-                    d.payload = {
-                        ...payload,
-                        geohashes: newGeohashes
-                    }
                     query.callback(d)
                 }
             }
 
             coarseBounds.forEach((coarseBound, index) => {
                 const queryClone = JSON.parse(JSON.stringify(query))
-                //console.log({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: coarseBound } } } } })
                 queryClone.pipeline.unshift({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: coarseBound } } } } });
                 queryClone.callback = (d) => {coarseCallback(d, index !== coarseBounds.length-1)};
                 this._queryMongo(queryClone)
@@ -325,7 +339,8 @@ const Query = {
             else if (data.type === "end") {
                 //close the listener
                 loader.removeEventListener("message", responseListener);
-                callback({ event: "end", payload: { geohashes: newGeohashes } });
+                callback({ event: "info", payload: { geohashes: newGeohashes } });
+                callback({ event: "end" });
             }
 
         }
