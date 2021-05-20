@@ -11,9 +11,9 @@ import NewModeling from "./NewModeling/NewModeling";
 import NewValidation from "./NewValidation/NewValidation";
 import { useGlobalState } from "./global/GlobalState";
 import IconButton from "@material-ui/core/IconButton";
-import SettingsIcon from "@material-ui/icons/Settings";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import {showGraph} from "../library/charting/chartBtnNewChartWindow"
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -79,7 +79,11 @@ export default function TabSystem(props) {
                     justify="center"
                     alignItems="center"
                 >
-                    <Grid item></Grid>
+                    <Grid
+                        item
+                        // xs={2}
+                    >
+                    </Grid>
                     <Grid item>
                         <Tabs
                             value={value}
@@ -94,9 +98,9 @@ export default function TabSystem(props) {
                         </Tabs></Grid>
                     <Grid
                         item
-                        justify="flex-end"
+                        // xs={2}
                     >
-                        <IconButton>
+                        <IconButton id="nav-graph-button" onClick={showGraph}>
                             <BarChartIcon />
                         </IconButton>
                         <IconButton onClick={props.handleDrawerClose}>
