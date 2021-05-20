@@ -236,10 +236,32 @@ const Query = {
             return groups;
         }
 
-        const groups = getGroups();
-        console.log(edges)
+        getGroups();
+        
+        const newBounds = Object.values(edges).map((edgeGroup) => {
+            edgeGroup = [...edgeGroup]
+            let poly = [...edgeGroup[0]];
+            while(JSON.stringify(poly[0]) !== JSON.stringify(poly[poly.length-1])){
+                const finalPointInPoly = poly[poly.length-1];
+                poly.push(edgeGroup.find(edge => JSON.stringify(finalPointInPoly) === JSON.stringify(edge[0]))[1]);
+            }
+            
+            let recentGoodPoint = 0;
+            poly = poly.filter((point, index) => {
+                if(index === 0 || index === poly.length-1){
+                    return true;
+                }
+                if((poly[recentGoodPoint][0] === poly[index+1][0] || poly[recentGoodPoint][1] === poly[index+1][1])){
+                    return false;
+                }
+                recentGoodPoint = index;
+                return true;
+            });
+            console.log({poly})
+            return poly;
+        });
 
-
+        console.log({newBounds})
         return [newBounds, geohashes];
     },
 
