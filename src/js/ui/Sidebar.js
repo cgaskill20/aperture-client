@@ -6,6 +6,8 @@ import TabSystem from "./TabSystem"
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import BarChartIcon from '@material-ui/icons/BarChart';
+import SettingsIcon from '@material-ui/icons/Settings';
 import {Button} from "@material-ui/core";
 
 const drawerWidth = 800;
@@ -31,12 +33,6 @@ const useStyles = makeStyles((theme) => ({
     drawerPaper: {
         width: drawerWidth,
         opacity: 0.85,
-    },
-    drawerHeader: {
-        display: 'flex',
-        alignItems: 'center',
-        padding: theme.spacing(0, 1),
-        justifyContent: 'flex-end',
     },
     content: {
         flexGrow: 1,
@@ -90,19 +86,13 @@ export default function Sidebar() {
                     paper: classes.drawerPaper,
                 }}
             >
-                <div className={classes.drawerHeader}>
-                    <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
-                <TabSystem />
+                <TabSystem handleDrawerClose={handleDrawerClose}/>
             </Drawer>
             <main
                 className={clsx(classes.content, {
                     [classes.contentShift]: open,
                 })}
             >
-                <div className={classes.drawerHeader} />
             </main>
         </div>
     );

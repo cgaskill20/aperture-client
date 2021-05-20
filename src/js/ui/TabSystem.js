@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import {Paper} from "@material-ui/core";
+import {Grid, Paper} from "@material-ui/core";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
@@ -10,6 +10,10 @@ import NewDataExploration from "./NewDataExploration/NewDataExploration";
 import NewModeling from "./NewModeling/NewModeling";
 import NewValidation from "./NewValidation/NewValidation";
 import { useGlobalState } from "./global/GlobalState";
+import IconButton from "@material-ui/core/IconButton";
+import SettingsIcon from "@material-ui/icons/Settings";
+import BarChartIcon from "@material-ui/icons/BarChart";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -51,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function TabSystem() {
+export default function TabSystem(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [globalState, setGlobalState] = useGlobalState();
@@ -69,17 +73,37 @@ export default function TabSystem() {
     return (
         <div className={classes.root}>
             <Paper>
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    centered
+                <Grid
+                    container
+                    spacing={3}
+                    justify="center"
+                    alignItems="center"
                 >
-                    <Tab label="Data Exploration" {...a11yProps(0)} />
-                    <Tab label="Modeling" {...a11yProps(1)} />
-                    <Tab label="Validation" {...a11yProps(2)} />
-                </Tabs>
+                    <Grid item></Grid>
+                    <Grid item>
+                        <Tabs
+                            value={value}
+                            onChange={handleChange}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            centered
+                        >
+                            <Tab label="Data Exploration" {...a11yProps(0)} />
+                            <Tab label="Modeling" {...a11yProps(1)} />
+                            <Tab label="Validation" disabled {...a11yProps(2)} />
+                        </Tabs></Grid>
+                    <Grid
+                        item
+                        justify="flex-end"
+                    >
+                        <IconButton>
+                            <BarChartIcon />
+                        </IconButton>
+                        <IconButton onClick={props.handleDrawerClose}>
+                            <ChevronLeftIcon />
+                        </IconButton>
+                    </Grid>
+                </Grid>
             </Paper>
             <TabPanel value={value} index={0}>
                 <NewDataExploration />
