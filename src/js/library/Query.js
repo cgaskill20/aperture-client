@@ -20,19 +20,13 @@ const Query = {
       * @param {JSON} queryableData JSON from automenu.js
       */
     init(queryableData) {
-        console.log("here")
-        this.queryWorker.postMessage({
-            type: "config"
-        });
         for (const [collection, data] of Object.entries(queryableData)) {
             if (data.linkedGeometry) {
                 this.linked[collection] = data.linkedGeometry;
             }
         }
-        console.log(queryableData)
         this.linkedCollections = [...new Set(Object.values(this.linked))]
         this.backgroundLoader = (linked) => linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
-        console.log(this.linked)
     },
 
     /**
@@ -395,5 +389,10 @@ const Query = {
     },
 
 }
+
+Query.queryWorker.postMessage({
+    type: "config"
+});
+
 window.Query = Query;
 export default Query;

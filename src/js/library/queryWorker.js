@@ -4,7 +4,7 @@ let querier;
 
 onmessage = function (msg) {
     if (msg.data.type === "query") {
-        //console.log(msg.data.queryParams)
+        console.log(msg.data)
         querier.query(msg.data.collection,
             msg.data.queryParams,
             data => { postMessage({ type: "data", data: data, senderID: msg.data.senderID }); },
@@ -12,6 +12,7 @@ onmessage = function (msg) {
     } else if (msg.data.type === "kill") {
         querier.killAllStreamsOverCollection(msg.data.collection);
     } else if (msg.data.type === "config") {
+        console.log("setup")
         querier = getSustainQuerier();
     }
 }
