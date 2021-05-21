@@ -6,6 +6,15 @@ export let finalData;
 export let nested_json_map ={};
 export let layerNames = [];
 
+const DEFAULT_OBJECT = {
+    group: "Other",
+    subGroup: "Other",
+    color: "#000000",
+    popup: null,
+    constraints: null,
+    map: function () { return window.map; }
+}
+
 $.getJSON("src/json/menumetadata.json", async function (mdata) {
     finalData = await AutoMenu.build(mdata, overwrite);
     makeNested(finalData);
@@ -25,7 +34,6 @@ function loopJSON(json) {
 }
 
 function makeNested(json_map) {
-    // let nested_json_map = {};
     for (const obj in json_map) {
         if (json_map[obj]["notAQueryableLayer"]) {
             continue;
@@ -42,17 +50,6 @@ function makeNested(json_map) {
         }
         nested_json_map[mergeWithDefalt["group"]][mergeWithDefalt["subGroup"]][obj] = mergeWithDefalt;
     }
-    // nested_json_map = columnsAndHeadings;
     loopJSON(nested_json_map);
-
-    // for(const obj in nested_json_map) {
-    //     for(const header in nested_json_map[obj]) {
-    //         for(const layer in nested_json_map[obj][header]) {
-    //             const layerLabel = Util.capitalizeString(Util.underScoreToSpace(nested_json_map[obj][header][layer].label ? nested_json_map[obj][header][layer].label : layer));
-    //             layerNames.push(layerLabel);
-    //         }
-    //     }
-    // }
-    console.log("layerNames from ResponseParser.js(): " + layerNames)
 }
 

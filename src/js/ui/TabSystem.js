@@ -80,7 +80,6 @@ export default function TabSystem(props) {
                 >
                     <Grid
                         item
-                        // xs={2}
                     >
                     </Grid>
                     <Grid item>
@@ -96,7 +95,6 @@ export default function TabSystem(props) {
                         </Tabs></Grid>
                     <Grid
                         item
-                        // xs={2}
                     >
                         <IconButton id="nav-graph-button" onClick={showGraph}>
                             <BarChartIcon />

@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Util from "../../library/apertureUtil";
 
 import DECheckbox from "./DECheckbox"
 import DESlider from "./DESlider"
@@ -13,9 +12,8 @@ import HandleConstraints from "./HandleConstraints"
 import {Layers} from "./testingConstants"
 import {finalData} from "../../../../index";
 import {nested_json_map} from "../../ui/menuGenerator";
-// import {layerNames} from "./ResponseParser";
+import {layerNames} from "./ResponseParser";
 
-export let layerNames = [];
 
 const printStuff = false;
 const dynamicData = true;
@@ -35,16 +33,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function NewDataExploration() {
     const classes = useStyles();
-    layerNames = [];
-
-    for(const obj in nested_json_map) {
-        for(const header in nested_json_map[obj]) {
-            for(const layer in nested_json_map[obj][header]) {
-                const layerLabel = Util.capitalizeString(Util.underScoreToSpace(nested_json_map[obj][header][layer].label ? nested_json_map[obj][header][layer].label : layer));
-                layerNames.push(layerLabel);
-            }
-        }
-    }
 
     if(printStuff) {
         console.log("findalData: " + finalData);
