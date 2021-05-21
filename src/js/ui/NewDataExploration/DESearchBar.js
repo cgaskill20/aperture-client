@@ -2,6 +2,7 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {makeStyles} from "@material-ui/core/styles";
+// import {layerNames} from "./ResponseParser";
 import {layerNames} from "./NewDataExploration";
 import {testingConstants} from "./testingConstants";
 

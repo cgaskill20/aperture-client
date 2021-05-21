@@ -13,11 +13,12 @@ import HandleConstraints from "./HandleConstraints"
 import {Layers} from "./testingConstants"
 import {finalData} from "../../../../index";
 import {nested_json_map} from "../../ui/menuGenerator";
+// import {layerNames} from "./ResponseParser";
 
 export let layerNames = [];
 
 const printStuff = false;
-const dynamicData = false;
+const dynamicData = true;
 
 const useStyles = makeStyles((theme) => ({
     root: {
