@@ -22,6 +22,8 @@ const DEFAULT_OBJECT = {
     map: function () { return window.map; }
 }
 
+export let nested_json_map;
+
 let updateQueue = {};
 export function updateLayers() {
     for (const layerUpdate in updateQueue) {
@@ -43,7 +45,7 @@ export default {
             ops = { ...ops, ...options }; //merge both options into one obj
         }
 
-        const nested_json_map = this.makeNested(json_map); //convert to nested format
+        nested_json_map = this.makeNested(json_map); //convert to nested format
         const categoryCount = Object.keys(nested_json_map).length;
         this.configureContainer(container, categoryCount);
         this.addColumns(container, nested_json_map);
