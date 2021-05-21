@@ -65,10 +65,7 @@ const Query = {
     * }
     **/
     async makeQuery(query) {
-        query = {
-            ...defaultQuery,
-            ...query
-        }
+        query = { ...defaultQuery, ...query }
         query.id = Math.random().toString(36).substring(2, 6);
         const { collection, granularity } = query;
         this._throwErrorsIfNeeded({ collection, granularity });
