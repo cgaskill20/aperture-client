@@ -35,7 +35,6 @@ const Query = {
       * @param {JSON} query JSON that matches a query schema
       */
     async makeQuery(query) {
-        console.log(`in makeQuery`)
         const { collection, granularity } = query;
         query.pipeline = query.pipeline ?? []
         this._throwErrorsIfNeeded({ collection });
@@ -85,7 +84,6 @@ const Query = {
     },
 
     _linkedQuery(linked, query) {
-        console.log(`in linkedQuery`)
         const { granularity } = query;
         this._throwErrorsIfNeeded({ granularity });
         const epsilon = 100;
@@ -167,7 +165,6 @@ const Query = {
     },
 
     _queryCoarse(query) {
-        console.log(`in queryCoarse`)
         const { collection, bounds } = query;
         if (!query.geohashBlacklist) {
             query.geohashBlacklist = [];
@@ -353,7 +350,6 @@ const Query = {
     _queryMongo(query) {
         const { pipeline, collection } = query;
         this._throwErrorsIfNeeded({ collection, pipeline });
-        console.log("query mongo")
         const sessionID = Math.random().toString(36).substring(2, 6);
         this.queryWorker.postMessage({
             type: "query",
