@@ -68,7 +68,6 @@ const Query = {
         query = { ...defaultQuery, ...query }
         query.id = Math.random().toString(36).substring(2, 6);
         const { collection, granularity } = query;
-        this._throwErrorsIfNeeded({ collection, granularity });
 
         let promiseFlag = false;
         let callbackToPromise;
@@ -81,11 +80,8 @@ const Query = {
         if (linked) { //making an edge case for this one cause it is fast as hell
             this._linkedQuery(linked, query);
         }
-        else if (granularity === "coarse") {
-            this._queryCoarse(query);
-        }
-        else if (granularity === "fine") {
-            this._queryFine(query);
+        else {
+            this._queryFineOrCoarse(query);
         }
 
         if (promiseFlag) {
@@ -100,6 +96,16 @@ const Query = {
     **/
     killQuery(qid){
         //TODO
+    },
+
+    _queryFineOrCoarse(query){
+        const { granularity } = query;
+        if (granularity === "coarse") {
+            this._queryCoarse(query);
+        }
+        else if (granularity === "fine") {
+            this._queryFine(query);
+        }
     },
 
     async _callbackToPromise(query) {
@@ -131,7 +137,6 @@ const Query = {
 
     _linkedQuery(linked, query) {
         const { granularity, id } = query;
-        this._throwErrorsIfNeeded({ granularity });
         const epsilon = 100;
         let waitingRoom = [];
         let geohashes;
@@ -202,12 +207,7 @@ const Query = {
         const queryLinked = JSON.parse(JSON.stringify(query))
         queryLinked.collection = linked;
         queryLinked.callback = waitingRoomListener;
-        if (granularity === "coarse") {
-            this._queryCoarse(queryLinked);
-        }
-        else if (granularity === "fine") {
-            this._queryFine(queryLinked);
-        }
+        this._queryFineOrCoarse(queryLinked);
     },
 
     _queryCoarse(query) {
@@ -252,7 +252,6 @@ const Query = {
 
     _getBoundsGetGeohashes(query) { //just another very complex space-filling algorithm...
         const { bounds, geohashBlacklist } = query;
-        this._throwErrorsIfNeeded({ bounds, geohashBlacklist });
         const geohashes = boundsToGISJOIN.boundsToLengthNGeohashes(bounds, geohashBlacklist);
         const geohashGroup = {}
         const edges = {};
@@ -350,7 +349,6 @@ const Query = {
 
     _queryPreloadedData(query) {
         const { collection, bounds, geohashBlacklist, callback, id } = query;
-        this._throwErrorsIfNeeded({ collection, bounds, callback });
 
         const loader = this.backgroundLoader(collection);
         let newGeohashes = [];
@@ -375,6 +373,7 @@ const Query = {
                 newGeohashes = [...new Set([...data.data.geohashes, ...newGeohashes])];
             }
             else if (data.type === "end") {
+                //close the listener
                 loader.removeEventListener("message", responseListener);
                 callback({ event: "info", payload: { geohashes: newGeohashes, id } });
                 callback({ event: "end" });
@@ -395,7 +394,6 @@ const Query = {
 
     _queryMongo(query) {
         const { pipeline, collection, callback, id } = query;
-        this._throwErrorsIfNeeded({ collection, pipeline, callback });
 
         query.callback({ event: "info", payload: { id } })
         const sessionID = Math.random().toString(36).substring(2, 6);
@@ -423,15 +421,6 @@ const Query = {
 
         this.queryWorker.addEventListener("message", responseListener);
     },
-
-    _throwErrorsIfNeeded(obj) {
-        for (const [key, value] of Object.entries(obj)) {
-            if (value == null) {
-                throw new Error(`${key} cannot be null!`);
-            }
-        }
-    },
-
 }
 
 try {
