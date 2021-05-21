@@ -65,8 +65,8 @@ const Query = {
                 if (event === "data") {
                     payload.data && Array.isArray(payload.data) ? allData.push(...payload.data) : allData.push(payload.data);
                 }
-                else if(event === "info"){
-                    if(payload.geohashes){
+                else if (event === "info") {
+                    if (payload.geohashes) {
                         geohashes = payload.geohashes;
                     }
                 }
@@ -101,7 +101,7 @@ const Query = {
                     dumpWaitingRoom();
                 }
             }
-            else if(event === "info"){
+            else if (event === "info") {
                 if (payload.geohashes) {
                     geohashes = payload.geohashes;
                 }
@@ -118,14 +118,14 @@ const Query = {
         }
 
         const finished = () => {
-            query.callback({event: "info", payload: { geohashes }})
-            query.callback({event: "end"})
+            query.callback({ event: "info", payload: { geohashes } })
+            query.callback({ event: "end" })
         }
 
         const dumpCallback = (d, ignoreEnd = true, waitingRoomSnapshot) => {
             const { event } = d;
             if (event === "data") {
-                const complimentaryData = {...d.payload.data};
+                const complimentaryData = { ...d.payload.data };
                 const realData = waitingRoomSnapshot.find(entry => entry.GISJOIN === complimentaryData.GISJOIN);
                 Util.normalizeFeatureID(realData);
                 realData.id = `${realData.id}_${complimentaryData.id}`
@@ -189,7 +189,7 @@ const Query = {
                 if (event === "data") {
                     query.callback(d);
                 }
-                else if(event === "end" && !ignoreEnd){
+                else if (event === "end" && !ignoreEnd) {
                     query.callback(d)
                 }
             }
@@ -197,7 +197,7 @@ const Query = {
             coarseBounds.forEach((coarseBound, index) => {
                 const queryClone = JSON.parse(JSON.stringify(query))
                 queryClone.pipeline.unshift({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: coarseBound } } } } });
-                queryClone.callback = (d) => {coarseCallback(d, index !== coarseBounds.length-1)};
+                queryClone.callback = (d) => { coarseCallback(d, index !== coarseBounds.length - 1) };
                 this._queryMongo(queryClone)
             });
         }
@@ -286,7 +286,7 @@ const Query = {
 
                 polys.push(poly)
             }
-            polys = polys.sort((a,b) => b.length - a.length).map(poly => {
+            polys = polys.sort((a, b) => b.length - a.length).map(poly => {
                 let recentGoodPoint = 0;
                 return poly.filter((point, index) => {
                     if (index === 0 || index === poly.length - 1) {
@@ -390,9 +390,12 @@ const Query = {
 
 }
 
-Query.queryWorker.postMessage({
-    type: "config"
-});
+try {
+    Query.queryWorker.postMessage({
+        type: "config"
+    });
+}
+catch { }
 
 window.Query = Query;
 export default Query;

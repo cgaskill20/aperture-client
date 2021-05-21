@@ -210,7 +210,7 @@ export default class AutoQuery {
                 //end
             }
         } 
-        console.log(this.geohashCache)
+
         Query.makeQuery({
             collection: this.collection,
             pipeline: this.buildConstraintPipeline(),
