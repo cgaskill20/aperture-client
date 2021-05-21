@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {makeStyles} from "@material-ui/core/styles";
 import {layerNames} from "./NewDataExploration";
+import {datasetList} from "./datasetList";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,6 +27,7 @@ export default function DESearchBar() {
                 id="datasetSearchBar"
                 disableClearable
                 options={newLayers.map((option) => option.title)}
+                // options={datasetList.map((option) => option.title)}
                 renderInput={(params) => (
                     <TextField
                         {...params}
