@@ -61,8 +61,7 @@ export default function TabSystem(props) {
     const [globalState, setGlobalState] = useGlobalState();
     const valueMap = {
         0: "dataExploration",
-        1: "modeling",
-        2: "validation"
+        1: "modeling"
     }
 
     const handleChange = (event, newValue) => {
@@ -94,7 +93,6 @@ export default function TabSystem(props) {
                         >
                             <Tab label="Data Exploration" {...a11yProps(0)} />
                             <Tab label="Modeling" {...a11yProps(1)} />
-                            <Tab label="Validation" disabled {...a11yProps(2)} />
                         </Tabs></Grid>
                     <Grid
                         item
@@ -114,9 +112,6 @@ export default function TabSystem(props) {
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <NewModeling />
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-                <NewValidation />
             </TabPanel>
         </div>
     );
