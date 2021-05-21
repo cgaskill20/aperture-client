@@ -32,7 +32,7 @@ export default class AutoQuery {
 
         this.streams = [];
         this.mapLayers = [];
-        this.layerIDs = [];
+        this.layerIDs = new Set();
 
         this.constraintChangedFlag = false;
         this.enabled = false;
@@ -86,7 +86,7 @@ export default class AutoQuery {
         this.blocked = false;
         this.checkAndDispatch(oldBlockers);
 
-        this.layerIDs = [];
+        this.layerIDs.clear()
         this.enabled = false;
         this.geohashCache = [];
         MapDataFilterWrapper.removeCollection(this.collection);
@@ -274,7 +274,7 @@ export default class AutoQuery {
     clearMapLayers() {
         window.renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
         this.mapLayers = [];
-        this.layerIDs = [];
+        this.layerIDs.clear();
     }
 
     /**
@@ -284,7 +284,7 @@ export default class AutoQuery {
       * @param {GeoJSON} data GeoJSON feature to be rendered
       */
     renderGeoJSON(data) {
-        if (!this.enabled)
+        if (!this.enabled || this.layerIDs.has(data.id))
             return;
 
         MapDataFilterWrapper.add(data, this.collection);
@@ -302,7 +302,7 @@ export default class AutoQuery {
         indexData[this.collection]["opacity"] = this.color.opacity;
 
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
-        this.layerIDs.push(data.id);
+        this.layerIDs.add(data.id);
     }
 
     /**
