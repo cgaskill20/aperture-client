@@ -1,62 +1,97 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Paper, Switch} from "@material-ui/core";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+import DECheckbox from "./DECheckbox"
+import DESlider from "./DESlider"
+import DESearchBar from './DESearchBar'
+import IndividualLayer from "./IndividualLayer";
+import DECard from "./DECard";
+import DELayerControls from "./DELayerControls";
+import HandleConstraints from "./HandleConstraints"
+
+import {Layers} from "./testingConstants"
+import {finalData} from "./ResponseParser";
+import {nested_json_map} from "./ResponseParser";
+import {layerNames} from "./ResponseParser";
+
+
+const printStuff = false;
+const dynamicData = false;
 
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
-        margin: theme.spacing(1),
     },
     heading: {
-        fontSize: theme.typography.pxToRem(18),
+        fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
     },
-    secondaryHeading: {
-        fontSize: theme.typography.pxToRem(15),
-        color: theme.palette.text.secondary,
+    cardSpace: {
+        margin: theme.spacing(1),
     },
 }));
 
-export default function AllDatasetsTab(props) {
+export default function AllDatasetsTab() {
     const classes = useStyles();
 
-    const [state, setState] = React.useState({
-        checked: false,
-    });
+    if(printStuff) {
+        console.log("findalData: " + finalData);
+        console.log("nested_json_map: " + nested_json_map);
+        console.log("layerNames: " + layerNames);
+    }
 
-    const handleChange = (event) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
-    };
+    if(dynamicData) {
+        return (
+            <div className={classes.root}>
+                <DESearchBar />
+                {layerNames.map((layer) =>
+                    <div key={layer}>
+                        <IndividualLayer title={layer}
+                                         content={
+                                         <box>
+                                         </box>
+                                     }>
+                        </IndividualLayer>
+                    </div>
+                )}
+            </div>
+        );
+    }
 
-    return (
-        <div className={classes.root}>
-            <Paper elevation={1}>
-                <Accordion>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <FormControlLabel
-                            aria-label="CheckLayer"
-                            onClick={(event) => event.stopPropagation()}
-                            onFocus={(event) => event.stopPropagation()}
-                            onChange={handleChange}
-                            control={<Switch color="primary" />}
-                            label={props.title}
-                            name="checked"
-                        />
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {props.content}
-                    </AccordionDetails>
-                </Accordion>
-            </Paper>
-        </div>
-    );
+    else {
+        return (
+            <div className={classes.root}>
+                <DESearchBar />
+                {Layers.map((dataset, index) =>
+                    <div key={index}>
+                        <IndividualLayer title={dataset.datasetName}
+                                         content={
+                                         <box>
+                                             <DELayerControls text={dataset.text} url={dataset.url}/>
+                                             <DECard
+                                                 content={
+                                                     <box>
+                                                         {dataset.checkboxes.map((name) =>
+                                                             <DECheckbox key={name} title={name}/>
+                                                         )}
+                                                     </box>
+                                                 }>
+                                             </DECard>
+                                             <DECard
+                                                 content={
+                                                     <box>
+                                                         {dataset.sliders.map((name) =>
+                                                             <DESlider key={name} title={name}/>
+                                                         )}
+                                                     </box>
+                                                 }>
+                                             </DECard>
+                                         </box>
+                                     }>
+                        </IndividualLayer>
+                    </div>
+                )}
+            </div>
+        );
+    }
 }
