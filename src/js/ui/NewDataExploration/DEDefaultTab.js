@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import DECheckbox from "./DECheckbox"
 import DESlider from "./DESlider"
 import DESearchBar from './DESearchBar'
-import DEAccordion from "./DEAccordion";
+import AllDatasetsTab from "./AllDatasetsTab";
 import DECard from "./DECard";
 import DELayerControls from "./DELayerControls";
 import HandleConstraints from "./HandleConstraints"
@@ -16,7 +16,7 @@ import {layerNames} from "./ResponseParser";
 
 
 const printStuff = false;
-const dynamicData = true;
+const dynamicData = false;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,12 +46,12 @@ export default function DEDefaultTab() {
                 <DESearchBar />
                 {layerNames.map((layer) =>
                     <div key={layer}>
-                        <DEAccordion title={layer}
-                                     content={
+                        <AllDatasetsTab title={layer}
+                                        content={
                                          <box>
                                          </box>
                                      }>
-                        </DEAccordion>
+                        </AllDatasetsTab>
                     </div>
                 )}
             </div>
@@ -64,8 +64,8 @@ export default function DEDefaultTab() {
                 <DESearchBar />
                 {Layers.map((dataset, index) =>
                     <div key={index}>
-                        <DEAccordion title={dataset.datasetName}
-                                     content={
+                        <AllDatasetsTab title={dataset.datasetName}
+                                        content={
                                          <box>
                                              <DELayerControls text={dataset.text} url={dataset.url}/>
                                              <DECard
@@ -88,7 +88,7 @@ export default function DEDefaultTab() {
                                              </DECard>
                                          </box>
                                      }>
-                        </DEAccordion>
+                        </AllDatasetsTab>
                     </div>
                 )}
             </div>

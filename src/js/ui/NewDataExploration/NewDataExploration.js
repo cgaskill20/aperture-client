@@ -57,19 +57,16 @@ export default function ScrollableTabsButtonAuto() {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" color="default">
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    centered
-                >
-                    <Tab label="All Datasets" {...a11yProps(0)} />
-                    <Tab label="Workspace" {...a11yProps(1)} />
-
-                </Tabs>
-            </AppBar>
+            <Tabs
+                value={value}
+                onChange={handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                centered
+            >
+                <Tab label="All Datasets" {...a11yProps(0)} />
+                <Tab label="Workspace" {...a11yProps(1)} />
+            </Tabs>
             <TabPanel value={value} index={0}>
                 <DEDefaultTab />
             </TabPanel>

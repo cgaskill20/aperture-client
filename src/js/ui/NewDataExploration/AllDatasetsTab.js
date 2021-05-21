@@ -16,9 +16,13 @@ const useStyles = makeStyles((theme) => ({
         fontSize: theme.typography.pxToRem(18),
         fontWeight: theme.typography.fontWeightRegular,
     },
+    secondaryHeading: {
+        fontSize: theme.typography.pxToRem(15),
+        color: theme.palette.text.secondary,
+    },
 }));
 
-export default function DEAccordion(props) {
+export default function AllDatasetsTab(props) {
     const classes = useStyles();
 
     const [state, setState] = React.useState({
