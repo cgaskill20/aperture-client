@@ -12,6 +12,8 @@ import {finalData} from "../../../../index";
 import {nested_json_map} from "../../ui/menuGenerator";
 import Util from "../../library/apertureUtil";
 
+export let layerNames = [];
+
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -28,10 +30,10 @@ const useStyles = makeStyles((theme) => ({
 export default function NewDataExploration() {
     const classes = useStyles();
 
-    console.log(finalData);
-    console.log(nested_json_map);
+    console.log("findalData: " + finalData);
+    console.log("nested_json_map: " + nested_json_map);
 
-    const layerNames = [];
+    layerNames = [];
     for(const obj in nested_json_map) {
         for(const header in nested_json_map[obj]) {
             for(const layer in nested_json_map[obj][header]) {
@@ -40,8 +42,7 @@ export default function NewDataExploration() {
             }
         }
     }
-    console.log(layerNames);
-
+    console.log("layerNames: " + layerNames);
 
     return (
         <div className={classes.root}>

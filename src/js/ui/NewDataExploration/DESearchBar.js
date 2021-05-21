@@ -1,8 +1,8 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {datasetList} from "./datasetList"
 import {makeStyles} from "@material-ui/core/styles";
+import {layerNames} from "./NewDataExploration";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -13,13 +13,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DESearchBar() {
     const classes = useStyles();
+
+    let newLayers = [];
+    for(const layer in layerNames) {
+        newLayers.push({title: layerNames[layer]});
+    }
+
     return (
         <div className={classes.root}>
             <Autocomplete
                 freeSolo
                 id="datasetSearchBar"
                 disableClearable
-                options={datasetList.map((option) => option.title)}
+                options={newLayers.map((option) => option.title)}
                 renderInput={(params) => (
                     <TextField
                         {...params}
