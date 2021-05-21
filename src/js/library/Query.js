@@ -36,42 +36,49 @@ const Query = {
     },
 
     /**
-      * Makes a query
-      * @memberof Query
-      * @param {JSON} query JSON that matches a query schema
-      * Query schema (as a TS interface): 
-      * interface QuerySchema{
-      *     granularity: string, //either `fine`, which only intersects or is within bounds, or `coarse`. Defaults to `fine`
-      *     geohashBlacklist?: string[], //blacklist of geohashes 
-      *     callback?: (data: CallbackResponse) => void, //if this is given, this function will be called whenever data is collected. If not, a promise will be returned.
-      *     bounds?: L.LatLngBounds, //bounds to query
-      *     collection: string, //mongo dataset to query. Required!
-      *     pipeline?: {}[], //mongodb aggregation pipeline
-      *
-      * }
-      *
-      * interface CallbackResponse {
-      *     event: string, //eiher `data` or `info` or `end`
-      *     payload?: { //only included on `data` and `info` events 
-      *         data?: GeoJSON.Feature | GeoJSON.Feature[], //only included on the `data` event, either a GeoJSON feature, or an Array of them
-      *         geohashes?: string[], //only sometimes included on the `info` event, when the query granularity was `coarse`, represents all of the geohashes data will be coming back from
-      *         id: string //included on the `info` event, unique id which can be used to kill the query
-      *     } 
-      * }
-      *
-      * interface PromiseResponse {
-      *     data: GeoJSON.Feature[],
-      *     geohashBlacklist?: string[] //only included if the `granularity` was `coarse`
-      * }
-      */
+    * Makes a query
+    * @memberof Query
+    * @param {JSON} query JSON that matches a query schema
+    * Query schema (as a TS interface): 
+    * interface QuerySchema{
+    *     granularity: string, //either `fine`, which only intersects or is within bounds, or `coarse`. Defaults to `fine`
+    *     geohashBlacklist?: string[], //blacklist of geohashes 
+    *     callback?: (data: CallbackResponse) => void, //if this is given, this function will be called whenever data is collected. If not, a promise will be returned.
+    *     bounds?: L.LatLngBounds, //bounds to query
+    *     collection: string, //mongo dataset to query. Required!
+    *     pipeline?: {}[], //mongodb aggregation pipeline
+    *
+    * }
+    *
+    * interface CallbackResponse {
+    *     event: string, //eiher `data` or `info` or `end`
+    *     payload?: { //only included on `data` and `info` events 
+    *         data?: GeoJSON.Feature, //only included on the `data` event
+    *         geohashes?: string[], //only sometimes included on the `info` event, when the query granularity was `coarse`, represents all of the geohashes data will be coming back from
+    *         id: string //included on the `info` event, unique id which can be used to kill the query
+    *     } 
+    * }
+    *
+    * interface PromiseResponse {
+    *     data: GeoJSON.Feature[],
+    *     geohashBlacklist?: string[] //only included if the `granularity` was `coarse`
+    * }
+    **/
     async makeQuery(query) {
         query = {
             ...defaultQuery,
             ...query
         }
+        query.id = Math.random().toString(36).substring(2, 6);
         const { collection, granularity } = query;
         this._throwErrorsIfNeeded({ collection, granularity });
 
+        let promiseFlag = false;
+        let callbackToPromise;
+        if(!query.callback){
+            promiseFlag = true;
+            callbackToPromise = this._callbackToPromise(query);
+        }
 
         const linked = this.linked[query.collection];
         if (linked) { //making an edge case for this one cause it is fast as hell
@@ -84,9 +91,18 @@ const Query = {
             this._queryFine(query);
         }
 
-        if (!query.callback) {
-            return await this._callbackToPromise(query);
+        if (promiseFlag) {
+            return await callbackToPromise;
         }
+    },
+
+    /**
+    * Kills a query
+    * @memberof Query
+    * @param {string} qid
+    **/
+    killQuery(qid){
+        //TODO
     },
 
     async _callbackToPromise(query) {
@@ -117,7 +133,7 @@ const Query = {
     },
 
     _linkedQuery(linked, query) {
-        const { granularity } = query;
+        const { granularity, id } = query;
         this._throwErrorsIfNeeded({ granularity });
         const epsilon = 100;
         let waitingRoom = [];
@@ -149,7 +165,7 @@ const Query = {
         }
 
         const finished = () => {
-            query.callback({ event: "info", payload: { geohashes } })
+            query.callback({ event: "info", payload: { geohashes, id } })
             query.callback({ event: "end" })
         }
 
@@ -198,7 +214,7 @@ const Query = {
     },
 
     _queryCoarse(query) {
-        const { collection, bounds } = query;
+        const { collection, bounds, id } = query;
         if (!query.geohashBlacklist) {
             query.geohashBlacklist = [];
         }
@@ -211,7 +227,8 @@ const Query = {
             query.callback({
                 event: "info",
                 payload: {
-                    geohashes: newGeohashes
+                    geohashes: newGeohashes,
+                    id
                 }
             });
             const coarseCallback = (d, ignoreEnd = true) => {
@@ -335,7 +352,7 @@ const Query = {
     },
 
     _queryPreloadedData(query) {
-        const { collection, bounds, geohashBlacklist, callback } = query;
+        const { collection, bounds, geohashBlacklist, callback, id } = query;
         this._throwErrorsIfNeeded({ collection, bounds, callback });
 
         const loader = this.backgroundLoader(collection);
@@ -363,7 +380,7 @@ const Query = {
             else if (data.type === "end") {
                 //close the listener
                 loader.removeEventListener("message", responseListener);
-                callback({ event: "info", payload: { geohashes: newGeohashes } });
+                callback({ event: "info", payload: { geohashes: newGeohashes, id } });
                 callback({ event: "end" });
             }
 
@@ -381,8 +398,10 @@ const Query = {
     },
 
     _queryMongo(query) {
-        const { pipeline, collection } = query;
-        this._throwErrorsIfNeeded({ collection, pipeline });
+        const { pipeline, collection, callback, id } = query;
+        this._throwErrorsIfNeeded({ collection, pipeline, callback });
+
+        query.callback({ event: "info", payload: { id } })
         const sessionID = Math.random().toString(36).substring(2, 6);
         this.queryWorker.postMessage({
             type: "query",
@@ -398,10 +417,10 @@ const Query = {
             if (data.type === "data") {
                 const dataFromServer = data.data;
                 Util.normalizeFeatureID(dataFromServer);
-                query.callback({ event: "data", payload: { data: dataFromServer } })
+                callback({ event: "data", payload: { data: dataFromServer } })
             }
             else if (data.type === "end") {
-                query.callback({ event: "end" })
+                callback({ event: "end" })
                 this.queryWorker.removeEventListener("message", responseListener);
             }
         }

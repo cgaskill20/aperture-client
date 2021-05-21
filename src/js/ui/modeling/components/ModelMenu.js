@@ -100,8 +100,7 @@ export default class ModelMenu extends React.Component {
 
     async populateCatalog() {
         const { data } = await Query.makeQuery({
-            collection: "model_catalogue",
-            granularity: "fine"
+            collection: "model_catalogue"
         });
         const catalog = data.reduce((acc, entry) => {
             acc[entry.type] = entry;

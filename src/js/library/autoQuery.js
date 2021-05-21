@@ -33,6 +33,7 @@ export default class AutoQuery {
         this.streams = [];
         this.mapLayers = [];
         this.layerIDs = new Set();
+        this.currentQueries = new Set();
 
         this.constraintChangedFlag = false;
         this.enabled = false;
@@ -78,6 +79,7 @@ export default class AutoQuery {
       */
     onRemove() {
         this.clearMapLayers();
+        this.killCurrentQueries();
 
         const oldBlockers = JSON.stringify(AutoQuery.blockers);
         AutoQuery.blockers[this.blockerGroup] -= this.blocked;
@@ -143,9 +145,21 @@ export default class AutoQuery {
     reQuery() {
         if (this.enabled) {
             this.clearMapLayers();
+            this.killCurrentQueries();
             this.geohashCache = [];
             this.query();
         }
+    }
+    /**
+      * Kills current Queries
+      * @memberof AutoQuery
+      * @method killCurrentQueries
+      */
+    killCurrentQueries(){
+        for(const qid of [...this.currentQueries]){
+            Query.killQuery(qid);
+        }
+        this.currentQueries.clear();
     }
 
     /**
@@ -196,16 +210,22 @@ export default class AutoQuery {
             return;
         }
         
+        let id;
         const callback = (d) => {
             const { event, payload } = d;
             if(event === "data"){
                 this.renderGeoJSON(payload.data);
             }
             else if(event === "info"){
+                console.log(payload)
                 payload.geohashes && this.geohashCache.push(...payload.geohashes);
+                if(payload.id) { 
+                    id = payload.id;
+                    this.currentQueries.add(payload.id); 
+                }
             }
             else if(event === "end"){
-                //end
+                this.currentQueries.delete(id);
             }
         } 
 

@@ -20,8 +20,7 @@ export default {
       */
     build: async function (menuMetaData, overwrite) {
         const { data } = await Query.makeQuery({
-            collection: "Metadata",
-            granularity: "fine"
+            collection: "Metadata"
         });
         const catalog = data.reduce((acc,feature) => {
             acc[feature.collection] = feature;
