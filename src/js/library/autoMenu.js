@@ -28,7 +28,6 @@ export default {
             return acc;
         }, {})
         const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
-        console.log(autoMenu)
         return{
             ...autoMenu,
             ...overwrite,
@@ -41,7 +40,6 @@ export default {
       * @method bindMenuToCatalog
       */
     bindMenuToCatalog: function (menuMetaData, catalog) {
-        console.log(catalog)
         let result = {};
         menuMetaData.forEach(metadata => {
             if (catalog[metadata.collection]) {

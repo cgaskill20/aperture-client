@@ -38,10 +38,8 @@ export default class AutoQuery {
         this.enabled = false;
         this.geohashCache = [];
 
-        if (this.data.linkedGeometry) { //linked geometry stuff
-            this.linked = this.data.linkedGeometry;
-            this.backgroundLoader = this.linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
-        }
+        this.linked = this.data.linkedGeometry ? true : false;
+
 
         this.color = layerData.color;
         this.colorStyle = layerData.color.style;
@@ -284,7 +282,8 @@ export default class AutoQuery {
       * @param {GeoJSON} data GeoJSON feature to be rendered
       */
     renderGeoJSON(data) {
-        if (!this.enabled || this.layerIDs.has(data.id))
+        const id = this.linked ? data.id.split("_")[0] : data.id;
+        if (!this.enabled || this.layerIDs.has(id))
             return;
 
         MapDataFilterWrapper.add(data, this.collection);
@@ -302,7 +301,8 @@ export default class AutoQuery {
         indexData[this.collection]["opacity"] = this.color.opacity;
 
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
-        this.layerIDs.add(data.id);
+        this.layerIDs.add(id);
+
     }
 
     /**
