@@ -3,6 +3,12 @@ import Util from "./apertureUtil"
 import boundsToGISJOIN from "./boundsToGISJOIN"
 import { geohash_adjacent, geohash_bounds } from "./geohash_util"
 
+const defaultQuery = {
+    granularity: "fine",
+    pipeline: [],
+    geohashBlacklist: []
+}
+
 /**
  * @class Query
  * @file Makes queries and returns them
@@ -33,11 +39,38 @@ const Query = {
       * Makes a query
       * @memberof Query
       * @param {JSON} query JSON that matches a query schema
+      * Query schema (as a TS interface): 
+      * interface QuerySchema{
+      *     granularity: string, //either `fine`, which only intersects or is within bounds, or `coarse`. Defaults to `fine`
+      *     geohashBlacklist?: string[], //blacklist of geohashes 
+      *     callback?: (data: CallbackResponse) => void, //if this is given, this function will be called whenever data is collected. If not, a promise will be returned.
+      *     bounds?: L.LatLngBounds, //bounds to query
+      *     collection: string, //mongo dataset to query. Required!
+      *     pipeline?: {}[], //mongodb aggregation pipeline
+      *
+      * }
+      *
+      * interface CallbackResponse {
+      *     event: string, //eiher `data` or `info` or `end`
+      *     payload?: { //only included on `data` and `info` events 
+      *         data?: GeoJSON.Feature | GeoJSON.Feature[], //only included on the `data` event, either a GeoJSON feature, or an Array of them
+      *         geohashes?: string[], //only sometimes included on the `info` event, when the query granularity was `coarse`, represents all of the geohashes data will be coming back from
+      *         id: string //included on the `info` event, unique id which can be used to kill the query
+      *     } 
+      * }
+      *
+      * interface PromiseResponse {
+      *     data: GeoJSON.Feature[],
+      *     geohashBlacklist?: string[] //only included if the `granularity` was `coarse`
+      * }
       */
     async makeQuery(query) {
+        query = {
+            ...defaultQuery,
+            ...query
+        }
         const { collection, granularity } = query;
-        query.pipeline = query.pipeline ?? []
-        this._throwErrorsIfNeeded({ collection });
+        this._throwErrorsIfNeeded({ collection, granularity });
 
 
         const linked = this.linked[query.collection];
