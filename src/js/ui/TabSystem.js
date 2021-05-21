@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import NewDataExploration from "./NewDataExploration/NewDataExploration";
 import NewModeling from "./NewModeling/NewModeling";
-import NewValidation from "./NewValidation/NewValidation";
 import { useGlobalState } from "./global/GlobalState";
 import IconButton from "@material-ui/core/IconButton";
 import BarChartIcon from "@material-ui/icons/BarChart";
