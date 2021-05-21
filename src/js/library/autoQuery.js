@@ -217,7 +217,6 @@ export default class AutoQuery {
                 this.renderGeoJSON(payload.data);
             }
             else if(event === "info"){
-                console.log(payload)
                 payload.geohashes && this.geohashCache.push(...payload.geohashes);
                 if(payload.id) { 
                     id = payload.id;

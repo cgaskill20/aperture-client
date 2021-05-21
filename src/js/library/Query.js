@@ -108,7 +108,7 @@ const Query = {
             let geohashes;
             const callback = ({ event, payload }) => {
                 if (event === "data") {
-                    payload.data && Array.isArray(payload.data) ? allData.push(...payload.data) : allData.push(payload.data);
+                    payload.data && allData.push(payload.data);
                 }
                 else if (event === "info") {
                     if (payload.geohashes) {
@@ -375,7 +375,6 @@ const Query = {
                 newGeohashes = [...new Set([...data.data.geohashes, ...newGeohashes])];
             }
             else if (data.type === "end") {
-                //close the listener
                 loader.removeEventListener("message", responseListener);
                 callback({ event: "info", payload: { geohashes: newGeohashes, id } });
                 callback({ event: "end" });
