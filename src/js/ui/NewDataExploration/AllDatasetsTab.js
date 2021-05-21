@@ -10,13 +10,13 @@ import DELayerControls from "./DELayerControls";
 import HandleConstraints from "./HandleConstraints"
 
 import {Layers} from "./testingConstants"
-import {finalData} from "./ResponseParser";
+import {finalData, layerInfos} from "./ResponseParser";
 import {nested_json_map} from "./ResponseParser";
 import {layerNames} from "./ResponseParser";
 
 
 const printStuff = false;
-const dynamicData = false;
+const dynamicData = true;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -44,11 +44,12 @@ export default function AllDatasetsTab() {
         return (
             <div className={classes.root}>
                 <DESearchBar />
-                {layerNames.map((layer) =>
+                {layerNames.map((layer, index) =>
                     <div key={layer}>
                         <IndividualLayer title={layer}
                                          content={
                                          <box>
+                                             <DELayerControls text={layerInfos[index]}/>
                                          </box>
                                      }>
                         </IndividualLayer>

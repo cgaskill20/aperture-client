@@ -15,7 +15,7 @@ export default function DELayerControls(props) {
                     <div>
                         <Typography>
                             {props.text}
-                            Find more info about this dataset on our <a href={props.url} target="_blank">website</a>
+                            {/*Find more info about this dataset on our <a href="https://urban-sustain.org/services/operationalDatasets.php" target="_blank">website</a>*/}
                         </Typography>
                         <br/>
                         <ButtonGroup variant="outlined" aria-label="text primary button group">

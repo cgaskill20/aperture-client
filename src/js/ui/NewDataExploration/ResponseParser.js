@@ -1,10 +1,14 @@
 import React from 'react';
 import AutoMenu from "../../library/autoMenu";
 import Util from "../../library/apertureUtil";
+import AutoQuery from "../../library/autoQuery";
 
 export let finalData;
 export let nested_json_map ={};
 export let layerNames = [];
+export let layerObjs = [];
+export let layerQueriers = [];
+export let layerInfos = [];
 
 const DEFAULT_OBJECT = {
     group: "Other",
@@ -28,6 +32,9 @@ function loopJSON(json) {
             for(const layer in json[obj][header]) {
                 const layerLabel = Util.capitalizeString(Util.underScoreToSpace(json[obj][header][layer].label ? json[obj][header][layer].label : layer));
                 layerNames.push(layerLabel);
+                layerObjs.push(nested_json_map[obj][header][layer]);
+                layerQueriers.push(new AutoQuery(nested_json_map[obj][header][layer])); //important
+                layerInfos.push(nested_json_map[obj][header][layer].info == null ? "" : nested_json_map[obj][header][layer].info);
             }
         }
     }
