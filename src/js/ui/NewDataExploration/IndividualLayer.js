@@ -47,12 +47,9 @@ export default function IndividualLayer(props) {
                     >
                         <FormControlLabel
                             aria-label="AddFav"
-                            // onClick={(event) => event.stopPropagation()}
-                            // onFocus={(event) => event.stopPropagation()}
-                            onClick={() => updateWorkspace(props.title, props.index)}
+                            // onClick={() => updateWorkspace(props.title, props.index)}
                             control={<IconButton color="primary">{getFavIcon(props.title)}</IconButton>}
                             name="fav"
-                            //Make this checkbox a heart icon
                         />
                         <FormControlLabel
                             aria-label="CheckLayer"
