@@ -1,12 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import AllDatasetsTab from "./AllDatasetsTab";
-import Workspace from "./Workspace";
+// import AllDatasetsTab from "./AllDatasetsTab";
+// import Workspace from "./Workspace";
+import DatasetsNavigator from "./DatasetsNavigator";
+
+import {finalData, nested_json_map, layerNames, layerInfos, layerObjs, layerQueriers,constraintObjs} from "./ResponseParser";
+const printStuff = false;
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -47,9 +51,29 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+export let workspaceList = [];
+
+export function updateWorkspace(layer, index) {
+    if(!workspaceList.includes(layer)) {
+        workspaceList.push(layer);
+    }
+    else {
+        workspaceList.splice(index, 1);
+    }
+}
+
 export default function ScrollableTabsButtonAuto() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+
+    if(printStuff) {
+        console.log("findalData: " + finalData);
+        console.log("nested_json_map: " + nested_json_map);
+        console.log("layerNames: " + layerNames);
+    }
+
+    //FIXME get this hook working
+    let [workspace, setWorkspace] = useState([]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -68,10 +92,12 @@ export default function ScrollableTabsButtonAuto() {
                 <Tab label="Workspace" {...a11yProps(1)} />
             </Tabs>
             <TabPanel value={value} index={0}>
-                <AllDatasetsTab />
+                {/*<DatasetsNavigator datasets={layerNames} workspace={workspaceList} setWorkspace={updateWorkspace}/>*/}
+                <DatasetsNavigator datasets={layerNames} workspace={workspace} setWorkspace={setWorkspace}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <Workspace />
+                {/*<DatasetsNavigator datasets={workspaceList} workspace={workspaceList} setWorkspace={updateWorkspace} isWorkspace={true}/>*/}
+                <DatasetsNavigator datasets={workspace} workspace={workspace} setWorkspace={setWorkspace} isWorkspace={true}/>
             </TabPanel>
 
         </div>

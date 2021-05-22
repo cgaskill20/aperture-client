@@ -1,26 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-import DECheckbox from "./DECheckbox"
 import DESearchBar from './DESearchBar'
 import IndividualLayer from "./IndividualLayer";
 import DECard from "./DECard";
 import DELayerControls from "./DELayerControls";
 
 import {layerInfos} from "./ResponseParser";
-import {Typography} from "@material-ui/core";
 
-
-export let workspaceList = [];
-
-export function updateWorkspace(layer, index) {
-    if(!workspaceList.includes(layer)) {
-        workspaceList.push(layer);
-    }
-    else {
-        workspaceList.splice(index, 1);
-    }
-}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,20 +22,24 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Workspace() {
+export default function DatasetsNavigator(props) {
     const classes = useStyles();
 
-
-    if(workspaceList.length !== 0) {
         return (
             <div className={classes.root}>
-                <DESearchBar workspace={true} />
-                {workspaceList.map((layer, index) =>
+                <DESearchBar isWorkspace={props.isWorkspace} datasets={props.datasets}/>
+                {props.datasets.map((layer, index) =>
                     <div key={layer}>
-                        <IndividualLayer title={layer}
+                        <IndividualLayer title={layer} index={index} setWorkspace={props.setWorkspace} workspace={props.workspace}
                                          content={
                                              <box>
-                                                 <DELayerControls text={layerInfos[index]} favorite={layer} currentlyFav={true} index={index}/>
+                                                 <DELayerControls text={layerInfos[index]} layer={layer} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
+                                                 <DECard
+                                                     content={
+                                                         <box>
+                                                         </box>
+                                                     }>
+                                                 </DECard>
                                              </box>
                                          }>
                         </IndividualLayer>
@@ -56,14 +47,5 @@ export default function Workspace() {
                 )}
             </div>
         );
-    }
-
-    else {
-        return(
-            <Typography>
-                Add some datasets to your Workspace from the All Datasets tab
-            </Typography>
-        )
-    }
 
 }

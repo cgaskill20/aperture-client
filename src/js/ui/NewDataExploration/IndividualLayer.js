@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -6,8 +6,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Button, Checkbox, IconButton, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import {updateWorkspace} from "./Workspace";
+// import {updateWorkspace} from "./Workspace";
 import {getFavIcon} from "./DELayerControls";
 
 const useStyles = makeStyles((theme) => ({
@@ -24,6 +23,16 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.text.secondary,
     },
 }));
+
+function updateWorkspace(workspace, layer, index) {
+    if(!workspace.includes(layer)) {
+        workspace.push(layer);
+    }
+    else {
+        workspace.splice(index, 1);
+    }
+    return workspace;
+}
 
 export default function IndividualLayer(props) {
     const classes = useStyles();
@@ -47,7 +56,8 @@ export default function IndividualLayer(props) {
                     >
                         <FormControlLabel
                             aria-label="AddFav"
-                            // onClick={() => updateWorkspace(props.title, props.index)}
+                            onClick={() => props.setWorkspace(updateWorkspace(props.workspace, props.layer, props.index))}
+                            // onClick={() => props.setWorkspace(props.title, props.index)}
                             control={<IconButton color="primary">{getFavIcon(props.title)}</IconButton>}
                             name="fav"
                         />

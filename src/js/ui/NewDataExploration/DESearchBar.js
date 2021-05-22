@@ -3,7 +3,8 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {makeStyles} from "@material-ui/core/styles";
 import {layerNames} from "./ResponseParser";
-import {workspaceList} from "./AllDatasetsTab";
+// import {layerNames} from "./ResponseParser";
+// import {workspaceList} from "./Workspace";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -15,10 +16,9 @@ const useStyles = makeStyles((theme) => ({
 export default function DESearchBar(props) {
     const classes = useStyles();
 
-    const searchText = props.workspace ? "Search Workspace..." : "Search All Datasets..."
-    const searchList = props.workspace ? workspaceList : layerNames;
+    const searchText = props.isWorkspace ? "Search Workspace..." : "Search All Datasets...";
     let newLayers = [];
-    for(const layer in searchList) {
+    for(const layer in props.datasets) {
         newLayers.push({title: layerNames[layer]});
     }
 

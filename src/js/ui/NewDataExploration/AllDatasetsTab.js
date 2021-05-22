@@ -11,10 +11,6 @@ import HandleConstraints from "./HandleConstraints"
 
 import {Layers} from "./testingConstants"
 import {finalData, nested_json_map, layerNames, layerInfos, layerObjs, layerQueriers,constraintObjs} from "./ResponseParser";
-import Util from "../../library/apertureUtil";
-import AutoQuery from "../../library/autoQuery";
-
-export let workspaceList = [];
 
 const printStuff = false;
 const dynamicData = true;
