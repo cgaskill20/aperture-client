@@ -1,15 +1,16 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Button, Checkbox, IconButton, Paper, Switch} from "@material-ui/core";
+import {IconButton, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import {updateWorkspace} from "./Workspace";
-import DELayerControls, {getFavIcon} from "./DELayerControls";
+import DELayerControls from "./DELayerControls";
 import {layerInfos} from "./ResponseParser";
 import DECard from "./DECard";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function getFavIcon(workspace, layer) {
+    return workspace.includes(layer) ? <FavoriteIcon/> : <FavoriteBorderIcon/>;
+}
+
 function updateWorkspace(workspace, layer, index) {
     //FIXME ERROR: can't call .includes() on undefined. So workspace is undefined here
     if(!workspace.includes(layer)) {
@@ -34,6 +39,7 @@ function updateWorkspace(workspace, layer, index) {
     else {
         workspace.splice(index, 1);
     }
+    console.log("workspace is now: " + workspace);
     return workspace;
 }
 

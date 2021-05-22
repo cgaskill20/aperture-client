@@ -8,6 +8,7 @@ import Box from '@material-ui/core/Box';
 import DatasetsNavigator from "./DatasetsNavigator";
 
 import {finalData, nested_json_map, layerNames, layerInfos, layerObjs, layerQueriers,constraintObjs} from "./ResponseParser";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 const printStuff = false;
 
 function TabPanel(props) {
@@ -78,11 +79,9 @@ export default function ScrollableTabsButtonAuto() {
                 <Tab label="Workspace" {...a11yProps(1)} />
             </Tabs>
             <TabPanel value={value} index={0}>
-                {/*<DatasetsNavigator datasets={layerNames} workspace={workspaceList} setWorkspace={updateWorkspace}/>*/}
                 <DatasetsNavigator datasets={layerNames} workspace={workspace} setWorkspace={setWorkspace}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                {/*<DatasetsNavigator datasets={workspaceList} workspace={workspaceList} setWorkspace={updateWorkspace} isWorkspace={true}/>*/}
                 <DatasetsNavigator datasets={workspace} workspace={workspace} setWorkspace={setWorkspace} isWorkspace={true}/>
             </TabPanel>
 
