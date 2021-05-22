@@ -55,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ScrollableTabsButtonAuto() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-    //FIXME this hook still doesn't cause updates on the screen instantly...need to switch tabs and back
     const [workspace, setWorkspace] = useState([]);
 
     if(printStuff) {

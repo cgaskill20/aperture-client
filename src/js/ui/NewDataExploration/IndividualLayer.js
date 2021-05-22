@@ -29,6 +29,10 @@ function getFavIcon(workspace, layer) {
     return workspace.includes(layer) ? <RemoveIcon/> : <AddIcon/>;
 }
 
+function getIcon(layerChecked) {
+    return layerChecked ? <RemoveIcon/> : <AddIcon/>;
+}
+
 export function updateWorkspace(workspace, layer, index) {
     let newWorkspace = [...workspace];
     if(!newWorkspace.includes(layer)) {
@@ -42,8 +46,8 @@ export function updateWorkspace(workspace, layer, index) {
 
 export default function IndividualLayer(props) {
     const classes = useStyles();
-
     const [state, setState] = useState({checked: false});
+    //FIXME this doesn't persist between tabs. However, if I put it any higher in the CH, there is only 1 instance of it...
     const [layerChecked, setLayerChecked] = useState(false);
 
     const handleChange = (event) => {
