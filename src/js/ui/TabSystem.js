@@ -21,8 +21,8 @@ function TabPanel(props) {
         <div
             role="tabpanel"
             hidden={value !== index}
-            id={`auto-tabpanel-${index}`}
-            aria-labelledby={`auto-tab-${index}`}
+            id={`tab-system-tabpanel-${index}`}
+            aria-labelledby={`tab-system-tab-${index}`}
             {...other}
         >
             {value === index && (
@@ -42,8 +42,8 @@ TabPanel.propTypes = {
 
 function a11yProps(index) {
     return {
-        id: `auto-tab-${index}`,
-        'aria-controls': `auto-tabpanel-${index}`,
+        id: `tab-system-tab-${index}`,
+        'aria-controls': `tab-system-tabpanel-${index}`,
     };
 }
 
@@ -55,13 +55,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TabSystem(props) {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
     const [globalState, setGlobalState] = useGlobalState();
     const [workspace, setWorkspace] = useState([]);
     const valueMap = {
         0: "dataExploration",
         1: "modeling"
     }
+    const [explorationTab, setExplorationTab] = useState(0);
 
     const handleChange = (event, newValue) => {
         setGlobalState({ mode: valueMap[newValue] });
@@ -105,7 +106,7 @@ export default function TabSystem(props) {
                 </Grid>
             </Paper>
             <TabPanel value={value} index={0}>
-                <NewDataExploration workspace={workspace} setWorkspace={setWorkspace}/>
+                <NewDataExploration workspace={workspace} setWorkspace={setWorkspace} explorationTab={explorationTab} setExplorationTab={setExplorationTab}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <NewModeling />

@@ -5,10 +5,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import DatasetsNavigator from "./DatasetsNavigator";
 
 import {finalData, nested_json_map, layerNames, layerInfos, layerObjs, layerQueriers,constraintObjs, jsonLayerObjs} from "./ResponseParser";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import BrowseDatasets from "./BrowseDatasets";
 import Workspace from "./Workspace";
 const printStuff = false;
@@ -20,8 +18,8 @@ function TabPanel(props) {
         <div
             role="tabpanel"
             hidden={value !== index}
-            id={`DE-tabpanel-${index}`}
-            aria-labelledby={`DE-tab-${index}`}
+            id={`data-exploration-tabpanel-${index}`}
+            aria-labelledby={`data-exploration-tab-${index}`}
             {...other}
         >
             {value === index && (
@@ -41,8 +39,8 @@ TabPanel.propTypes = {
 
 function a11yProps(index) {
     return {
-        id: `DE-tab-${index}`,
-        'aria-controls': `DE-tabpanel-${index}`,
+        id: `data-exploration-tab-${index}`,
+        'aria-controls': `data-exploration-tabpanel-${index}`,
     };
 }
 
@@ -54,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ScrollableTabsButtonAuto(props) {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
 
     if(printStuff) {
         console.log("findalData: " + finalData);
@@ -62,14 +59,14 @@ export default function ScrollableTabsButtonAuto(props) {
         console.log("layerNames: " + layerNames);
     }
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
+    const handleChange = (event, newExplorationTab) => {
+        props.setExplorationTab(newExplorationTab);
     };
 
     return (
         <div className={classes.root}>
             <Tabs
-                value={value}
+                value={props.explorationTab}
                 onChange={handleChange}
                 indicatorColor="primary"
                 textColor="primary"
@@ -78,10 +75,10 @@ export default function ScrollableTabsButtonAuto(props) {
                 <Tab label="Browse Datasets" {...a11yProps(0)} />
                 <Tab label="Workspace" {...a11yProps(1)} />
             </Tabs>
-            <TabPanel value={value} index={0}>
+            <TabPanel value={props.explorationTab} index={0}>
                 <BrowseDatasets datasets={layerNames} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
             </TabPanel>
-            <TabPanel value={value} index={1}>
+            <TabPanel value={props.explorationTab} index={1}>
                 <Workspace datasets={props.workspace} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
             </TabPanel>
 
