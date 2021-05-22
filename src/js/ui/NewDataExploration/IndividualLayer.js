@@ -25,32 +25,37 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function getIcon(workspace, layer) {
-    return workspace.includes(layer) ? <RemoveIcon/> : <AddIcon/>;
-}
-
 function findIndex(workspace, layer) {
     for(let i = 0; i < workspace.length; i++) {
-        if(workspace[i] == layer) {
+        if(workspace[i] === layer) {
             return i;
         }
     }
+    return -1;
 }
 
-function updateWorkspace(workspace, layer) {
+function updateWorkspace(workspace, layer, index) {
     let newWorkspace = [...workspace];
-    if(!newWorkspace.includes(layer)) {
-        newWorkspace.push(layer);
-    }
-    else {
-        newWorkspace.splice(findIndex(workspace, layer), 1);
-    }
+    index === -1 ? newWorkspace.push(layer) : newWorkspace.splice(index, 1);
     return newWorkspace;
+}
+
+function getIcon(index) {
+    return index !== -1 ? <RemoveIcon/> : <AddIcon/>;
+}
+
+function renderIcon(workspace, layer, index, setWorkspace) {
+    return (
+        <IconButton aria-label="fav" color="primary" onClick={() => setWorkspace(updateWorkspace(workspace, layer, index))}>
+            {getIcon(index)}
+        </IconButton>
+    )
 }
 
 export default function IndividualLayer(props) {
     const classes = useStyles();
     const [state, setState] = useState({checked: false});
+    const index = findIndex(props.workspace, props.layer);
 
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
@@ -66,9 +71,7 @@ export default function IndividualLayer(props) {
                             aria-controls="panel1a-content"
                             id="panel1a-header"
                         >
-                            <IconButton aria-label="fav" color="primary" onClick={() => props.setWorkspace(updateWorkspace(props.workspace, props.layer))}>
-                                {getIcon(props.workspace, props.layer)}
-                            </IconButton>
+                            {renderIcon(props.workspace, props.layer, index, props.setWorkspace)}
                             <FormControlLabel
                                 aria-label="CheckLayer"
                                 onClick={(event) => event.stopPropagation()}
@@ -93,9 +96,7 @@ export default function IndividualLayer(props) {
             <div className={classes.root}>
                 <Paper elevation={1}>
                     <Typography>
-                        <IconButton aria-label="fav" color="primary" onClick={() => props.setWorkspace(updateWorkspace(props.workspace, props.layer))}>
-                            {getIcon(props.workspace, props.layer)}
-                        </IconButton>
+                        {renderIcon(props.workspace, props.layer, index, props.setWorkspace)}
                         {props.layer}
                     </Typography>
                 </Paper>
