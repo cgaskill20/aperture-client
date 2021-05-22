@@ -8,7 +8,6 @@ import {IconButton, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DELayerControls from "./DELayerControls";
 import {layerInfos} from "./ResponseParser";
-import DECard from "./DECard";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 
@@ -32,23 +31,19 @@ function getFavIcon(workspace, layer) {
 }
 
 function updateWorkspace(workspace, layer, index) {
-    //FIXME ERROR: can't call .includes() on undefined. So workspace is undefined here
     if(!workspace.includes(layer)) {
         workspace.push(layer);
     }
     else {
         workspace.splice(index, 1);
     }
-    console.log("workspace is now: " + workspace);
     return workspace;
 }
 
 export default function IndividualLayer(props) {
     const classes = useStyles();
 
-    const [state, setState] = React.useState({
-        checked: false,
-    });
+    const [state, setState] = React.useState({checked: false});
 
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
@@ -66,7 +61,7 @@ export default function IndividualLayer(props) {
                         <FormControlLabel
                             aria-label="AddFav"
                             onClick={() => props.setWorkspace(updateWorkspace(props.workspace, props.layer, props.index))}
-                            control={<IconButton color="primary">{getFavIcon(props.title)}</IconButton>}
+                            control={<IconButton>{getFavIcon(props.workspace, props.layer)}</IconButton>}
                             name="fav"
                         />
                         <FormControlLabel
@@ -75,18 +70,12 @@ export default function IndividualLayer(props) {
                             onFocus={(event) => event.stopPropagation()}
                             onChange={handleChange}
                             control={<Switch color="primary" />}
-                            label={props.title}
+                            label={props.layer}
                             name="checked"
                         />
                     </AccordionSummary>
                     <AccordionDetails>
-                        <DELayerControls text={layerInfos[index]} layer={layer} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
-                        <DECard
-                            content={
-                                <box>
-                                </box>
-                            }>
-                        </DECard>
+                        <DELayerControls text={layerInfos[props.index]}/>
                     </AccordionDetails>
                 </Accordion>
             </Paper>

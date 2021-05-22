@@ -26,7 +26,7 @@ export default function DatasetsNavigator(props) {
                 <DESearchBar isWorkspace={props.isWorkspace} datasets={props.datasets}/>
                 {props.datasets.map((layer, index) =>
                     <div key={layer}>
-                        <IndividualLayer title={layer} index={index} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
+                        <IndividualLayer layer={layer} index={index} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
                     </div>
                 )}
             </div>
