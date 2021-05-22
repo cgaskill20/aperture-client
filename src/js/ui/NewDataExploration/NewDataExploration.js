@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import DatasetsNavigator from "./DatasetsNavigator";
 
-import {finalData, nested_json_map, layerNames, layerInfos, layerObjs, layerQueriers,constraintObjs} from "./ResponseParser";
+import {finalData, nested_json_map, layerNames, layerInfos, layerObjs, layerQueriers,constraintObjs, jsonLayerObjs} from "./ResponseParser";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 const printStuff = false;
 

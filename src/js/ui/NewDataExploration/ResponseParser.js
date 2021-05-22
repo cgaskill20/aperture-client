@@ -11,6 +11,7 @@ export let layerQueriers = [];
 export let layerInfos = [];
 export let constraintNames = [];
 export let constraintObjs = [];
+export let jsonLayerObjs = [];
 
 const DEFAULT_OBJECT = {
     group: "Other",
@@ -34,6 +35,7 @@ function loopJSON(json) {
             for(const layer in json[obj][header]) {
                 const layerLabel = Util.capitalizeString(Util.underScoreToSpace(json[obj][header][layer].label ? json[obj][header][layer].label : layer));
                 layerNames.push(layerLabel);
+                jsonLayerObjs.push(json[obj][header][layer]);
                 layerObjs.push(nested_json_map[obj][header][layer]);
                 layerQueriers.push(new AutoQuery(nested_json_map[obj][header][layer])); //important
                 layerInfos.push(nested_json_map[obj][header][layer].info == null ? "" : nested_json_map[obj][header][layer].info);

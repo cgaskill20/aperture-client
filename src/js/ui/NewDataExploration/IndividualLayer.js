@@ -7,12 +7,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {IconButton, Paper, Switch, Typography} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DELayerControls from "./DELayerControls";
-import {layerInfos} from "./ResponseParser";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,14 +35,14 @@ function getFavIcon(workspace, layer) {
 // }
 
 export function updateWorkspace(workspace, layer, index) {
-    let tempWorkspace = [...workspace];
-    if(!tempWorkspace.includes(layer)) {
-        tempWorkspace.push(layer);
+    let newWorkspace = [...workspace];
+    if(!newWorkspace.includes(layer)) {
+        newWorkspace.push(layer);
     }
     else {
-        tempWorkspace.splice(index, 1);
+        newWorkspace.splice(index, 1);
     }
-    return tempWorkspace;
+    return newWorkspace;
 }
 
 export default function IndividualLayer(props) {
@@ -90,7 +86,7 @@ export default function IndividualLayer(props) {
                             />
                         </AccordionSummary>
                         <AccordionDetails>
-                            <DELayerControls text={layerInfos[props.index]}/>
+                            <DELayerControls/>
                         </AccordionDetails>
                     </Accordion>
                 </Paper>
