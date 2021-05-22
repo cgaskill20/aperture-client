@@ -22,9 +22,9 @@ export default function BrowseDatasets(props) {
     return (
         <div className={classes.root}>
             <LayerNavigationControl datasets={props.datasets} setWorkspace={props.setWorkspace}/>
-            {props.datasets.map((layer, index) =>
+            {props.datasets.map((layer) =>
                 <div key={layer}>
-                    <IndividualLayer layer={layer} index={index} workspace={props.workspace}
+                    <IndividualLayer layer={layer} workspace={props.workspace}
                                      setWorkspace={props.setWorkspace}/>
                 </div>
             )}

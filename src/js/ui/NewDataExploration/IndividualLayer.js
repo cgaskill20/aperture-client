@@ -25,17 +25,25 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function getFavIcon(workspace, layer) {
+function getIcon(workspace, layer) {
     return workspace.includes(layer) ? <RemoveIcon/> : <AddIcon/>;
 }
 
-export function updateWorkspace(workspace, layer, index) {
+function findIndex(workspace, layer) {
+    for(let i = 0; i < workspace.length; i++) {
+        if(workspace[i] == layer) {
+            return i;
+        }
+    }
+}
+
+function updateWorkspace(workspace, layer) {
     let newWorkspace = [...workspace];
     if(!newWorkspace.includes(layer)) {
         newWorkspace.push(layer);
     }
     else {
-        newWorkspace.splice(index, 1);
+        newWorkspace.splice(findIndex(workspace, layer), 1);
     }
     return newWorkspace;
 }
@@ -58,8 +66,8 @@ export default function IndividualLayer(props) {
                             aria-controls="panel1a-content"
                             id="panel1a-header"
                         >
-                            <IconButton aria-label="fav" color="primary" onClick={() => props.setWorkspace(updateWorkspace(props.workspace, props.layer, props.index))}>
-                                {getFavIcon(props.workspace, props.layer)}
+                            <IconButton aria-label="fav" color="primary" onClick={() => props.setWorkspace(updateWorkspace(props.workspace, props.layer))}>
+                                {getIcon(props.workspace, props.layer)}
                             </IconButton>
                             <FormControlLabel
                                 aria-label="CheckLayer"
@@ -85,8 +93,8 @@ export default function IndividualLayer(props) {
             <div className={classes.root}>
                 <Paper elevation={1}>
                     <Typography>
-                        <IconButton aria-label="fav" color="primary" onClick={() => props.setWorkspace(updateWorkspace(props.workspace, props.layer, props.index))}>
-                            {getFavIcon(props.workspace, props.layer)}
+                        <IconButton aria-label="fav" color="primary" onClick={() => props.setWorkspace(updateWorkspace(props.workspace, props.layer))}>
+                            {getIcon(props.workspace, props.layer)}
                         </IconButton>
                         {props.layer}
                     </Typography>
