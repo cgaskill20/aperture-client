@@ -50,15 +50,10 @@ export default function Workspace(props) {
         return(
             <div className={classes.root}>
                 <Grid container direction="row" justify="center" alignItems="center">
-                    <DESearchBar isWorkspace={true} datasets={props.datasets}/>
                     <ButtonGroup>
                         <Button variant="outlined" startIcon={<SaveIcon />}>Save Workspace</Button>
                         <Button variant="outlined" startIcon={<FolderOpenIcon />}>Load Workspace</Button>
                     </ButtonGroup>
-                    <br/>
-                    <Typography>
-                        Add Datasets from the Browse Datasets tab to start visualizing data
-                    </Typography>
                 </Grid>
             </div>
         )

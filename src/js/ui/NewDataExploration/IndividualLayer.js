@@ -63,14 +63,6 @@ export default function IndividualLayer(props) {
                             <IconButton aria-label="fav" color="primary" onClick={() => props.setWorkspace(updateWorkspace(props.workspace, props.layer, props.index))}>
                                 {getFavIcon(props.workspace, props.layer)}
                             </IconButton>
-                            {/*<FormControlLabel*/}
-                            {/*    aria-label="AddFav"*/}
-                            {/*    onClick={() => {*/}
-                            {/*        props.setWorkspace(updateWorkspace(props.workspace, props.layer, props.index));*/}
-                            {/*    }}*/}
-                            {/*    control={<IconButton color="primary">{getFavIcon(props.workspace, props.layer)}</IconButton>}*/}
-                            {/*    name="fav"*/}
-                            {/*/>*/}
                             <FormControlLabel
                                 aria-label="CheckLayer"
                                 onClick={(event) => event.stopPropagation()}
