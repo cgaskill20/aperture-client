@@ -4,11 +4,15 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {IconButton, Paper, Switch, Typography} from "@material-ui/core";
+import {Grid, IconButton, Paper, Switch, Typography} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import DELayerControls from "./DELayerControls";
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
+import HandleConstraints from "./HandleConstraints";
+import DELayerControls from "./DELayerControls";
+import CardContent from "@material-ui/core/CardContent";
+import DECheckbox from "./DECheckbox";
+import DESlider from "./DESlider";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,6 +59,8 @@ function renderIcon(workspace, layer, index, setWorkspace) {
 export default function IndividualLayer(props) {
     const classes = useStyles();
     const [state, setState] = useState({checked: false});
+    const [checkboxes, setCheckboxes] = useState([]);
+    const [sliders, setSliders] = useState([]);
     const index = findIndex(props.workspace, props.layer);
 
     const handleChange = (event) => {
@@ -83,7 +89,33 @@ export default function IndividualLayer(props) {
                             />
                         </AccordionSummary>
                         <AccordionDetails>
-                            <DELayerControls/>
+                            <Grid container direction="column">
+                                <Grid item>
+                                    <DELayerControls/>
+                                </Grid>
+                                <Grid item>
+                                    <Paper elevation={3} className={classes.root}>
+                                        <CardContent>
+                                            {checkboxes.map((constraint) =>
+                                                <div key={constraint}>
+                                                    <DECheckbox title={constraint} />
+                                                </div>
+                                            )}
+                                        </CardContent>
+                                    </Paper>
+                                </Grid>
+                                <Grid item>
+                                    <Paper elevation={3} className={classes.root}>
+                                        <CardContent>
+                                            {sliders.map((constraint) =>
+                                                <div key={constraint}>
+                                                    <DESlider title={constraint} />
+                                                </div>
+                                            )}
+                                        </CardContent>
+                                    </Paper>
+                                </Grid>
+                            </Grid>
                         </AccordionDetails>
                     </Accordion>
                 </Paper>

@@ -58,6 +58,8 @@ export default function TabSystem(props) {
     const [value, setValue] = useState(0);
     const [globalState, setGlobalState] = useGlobalState();
     const [workspace, setWorkspace] = useState([]);
+    // const [checkboxes, setCheckboxes] = useState([]);
+    // const [sliders, setSliders] = useState([]);
     const valueMap = {
         0: "dataExploration",
         1: "modeling"

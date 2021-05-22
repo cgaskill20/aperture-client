@@ -8,6 +8,7 @@ import {Paper} from "@material-ui/core";
 const useStyles = makeStyles({
     root: {
         margin: theme.spacing(1),
+        width: '100%',
     },
 });
 

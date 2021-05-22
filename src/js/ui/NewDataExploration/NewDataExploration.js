@@ -9,6 +9,7 @@ import Box from '@material-ui/core/Box';
 import {finalData, nested_json_map, layerNames, layerInfos, layerObjs, layerQueriers,constraintObjs, jsonLayerObjs} from "./ResponseParser";
 import BrowseDatasets from "./BrowseDatasets";
 import Workspace from "./Workspace";
+
 const printStuff = false;
 
 function TabPanel(props) {
@@ -57,6 +58,8 @@ export default function ScrollableTabsButtonAuto(props) {
         console.log("findalData: " + finalData);
         console.log("nested_json_map: " + nested_json_map);
         console.log("layerNames: " + layerNames);
+        console.log("layerObjs: " + layerObjs);
+        console.log("jsonLayerObjs: " + jsonLayerObjs);
     }
 
     const handleChange = (event, newExplorationTab) => {

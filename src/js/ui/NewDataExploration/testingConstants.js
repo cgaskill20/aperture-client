@@ -62,3 +62,30 @@ let SVIAccordion = {
 };
 
 export const Layers = [HWAccordion, MIAccordion, PSAccordion, SVIAccordion];
+
+export const tempArray = [
+    {
+        title: "Checkbox 1",
+        type: "checkbox"
+    },
+    {
+        title: "Checkbox 2",
+        type: "checkbox"
+    },
+    {
+        title: "Checkbox 3",
+        type: "checkbox"
+    },
+    {
+        title: "Slider 1",
+        type: "slider",
+        min: 0,
+        max: 100
+    },
+    {
+        title: "Slider 2",
+        type: "slider",
+        min: 23,
+        max: 653
+    },
+]
