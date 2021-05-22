@@ -12,6 +12,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles((theme) => ({
     root: {

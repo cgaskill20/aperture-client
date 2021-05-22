@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import DESearchBar from './DESearchBar'
 import IndividualLayer from "./IndividualLayer";
-import {Button} from "@material-ui/core";
+import {Button, ButtonGroup} from "@material-ui/core";
 import {updateWorkspace} from "./Workspace";
 
 
@@ -53,7 +53,11 @@ export default function DatasetsNavigator(props) {
         return (
             <div className={classes.root}>
                 <DESearchBar isWorkspace={props.isWorkspace} datasets={props.datasets} />
-                <Button variant="outlined" onClick={() => props.setWorkspace(addAll(props.datasets, props.workspace))}>Add All Datasets To Workspace</Button>
+                <ButtonGroup>
+                <Button variant="outlined" onClick={() => props.setWorkspace(props.datasets)}>Add All Datasets To Workspace</Button>
+                {/*<Button variant="outlined">Add Tract Datasets To Workspace</Button>*/}
+                {/*<Button variant="outlined">Add County Datasets To Workspace</Button>*/}
+                </ButtonGroup>
                 {props.datasets.map((layer, index) =>
                     <div key={layer}>
                         <IndividualLayer layer={layer} index={index} workspace={props.workspace}
