@@ -99,16 +99,9 @@ export default function IndividualLayer(props) {
             <div className={classes.root}>
                 <Paper elevation={1}>
                     <Typography>
-                        <FormControlLabel
-                            aria-label="AddFav"
-                            onClick={() => {
-                                props.setWorkspace(updateWorkspace(props.workspace, props.layer, props.index));
-                                // setLayerChecked(!layerChecked);
-                            }}
-                            control={<IconButton color="primary">{getFavIcon(props.workspace, props.layer)}</IconButton>}
-                            // control={<IconButton color="secondary">{getFavIcon(layerChecked)}</IconButton>}
-                            name="fav"
-                        />
+                        <IconButton aria-label="fav" color="primary" onClick={() => props.setWorkspace(updateWorkspace(props.workspace, props.layer, props.index))}>
+                            {getFavIcon(props.workspace, props.layer)}
+                        </IconButton>
                         {props.layer}
                     </Typography>
                 </Paper>

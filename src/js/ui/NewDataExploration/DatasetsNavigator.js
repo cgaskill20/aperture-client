@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import DESearchBar from './DESearchBar'
 import IndividualLayer from "./IndividualLayer";
-import {Button, ButtonGroup} from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import Util from "../../library/apertureUtil";
 
 
@@ -29,7 +29,7 @@ export default function DatasetsNavigator(props) {
                 <DESearchBar isWorkspace={props.isWorkspace} datasets={props.datasets}/>
                 <Button variant="outlined" onClick={() => props.setWorkspace([])}>Remove All Datasets From Workspace</Button>
                 {props.datasets.map((layer, index) =>
-                    <div key={layer}>
+                    <div key={index}>
                         <IndividualLayer layer={layer} index={index} workspace={props.workspace}
                                          setWorkspace={props.setWorkspace} isWorkspace={props.isWorkspace}/>
                     </div>
@@ -44,7 +44,7 @@ export default function DatasetsNavigator(props) {
                 <DESearchBar isWorkspace={props.isWorkspace} datasets={props.datasets} />
                 <Button variant="outlined" onClick={() => props.setWorkspace(props.datasets)}>Add All Datasets To Workspace</Button>
                 {props.datasets.map((layer, index) =>
-                    <div key={layer}>
+                    <div key={index}>
                         <IndividualLayer prettyName={Util.capitalizeString(Util.underScoreToSpace(layer.label))} layer={layer} index={index} workspace={props.workspace}
                                          setWorkspace={props.setWorkspace}/>
                     </div>
