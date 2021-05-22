@@ -52,7 +52,7 @@ export default function IndividualLayer(props) {
     return (
         <div className={classes.root}>
             <Paper elevation={1}>
-                <Accordion>
+                <Accordion color="primary">
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1a-content"
@@ -61,7 +61,7 @@ export default function IndividualLayer(props) {
                         <FormControlLabel
                             aria-label="AddFav"
                             onClick={() => props.setWorkspace(updateWorkspace(props.workspace, props.layer, props.index))}
-                            control={<IconButton>{getFavIcon(props.workspace, props.layer)}</IconButton>}
+                            control={<IconButton color="secondary">{getFavIcon(props.workspace, props.layer)}</IconButton>}
                             name="fav"
                         />
                         <FormControlLabel

@@ -95,10 +95,10 @@ export default function TabSystem(props) {
                         item
                     >
                         <IconButton id="nav-graph-button" onClick={showGraph}>
-                            <BarChartIcon />
+                            <BarChartIcon color="primary" />
                         </IconButton>
                         <IconButton onClick={props.handleDrawerClose}>
-                            <ChevronLeftIcon />
+                            <ChevronLeftIcon color="primary" />
                         </IconButton>
                     </Grid>
                 </Grid>
