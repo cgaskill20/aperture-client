@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {Grid, Paper} from "@material-ui/core";
@@ -57,6 +57,7 @@ export default function TabSystem(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [globalState, setGlobalState] = useGlobalState();
+    const [workspace, setWorkspace] = useState([]);
     const valueMap = {
         0: "dataExploration",
         1: "modeling"
@@ -104,7 +105,7 @@ export default function TabSystem(props) {
                 </Grid>
             </Paper>
             <TabPanel value={value} index={0}>
-                <NewDataExploration />
+                <NewDataExploration workspace={workspace} setWorkspace={setWorkspace}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <NewModeling />

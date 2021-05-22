@@ -52,10 +52,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ScrollableTabsButtonAuto() {
+export default function ScrollableTabsButtonAuto(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-    const [workspace, setWorkspace] = useState([]);
 
     if(printStuff) {
         console.log("findalData: " + finalData);
@@ -80,10 +79,10 @@ export default function ScrollableTabsButtonAuto() {
                 <Tab label="Workspace" {...a11yProps(1)} />
             </Tabs>
             <TabPanel value={value} index={0}>
-                <BrowseDatasets datasets={layerNames} workspace={workspace} setWorkspace={setWorkspace}/>
+                <BrowseDatasets datasets={layerNames} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <Workspace datasets={workspace} workspace={workspace} setWorkspace={setWorkspace}/>
+                <Workspace datasets={props.workspace} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
             </TabPanel>
 
         </div>
