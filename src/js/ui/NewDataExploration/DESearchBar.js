@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {makeStyles} from "@material-ui/core/styles";
 import {layerNames} from "./ResponseParser";
+import {workspaceList} from "./AllDatasetsTab";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -11,11 +12,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function DESearchBar() {
+export default function DESearchBar(props) {
     const classes = useStyles();
 
+    const searchList = props.workspace ? workspaceList : layerNames;
     let newLayers = [];
-    for(const layer in layerNames) {
+    for(const layer in searchList) {
         newLayers.push({title: layerNames[layer]});
     }
 

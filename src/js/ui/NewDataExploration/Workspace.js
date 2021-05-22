@@ -29,7 +29,7 @@ export default function Workspace() {
 
         return (
             <div className={classes.root}>
-                <DESearchBar />
+                <DESearchBar workspace={true} />
                 {workspaceList.map((layer, index) =>
                     <div key={layer}>
                         <IndividualLayer title={layer}
