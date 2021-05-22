@@ -47,7 +47,7 @@ export default function AllDatasetsTab() {
                 <DESearchBar />
                 {layerNames.map((layer, index) =>
                     <div key={layer}>
-                        <IndividualLayer title={layer}
+                        <IndividualLayer title={layer} index={index}
                                          content={
                                          <box>
                                              <DELayerControls text={layerInfos[index]} favorite={layer} />

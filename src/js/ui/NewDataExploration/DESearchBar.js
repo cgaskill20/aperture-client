@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
 export default function DESearchBar(props) {
     const classes = useStyles();
 
+    const searchText = props.workspace ? "Search Workspace..." : "Search All Datasets..."
     const searchList = props.workspace ? workspaceList : layerNames;
     let newLayers = [];
     for(const layer in searchList) {
@@ -31,7 +32,7 @@ export default function DESearchBar(props) {
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        label="Search Datasets..."
+                        label={searchText}
                         margin="normal"
                         variant="outlined"
                         InputProps={{ ...params.InputProps, type: 'search' }}

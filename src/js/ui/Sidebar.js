@@ -6,7 +6,7 @@ import TabSystem from "./TabSystem"
 import MenuIcon from '@material-ui/icons/Menu';
 import {Button} from "@material-ui/core";
 
-const drawerWidth = 750;
+const drawerWidth = 800;
 
 const useStyles = makeStyles((theme) => ({
     root: {

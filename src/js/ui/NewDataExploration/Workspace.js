@@ -10,6 +10,16 @@ import DELayerControls from "./DELayerControls";
 import {workspaceList} from "./AllDatasetsTab";
 import {layerInfos} from "./ResponseParser";
 
+export function updateWorkspace(layer, index) {
+    if(!workspaceList.includes(layer)) {
+        workspaceList.push(layer);
+    }
+    else {
+        workspaceList.splice(index, 1);
+    }
+    console.log(workspaceList);
+}
+
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
