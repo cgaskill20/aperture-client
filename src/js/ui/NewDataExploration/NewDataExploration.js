@@ -5,8 +5,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-// import AllDatasetsTab from "./AllDatasetsTab";
-// import Workspace from "./Workspace";
 import DatasetsNavigator from "./DatasetsNavigator";
 
 import {finalData, nested_json_map, layerNames, layerInfos, layerObjs, layerQueriers,constraintObjs} from "./ResponseParser";
@@ -51,29 +49,17 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export let workspaceList = [];
-
-export function updateWorkspace(layer, index) {
-    if(!workspaceList.includes(layer)) {
-        workspaceList.push(layer);
-    }
-    else {
-        workspaceList.splice(index, 1);
-    }
-}
-
 export default function ScrollableTabsButtonAuto() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    //FIXME get this hook working
+    const [workspace, setWorkspace] = useState([]);
 
     if(printStuff) {
         console.log("findalData: " + finalData);
         console.log("nested_json_map: " + nested_json_map);
         console.log("layerNames: " + layerNames);
     }
-
-    //FIXME get this hook working
-    let [workspace, setWorkspace] = useState([]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);

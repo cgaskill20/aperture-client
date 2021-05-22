@@ -7,7 +7,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Button, Checkbox, IconButton, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import {updateWorkspace} from "./Workspace";
-import {getFavIcon} from "./DELayerControls";
+import DELayerControls, {getFavIcon} from "./DELayerControls";
+import {layerInfos} from "./ResponseParser";
+import DECard from "./DECard";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function updateWorkspace(workspace, layer, index) {
+    //FIXME ERROR: can't call .includes() on undefined. So workspace is undefined here
     if(!workspace.includes(layer)) {
         workspace.push(layer);
     }
@@ -57,7 +60,6 @@ export default function IndividualLayer(props) {
                         <FormControlLabel
                             aria-label="AddFav"
                             onClick={() => props.setWorkspace(updateWorkspace(props.workspace, props.layer, props.index))}
-                            // onClick={() => props.setWorkspace(props.title, props.index)}
                             control={<IconButton color="primary">{getFavIcon(props.title)}</IconButton>}
                             name="fav"
                         />
@@ -72,7 +74,13 @@ export default function IndividualLayer(props) {
                         />
                     </AccordionSummary>
                     <AccordionDetails>
-                        {props.content}
+                        <DELayerControls text={layerInfos[index]} layer={layer} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
+                        <DECard
+                            content={
+                                <box>
+                                </box>
+                            }>
+                        </DECard>
                     </AccordionDetails>
                 </Accordion>
             </Paper>
