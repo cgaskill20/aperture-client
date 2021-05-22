@@ -17,7 +17,7 @@ export default function DESearchBar(props) {
     const searchText = props.isWorkspace ? "Search Workspace..." : "Search All Datasets...";
     let newLayers = [];
     for(const layer in props.datasets) {
-        newLayers.push({title: layerNames[layer]});
+        newLayers.push({title: props.datasets[layer]});
     }
 
     return (

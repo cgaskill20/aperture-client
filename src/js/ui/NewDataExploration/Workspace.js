@@ -28,7 +28,7 @@ export default function Workspace(props) {
     if(props.workspace.length !== 0) {
         return (
             <div className={classes.root}>
-                <DESearchBar isWorkspace={props.isWorkspace} datasets={props.datasets}/>
+                <DESearchBar isWorkspace={true} datasets={props.datasets}/>
                 <Grid container direction="row" justify="center" alignItems="center">
                     <ButtonGroup>
                         <Button variant="outlined" onClick={() => props.setWorkspace([])} startIcon={<ClearIcon/>}>Clear Workspace</Button>
@@ -50,7 +50,7 @@ export default function Workspace(props) {
         return(
             <div className={classes.root}>
                 <Grid container direction="row" justify="center" alignItems="center">
-                    <DESearchBar isWorkspace={props.isWorkspace} datasets={props.datasets}/>
+                    <DESearchBar isWorkspace={true} datasets={props.datasets}/>
                     <ButtonGroup>
                         <Button variant="outlined" startIcon={<SaveIcon />}>Save Workspace</Button>
                         <Button variant="outlined" startIcon={<FolderOpenIcon />}>Load Workspace</Button>
