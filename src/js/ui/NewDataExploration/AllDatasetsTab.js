@@ -10,10 +10,11 @@ import DELayerControls from "./DELayerControls";
 import HandleConstraints from "./HandleConstraints"
 
 import {Layers} from "./testingConstants"
-import {finalData, layerInfos} from "./ResponseParser";
-import {nested_json_map} from "./ResponseParser";
-import {layerNames} from "./ResponseParser";
+import {finalData, nested_json_map, layerNames, layerInfos, layerObjs, layerQueriers,constraintObjs} from "./ResponseParser";
+import Util from "../../library/apertureUtil";
+import AutoQuery from "../../library/autoQuery";
 
+export let workspaceList = [];
 
 const printStuff = false;
 const dynamicData = true;
@@ -49,7 +50,17 @@ export default function AllDatasetsTab() {
                         <IndividualLayer title={layer}
                                          content={
                                          <box>
-                                             <DELayerControls text={layerInfos[index]}/>
+                                             <DELayerControls text={layerInfos[index]} favorite={layer} />
+                                             <DECard
+                                                 content={
+                                                     <box>
+                                                         {
+                                                             constraintObjs.map((name) =>
+                                                             <DECheckbox key={name} title={constraintObjs[name]}/>
+                                                         )}
+                                                     </box>
+                                                 }>
+                                             </DECard>
                                          </box>
                                      }>
                         </IndividualLayer>

@@ -9,6 +9,8 @@ export let layerNames = [];
 export let layerObjs = [];
 export let layerQueriers = [];
 export let layerInfos = [];
+export let constraintNames = [];
+export let constraintObjs = [];
 
 const DEFAULT_OBJECT = {
     group: "Other",

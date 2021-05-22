@@ -4,8 +4,10 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Paper, Switch} from "@material-ui/core";
+import {Button, Checkbox, IconButton, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import {ChangeHistory, CheckBox} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -42,6 +44,15 @@ export default function IndividualLayer(props) {
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                     >
+                        {/*<FormControlLabel*/}
+                        {/*    aria-label="CheckLayer"*/}
+                        {/*    onClick={(event) => event.stopPropagation()}*/}
+                        {/*    onFocus={(event) => event.stopPropagation()}*/}
+                        {/*    onChange={handleChange}*/}
+                        {/*    control={<CheckBox color="primary"/>}*/}
+                        {/*    name="fav"*/}
+                        {/*    //Make this checkbox a heart icon*/}
+                        {/*/>*/}
                         <FormControlLabel
                             aria-label="CheckLayer"
                             onClick={(event) => event.stopPropagation()}
