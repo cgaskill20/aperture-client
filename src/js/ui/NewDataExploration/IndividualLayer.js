@@ -27,12 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 function getFavIcon(workspace, layer) {
     return workspace.includes(layer) ? <RemoveIcon/> : <AddIcon/>;
-    // return workspace.includes(layer) ? <FavoriteIcon/> : <FavoriteBorderIcon/>;
 }
-
-// function getFavIcon(layerChecked) {
-//     return layerChecked ? <FavoriteIcon/> : <FavoriteBorderIcon/>;
-// }
 
 export function updateWorkspace(workspace, layer, index) {
     let newWorkspace = [...workspace];
@@ -69,10 +64,8 @@ export default function IndividualLayer(props) {
                                 aria-label="AddFav"
                                 onClick={() => {
                                     props.setWorkspace(updateWorkspace(props.workspace, props.layer, props.index));
-                                    // setLayerChecked(!layerChecked);
                                 }}
                                 control={<IconButton color="primary">{getFavIcon(props.workspace, props.layer)}</IconButton>}
-                                // control={<IconButton color="secondary">{getFavIcon(layerChecked)}</IconButton>}
                                 name="fav"
                             />
                             <FormControlLabel
