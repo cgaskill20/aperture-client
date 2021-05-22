@@ -1,9 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import DESearchBar from './DESearchBar'
 import IndividualLayer from "./IndividualLayer";
-import {Button, Grid} from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add';
+import LayerNavigationControl from "./LayerNavigationControl";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,10 +21,7 @@ export default function BrowseDatasets(props) {
 
     return (
         <div className={classes.root}>
-            <DESearchBar isWorkspace={props.isWorkspace} datasets={props.datasets} />
-            <Grid container direction="row" justify="center" alignItems="center">
-                <Button variant="outlined" startIcon={<AddIcon/>} onClick={() => props.setWorkspace(props.datasets)}>Add All Datasets To Workspace</Button>
-            </Grid>
+            <LayerNavigationControl datasets={props.datasets} setWorkspace={props.setWorkspace}/>
             {props.datasets.map((layer, index) =>
                 <div key={layer}>
                     <IndividualLayer layer={layer} index={index} workspace={props.workspace}
