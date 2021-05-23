@@ -23,10 +23,10 @@ export default function Workspace(props) {
         <div className={classes.root}>
             <LayerNavigationControl isWorkspace={true} datasets={props.datasets} setWorkspace={props.setWorkspace}/>
             {props.datasets.map((layer) =>
-                    <div key={layer}>
+                <div key={layer}>
                     <IndividualLayer layer={layer} workspace={props.workspace}
                                          setWorkspace={props.setWorkspace} isWorkspace={true}/>
-                    </div>
+                </div>
             )}
         </div>
     );

@@ -6,14 +6,8 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, IconButton, Paper, Switch, Typography} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
 import DELayerControls from "./DELayerControls";
-import CardContent from "@material-ui/core/CardContent";
-import DECheckbox from "./DECheckbox";
-import DESlider from "./DESlider";
-import {experimentalConstraints} from "./testingConstants";
-import {layers} from "./ResponseParser";
+import {findIndex, renderConstraintContainer, renderIcon} from "./IndividualLayerHelpers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,33 +23,6 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.text.secondary,
     },
 }));
-
-function findIndex(workspace, layer) {
-    for(let i = 0; i < workspace.length; i++) {
-        if(workspace[i] === layer) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-function updateWorkspace(workspace, layer, index) {
-    let newWorkspace = [...workspace];
-    index === -1 ? newWorkspace.push(layer) : newWorkspace.splice(index, 1);
-    return newWorkspace;
-}
-
-function getIcon(index) {
-    return index !== -1 ? <RemoveIcon/> : <AddIcon/>;
-}
-
-function renderIcon(workspace, layer, index, setWorkspace) {
-    return (
-        <IconButton aria-label="fav" color="primary" onClick={() => setWorkspace(updateWorkspace(workspace, layer, index))}>
-            {getIcon(index)}
-        </IconButton>
-    )
-}
 
 export default function IndividualLayer(props) {
     const classes = useStyles();
@@ -113,28 +80,8 @@ export default function IndividualLayer(props) {
                                 <Grid item>
                                     <DELayerControls/>
                                 </Grid>
-                                <Grid item>
-                                    <Paper elevation={3} className={classes.root}>
-                                        <CardContent>
-                                            {sliders.map((constraint) =>
-                                                <div key={constraint}>
-                                                    <DESlider constraint={constraint} />
-                                                </div>
-                                            )}
-                                        </CardContent>
-                                    </Paper>
-                                </Grid>
-                                <Grid item>
-                                    <Paper elevation={3} className={classes.root}>
-                                        <CardContent>
-                                            {checkboxes.map((constraint) =>
-                                                <div key={constraint}>
-                                                    <DECheckbox constraint={constraint} />
-                                                </div>
-                                            )}
-                                        </CardContent>
-                                    </Paper>
-                                </Grid>
+                                {renderConstraintContainer(sliders, "slider")}
+                                {renderConstraintContainer(checkboxes, "checkbox")}
                             </Grid>
                         </AccordionDetails>
                     </Accordion>
