@@ -16,6 +16,8 @@ function valuetext(value) {
     return `${value}`;
 }
 
+//FIXME include a conditional render for a single-point slider
+
 export default function DESlider(props) {
     const classes = useStyles();
     const [value, setValue] = useState([12, 72]);

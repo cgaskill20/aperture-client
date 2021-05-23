@@ -98,7 +98,7 @@ export default function IndividualLayer(props) {
                                 onFocus={(event) => event.stopPropagation()}
                                 onChange={handleChange}
                                 control={<Switch color="primary" />}
-                                label={props.layer}
+                                label={props.layer["label"]}
                                 name="checked"
                             />
                         </AccordionSummary>
@@ -143,7 +143,7 @@ export default function IndividualLayer(props) {
                 <Paper elevation={1}>
                     <Typography>
                         {renderIcon(props.workspace, props.layer, index, props.setWorkspace)}
-                        {props.layer}
+                        {props.layer["label"]}
                     </Typography>
                 </Paper>
             </div>

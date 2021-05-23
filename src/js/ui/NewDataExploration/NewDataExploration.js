@@ -6,9 +6,10 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-import {finalData, nested_json_map, layerNames, layerInfos, layerObjs, layerQueriers,constraintObjs, jsonLayerObjs} from "./ResponseParser";
+import {layers} from "./ResponseParser";
 import BrowseDatasets from "./BrowseDatasets";
 import Workspace from "./Workspace";
+import {menumetadata} from "../../../json/menumetadata.json";
 
 const printStuff = false;
 
@@ -54,17 +55,11 @@ const useStyles = makeStyles((theme) => ({
 export default function ScrollableTabsButtonAuto(props) {
     const classes = useStyles();
 
-    if(printStuff) {
-        console.log("findalData: " + finalData);
-        console.log("nested_json_map: " + nested_json_map);
-        console.log("layerNames: " + layerNames);
-        console.log("layerObjs: " + layerObjs);
-        console.log("jsonLayerObjs: " + jsonLayerObjs);
-    }
-
     const handleChange = (event, newExplorationTab) => {
         props.setExplorationTab(newExplorationTab);
     };
+
+    //FIXME if [hide] put it in the Advanced... tab
 
     return (
         <div className={classes.root}>
@@ -79,8 +74,8 @@ export default function ScrollableTabsButtonAuto(props) {
                 <Tab label="Workspace" {...a11yProps(1)} />
             </Tabs>
             <TabPanel value={props.explorationTab} index={0}>
-                <BrowseDatasets datasets={layerNames} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
-                {/*<BrowseDatasets datasets={jsonLayerObjs} workspace={props.workspace} setWorkspace={props.setWorkspace}/>*/}
+                {/*<BrowseDatasets datasets={layerNames} workspace={props.workspace} setWorkspace={props.setWorkspace}/>*/}
+                <BrowseDatasets datasets={layers} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
             </TabPanel>
             <TabPanel value={props.explorationTab} index={1}>
                 <Workspace datasets={props.workspace} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
