@@ -8,6 +8,7 @@ import {Grid, IconButton, Paper, Switch, Typography} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DELayerControls from "./DELayerControls";
 import {findIndex, renderConstraintContainer, renderIcon} from "./IndividualLayerHelpers";
+import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,7 +29,7 @@ export default function IndividualLayer(props) {
     const classes = useStyles();
     const [state, setState] = useState({checked: false});
     const index = findIndex(props.workspace, props.layer);
-    const layerLabel = props.layer["label"] ? props.layer["label"] : props.layer["collection"];
+    const layerLabel = props.layer["label"] ? props.layer["label"] : Util.capitalizeString(Util.underScoreToSpace(props.layer["collection"]));
 
     let checkboxes = [];
     let sliders = [];
