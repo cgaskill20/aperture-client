@@ -48,9 +48,10 @@ function getIcon(index) {
 
 export function renderConstraintContainer(constraintArray, type) {
     const classes = useStyles();
+    let renderedSections = [];
     if(constraintArray.length > 0) {
         if(type === "slider"){
-            return (
+            renderedSections.push(
                 <Grid item>
                     <Paper elevation={3} className={classes.root}>
                         <CardContent>
@@ -58,16 +59,12 @@ export function renderConstraintContainer(constraintArray, type) {
                         </CardContent>
                     </Paper>
                 </Grid>
-            )
+            );
         }
         else if(type === "checkbox") {
-            console.log("In the checkboxes conditional!");
-            console.log({constraintArray});
             for(const constraint in constraintArray) {
-                let thisConstraint = constraintArray[constraint];
-                console.log({thisConstraint});
-                return (
-                    <Grid item>
+                renderedSections.push(
+                     <Grid item>
                         <Paper elevation={3} className={classes.root}>
                             <Typography className={classes.heading}>{constraintArray[constraint]["label"]}</Typography>
                             <CardContent>
@@ -75,10 +72,11 @@ export function renderConstraintContainer(constraintArray, type) {
                             </CardContent>
                         </Paper>
                     </Grid>
-                )
+                );
             }
         }
     }
+    return renderedSections;
 }
 
 function renderSliders(constraintArray) {

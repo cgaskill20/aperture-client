@@ -82,8 +82,16 @@ export default function IndividualLayer(props) {
                                 <Grid item>
                                     <DELayerControls/>
                                 </Grid>
-                                {renderConstraintContainer(sliders, "slider")}
-                                {renderConstraintContainer(checkboxes, "checkbox")}
+                                {renderConstraintContainer(sliders, "slider").map((section) =>
+                                    <div>
+                                        {section}
+                                    </div>
+                                )}
+                                {renderConstraintContainer(checkboxes, "checkbox").map((section) =>
+                                    <div>
+                                        {section}
+                                    </div>
+                                )}
                             </Grid>
                         </AccordionDetails>
                     </Accordion>
