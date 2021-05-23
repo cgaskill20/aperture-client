@@ -28,7 +28,7 @@ export default function IndividualLayer(props) {
     const classes = useStyles();
     const [state, setState] = useState({checked: false});
     const index = findIndex(props.workspace, props.layer);
-    const layerLabel = props.layer["label"] ? props.layer["label"] : props.layer;
+    const layerLabel = props.layer["label"] ? props.layer["label"] : props.layer["collection"];
 
     let checkboxes = [];
     let sliders = [];
@@ -71,7 +71,7 @@ export default function IndividualLayer(props) {
                                 onFocus={(event) => event.stopPropagation()}
                                 onChange={handleChange}
                                 control={<Switch color="primary" />}
-                                label={props.layer["label"]}
+                                label={layerLabel}
                                 name="checked"
                             />
                         </AccordionSummary>
@@ -96,7 +96,7 @@ export default function IndividualLayer(props) {
                 <Paper elevation={1}>
                     <Typography>
                         {renderIcon(props.workspace, props.layer, index, props.setWorkspace)}
-                        {props.layer["label"]}
+                        {layerLabel}
                     </Typography>
                 </Paper>
             </div>

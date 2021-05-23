@@ -16,10 +16,14 @@ export default function DESearchBar(props) {
     const searchText = props.isWorkspace ? "Search Workspace..." : "Search All Datasets...";
     let newLayers = [];
     for(const layer in props.datasets) {
-        const layerLabel = props.datasets[layer]["label"];
-        if(layerLabel) {
-            newLayers.push({title: layerLabel});
+        let layerLabel;
+        if(props.datasets[layer]["label"]) {
+            layerLabel = props.datasets[layer]["label"];
         }
+        else {
+            layerLabel = props.datasets[layer]["collection"];
+        }
+        newLayers.push({title: layerLabel});
     }
 
     return (
