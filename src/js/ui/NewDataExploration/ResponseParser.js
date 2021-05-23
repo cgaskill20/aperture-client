@@ -33,9 +33,10 @@ function loopJSON(json) {
     for(const obj in json) {
         for(const header in json[obj]) {
             for(const layer in json[obj][header]) {
-                const layerLabel = Util.capitalizeString(Util.underScoreToSpace(json[obj][header][layer].label ? json[obj][header][layer].label : layer));
+                const jsonLayerObj = json[obj][header][layer];
+                jsonLayerObjs.push(jsonLayerObj);
+                const layerLabel = Util.capitalizeString(Util.underScoreToSpace(jsonLayerObj.label ? jsonLayerObj.label : layer));
                 layerNames.push(layerLabel);
-                jsonLayerObjs.push(json[obj][header][layer]);
                 layerObjs.push(nested_json_map[obj][header][layer]);
                 layerQueriers.push(new AutoQuery(nested_json_map[obj][header][layer])); //important
                 layerInfos.push(nested_json_map[obj][header][layer].info == null ? "" : nested_json_map[obj][header][layer].info);

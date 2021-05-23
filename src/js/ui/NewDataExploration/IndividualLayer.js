@@ -13,6 +13,9 @@ import DELayerControls from "./DELayerControls";
 import CardContent from "@material-ui/core/CardContent";
 import DECheckbox from "./DECheckbox";
 import DESlider from "./DESlider";
+import {experimentalConstraints} from "./testingConstants";
+import {layerObjs} from "./ResponseParser";
+import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -59,13 +62,24 @@ function renderIcon(workspace, layer, index, setWorkspace) {
 export default function IndividualLayer(props) {
     const classes = useStyles();
     const [state, setState] = useState({checked: false});
-    const [checkboxes, setCheckboxes] = useState([]);
-    const [sliders, setSliders] = useState([]);
     const index = findIndex(props.workspace, props.layer);
+
+    let checkboxes = [];
+    let sliders = [];
+    let radios = [];
 
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
     };
+
+    for(const constraint in experimentalConstraints) {
+        if(experimentalConstraints[constraint].type === "checkbox") {
+            checkboxes.push(experimentalConstraints[constraint].title);
+        }
+        else if(experimentalConstraints[constraint].type === 'slider'){
+            sliders.push(experimentalConstraints[constraint].title);
+        }
+    }
 
     if(props.isWorkspace) {
         return (

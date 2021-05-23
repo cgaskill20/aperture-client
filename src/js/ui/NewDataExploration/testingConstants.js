@@ -63,7 +63,7 @@ let SVIAccordion = {
 
 export const Layers = [HWAccordion, MIAccordion, PSAccordion, SVIAccordion];
 
-export const tempArray = [
+export const experimentalConstraints = [
     {
         title: "Checkbox 1",
         type: "checkbox"
