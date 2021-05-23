@@ -47,9 +47,10 @@ export default function IndividualLayer(props) {
                 sliders.push(constraint);
             }
             else if(constraint["type"] === "multiselector") {
-                for(const option in constraint["options"]) {
-                    checkboxes.push(constraint["options"][option]);
-                }
+                checkboxes.push(constraint);
+                // for(const option in constraint["options"]) {
+                //     checkboxes.push(constraint["options"][option]);
+                // }
             }
             const constraintLabel = constraint["label"];
         }
