@@ -13,6 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {showGraph} from "../library/charting/chartBtnNewChartWindow"
+import {layers} from "./NewDataExploration/ResponseParser";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -108,7 +109,7 @@ export default function TabSystem(props) {
                 </Grid>
             </Paper>
             <TabPanel value={value} index={0}>
-                <NewDataExploration workspace={workspace} setWorkspace={setWorkspace} explorationTab={explorationTab} setExplorationTab={setExplorationTab}/>
+                <NewDataExploration layers={layers} workspace={workspace} setWorkspace={setWorkspace} explorationTab={explorationTab} setExplorationTab={setExplorationTab}/>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <NewModeling />
