@@ -11,8 +11,6 @@ import BrowseDatasets from "./BrowseDatasets";
 import Workspace from "./Workspace";
 import {menumetadata} from "../../../json/menumetadata.json";
 
-const printStuff = false;
-
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -74,7 +72,6 @@ export default function ScrollableTabsButtonAuto(props) {
                 <Tab label="Workspace" {...a11yProps(1)} />
             </Tabs>
             <TabPanel value={props.explorationTab} index={0}>
-                {/*<BrowseDatasets datasets={layerNames} workspace={props.workspace} setWorkspace={props.setWorkspace}/>*/}
                 <BrowseDatasets datasets={layers} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
             </TabPanel>
             <TabPanel value={props.explorationTab} index={1}>

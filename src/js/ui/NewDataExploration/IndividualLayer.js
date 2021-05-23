@@ -8,14 +8,12 @@ import {Grid, IconButton, Paper, Switch, Typography} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import HandleConstraints from "./HandleConstraints";
 import DELayerControls from "./DELayerControls";
 import CardContent from "@material-ui/core/CardContent";
 import DECheckbox from "./DECheckbox";
 import DESlider from "./DESlider";
 import {experimentalConstraints} from "./testingConstants";
-import {layerObjs} from "./ResponseParser";
-import Util from "../../library/apertureUtil";
+import {layers} from "./ResponseParser";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -63,6 +61,7 @@ export default function IndividualLayer(props) {
     const classes = useStyles();
     const [state, setState] = useState({checked: false});
     const index = findIndex(props.workspace, props.layer);
+    const layerLabel = props.layer["label"] ? props.layer["label"] : props.layer;
 
     let checkboxes = [];
     let sliders = [];
@@ -72,14 +71,29 @@ export default function IndividualLayer(props) {
         setState({ ...state, [event.target.name]: event.target.checked });
     };
 
-    for(const constraint in experimentalConstraints) {
-        if(experimentalConstraints[constraint].type === "checkbox") {
-            checkboxes.push(experimentalConstraints[constraint].title);
-        }
-        else if(experimentalConstraints[constraint].type === 'slider'){
-            sliders.push(experimentalConstraints[constraint].title);
+
+    for(const layerConstraints in props.layer["constraints"]) {
+        const constraint = props.layer["constraints"][layerConstraints];
+        if(!constraint["hide"]) {
+            if(constraint["type"] === "slider") {
+                sliders.push(constraint);
+            }
+            else if(constraint["type"] === "multiselect") {
+                checkboxes.push(constraint);
+            }
+            const constraintLabel = constraint["label"];
         }
     }
+
+
+    // for(const constraint in experimentalConstraints) {
+    //     if(experimentalConstraints[constraint].type === "checkbox") {
+    //         checkboxes.push(experimentalConstraints[constraint].title);
+    //     }
+    //     else if(experimentalConstraints[constraint].type === 'slider'){
+    //         sliders.push(experimentalConstraints[constraint].title);
+    //     }
+    // }
 
     if(props.isWorkspace) {
         return (
@@ -112,7 +126,7 @@ export default function IndividualLayer(props) {
                                         <CardContent>
                                             {checkboxes.map((constraint) =>
                                                 <div key={constraint}>
-                                                    <DECheckbox title={constraint} />
+                                                    <DECheckbox constraint={constraint} title={constraint["label"]} />
                                                 </div>
                                             )}
                                         </CardContent>
@@ -123,7 +137,7 @@ export default function IndividualLayer(props) {
                                         <CardContent>
                                             {sliders.map((constraint) =>
                                                 <div key={constraint}>
-                                                    <DESlider title={constraint} />
+                                                    <DESlider constraint={constraint} title={constraint["label"]} />
                                                 </div>
                                             )}
                                         </CardContent>
