@@ -23,7 +23,7 @@ export default function DECheckbox(props) {
                         color="primary"
                     />
                 }
-                label={props.title}
+                label={props.constraint}
             />
         </FormGroup>
     );

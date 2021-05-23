@@ -29,7 +29,13 @@ function extractConstraints() {
             if(!constraint["hide"]) {
                 console.log({constraint});
                 layerConstraints.push(constraint);
-                const constraintLabel = constraint["label"];
+                const constraintLabel = constraint["label"] ? constraint["label"] : theseConstraints;
+                if(constraint["options"]) {
+                    for(const option in constraint["options"]) {
+                        const optionName = constraint["options"][option];
+                        console.log({optionName});
+                    }
+                }
                 console.log({constraintLabel});
             }
         }

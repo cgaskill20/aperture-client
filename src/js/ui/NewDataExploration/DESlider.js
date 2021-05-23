@@ -26,10 +26,18 @@ export default function DESlider(props) {
         setValue(newValue);
     };
 
+    // let constraintLabel;
+    // if(props.constraint["label"]) {
+    //     constraintLabel = props.constraint["label"];
+    // }
+    // else {
+    //     constraintLabel = props.constraint;
+    // }
+
     return (
         <div className={classes.root}>
             <Typography className={classes.title} id="range-slider" gutterBottom>
-                {props.title}
+                {props.constraint["label"]}
             </Typography>
             <Slider
                 value={value}

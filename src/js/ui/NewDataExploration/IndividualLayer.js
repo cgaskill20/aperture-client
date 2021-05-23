@@ -78,22 +78,14 @@ export default function IndividualLayer(props) {
             if(constraint["type"] === "slider") {
                 sliders.push(constraint);
             }
-            else if(constraint["type"] === "multiselect") {
-                checkboxes.push(constraint);
+            else if(constraint["type"] === "multiselector") {
+                for(const option in constraint["options"]) {
+                    checkboxes.push(constraint["options"][option]);
+                }
             }
             const constraintLabel = constraint["label"];
         }
     }
-
-
-    // for(const constraint in experimentalConstraints) {
-    //     if(experimentalConstraints[constraint].type === "checkbox") {
-    //         checkboxes.push(experimentalConstraints[constraint].title);
-    //     }
-    //     else if(experimentalConstraints[constraint].type === 'slider'){
-    //         sliders.push(experimentalConstraints[constraint].title);
-    //     }
-    // }
 
     if(props.isWorkspace) {
         return (
@@ -124,9 +116,9 @@ export default function IndividualLayer(props) {
                                 <Grid item>
                                     <Paper elevation={3} className={classes.root}>
                                         <CardContent>
-                                            {checkboxes.map((constraint) =>
+                                            {sliders.map((constraint) =>
                                                 <div key={constraint}>
-                                                    <DECheckbox constraint={constraint} title={constraint["label"]} />
+                                                    <DESlider constraint={constraint} />
                                                 </div>
                                             )}
                                         </CardContent>
@@ -135,9 +127,9 @@ export default function IndividualLayer(props) {
                                 <Grid item>
                                     <Paper elevation={3} className={classes.root}>
                                         <CardContent>
-                                            {sliders.map((constraint) =>
+                                            {checkboxes.map((constraint) =>
                                                 <div key={constraint}>
-                                                    <DESlider constraint={constraint} title={constraint["label"]} />
+                                                    <DECheckbox constraint={constraint} />
                                                 </div>
                                             )}
                                         </CardContent>
