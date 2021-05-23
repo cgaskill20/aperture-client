@@ -2,7 +2,6 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {makeStyles} from "@material-ui/core/styles";
-import {layerNames} from "./ResponseParser";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -17,7 +16,10 @@ export default function DESearchBar(props) {
     const searchText = props.isWorkspace ? "Search Workspace..." : "Search All Datasets...";
     let newLayers = [];
     for(const layer in props.datasets) {
-        newLayers.push({title: props.datasets[layer]});
+        const layerLabel = props.datasets[layer]["label"];
+        if(layerLabel) {
+            newLayers.push({title: layerLabel});
+        }
     }
 
     return (

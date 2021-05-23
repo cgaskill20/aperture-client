@@ -23,6 +23,14 @@ export function findIndex(workspace, layer) {
     return -1;
 }
 
+export function renderIcon(workspace, layer, index, setWorkspace) {
+    return (
+        <IconButton aria-label="fav" color="primary" onClick={() => setWorkspace(updateWorkspace(workspace, layer, index))}>
+            {getIcon(index)}
+        </IconButton>
+    )
+}
+
 function updateWorkspace(workspace, layer, index) {
     let newWorkspace = [...workspace];
     index === -1 ? newWorkspace.push(layer) : newWorkspace.splice(index, 1);
@@ -31,14 +39,6 @@ function updateWorkspace(workspace, layer, index) {
 
 function getIcon(index) {
     return index !== -1 ? <RemoveIcon/> : <AddIcon/>;
-}
-
-export function renderIcon(workspace, layer, index, setWorkspace) {
-    return (
-        <IconButton aria-label="fav" color="primary" onClick={() => setWorkspace(updateWorkspace(workspace, layer, index))}>
-            {getIcon(index)}
-        </IconButton>
-    )
 }
 
 export function renderConstraintContainer(constraintArray, type) {
