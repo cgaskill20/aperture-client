@@ -18,6 +18,7 @@ export default function BrowseDatasets(props) {
     const classes = useStyles();
     const layerSection = createSection(props.datasets, props.workspace, props.setWorkspace);
 
+
     return (
         <div className={classes.root}>
             <LayerNavigationControl datasets={props.datasets} setWorkspace={props.setWorkspace}/>

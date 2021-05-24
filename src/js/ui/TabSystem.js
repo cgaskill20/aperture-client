@@ -73,7 +73,7 @@ export default function TabSystem(props) {
         setValue(newValue);
     };
 
-    const [openLayers, setOpenLayers] = useState([layers.length].fill(false));
+    const [openLayers, setOpenLayers] = useState(new Array(19).fill(false));
 
     return (
         <div className={classes.root}>

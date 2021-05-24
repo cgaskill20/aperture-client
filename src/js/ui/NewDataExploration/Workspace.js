@@ -16,10 +16,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function printOpenLayers(nowOpenLayers) {
+    console.log({nowOpenLayers});
+}
+
 export default function Workspace(props) {
     const classes = useStyles();
 
-    let section = [];
+    printOpenLayers(props.openLayers);
 
     return (
         <div className={classes.root}>

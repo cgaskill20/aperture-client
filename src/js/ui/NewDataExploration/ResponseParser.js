@@ -21,27 +21,28 @@ function extractLayers(data) {
 }
 
 function extractConstraints() {
+    // console.log({layers});
     for(const layerInfo in layers) {
         const layerData = layers[layerInfo];
         const layerName = layerData["label"] ? layerData["label"] : layerData["collection"];
         console.log({layerName})
         console.log({layerData});
-        for(const theseConstraints in layerData["constraints"]) {
-            const constraint = layerData["constraints"][theseConstraints];
-            if(!constraint["hide"]) {
-                if(constraint["type"] === "slider") {
-                    //FIXME How do I get the name of the constraint if it has no label property?
-                    const sliderName = constraint["label"] ? constraint["label"] : constraint;
-                    console.log({sliderName});
-                }
+        // for(const theseConstraints in layerData["constraints"]) {
+        //     const constraint = layerData["constraints"][theseConstraints];
+        //     if(!constraint["hide"]) {
+        //         if(constraint["type"] === "slider") {
+        //             //FIXME How do I get the name of the constraint if it has no label property?
+        //             const sliderName = constraint["label"] ? constraint["label"] : constraint;
+        //             console.log({sliderName});
+        //         }
                 // if(constraint["options"]) {
                 //     for(const option in constraint["options"]) {
                 //         const optionName = constraint["options"][option];
                 //         console.log({optionName}); //the name of the option
                 //     }
                 // }
-            }
-        }
+            // }
+        // }
     }
 }
 

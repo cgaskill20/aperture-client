@@ -4,7 +4,7 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Grid, Paper, Switch, Typography} from "@material-ui/core";
+import {Button, Grid, Paper, Switch, Typography} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DELayerControls from "./DELayerControls";
 import {findIndex, renderConstraintContainer, renderIcon} from "./IndividualLayerHelpers";
@@ -57,13 +57,15 @@ export default function IndividualLayer(props) {
         return (
             <div className={classes.root}>
                 <Paper elevation={1}>
-                    <Accordion color="primary">
+                    <Accordion
+                        color="primary"
+                        //FIXME I need to do something like this...
+                        expanded={props.openLayers[props.index]}
+                        //FIXME This onClick doesn't work. Figure out how to control the dropdown arrow action.
+                        onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, !props.openLayers[props.index], props.index))}
+                    >
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
-                            open={props.openLayers[props.index]}
-                            onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, !props.openLayers[props.index], props.index))}
-                            // aria-controls="panel1a-content"
-                            // id="panel1a-header"
                         >
                             {renderIcon(props.workspace, props.layer, index, props.setWorkspace)}
                             <FormControlLabel
