@@ -27,10 +27,11 @@ export default function LayerNavigationControl(props) {
     if(props.isWorkspace) {
         return (
             <div className={classes.root}>
-                <DESearchBar datasets={props.datasets} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
-                <DESearchBar isWorkspace={true} datasets={props.workspace}/>
+                {/*<DESearchBar datasets={props.datasets} workspace={props.workspace} setWorkspace={props.setWorkspace} />*/}
+                <DESearchBar isWorkspace={true} datasets={props.workspace} workspace={props.workspace} setWorkspace={props.setWorkspace} />
                 <Grid container direction="row" justify="center" alignItems="center">
                     <ButtonGroup>
+                        {/*<Button variant="outlined" startIcon={<AddIcon/>} onClick={() => props.setWorkspace(props.datasets)}>Add All Datasets</Button>*/}
                         <Button variant="outlined" onClick={() => props.setWorkspace([])} startIcon={<ClearIcon/>}>Clear Workspace</Button>
                         <Button variant="outlined" startIcon={<SaveIcon />}>Save Workspace</Button>
                         <Button variant="outlined" startIcon={<FolderOpenIcon />}>Load Workspace</Button>
@@ -43,7 +44,7 @@ export default function LayerNavigationControl(props) {
     else {
         return(
             <div className={classes.root}>
-                <DESearchBar isWorkspace={props.isWorkspace} datasets={props.datasets} />
+                <DESearchBar datasets={props.datasets} workspace={props.workspace} setWorkspace={props.setWorkspace} />
                 <Grid container direction="row" justify="center" alignItems="center">
                     <Button variant="outlined" startIcon={<AddIcon/>} onClick={() => props.setWorkspace(props.datasets)}>Add All Datasets To Workspace</Button>
                 </Grid>

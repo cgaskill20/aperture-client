@@ -36,7 +36,7 @@ export function renderIcon(workspace, layer, index, setWorkspace) {
     )
 }
 
-function updateWorkspace(workspace, layer, index) {
+export function updateWorkspace(workspace, layer, index) {
     let newWorkspace = [...workspace];
     index === -1 ? newWorkspace.push(layer) : newWorkspace.splice(index, 1);
     return newWorkspace;
