@@ -12,22 +12,20 @@ import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: '100%',
+        width: '98%',
         margin: theme.spacing(1),
-    },
-    heading: {
-        fontSize: theme.typography.pxToRem(18),
-        fontWeight: theme.typography.fontWeightRegular,
-    },
-    secondaryHeading: {
-        fontSize: theme.typography.pxToRem(15),
-        color: theme.palette.text.secondary,
     },
 }));
 
+function updateOpenLayers(openLayers, layerOpen, index) {
+    let updatedLayers = [...openLayers];
+    updatedLayers[index] = layerOpen;
+    return updatedLayers;
+}
+
 export default function IndividualLayer(props) {
     const classes = useStyles();
-    const [state, setState] = useState({checked: false});
+    const [check, setCheck] = useState({checked: false});
     const index = findIndex(props.workspace, props.layer);
     const layerLabel = props.layer["label"] ? props.layer["label"] : Util.capitalizeString(Util.underScoreToSpace(props.layer["collection"]));
 
@@ -36,8 +34,8 @@ export default function IndividualLayer(props) {
     let radios = [];
     let advancedLayers = [];
 
-    const handleChange = (event) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
+    const handleCheck = (event) => {
+        setCheck({ ...check, [event.target.name]: event.target.checked });
     };
 
     for(const layerConstraints in props.layer["constraints"]) {
@@ -62,15 +60,17 @@ export default function IndividualLayer(props) {
                     <Accordion color="primary">
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
+                            open={props.openLayers[props.index]}
+                            onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, !props.openLayers[props.index], props.index))}
+                            // aria-controls="panel1a-content"
+                            // id="panel1a-header"
                         >
                             {renderIcon(props.workspace, props.layer, index, props.setWorkspace)}
                             <FormControlLabel
                                 aria-label="CheckLayer"
                                 onClick={(event) => event.stopPropagation()}
                                 onFocus={(event) => event.stopPropagation()}
-                                onChange={handleChange}
+                                onChange={handleCheck}
                                 control={<Switch color="primary" />}
                                 label={layerLabel}
                                 name="checked"

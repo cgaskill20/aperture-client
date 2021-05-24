@@ -73,10 +73,7 @@ export default function TabSystem(props) {
         setValue(newValue);
     };
 
-    const [graph, setGraph] = useState(() => ['graph']);
-    const handleGraph = (event, newFormats) => {
-        setGraph(newFormats);
-    };
+    const [openLayers, setOpenLayers] = useState([layers.length].fill(false));
 
     return (
         <div className={classes.root}>
@@ -115,7 +112,10 @@ export default function TabSystem(props) {
                 </Grid>
             </Paper>
             <TabPanel value={value} index={0}>
-                <NewDataExploration layers={layers} workspace={workspace} setWorkspace={setWorkspace} explorationTab={explorationTab} setExplorationTab={setExplorationTab}/>
+                <NewDataExploration layers={layers}
+                                    openLayers={openLayers} setOpenLayers={setOpenLayers}
+                                    workspace={workspace} setWorkspace={setWorkspace}
+                                    explorationTab={explorationTab} setExplorationTab={setExplorationTab} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <NewModeling />

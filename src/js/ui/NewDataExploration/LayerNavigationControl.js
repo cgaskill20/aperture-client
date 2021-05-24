@@ -6,6 +6,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import SaveIcon from '@material-ui/icons/Save';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import AddIcon from "@material-ui/icons/Add";
+import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,7 +27,8 @@ export default function LayerNavigationControl(props) {
     if(props.isWorkspace) {
         return (
             <div className={classes.root}>
-                <DESearchBar isWorkspace={true} datasets={props.datasets}/>
+                <DESearchBar datasets={props.datasets} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
+                <DESearchBar isWorkspace={true} datasets={props.workspace}/>
                 <Grid container direction="row" justify="center" alignItems="center">
                     <ButtonGroup>
                         <Button variant="outlined" onClick={() => props.setWorkspace([])} startIcon={<ClearIcon/>}>Clear Workspace</Button>

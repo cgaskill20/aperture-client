@@ -19,13 +19,17 @@ const useStyles = makeStyles((theme) => ({
 export default function Workspace(props) {
     const classes = useStyles();
 
+    let section = [];
+
     return (
         <div className={classes.root}>
-            <LayerNavigationControl isWorkspace={true} datasets={props.datasets} setWorkspace={props.setWorkspace}/>
-            {props.datasets.map((layer) =>
-                <div key={layer}>
-                    <IndividualLayer layer={layer} workspace={props.workspace}
-                                         setWorkspace={props.setWorkspace} isWorkspace={true}/>
+            <LayerNavigationControl isWorkspace={true} datasets={props.datasets}
+                                    workspace={props.workspace} setWorkspace={props.setWorkspace}/>
+            {props.workspace.map((layer, index) =>
+                <div key={index}>
+                    <IndividualLayer layer={layer} isWorkspace={true}
+                                     openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
+                                     workspace={props.workspace} setWorkspace={props.setWorkspace} />
                 </div>
             )}
         </div>

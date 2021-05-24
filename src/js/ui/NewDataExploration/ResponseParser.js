@@ -17,7 +17,7 @@ function extractLayers(data) {
         layers.push(thisLayer);
     }
     console.log({layers});
-    extractConstraints();
+    // extractConstraints();
 }
 
 function extractConstraints() {

@@ -72,10 +72,13 @@ export default function ScrollableTabsButtonAuto(props) {
                 <Tab label="Workspace" {...a11yProps(1)} />
             </Tabs>
             <TabPanel value={props.explorationTab} index={0}>
-                <BrowseDatasets datasets={props.layers} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
+                <BrowseDatasets datasets={props.layers}
+                                workspace={props.workspace} setWorkspace={props.setWorkspace} />
             </TabPanel>
             <TabPanel value={props.explorationTab} index={1}>
-                <Workspace datasets={props.workspace} workspace={props.workspace} setWorkspace={props.setWorkspace}/>
+                <Workspace datasets={props.layers}
+                           openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
+                           workspace={props.workspace} setWorkspace={props.setWorkspace} />
             </TabPanel>
 
         </div>

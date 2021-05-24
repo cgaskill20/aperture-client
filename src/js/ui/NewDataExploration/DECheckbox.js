@@ -26,6 +26,5 @@ export default function DECheckbox(props) {
                 label={props.constraint}
             />
         </FormGroup>
-
     );
 }
