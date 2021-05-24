@@ -6,7 +6,7 @@ import {Grid} from "@material-ui/core";
 
 const useStyles = makeStyles({
     root: {
-        width: 300,
+        width: '100%',
     },
     title: {
         textAlign: "center",
@@ -23,10 +23,10 @@ export default function DESlider(props) {
     const min = props.constraint["range"][0];
     const max = props.constraint["range"][1];
     const step = props.constraint["step"] ? props.constraint["step"] : 1;
-    const [value, setValue] = useState([min, max]);
+    const [minMax, setMinMax] = useState([min, max]);
 
     const handleChange = (event, newValue) => {
-        setValue(newValue);
+        setMinMax(newValue);
     };
 
     // let constraintLabel;
@@ -41,10 +41,10 @@ export default function DESlider(props) {
         <div className={classes.root}>
             <Typography className={classes.title} id="range-slider" gutterBottom>
                 {props.constraint["label"]} &nbsp;
-                <span className={classes.nowrap}>{value[0]} - {value[1]}</span>
+                <span className={classes.nowrap}>{minMax[0]} - {minMax[1]}</span>
             </Typography>
             <Slider
-                value={value}
+                value={minMax}
                 onChange={handleChange}
                 aria-labelledby="range-slider"
                 min={min}

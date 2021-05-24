@@ -4,7 +4,7 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Grid, IconButton, Paper, Switch, Typography} from "@material-ui/core";
+import {Grid, Paper, Switch, Typography} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DELayerControls from "./DELayerControls";
 import {findIndex, renderConstraintContainer, renderIcon} from "./IndividualLayerHelpers";
@@ -34,11 +34,11 @@ export default function IndividualLayer(props) {
     let checkboxes = [];
     let sliders = [];
     let radios = [];
+    let advancedLayers = [];
 
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
     };
-
 
     for(const layerConstraints in props.layer["constraints"]) {
         const constraint = props.layer["constraints"][layerConstraints];
@@ -48,11 +48,10 @@ export default function IndividualLayer(props) {
             }
             else if(constraint["type"] === "multiselector") {
                 checkboxes.push(constraint);
-                // for(const option in constraint["options"]) {
-                //     checkboxes.push(constraint["options"][option]);
-                // }
             }
-            const constraintLabel = constraint["label"];
+        }
+        else {
+            advancedLayers.push(constraint);
         }
     }
 
@@ -80,7 +79,7 @@ export default function IndividualLayer(props) {
                         <AccordionDetails>
                             <Grid container direction="column">
                                 <Grid item>
-                                    <DELayerControls/>
+                                    <DELayerControls advancedLayers={advancedLayers} />
                                 </Grid>
                                 {renderConstraintContainer(sliders, "slider").map((section) =>
                                     <div>

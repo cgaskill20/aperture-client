@@ -14,6 +14,7 @@ import BarChartIcon from "@material-ui/icons/BarChart";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {showGraph} from "../library/charting/chartBtnNewChartWindow"
 import {layers} from "./NewDataExploration/ResponseParser";
+import {ToggleButton} from "@material-ui/lab";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -70,6 +71,11 @@ export default function TabSystem(props) {
     const handleChange = (event, newValue) => {
         setGlobalState({ mode: valueMap[newValue] });
         setValue(newValue);
+    };
+
+    const [graph, setGraph] = useState(() => ['graph']);
+    const handleGraph = (event, newFormats) => {
+        setGraph(newFormats);
     };
 
     return (
