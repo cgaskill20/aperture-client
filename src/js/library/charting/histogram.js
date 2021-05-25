@@ -60,13 +60,15 @@ import KernelDensityEstimator from "./kernelDensityEstimator";
 import * as d3 from "../../third-party/d3.min.js";
 
 export default class Histogram extends Chart {
-    constructor() {
+    constructor(attachSelector) {
         super([]);
         this.binNum = 10;
         this.changeBins(this.binNum);
         this.colorScale = () => "steelblue";
         this.kdeEnabled = false;
         this.kde = new KernelDensityEstimator();
+        
+        d3.select(attachSelector).append(this.makeNewView(undefined, 400, 300));
     }
 
     rerender(newWidth, newHeight, viewIndex) {

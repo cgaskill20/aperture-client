@@ -4,6 +4,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { useGlobalState } from '../global/GlobalState';
+import { ChartingType } from '../../library/charting/chartSystem';
 
 export default function ChartGlobalControls(props) {
     const [globalState, setGlobalState] = useGlobalState();
@@ -12,9 +13,9 @@ export default function ChartGlobalControls(props) {
         <div>
             {/* Graph creation buttons */}
             <ButtonGroup variant="outlined" color="primary">
-                <Button onClick={() => props.make({ type: "histogram" })}>Histogram</Button>
-                <Button onClick={() => props.make({ type: "scatterplot" })}>Scatterplot</Button>
-                <Button onClick={() => props.make({ type: "covid" })}>COVID-19</Button>
+                <Button onClick={() => props.make({ type: ChartingType.HISTOGRAM })}>Histogram</Button>
+                <Button onClick={() => props.make({ type: ChartingType.SCATTERPLOT })}>Scatterplot</Button>
+                <Button onClick={() => props.make({ type: ChartingType.LINE })}>COVID-19</Button>
             </ButtonGroup>
 
             {/* Close button */}
