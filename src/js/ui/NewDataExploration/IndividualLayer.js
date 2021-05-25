@@ -105,7 +105,9 @@ export default function IndividualLayer(props) {
             <div className={classes.root}>
                 <Paper elevation={1}>
                     <Typography>
-                        {renderIconInDatasetBrowser(props.workspace, props.layer, index, props.setWorkspace, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}
+                        {renderIcon(props.workspace, props.layer, index, props.setWorkspace, props.openLayers,
+                        props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}
+                        {/*{renderIconInDatasetBrowser(props.workspace, props.layer, index, props.setWorkspace, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}*/}
                         {layerLabel}
                     </Typography>
                 </Paper>

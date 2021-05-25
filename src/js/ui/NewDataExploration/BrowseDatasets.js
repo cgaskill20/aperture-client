@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 export default function BrowseDatasets(props) {
     const classes = useStyles();
     const layerSection = createSection(props.datasets, props.workspace, props.setWorkspace,
+                                       props.openLayers, props.setOpenLayers,
                                        props.booleanWorkspace, props.setBooleanWorkspace);
 
 
