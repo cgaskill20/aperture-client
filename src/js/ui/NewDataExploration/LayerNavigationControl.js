@@ -6,7 +6,9 @@ import ClearIcon from '@material-ui/icons/Clear';
 import SaveIcon from '@material-ui/icons/Save';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import AddIcon from "@material-ui/icons/Add";
-import Util from "../../library/apertureUtil";
+
+//FIXME Replace hard coded number with this once datasets load immediately
+import {numberOfDatasets} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
     root: {

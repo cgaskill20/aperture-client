@@ -16,6 +16,9 @@ import {showGraph} from "../library/charting/chartBtnNewChartWindow"
 import {layers} from "./NewDataExploration/ResponseParser";
 import {ToggleButton} from "@material-ui/lab";
 
+//FIXME Once the datasets load immediately this will work
+export const numberOfDatasets = layers.length;
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -73,7 +76,8 @@ export default function TabSystem(props) {
         setValue(newValue);
     };
 
-    //FIXME consider something like this
+
+    //FIXME Replace these hard coded values with numberOfDatasets once datasets load immediately
     const [booleanWorkspace, setBooleanWorkspace] = useState(new Array(19).fill(false));
     const [openLayers, setOpenLayers] = useState(new Array(19).fill(false));
 

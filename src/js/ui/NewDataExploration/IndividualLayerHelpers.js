@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export function findIndex(workspace, layer) {
+function findIndex(workspace, layer) {
     for(let i = 0; i < workspace.length; i++) {
         if(workspace[i] === layer) {
             return i;
@@ -33,8 +33,8 @@ export function renderIcon(workspace, layer, setWorkspace, openLayers, setOpenLa
     const indexInWorkspace = findIndex(workspace, layer);
     return (
         <IconButton aria-label="fav" color="primary" onClick={() => {
-            setWorkspace(updateWorkspace(workspace, layer, indexInWorkspace, openLayers, setOpenLayers));
-            setBooleanWorkspace(updateBooleanWorkspace(layer, indexInWorkspace, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers));
+            setWorkspace(updateWorkspace(workspace, layer, indexInWorkspace, openLayers, setOpenLayers)); //FIXME This is what needs to be removed
+            setBooleanWorkspace(updateWorkspaceAndLayers(layer, indexInWorkspace, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers));
         }}>
             {getIcon(indexInDatasets, booleanWorkspace)}
         </IconButton>
@@ -55,7 +55,7 @@ export function updateWorkspace(workspace, layer, indexInWorkspace, openLayers, 
     return newWorkspace;
 }
 
-export function updateBooleanWorkspace(layer, indexInWorkspace, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers) {
+function updateWorkspaceAndLayers(layer, indexInWorkspace, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers) {
     let newBooleanWorkspace = [...booleanWorkspace];
     newBooleanWorkspace[indexInDatasets] = !newBooleanWorkspace[indexInDatasets];
     let newOpenLayers = [...openLayers];
