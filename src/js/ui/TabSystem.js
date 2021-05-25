@@ -14,7 +14,6 @@ import BarChartIcon from "@material-ui/icons/BarChart";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {showGraph} from "../library/charting/chartBtnNewChartWindow"
 import {layers} from "./NewDataExploration/ResponseParser";
-import {ToggleButton} from "@material-ui/lab";
 
 //FIXME Once the datasets load immediately this will work
 export const numberOfDatasets = layers.length;
@@ -62,9 +61,11 @@ export default function TabSystem(props) {
     const classes = useStyles();
     const [value, setValue] = useState(0);
     const [globalState, setGlobalState] = useGlobalState();
-    const [workspace, setWorkspace] = useState([]);
-    // const [checkboxes, setCheckboxes] = useState([]);
-    // const [sliders, setSliders] = useState([]);
+
+    //FIXME Replace these hard coded values with numberOfDatasets once datasets load immediately
+    const [booleanWorkspace, setBooleanWorkspace] = useState(new Array(19).fill(false));
+    const [openLayers, setOpenLayers] = useState(new Array(19).fill(false));
+
     const valueMap = {
         0: "dataExploration",
         1: "modeling"
@@ -77,9 +78,6 @@ export default function TabSystem(props) {
     };
 
 
-    //FIXME Replace these hard coded values with numberOfDatasets once datasets load immediately
-    const [booleanWorkspace, setBooleanWorkspace] = useState(new Array(19).fill(false));
-    const [openLayers, setOpenLayers] = useState(new Array(19).fill(false));
 
     return (
         <div className={classes.root}>
@@ -120,7 +118,6 @@ export default function TabSystem(props) {
             <TabPanel value={value} index={0}>
                 <NewDataExploration layers={layers}
                                     openLayers={openLayers} setOpenLayers={setOpenLayers}
-                                    workspace={workspace} setWorkspace={setWorkspace}
                                     booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
                                     explorationTab={explorationTab} setExplorationTab={setExplorationTab} />
             </TabPanel>

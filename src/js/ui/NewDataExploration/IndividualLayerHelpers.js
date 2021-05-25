@@ -28,38 +28,22 @@ function findIndex(workspace, layer) {
     return -1;
 }
 
-export function renderIcon(workspace, layer, setWorkspace, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace, datasets) {
+export function renderIcon(layer, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace, datasets) {
     const indexInDatasets = findIndex(datasets, layer);
-    const indexInWorkspace = findIndex(workspace, layer);
     return (
         <IconButton aria-label="fav" color="primary" onClick={() => {
-            // setWorkspace(updateWorkspace(workspace, layer, indexInWorkspace, openLayers, setOpenLayers)); //FIXME This is what needs to be removed
-            setBooleanWorkspace(updateWorkspaceAndLayers(layer, indexInWorkspace, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers));
+            setBooleanWorkspace(updateWorkspaceAndLayers(layer, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers));
         }}>
             {getIcon(indexInDatasets, booleanWorkspace)}
         </IconButton>
     )
 }
 
-function updateWorkspace(workspace, layer, indexInWorkspace, openLayers, setOpenLayers) {
-    let newWorkspace = [...workspace];
-    if (indexInWorkspace === -1) {
-        newWorkspace.push(layer)
-    }
-    else {
-        newWorkspace.splice(indexInWorkspace, 1);
-        let newOpenLayers = [...openLayers];
-        newOpenLayers[indexInWorkspace] = false;
-        setOpenLayers(newOpenLayers);
-    }
-    return newWorkspace;
-}
-
-function updateWorkspaceAndLayers(layer, indexInWorkspace, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers) {
+function updateWorkspaceAndLayers(layer, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers) {
     let newBooleanWorkspace = [...booleanWorkspace];
     newBooleanWorkspace[indexInDatasets] = !newBooleanWorkspace[indexInDatasets];
     let newOpenLayers = [...openLayers];
-    newOpenLayers[indexInWorkspace] = false;
+    newOpenLayers[indexInDatasets] = false;
     setOpenLayers(newOpenLayers);
     return newBooleanWorkspace;
 }

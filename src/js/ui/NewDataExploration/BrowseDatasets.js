@@ -14,11 +14,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createSection(datasets, workspace, setWorkspace, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace) {
+function createSection(datasets, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace) {
     let layerSection = [];
     datasets.map((layer) =>
         layerSection.push(
-            <IndividualLayer layer={layer} workspace={workspace} setWorkspace={setWorkspace}
+            <IndividualLayer layer={layer}
                              openLayers={openLayers} setOpenLayers={setOpenLayers}
                              booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} datasets={datasets}/>
         )
@@ -28,14 +28,14 @@ function createSection(datasets, workspace, setWorkspace, openLayers, setOpenLay
 
 export default function BrowseDatasets(props) {
     const classes = useStyles();
-    const layerSection = createSection(props.datasets, props.workspace, props.setWorkspace,
+    const layerSection = createSection(props.datasets,
                                        props.openLayers, props.setOpenLayers,
                                        props.booleanWorkspace, props.setBooleanWorkspace);
 
 
     return (
         <div className={classes.root}>
-            <LayerNavigationControl datasets={props.datasets} setWorkspace={props.setWorkspace} setBooleanWorkspace={props.setBooleanWorkspace}/>
+            <LayerNavigationControl datasets={props.datasets} setBooleanWorkspace={props.setBooleanWorkspace}/>
             <Card className={classes.section}>
                 {layerSection.map((layer) =>
                     <div>{layer}</div>
