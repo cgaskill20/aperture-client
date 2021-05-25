@@ -5,16 +5,19 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { useGlobalState } from '../global/GlobalState';
 
-export default function ChartGlobalControls() {
+export default function ChartGlobalControls(props) {
     const [globalState, setGlobalState] = useGlobalState();
 
     return (
         <div>
+            {/* Graph creation buttons */}
             <ButtonGroup variant="outlined" color="primary">
-                <Button>Histogram</Button>
-                <Button>Scatterplot</Button>
-                <Button>COVID-19</Button>
+                <Button onClick={() => props.make("histogram")}>Histogram</Button>
+                <Button onClick={() => props.make("scatterplot")}>Scatterplot</Button>
+                <Button onClick={() => props.make("covid")}>COVID-19</Button>
             </ButtonGroup>
+
+            {/* Close button */}
             <IconButton aria-label="close" onClick={() => setGlobalState({ chartingOpen: false })}>
                 <CloseIcon/>
             </IconButton>
