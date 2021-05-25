@@ -1,6 +1,6 @@
 import React from 'react';
 import { Rnd } from 'react-rnd';
-import ChartCreateControls from './ChartCreateControls';
+import ChartGlobalControls from './ChartGlobalControls';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
@@ -29,7 +29,7 @@ export default function ChartingResizable() {
                     <Grid container>
                         <Grid container direction="column" alignItems="center" justify="center" spacing={1}>
                             <Grid item>
-                                <ChartCreateControls/>
+                                <ChartGlobalControls/>
                             </Grid>
                         </Grid>
                     </Grid>
