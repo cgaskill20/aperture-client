@@ -12,9 +12,9 @@ export default function ChartGlobalControls(props) {
         <div>
             {/* Graph creation buttons */}
             <ButtonGroup variant="outlined" color="primary">
-                <Button onClick={() => props.make("histogram")}>Histogram</Button>
-                <Button onClick={() => props.make("scatterplot")}>Scatterplot</Button>
-                <Button onClick={() => props.make("covid")}>COVID-19</Button>
+                <Button onClick={() => props.make({ type: "histogram" })}>Histogram</Button>
+                <Button onClick={() => props.make({ type: "scatterplot" })}>Scatterplot</Button>
+                <Button onClick={() => props.make({ type: "covid" })}>COVID-19</Button>
             </ButtonGroup>
 
             {/* Close button */}
