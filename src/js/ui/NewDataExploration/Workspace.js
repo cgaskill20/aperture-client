@@ -31,7 +31,7 @@ export default function Workspace(props) {
                                     workspace={props.workspace} setWorkspace={props.setWorkspace}/>
             {props.workspace.map((layer, index) =>
                 <div key={index}>
-                    <IndividualLayer layer={layer} isWorkspace={true}
+                    <IndividualLayer layer={layer} isWorkspace={true} index={index} datasets={props.datasets}
                                      openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
                                      workspace={props.workspace} setWorkspace={props.setWorkspace} />
                 </div>

@@ -28,17 +28,25 @@ export function findIndex(workspace, layer) {
     return -1;
 }
 
-export function renderIcon(workspace, layer, index, setWorkspace) {
+export function renderIcon(workspace, layer, index, setWorkspace, openLayers, setOpenLayers) {
     return (
-        <IconButton aria-label="fav" color="primary" onClick={() => setWorkspace(updateWorkspace(workspace, layer, index))}>
+        <IconButton aria-label="fav" color="primary" onClick={() => setWorkspace(updateWorkspace(workspace, layer, index, openLayers, setOpenLayers))}>
             {getIcon(index)}
         </IconButton>
     )
 }
 
-export function updateWorkspace(workspace, layer, index) {
+export function updateWorkspace(workspace, layer, index, openLayers, setOpenLayers) {
     let newWorkspace = [...workspace];
-    index === -1 ? newWorkspace.push(layer) : newWorkspace.splice(index, 1);
+    if (index === -1) {
+        newWorkspace.push(layer)
+    }
+    else {
+        newWorkspace.splice(index, 1);
+        let newOpenLayers = [...openLayers];
+        newOpenLayers[index] = false;
+        setOpenLayers(newOpenLayers);
+    }
     return newWorkspace;
 }
 

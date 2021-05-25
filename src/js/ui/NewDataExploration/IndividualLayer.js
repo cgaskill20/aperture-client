@@ -53,21 +53,19 @@ export default function IndividualLayer(props) {
         }
     }
 
+
     if(props.isWorkspace) {
         return (
             <div className={classes.root}>
                 <Paper elevation={1}>
                     <Accordion
                         color="primary"
-                        //FIXME I need to do something like this...
                         expanded={props.openLayers[props.index]}
-                        //FIXME This onClick doesn't work. Figure out how to control the dropdown arrow action.
-                        // onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, !props.openLayers[props.index], props.index))}
                     >
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
                         >
-                            {renderIcon(props.workspace, props.layer, index, props.setWorkspace)}
+                            {renderIcon(props.workspace, props.layer, index, props.setWorkspace, props.openLayers, props.setOpenLayers)}
                             <FormControlLabel
                                 aria-label="CheckLayer"
                                 onClick={(event) => event.stopPropagation()}
