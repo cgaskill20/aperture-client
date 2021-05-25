@@ -33,7 +33,7 @@ export function renderIcon(workspace, layer, setWorkspace, openLayers, setOpenLa
     const indexInWorkspace = findIndex(workspace, layer);
     return (
         <IconButton aria-label="fav" color="primary" onClick={() => {
-            setWorkspace(updateWorkspace(workspace, layer, indexInWorkspace, openLayers, setOpenLayers)); //FIXME This is what needs to be removed
+            // setWorkspace(updateWorkspace(workspace, layer, indexInWorkspace, openLayers, setOpenLayers)); //FIXME This is what needs to be removed
             setBooleanWorkspace(updateWorkspaceAndLayers(layer, indexInWorkspace, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers));
         }}>
             {getIcon(indexInDatasets, booleanWorkspace)}
@@ -41,7 +41,7 @@ export function renderIcon(workspace, layer, setWorkspace, openLayers, setOpenLa
     )
 }
 
-export function updateWorkspace(workspace, layer, indexInWorkspace, openLayers, setOpenLayers) {
+function updateWorkspace(workspace, layer, indexInWorkspace, openLayers, setOpenLayers) {
     let newWorkspace = [...workspace];
     if (indexInWorkspace === -1) {
         newWorkspace.push(layer)
