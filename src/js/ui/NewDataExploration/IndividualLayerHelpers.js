@@ -28,10 +28,15 @@ export function findIndex(workspace, layer) {
     return -1;
 }
 
-export function renderIcon(workspace, layer, index, setWorkspace, openLayers, setOpenLayers) {
+export function renderIcon(workspace, layer, index, setWorkspace, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace, datasets) {
+    const layerIndex = findIndex(datasets, layer);
     return (
-        <IconButton aria-label="fav" color="primary" onClick={() => setWorkspace(updateWorkspace(workspace, layer, index, openLayers, setOpenLayers))}>
-            {getIcon(index)}
+        <IconButton aria-label="fav" color="primary" onClick={() => {
+            setWorkspace(updateWorkspace(workspace, layer, index, openLayers, setOpenLayers));
+            setBooleanWorkspace(updateBooleanWorkspace(layer, layerIndex, booleanWorkspace, openLayers, setOpenLayers));
+        }}>
+            {/*{getIcon(index)}*/}
+            {getIcon(layerIndex, booleanWorkspace)}
         </IconButton>
     )
 }
@@ -50,8 +55,49 @@ export function updateWorkspace(workspace, layer, index, openLayers, setOpenLaye
     return newWorkspace;
 }
 
-function getIcon(index) {
-    return index !== -1 ? <RemoveIcon/> : <AddIcon/>;
+export function updateBooleanWorkspace(layer, index, booleanWorkspace, openLayers, setOpenLayers) {
+    let newWorkspace = [...booleanWorkspace];
+    newWorkspace[index] = !newWorkspace[index];
+    let newOpenLayers = [...openLayers];
+    newOpenLayers[index] = false;
+    setOpenLayers(newOpenLayers);
+    return newWorkspace;
+}
+
+export function renderIconInDatasetBrowser(workspace, layer, index, setWorkspace, booleanWorkspace, setBooleanWorkspace, datasets) {
+    const layerIndex = findIndex(datasets, layer);
+    return (
+        <IconButton aria-label="fav" color="primary" onClick={() => {
+            setWorkspace(updateWorkspaceInDatasetBrowser(workspace, layer, index));
+            setBooleanWorkspace(updateBooleanWorkspaceInDatasetBrowser(layer, layerIndex, booleanWorkspace));
+        }}>
+            {/*{getIcon(index)}*/}
+            {getIcon(layerIndex, booleanWorkspace)}
+        </IconButton>
+    )
+}
+
+export function updateWorkspaceInDatasetBrowser(workspace, layer, index) {
+    let newWorkspace = [...workspace];
+    if (index === -1) {
+        newWorkspace.push(layer)
+    }
+    else {
+        newWorkspace.splice(index, 1);
+    }
+    console.log({newWorkspace});
+    return newWorkspace;
+}
+
+export function updateBooleanWorkspaceInDatasetBrowser(layer, index, booleanWorkspace) {
+    let newWorkspace = [...booleanWorkspace];
+    newWorkspace[index] = !newWorkspace[index];
+    return newWorkspace;
+}
+
+function getIcon(index, booleanWorkspace) {
+    // return index !== -1 ? <RemoveIcon/> : <AddIcon/>;
+    return booleanWorkspace[index] ? <RemoveIcon/> : <AddIcon/>;
 }
 
 export function renderConstraintContainer(constraintArray, type) {

@@ -16,23 +16,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BrowseDatasets(props) {
     const classes = useStyles();
-    const layerSection = createSection(props.datasets, props.workspace, props.setWorkspace);
+    const layerSection = createSection(props.datasets, props.workspace, props.setWorkspace,
+                                       props.booleanWorkspace, props.setBooleanWorkspace);
 
 
     return (
         <div className={classes.root}>
-            <LayerNavigationControl datasets={props.datasets} setWorkspace={props.setWorkspace}/>
+            <LayerNavigationControl datasets={props.datasets} setWorkspace={props.setWorkspace} setBooleanWorkspace={props.setBooleanWorkspace}/>
             <Card className={classes.section}>
                 {layerSection.map((layer) =>
                     <div>{layer}</div>
                 )}
             </Card>
-            {/*{props.datasets.map((layer) =>*/}
-            {/*    <div key={layer}>*/}
-            {/*        <IndividualLayer layer={layer} workspace={props.workspace}*/}
-            {/*                         setWorkspace={props.setWorkspace}/>*/}
-            {/*    </div>*/}
-            {/*)}*/}
         </div>
     )
 }

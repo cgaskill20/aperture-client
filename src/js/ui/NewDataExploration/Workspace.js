@@ -16,24 +16,35 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function printOpenLayers(nowOpenLayers) {
-    console.log({nowOpenLayers});
-}
-
 export default function Workspace(props) {
     const classes = useStyles();
 
-    printOpenLayers(props.openLayers);
+    // return (
+    //     <div className={classes.root}>
+    //         <LayerNavigationControl isWorkspace={true} datasets={props.datasets}
+    //                                 workspace={props.workspace} setWorkspace={props.setWorkspace}/>
+    //         {props.workspace.map((layer, index) =>
+    //             <div key={index}>
+    //                 <IndividualLayer layer={layer} isWorkspace={true} index={index} datasets={props.datasets}
+    //                                  openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
+    //                                  workspace={props.workspace} setWorkspace={props.setWorkspace} />
+    //             </div>
+    //         )}
+    //     </div>
+    // );
 
+    //FIXME Much less copying if we can represent Workspace with a boolean array, use datasets array to extract info
     return (
         <div className={classes.root}>
             <LayerNavigationControl isWorkspace={true} datasets={props.datasets}
-                                    workspace={props.workspace} setWorkspace={props.setWorkspace}/>
+                                    workspace={props.workspace} setWorkspace={props.setWorkspace}
+                                    setBooleanWorkspace={props.setBooleanWorkspace} />
             {props.workspace.map((layer, index) =>
                 <div key={index}>
                     <IndividualLayer layer={layer} isWorkspace={true} index={index} datasets={props.datasets}
                                      openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
-                                     workspace={props.workspace} setWorkspace={props.setWorkspace} />
+                                     workspace={props.workspace} setWorkspace={props.setWorkspace}
+                                     booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace} />
                 </div>
             )}
         </div>

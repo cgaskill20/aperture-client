@@ -73,6 +73,8 @@ export default function TabSystem(props) {
         setValue(newValue);
     };
 
+    //FIXME consider something like this
+    const [booleanWorkspace, setBooleanWorkspace] = useState(new Array(19).fill(false));
     const [openLayers, setOpenLayers] = useState(new Array(19).fill(false));
 
     return (
@@ -115,6 +117,7 @@ export default function TabSystem(props) {
                 <NewDataExploration layers={layers}
                                     openLayers={openLayers} setOpenLayers={setOpenLayers}
                                     workspace={workspace} setWorkspace={setWorkspace}
+                                    booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
                                     explorationTab={explorationTab} setExplorationTab={setExplorationTab} />
             </TabPanel>
             <TabPanel value={value} index={1}>

@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Button, Grid, Paper, Switch, Typography} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import DELayerControls from "./DELayerControls";
-import {findIndex, renderConstraintContainer, renderIcon} from "./IndividualLayerHelpers";
+import {findIndex, renderConstraintContainer, renderIcon, renderIconInDatasetBrowser} from "./IndividualLayerHelpers";
 import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
@@ -65,7 +65,8 @@ export default function IndividualLayer(props) {
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
                         >
-                            {renderIcon(props.workspace, props.layer, index, props.setWorkspace, props.openLayers, props.setOpenLayers)}
+                            {renderIcon(props.workspace, props.layer, index, props.setWorkspace, props.openLayers,
+                                        props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}
                             <FormControlLabel
                                 aria-label="CheckLayer"
                                 onClick={(event) => event.stopPropagation()}
@@ -104,7 +105,7 @@ export default function IndividualLayer(props) {
             <div className={classes.root}>
                 <Paper elevation={1}>
                     <Typography>
-                        {renderIcon(props.workspace, props.layer, index, props.setWorkspace)}
+                        {renderIconInDatasetBrowser(props.workspace, props.layer, index, props.setWorkspace, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}
                         {layerLabel}
                     </Typography>
                 </Paper>
