@@ -12,8 +12,23 @@ import { useGlobalState } from "./global/GlobalState";
 import IconButton from "@material-ui/core/IconButton";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import {showGraph} from "../library/charting/chartBtnNewChartWindow"
-import {layers} from "./NewDataExploration/ResponseParser";
+import {showGraph} from "../library/charting/chartBtnNewChartWindow";
+import AutoMenu from "../library/autoMenu";
+
+function overwrite() {}
+let layers = [];
+
+$.getJSON("src/json/menumetadata.json", async function (mdata) {
+    const finalData = await AutoMenu.build(mdata, overwrite);
+    extractLayers(finalData);
+});
+
+function extractLayers(data) {
+    for(const layer in data) {
+        const thisLayer = data[layer];
+        layers.push(thisLayer);
+    }
+}
 
 //FIXME Once the datasets load immediately this will work
 export const numberOfDatasets = layers.length;

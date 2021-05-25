@@ -2,12 +2,10 @@ import React from 'react';
 import AutoMenu from "../../library/autoMenu";
 
 export let layers = [];
-let layerConstraints = [];
 function overwrite() {}
 
 $.getJSON("src/json/menumetadata.json", async function (mdata) {
     const finalData = await AutoMenu.build(mdata, overwrite);
-    console.log({finalData});
     extractLayers(finalData);
 });
 
@@ -16,7 +14,6 @@ function extractLayers(data) {
         const thisLayer = data[layer];
         layers.push(thisLayer);
     }
-    console.log({layers});
     // extractConstraints();
 }
 
