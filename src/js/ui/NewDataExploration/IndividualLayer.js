@@ -26,7 +26,6 @@ function updateOpenLayers(openLayers, index) {
 export default function IndividualLayer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState({checked: false});
-    const index = findIndex(props.workspace, props.layer);
     const layerLabel = props.layer["label"] ? props.layer["label"] : Util.capitalizeString(Util.underScoreToSpace(props.layer["collection"]));
 
     let checkboxes = [];
@@ -65,7 +64,7 @@ export default function IndividualLayer(props) {
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
                         >
-                            {renderIcon(props.workspace, props.layer, index, props.setWorkspace, props.openLayers,
+                            {renderIcon(props.workspace, props.layer, props.setWorkspace, props.openLayers,
                                         props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}
                             <FormControlLabel
                                 aria-label="CheckLayer"
@@ -105,7 +104,7 @@ export default function IndividualLayer(props) {
             <div className={classes.root}>
                 <Paper elevation={1}>
                     <Typography>
-                        {renderIcon(props.workspace, props.layer, index, props.setWorkspace, props.openLayers,
+                        {renderIcon(props.workspace, props.layer, props.setWorkspace, props.openLayers,
                         props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}
                         {/*{renderIconInDatasetBrowser(props.workspace, props.layer, index, props.setWorkspace, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}*/}
                         {layerLabel}

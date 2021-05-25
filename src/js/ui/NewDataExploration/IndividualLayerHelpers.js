@@ -28,39 +28,40 @@ export function findIndex(workspace, layer) {
     return -1;
 }
 
-export function renderIcon(workspace, layer, index, setWorkspace, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace, datasets) {
-    const layerIndex = findIndex(datasets, layer);
+export function renderIcon(workspace, layer, setWorkspace, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace, datasets) {
+    const indexInDatasets = findIndex(datasets, layer);
+    const indexInWorkspace = findIndex(workspace, layer);
     return (
         <IconButton aria-label="fav" color="primary" onClick={() => {
-            setWorkspace(updateWorkspace(workspace, layer, index, openLayers, setOpenLayers));
-            setBooleanWorkspace(updateBooleanWorkspace(layer, layerIndex, booleanWorkspace, openLayers, setOpenLayers));
+            setWorkspace(updateWorkspace(workspace, layer, indexInWorkspace, openLayers, setOpenLayers));
+            setBooleanWorkspace(updateBooleanWorkspace(layer, indexInWorkspace, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers));
         }}>
-            {getIcon(layerIndex, booleanWorkspace)}
+            {getIcon(indexInDatasets, booleanWorkspace)}
         </IconButton>
     )
 }
 
-export function updateWorkspace(workspace, layer, index, openLayers, setOpenLayers) {
+export function updateWorkspace(workspace, layer, indexInWorkspace, openLayers, setOpenLayers) {
     let newWorkspace = [...workspace];
-    if (index === -1) {
+    if (indexInWorkspace === -1) {
         newWorkspace.push(layer)
     }
     else {
-        newWorkspace.splice(index, 1);
+        newWorkspace.splice(indexInWorkspace, 1);
         let newOpenLayers = [...openLayers];
-        newOpenLayers[index] = false;
+        newOpenLayers[indexInWorkspace] = false;
         setOpenLayers(newOpenLayers);
     }
     return newWorkspace;
 }
 
-export function updateBooleanWorkspace(layer, index, booleanWorkspace, openLayers, setOpenLayers) {
-    let newWorkspace = [...booleanWorkspace];
-    newWorkspace[index] = !newWorkspace[index];
+export function updateBooleanWorkspace(layer, indexInWorkspace, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers) {
+    let newBooleanWorkspace = [...booleanWorkspace];
+    newBooleanWorkspace[indexInDatasets] = !newBooleanWorkspace[indexInDatasets];
     let newOpenLayers = [...openLayers];
-    newOpenLayers[index] = false;
+    newOpenLayers[indexInWorkspace] = false;
     setOpenLayers(newOpenLayers);
-    return newWorkspace;
+    return newBooleanWorkspace;
 }
 
 function getIcon(index, booleanWorkspace) {
