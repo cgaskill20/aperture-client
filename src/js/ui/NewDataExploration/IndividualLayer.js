@@ -6,8 +6,8 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch, Typography} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import DELayerControls from "./DELayerControls";
-import {findIndex, renderConstraintContainer, renderIcon} from "./IndividualLayerHelpers";
+import LayerControls from "./LayerControls";
+import {renderConstraintContainer, renderIcon} from "./IndividualLayerHelpers";
 import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
@@ -60,9 +60,10 @@ export default function IndividualLayer(props) {
                     <Accordion
                         color="primary"
                         expanded={props.openLayers[props.index]}
+                        onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))}
                     >
                         <AccordionSummary
-                            expandIcon={<ExpandMoreIcon onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
+                            expandIcon={<ExpandMoreIcon />}
                         >
                             {renderIcon(props.layer, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}
                             <FormControlLabel
@@ -78,7 +79,7 @@ export default function IndividualLayer(props) {
                         <AccordionDetails>
                             <Grid container direction="column">
                                 <Grid item>
-                                    <DELayerControls advancedLayers={advancedLayers} />
+                                    <LayerControls advancedLayers={advancedLayers} />
                                 </Grid>
                                 {renderConstraintContainer(sliders, "slider").map((section) =>
                                     <div>

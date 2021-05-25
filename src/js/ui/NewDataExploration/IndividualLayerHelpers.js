@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Box, Grid, IconButton, Paper, Typography} from "@material-ui/core";
+import {Box, Card, Grid, IconButton, Paper, Typography} from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import CardContent from "@material-ui/core/CardContent";
@@ -9,8 +9,7 @@ import DESlider from "./DESlider";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: '100%',
-        margin: theme.spacing(1),
+        marginTop: theme.spacing(1),
     },
     heading: {
         fontSize: theme.typography.pxToRem(20),
@@ -59,11 +58,11 @@ export function renderConstraintContainer(constraintArray, type) {
         if(type === "slider"){
             renderedSections.push(
                 <Grid item>
-                    <Paper elevation={3} className={classes.root}>
+                    <Card className={classes.root}>
                         <CardContent>
                             {renderSliders(constraintArray)}
                         </CardContent>
-                    </Paper>
+                    </Card>
                 </Grid>
             );
         }
@@ -71,12 +70,12 @@ export function renderConstraintContainer(constraintArray, type) {
             for(const constraint in constraintArray) {
                 renderedSections.push(
                      <Grid item>
-                        <Paper elevation={3} className={classes.root}>
+                        <Card className={classes.root}>
                             <Typography className={classes.heading}>{constraintArray[constraint]["label"]}</Typography>
                             <CardContent>
                                 {renderCheckboxes(constraintArray[constraint]["options"])}
                             </CardContent>
-                        </Paper>
+                        </Card>
                     </Grid>
                 );
             }
