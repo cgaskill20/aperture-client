@@ -33,7 +33,7 @@ export default function DESearchbar(props) {
                 style={{width: '25%'}}
                 onClick={() => props.setBooleanWorkspace(buildWorkspace(selectedDatasets))}
             >
-                Add
+                Update Workspace
             </Button>
             <Autocomplete
                 multiple
@@ -68,7 +68,7 @@ export default function DESearchbar(props) {
                     <TextField
                         {...params}
                         variant="outlined"
-                        label="Add Datasets..."
+                        label="Browse Datasets..."
                     />
                 )}
             />
