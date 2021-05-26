@@ -43,7 +43,7 @@ function extractLayers(data) {
 function extractGraphableLayers(data) {
     for (const layer in data) {
         const thisLayer = data[layer];
-        const layerName = thisLayer["label"] ? thisLayer["label"] : Util.capitalizeString(Util.underScoreToSpace(thisLayer["collection"]));
+        const layerName = thisLayer["collection"];
         graphableLayers.push(layerName);
     }
 }

@@ -60,7 +60,7 @@ export default function IndividualLayer(props) {
                     expanded={props.openLayers[props.index]}
                 >
                     <AccordionSummary
-                        expandIcon={<ExpandMoreIcon onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
+                        expandIcon={<ExpandMoreIcon color="primary" onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
                     >
                         {renderIcon(layerLabel, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace)}
                         <FormControlLabel
@@ -76,7 +76,7 @@ export default function IndividualLayer(props) {
                     <AccordionDetails>
                         <Grid container direction="column">
                             <Grid item>
-                                <LayerControls advancedLayers={advancedLayers} />
+                                <LayerControls advancedLayers={advancedLayers} layerLabel={layerLabel}/>
                             </Grid>
                             {renderConstraintContainer(sliders, "slider").map((section) =>
                                 <div>

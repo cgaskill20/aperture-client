@@ -2,8 +2,9 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {IconButton, Paper, Typography} from "@material-ui/core";
 import {renderIcon} from "./IndividualLayerHelpers";
-import {graphableLayers} from "../TabSystem";
+import {graphableLayers, layers} from "../TabSystem";
 import EqualizerIcon from '@material-ui/icons/Equalizer';
+import {findIndex} from "./IndividualLayerHelpers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,8 +17,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function graphIcon(layerLabel) {
-    if(graphableLayers.includes(layerLabel)) {
-        return <IconButton aria-label="graph-icon">
+    const index = findIndex(layerLabel);
+    const collectionName = layers[index]['collection'];
+    if(graphableLayers.includes(collectionName)) {
+        return <IconButton color="primary" aria-label="graph-icon">
             <EqualizerIcon />
         </IconButton>
     }

@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
-import {Button, ButtonGroup, Card, Paper, Typography} from "@material-ui/core";
+import {Button, ButtonGroup, Card, IconButton, Paper, Typography} from "@material-ui/core";
 import SettingsIcon from '@material-ui/icons/Settings';
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import AdvancedMenu from "./AdvancedMenu";
 import {makeStyles} from "@material-ui/core/styles";
 import Portal from "@material-ui/core/Portal";
 import CardContent from "@material-ui/core/CardContent";
+import {findIndex} from "./IndividualLayerHelpers";
+import {graphableLayers, layers} from "../TabSystem";
+import EqualizerIcon from "@material-ui/icons/Equalizer";
 
 const useStyles = makeStyles((theme) => ({
     dropdown: {
@@ -19,6 +22,17 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper,
     },
 }));
+
+function graphIcon(layerLabel) {
+    const index = findIndex(layerLabel);
+    const collectionName = layers[index]['collection'];
+    if(graphableLayers.includes(collectionName)) {
+        return <Button startIcon={<EqualizerIcon />}>
+            Graph Me
+        </Button>
+    }
+    return;
+}
 
 export default function LayerControls(props) {
     const classes = useStyles();
@@ -49,6 +63,7 @@ export default function LayerControls(props) {
                     <Button startIcon={<RotateLeftIcon />}>
                         Reset Constraints
                     </Button>
+                    {graphIcon(props.layerLabel)}
                 </ButtonGroup>
             </CardContent>
         </Card>
