@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function buildWorkspace(selectedDatasets) {
+export function buildWorkspace(selectedDatasets) {
     let newBooleanWorkspace = [];
     for(let i = 0; i < layerTitles.length; i++) {
         if(selectedDatasets.includes(layerTitles[i])) {

@@ -6,6 +6,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import {layerTitles} from "../TabSystem";
 import theme from "../global/GlobalTheme";
+import {buildWorkspace} from "./LayerNavigationControl";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
