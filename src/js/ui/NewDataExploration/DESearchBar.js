@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import theme from "../global/GlobalTheme";
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -34,6 +34,7 @@ export default function DESearchBar(props) {
                         <Checkbox
                             checked={props.booleanWorkspace[findIndex({option}['option'])]}
                             onChange={() => updateWorkspaceAndLayers(findIndex({option}['option']), props.booleanWorkspace, props.openLayers, props.setOpenLayers)}
+                            name={option['option']}
                             color="primary"
                         />
                     }
@@ -44,7 +45,7 @@ export default function DESearchBar(props) {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Search Datasets..."
+                    label="Add Datasets..."
                     variant="outlined"
                     inputProps={{
                         ...params.inputProps,

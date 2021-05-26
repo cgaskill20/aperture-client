@@ -19,10 +19,16 @@ import Util from "../library/apertureUtil";
 function overwrite() {}
 export let layers = [];
 export let layerTitles = [];
+export let graphableLayers = [];
 
 $.getJSON("src/json/menumetadata.json", async function (mdata) {
     const finalData = await AutoMenu.build(mdata, overwrite);
     extractLayers(finalData);
+});
+
+$.getJSON("src/json/graphPriority.json", async function (mdata) {
+    const graphableLayers = await AutoMenu.build(mdata, overwrite);
+    extractGraphableLayers(graphableLayers);
 });
 
 function extractLayers(data) {
@@ -31,6 +37,14 @@ function extractLayers(data) {
         layers.push(thisLayer);
         const layerName = thisLayer["label"] ? thisLayer["label"] : Util.capitalizeString(Util.underScoreToSpace(thisLayer["collection"]));
         layerTitles.push(layerName);
+    }
+}
+
+function extractGraphableLayers(data) {
+    for (const layer in data) {
+        const thisLayer = data[layer];
+        const layerName = thisLayer["label"] ? thisLayer["label"] : Util.capitalizeString(Util.underScoreToSpace(thisLayer["collection"]));
+        graphableLayers.push(layerName);
     }
 }
 
