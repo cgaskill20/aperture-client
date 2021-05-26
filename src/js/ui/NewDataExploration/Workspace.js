@@ -30,7 +30,7 @@ export default function Workspace(props) {
 
     return (
         <div className={classes.root}>
-            <LayerNavigationControl isWorkspace={true} setBooleanWorkspace={props.setBooleanWorkspace} />
+            <LayerNavigationControl setBooleanWorkspace={props.setBooleanWorkspace} />
             {workspaceLayers.map((layer) =>
                 <div>{layer}</div>
             )}
