@@ -1,10 +1,9 @@
-
-
 import React, {useState} from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {Checkbox, FormControlLabel, ListItemText, makeStyles, MenuItem} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core";
 import Util from "../../library/apertureUtil";
+import {layerTitles} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,12 +19,6 @@ function getName(layer) {
 export default function ControllableStates(props) {
     const classes = useStyles();
     const searchText = props.isWorkspace ? "Search Workspace..." : "Search All Datasets...";
-
-    let options = [];
-    for(const layer in props.datasets) {
-        const layerLabel = props.datasets[layer]["label"] ? props.datasets[layer]["label"] : Util.capitalizeString(Util.underScoreToSpace(props.datasets[layer]["collection"]));
-        options.push(layerLabel);
-    }
 
     // const [value, setValue] = useState();
     const [inputValue, setInputValue] = useState('');
@@ -46,7 +39,7 @@ export default function ControllableStates(props) {
                     setInputValue(newInputValue);
                 }}
                 id="dataset-browser-searchbar"
-                options={options}
+                options={layerTitles}
                 renderInput={(params) => <TextField {...params} label={searchText} variant="outlined" />}
             />
         </div>

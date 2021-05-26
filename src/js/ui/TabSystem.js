@@ -17,7 +17,7 @@ import AutoMenu from "../library/autoMenu";
 import Util from "../library/apertureUtil";
 
 function overwrite() {}
-let layers = [];
+export let layers = [];
 export let layerTitles = [];
 
 $.getJSON("src/json/menumetadata.json", async function (mdata) {
@@ -135,8 +135,7 @@ export default function TabSystem(props) {
                 </Grid>
             </Paper>
             <TabPanel value={value} index={0}>
-                <NewDataExploration layers={layers}
-                                    openLayers={openLayers} setOpenLayers={setOpenLayers}
+                <NewDataExploration openLayers={openLayers} setOpenLayers={setOpenLayers}
                                     booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
                                     explorationTab={explorationTab} setExplorationTab={setExplorationTab} />
             </TabPanel>

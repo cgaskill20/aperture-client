@@ -7,7 +7,6 @@ import CardContent from "@material-ui/core/CardContent";
 import DECheckbox from "./DECheckbox";
 import DESlider from "./DESlider";
 import {layerTitles} from "../TabSystem";
-import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
     root: {

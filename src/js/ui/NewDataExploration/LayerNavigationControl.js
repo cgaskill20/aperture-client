@@ -30,7 +30,7 @@ export default function LayerNavigationControl(props) {
         return (
             <div className={classes.root}>
                 {/*<DESearchBar datasets={props.datasets} workspace={props.workspace} setWorkspace={props.setWorkspace} />*/}
-                <DESearchBar isWorkspace={true} datasets={props.datasets} />
+                <DESearchBar isWorkspace={true} />
                 <Grid container direction="row" justify="center" alignItems="center">
                     <ButtonGroup>
                         {/*<Button variant="outlined" startIcon={<AddIcon/>} onClick={() => props.setWorkspace(props.datasets)}>Add All Datasets</Button>*/}
@@ -49,7 +49,7 @@ export default function LayerNavigationControl(props) {
     else {
         return(
             <div className={classes.root}>
-                <DESearchBar datasets={props.datasets} />
+                <DESearchBar />
                 <Grid container direction="row" justify="center" alignItems="center">
                     <Button variant="outlined" startIcon={<AddIcon />} onClick={() => {
                         const temp = new Array(19).fill(true);

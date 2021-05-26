@@ -64,7 +64,7 @@ export default function IndividualLayer(props) {
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
                         >
-                            {renderIcon(layerLabel, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}
+                            {renderIcon(layerLabel, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace)}
                             <FormControlLabel
                                 aria-label="CheckLayer"
                                 onClick={(event) => event.stopPropagation()}
@@ -103,7 +103,7 @@ export default function IndividualLayer(props) {
             <div className={classes.root}>
                 <Paper elevation={1}>
                     <Typography>
-                        {renderIcon(layerLabel, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}
+                        {renderIcon(layerLabel, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace)}
                         {layerLabel}
                     </Typography>
                 </Paper>
