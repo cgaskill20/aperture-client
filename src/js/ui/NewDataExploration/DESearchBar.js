@@ -6,49 +6,72 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import {layerTitles} from "../TabSystem";
 import theme from "../global/GlobalTheme";
+import {Button} from "@material-ui/core";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function CheckboxesTags() {
-    const [selectedDataset, setSelectedDataset] = useState([]);
+function buildWorkspace(selectedDatasets) {
+    let newBooleanWorkspace = [];
+    for(let i = 0; i < layerTitles.length; i++) {
+        if(selectedDatasets.includes(layerTitles[i])) {
+            newBooleanWorkspace.push(true);
+        }
+        else {
+            newBooleanWorkspace.push(false);
+        }
+    }
+    return newBooleanWorkspace;
+}
+
+export default function DESearchbar(props) {
+    const [selectedDatasets, setSelectedDatasets] = useState([]);
     return (
-        <Autocomplete
-            multiple
-            disableCloseOnSelect
-            id="dataset-searchbar"
-            options={layerTitles}
-            onChange={(e, dataset) => {
-                setSelectedDataset(dataset);
-            }}
-            renderOption={(option, state) => {
-                const selectDatasetIndex = selectedDataset.findIndex(
-                    dataset => dataset.toLowerCase() === "all"
-                );
-                if (selectDatasetIndex > -1) {
-                    state.selected = true;
-                }
-                return (
-                    <React.Fragment>
-                        <Checkbox
-                            icon={icon}
-                            color="primary"
-                            checkedIcon={checkedIcon}
-                            style={{ marginRight: 8 }}
-                            checked={state.selected}
-                        />
-                        {option}
-                    </React.Fragment>
-                );
-            }}
-            style={{ width: '100%', margin: theme.spacing(1) }}
-            renderInput={params => (
-                <TextField
-                    {...params}
-                    variant="outlined"
-                    label="Add Datasets..."
-                />
-            )}
-        />
+        <div>
+            <Button
+                variant="outlined"
+                style={{width: '25%'}}
+                onClick={() => props.setBooleanWorkspace(buildWorkspace(selectedDatasets))}
+            >
+                Add
+            </Button>
+            <Autocomplete
+                multiple
+                disableCloseOnSelect
+                id="dataset-searchbar"
+                options={layerTitles}
+                onChange={(e, dataset) => {
+                    setSelectedDatasets(dataset);
+                }}
+                renderOption={(option, state) => {
+                    const selectDatasetIndex = selectedDatasets.findIndex(
+                        dataset => dataset.toLowerCase() === "all"
+                    );
+                    if (selectDatasetIndex > -1) {
+                        state.selected = true;
+                    }
+                    return (
+                        <React.Fragment>
+                            <Checkbox
+                                icon={icon}
+                                color="primary"
+                                checkedIcon={checkedIcon}
+                                style={{ marginRight: 8 }}
+                                checked={state.selected}
+                            />
+                            {option}
+                        </React.Fragment>
+                    );
+                }}
+                style={{ width: '75%', margin: theme.spacing(1) }}
+                renderInput={params => (
+                    <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Add Datasets..."
+                    />
+                )}
+            />
+        </div>
     );
 }

@@ -30,7 +30,9 @@ export default function LayerNavigationControl(props) {
     if(props.isWorkspace) {
         return (
             <div className={classes.root}>
-                {/*<DESearchBar isWorkspace={true} />*/}
+                <DESearchBar openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
+                             booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace}
+                             setSearchedDatasets={props.setSearchedDatasets}/>
                 <Grid container direction="row" justify="center" alignItems="center">
                     <ButtonGroup>
                         <Button variant="outlined" onClick={() => {

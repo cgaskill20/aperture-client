@@ -61,24 +61,24 @@ export default function ScrollableTabsButtonAuto(props) {
 
     return (
         <div className={classes.root}>
-            <Tabs
-                value={props.explorationTab}
-                onChange={handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-                centered
-            >
-                <Tab label="Browse Datasets" {...a11yProps(0)} />
-                <Tab label="Workspace" {...a11yProps(1)} />
-            </Tabs>
-            <TabPanel value={props.explorationTab} index={0}>
-                <BrowseDatasets openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
-                                booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace} />
-            </TabPanel>
-            <TabPanel value={props.explorationTab} index={1}>
+            {/*<Tabs*/}
+            {/*    value={props.explorationTab}*/}
+            {/*    onChange={handleChange}*/}
+            {/*    indicatorColor="primary"*/}
+            {/*    textColor="primary"*/}
+            {/*    centered*/}
+            {/*>*/}
+            {/*    <Tab label="Browse Datasets" {...a11yProps(0)} />*/}
+            {/*    <Tab label="Workspace" {...a11yProps(1)} />*/}
+            {/*</Tabs>*/}
+            {/*<TabPanel value={props.explorationTab} index={0}>*/}
+            {/*    <BrowseDatasets openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}*/}
+            {/*                    booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace} />*/}
+            {/*</TabPanel>*/}
+            {/*<TabPanel value={props.explorationTab} index={1}>*/}
                 <Workspace openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
                            booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace} />
-            </TabPanel>
+            {/*</TabPanel>*/}
 
         </div>
     );
