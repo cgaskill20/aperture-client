@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function findIndex(layerLabel) {
+export function findIndex(layerLabel) {
     for(let i = 0; i < layerTitles.length; i++) {
         if(layerTitles[i] === layerLabel) {
             return i;
@@ -39,7 +39,7 @@ export function renderIcon(layerLabel, openLayers, setOpenLayers, booleanWorkspa
     )
 }
 
-function updateWorkspaceAndLayers(indexInDatasets, booleanWorkspace, openLayers, setOpenLayers) {
+export function updateWorkspaceAndLayers(indexInDatasets, booleanWorkspace, openLayers, setOpenLayers) {
     let newBooleanWorkspace = [...booleanWorkspace];
     newBooleanWorkspace[indexInDatasets] = !newBooleanWorkspace[indexInDatasets];
     let newOpenLayers = [...openLayers];

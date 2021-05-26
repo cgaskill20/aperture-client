@@ -29,11 +29,13 @@ export default function LayerNavigationControl(props) {
     if(props.isWorkspace) {
         return (
             <div className={classes.root}>
-                {/*<DESearchBar datasets={props.datasets} workspace={props.workspace} setWorkspace={props.setWorkspace} />*/}
-                <DESearchBar isWorkspace={true} />
+                {/*<DESearchBar isWorkspace={true} />*/}
                 <Grid container direction="row" justify="center" alignItems="center">
                     <ButtonGroup>
-                        {/*<Button variant="outlined" startIcon={<AddIcon/>} onClick={() => props.setWorkspace(props.datasets)}>Add All Datasets</Button>*/}
+                        {/*<Button variant="outlined" startIcon={<AddIcon />} onClick={() => {*/}
+                        {/*    const temp = new Array(19).fill(true);*/}
+                        {/*    props.setBooleanWorkspace(temp);*/}
+                        {/*}}>Add All Datasets To Workspace</Button>*/}
                         <Button variant="outlined" onClick={() => {
                             const temp = new Array(19).fill(false);
                             props.setBooleanWorkspace(temp);
@@ -49,7 +51,9 @@ export default function LayerNavigationControl(props) {
     else {
         return(
             <div className={classes.root}>
-                <DESearchBar />
+                <DESearchBar openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
+                             booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace}
+                             setSearchedDatasets={props.setSearchedDatasets}/>
                 <Grid container direction="row" justify="center" alignItems="center">
                     <Button variant="outlined" startIcon={<AddIcon />} onClick={() => {
                         const temp = new Array(19).fill(true);

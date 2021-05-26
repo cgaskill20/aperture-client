@@ -96,8 +96,6 @@ export default function TabSystem(props) {
         setValue(newValue);
     };
 
-
-
     return (
         <div className={classes.root}>
             <Paper>

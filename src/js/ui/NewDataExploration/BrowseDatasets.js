@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import LayerNavigationControl from "./LayerNavigationControl";
 import {Card} from "@material-ui/core";
-import IndividualLayer from "./IndividualLayer";
-import {layers} from "../TabSystem";
+import {layerTitles} from "../TabSystem";
 import IndividualLayerBrowser from "./IndividualLayerBrowser";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,11 +15,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createSection(openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace) {
+function createSection(openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace, searchedDatasets) {
     let layerSection = [];
-    layers.map((layer) =>
+    searchedDatasets.map((layer) =>
         layerSection.push(
-            <IndividualLayerBrowser layer={layer}
+            <IndividualLayerBrowser layerLabel={layer}
                              openLayers={openLayers} setOpenLayers={setOpenLayers}
                              booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} />
         )
@@ -30,12 +29,14 @@ function createSection(openLayers, setOpenLayers, booleanWorkspace, setBooleanWo
 
 export default function BrowseDatasets(props) {
     const classes = useStyles();
-    const [searchedDatasets, setSearchedDatasets] = useState([]);
-    const layerSection = createSection(props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace);
+    const [searchedDatasets, setSearchedDatasets] = useState(layerTitles);
+    const layerSection = createSection(props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace, searchedDatasets);
 
     return (
         <div className={classes.root}>
-            <LayerNavigationControl setBooleanWorkspace={props.setBooleanWorkspace}/>
+            <LayerNavigationControl openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
+                                    booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace}
+                                    setSearchedDatasets={setSearchedDatasets}/>
             <Card className={classes.section}>
                 {layerSection.map((layer) =>
                     <div>{layer}</div>
