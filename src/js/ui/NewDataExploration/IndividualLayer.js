@@ -60,10 +60,10 @@ export default function IndividualLayer(props) {
                     <Accordion
                         color="primary"
                         expanded={props.openLayers[props.index]}
-                        onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))}
+                        // onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))}
                     >
                         <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
+                            expandIcon={<ExpandMoreIcon onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
                         >
                             {renderIcon(props.layer, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}
                             <FormControlLabel
