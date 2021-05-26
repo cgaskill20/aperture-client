@@ -7,6 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import DECheckbox from "./DECheckbox";
 import DESlider from "./DESlider";
 import {layerTitles} from "../TabSystem";
+import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,28 +20,27 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function findIndex(layer) {
-    const layerName = layer["label"] ? layer["label"] : layer["collection"];
+function findIndex(layerLabel) {
     for(let i = 0; i < layerTitles.length; i++) {
-        if(layerTitles[i] === layerName) {
+        if(layerTitles[i] === layerLabel) {
             return i;
         }
     }
     return -1;
 }
 
-export function renderIcon(layer, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace) {
-    const indexInDatasets = findIndex(layer);
+export function renderIcon(layerLabel, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace) {
+    const indexInDatasets = findIndex(layerLabel);
     return (
         <IconButton aria-label="fav" color="primary" onClick={() => {
-            setBooleanWorkspace(updateWorkspaceAndLayers(layer, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers));
+            setBooleanWorkspace(updateWorkspaceAndLayers(indexInDatasets, booleanWorkspace, openLayers, setOpenLayers));
         }}>
             {getIcon(indexInDatasets, booleanWorkspace)}
         </IconButton>
     )
 }
 
-function updateWorkspaceAndLayers(layer, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers) {
+function updateWorkspaceAndLayers(indexInDatasets, booleanWorkspace, openLayers, setOpenLayers) {
     let newBooleanWorkspace = [...booleanWorkspace];
     newBooleanWorkspace[indexInDatasets] = !newBooleanWorkspace[indexInDatasets];
     let newOpenLayers = [...openLayers];

@@ -14,6 +14,7 @@ import BarChartIcon from "@material-ui/icons/BarChart";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {showGraph} from "../library/charting/chartBtnNewChartWindow";
 import AutoMenu from "../library/autoMenu";
+import Util from "../library/apertureUtil";
 
 function overwrite() {}
 let layers = [];
@@ -28,7 +29,7 @@ function extractLayers(data) {
     for(const layer in data) {
         const thisLayer = data[layer];
         layers.push(thisLayer);
-        const layerName = thisLayer["label"] ? thisLayer["label"] : thisLayer["collection"];
+        const layerName = thisLayer["label"] ? thisLayer["label"] : Util.capitalizeString(Util.underScoreToSpace(thisLayer["collection"]));
         layerTitles.push(layerName);
     }
 }
