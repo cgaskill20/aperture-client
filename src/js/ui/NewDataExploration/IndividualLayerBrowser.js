@@ -19,7 +19,7 @@ export default function IndividualLayerBrowser(props) {
         <div className={classes.root}>
             <Paper elevation={1}>
                 <Typography>
-                    {renderIcon(props.layer, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace, props.datasets)}
+                    {renderIcon(layerLabel, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace)}
                     {layerLabel}
                 </Typography>
             </Paper>

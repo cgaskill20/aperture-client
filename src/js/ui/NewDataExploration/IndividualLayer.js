@@ -52,62 +52,46 @@ export default function IndividualLayer(props) {
         }
     }
 
-
-    if(props.isWorkspace) {
-        return (
-            <div className={classes.root}>
-                <Paper elevation={1}>
-                    <Accordion
-                        color="primary"
-                        expanded={props.openLayers[props.index]}
+    return (
+        <div className={classes.root}>
+            <Paper elevation={1}>
+                <Accordion
+                    color="primary"
+                    expanded={props.openLayers[props.index]}
+                >
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
                     >
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
-                        >
-                            {renderIcon(layerLabel, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace)}
-                            <FormControlLabel
-                                aria-label="CheckLayer"
-                                onClick={(event) => event.stopPropagation()}
-                                onFocus={(event) => event.stopPropagation()}
-                                onChange={handleCheck}
-                                control={<Switch color="primary" />}
-                                label={layerLabel}
-                                name="checked"
-                            />
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Grid container direction="column">
-                                <Grid item>
-                                    <LayerControls advancedLayers={advancedLayers} />
-                                </Grid>
-                                {renderConstraintContainer(sliders, "slider").map((section) =>
-                                    <div>
-                                        {section}
-                                    </div>
-                                )}
-                                {renderConstraintContainer(checkboxes, "checkbox").map((section) =>
-                                    <div>
-                                        {section}
-                                    </div>
-                                )}
-                            </Grid>
-                        </AccordionDetails>
-                    </Accordion>
-                </Paper>
-            </div>
-        );
-    }
-
-    else {
-        return (
-            <div className={classes.root}>
-                <Paper elevation={1}>
-                    <Typography>
                         {renderIcon(layerLabel, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace)}
-                        {layerLabel}
-                    </Typography>
-                </Paper>
-            </div>
-        )
-    }
+                        <FormControlLabel
+                            aria-label="CheckLayer"
+                            onClick={(event) => event.stopPropagation()}
+                            onFocus={(event) => event.stopPropagation()}
+                            onChange={handleCheck}
+                            control={<Switch color="primary" />}
+                            label={layerLabel}
+                            name="checked"
+                        />
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Grid container direction="column">
+                            <Grid item>
+                                <LayerControls advancedLayers={advancedLayers} />
+                            </Grid>
+                            {renderConstraintContainer(sliders, "slider").map((section) =>
+                                <div>
+                                    {section}
+                                </div>
+                            )}
+                            {renderConstraintContainer(checkboxes, "checkbox").map((section) =>
+                                <div>
+                                    {section}
+                                </div>
+                            )}
+                        </Grid>
+                    </AccordionDetails>
+                </Accordion>
+            </Paper>
+        </div>
+    );
 }

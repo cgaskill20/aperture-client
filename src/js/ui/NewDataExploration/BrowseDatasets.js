@@ -4,6 +4,7 @@ import LayerNavigationControl from "./LayerNavigationControl";
 import {Card} from "@material-ui/core";
 import IndividualLayer from "./IndividualLayer";
 import {layers} from "../TabSystem";
+import IndividualLayerBrowser from "./IndividualLayerBrowser";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,7 +20,7 @@ function createSection(openLayers, setOpenLayers, booleanWorkspace, setBooleanWo
     let layerSection = [];
     layers.map((layer) =>
         layerSection.push(
-            <IndividualLayer layer={layer}
+            <IndividualLayerBrowser layer={layer}
                              openLayers={openLayers} setOpenLayers={setOpenLayers}
                              booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} />
         )
