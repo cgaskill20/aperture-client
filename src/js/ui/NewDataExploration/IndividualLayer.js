@@ -12,7 +12,7 @@ import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: '98%',
+        width: '100%',
         margin: theme.spacing(1),
     },
 }));
@@ -62,7 +62,7 @@ export default function IndividualLayer(props) {
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon color="primary" onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
                     >
-                        {renderIcon(layerLabel, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace)}
+                        {/*{renderIcon(layerLabel, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace)}*/}
                         <FormControlLabel
                             aria-label="CheckLayer"
                             onClick={(event) => event.stopPropagation()}
