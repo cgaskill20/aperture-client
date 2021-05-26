@@ -55,6 +55,8 @@ END OF TERMS AND CONDITIONS
 
 */
 
+import * as d3 from '../../third-party/d3.min.js';
+
 /* The base class for all charts.
  * This class takes care of bookkeeping for creating chart views and attaching
  * these views to the DOM.
@@ -94,20 +96,32 @@ export default class Chart {
     static MINIMUM_WIDTH = 100;
 
     constructor(data) {
-        this.views = [];
         this.data = data;
     }
 
-    addTo(node) {
-        let view = this.makeNewView(node, 1000, 300);
-        this.views.push(view);
-        node.appendChild(view.svg.node());
+    attachTo(selector) {
+        this.view = this.makeNewView(Chart.MINIMUM_WIDTH, Chart.MINIMUM_HEIGHT, selector);
+        this.attached = true;
     }
 
-    rerenderAllViews() {
-        for (let i = 0; i < this.views.length; i++) {
-            this.rerender(this.views[i].width, this.views[i].height, i);
+    isAttached() {
+        return this.attached;
+    }
+
+    rerender(width,  height) {
+        if (!this.view) {
+            return;
         }
+
+        if (!width) {
+            width = this.view.width;
+        }
+
+        if (!height) {
+            height = this.view.height;
+        }
+
+        this.changeSize(width, height);
     }
 
     hide(viewIndex) {
@@ -131,8 +145,8 @@ export default class Chart {
     }
 
     // To be overriden in subclasses.
-    makeNewView(node, width, height) { }
-    rerender(width, height, viewIndex) { }
+    makeNewView(width, height, selector) { }
+    changeSize(width, height) { }
     changeData(data) { }
 }
 

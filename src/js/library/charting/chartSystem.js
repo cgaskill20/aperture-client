@@ -70,6 +70,7 @@ import resizable from "../resizable";
 import ChartFrame from "./chartFrame";
 import CovidDataSource from "./covidDataSource"
 import MapDataSource from "./mapDataSource"
+import HistogramChart from '../../ui/NewCharting/HistogramChart';
 
 // An enumeration of each type of data source recognized by the ChartSystem.
 // See DataSource for more information about what a "data source" is.
@@ -110,6 +111,7 @@ export const ChartingType = {
         managerType: SingleChartManager,
         areaType: SingleChartArea,
         chartType: Histogram,
+        componentType: HistogramChart,
         wantsSources: [ DataSourceType.MAP_FEATURES ],
     },
     SCATTERPLOT: {
@@ -255,7 +257,8 @@ export default class ChartSystem {
         if (this.doNotUpdate && !parameters.force) {
             return;
         }
-
+        
+        /*
         this.rerenderAll();
 
         Object.values(DataSourceType).forEach(async source => {
@@ -275,6 +278,9 @@ export default class ChartSystem {
                 }
             });
         });
+        */
+
+
 
         this.doNotUpdate = true;
         window.setTimeout(() => { this.doNotUpdate = false; }, 200);

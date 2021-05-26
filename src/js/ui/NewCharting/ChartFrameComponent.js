@@ -6,7 +6,7 @@ export default function ChartFrameComponent(props) {
     let frame;
     switch (props.type.name) {
         case "histogram": {
-            frame = <HistogramFrame/>;
+            frame = <HistogramFrame size={props.size}/>;
             break;
         }
         default: break;
