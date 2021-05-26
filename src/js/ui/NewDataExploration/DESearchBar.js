@@ -1,55 +1,52 @@
-import React, {useState} from 'react';
-import theme from "../global/GlobalTheme";
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
-import {Checkbox, FormControlLabel} from "@material-ui/core";
+import React, { useState } from "react";
+import Checkbox from "@material-ui/core/Checkbox";
+import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import {layerTitles} from "../TabSystem";
-import {findIndex, updateWorkspaceAndLayers} from "./IndividualLayerHelpers";
+import theme from "../global/GlobalTheme";
 
-const useStyles = makeStyles({
-    option: {
-        fontSize: 15,
-        '& > span': {
-            marginRight: 10,
-            fontSize: 18,
-        },
-    },
-});
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function DESearchBar(props) {
-    const classes = useStyles();
-
+export default function CheckboxesTags() {
+    const [selectedDataset, setSelectedDataset] = useState([]);
     return (
         <Autocomplete
-            id="country-select-demo"
-            style={{ width: '100%',
-                     margin: theme.spacing(1)}}
+            multiple
+            disableCloseOnSelect
+            id="dataset-searchbar"
             options={layerTitles}
-            classes={{option: classes.option}}
-            autoHighlight
-            renderOption={(option) => (
-                <React.Fragment>
-                    <FormControlLabel control={
+            onChange={(e, dataset) => {
+                setSelectedDataset(dataset);
+            }}
+            renderOption={(option, state) => {
+                const selectDatasetIndex = selectedDataset.findIndex(
+                    dataset => dataset.toLowerCase() === "all"
+                );
+                if (selectDatasetIndex > -1) {
+                    state.selected = true;
+                }
+                return (
+                    <React.Fragment>
                         <Checkbox
-                            checked={props.booleanWorkspace[findIndex({option}['option'])]}
-                            onChange={() => updateWorkspaceAndLayers(findIndex({option}['option']), props.booleanWorkspace, props.openLayers, props.setOpenLayers)}
-                            name={option['option']}
+                            icon={icon}
                             color="primary"
+                            checkedIcon={checkedIcon}
+                            style={{ marginRight: 8 }}
+                            checked={state.selected}
                         />
-                    }
-                        label={option}
-                    />
-                </React.Fragment>
-            )}
-            renderInput={(params) => (
+                        {option}
+                    </React.Fragment>
+                );
+            }}
+            style={{ width: '100%', margin: theme.spacing(1) }}
+            renderInput={params => (
                 <TextField
                     {...params}
-                    label="Add Datasets..."
                     variant="outlined"
-                    inputProps={{
-                        ...params.inputProps,
-                    }}
+                    label="Add Datasets..."
                 />
             )}
         />

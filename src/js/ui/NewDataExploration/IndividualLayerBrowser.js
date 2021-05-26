@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function graphIcon(layerLabel) {
+export function graphIcon(layerLabel) {
     const index = findIndex(layerLabel);
     const collectionName = layers[index]['collection'];
     if(graphableLayers.includes(collectionName)) {
