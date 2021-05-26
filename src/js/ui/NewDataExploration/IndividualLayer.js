@@ -4,10 +4,10 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Grid, Paper, Switch, Typography} from "@material-ui/core";
+import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {renderConstraintContainer, renderIcon} from "./IndividualLayerHelpers";
+import {renderConstraintContainer} from "./IndividualLayerHelpers";
 import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +62,6 @@ export default function IndividualLayer(props) {
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon color="primary" onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
                     >
-                        {/*{renderIcon(layerLabel, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace)}*/}
                         <FormControlLabel
                             aria-label="CheckLayer"
                             onClick={(event) => event.stopPropagation()}

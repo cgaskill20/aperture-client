@@ -5,16 +5,24 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import {layerTitles} from "../TabSystem";
-import theme from "../global/GlobalTheme";
-import {buildWorkspace} from "./LayerNavigationControl";
+import {makeStyles} from "@material-ui/core/styles";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+        margin: theme.spacing(1),
+    },
+}));
+
 export default function SearchBarSection(props) {
+    const classes = useStyles();
     return (
         <div>
             <Autocomplete
+                className={classes.root}
                 multiple
                 disableCloseOnSelect
                 id="dataset-searchbar"
@@ -42,7 +50,6 @@ export default function SearchBarSection(props) {
                         </React.Fragment>
                     );
                 }}
-                style={{ width: '100%', margin: theme.spacing(1) }}
                 renderInput={params => (
                     <TextField
                         {...params}

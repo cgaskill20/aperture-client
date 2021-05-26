@@ -6,7 +6,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import NewDataExploration from "./NewDataExploration/NewDataExploration";
 import NewModeling from "./NewModeling/NewModeling";
 import { useGlobalState } from "./global/GlobalState";
 import IconButton from "@material-ui/core/IconButton";
@@ -15,6 +14,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {showGraph} from "../library/charting/chartBtnNewChartWindow";
 import AutoMenu from "../library/autoMenu";
 import Util from "../library/apertureUtil";
+import Workspace from "./NewDataExploration/Workspace";
 
 function overwrite() {}
 export let layers = [];
@@ -103,7 +103,6 @@ export default function TabSystem(props) {
         0: "dataExploration",
         1: "modeling"
     }
-    const [explorationTab, setExplorationTab] = useState(0);
 
     const handleChange = (event, newValue) => {
         setGlobalState({ mode: valueMap[newValue] });
@@ -147,9 +146,8 @@ export default function TabSystem(props) {
                 </Grid>
             </Paper>
             <TabPanel value={value} index={0}>
-                <NewDataExploration openLayers={openLayers} setOpenLayers={setOpenLayers}
-                                    booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
-                                    explorationTab={explorationTab} setExplorationTab={setExplorationTab} />
+                <Workspace openLayers={openLayers} setOpenLayers={setOpenLayers}
+                           booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <NewModeling />

@@ -28,17 +28,6 @@ export function findIndex(layerLabel) {
     return -1;
 }
 
-export function renderIcon(layerLabel, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace) {
-    const indexInDatasets = findIndex(layerLabel);
-    return (
-        <IconButton aria-label="fav" color="primary" onClick={() => {
-            setBooleanWorkspace(updateWorkspaceAndLayers(indexInDatasets, booleanWorkspace, openLayers, setOpenLayers));
-        }}>
-            {getIcon(indexInDatasets, booleanWorkspace)}
-        </IconButton>
-    )
-}
-
 export function updateWorkspaceAndLayers(indexInDatasets, booleanWorkspace, openLayers, setOpenLayers) {
     let newBooleanWorkspace = [...booleanWorkspace];
     newBooleanWorkspace[indexInDatasets] = !newBooleanWorkspace[indexInDatasets];
@@ -46,10 +35,6 @@ export function updateWorkspaceAndLayers(indexInDatasets, booleanWorkspace, open
     newOpenLayers[indexInDatasets] = false;
     setOpenLayers(newOpenLayers);
     return newBooleanWorkspace;
-}
-
-function getIcon(index, booleanWorkspace) {
-    return booleanWorkspace[index] ? <RemoveIcon/> : <AddIcon/>;
 }
 
 export function renderConstraintContainer(constraintArray, type) {
