@@ -17,6 +17,7 @@ import AutoMenu from "../library/autoMenu";
 
 function overwrite() {}
 let layers = [];
+export let layerTitles = [];
 
 $.getJSON("src/json/menumetadata.json", async function (mdata) {
     const finalData = await AutoMenu.build(mdata, overwrite);
@@ -27,6 +28,8 @@ function extractLayers(data) {
     for(const layer in data) {
         const thisLayer = data[layer];
         layers.push(thisLayer);
+        const layerName = thisLayer["label"] ? thisLayer["label"] : thisLayer["collection"];
+        layerTitles.push(layerName);
     }
 }
 

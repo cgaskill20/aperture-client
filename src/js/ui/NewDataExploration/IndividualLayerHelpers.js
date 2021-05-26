@@ -1,11 +1,12 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Box, Card, Grid, IconButton, Paper, Typography} from "@material-ui/core";
+import {Card, Grid, IconButton, Paper, Typography} from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import CardContent from "@material-ui/core/CardContent";
 import DECheckbox from "./DECheckbox";
 import DESlider from "./DESlider";
+import {layerTitles} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -18,17 +19,18 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function findIndex(workspace, layer) {
-    for(let i = 0; i < workspace.length; i++) {
-        if(workspace[i] === layer) {
+function findIndex(layer) {
+    const layerName = layer["label"] ? layer["label"] : layer["collection"];
+    for(let i = 0; i < layerTitles.length; i++) {
+        if(layerTitles[i] === layerName) {
             return i;
         }
     }
     return -1;
 }
 
-export function renderIcon(layer, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace, datasets) {
-    const indexInDatasets = findIndex(datasets, layer);
+export function renderIcon(layer, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace) {
+    const indexInDatasets = findIndex(layer);
     return (
         <IconButton aria-label="fav" color="primary" onClick={() => {
             setBooleanWorkspace(updateWorkspaceAndLayers(layer, indexInDatasets, booleanWorkspace, openLayers, setOpenLayers));

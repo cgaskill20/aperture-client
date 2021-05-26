@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import LayerNavigationControl from "./LayerNavigationControl";
 import {Card} from "@material-ui/core";
@@ -18,9 +18,9 @@ function createSection(datasets, openLayers, setOpenLayers, booleanWorkspace, se
     let layerSection = [];
     datasets.map((layer) =>
         layerSection.push(
-            <IndividualLayer layer={layer}
+            <IndividualLayer layer={layer} datasets={datasets}
                              openLayers={openLayers} setOpenLayers={setOpenLayers}
-                             booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} datasets={datasets}/>
+                             booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} />
         )
     )
     return layerSection;
@@ -28,10 +28,10 @@ function createSection(datasets, openLayers, setOpenLayers, booleanWorkspace, se
 
 export default function BrowseDatasets(props) {
     const classes = useStyles();
+    const [searchedDatasets, setSearchedDatasets] = useState([]);
     const layerSection = createSection(props.datasets,
                                        props.openLayers, props.setOpenLayers,
                                        props.booleanWorkspace, props.setBooleanWorkspace);
-
 
     return (
         <div className={classes.root}>

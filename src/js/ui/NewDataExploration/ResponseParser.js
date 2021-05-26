@@ -2,6 +2,7 @@ import React from 'react';
 import AutoMenu from "../../library/autoMenu";
 
 export let layers = [];
+export let layerNames2 = [];
 function overwrite() {}
 
 $.getJSON("src/json/menumetadata.json", async function (mdata) {
@@ -14,7 +15,7 @@ function extractLayers(data) {
         const thisLayer = data[layer];
         layers.push(thisLayer);
     }
-    // extractConstraints();
+    extractConstraints();
 }
 
 function extractConstraints() {
@@ -22,8 +23,9 @@ function extractConstraints() {
     for(const layerInfo in layers) {
         const layerData = layers[layerInfo];
         const layerName = layerData["label"] ? layerData["label"] : layerData["collection"];
-        console.log({layerName})
-        console.log({layerData});
+        // console.log({layerName})
+        // console.log({layerData});
+        layerNames2.push((layerName));
         // for(const theseConstraints in layerData["constraints"]) {
         //     const constraint = layerData["constraints"][theseConstraints];
         //     if(!constraint["hide"]) {
