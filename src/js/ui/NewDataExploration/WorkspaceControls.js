@@ -13,17 +13,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function buildWorkspace(selectedDatasets) {
-    let newBooleanWorkspace = [];
+function buildWorkspace(selectedDatasets, openLayers, setOpenLayers) {
     //FIXME This is some n^2 'ish right here, make it better
+    let newBooleanWorkspace = [];
+    let newOpenLayers = [...openLayers];
     for(let i = 0; i < layerTitles.length; i++) {
         if(selectedDatasets.includes(layerTitles[i])) {
             newBooleanWorkspace.push(true);
         }
         else {
             newBooleanWorkspace.push(false);
+            newOpenLayers[i] = false;
         }
     }
+    setOpenLayers(newOpenLayers);
     return newBooleanWorkspace;
 }
 
@@ -37,7 +40,7 @@ export default function WorkspaceControls(props) {
                 <ButtonGroup>
                     <Button
                         variant="outlined"
-                        onClick={() => props.setBooleanWorkspace(buildWorkspace(selectedDatasets))}
+                        onClick={() => props.setBooleanWorkspace(buildWorkspace(selectedDatasets, props.openLayers, props.setOpenLayers))}
                         startIcon={<UpdateIcon/>}>
                         Update Workspace
                     </Button>
@@ -45,9 +48,7 @@ export default function WorkspaceControls(props) {
                     <Button variant="outlined" startIcon={<FolderOpenIcon />}>Load Workspace</Button>
                 </ButtonGroup>
             </Grid>
-            <WorkspaceSearchbar selectedDatasets={selectedDatasets} setSelectedDatasets={setSelectedDatasets}
-                                openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
-                                booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace}/>
+            <WorkspaceSearchbar selectedDatasets={selectedDatasets} setSelectedDatasets={setSelectedDatasets} />
         </div>
     )
 }

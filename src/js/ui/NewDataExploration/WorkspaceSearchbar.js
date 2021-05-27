@@ -32,18 +32,6 @@ function graphIcon(layerLabel) {
     return;
 }
 
-// function updateWorkspace(setSelectedDatasets, dataset, booleanWorkspace, setBooleanWorkspace) {
-//     setSelectedDatasets(dataset);
-    // addToWorkspace(dataset, booleanWorkspace, setBooleanWorkspace)
-// }
-
-// function addToWorkspace(dataset, booleanWorkspace, setBooleanWorkspace) {
-//     const index = findIndex(dataset[0]);
-//     let newWorkspace = [...booleanWorkspace];
-//     newWorkspace[index] = !newWorkspace[index];
-//     setBooleanWorkspace(newWorkspace);
-// }
-
 export default function WorkspaceSearchbar(props) {
     const classes = useStyles();
     return (
@@ -56,7 +44,6 @@ export default function WorkspaceSearchbar(props) {
                 options={layerTitles}
                 onChange={(e, dataset) => {
                     props.setSelectedDatasets(dataset);
-                    // updateWorkspace(props.setSelectedDatasets, dataset, props.booleanWorkspace, props.setBooleanWorkspace);
                 }}
                 renderOption={(option, state) => {
                     const selectDatasetIndex = props.selectedDatasets.findIndex(
