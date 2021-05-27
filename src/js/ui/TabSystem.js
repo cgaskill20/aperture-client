@@ -9,12 +9,13 @@ import Box from '@material-ui/core/Box';
 import NewModeling from "./NewModeling/NewModeling";
 import { useGlobalState } from "./global/GlobalState";
 import IconButton from "@material-ui/core/IconButton";
-import BarChartIcon from "@material-ui/icons/BarChart";
+import EqualizerIcon from '@material-ui/icons/Equalizer';
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {showGraph} from "../library/charting/chartBtnNewChartWindow";
 import AutoMenu from "../library/autoMenu";
 import Util from "../library/apertureUtil";
 import Workspace from "./NewDataExploration/Workspace";
+import {Equalizer} from "@material-ui/icons";
 
 function overwrite() {}
 export let layers = [];
@@ -137,7 +138,7 @@ export default function TabSystem(props) {
                         item
                     >
                         <IconButton id="nav-graph-button" onClick={showGraph}>
-                            <BarChartIcon color="primary" />
+                            <Equalizer color="primary" />
                         </IconButton>
                         <IconButton onClick={props.handleDrawerClose}>
                             <ChevronLeftIcon color="primary" />

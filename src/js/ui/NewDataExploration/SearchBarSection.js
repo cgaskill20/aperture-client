@@ -4,18 +4,33 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import {layerTitles} from "../TabSystem";
+import {graphableLayers, layers, layerTitles} from "../TabSystem";
 import {makeStyles} from "@material-ui/core/styles";
+import {findIndex} from "./LayerHelpers";
+import EqualizerIcon from "@material-ui/icons/Equalizer";
+import IconButton from "@material-ui/core/IconButton";
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
+const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
+const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
 
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
         margin: theme.spacing(1),
     },
+    graphIcon: {
+        float: 'right',
+    },
 }));
+
+function graphIcon(layerLabel) {
+    const index = findIndex(layerLabel);
+    const collectionName = layers[index]['collection'];
+    if(graphableLayers.includes(collectionName)) {
+        return <IconButton><EqualizerIcon color="primary"/></IconButton>
+    }
+    return;
+}
 
 export default function SearchBarSection(props) {
     const classes = useStyles();
@@ -47,6 +62,7 @@ export default function SearchBarSection(props) {
                                 checked={state.selected}
                             />
                             {option}
+                            <span className={classes.graphIcon}>{graphIcon({option}['option'])}</span>
                         </React.Fragment>
                     );
                 }}

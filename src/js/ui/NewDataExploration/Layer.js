@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {renderConstraintContainer} from "./IndividualLayerHelpers";
+import {renderConstraintContainer} from "./LayerHelpers";
 import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
@@ -23,7 +23,7 @@ function updateOpenLayers(openLayers, index) {
     return updatedLayers;
 }
 
-export default function IndividualLayer(props) {
+export default function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState({checked: false});
     const layerLabel = props.layer["label"] ? props.layer["label"] : Util.capitalizeString(Util.underScoreToSpace(props.layer["collection"]));

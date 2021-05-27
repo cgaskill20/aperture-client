@@ -6,7 +6,7 @@ import AdvancedMenu from "./AdvancedMenu";
 import {makeStyles} from "@material-ui/core/styles";
 import Portal from "@material-ui/core/Portal";
 import CardContent from "@material-ui/core/CardContent";
-import {findIndex} from "./IndividualLayerHelpers";
+import {findIndex} from "./LayerHelpers";
 import {graphableLayers, layers} from "../TabSystem";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 

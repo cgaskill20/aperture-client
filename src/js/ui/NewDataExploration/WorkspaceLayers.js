@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import IndividualLayer from "./IndividualLayer";
+import Layer from "./Layer";
 import {layers} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
@@ -14,9 +14,9 @@ function createWorkspace(openLayers, setOpenLayers, booleanWorkspace, setBoolean
     booleanWorkspace.forEach((layer, index) => {
         if(layer) {
             workspaceLayers.push(
-                <IndividualLayer layer={layers[index]} index={index}
-                                 openLayers={openLayers} setOpenLayers={setOpenLayers}
-                                 booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} />
+                <Layer layer={layers[index]} index={index}
+                       openLayers={openLayers} setOpenLayers={setOpenLayers}
+                       booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} />
             );
         }
     });
