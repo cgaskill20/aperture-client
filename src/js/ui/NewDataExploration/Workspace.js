@@ -14,7 +14,9 @@ export default function Workspace(props) {
 
     return (
         <div className={classes.root}>
-            <WorkspaceControls openLayers={props.openLayers} setOpenLayers={props.setOpenLayers} setBooleanWorkspace={props.setBooleanWorkspace} />
+            <WorkspaceControls openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
+                               selectedDatasets={props.selectedDatasets} setSelectedDatasets={props.setSelectedDatasets}
+                               booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace} />
             <WorkspaceLayers openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
                              booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace} />
         </div>

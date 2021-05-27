@@ -98,6 +98,7 @@ export default function TabSystem(props) {
     //FIXME Replace these hard coded values with numberOfDatasets once datasets load immediately
     const [booleanWorkspace, setBooleanWorkspace] = useState(new Array(19).fill(false));
     const [openLayers, setOpenLayers] = useState(new Array(19).fill(false));
+    const [selectedDatasets, setSelectedDatasets] = useState([]);
 
     const valueMap = {
         0: "dataExploration",
@@ -147,6 +148,7 @@ export default function TabSystem(props) {
             </Paper>
             <TabPanel value={value} index={0}>
                 <Workspace openLayers={openLayers} setOpenLayers={setOpenLayers}
+                           selectedDatasets={selectedDatasets} setSelectedDatasets={setSelectedDatasets}
                            booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} />
             </TabPanel>
             <TabPanel value={value} index={1}>

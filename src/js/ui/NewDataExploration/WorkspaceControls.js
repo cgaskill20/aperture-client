@@ -32,7 +32,6 @@ function buildWorkspace(selectedDatasets, openLayers, setOpenLayers) {
 
 export default function WorkspaceControls(props) {
     const classes = useStyles();
-    const [selectedDatasets, setSelectedDatasets] = useState([]);
 
     return (
         <div className={classes.root}>
@@ -40,7 +39,7 @@ export default function WorkspaceControls(props) {
                 <ButtonGroup>
                     <Button
                         variant="outlined"
-                        onClick={() => props.setBooleanWorkspace(buildWorkspace(selectedDatasets, props.openLayers, props.setOpenLayers))}
+                        onClick={() => props.setBooleanWorkspace(buildWorkspace(props.selectedDatasets, props.openLayers, props.setOpenLayers))}
                         startIcon={<UpdateIcon/>}>
                         Update Workspace
                     </Button>
@@ -48,7 +47,7 @@ export default function WorkspaceControls(props) {
                     <Button variant="outlined" startIcon={<FolderOpenIcon />}>Load Workspace</Button>
                 </ButtonGroup>
             </Grid>
-            <WorkspaceSearchbar selectedDatasets={selectedDatasets} setSelectedDatasets={setSelectedDatasets} />
+            <WorkspaceSearchbar selectedDatasets={props.selectedDatasets} setSelectedDatasets={props.setSelectedDatasets} booleanWorkspace={props.booleanWorkspace} />
         </div>
     )
 }

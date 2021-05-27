@@ -32,6 +32,7 @@ function graphIcon(layerLabel) {
     return;
 }
 
+//FIXME Issue when navigating back from the Modeling Tab. Datasets are displayed as Layers and are checked BUT are not in the Searchbar's text field. Causes an issue when removing/adding.
 export default function WorkspaceSearchbar(props) {
     const classes = useStyles();
     return (
@@ -59,7 +60,7 @@ export default function WorkspaceSearchbar(props) {
                                 color="primary"
                                 checkedIcon={checkedIcon}
                                 style={{ marginRight: 8 }}
-                                checked={state.selected}
+                                checked={state.selected || props.booleanWorkspace[findIndex({option}['option'])]}
                             />
                             {option}
                             <span className={classes.graphIcon}>{graphIcon({option}['option'])}</span>
