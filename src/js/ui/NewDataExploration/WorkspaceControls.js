@@ -27,7 +27,7 @@ function buildWorkspace(selectedDatasets) {
     return newBooleanWorkspace;
 }
 
-export default function LayerNavigationControl(props) {
+export default function WorkspaceControls(props) {
     const classes = useStyles();
     const [selectedDatasets, setSelectedDatasets] = useState([]);
 

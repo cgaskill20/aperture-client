@@ -1,8 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import IndividualLayer from "./IndividualLayer";
-import LayerNavigationControl from "./LayerNavigationControl";
-import {layers} from "../TabSystem";
+import WorkspaceControls from "./WorkspaceControls";
+import WorkspaceLayers from "./WorkspaceLayers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -10,30 +9,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createWorkspace(openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace) {
-    let workspaceLayers = [];
-    booleanWorkspace.forEach((layer, index) => {
-        if(layer) {
-            workspaceLayers.push(
-                <IndividualLayer layer={layers[index]} isWorkspace={true} index={index}
-                                 openLayers={openLayers} setOpenLayers={setOpenLayers}
-                                 booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} />
-            );
-        }
-    });
-    return workspaceLayers;
-}
-
 export default function Workspace(props) {
     const classes = useStyles();
-    const workspaceLayers = createWorkspace(props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace);
 
     return (
         <div className={classes.root}>
-            <LayerNavigationControl setBooleanWorkspace={props.setBooleanWorkspace} />
-            {workspaceLayers.map((layer) =>
-                <div>{layer}</div>
-            )}
+            <WorkspaceControls setBooleanWorkspace={props.setBooleanWorkspace} />
+            <WorkspaceLayers openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
+                             booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace} />
         </div>
     );
 }
