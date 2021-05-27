@@ -14,7 +14,7 @@ export default function Workspace(props) {
 
     return (
         <div className={classes.root}>
-            <WorkspaceControls setBooleanWorkspace={props.setBooleanWorkspace} />
+            <WorkspaceControls booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace} />
             <WorkspaceLayers openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
                              booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace} />
         </div>
