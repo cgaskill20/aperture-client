@@ -9,7 +9,6 @@ import Box from '@material-ui/core/Box';
 import NewModeling from "./NewModeling/NewModeling";
 import { useGlobalState } from "./global/GlobalState";
 import IconButton from "@material-ui/core/IconButton";
-import EqualizerIcon from '@material-ui/icons/Equalizer';
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {showGraph} from "../library/charting/chartBtnNewChartWindow";
 import AutoMenu from "../library/autoMenu";
