@@ -4,8 +4,8 @@ import {Card, Grid, IconButton, Paper, Typography} from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import CardContent from "@material-ui/core/CardContent";
-import DECheckbox from "./DECheckbox";
-import DESlider from "./DESlider";
+import LayerCheckbox from "./LayerCheckbox";
+import LayerSlider from "./LayerSlider";
 import {layerTitles} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
@@ -73,7 +73,7 @@ export function renderConstraintContainer(constraintArray, type) {
 function renderSliders(constraintArray) {
     return (
         constraintArray.map((constraint) =>
-            <DESlider constraint={constraint} />
+            <LayerSlider constraint={constraint} />
         )
     )
 }
@@ -85,7 +85,7 @@ function renderCheckboxes(constraintOptions) {
     }
     return (
         options.map((option) =>
-            <DECheckbox constraint={option}/>
+            <LayerCheckbox constraint={option}/>
         )
     )
 }

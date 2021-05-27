@@ -6,7 +6,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import {graphableLayers, layers, layerTitles} from "../TabSystem";
 import {makeStyles} from "@material-ui/core/styles";
-import {findIndex} from "./LayerHelpers";
+import {findIndex} from "./LayerHelperFunctions";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
 
@@ -32,7 +32,7 @@ function graphIcon(layerLabel) {
     return;
 }
 
-export default function SearchBarSection(props) {
+export default function WorkspaceSearchbar(props) {
     const classes = useStyles();
     return (
         <div>

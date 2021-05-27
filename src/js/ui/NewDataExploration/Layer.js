@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {renderConstraintContainer} from "./LayerHelpers";
+import {renderConstraintContainer} from "./LayerHelperFunctions";
 import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({

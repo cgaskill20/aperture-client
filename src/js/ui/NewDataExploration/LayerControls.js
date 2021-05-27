@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import {Button, ButtonGroup, Card, IconButton, Paper, Typography} from "@material-ui/core";
 import SettingsIcon from '@material-ui/icons/Settings';
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
-import AdvancedMenu from "./AdvancedMenu";
+import AdvancedLayers from "./AdvancedLayers";
 import {makeStyles} from "@material-ui/core/styles";
 import Portal from "@material-ui/core/Portal";
 import CardContent from "@material-ui/core/CardContent";
-import {findIndex} from "./LayerHelpers";
+import {findIndex} from "./LayerHelperFunctions";
 import {graphableLayers, layers} from "../TabSystem";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 
@@ -56,7 +56,7 @@ export default function LayerControls(props) {
                     {open ? (
                         <Portal>
                             <div className={classes.dropdown}>
-                                <AdvancedMenu advancedLayers={props.advancedLayers}/>
+                                <AdvancedLayers advancedLayers={props.advancedLayers}/>
                             </div>
                         </Portal>
                     ) : null}

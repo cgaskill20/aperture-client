@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {Button, ButtonGroup, Grid} from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
-import SearchBarSection from "./SearchBarSection";
+import WorkspaceSearchbar from "./WorkspaceSearchbar";
 import UpdateIcon from '@material-ui/icons/Update';
 import {layerTitles} from "../TabSystem";
 
@@ -45,9 +45,9 @@ export default function WorkspaceControls(props) {
                     <Button variant="outlined" startIcon={<FolderOpenIcon />}>Load Workspace</Button>
                 </ButtonGroup>
             </Grid>
-            <SearchBarSection selectedDatasets={selectedDatasets} setSelectedDatasets={setSelectedDatasets}
-                              openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
-                              booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace}/>
+            <WorkspaceSearchbar selectedDatasets={selectedDatasets} setSelectedDatasets={setSelectedDatasets}
+                                openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
+                                booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace}/>
         </div>
     )
 }
