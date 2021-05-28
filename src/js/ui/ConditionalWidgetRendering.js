@@ -47,6 +47,7 @@ const ConditionalWidgetRendering = () => {
     }
 
     if (globalState.chartingOpen) {
+
         toRender.push(
             <div id="charting-resizable-container" key={widgetEnum.chartingResizable}>
                 <ChartingResizable />

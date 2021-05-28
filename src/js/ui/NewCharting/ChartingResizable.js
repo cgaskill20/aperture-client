@@ -7,10 +7,12 @@ export default function ChartingResizable() {
     let [size, setSize] = useState({ width: 300, height: 400 });
 
     return (
+
         <div style={{
             width: '800px',
             height: '800px',
         }}>
+            {console.log("rerenderresizable")}
             <Rnd default={{
                     x: 300,
                     y: 400,

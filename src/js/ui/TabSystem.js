@@ -95,7 +95,10 @@ export default function TabSystem(props) {
                         item
                     >
                         {/* Not using handleChange because this isn't a tab */}
-                        <IconButton id="nav-graph-button" onClick={() => setGlobalState({ chartingOpen: !globalState.chartingOpen })}>
+                        <IconButton id="nav-graph-button" onClick={() => {
+                            setGlobalState({ chartingOpen: !globalState.chartingOpen })
+                            props.handleDrawerClose()
+                        }}>
                             <BarChartIcon />
                         </IconButton>
                         <IconButton onClick={props.handleDrawerClose}>

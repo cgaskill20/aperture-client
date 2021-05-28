@@ -4,6 +4,7 @@ import HistogramFrame from './HistogramFrame';
 
 export default function ChartFrameComponent(props) {
     let frame;
+
     switch (props.type.name) {
         case "histogram": {
             frame = <HistogramFrame size={props.size}/>;
