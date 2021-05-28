@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
 export default function LayerCheckbox(props) {
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
         checkedMe: true,
     });
 

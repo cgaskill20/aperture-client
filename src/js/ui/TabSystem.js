@@ -1,20 +1,21 @@
-import React, {useState} from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Grid, Paper} from "@material-ui/core";
+import PropTypes from 'prop-types';
+import AutoMenu from "../library/autoMenu";
+import Util from "../library/apertureUtil";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import NewModeling from "./NewModeling/NewModeling";
-import { useGlobalState } from "./global/GlobalState";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import {showGraph} from "../library/charting/chartBtnNewChartWindow";
-import AutoMenu from "../library/autoMenu";
-import Util from "../library/apertureUtil";
-import Workspace from "./NewDataExploration/Workspace";
 import {Equalizer} from "@material-ui/icons";
+import NewModeling from "./NewModeling/NewModeling";
+import Workspace from "./NewDataExploration/Workspace";
+import { useGlobalState } from "./global/GlobalState";
+import { showGraph } from "../library/charting/chartBtnNewChartWindow";
 
 function overwrite() {}
 export let layers = [];
