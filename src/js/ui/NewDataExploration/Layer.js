@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {getAllConstraints, createActiveConstraints, createConstraints} from "./LayerHelpers";
+import {getAllConstraints, createActiveConstraints, createConstraints, updateOpenLayers} from "./LayerHelpers";
 import {prettifyJSON} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,12 +16,6 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
     },
 }));
-
-function updateOpenLayers(openLayers, index) {
-    let updatedLayers = [...openLayers];
-    updatedLayers[index] = !updatedLayers[index];
-    return updatedLayers;
-}
 
 export default function Layer(props) {
     const classes = useStyles();

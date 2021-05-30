@@ -63,13 +63,10 @@ export function createConstraints(activeConstraints, allConstraints) {
     return constraints;
 }
 
-export function updateWorkspaceAndLayers(indexInDatasets, booleanWorkspace, openLayers, setOpenLayers) {
-    let newBooleanWorkspace = [...booleanWorkspace];
-    newBooleanWorkspace[indexInDatasets] = !newBooleanWorkspace[indexInDatasets];
-    let newOpenLayers = [...openLayers];
-    newOpenLayers[indexInDatasets] = false;
-    setOpenLayers(newOpenLayers);
-    return newBooleanWorkspace;
+export function updateOpenLayers(openLayers, index) {
+    let updatedLayers = [...openLayers];
+    updatedLayers[index] = !updatedLayers[index];
+    return updatedLayers;
 }
 
 export function renderIndividualConstraint(constraint, index) {
