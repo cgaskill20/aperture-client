@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import ChartingWindow from './ChartingWindow';
 
 export default function ChartingResizable() {
-    let [size, setSize] = useState({ width: 300, height: 400 });
+    let [size, setSize] = useState({ width: 500, height: 400 });
 
     return (
 
@@ -14,7 +14,7 @@ export default function ChartingResizable() {
         }}>
             {console.log("rerenderresizable")}
             <Rnd default={{
-                    x: 300,
+                    x: 500,
                     y: 400,
                     width: size.width,
                     height: size.height
@@ -26,7 +26,9 @@ export default function ChartingResizable() {
                 minHeight={190}
                 bounds="window"
                 onResizeStop={(e, dir, refToElement, delta, position) => {
+                    
                     setSize({ width: size.width + delta.width, height: size.height + delta.height});
+                    console.log(size.width);
                 }}
             >
                 <Paper className={'charting-resizable-window'}>

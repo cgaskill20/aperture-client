@@ -28,7 +28,6 @@ export default function makeFrame(type) {
                     height: this.props.size.height - 50,
                     border: "1px solid red"
                 }}>
-                    {console.log(this.props.size.height)}
                     <Histogram size={this.props.size}></Histogram>
                     <type.componentType data={this.state.data} id={this.state.id}/>
                 </div>
