@@ -5,6 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import ConstraintCheckbox from "./ConstraintCheckbox";
 import ConstraintSlider from "./ConstraintSlider";
 import {layerTitles} from "../TabSystem";
+import Constraint from "./Constraint";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,11 +36,48 @@ export function updateWorkspaceAndLayers(indexInDatasets, booleanWorkspace, open
     return newBooleanWorkspace;
 }
 
+export function renderIndividualConstraint(constraint, index) {
+    const classes = useStyles();
+    console.log({constraint});
+    const type = constraint.type;
+    console.log({type});
+
+    if(constraint.type === "slider") {
+        console.log("Found slider")
+        return (
+            <Grid item>
+                <Card className={classes.root}>
+                    <CardContent>
+                        <ConstraintSlider constraint={constraint} type={constraint.type} />
+                    </CardContent>
+                </Card>
+            </Grid>
+        );
+    }
+
+    else if(constraint.type === "multiselector") {
+        console.log("Found checkbox")
+        let renderedSections = [];
+        for(const thisConstraint in constraint) {
+            renderedSections.push(
+                <Grid item>
+                    <Card className={classes.root}>
+                        <Typography className={classes.heading}>{constraint[thisConstraint].label}</Typography>
+                        <CardContent>
+                            {renderCheckboxes(constraint[thisConstraint].options, constraint.type)}
+                        </CardContent>
+                    </Card>
+                </Grid>
+            );
+        }
+    }
+}
+
 export function renderConstraintContainer(constraintArray, type) {
     const classes = useStyles();
     let renderedSections = [];
     if(constraintArray.length > 0) {
-        if(type === "slider"){
+        if(type === "slider") {
             renderedSections.push(
                 <Grid item>
                     <Card className={classes.root}>
@@ -71,19 +109,20 @@ export function renderConstraintContainer(constraintArray, type) {
 function renderSliders(constraintArray) {
     return (
         constraintArray.map((constraint) =>
-            <ConstraintSlider constraint={constraint} />
+            <Constraint constraint={constraint} type="slider" />
         )
     )
 }
 
-function renderCheckboxes(constraintOptions) {
+function renderCheckboxes(constraintOptions, type) {
     let options = [];
     for(const option in constraintOptions) {
         options.push(constraintOptions[option]);
     }
     return (
         options.map((option) =>
-            <ConstraintCheckbox constraint={option} />
+            //FIXME Make this dynamic eventually
+            <Constraint constraint={option} type="multiselector" />
         )
     )
 }

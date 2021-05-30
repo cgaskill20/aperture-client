@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {renderConstraintContainer} from "./LayerHelperFunctions";
+import {renderConstraintContainer, renderIndividualConstraint} from "./LayerHelpers";
 import {prettifyJSON} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
@@ -42,26 +42,29 @@ export default function Layer(props) {
     }
 
     let defaultActiveConstraints = [];
-    let initialCheckboxes = [];
-    let initialSliders = [];
+    // let initialCheckboxes = [];
+    // let initialSliders = [];
+    let initialConstraints = [];
     for(const constraint in allConstraints) {
         const thisConstraint = allConstraints[constraint];
         if(!thisConstraint.hide) {
             defaultActiveConstraints.push(true);
-            if (thisConstraint.type === "slider") {
-                initialSliders.push(thisConstraint);
-            }
-            else if (thisConstraint.type === "multiselector") {
-                initialCheckboxes.push(thisConstraint);
-            }
+            // if (thisConstraint.type === "slider") {
+            //     initialSliders.push(thisConstraint);
+            // }
+            // else if (thisConstraint.type === "multiselector") {
+            //     initialCheckboxes.push(thisConstraint);
+            // }
         }
         else {
             defaultActiveConstraints.push(false);
         }
+        initialConstraints.push(thisConstraint);
     }
     const [activeConstraints, setActiveConstraints] = useState(defaultActiveConstraints);
-    const [checkboxes, setCheckboxes] = useState(initialCheckboxes);
-    const [sliders, setSliders] = useState(initialSliders);
+    // const [checkboxes, setCheckboxes] = useState(initialCheckboxes);
+    // const [sliders, setSliders] = useState(initialSliders);
+    const [constraints, setConstraints] = useState(initialConstraints);
 
     return (
         <div className={classes.root}>
@@ -88,19 +91,25 @@ export default function Layer(props) {
                             <Grid item>
                                 <LayerControls allConstraints={allConstraints} layer={props.layer}
                                                activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints}
-                                               checkboxes={checkboxes} setCheckboxes={setCheckboxes}
-                                               sliders={sliders} setSliders={setSliders} />
+                                               // checkboxes={checkboxes} setCheckboxes={setCheckboxes}
+                                               // sliders={sliders} setSliders={setSliders}
+                                               constraints={constraints} setConstraints={setConstraints} />
                             </Grid>
-                            {renderConstraintContainer(sliders, "slider").map((section) =>
-                                <div>
-                                    {section}
-                                </div>
-                            )}
-                            {renderConstraintContainer(checkboxes, "checkbox").map((section) =>
-                                <div>
-                                    {section}
-                                </div>
-                            )}
+                            {activeConstraints.map((constraint, index) => {
+                                {if(constraint) {
+                                    renderIndividualConstraint(constraints[index], index);
+                                }}
+                            })}
+                            {/*{renderConstraintContainer(sliders, "slider").map((section) =>*/}
+                            {/*    <div>*/}
+                            {/*        {section}*/}
+                            {/*    </div>*/}
+                            {/*)}*/}
+                            {/*{renderConstraintContainer(checkboxes, "checkbox").map((section) =>*/}
+                            {/*    <div>*/}
+                            {/*        {section}*/}
+                            {/*    </div>*/}
+                            {/*)}*/}
                         </Grid>
                     </AccordionDetails>
                 </Accordion>

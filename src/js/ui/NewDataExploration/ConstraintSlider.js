@@ -16,8 +16,6 @@ const useStyles = makeStyles({
     },
 });
 
-//FIXME include a conditional render for a single-point slider
-
 export default function ConstraintSlider(props) {
     const classes = useStyles();
     const min = props.constraint.range[0];

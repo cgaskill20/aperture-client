@@ -6,7 +6,7 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import {graphableLayers, layers, layerTitles} from "../TabSystem";
 import {makeStyles} from "@material-ui/core/styles";
-import {findIndex} from "./LayerHelperFunctions";
+import {findIndex} from "./LayerHelpers";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
 
