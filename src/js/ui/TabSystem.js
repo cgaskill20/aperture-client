@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import AutoMenu from "../library/autoMenu";
-import Util from "../library/apertureUtil";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Tabs from '@material-ui/core/Tabs';
@@ -16,6 +15,7 @@ import NewModeling from "./NewModeling/NewModeling";
 import Workspace from "./NewDataExploration/Workspace";
 import { useGlobalState } from "./global/GlobalState";
 import { showGraph } from "../library/charting/chartBtnNewChartWindow";
+import {prettifyJSON} from "./NewDataExploration/Helpers";
 
 function overwrite() {}
 export let layers = [];
@@ -36,7 +36,7 @@ function extractLayers(data) {
     for(const layer in data) {
         const thisLayer = data[layer];
         layers.push(thisLayer);
-        const layerName = thisLayer["label"] ? thisLayer["label"] : Util.capitalizeString(Util.underScoreToSpace(thisLayer["collection"]));
+        const layerName = thisLayer["label"] ? thisLayer["label"] : prettifyJSON(thisLayer["collection"]);
         layerTitles.push(layerName);
     }
 }

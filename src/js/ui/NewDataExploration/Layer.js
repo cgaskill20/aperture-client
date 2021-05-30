@@ -8,7 +8,7 @@ import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
 import {renderConstraintContainer} from "./LayerHelperFunctions";
-import Util from "../../library/apertureUtil";
+import {prettifyJSON} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,19 +26,23 @@ function updateOpenLayers(openLayers, index) {
 export default function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState({checked: false});
-    const layerLabel = props.layer["label"] ? props.layer["label"] : Util.capitalizeString(Util.underScoreToSpace(props.layer["collection"]));
+    const layerLabel = props.layer["label"] ? props.layer["label"] : prettifyJSON(props.layer["collection"]);
 
     let checkboxes = [];
     let sliders = [];
     let radios = [];
-    let advancedLayers = [];
+    let advancedConstraints = [];
 
     const handleCheck = (event) => {
         setCheck({ ...check, [event.target.name]: event.target.checked });
     };
 
-    for(const layerConstraints in props.layer["constraints"]) {
-        const constraint = props.layer["constraints"][layerConstraints];
+    for(const layerConstraint in props.layer["constraints"]) {
+        const constraint = props.layer["constraints"][layerConstraint];
+        if(!constraint.label) {
+            constraint.label = prettifyJSON(layerConstraint);
+        }
+        advancedConstraints.push(constraint);
         if(!constraint["hide"]) {
             if(constraint["type"] === "slider") {
                 sliders.push(constraint);
@@ -46,9 +50,6 @@ export default function Layer(props) {
             else if(constraint["type"] === "multiselector") {
                 checkboxes.push(constraint);
             }
-        }
-        else {
-            advancedLayers.push(constraint);
         }
     }
 
@@ -75,7 +76,7 @@ export default function Layer(props) {
                     <AccordionDetails>
                         <Grid container direction="column">
                             <Grid item>
-                                <LayerControls advancedLayers={advancedLayers} layerLabel={layerLabel}/>
+                                <LayerControls advancedLayers={advancedConstraints} layerLabel={layerLabel}/>
                             </Grid>
                             {renderConstraintContainer(sliders, "slider").map((section) =>
                                 <div>

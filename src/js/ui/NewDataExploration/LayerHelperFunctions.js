@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Card, Grid, IconButton, Paper, Typography} from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+import {Card, Grid, Typography} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import LayerCheckbox from "./LayerCheckbox";
 import LayerSlider from "./LayerSlider";
