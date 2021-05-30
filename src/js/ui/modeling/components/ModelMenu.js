@@ -7,6 +7,7 @@ import Util from "../../../library/apertureUtil";
 import { sustain_querier } from "../../../grpc/GRPC_Querier/grpc_querier.js";
 import ClusterManager from "../../../model-managers/clusterManager"
 import RegressionManager from "../../../model-managers/regressionManager"
+import Query from "../../../library/Query"
 
 export default class ModelMenu extends React.Component {
     constructor(props) {
@@ -97,26 +98,23 @@ export default class ModelMenu extends React.Component {
         });
     }
 
-    populateCatalog() {
-        const q = [];
-        const stream = this._sustainQuerier.getStreamForQuery("model_catalogue", JSON.stringify(q));
-        const catalog = {};
-        stream.on('data', function (r) {
-            const data = JSON.parse(r.getData());
-            catalog[data.type] = data;
-        }.bind(this));
-        stream.on('end', function (end) {
-            //console.log(catalog)
-            const catalogMap = this.catalogMap(catalog);
-            const categoryDefault = "CLUSTERING";
-            this.setState({
-                catalog: catalog,
-                config: catalogMap,
-                modelCategory: categoryDefault,
-                modelType: Object.keys(catalogMap[categoryDefault])[0],
-                modelStatus: "none"
-            })
-        }.bind(this));
+    async populateCatalog() {
+        const { data } = await Query.makeQuery({
+            collection: "model_catalogue"
+        });
+        const catalog = data.reduce((acc, entry) => {
+            acc[entry.type] = entry;
+            return acc;
+        }, {});
+        const catalogMap = this.catalogMap(catalog);
+        const categoryDefault = "CLUSTERING";
+        this.setState({
+            catalog: catalog,
+            config: catalogMap,
+            modelCategory: categoryDefault,
+            modelType: Object.keys(catalogMap[categoryDefault])[0],
+            modelStatus: "none"
+        })
     }
 
     catalogMap(catalog) {
@@ -326,11 +324,11 @@ export default class ModelMenu extends React.Component {
         this.modelManager = new ClusterManager(refinedData, window.map, window.dataModelingGroup, this.getGeometryCollectionName());
     }
 
-    handleFullRegressionResponse(data){
+    handleFullRegressionResponse(data) {
         const refinedData = data.map(d => {
             return d[Object.keys(d)[0]];
         });
-        this.modelManager = new RegressionManager(refinedData, window.map,window.dataModelingGroup, this.recentGeometry);
+        this.modelManager = new RegressionManager(refinedData, window.map, window.dataModelingGroup, this.recentGeometry);
     }
 
     convertCollectionsToCollectionsQuery() {
@@ -385,7 +383,7 @@ export default class ModelMenu extends React.Component {
             const q = [
                 { "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: [barray] } } } } }
             ];
-            const stream = this._sustainQuerier.getStreamForQuery(collectionName,JSON.stringify(q));
+            const stream = this._sustainQuerier.getStreamForQuery(collectionName, JSON.stringify(q));
 
             let GISJOINS = [];
             stream.on('data', function (r) {
@@ -400,11 +398,11 @@ export default class ModelMenu extends React.Component {
         });
     }
 
-    getGeometryCollectionName(){
+    getGeometryCollectionName() {
         return this.state.resolution === "Tract" ? "tract_geo_140mb_no_2d_index" : "county_geo_30mb_no_2d_index";
     }
 
-    getGeometryCollectionName2dIndexed(){
+    getGeometryCollectionName2dIndexed() {
         return this.state.resolution === "Tract" ? "tract_geo_140mb" : "county_geo_30mb";
     }
 }
