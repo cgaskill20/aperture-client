@@ -133,7 +133,7 @@ export default function TabSystem(props) {
                             centered
                         >
                             <Tab label="Data Exploration" {...a11yProps(0)} />
-                            <Tab label="Modeling" {...a11yProps(1)} />
+                            <Tab disabled={true} label="Modeling" {...a11yProps(1)} />
                         </Tabs></Grid>
                     <Grid
                         item
