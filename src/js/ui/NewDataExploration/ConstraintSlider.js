@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 
 //FIXME include a conditional render for a single-point slider
 
-export default function LayerSlider(props) {
+export default function ConstraintSlider(props) {
     const classes = useStyles();
     const min = props.constraint["range"][0];
     const max = props.constraint["range"][1];
@@ -28,14 +28,6 @@ export default function LayerSlider(props) {
     const handleChange = (event, newValue) => {
         setMinMax(newValue);
     };
-
-    // let constraintLabel;
-    // if(props.constraint["label"]) {
-    //     constraintLabel = props.constraint["label"];
-    // }
-    // else {
-    //     constraintLabel = props.constraint;
-    // }
 
     return (
         <div className={classes.root}>

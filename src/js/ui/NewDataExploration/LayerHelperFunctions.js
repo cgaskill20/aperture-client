@@ -2,8 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Card, Grid, Typography} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
-import LayerCheckbox from "./LayerCheckbox";
-import LayerSlider from "./LayerSlider";
+import ConstraintCheckbox from "./ConstraintCheckbox";
+import ConstraintSlider from "./ConstraintSlider";
 import {layerTitles} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
@@ -71,7 +71,7 @@ export function renderConstraintContainer(constraintArray, type) {
 function renderSliders(constraintArray) {
     return (
         constraintArray.map((constraint) =>
-            <LayerSlider constraint={constraint} />
+            <ConstraintSlider constraint={constraint} />
         )
     )
 }
@@ -83,7 +83,7 @@ function renderCheckboxes(constraintOptions) {
     }
     return (
         options.map((option) =>
-            <LayerCheckbox constraint={option}/>
+            <ConstraintCheckbox constraint={option} />
         )
     )
 }

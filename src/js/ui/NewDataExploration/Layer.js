@@ -37,6 +37,7 @@ export default function Layer(props) {
         setCheck({ ...check, [event.target.name]: event.target.checked });
     };
 
+    let defaultActiveConstraints = [];
     for(const layerConstraint in props.layer["constraints"]) {
         const constraint = props.layer["constraints"][layerConstraint];
         if(!constraint.label) {
@@ -44,6 +45,7 @@ export default function Layer(props) {
         }
         advancedConstraints.push(constraint);
         if(!constraint["hide"]) {
+            defaultActiveConstraints.push(true);
             if(constraint["type"] === "slider") {
                 sliders.push(constraint);
             }
@@ -51,7 +53,11 @@ export default function Layer(props) {
                 checkboxes.push(constraint);
             }
         }
+        else {
+            defaultActiveConstraints.push(false);
+        }
     }
+    const [activeConstraints, setActiveConstraints] = useState(defaultActiveConstraints);
 
     return (
         <div className={classes.root}>
@@ -76,7 +82,8 @@ export default function Layer(props) {
                     <AccordionDetails>
                         <Grid container direction="column">
                             <Grid item>
-                                <LayerControls advancedLayers={advancedConstraints} layerLabel={layerLabel}/>
+                                <LayerControls advancedConstraints={advancedConstraints} layerLabel={layerLabel}
+                                               activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
                             </Grid>
                             {renderConstraintContainer(sliders, "slider").map((section) =>
                                 <div>

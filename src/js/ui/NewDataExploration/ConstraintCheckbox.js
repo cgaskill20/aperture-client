@@ -3,9 +3,9 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-export default function LayerCheckbox(props) {
+export default function ConstraintCheckbox(props) {
     const [state, setState] = useState({
-        checkedMe: true,
+        checked: true,
     });
 
     const handleChange = (event) => {
@@ -17,9 +17,10 @@ export default function LayerCheckbox(props) {
             <FormControlLabel
                 control={
                     <Checkbox
-                        checked={state.checkedMe}
+                        checked={state.checked}
                         onChange={handleChange}
-                        name="checkedMe"
+                        name="checked"
+                        // name={`check-${props.constraint}`}
                         color="primary"
                     />
                 }
