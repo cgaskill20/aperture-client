@@ -27,30 +27,32 @@ export default function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState({checked: false});
     const layerLabel = props.layer.label ? props.layer.label : prettifyJSON(props.layer.collection);
-
-    let checkboxes = [];
-    let sliders = [];
-    let radios = [];
-    let advancedConstraints = [];
+    let allConstraints = [];
 
     const handleCheck = (event) => {
         setCheck({ ...check, [event.target.name]: event.target.checked });
     };
 
-    let defaultActiveConstraints = [];
     for(const layerConstraint in props.layer.constraints) {
         const constraint = props.layer.constraints[layerConstraint];
         if(!constraint.label) {
             constraint.label = prettifyJSON(layerConstraint);
         }
-        advancedConstraints.push(constraint);
-        if(!constraint.hide) {
+        allConstraints.push(constraint);
+    }
+
+    let defaultActiveConstraints = [];
+    let initialCheckboxes = [];
+    let initialSliders = [];
+    for(const constraint in allConstraints) {
+        const thisConstraint = allConstraints[constraint];
+        if(!thisConstraint.hide) {
             defaultActiveConstraints.push(true);
-            if(constraint.type === "slider") {
-                sliders.push(constraint);
+            if (thisConstraint.type === "slider") {
+                initialSliders.push(thisConstraint);
             }
-            else if(constraint.type === "multiselector") {
-                checkboxes.push(constraint);
+            else if (thisConstraint.type === "multiselector") {
+                initialCheckboxes.push(thisConstraint);
             }
         }
         else {
@@ -58,6 +60,8 @@ export default function Layer(props) {
         }
     }
     const [activeConstraints, setActiveConstraints] = useState(defaultActiveConstraints);
+    const [checkboxes, setCheckboxes] = useState(initialCheckboxes);
+    const [sliders, setSliders] = useState(initialSliders);
 
     return (
         <div className={classes.root}>
@@ -82,8 +86,10 @@ export default function Layer(props) {
                     <AccordionDetails>
                         <Grid container direction="column">
                             <Grid item>
-                                <LayerControls advancedConstraints={advancedConstraints} layerLabel={layerLabel}
-                                               activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
+                                <LayerControls allConstraints={allConstraints} layer={props.layer}
+                                               activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints}
+                                               checkboxes={checkboxes} setCheckboxes={setCheckboxes}
+                                               sliders={sliders} setSliders={setSliders} />
                             </Grid>
                             {renderConstraintContainer(sliders, "slider").map((section) =>
                                 <div>

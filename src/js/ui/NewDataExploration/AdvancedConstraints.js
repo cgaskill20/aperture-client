@@ -33,9 +33,11 @@ export default function AdvancedConstraints(props) {
 
     const body = (
         <Box className={classes.modal}>
-            {props.constraints.map((constraint, index) =>
+            {props.allConstraints.map((constraint, index) =>
                 <AdvancedConstraintCheckbox activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints}
-                                            constraint={constraint.label} index={index} />
+                                            checkboxes={props.checkboxes} setCheckboxes={props.setCheckboxes}
+                                            sliders={props.sliders} setSliders={props.setSliders}
+                                            index={index} layer={props.layer} constraint={constraint} />
             )}
         </Box>
     );
