@@ -26,7 +26,7 @@ function updateOpenLayers(openLayers, index) {
 export default function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState({checked: false});
-    const layerLabel = props.layer["label"] ? props.layer["label"] : prettifyJSON(props.layer["collection"]);
+    const layerLabel = props.layer.label ? props.layer.label : prettifyJSON(props.layer.collection);
 
     let checkboxes = [];
     let sliders = [];
@@ -38,18 +38,18 @@ export default function Layer(props) {
     };
 
     let defaultActiveConstraints = [];
-    for(const layerConstraint in props.layer["constraints"]) {
-        const constraint = props.layer["constraints"][layerConstraint];
+    for(const layerConstraint in props.layer.constraints) {
+        const constraint = props.layer.constraints[layerConstraint];
         if(!constraint.label) {
             constraint.label = prettifyJSON(layerConstraint);
         }
         advancedConstraints.push(constraint);
-        if(!constraint["hide"]) {
+        if(!constraint.hide) {
             defaultActiveConstraints.push(true);
-            if(constraint["type"] === "slider") {
+            if(constraint.type === "slider") {
                 sliders.push(constraint);
             }
-            else if(constraint["type"] === "multiselector") {
+            else if(constraint.type === "multiselector") {
                 checkboxes.push(constraint);
             }
         }

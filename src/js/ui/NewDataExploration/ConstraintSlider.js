@@ -20,9 +20,9 @@ const useStyles = makeStyles({
 
 export default function ConstraintSlider(props) {
     const classes = useStyles();
-    const min = props.constraint["range"][0];
-    const max = props.constraint["range"][1];
-    const step = props.constraint["step"] ? props.constraint["step"] : 1;
+    const min = props.constraint.range[0];
+    const max = props.constraint.range[1];
+    const step = props.constraint.step ? props.constraint.step : 1;
     const [minMax, setMinMax] = useState([min, max]);
 
     const handleChange = (event, newValue) => {
@@ -32,7 +32,7 @@ export default function ConstraintSlider(props) {
     return (
         <div className={classes.root}>
             <Typography className={classes.title} id="range-slider" gutterBottom>
-                {props.constraint["label"]} &nbsp;
+                {props.constraint.label} &nbsp;
                 <span className={classes.nowrap}>{minMax[0]} - {minMax[1]}</span>
             </Typography>
             <Slider

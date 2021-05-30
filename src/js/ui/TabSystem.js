@@ -36,7 +36,7 @@ function extractLayers(data) {
     for(const layer in data) {
         const thisLayer = data[layer];
         layers.push(thisLayer);
-        const layerName = thisLayer["label"] ? thisLayer["label"] : prettifyJSON(thisLayer["collection"]);
+        const layerName = thisLayer.label ? thisLayer.label : prettifyJSON(thisLayer.collection);
         layerTitles.push(layerName);
     }
 }
@@ -44,7 +44,7 @@ function extractLayers(data) {
 function extractGraphableLayers(data) {
     for (const layer in data) {
         const thisLayer = data[layer];
-        const layerName = thisLayer["collection"];
+        const layerName = thisLayer.collection;
         graphableLayers.push(layerName);
     }
 }

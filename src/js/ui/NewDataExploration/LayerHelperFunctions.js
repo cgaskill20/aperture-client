@@ -55,9 +55,9 @@ export function renderConstraintContainer(constraintArray, type) {
                 renderedSections.push(
                      <Grid item>
                         <Card className={classes.root}>
-                            <Typography className={classes.heading}>{constraintArray[constraint]["label"]}</Typography>
+                            <Typography className={classes.heading}>{constraintArray[constraint].label}</Typography>
                             <CardContent>
-                                {renderCheckboxes(constraintArray[constraint]["options"])}
+                                {renderCheckboxes(constraintArray[constraint].options)}
                             </CardContent>
                         </Card>
                     </Grid>
