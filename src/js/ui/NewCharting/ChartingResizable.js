@@ -21,7 +21,6 @@ export default function ChartingResizable() {
                 }}
                 style={{
                     zIndex: 1000,
-                    overflow: "scroll"
                 }}
                 minWidth={500}
                 minHeight={190}
@@ -33,7 +32,9 @@ export default function ChartingResizable() {
                 }}
             >
                 <Paper className={'charting-resizable-window'}>
-                    <ChartingWindow size={size}/>
+                    <div style={{ overflowY: "scroll", maxHeight: size.height }}>
+                        <ChartingWindow size={size}/>
+                    </div>
                 </Paper>
             </Rnd>
         </div>
