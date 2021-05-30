@@ -41,7 +41,7 @@ export default function ChartingResizable() {
             >
                 <Paper className={'charting-resizable-window'}>
                     <div style={{ overflowY: "scroll", maxHeight: size.height }}>
-                        <ChartingWindow size={size}/>
+                        <ChartingWindow size={size} data={chartData}/>
                     </div>
                 </Paper>
             </Rnd>
