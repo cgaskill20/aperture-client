@@ -2,8 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Card, Grid, Typography} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
-import ConstraintCheckbox from "./ConstraintCheckbox";
-import ConstraintSlider from "./ConstraintSlider";
 import {layerTitles} from "../TabSystem";
 import Constraint from "./Constraint";
 
@@ -38,17 +36,13 @@ export function updateWorkspaceAndLayers(indexInDatasets, booleanWorkspace, open
 
 export function renderIndividualConstraint(constraint, index) {
     const classes = useStyles();
-    console.log({constraint});
-    const type = constraint.type;
-    console.log({type});
 
     if(constraint.type === "slider") {
-        console.log("Found slider")
         return (
             <Grid item>
                 <Card className={classes.root}>
                     <CardContent>
-                        <ConstraintSlider constraint={constraint} type={constraint.type} />
+                        <Constraint constraint={constraint} type={constraint.type} />
                     </CardContent>
                 </Card>
             </Grid>
@@ -56,62 +50,17 @@ export function renderIndividualConstraint(constraint, index) {
     }
 
     else if(constraint.type === "multiselector") {
-        console.log("Found checkbox")
-        let renderedSections = [];
-        for(const thisConstraint in constraint) {
-            renderedSections.push(
-                <Grid item>
-                    <Card className={classes.root}>
-                        <Typography className={classes.heading}>{constraint[thisConstraint].label}</Typography>
-                        <CardContent>
-                            {renderCheckboxes(constraint[thisConstraint].options, constraint.type)}
-                        </CardContent>
-                    </Card>
-                </Grid>
-            );
-        }
+        return (
+            <Grid item>
+                <Card className={classes.root}>
+                    <Typography className={classes.heading}>{constraint.label}</Typography>
+                    <CardContent>
+                        {renderCheckboxes(constraint.options, constraint.type)}
+                    </CardContent>
+                </Card>
+            </Grid>
+        );
     }
-}
-
-export function renderConstraintContainer(constraintArray, type) {
-    const classes = useStyles();
-    let renderedSections = [];
-    if(constraintArray.length > 0) {
-        if(type === "slider") {
-            renderedSections.push(
-                <Grid item>
-                    <Card className={classes.root}>
-                        <CardContent>
-                            {renderSliders(constraintArray)}
-                        </CardContent>
-                    </Card>
-                </Grid>
-            );
-        }
-        else if(type === "checkbox") {
-            for(const constraint in constraintArray) {
-                renderedSections.push(
-                     <Grid item>
-                        <Card className={classes.root}>
-                            <Typography className={classes.heading}>{constraintArray[constraint].label}</Typography>
-                            <CardContent>
-                                {renderCheckboxes(constraintArray[constraint].options)}
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                );
-            }
-        }
-    }
-    return renderedSections;
-}
-
-function renderSliders(constraintArray) {
-    return (
-        constraintArray.map((constraint) =>
-            <Constraint constraint={constraint} type="slider" />
-        )
-    )
 }
 
 function renderCheckboxes(constraintOptions, type) {
@@ -121,8 +70,7 @@ function renderCheckboxes(constraintOptions, type) {
     }
     return (
         options.map((option) =>
-            //FIXME Make this dynamic eventually
-            <Constraint constraint={option} type="multiselector" />
+            <Constraint constraint={option} type={type} />
         )
     )
 }

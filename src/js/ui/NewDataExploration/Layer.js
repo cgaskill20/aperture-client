@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {renderConstraintContainer, renderIndividualConstraint} from "./LayerHelpers";
+import {renderIndividualConstraint} from "./LayerHelpers";
 import {prettifyJSON} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
@@ -23,48 +23,58 @@ function updateOpenLayers(openLayers, index) {
     return updatedLayers;
 }
 
-export default function Layer(props) {
-    const classes = useStyles();
-    const [check, setCheck] = useState({checked: false});
-    const layerLabel = props.layer.label ? props.layer.label : prettifyJSON(props.layer.collection);
+function getAllConstraints(layer) {
     let allConstraints = [];
-
-    const handleCheck = (event) => {
-        setCheck({ ...check, [event.target.name]: event.target.checked });
-    };
-
-    for(const layerConstraint in props.layer.constraints) {
-        const constraint = props.layer.constraints[layerConstraint];
+    for(const layerConstraint in layer.constraints) {
+        const constraint = layer.constraints[layerConstraint];
         if(!constraint.label) {
             constraint.label = prettifyJSON(layerConstraint);
         }
         allConstraints.push(constraint);
     }
+    return allConstraints;
+}
 
-    let defaultActiveConstraints = [];
-    // let initialCheckboxes = [];
-    // let initialSliders = [];
-    let initialConstraints = [];
+function createActiveConstraints(allConstraints) {
+    let initializeActiveConstraints = [];
     for(const constraint in allConstraints) {
         const thisConstraint = allConstraints[constraint];
         if(!thisConstraint.hide) {
-            defaultActiveConstraints.push(true);
-            // if (thisConstraint.type === "slider") {
-            //     initialSliders.push(thisConstraint);
-            // }
-            // else if (thisConstraint.type === "multiselector") {
-            //     initialCheckboxes.push(thisConstraint);
-            // }
+            initializeActiveConstraints.push(true);
         }
         else {
-            defaultActiveConstraints.push(false);
+            initializeActiveConstraints.push(false);
         }
-        initialConstraints.push(thisConstraint);
     }
-    const [activeConstraints, setActiveConstraints] = useState(defaultActiveConstraints);
-    // const [checkboxes, setCheckboxes] = useState(initialCheckboxes);
-    // const [sliders, setSliders] = useState(initialSliders);
-    const [constraints, setConstraints] = useState(initialConstraints);
+    return initializeActiveConstraints;
+}
+
+function createConstraints(activeConstraints, allConstraints) {
+    let constraints = [];
+    for(let i = 0; i < activeConstraints.length; i++) {
+        if(activeConstraints[i]) {
+            let temp = renderIndividualConstraint(allConstraints[i], i);
+            constraints.push(temp);
+        }
+    }
+    return constraints;
+}
+
+export default function Layer(props) {
+    const classes = useStyles();
+    const [check, setCheck] = useState({checked: false});
+    const layerLabel = props.layer.label ? props.layer.label : prettifyJSON(props.layer.collection);
+
+    const handleCheck = (event) => {
+        setCheck({ ...check, [event.target.name]: event.target.checked });
+    };
+
+    let allConstraints = getAllConstraints(props.layer);
+
+    let initializeActiveConstraints = createActiveConstraints(allConstraints);
+    const [activeConstraints, setActiveConstraints] = useState(initializeActiveConstraints);
+
+    let constraints = createConstraints(activeConstraints, allConstraints);
 
     return (
         <div className={classes.root}>
@@ -90,26 +100,11 @@ export default function Layer(props) {
                         <Grid container direction="column">
                             <Grid item>
                                 <LayerControls allConstraints={allConstraints} layer={props.layer}
-                                               activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints}
-                                               // checkboxes={checkboxes} setCheckboxes={setCheckboxes}
-                                               // sliders={sliders} setSliders={setSliders}
-                                               constraints={constraints} setConstraints={setConstraints} />
+                                               activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
                             </Grid>
-                            {activeConstraints.map((constraint, index) => {
-                                {if(constraint) {
-                                    renderIndividualConstraint(constraints[index], index);
-                                }}
-                            })}
-                            {/*{renderConstraintContainer(sliders, "slider").map((section) =>*/}
-                            {/*    <div>*/}
-                            {/*        {section}*/}
-                            {/*    </div>*/}
-                            {/*)}*/}
-                            {/*{renderConstraintContainer(checkboxes, "checkbox").map((section) =>*/}
-                            {/*    <div>*/}
-                            {/*        {section}*/}
-                            {/*    </div>*/}
-                            {/*)}*/}
+                            {constraints.map((current) =>
+                                <div>{current}</div>
+                            )}
                         </Grid>
                     </AccordionDetails>
                 </Accordion>

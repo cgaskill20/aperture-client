@@ -26,8 +26,7 @@ export default function LayerControls(props) {
                 <br/>
                 <ButtonGroup variant="outlined" aria-label="text primary button group">
                     <AdvancedConstraints allConstraints={props.allConstraints} layer={props.layer}
-                                         activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints}
-                                         constraints={props.constraints} setConstraints={props.setConstraints} />
+                                         activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} />
                     <Button startIcon={<RotateLeftIcon />}>
                         Reset Constraints
                     </Button>
