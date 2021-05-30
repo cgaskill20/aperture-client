@@ -286,6 +286,14 @@ export default class ChartSystem {
         window.setTimeout(() => { this.doNotUpdate = false; }, 200);
     }
 
+    registerChart(id, type) {
+        console.log(`register: ${id}`);
+    }
+
+    unregisterChart(id) {
+        console.log(`unregister: ${id}`);
+    }
+
     rerenderAll(width, height) {
         let hasNewDimensions = width && height;
 

@@ -5,6 +5,7 @@ import ChartingWindow from './ChartingWindow';
 
 export default function ChartingResizable() {
     let [size, setSize] = useState({ width: 500, height: 400 });
+    let [chartData, setChartData] = useState({});
 
     return (
 
