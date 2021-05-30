@@ -4,6 +4,7 @@ import {Card, Grid, Typography} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import {layerTitles} from "../TabSystem";
 import Constraint from "./Constraint";
+import {prettifyJSON} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,6 +24,43 @@ export function findIndex(layerLabel) {
         }
     }
     return -1;
+}
+
+export function getAllConstraints(layer) {
+    let allConstraints = [];
+    for(const layerConstraint in layer.constraints) {
+        const constraint = layer.constraints[layerConstraint];
+        if(!constraint.label) {
+            constraint.label = prettifyJSON(layerConstraint);
+        }
+        allConstraints.push(constraint);
+    }
+    return allConstraints;
+}
+
+export function createActiveConstraints(allConstraints) {
+    let initializeActiveConstraints = [];
+    for(const constraint in allConstraints) {
+        const thisConstraint = allConstraints[constraint];
+        if(!thisConstraint.hide) {
+            initializeActiveConstraints.push(true);
+        }
+        else {
+            initializeActiveConstraints.push(false);
+        }
+    }
+    return initializeActiveConstraints;
+}
+
+export function createConstraints(activeConstraints, allConstraints) {
+    let constraints = [];
+    for(let i = 0; i < activeConstraints.length; i++) {
+        if(activeConstraints[i]) {
+            let temp = renderIndividualConstraint(allConstraints[i], i);
+            constraints.push(temp);
+        }
+    }
+    return constraints;
 }
 
 export function updateWorkspaceAndLayers(indexInDatasets, booleanWorkspace, openLayers, setOpenLayers) {

@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {renderIndividualConstraint} from "./LayerHelpers";
+import {getAllConstraints, createActiveConstraints, createConstraints} from "./LayerHelpers";
 import {prettifyJSON} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
@@ -23,58 +23,19 @@ function updateOpenLayers(openLayers, index) {
     return updatedLayers;
 }
 
-function getAllConstraints(layer) {
-    let allConstraints = [];
-    for(const layerConstraint in layer.constraints) {
-        const constraint = layer.constraints[layerConstraint];
-        if(!constraint.label) {
-            constraint.label = prettifyJSON(layerConstraint);
-        }
-        allConstraints.push(constraint);
-    }
-    return allConstraints;
-}
-
-function createActiveConstraints(allConstraints) {
-    let initializeActiveConstraints = [];
-    for(const constraint in allConstraints) {
-        const thisConstraint = allConstraints[constraint];
-        if(!thisConstraint.hide) {
-            initializeActiveConstraints.push(true);
-        }
-        else {
-            initializeActiveConstraints.push(false);
-        }
-    }
-    return initializeActiveConstraints;
-}
-
-function createConstraints(activeConstraints, allConstraints) {
-    let constraints = [];
-    for(let i = 0; i < activeConstraints.length; i++) {
-        if(activeConstraints[i]) {
-            let temp = renderIndividualConstraint(allConstraints[i], i);
-            constraints.push(temp);
-        }
-    }
-    return constraints;
-}
-
 export default function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState({checked: false});
     const layerLabel = props.layer.label ? props.layer.label : prettifyJSON(props.layer.collection);
 
+    const allConstraints = getAllConstraints(props.layer);
+    const initializeActiveConstraints = createActiveConstraints(allConstraints);
+    const [activeConstraints, setActiveConstraints] = useState(initializeActiveConstraints);
+    const constraints = createConstraints(activeConstraints, allConstraints);
+
     const handleCheck = (event) => {
         setCheck({ ...check, [event.target.name]: event.target.checked });
     };
-
-    let allConstraints = getAllConstraints(props.layer);
-
-    let initializeActiveConstraints = createActiveConstraints(allConstraints);
-    const [activeConstraints, setActiveConstraints] = useState(initializeActiveConstraints);
-
-    let constraints = createConstraints(activeConstraints, allConstraints);
 
     return (
         <div className={classes.root}>
