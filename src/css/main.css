@@ -10,6 +10,12 @@
   transition: 0.3s;
 }
 
+.oldMenuButton {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+}
+
 .noTransitions {
     transition: 0.0s;
 }

@@ -3,7 +3,7 @@ import { createHistogram, createScatterplot, createLinegraph} from "./chartBtnCr
 document.getElementById('nav-graph-button').addEventListener('click', showGraph);
 let buttonsOn = false;
 
-function showGraph() {
+export function showGraph() {
     window.chartSystem.toggleVisible();
     if(!buttonsOn) {
         createAddChartArea();

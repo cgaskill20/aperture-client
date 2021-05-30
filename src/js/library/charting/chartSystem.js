@@ -70,6 +70,7 @@ import resizable from "../resizable";
 import ChartFrame from "./chartFrame";
 import CovidDataSource from "./covidDataSource"
 import MapDataSource from "./mapDataSource"
+import HistogramChart from '../../ui/NewCharting/HistogramChart';
 
 // An enumeration of each type of data source recognized by the ChartSystem.
 // See DataSource for more information about what a "data source" is.
@@ -110,6 +111,7 @@ export const ChartingType = {
         managerType: SingleChartManager,
         areaType: SingleChartArea,
         chartType: Histogram,
+        componentType: HistogramChart,
         wantsSources: [ DataSourceType.MAP_FEATURES ],
     },
     SCATTERPLOT: {
@@ -160,10 +162,7 @@ export default class ChartSystem {
     constructor(map, chartCatalogFilename) {
         this.map = map;
 
-        this.chartFrames = [];
-
-        this.resizable = new resizable(resizable.minimum_width, resizable.minimum_height + 200, "white");
-        this.resizable.setResizeCallback(this.rerenderAll.bind(this));
+        this.dataConsumers = [];
 
         $.getJSON(chartCatalogFilename, (catalog) => {
             this.initializeUpdateHooks();
@@ -178,7 +177,6 @@ export default class ChartSystem {
         });
 
         this.doNotUpdate = false;
-
     }
 
     /** 
@@ -197,30 +195,6 @@ export default class ChartSystem {
         });
     }
 
-    /**
-     * Create a new chart frame for a given type of chart.
-     * This is how you are intended to put new charts into the UI. Call this,
-     * get a ChartFrame, and attach the frame's DOM node to some other node.
-     * See ChartFrame for a few more details.
-     * See chartBtnCreateChart.js for examples of how this function is used.
-     * @memberof ChartSystem
-     * @method getChartFrame
-     * @param type {object} A ChartType for the type of chart you wish to create
-     * @returns {object} A ChartFrame
-     */
-    getChartFrame(type) {
-        let node = document.createElement("div");
-        node.className = `${type.name}-chart-area`;
-
-        let area = new type.areaType();
-        area.attachTo(node);
-        let manager = new type.managerType(this.catalog, area, type.wantsSources[0].supplementObjectInstance, this, type.chartType);
-        let frame = new ChartFrame(node, area, manager, type);
-        this.chartFrames.push(frame);
-
-        return frame;
-    }
-
     initializeUpdateHooks() {
         this.map.on('move', e => { 
             this.update(); 
@@ -234,10 +208,6 @@ export default class ChartSystem {
             this.doNotUpdate = false; 
             this.update(); 
         });
-
-        window.setInterval(() => {
-            this.rerenderAll();
-        }, 1500);
     }
 
     /**
@@ -256,53 +226,23 @@ export default class ChartSystem {
             return;
         }
 
-        this.rerenderAll();
-
-        Object.values(DataSourceType).forEach(async source => {
-            this.chartFrames.forEach(async frame => {
-                if (frame.getChartType().wantsSources.find(wanted => wanted.name === source.name)) {
-                    let sourceParams = frame.manager.getSourceParameters();
-                    if (!parameters.periodic) {
-                        frame.passMessage({ type: CommonChartMessageType.NOTIFY_QUERY_STATE, started: true });
-                    }
-
-                    frame.manager.update(await source.sourceInstance.get(...sourceParams));
-
-                    if (!parameters.periodic) {
-                        frame.passMessage({ type: CommonChartMessageType.NOTIFY_QUERY_STATE, started: false });
-                    }
-                    source.sourceInstance.updateSupplement(source.supplementObjectInstance);
-                }
+        this.dataConsumers.forEach(async consumer => {
+            let data = {};
+            Object.values(DataSourceType).forEach(async source => {
+                data[source.name] = await source.sourceInstance.get();
             });
+            consumer.dataCallback(data);
         });
-
+        
         this.doNotUpdate = true;
         window.setTimeout(() => { this.doNotUpdate = false; }, 200);
     }
 
-    rerenderAll(width, height) {
-        let hasNewDimensions = width && height;
-
-        this.chartFrames.forEach(frame => {
-            if (hasNewDimensions) {
-                let newHeight = height - 200;
-                if (newHeight > ChartSystem.MAX_CHART_HEIGHT) {
-                    newHeight = ChartSystem.MAX_CHART_HEIGHT;
-                }
-
-                frame.setSize(width - 200, newHeight);
-            }
-            frame.resize();
-        });
+    registerDataConsumer(id, setData) {
+        this.dataConsumers.push({ id: id, dataCallback: setData });
     }
 
-
-    /**
-     * Toggle whether or not the charting window is visible.
-     * @memberof ChartSystem
-     * @method toggleVisible
-     */
-    toggleVisible() {
-        this.resizable.toggleVisible();
+    unregisterDataConsumer(id) {
+        this.dataConsumers = this.dataConsumers.filter(c => c.id !== id);
     }
 }

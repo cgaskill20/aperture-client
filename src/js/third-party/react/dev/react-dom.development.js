@@ -1819,7 +1819,7 @@
   
     var valuePropNames = ['value', 'defaultValue'];
     /**
-     * Validation function for `value` and `defaultValue`.
+     * DeleteMePlease! function for `value` and `defaultValue`.
      */
   
     function checkSelectPropTypes(props) {

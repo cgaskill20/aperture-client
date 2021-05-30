@@ -69,12 +69,12 @@ export default class Histogram extends Chart {
         this.kde = new KernelDensityEstimator();
     }
 
-    rerender(newWidth, newHeight, viewIndex) {
+    changeSize(newWidth, newHeight) {
         if (this.data.length === 0) {
             return;
         }
 
-        let view = this.views[viewIndex];
+        let view = this.view;
 
         newWidth = newWidth < Chart.MINIMUM_WIDTH ? Chart.MINIMUM_WIDTH : newWidth;
         newHeight = newHeight < Chart.MINIMUM_HEIGHT ? Chart.MINIMUM_HEIGHT : newHeight;
@@ -138,13 +138,13 @@ export default class Histogram extends Chart {
 
     changeBins(binNum) {
         this.bins = d3.bin().thresholds(binNum)(this.data);
-        this.rerenderAllViews();
+        this.rerender();
     }
 
     changeData(newData, binNum) {
         this.data = newData;
         this.changeBins(binNum);
-        this.rerenderAllViews();
+        this.rerender();
     }
 
     setColors(start, end) {
@@ -155,14 +155,14 @@ export default class Histogram extends Chart {
 
     setTitle(title) {
         this.title = title;
-        this.rerenderAllViews();
+        this.rerender();
     }
 
-    makeNewView(node, width, height) {
+    makeNewView(width, height, selector) {
         let view = {};
         view.width = width;
         view.height = height;
-        view.svg = d3.create("svg").attr("viewBox", [0, 0, width, height]);
+        view.svg = d3.select(selector).append("svg").attr("viewBox", [0, 0, width, height]);
 
         view.bins = d3.bin().thresholds(8)(this.data);
         view.margin = { top: 60, right: 20, bottom: 30, left: 40 };
@@ -209,7 +209,7 @@ export default class Histogram extends Chart {
                 svg.select("foreignObject div text")
                     .text(`${Number.parseFloat(this.value).toPrecision(2)}`)
 
-                histogram.rerenderAllViews();
+                histogram.rerender();
             }
         };
     }
@@ -229,7 +229,7 @@ export default class Histogram extends Chart {
         let checkboxNode = svg.select("foreignObject input#kdeToggle").node();
         checkboxNode.onclick = function() { 
             histogram.kdeEnabled = checkboxNode.checked;
-            histogram.rerenderAllViews();
+            histogram.rerender();
         };
     }
 }

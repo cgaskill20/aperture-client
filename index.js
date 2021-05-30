@@ -43,6 +43,7 @@ require("./src/js/third-party/bootstrap4-toggle.min.js");
 require("bootstrap");
 require("./src/js/library/smartQuerier.js");
 
+export let finalData;
 const PAGE_URL = window.location.href;
 const DEV = PAGE_URL.includes("localhost") || PAGE_URL.includes("127.0.0.1");
 if (DEV && !localStorage.getItem("noDev")) {

@@ -3,11 +3,13 @@ import { useGlobalState } from "./global/GlobalState"
 import DefensiveOptimization from "./widgets/DefensiveOptimization"
 import ClusterLegend from "./widgets/ClusterLegend"
 import PreloadingMenu from "./widgets/PreloadingMenu"
+import ChartingResizable from "./NewCharting/ChartingResizable"
 
 const widgetEnum = {
     defensiveOptimization: 0,
     clusterLegend: 1,
-    preloading: 2
+    preloading: 2,
+    chartingResizble: 3,
 }
 
 const ConditionalWidgetRendering = () => {
@@ -45,7 +47,12 @@ const ConditionalWidgetRendering = () => {
     }
 
     if (globalState.chartingOpen) {
-        //we will put the graphing stuff here
+
+        toRender.push(
+            <div id="charting-resizable-container" key={widgetEnum.chartingResizable}>
+                <ChartingResizable />
+            </div>
+        );
     }
 
     return <div>

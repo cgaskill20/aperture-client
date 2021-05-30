@@ -24,10 +24,13 @@
   "homepage": "https://github.com/Project-Sustain/aperture-client#readme",
   "dependencies": {
     "@material-ui/core": "^4.11.4",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.58",
     "bootstrap": "^4.6.0",
     "browserify": "^16.5.0",
     "canvas": "^2.6.1",
     "chroma-js": "^2.1.0",
+    "clsx": "^1.1.1",
     "create-react-app": "^2.1.1",
     "d3": "^4.13.0",
     "data2grid": "^1.0.0",
@@ -47,6 +50,7 @@
     "popper.js": "^1.16.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-rnd": "^10.3.0",
     "reactstrap": "^8.9.0",
     "set-default-browser": "^1.0.1",
     "three": "~0.125.0"
