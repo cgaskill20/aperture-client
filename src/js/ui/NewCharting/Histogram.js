@@ -8,8 +8,8 @@ export default function Histogram(props) {
 
             // set the dimensions and margins of the graph
             var margin = {top: 10, right: 30, bottom: 30, left: 40},
-            width = 460 - margin.left - margin.right,
-            height = 400 - margin.top - margin.bottom;
+            width = props.size.width - margin.left - margin.right,
+            height = props.size.height - margin.top - margin.bottom;
 
             // append the svg object to the body of the page
             var svg = d3.select(d3Chart.current)
@@ -62,8 +62,6 @@ export default function Histogram(props) {
     })
 
     return (
-        <div id='d3demo'>
-            <svg ref={d3Chart}></svg>
-        </div>
+        <div ref={d3Chart}></div>
     )
 }

@@ -29,7 +29,7 @@ export default function makeFrame(type) {
                     border: "1px solid red"
                 }}>
                     {console.log(this.props.size.height)}
-                    <Histogram></Histogram>
+                    <Histogram size={this.props.size}></Histogram>
                     <type.componentType data={this.state.data} id={this.state.id}/>
                 </div>
             );
