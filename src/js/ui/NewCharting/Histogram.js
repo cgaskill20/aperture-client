@@ -5,11 +5,11 @@ export default function Histogram(props) {
     const d3Chart = useRef()
 
     useEffect(()=>{
-
+            console.log(props.size.width);
             // set the dimensions and margins of the graph
             var margin = {top: 10, right: 30, bottom: 30, left: 40},
-            width = props.size.width - margin.left - margin.right,
-            height = props.size.height - margin.top - margin.bottom;
+            width = props.size.width,
+            height = props.size.height;
 
             // append the svg object to the body of the page
             var svg = d3.select(d3Chart.current)
