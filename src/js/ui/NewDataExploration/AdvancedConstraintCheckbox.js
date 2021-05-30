@@ -16,7 +16,7 @@ export default function AdvancedConstraintCheckbox(props) {
 
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
-        updateActiveConstraints(props.activeConstraints, props.setActiveConstraints, props.index);
+        // updateActiveConstraints(props.activeConstraints, props.setActiveConstraints, props.index);
     };
 
     return (
