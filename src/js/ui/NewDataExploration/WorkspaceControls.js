@@ -5,7 +5,6 @@ import SaveIcon from '@material-ui/icons/Save';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import WorkspaceSearchbar from "./WorkspaceSearchbar";
 import UpdateIcon from '@material-ui/icons/Update';
-import {layerTitles} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -13,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function buildWorkspace(selectedDatasets, openLayers, setOpenLayers) {
+function buildWorkspace(selectedDatasets, openLayers, setOpenLayers, layerTitles) {
     //FIXME This is some n^2 'ish right here, make it better
     let newBooleanWorkspace = [];
     let newOpenLayers = [...openLayers];
@@ -39,7 +38,7 @@ export default function WorkspaceControls(props) {
                 <ButtonGroup>
                     <Button
                         variant="outlined"
-                        onClick={() => props.setBooleanWorkspace(buildWorkspace(props.selectedDatasets, props.openLayers, props.setOpenLayers))}
+                        onClick={() => props.setBooleanWorkspace(buildWorkspace(props.selectedDatasets, props.openLayers, props.setOpenLayers, props.layerTitles))}
                         startIcon={<UpdateIcon/>}>
                         Update Workspace
                     </Button>
@@ -47,7 +46,7 @@ export default function WorkspaceControls(props) {
                     <Button variant="outlined" startIcon={<FolderOpenIcon />}>Load Workspace</Button>
                 </ButtonGroup>
             </Grid>
-            <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers}
+            <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
                                 selectedDatasets={props.selectedDatasets} setSelectedDatasets={props.setSelectedDatasets}
                                 booleanWorkspace={props.booleanWorkspace} />
         </div>

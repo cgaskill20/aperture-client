@@ -18,7 +18,7 @@ import { showGraph } from "../library/charting/chartBtnNewChartWindow";
 import {prettifyJSON} from "./NewDataExploration/Helpers";
 
 function overwrite() {}
-export let layerTitles = [];
+// export let layerTitles = [];
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -102,20 +102,23 @@ export default function TabSystem(props) {
     const [activeConstraints, setActiveConstraints] = useState([]);
     const [booleanWorkspace, setBooleanWorkspace] = useState([]);
     const [openLayers, setOpenLayers] = useState([]);
+    const [layerTitles, setLayerTitles] = useState([]);
     function extractLayers(data) {
         let tempBoolean = [];
         let tempLayers = [];
+        let tempLayerTitles = [];
         for(const layer in data) {
             const thisLayer = data[layer];
             tempLayers.push(thisLayer);
             const layerName = thisLayer.label ? thisLayer.label : prettifyJSON(thisLayer.collection);
-            layerTitles.push(layerName);
+            tempLayerTitles.push(layerName);
             tempBoolean.push(false);
         }
         setLayers(tempLayers);
         setActiveConstraints(extractActiveConstraints(tempLayers));
         setBooleanWorkspace(tempBoolean);
         setOpenLayers(tempBoolean);
+        setLayerTitles(tempLayerTitles);
     }
 
     const [graphableLayers, setGraphableLayers] = useState([]);
@@ -193,7 +196,7 @@ export default function TabSystem(props) {
                 </Grid>
             </Paper>
             <TabPanel value={value} index={0}>
-                <Workspace layers={layers} graphableLayers={graphableLayers}
+                <Workspace layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
                            openLayers={openLayers} setOpenLayers={setOpenLayers}
                            selectedDatasets={selectedDatasets} setSelectedDatasets={setSelectedDatasets}
                            booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}

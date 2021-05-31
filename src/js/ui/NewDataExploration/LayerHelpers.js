@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Card, Grid, Typography} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
-import {layerTitles} from "../TabSystem";
 import Constraint from "./Constraint";
 import {prettifyJSON} from "./Helpers";
 

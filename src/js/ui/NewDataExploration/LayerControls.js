@@ -2,7 +2,6 @@ import React from 'react';
 import {Button, ButtonGroup, Card, Typography} from "@material-ui/core";
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import CardContent from "@material-ui/core/CardContent";
-// import {graphableLayers} from "../TabSystem";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import AdvancedConstraints from "./AdvancedConstraints";
 

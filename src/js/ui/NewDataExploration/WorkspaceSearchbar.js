@@ -4,7 +4,6 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import {layerTitles} from "../TabSystem";
 import {makeStyles} from "@material-ui/core/styles";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
@@ -12,7 +11,7 @@ import IconButton from "@material-ui/core/IconButton";
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
 
-function findIndex(layerLabel) {
+function findIndex(layerLabel, layerTitles) {
     for(let i = 0; i < layerTitles.length; i++) {
         if(layerTitles[i] === layerLabel) {
             return i;
@@ -31,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function graphIcon(layerLabel, layers, graphableLayers) {
-    const index = findIndex(layerLabel);
+function graphIcon(layerLabel, layers, graphableLayers, layerTitles) {
+    const index = findIndex(layerLabel, layerTitles);
     const collectionName = layers[index].collection;
     if(graphableLayers.includes(collectionName)) {
         return <IconButton><EqualizerIcon color="primary"/></IconButton>
@@ -49,14 +48,14 @@ export default function WorkspaceSearchbar(props) {
                 multiple
                 disableCloseOnSelect
                 id="dataset-searchbar"
-                options={layerTitles}
+                options={props.layerTitles}
                 onChange={(e, dataset) => {
                     props.setSelectedDatasets(dataset);
                 }}
                 renderOption={(option, state) => {
                     const selectDatasetIndex = props.selectedDatasets.findIndex(
                         dataset => dataset.toLowerCase() === "all"
-                    );
+                    , props.layerTitles);
                     if (selectDatasetIndex > -1) {
                         state.selected = true;
                     }
@@ -67,10 +66,10 @@ export default function WorkspaceSearchbar(props) {
                                 color="primary"
                                 checkedIcon={checkedIcon}
                                 style={{ marginRight: 8 }}
-                                checked={state.selected || props.booleanWorkspace[findIndex({option}['option'])]}
+                                checked={state.selected || props.booleanWorkspace[findIndex({option}['option'], props.layerTitles)]}
                             />
                             {option}
-                            <span className={classes.graphIcon}>{graphIcon({option}['option'], props.layers, props.graphableLayers)}</span>
+                            <span className={classes.graphIcon}>{graphIcon({option}['option'], props.layers, props.graphableLayers, props.layerTitles)}</span>
                         </React.Fragment>
                     );
                 }}

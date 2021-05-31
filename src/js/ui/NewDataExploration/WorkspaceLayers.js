@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Layer from "./Layer";
-// import {layers} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
     root: {
