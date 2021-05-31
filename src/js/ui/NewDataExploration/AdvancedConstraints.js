@@ -32,7 +32,7 @@ export default function AdvancedConstraints(props) {
     };
 
     const body = (
-        <Box id={`adv-constraints-${props.layer.label}`} className={classes.modal}>
+        <Box className={classes.modal}>
             {props.allLayerConstraints.map((constraint, index) =>
                 <AdvancedConstraintCheckbox activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints}
                                             index={index} layerIndex={props.layerIndex} constraint={constraint} />
@@ -50,7 +50,6 @@ export default function AdvancedConstraints(props) {
                 disableAutoFocus
                 open={open}
                 onClose={handleClose}
-                aria-labelledby={`adv-constraints-${props.layer.label}`}
             >
                 {body}
             </Modal>

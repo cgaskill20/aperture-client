@@ -96,6 +96,11 @@ function extractActiveConstraints(layers) {
 }
 
 export default function TabSystem(props) {
+    const classes = useStyles();
+    const [value, setValue] = useState(0);
+    const [globalState, setGlobalState] = useGlobalState();
+    const [selectedDatasets, setSelectedDatasets] = useState([]);
+
     const [layers, setLayers] = useState([]);
     const [activeConstraints, setActiveConstraints] = useState([]);
     const [booleanWorkspace, setBooleanWorkspace] = useState([]);
@@ -107,8 +112,9 @@ export default function TabSystem(props) {
         let tempLayerTitles = [];
         for(const layer in data) {
             const thisLayer = data[layer];
-            tempLayers.push(thisLayer);
-            const layerName = thisLayer.label ? thisLayer.label : prettifyJSON(thisLayer.collection);
+            tempLayers.push(data[layer]);
+            // const layerName = thisLayer.label ? thisLayer.label : prettifyJSON(thisLayer.collection);
+            const layerName = thisLayer?.label ?? prettifyJSON(thisLayer.collection);
             tempLayerTitles.push(layerName);
             tempBoolean.push(false);
         }
@@ -142,11 +148,6 @@ export default function TabSystem(props) {
         });
     }, []);
 
-    const classes = useStyles();
-    const [value, setValue] = useState(0);
-    const [globalState, setGlobalState] = useGlobalState();
-    const [selectedDatasets, setSelectedDatasets] = useState([]);
-
     const valueMap = {
         0: "dataExploration",
         1: "modeling"
@@ -156,6 +157,8 @@ export default function TabSystem(props) {
         setGlobalState({ mode: valueMap[newValue] });
         setValue(newValue);
     };
+
+    //FIXME do something like this: selectedArray = [selectedDatasets, setSelectedDatasets]
 
     return (
         <div className={classes.root}>
@@ -179,8 +182,9 @@ export default function TabSystem(props) {
                             centered
                         >
                             <Tab label="Data Exploration" {...a11yProps(0)} />
-                            <Tab disabled={true} label="Modeling" {...a11yProps(1)} />
-                        </Tabs></Grid>
+                            <Tab label="Modeling" {...a11yProps(1)} />
+                        </Tabs>
+                    </Grid>
                     <Grid
                         item
                     >

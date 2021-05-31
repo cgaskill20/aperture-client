@@ -28,29 +28,13 @@ export function getAllLayerConstraints(layer) {
     return allConstraints;
 }
 
-export function createActiveConstraints(allConstraints) {
-    let initializeActiveConstraints = [];
-    for(const constraint in allConstraints) {
-        const thisConstraint = allConstraints[constraint];
-        if(!thisConstraint.hide) {
-            initializeActiveConstraints.push(true);
-        }
-        else {
-            initializeActiveConstraints.push(false);
-        }
-    }
-    return initializeActiveConstraints;
-}
-
 export function updateOpenLayers(openLayers, index) {
     let updatedLayers = [...openLayers];
     updatedLayers[index] = !updatedLayers[index];
     return updatedLayers;
 }
 
-export function renderIndividualConstraint(constraint, index) {
-    const classes = useStyles();
-
+export function renderIndividualConstraint(constraint, classes) {
     if(constraint.type === "slider") {
         return (
             <Grid item>

@@ -14,16 +14,21 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         margin: theme.spacing(1),
     },
+    heading: {
+        fontSize: theme.typography.pxToRem(20),
+        fontWeight: theme.typography.fontWeightRegular,
+        margin: theme.spacing(2),
+    },
 }));
 
-function createConstraints(activeConstraints, allLayerConstraints, index) {
+function createConstraints(activeConstraints, allLayerConstraints, layerIndex, classes) {
     let constraints = [];
-    for(let i = 0; i < activeConstraints[index].length; i++) {
-        if(activeConstraints[index][i]) {
-            let individualConstraint = renderIndividualConstraint(allLayerConstraints[i], i);
+    activeConstraints[layerIndex].forEach((constraint, index) => {
+        if(constraint) {
+            let individualConstraint = renderIndividualConstraint(allLayerConstraints[index], classes);
             constraints.push(individualConstraint);
         }
-    }
+    });
     return constraints;
 }
 
@@ -32,7 +37,7 @@ export default function Layer(props) {
     const [check, setCheck] = useState({checked: false});
 
     const allLayerConstraints = getAllLayerConstraints(props.layer);
-    const constraints = createConstraints(props.activeConstraints, allLayerConstraints, props.layerIndex);
+    const constraints = createConstraints(props.activeConstraints, allLayerConstraints, props.layerIndex, classes);
 
     const handleCheck = (event) => {
         setCheck({ ...check, [event.target.name]: event.target.checked });
@@ -64,8 +69,8 @@ export default function Layer(props) {
                                 <LayerControls allLayerConstraints={allLayerConstraints} layer={props.layer} graphableLayers={props.graphableLayers}
                                                activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} layerIndex={props.layerIndex} />
                             </Grid>
-                            {constraints.map((current) =>
-                                <div>{current}</div>
+                            {constraints.map((constraint) =>
+                                <div>{constraint}</div>
                             )}
                         </Grid>
                     </AccordionDetails>
