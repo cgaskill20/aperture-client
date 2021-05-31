@@ -1,20 +1,9 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import {Card, Grid, Typography} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
-import Constraint from "./Constraint";
 import {prettifyJSON} from "./Helpers";
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        marginTop: theme.spacing(1),
-    },
-    heading: {
-        fontSize: theme.typography.pxToRem(20),
-        fontWeight: theme.typography.fontWeightRegular,
-        margin: theme.spacing(2),
-    },
-}));
+import ConstraintSlider from "./ConstraintSlider";
+import ConstraintCheckbox from "./ConstraintCheckbox";
 
 export function getAllLayerConstraints(layer) {
     let allConstraints = [];
@@ -40,7 +29,7 @@ export function renderIndividualConstraint(constraint, classes) {
             <Grid item>
                 <Card className={classes.root}>
                     <CardContent>
-                        <Constraint constraint={constraint} type={constraint.type} />
+                        <ConstraintSlider constraint={constraint} />
                     </CardContent>
                 </Card>
             </Grid>
@@ -68,7 +57,7 @@ function renderCheckboxes(constraintOptions, type) {
     }
     return (
         options.map((option) =>
-            <Constraint constraint={option} type={type} />
+            <ConstraintCheckbox constraint={option} />
         )
     )
 }
