@@ -6,12 +6,20 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import {layerTitles} from "../TabSystem";
 import {makeStyles} from "@material-ui/core/styles";
-import {findIndex} from "./LayerHelpers";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
 
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
+
+function findIndex(layerLabel) {
+    for(let i = 0; i < layerTitles.length; i++) {
+        if(layerTitles[i] === layerLabel) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,7 +40,6 @@ function graphIcon(layerLabel, layers, graphableLayers) {
     return;
 }
 
-//FIXME Issue when navigating back from the Modeling Tab. Datasets are displayed as Layers and are checked BUT are not in the Searchbar's text field. Causes an issue when removing/adding.
 export default function WorkspaceSearchbar(props) {
     const classes = useStyles();
     return (

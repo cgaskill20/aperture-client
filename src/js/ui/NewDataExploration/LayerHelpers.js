@@ -17,15 +17,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export function findIndex(layerLabel) {
-    for(let i = 0; i < layerTitles.length; i++) {
-        if(layerTitles[i] === layerLabel) {
-            return i;
-        }
-    }
-    return -1;
-}
-
 export function getAllLayerConstraints(layer) {
     let allConstraints = [];
     for(const layerConstraint in layer.constraints) {

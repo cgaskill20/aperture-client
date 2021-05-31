@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {getAllLayerConstraints, createActiveConstraints, createConstraints, updateOpenLayers} from "./LayerHelpers";
+import {getAllLayerConstraints, createConstraints, updateOpenLayers} from "./LayerHelpers";
 import {prettifyJSON} from "./Helpers";
 import {extractActiveConstraints} from "../TabSystem"
 
@@ -23,11 +23,7 @@ export default function Layer(props) {
     const [check, setCheck] = useState({checked: false});
     const layerLabel = props.layer.label ? props.layer.label : prettifyJSON(props.layer.collection);
 
-    // props.setActiveConstraints(extractActiveConstraints());
-
     const allLayerConstraints = getAllLayerConstraints(props.layer);
-    // const initializeActiveConstraints = createActiveConstraints(allLayerConstraints);
-    // const [activeConstraints, setActiveConstraints] = useState(initializeActiveConstraints);
     const constraints = createConstraints(props.activeConstraints, allLayerConstraints, props.index);
 
     const handleCheck = (event) => {
@@ -58,7 +54,7 @@ export default function Layer(props) {
                         <Grid container direction="column">
                             <Grid item>
                                 <LayerControls allLayerConstraints={allLayerConstraints} layer={props.layer} graphableLayers={props.graphableLayers}
-                                               activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} />
+                                               activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} layerIndex={props.index} />
                             </Grid>
                             {constraints.map((current) =>
                                 <div>{current}</div>

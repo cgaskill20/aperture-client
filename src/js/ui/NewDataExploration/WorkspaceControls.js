@@ -6,7 +6,6 @@ import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import WorkspaceSearchbar from "./WorkspaceSearchbar";
 import UpdateIcon from '@material-ui/icons/Update';
 import {layerTitles} from "../TabSystem";
-import WorkspaceLayers from "./WorkspaceLayers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
