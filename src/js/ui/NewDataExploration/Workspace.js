@@ -14,11 +14,14 @@ export default function Workspace(props) {
 
     return (
         <div className={classes.root}>
-            <WorkspaceControls openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
+            <WorkspaceControls layers={props.layers} graphableLayers={props.graphableLayers}
+                               openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
                                selectedDatasets={props.selectedDatasets} setSelectedDatasets={props.setSelectedDatasets}
                                booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace} />
-            <WorkspaceLayers openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
-                             booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace} />
+            <WorkspaceLayers layers={props.layers} graphableLayers={props.graphableLayers}
+                             openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
+                             booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace}
+                             activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} />
         </div>
     );
 }

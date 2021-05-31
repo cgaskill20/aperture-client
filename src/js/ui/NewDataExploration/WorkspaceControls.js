@@ -6,6 +6,7 @@ import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import WorkspaceSearchbar from "./WorkspaceSearchbar";
 import UpdateIcon from '@material-ui/icons/Update';
 import {layerTitles} from "../TabSystem";
+import WorkspaceLayers from "./WorkspaceLayers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -47,7 +48,9 @@ export default function WorkspaceControls(props) {
                     <Button variant="outlined" startIcon={<FolderOpenIcon />}>Load Workspace</Button>
                 </ButtonGroup>
             </Grid>
-            <WorkspaceSearchbar selectedDatasets={props.selectedDatasets} setSelectedDatasets={props.setSelectedDatasets} booleanWorkspace={props.booleanWorkspace} />
+            <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers}
+                                selectedDatasets={props.selectedDatasets} setSelectedDatasets={props.setSelectedDatasets}
+                                booleanWorkspace={props.booleanWorkspace} />
         </div>
     )
 }

@@ -4,7 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import {graphableLayers, layers, layerTitles} from "../TabSystem";
+import {layerTitles} from "../TabSystem";
 import {makeStyles} from "@material-ui/core/styles";
 import {findIndex} from "./LayerHelpers";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
@@ -23,9 +23,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function graphIcon(layerLabel) {
+function graphIcon(layerLabel, layers, graphableLayers) {
     const index = findIndex(layerLabel);
-    const collectionName = layers[index]['collection'];
+    const collectionName = layers[index].collection;
     if(graphableLayers.includes(collectionName)) {
         return <IconButton><EqualizerIcon color="primary"/></IconButton>
     }
@@ -63,7 +63,7 @@ export default function WorkspaceSearchbar(props) {
                                 checked={state.selected || props.booleanWorkspace[findIndex({option}['option'])]}
                             />
                             {option}
-                            <span className={classes.graphIcon}>{graphIcon({option}['option'])}</span>
+                            <span className={classes.graphIcon}>{graphIcon({option}['option'], props.layers, props.graphableLayers)}</span>
                         </React.Fragment>
                     );
                 }}

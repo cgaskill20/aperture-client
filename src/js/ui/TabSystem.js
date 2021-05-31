@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import AutoMenu from "../library/autoMenu";
@@ -18,39 +18,7 @@ import { showGraph } from "../library/charting/chartBtnNewChartWindow";
 import {prettifyJSON} from "./NewDataExploration/Helpers";
 
 function overwrite() {}
-export let layers = [];
 export let layerTitles = [];
-export let graphableLayers = [];
-
-$.getJSON("src/json/menumetadata.json", async function (mdata) {
-    const finalData = await AutoMenu.build(mdata, overwrite);
-    extractLayers(finalData);
-});
-
-$.getJSON("src/json/graphPriority.json", async function (mdata) {
-    const graphableLayers = await AutoMenu.build(mdata, overwrite);
-    extractGraphableLayers(graphableLayers);
-});
-
-function extractLayers(data) {
-    for(const layer in data) {
-        const thisLayer = data[layer];
-        layers.push(thisLayer);
-        const layerName = thisLayer.label ? thisLayer.label : prettifyJSON(thisLayer.collection);
-        layerTitles.push(layerName);
-    }
-}
-
-function extractGraphableLayers(data) {
-    for (const layer in data) {
-        const thisLayer = data[layer];
-        const layerName = thisLayer.collection;
-        graphableLayers.push(layerName);
-    }
-}
-
-//FIXME Once the datasets load immediately this will work
-export const numberOfDatasets = layers.length;
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -91,14 +59,91 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+//This function will get ALL constraints for EVERY layer and put them in a MASSIVE data structure.
+function extractAllConstraints(layers) {
+    let allConstraints = [];
+    for(const layer in layers) {
+        let theseLayerConstraints = [];
+        const individualLayer = layers[layer]
+        for(const layerConstraint in individualLayer.constraints) {
+            const individualConstraint = individualLayer.constraints[layerConstraint];
+            if(!individualConstraint.label) {
+                individualConstraint.label = prettifyJSON(layerConstraint);
+            }
+            theseLayerConstraints.push(individualConstraint);
+        }
+        allConstraints.push(theseLayerConstraints);
+    }
+    return allConstraints;
+}
+
+//This function will return a data structure representing which constraints are on/off (visible in the layer dropdown)
+function extractActiveConstraints(layers) {
+    let allActiveConstraints = [];
+    for(const layer in layers) {
+        let theseLayerConstraints = [];
+        const individualLayer = layers[layer]
+        for(const layerConstraint in individualLayer.constraints) {
+            const individualConstraint = individualLayer.constraints[layerConstraint];
+            if(!individualConstraint.hide) {
+                theseLayerConstraints.push(true);
+            }
+            else {
+                theseLayerConstraints.push(false);
+            }
+        }
+        allActiveConstraints.push(theseLayerConstraints);
+    }
+    return allActiveConstraints;
+}
+
 export default function TabSystem(props) {
+    const [layers, setLayers] = useState([]);
+    const [activeConstraints, setActiveConstraints] = useState([]);
+    const [booleanWorkspace, setBooleanWorkspace] = useState([]);
+    const [openLayers, setOpenLayers] = useState([]);
+    function extractLayers(data) {
+        let tempBoolean = [];
+        let tempLayers = [];
+        for(const layer in data) {
+            const thisLayer = data[layer];
+            tempLayers.push(thisLayer);
+            const layerName = thisLayer.label ? thisLayer.label : prettifyJSON(thisLayer.collection);
+            layerTitles.push(layerName);
+            tempBoolean.push(false);
+        }
+        setLayers(tempLayers);
+        setActiveConstraints(extractActiveConstraints(tempLayers));
+        setBooleanWorkspace(tempBoolean);
+        setOpenLayers(tempBoolean);
+    }
+
+    const [graphableLayers, setGraphableLayers] = useState([]);
+    function extractGraphableLayers(data) {
+        let tempGraphableLayers = [];
+        for (const layer in data) {
+            const thisLayer = data[layer];
+            const layerName = thisLayer.collection;
+            tempGraphableLayers.push(layerName);
+        }
+        setGraphableLayers(tempGraphableLayers);
+    }
+
+    useEffect(() => {
+        $.getJSON("src/json/menumetadata.json", async function (mdata) {
+            const finalData = await AutoMenu.build(mdata, overwrite);
+            extractLayers(finalData);
+        });
+
+        $.getJSON("src/json/graphPriority.json", async function (mdata) {
+            const graphableLayers = await AutoMenu.build(mdata, overwrite);
+            extractGraphableLayers(graphableLayers);
+        });
+    }, []);
+
     const classes = useStyles();
     const [value, setValue] = useState(0);
     const [globalState, setGlobalState] = useGlobalState();
-
-    //FIXME Replace these hard coded values with numberOfDatasets once datasets load immediately
-    const [booleanWorkspace, setBooleanWorkspace] = useState(new Array(19).fill(false));
-    const [openLayers, setOpenLayers] = useState(new Array(19).fill(false));
     const [selectedDatasets, setSelectedDatasets] = useState([]);
 
     const valueMap = {
@@ -148,9 +193,11 @@ export default function TabSystem(props) {
                 </Grid>
             </Paper>
             <TabPanel value={value} index={0}>
-                <Workspace openLayers={openLayers} setOpenLayers={setOpenLayers}
+                <Workspace layers={layers} graphableLayers={graphableLayers}
+                           openLayers={openLayers} setOpenLayers={setOpenLayers}
                            selectedDatasets={selectedDatasets} setSelectedDatasets={setSelectedDatasets}
-                           booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} />
+                           booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
+                           activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <NewModeling />

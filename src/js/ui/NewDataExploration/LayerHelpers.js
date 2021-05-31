@@ -26,7 +26,7 @@ export function findIndex(layerLabel) {
     return -1;
 }
 
-export function getAllConstraints(layer) {
+export function getAllLayerConstraints(layer) {
     let allConstraints = [];
     for(const layerConstraint in layer.constraints) {
         const constraint = layer.constraints[layerConstraint];
@@ -52,12 +52,12 @@ export function createActiveConstraints(allConstraints) {
     return initializeActiveConstraints;
 }
 
-export function createConstraints(activeConstraints, allConstraints) {
+export function createConstraints(activeConstraints, allLayerConstraints, index) {
     let constraints = [];
-    for(let i = 0; i < activeConstraints.length; i++) {
-        if(activeConstraints[i]) {
-            let temp = renderIndividualConstraint(allConstraints[i], i);
-            constraints.push(temp);
+    for(let i = 0; i < activeConstraints[index].length; i++) {
+        if(activeConstraints[index][i]) {
+            let individualConstraint = renderIndividualConstraint(allLayerConstraints[i], i);
+            constraints.push(individualConstraint);
         }
     }
     return constraints;

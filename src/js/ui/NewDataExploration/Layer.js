@@ -7,8 +7,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {getAllConstraints, createActiveConstraints, createConstraints, updateOpenLayers} from "./LayerHelpers";
+import {getAllLayerConstraints, createActiveConstraints, createConstraints, updateOpenLayers} from "./LayerHelpers";
 import {prettifyJSON} from "./Helpers";
+import {extractActiveConstraints} from "../TabSystem"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,10 +23,12 @@ export default function Layer(props) {
     const [check, setCheck] = useState({checked: false});
     const layerLabel = props.layer.label ? props.layer.label : prettifyJSON(props.layer.collection);
 
-    const allConstraints = getAllConstraints(props.layer);
-    const initializeActiveConstraints = createActiveConstraints(allConstraints);
-    const [activeConstraints, setActiveConstraints] = useState(initializeActiveConstraints);
-    const constraints = createConstraints(activeConstraints, allConstraints);
+    // props.setActiveConstraints(extractActiveConstraints());
+
+    const allLayerConstraints = getAllLayerConstraints(props.layer);
+    // const initializeActiveConstraints = createActiveConstraints(allLayerConstraints);
+    // const [activeConstraints, setActiveConstraints] = useState(initializeActiveConstraints);
+    const constraints = createConstraints(props.activeConstraints, allLayerConstraints, props.index);
 
     const handleCheck = (event) => {
         setCheck({ ...check, [event.target.name]: event.target.checked });
@@ -54,8 +57,8 @@ export default function Layer(props) {
                     <AccordionDetails>
                         <Grid container direction="column">
                             <Grid item>
-                                <LayerControls allConstraints={allConstraints} layer={props.layer}
-                                               activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
+                                <LayerControls allLayerConstraints={allLayerConstraints} layer={props.layer} graphableLayers={props.graphableLayers}
+                                               activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} />
                             </Grid>
                             {constraints.map((current) =>
                                 <div>{current}</div>

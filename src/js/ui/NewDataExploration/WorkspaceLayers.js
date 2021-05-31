@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Layer from "./Layer";
-import {layers} from "../TabSystem";
+// import {layers} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -9,14 +9,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createWorkspace(openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace) {
+function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace, activeConstraints, setActiveConstraints) {
     let workspaceLayers = [];
     booleanWorkspace.forEach((layer, index) => {
         if(layer) {
             workspaceLayers.push(
-                <Layer layer={layers[index]} index={index}
+                <Layer layer={layers[index]} index={index} graphableLayers={graphableLayers}
                        openLayers={openLayers} setOpenLayers={setOpenLayers}
-                       booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} />
+                       booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
+                       activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
             );
         }
     });
@@ -25,7 +26,8 @@ function createWorkspace(openLayers, setOpenLayers, booleanWorkspace, setBoolean
 
 export default function WorkspaceLayers(props) {
     const classes = useStyles();
-    const workspaceLayers = createWorkspace(props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace);
+    const workspaceLayers = createWorkspace(props.layers, props.graphableLayers, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace,
+                                            props.activeConstraints, props.setActiveConstraints);
 
     return (
         <div className={classes.root}>
