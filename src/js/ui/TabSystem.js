@@ -18,7 +18,6 @@ import { showGraph } from "../library/charting/chartBtnNewChartWindow";
 import {prettifyJSON} from "./NewDataExploration/Helpers";
 
 function overwrite() {}
-// export let layerTitles = [];
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -77,7 +76,6 @@ function extractAllConstraints(layers) {
     return allConstraints;
 }
 
-//This function will return a data structure representing which constraints are on/off (visible in the layer dropdown)
 function extractActiveConstraints(layers) {
     let allActiveConstraints = [];
     for(const layer in layers) {

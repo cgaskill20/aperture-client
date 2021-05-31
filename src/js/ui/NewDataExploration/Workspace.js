@@ -18,7 +18,7 @@ export default function Workspace(props) {
                                openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
                                selectedDatasets={props.selectedDatasets} setSelectedDatasets={props.setSelectedDatasets}
                                booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace} />
-            <WorkspaceLayers layers={props.layers} graphableLayers={props.graphableLayers}
+            <WorkspaceLayers layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
                              openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
                              booleanWorkspace={props.booleanWorkspace} setBooleanWorkspace={props.setBooleanWorkspace}
                              activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} />

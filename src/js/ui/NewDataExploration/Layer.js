@@ -7,9 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {getAllLayerConstraints, createConstraints, updateOpenLayers} from "./LayerHelpers";
-import {prettifyJSON} from "./Helpers";
-import {extractActiveConstraints} from "../TabSystem"
+import {getAllLayerConstraints, updateOpenLayers, renderIndividualConstraint} from "./LayerHelpers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -18,13 +16,23 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function createConstraints(activeConstraints, allLayerConstraints, index) {
+    let constraints = [];
+    for(let i = 0; i < activeConstraints[index].length; i++) {
+        if(activeConstraints[index][i]) {
+            let individualConstraint = renderIndividualConstraint(allLayerConstraints[i], i);
+            constraints.push(individualConstraint);
+        }
+    }
+    return constraints;
+}
+
 export default function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState({checked: false});
-    const layerLabel = props.layer.label ? props.layer.label : prettifyJSON(props.layer.collection);
 
     const allLayerConstraints = getAllLayerConstraints(props.layer);
-    const constraints = createConstraints(props.activeConstraints, allLayerConstraints, props.index);
+    const constraints = createConstraints(props.activeConstraints, allLayerConstraints, props.layerIndex);
 
     const handleCheck = (event) => {
         setCheck({ ...check, [event.target.name]: event.target.checked });
@@ -35,10 +43,10 @@ export default function Layer(props) {
             <Paper elevation={1}>
                 <Accordion
                     color="primary"
-                    expanded={props.openLayers[props.index]}
+                    expanded={props.openLayers[props.layerIndex]}
                 >
                     <AccordionSummary
-                        expandIcon={<ExpandMoreIcon color="primary" onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.index))} />}
+                        expandIcon={<ExpandMoreIcon color="primary" onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.layerIndex))} />}
                     >
                         <FormControlLabel
                             aria-label="CheckLayer"
@@ -46,7 +54,7 @@ export default function Layer(props) {
                             onFocus={(event) => event.stopPropagation()}
                             onChange={handleCheck}
                             control={<Switch color="primary" />}
-                            label={layerLabel}
+                            label={props.layerTitles[props.layerIndex]}
                             name="checked"
                         />
                     </AccordionSummary>
@@ -54,7 +62,7 @@ export default function Layer(props) {
                         <Grid container direction="column">
                             <Grid item>
                                 <LayerControls allLayerConstraints={allLayerConstraints} layer={props.layer} graphableLayers={props.graphableLayers}
-                                               activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} layerIndex={props.index} />
+                                               activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} layerIndex={props.layerIndex} />
                             </Grid>
                             {constraints.map((current) =>
                                 <div>{current}</div>

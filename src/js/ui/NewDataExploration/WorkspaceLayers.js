@@ -8,12 +8,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace, activeConstraints, setActiveConstraints) {
+function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, booleanWorkspace, setBooleanWorkspace, activeConstraints, setActiveConstraints, layerTitles) {
     let workspaceLayers = [];
     booleanWorkspace.forEach((layer, index) => {
         if(layer) {
             workspaceLayers.push(
-                <Layer layer={layers[index]} index={index} graphableLayers={graphableLayers}
+                <Layer layer={layers[index]} layerIndex={index} graphableLayers={graphableLayers} layerTitles={layerTitles}
                        openLayers={openLayers} setOpenLayers={setOpenLayers}
                        booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
                        activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
@@ -26,7 +26,7 @@ function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, boo
 export default function WorkspaceLayers(props) {
     const classes = useStyles();
     const workspaceLayers = createWorkspace(props.layers, props.graphableLayers, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace,
-                                            props.activeConstraints, props.setActiveConstraints);
+                                            props.activeConstraints, props.setActiveConstraints, props.layerTitles);
 
     return (
         <div className={classes.root}>

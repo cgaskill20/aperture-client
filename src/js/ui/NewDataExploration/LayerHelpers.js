@@ -42,17 +42,6 @@ export function createActiveConstraints(allConstraints) {
     return initializeActiveConstraints;
 }
 
-export function createConstraints(activeConstraints, allLayerConstraints, index) {
-    let constraints = [];
-    for(let i = 0; i < activeConstraints[index].length; i++) {
-        if(activeConstraints[index][i]) {
-            let individualConstraint = renderIndividualConstraint(allLayerConstraints[i], i);
-            constraints.push(individualConstraint);
-        }
-    }
-    return constraints;
-}
-
 export function updateOpenLayers(openLayers, index) {
     let updatedLayers = [...openLayers];
     updatedLayers[index] = !updatedLayers[index];
