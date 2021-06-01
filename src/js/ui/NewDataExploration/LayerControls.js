@@ -18,8 +18,6 @@ function graphIcon(layer, graphableLayers) {
 }
 
 export default function LayerControls(props) {
-    const [layerConstraints, setLayerConstraints] = useState(props.activeConstraints[props.layerIndex]);
-
     if(isComponentRerendering) {console.log("|LayerControls Rerending|")}
     return (
         <Card>
@@ -30,14 +28,12 @@ export default function LayerControls(props) {
                 <br/>
                 <ButtonGroup variant="outlined" aria-label="text primary button group">
                     <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
-                                         layerConstraints={layerConstraints} setLayerConstraints={setLayerConstraints}
                                          activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} />
                     <Button startIcon={<RotateLeftIcon />}>
                         Reset Constraints
                     </Button>
                     <Button startIcon={<TuneIcon />} onClick={() => {
-                        setLayerConstraints(defaultConstraints[props.layerIndex]);
-                        props.setActiveConstraints(defaultConstraints);
+                        props.setActiveConstraints(props.defaultConstraints);
                     }}>
                         Default Constraints
                     </Button>

@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, workspace, setworkspace, activeConstraints, setActiveConstraints, layerTitles) {
+function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, workspace, setWorkspace,  layerTitles) {
     let workspaceLayers = [];
     workspace.forEach((layer, index) => {
         if(layer) {
@@ -17,8 +17,7 @@ function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, wor
                 <div id={`layer-div-${index}`}>
                     <Layer layer={layers[index]} layerIndex={index} graphableLayers={graphableLayers} layerTitles={layerTitles}
                            openLayers={openLayers} setOpenLayers={setOpenLayers}
-                           workspace={workspace} setworkspace={setworkspace}
-                           activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
+                           workspace={workspace} setWorkspace={setWorkspace} />
                 </div>
             );
         }
@@ -28,8 +27,8 @@ function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, wor
 
 export default function WorkspaceLayers(props) {
     const classes = useStyles();
-    const workspaceLayers = createWorkspace(props.layers, props.graphableLayers, props.openLayers, props.setOpenLayers, props.workspace, props.setworkspace,
-                                            props.activeConstraints, props.setActiveConstraints, props.layerTitles);
+    const workspaceLayers = createWorkspace(props.layers, props.graphableLayers, props.openLayers, props.setOpenLayers,
+                                            props.workspace, props.setWorkspace, props.layerTitles);
 
     if(isComponentRerendering) {console.log("|WorkspaceLayers Rerending|")}
     return (

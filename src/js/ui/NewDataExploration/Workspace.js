@@ -6,7 +6,6 @@ import {prettifyJSON} from "./Helpers";
 import AutoMenu from "../../library/autoMenu";
 
 function overwrite() {}
-export let defaultConstraints;
 export const isComponentRerendering = false;
 
 const useStyles = makeStyles((theme) => ({
@@ -15,32 +14,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function extractActiveConstraints(layers) {
-    let allActiveConstraints = [];
-    for(const layer in layers) {
-        let theseLayerConstraints = [];
-        const individualLayer = layers[layer]
-        for(const layerConstraint in individualLayer.constraints) {
-            const individualConstraint = individualLayer.constraints[layerConstraint];
-            if(!individualConstraint.hide) {
-                theseLayerConstraints.push(true);
-            }
-            else {
-                theseLayerConstraints.push(false);
-            }
-        }
-        allActiveConstraints.push(theseLayerConstraints);
-    }
-    return allActiveConstraints;
-}
-
 
 export default function Workspace() {
     const classes = useStyles();
-    const [selectedDatasets, setSelectedDatasets] = useState([]);
 
     const [layers, setLayers] = useState([]);
-    const [activeConstraints, setActiveConstraints] = useState([]);
     const [workspace, setWorkspace] = useState([]);
     const [openLayers, setOpenLayers] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
@@ -57,9 +35,6 @@ export default function Workspace() {
             tempBoolean.push(false);
         }
         setLayers(tempLayers);
-        const extractedActiveConstraints = extractActiveConstraints(tempLayers);
-        setActiveConstraints(extractedActiveConstraints);
-        defaultConstraints = [...extractedActiveConstraints];
         setWorkspace(tempBoolean);
         setOpenLayers(tempBoolean);
         setLayerTitles(tempLayerTitles);
@@ -96,12 +71,10 @@ export default function Workspace() {
         <div className={classes.root}>
             <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
                                openLayers={openLayers} setOpenLayers={setOpenLayers}
-                               selectedDatasets={selectedDatasets} setSelectedDatasets={setSelectedDatasets}
                                workspace={workspace} setWorkspace={setWorkspace} />
             <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
                              openLayers={openLayers} setOpenLayers={setOpenLayers}
-                             workspace={workspace} setWorkspace={setWorkspace}
-                             activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
+                             workspace={workspace} setWorkspace={setWorkspace} />
         </div>
     );
 }

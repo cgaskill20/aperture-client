@@ -29,23 +29,21 @@ function updateActiveConstraints(activeConstraints, layerConstraints, layerIndex
 export default function AdvancedConstraints(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
-    const [layerConstraints, setLayerConstraints] = useState(props.activeConstraints[props.layerIndex]);
+    // const [layerConstraints, setLayerConstraints] = useState(props.activeConstraints[props.layerIndex]);
 
     const body = (
         <Box className={classes.modal}>
-            <Button variant="outlined"
-                    onClick={() => props.setActiveConstraints(updateActiveConstraints(props.activeConstraints, layerConstraints, props.layerIndex))}
-            >
-                Update Constraints
-            </Button>
+            {/*<Button variant="outlined"*/}
+            {/*        onClick={() => props.setActiveConstraints(updateActiveConstraints(props.activeConstraints))}*/}
+            {/*>*/}
+            {/*    Update Constraints*/}
+            {/*</Button>*/}
             {props.allLayerConstraints.map((constraint, index) => {
-                    const trueIndex = index;
-                    index = props.layerIndex * 524 + index;
                     return (
                         <div key={index}>
-                            <AdvancedConstraintCheckbox activeConstraints={layerConstraints}
-                                                        setActiveConstraints={setLayerConstraints}
-                                                        index={trueIndex} layerIndex={props.layerIndex} constraint={constraint}/>
+                            <AdvancedConstraintCheckbox activeConstraints={props.activeConstraints}
+                                                        setActiveConstraints={props.setActiveConstraints}
+                                                        index={index} layerIndex={props.layerIndex} constraint={constraint}/>
                         </div>)
                 }
             )}
