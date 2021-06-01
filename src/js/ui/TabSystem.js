@@ -16,51 +16,12 @@ import Workspace from "./NewDataExploration/Workspace";
 import { useGlobalState } from "./global/GlobalState";
 import { showGraph } from "../library/charting/chartBtnNewChartWindow";
 import {prettifyJSON} from "./NewDataExploration/Helpers";
-
-function overwrite() {}
-export let defaultConstraints;
-export const isComponentRerendering = false;
-
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`tab-system-tabpanel-${index}`}
-            aria-labelledby={`tab-system-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-}
-
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-    return {
-        id: `tab-system-tab-${index}`,
-        'aria-controls': `tab-system-tabpanel-${index}`,
-    };
-}
+import {Button, ButtonGroup} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
-    hide: {
-        display: 'none'
-    }
 }));
 
 //This function will get ALL constraints for EVERY layer and put them in a MASSIVE data structure.
@@ -81,93 +42,25 @@ function extractAllConstraints(layers) {
     return allConstraints;
 }
 
-function extractActiveConstraints(layers) {
-    let allActiveConstraints = [];
-    for(const layer in layers) {
-        let theseLayerConstraints = [];
-        const individualLayer = layers[layer]
-        for(const layerConstraint in individualLayer.constraints) {
-            const individualConstraint = individualLayer.constraints[layerConstraint];
-            if(!individualConstraint.hide) {
-                theseLayerConstraints.push(true);
-            }
-            else {
-                theseLayerConstraints.push(false);
-            }
-        }
-        allActiveConstraints.push(theseLayerConstraints);
-    }
-    return allActiveConstraints;
-}
-
 export default function TabSystem(props) {
     const classes = useStyles();
-    const [value, setValue] = useState(0);
     const [globalState, setGlobalState] = useGlobalState();
-    const [selectedDatasets, setSelectedDatasets] = useState([]);
-
-    const [layers, setLayers] = useState([]);
-    const [activeConstraints, setActiveConstraints] = useState([]);
-    const [booleanWorkspace, setBooleanWorkspace] = useState([]);
-    const [openLayers, setOpenLayers] = useState([]);
-    const [layerTitles, setLayerTitles] = useState([]);
-    function extractLayers(data) {
-        let tempBoolean = [];
-        let tempLayers = [];
-        let tempLayerTitles = [];
-        for(const layer in data) {
-            const thisLayer = data[layer];
-            tempLayers.push(data[layer]);
-            // const layerName = thisLayer.label ? thisLayer.label : prettifyJSON(thisLayer.collection);
-            const layerName = thisLayer?.label ?? prettifyJSON(thisLayer.collection);
-            tempLayerTitles.push(layerName);
-            tempBoolean.push(false);
-        }
-        setLayers(tempLayers);
-        const extractedActiveConstraints = extractActiveConstraints(tempLayers);
-        setActiveConstraints(extractedActiveConstraints);
-        defaultConstraints = [...extractedActiveConstraints];
-        setBooleanWorkspace(tempBoolean);
-        setOpenLayers(tempBoolean);
-        setLayerTitles(tempLayerTitles);
-    }
-
-    const [graphableLayers, setGraphableLayers] = useState([]);
-    function extractGraphableLayers(data) {
-        let tempGraphableLayers = [];
-        for (const layer in data) {
-            const thisLayer = data[layer];
-            const layerName = thisLayer.collection;
-            tempGraphableLayers.push(layerName);
-        }
-        setGraphableLayers(tempGraphableLayers);
-    }
-
-    useEffect(() => {
-        $.getJSON("src/json/menumetadata.json", async function (mdata) {
-            const finalData = await AutoMenu.build(mdata, overwrite);
-            extractLayers(finalData);
-        });
-
-        $.getJSON("src/json/graphPriority.json", async function (mdata) {
-            const graphableLayers = await AutoMenu.build(mdata, overwrite);
-            extractGraphableLayers(graphableLayers);
-        });
-    }, []);
-
-    const valueMap = {
-        0: "dataExploration",
-        1: "modeling"
-    }
-
-    const handleChange = (event, newValue) => {
-        setGlobalState({ mode: valueMap[newValue] });
-        setValue(newValue);
-    };
 
     //FIXME do something like this: selectedArray = [selectedDatasets, setSelectedDatasets]
 
-    if(isComponentRerendering) {console.log("|Tab System Rerending|")}
+    const [dataExplorationDisplay, setDataExplorationDisplay] = useState({display: 'block'});
+    const [modelingDisplay, setModelingDisplay] = useState({display: 'none'})
+    function switchTabs(index) {
+        if(index === 0) {
+            setDataExplorationDisplay({display: 'block'});
+            setModelingDisplay({display: 'none'});
+        }
+        else if(index === 1) {
+            setDataExplorationDisplay({display: 'none'});
+            setModelingDisplay({display: 'block'});
+        }
+    }
+
     return (
         <div className={classes.root}>
             <Paper>
@@ -177,25 +70,14 @@ export default function TabSystem(props) {
                     justify="center"
                     alignItems="center"
                 >
-                    <Grid
-                        item
-                    >
+                    <Grid item></Grid>
+                    <Grid item>
+                        <ButtonGroup>
+                            <Button variant="outlined" onClick={() => switchTabs(0)}>Data Exploration</Button>
+                            <Button variant="outlined" onClick={() => switchTabs(1)}>Modeling</Button>
+                        </ButtonGroup>
                     </Grid>
                     <Grid item>
-                        <Tabs
-                            value={value}
-                            onChange={handleChange}
-                            indicatorColor="primary"
-                            textColor="primary"
-                            centered
-                        >
-                            <Tab label="Data Exploration" {...a11yProps(0)} />
-                            <Tab label="Modeling" {...a11yProps(1)} />
-                        </Tabs>
-                    </Grid>
-                    <Grid
-                        item
-                    >
                         <IconButton id="nav-graph-button" onClick={showGraph}>
                             <Equalizer color="primary" />
                         </IconButton>
@@ -205,16 +87,13 @@ export default function TabSystem(props) {
                     </Grid>
                 </Grid>
             </Paper>
-            <TabPanel value={value} index={0}>
-                <Workspace layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                           openLayers={openLayers} setOpenLayers={setOpenLayers}
-                           selectedDatasets={selectedDatasets} setSelectedDatasets={setSelectedDatasets}
-                           booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
-                           activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
-            </TabPanel>
-            <TabPanel value={value} index={1}>
+            <br/>
+            <div id="data-exploration-display" style={dataExplorationDisplay}>
+                <Workspace />
+            </div>
+            <div id="modeling-display" style={modelingDisplay}>
                 <NewModeling />
-            </TabPanel>
+            </div>
         </div>
     );
 }

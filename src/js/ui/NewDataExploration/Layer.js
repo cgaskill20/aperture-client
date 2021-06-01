@@ -8,6 +8,7 @@ import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
 import {getAllLayerConstraints, updateOpenLayers, renderIndividualConstraint} from "./LayerHelpers";
+import {isComponentRerendering} from "./Workspace";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,6 +46,7 @@ export default function Layer(props) {
     const allLayerConstraints = getAllLayerConstraints(props.layer);
     const constraints = createConstraints(props.activeConstraints, allLayerConstraints, props.layerIndex, classes);
 
+    if(isComponentRerendering) console.log("|Layer|");
     return (
         <div id={`layer-div-${props.layerTitles[props.layerIndex]}`} className={classes.root}>
             <Paper elevation={1}>

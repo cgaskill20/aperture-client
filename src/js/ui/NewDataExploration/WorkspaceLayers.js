@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Layer from "./Layer";
-import {isComponentRerendering} from "../TabSystem";
+import {isComponentRerendering} from "./Workspace";
 
 const useStyles = makeStyles((theme) => ({
     root: {

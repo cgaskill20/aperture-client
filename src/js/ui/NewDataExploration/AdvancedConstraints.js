@@ -5,7 +5,7 @@ import {Button} from "@material-ui/core";
 import SettingsIcon from "@material-ui/icons/Settings";
 import Box from "@material-ui/core/Box";
 import AdvancedConstraintCheckbox from "./AdvancedConstraintCheckbox";
-import {isComponentRerendering} from "../TabSystem";
+import {isComponentRerendering} from "./Workspace";
 
 const useStyles = makeStyles((theme) => ({
     modal: {

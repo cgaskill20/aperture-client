@@ -5,7 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import TuneIcon from '@material-ui/icons/Tune';
 import AdvancedConstraints from "./AdvancedConstraints";
-import {defaultConstraints, isComponentRerendering} from "../TabSystem";
+import {defaultConstraints, isComponentRerendering} from "./Workspace";
 
 function graphIcon(layer, graphableLayers) {
     const collectionName = layer.collection;

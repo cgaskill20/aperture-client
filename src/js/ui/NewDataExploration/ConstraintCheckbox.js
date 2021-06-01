@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import {isComponentRerendering} from "../TabSystem";
+import {isComponentRerendering} from "./Workspace";
 
 export default function ConstraintCheckbox(props) {
     const [check, setCheck] = useState(true);

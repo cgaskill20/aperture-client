@@ -7,7 +7,7 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import {makeStyles} from "@material-ui/core/styles";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
-import {isComponentRerendering} from "../TabSystem";
+import {isComponentRerendering} from "./Workspace";
 
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;

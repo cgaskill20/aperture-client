@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
-import {Grid} from "@material-ui/core";
-import {isComponentRerendering} from "../TabSystem";
+import {isComponentRerendering} from "./Workspace";
 
 const useStyles = makeStyles({
     root: {
