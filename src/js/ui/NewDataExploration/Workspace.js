@@ -62,9 +62,6 @@ export default function Workspace() {
             extractGraphableLayers(graphableLayers);
         });
     }, []);
-    
-    
-    
 
     if(isComponentRerendering) {console.log("|Workspace Rerending|")}
     return (

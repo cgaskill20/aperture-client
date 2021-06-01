@@ -7,10 +7,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {updateOpenLayers, renderIndividualConstraint} from "./LayerHelpers";
+import {updateOpenLayers, createConstraints, extractActiveConstraints} from "./LayerHelpers";
 import {isComponentRerendering} from "./Workspace";
-import Util from "../../library/apertureUtil";
-import {prettifyJSON} from "./Helpers";
+import {randomizeIndex} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,37 +26,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function extractActiveConstraints(layer) {
-    let activeConstraints = [];
-    let allLayerConstraints = [];
-    for(const constraint in layer.constraints) {
-        activeConstraints.push(!layer.constraints[constraint].hide);
-        layer.constraints[constraint].label = layer.constraints[constraint]?.label ?? constraint;
-        if(layer.constraints[constraint].label.substring(0, 11) === "properties.") {
-            layer.constraints[constraint].label = layer.constraints[constraint].label.substring(11, layer.constraints[constraint].label.length);
-        }
-        allLayerConstraints.push(layer.constraints[constraint]);
-    }
-    return [activeConstraints, allLayerConstraints];
-}
-
-function createConstraints(activeConstraints, allLayerConstraints, classes) {
-    let constraints = [];
-    activeConstraints.forEach((constraint, index) => {
-        let individualConstraint = renderIndividualConstraint(allLayerConstraints[index], classes);
-        if(constraint) {
-            constraints.push(<div>{individualConstraint}</div>);
-        }
-        else {
-            constraints.push(<div className={classes.hide}>{individualConstraint}</div>);
-        }
-    });
-    return constraints;
-}
-
 export default function Layer(props) {
     const classes = useStyles();
-    const layerConstraintBuffer = 1000;
     const [check, setCheck] = useState(false);
 
     const [initializedActiveConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
@@ -98,7 +68,7 @@ export default function Layer(props) {
                                                layerIndex={props.layerIndex} />
                             </Grid>
                             {constraints.map((constraint, index) => {
-                                    index = props.layerIndex * layerConstraintBuffer + index;
+                                    index = randomizeIndex();
                                     return (<div key={index}>{constraint}</div>)
                                 }
                             )}

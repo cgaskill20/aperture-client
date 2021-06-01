@@ -17,6 +17,31 @@ export function getAllLayerConstraints(layer) {
     return allConstraints;
 }
 
+export function extractActiveConstraints(layer) {
+    let activeConstraints = [];
+    let allLayerConstraints = [];
+    for(const constraint in layer.constraints) {
+        activeConstraints.push(!layer.constraints[constraint].hide);
+        layer.constraints[constraint].label = layer.constraints[constraint]?.label ?? constraint;
+        if(layer.constraints[constraint].label.substring(0, 11) === "properties.") {
+            layer.constraints[constraint].label = layer.constraints[constraint].label.substring(11, layer.constraints[constraint].label.length);
+        }
+        allLayerConstraints.push(layer.constraints[constraint]);
+    }
+    return [activeConstraints, allLayerConstraints];
+}
+
+export function createConstraints(activeConstraints, allLayerConstraints, classes) {
+    let constraints = [];
+    activeConstraints.forEach((constraint, index) => {
+        let individualConstraint = renderIndividualConstraint(allLayerConstraints[index], classes);
+        if(constraint) {
+            constraints.push(<div>{individualConstraint}</div>);
+        }
+    });
+    return constraints;
+}
+
 export function updateOpenLayers(openLayers, index) {
     let updatedLayers = [...openLayers];
     updatedLayers[index] = !updatedLayers[index];
