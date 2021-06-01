@@ -41,7 +41,7 @@ export default function Workspace() {
 
     const [layers, setLayers] = useState([]);
     const [activeConstraints, setActiveConstraints] = useState([]);
-    const [booleanWorkspace, setBooleanWorkspace] = useState([]);
+    const [workspace, setWorkspace] = useState([]);
     const [openLayers, setOpenLayers] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
     function extractLayers(data) {
@@ -60,7 +60,7 @@ export default function Workspace() {
         const extractedActiveConstraints = extractActiveConstraints(tempLayers);
         setActiveConstraints(extractedActiveConstraints);
         defaultConstraints = [...extractedActiveConstraints];
-        setBooleanWorkspace(tempBoolean);
+        setWorkspace(tempBoolean);
         setOpenLayers(tempBoolean);
         setLayerTitles(tempLayerTitles);
     }
@@ -97,10 +97,10 @@ export default function Workspace() {
             <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
                                openLayers={openLayers} setOpenLayers={setOpenLayers}
                                selectedDatasets={selectedDatasets} setSelectedDatasets={setSelectedDatasets}
-                               booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace} />
+                               workspace={workspace} setWorkspace={setWorkspace} />
             <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
                              openLayers={openLayers} setOpenLayers={setOpenLayers}
-                             booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
+                             workspace={workspace} setWorkspace={setWorkspace}
                              activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
         </div>
     );

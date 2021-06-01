@@ -71,7 +71,7 @@ export default function WorkspaceSearchbar(props) {
                                 color="primary"
                                 checkedIcon={checkedIcon}
                                 style={{ marginRight: 8 }}
-                                checked={state.selected || props.booleanWorkspace[optionIndex]}
+                                checked={state.selected || props.workspace[optionIndex]}
                             />
                             {option}
                             <span className={classes.graphIcon}>{graphIcon(optionIndex, props.layers, props.graphableLayers)}</span>
