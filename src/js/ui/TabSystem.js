@@ -18,6 +18,7 @@ import { showGraph } from "../library/charting/chartBtnNewChartWindow";
 import {prettifyJSON} from "./NewDataExploration/Helpers";
 
 function overwrite() {}
+export let defaultConstraints;
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -119,7 +120,9 @@ export default function TabSystem(props) {
             tempBoolean.push(false);
         }
         setLayers(tempLayers);
-        setActiveConstraints(extractActiveConstraints(tempLayers));
+        const extractedActiveConstraints = extractActiveConstraints(tempLayers);
+        setActiveConstraints(extractedActiveConstraints);
+        defaultConstraints = [...extractedActiveConstraints];
         setBooleanWorkspace(tempBoolean);
         setOpenLayers(tempBoolean);
         setLayerTitles(tempLayerTitles);

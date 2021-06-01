@@ -19,22 +19,22 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function updateActiveConstraints(activeConstraints, layerConstraints, layerIndex) {
+    let tempActiveConstraints = [...activeConstraints];
+    tempActiveConstraints[layerIndex] = layerConstraints;
+    return tempActiveConstraints;
+}
+
 export default function AdvancedConstraints(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    // const [layerConstraints, setLayerConstraints] = useState(props.activeConstraints[props.layerIndex]);
 
     const body = (
         <Box className={classes.modal}>
+            <Button variant="outlined" onClick={() => props.setActiveConstraints(updateActiveConstraints(props.activeConstraints, props.layerConstraints, props.layerIndex))}>Update Constraints</Button>
             {props.allLayerConstraints.map((constraint, index) =>
-                <AdvancedConstraintCheckbox activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints}
+                <AdvancedConstraintCheckbox layerConstraints={props.layerConstraints} setLayerConstraints={props.setLayerConstraints}
                                             index={index} layerIndex={props.layerIndex} constraint={constraint} />
             )}
         </Box>
@@ -42,14 +42,14 @@ export default function AdvancedConstraints(props) {
 
     return (
         <div>
-            <Button variant="outlined" startIcon={<SettingsIcon/>} onClick={handleOpen}>
+            <Button variant="outlined" startIcon={<SettingsIcon/>} onClick={() => setOpen(true)}>
                 Advanced...
             </Button>
             <Modal
                 disableEnforceFocus
                 disableAutoFocus
                 open={open}
-                onClose={handleClose}
+                onClose={() => setOpen(false)}
             >
                 {body}
             </Modal>

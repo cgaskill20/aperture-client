@@ -23,23 +23,21 @@ export default function ConstraintSlider(props) {
     const step = props.constraint.step ? props.constraint.step : 1;
     const [minMax, setMinMax] = useState([min, max]);
 
-    const handleChange = (event, newValue) => {
-        setMinMax(newValue);
-    };
-
     return (
-        <div className={classes.root}>
+        <div className={classes.root} id={`constraint-div-${props.constraint.label}`}>
             <Typography className={classes.title} id="range-slider" gutterBottom>
                 {props.constraint.label} &nbsp;
                 <span className={classes.nowrap}>{minMax[0]} - {minMax[1]}</span>
             </Typography>
             <Slider
                 value={minMax}
-                onChange={handleChange}
+                onChange={(event, newValue) => setMinMax(newValue)}
                 aria-labelledby="range-slider"
                 min={min}
                 max={max}
                 step={step}
+                id={`${props.constraint.label}`}
+                name={`${props.constraint.label}`}
             />
         </div>
     );

@@ -30,8 +30,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function graphIcon(layerLabel, layers, graphableLayers, layerTitles) {
-    const index = findIndex(layerLabel, layerTitles);
+function graphIcon(index, layers, graphableLayers) {
     const collectionName = layers[index].collection;
     if(graphableLayers.includes(collectionName)) {
         return <IconButton><EqualizerIcon color="primary"/></IconButton>
@@ -59,17 +58,20 @@ export default function WorkspaceSearchbar(props) {
                     if (selectDatasetIndex > -1) {
                         state.selected = true;
                     }
+                    const optionIndex = findIndex({option}['option'], props.layerTitles);
                     return (
                         <React.Fragment>
                             <Checkbox
+                                id={`searchbar-checkbox-${optionIndex}`}
+                                name={`searchbar-checkbox-${optionIndex}`}
                                 icon={icon}
                                 color="primary"
                                 checkedIcon={checkedIcon}
                                 style={{ marginRight: 8 }}
-                                checked={state.selected || props.booleanWorkspace[findIndex({option}['option'], props.layerTitles)]}
+                                checked={state.selected || props.booleanWorkspace[optionIndex]}
                             />
                             {option}
-                            <span className={classes.graphIcon}>{graphIcon({option}['option'], props.layers, props.graphableLayers, props.layerTitles)}</span>
+                            <span className={classes.graphIcon}>{graphIcon(optionIndex, props.layers, props.graphableLayers)}</span>
                         </React.Fragment>
                     );
                 }}

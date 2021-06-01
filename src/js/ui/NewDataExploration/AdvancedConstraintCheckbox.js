@@ -3,34 +3,27 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-function updateActiveConstraints(activeConstraints, layerIndex, index) {
-    let tempActiveConstraints = [...activeConstraints];
-    tempActiveConstraints[layerIndex][index] = !tempActiveConstraints[layerIndex][index];
-    return tempActiveConstraints;
+function updateLayerConstraints(layerConstraints, index) {
+    let tempLayerConstraints = [...layerConstraints];
+    tempLayerConstraints[index] = !tempLayerConstraints[index];
+    return tempLayerConstraints;
 }
 
 export default function AdvancedConstraintCheckbox(props) {
-    const [state, setState] = useState({
-        checked: props.activeConstraints[props.layerIndex][props.index],
-    });
-
-    const handleChange = (event) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
-        props.setActiveConstraints(updateActiveConstraints(props.activeConstraints, props.layerIndex, props.index));
-    };
+    const [check, setCheck] = useState(props.layerConstraints[props.index]);
 
     return (
-        <FormGroup>
+        <FormGroup id={`advanced-constraint-formGroup-${props.layerIndex}-${props.index}`}>
             <FormControlLabel
                 control={
                     <Checkbox
-                        checked={state.checked}
-                        onChange={handleChange}
-                        // onChange={(e, constraint) => {
-                        //     props.setActiveConstraints(updateActiveConstraints(props.activeConstraints, props.layerIndex, props.index, constraint));
-                        //     // props.setSelectedDatasets(constraint);
-                        // }}
-                        name="checked"
+                        checked={check}
+                        onChange={() => {
+                            setCheck(!check);
+                            props.setLayerConstraints(updateLayerConstraints(props.layerConstraints, props.index));
+                        }}
+                        id={`advanced-constraint-checkbox-${props.layerIndex}-${props.index}`}
+                        name={`advanced-constraint-checkbox-${props.layerIndex}-${props.index}`}
                         color="primary"
                     />
                 }

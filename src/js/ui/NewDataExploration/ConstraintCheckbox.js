@@ -4,23 +4,17 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
 export default function ConstraintCheckbox(props) {
-    const [state, setState] = useState({
-        checked: true,
-    });
-
-    const handleChange = (event) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
-    };
+    const [check, setCheck] = useState(true);
 
     return (
-        <FormGroup>
+        <FormGroup id={`constraint-formGroup-${props.constraint}`}>
             <FormControlLabel
                 control={
                     <Checkbox
-                        checked={state.checked}
-                        onChange={handleChange}
-                        name="checked"
-                        // name={`check-${props.constraint}`}
+                        checked={check}
+                        onChange={() => setCheck(!check)}
+                        id={`${props.constraint}`}
+                        name={`${props.constraint}`}
                         color="primary"
                     />
                 }
