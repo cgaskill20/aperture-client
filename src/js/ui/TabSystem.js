@@ -58,6 +58,9 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
+    hide: {
+        display: 'none'
+    }
 }));
 
 //This function will get ALL constraints for EVERY layer and put them in a MASSIVE data structure.
@@ -209,7 +212,7 @@ export default function TabSystem(props) {
                            booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
                            activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
             </TabPanel>
-            <TabPanel value={value} index={1}>
+            <TabPanel className={classes.hide} value={value} index={1}>
                 <NewModeling />
             </TabPanel>
         </div>

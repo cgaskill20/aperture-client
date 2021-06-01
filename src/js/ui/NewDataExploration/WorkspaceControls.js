@@ -5,6 +5,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import WorkspaceSearchbar from "./WorkspaceSearchbar";
 import UpdateIcon from '@material-ui/icons/Update';
+import {isComponentRerendering} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,6 +33,7 @@ function buildWorkspace(selectedDatasets, openLayers, setOpenLayers, layerTitles
 export default function WorkspaceControls(props) {
     const classes = useStyles();
 
+    if(isComponentRerendering) {console.log("|WorkspaceControls Rerending|")}
     return (
         <div className={classes.root}>
             <Grid container direction="row" justify="center" alignItems="center">

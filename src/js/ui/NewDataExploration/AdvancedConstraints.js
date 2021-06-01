@@ -5,6 +5,7 @@ import {Button} from "@material-ui/core";
 import SettingsIcon from "@material-ui/icons/Settings";
 import Box from "@material-ui/core/Box";
 import AdvancedConstraintCheckbox from "./AdvancedConstraintCheckbox";
+import {isComponentRerendering} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -32,14 +33,23 @@ export default function AdvancedConstraints(props) {
 
     const body = (
         <Box className={classes.modal}>
-            <Button variant="outlined" onClick={() => props.setActiveConstraints(updateActiveConstraints(props.activeConstraints, layerConstraints, props.layerIndex))}>Update Constraints</Button>
-            {props.allLayerConstraints.map((constraint, index) =>
-                <AdvancedConstraintCheckbox activeConstraints={layerConstraints} setActiveConstraints={setLayerConstraints}
-                                            index={index} layerIndex={props.layerIndex} constraint={constraint} />
+            <Button variant="outlined"
+                    onClick={() => props.setActiveConstraints(updateActiveConstraints(props.activeConstraints, layerConstraints, props.layerIndex))}
+            >
+                Update Constraints
+            </Button>
+            {props.allLayerConstraints.map((constraint, index) => {
+                    const trueIndex = index;
+                    index = props.layerIndex * 524 + index;
+                    return (<div key={index}><AdvancedConstraintCheckbox activeConstraints={layerConstraints}
+                                                setActiveConstraints={setLayerConstraints}
+                                                index={trueIndex} layerIndex={props.layerIndex} constraint={constraint}/></div>)
+                }
             )}
         </Box>
     );
 
+    if(isComponentRerendering) {console.log("|AdvancedContraints Rerending|")}
     return (
         <div>
             <Button variant="outlined" startIcon={<SettingsIcon/>} onClick={() => setOpen(true)}>

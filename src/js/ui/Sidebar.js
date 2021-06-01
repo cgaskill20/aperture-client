@@ -53,14 +53,6 @@ export default function Sidebar() {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
 
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-
     return (
         <div className={classes.root}>
             <Button
@@ -69,7 +61,7 @@ export default function Sidebar() {
                 className={clsx(classes.menuButton, open && classes.hide)}
                 startIcon={<MenuIcon />}
                 aria-label="open drawer"
-                onClick={handleDrawerOpen}
+                onClick={() => setOpen(true)}
             >
                 Menu
             </Button>
@@ -82,14 +74,14 @@ export default function Sidebar() {
                     paper: classes.drawerPaper,
                 }}
             >
-                <TabSystem handleDrawerClose={handleDrawerClose}/>
+                <TabSystem handleDrawerClose={() => {setOpen(false)}}/>
             </Drawer>
-            <main
-                className={clsx(classes.content, {
-                    [classes.contentShift]: open,
-                })}
-            >
-            </main>
+            {/*<main*/}
+            {/*    className={clsx(classes.content, {*/}
+            {/*        [classes.contentShift]: open,*/}
+            {/*    })}*/}
+            {/*>*/}
+            {/*</main>*/}
         </div>
     );
 }

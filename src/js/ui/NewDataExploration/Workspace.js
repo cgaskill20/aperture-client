@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Workspace(props) {
     const classes = useStyles();
 
-
     if(isComponentRerendering) {console.log("|Workspace Rerending|")}
     return (
         <div className={classes.root}>

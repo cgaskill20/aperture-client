@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Layer from "./Layer";
+import {isComponentRerendering} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,10 +31,11 @@ export default function WorkspaceLayers(props) {
     const workspaceLayers = createWorkspace(props.layers, props.graphableLayers, props.openLayers, props.setOpenLayers, props.booleanWorkspace, props.setBooleanWorkspace,
                                             props.activeConstraints, props.setActiveConstraints, props.layerTitles);
 
+    if(isComponentRerendering) {console.log("|WorkspaceLayers Rerending|")}
     return (
         <div className={classes.root}>
-            {workspaceLayers.map((layer) =>
-                <div>{layer}</div>
+            {workspaceLayers.map((layer, index) =>
+                <div key={index}>{layer}</div>
             )}
         </div>
     );

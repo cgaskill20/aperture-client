@@ -5,7 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import TuneIcon from '@material-ui/icons/Tune';
 import AdvancedConstraints from "./AdvancedConstraints";
-import {defaultConstraints} from "../TabSystem";
+import {defaultConstraints, isComponentRerendering} from "../TabSystem";
 
 function graphIcon(layer, graphableLayers) {
     const collectionName = layer.collection;
@@ -20,6 +20,7 @@ function graphIcon(layer, graphableLayers) {
 export default function LayerControls(props) {
     const [layerConstraints, setLayerConstraints] = useState(props.activeConstraints[props.layerIndex]);
 
+    if(isComponentRerendering) {console.log("|LayerControls Rerending|")}
     return (
         <Card>
             <CardContent>
