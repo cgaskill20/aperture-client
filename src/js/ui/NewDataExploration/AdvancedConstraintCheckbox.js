@@ -3,14 +3,14 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-function updateLayerConstraints(layerConstraints, index) {
-    let tempLayerConstraints = [...layerConstraints];
-    tempLayerConstraints[index] = !tempLayerConstraints[index];
-    return tempLayerConstraints;
+function updateLayerConstraints(activeConstraints, index) {
+    let tempActiveConstraints = [...activeConstraints];
+    tempActiveConstraints[index] = !tempActiveConstraints[index];
+    return tempActiveConstraints;
 }
 
 export default function AdvancedConstraintCheckbox(props) {
-    const [check, setCheck] = useState(props.layerConstraints[props.index]);
+    const [check, setCheck] = useState(props.activeConstraints[props.index]);
 
     return (
         <FormGroup id={`advanced-constraint-formGroup-${props.layerIndex}-${props.index}`}>
@@ -20,7 +20,7 @@ export default function AdvancedConstraintCheckbox(props) {
                         checked={check}
                         onChange={() => {
                             setCheck(!check);
-                            props.setLayerConstraints(updateLayerConstraints(props.layerConstraints, props.index));
+                            props.setActiveConstraints(updateLayerConstraints(props.activeConstraints, props.index));
                         }}
                         id={`advanced-constraint-checkbox-${props.layerIndex}-${props.index}`}
                         name={`advanced-constraint-checkbox-${props.layerIndex}-${props.index}`}

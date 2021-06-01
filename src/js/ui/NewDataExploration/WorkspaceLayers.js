@@ -13,10 +13,12 @@ function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, boo
     booleanWorkspace.forEach((layer, index) => {
         if(layer) {
             workspaceLayers.push(
-                <Layer layer={layers[index]} layerIndex={index} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                       openLayers={openLayers} setOpenLayers={setOpenLayers}
-                       booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
-                       activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
+                <div id={`layer-div-${index}`}>
+                    <Layer layer={layers[index]} layerIndex={index} graphableLayers={graphableLayers} layerTitles={layerTitles}
+                           openLayers={openLayers} setOpenLayers={setOpenLayers}
+                           booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
+                           activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
+                </div>
             );
         }
     });

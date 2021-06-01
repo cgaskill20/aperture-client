@@ -19,6 +19,7 @@ import {prettifyJSON} from "./NewDataExploration/Helpers";
 
 function overwrite() {}
 export let defaultConstraints;
+export const isComponentRerendering = false;
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -163,6 +164,7 @@ export default function TabSystem(props) {
 
     //FIXME do something like this: selectedArray = [selectedDatasets, setSelectedDatasets]
 
+    if(isComponentRerendering) {console.log("|Tab System Rerending|")}
     return (
         <div className={classes.root}>
             <Paper>

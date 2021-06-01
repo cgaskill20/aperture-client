@@ -39,6 +39,7 @@ function createConstraints(activeConstraints, allLayerConstraints, layerIndex, c
 }
 
 export default function Layer(props) {
+    const layerConstraintBuffer = 1000;
     const classes = useStyles();
     const [check, setCheck] = useState(false);
     const allLayerConstraints = getAllLayerConstraints(props.layer);
@@ -77,8 +78,10 @@ export default function Layer(props) {
                                 <LayerControls allLayerConstraints={allLayerConstraints} layer={props.layer} graphableLayers={props.graphableLayers}
                                                activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} layerIndex={props.layerIndex} />
                             </Grid>
-                            {constraints.map((constraint) =>
-                                <div>{constraint}</div>
+                            {constraints.map((constraint, index) => {
+                                    index = props.layerIndex * layerConstraintBuffer + index;
+                                    return (<div key={index}>{constraint}</div>)
+                                }
                             )}
                         </Grid>
                     </AccordionDetails>

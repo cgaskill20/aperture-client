@@ -19,6 +19,7 @@ function graphIcon(layer, graphableLayers) {
 
 export default function LayerControls(props) {
     const [layerConstraints, setLayerConstraints] = useState(props.activeConstraints[props.layerIndex]);
+
     return (
         <Card>
             <CardContent>
