@@ -41,9 +41,12 @@ export default function AdvancedConstraints(props) {
             {props.allLayerConstraints.map((constraint, index) => {
                     const trueIndex = index;
                     index = props.layerIndex * 524 + index;
-                    return (<div key={index}><AdvancedConstraintCheckbox activeConstraints={layerConstraints}
-                                                setActiveConstraints={setLayerConstraints}
-                                                index={trueIndex} layerIndex={props.layerIndex} constraint={constraint}/></div>)
+                    return (
+                        <div key={index}>
+                            <AdvancedConstraintCheckbox activeConstraints={layerConstraints}
+                                                        setActiveConstraints={setLayerConstraints}
+                                                        index={trueIndex} layerIndex={props.layerIndex} constraint={constraint}/>
+                        </div>)
                 }
             )}
         </Box>

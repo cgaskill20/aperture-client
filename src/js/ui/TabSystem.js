@@ -212,7 +212,7 @@ export default function TabSystem(props) {
                            booleanWorkspace={booleanWorkspace} setBooleanWorkspace={setBooleanWorkspace}
                            activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
             </TabPanel>
-            <TabPanel className={classes.hide} value={value} index={1}>
+            <TabPanel value={value} index={1}>
                 <NewModeling />
             </TabPanel>
         </div>
