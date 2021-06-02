@@ -67,11 +67,13 @@ export default function Layer(props) {
                                                layerIndex={props.layerIndex} />
                             </Grid>
                             {constraints.map((constraint, index) => {
-                                    index = props.layerIndex + hashIndex(13) + index;
-                                    const constraintAndIndex = `${props.layerIndex}: ${index}`
-                                    console.log({constraintAndIndex})
-                                    return (<div key={index}>{constraint}</div>)
-                                }
+                                const originalIndex = index;
+                                // index = props.layerIndex * hashIndex(13) + index;
+                                index = hashIndex(props.layerIndex, index, 4);
+                                const mapActiveConstraints = `${props.layerIndex}-${originalIndex}: ${index}`
+                                console.log({mapActiveConstraints})
+                                return (<div key={index}>{constraint}</div>)
+                            }
                             )}
                         </Grid>
                     </AccordionDetails>

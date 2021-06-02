@@ -5,8 +5,9 @@ export function prettifyJSON(name) {
     return Util.capitalizeString(Util.underScoreToSpace(name));
 }
 
-export function hashIndex(seed) {
-    return (seed * 18423) / 13;
+export function hashIndex(layerIndex, index, seed) {
+    const newSeed = ((layerIndex + 7) * 1763) % (seed * 17);
+    return ((newSeed * 184237) / 257) + index;
 }
 
 //This function will get ALL constraints for EVERY layer and put them in a MASSIVE data structure.

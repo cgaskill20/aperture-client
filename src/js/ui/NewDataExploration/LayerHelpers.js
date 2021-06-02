@@ -36,10 +36,10 @@ export function createConstraints(activeConstraints, allLayerConstraints, layerI
     activeConstraints[layerIndex].forEach((constraint, index) => {
         if(constraint) {
             const originalIndex = index;
-            index = layerIndex + hashIndex(17) + index;
+            index = hashIndex(layerIndex, index, 3);
 
-            // const constraintNumberAndIndex = `${layerIndex}-${originalIndex}: ${index}`
-            // console.log({constraintNumberAndIndex})
+            const createConstraints = `${layerIndex}-${originalIndex}: ${index}`
+            console.log({createConstraints})
 
             constraints.push(
                 <div key={index}>

@@ -16,9 +16,10 @@ function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, wor
     workspace.forEach((layer, index) => {
         if(layer) {
             const originalIndex = index;
-            index = hashIndex(7) + index;
-            const titleAndIndex = `${layerTitles[originalIndex]}: ${index}`
-            console.log({titleAndIndex})
+            // index = hashIndex(7) + index;
+            index = hashIndex(originalIndex, index, 1);
+            const createWorkspaceLayers = `${layerTitles[originalIndex]}: ${index}`
+            console.log({createWorkspaceLayers})
             workspaceLayers.push(
                 <div key={index} id={`layer-div-${originalIndex}`}>
                     <Layer layer={layers[originalIndex]} layerIndex={originalIndex} graphableLayers={graphableLayers} layerTitles={layerTitles}
@@ -42,9 +43,10 @@ export default function WorkspaceLayers(props) {
         <div className={classes.root}>
             {workspaceLayers.map((layer, index) => {
                 const layerIndex = referenceIndices[index];
-                index = layerIndex + hashIndex(11) + index;
-                const layerIndexAndIndex = `${layerIndex}: ${index}`
-                console.log({layerIndexAndIndex});
+                // index = layerIndex + hashIndex(11) + index;
+                index = hashIndex(layerIndex, index,2);
+                const mapWorkspaceLayers = `${layerIndex}: ${index}`
+                console.log({mapWorkspaceLayers});
                 return (<div key={index}>{layer}</div>)
             }
             )}
