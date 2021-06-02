@@ -67,9 +67,11 @@ const createLayer = () => {
             const { features } = tileToRender;
             ctx.strokeStyle = 'grey';
             features.forEach(feature => {
-                const geometries = feature;
+                const { geometry, tags } = feature;
                 console.log(geometry)
+                console.log(tags)
             })
+            return tile;
         }
     });
     // Add layer to the canvas
