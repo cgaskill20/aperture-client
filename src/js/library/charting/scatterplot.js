@@ -63,8 +63,8 @@ export default class Scatterplot extends Chart {
         super([]);
     }
 
-    rerender(newWidth, newHeight, viewIndex) {
-        let view = this.views[viewIndex];
+    changeSize(newWidth, newHeight) {
+        let view = this.view;
 
         newWidth = newWidth < Chart.MINIMUM_WIDTH ? Chart.MINIMUM_WIDTH : newWidth;
         newHeight = newHeight < Chart.MINIMUM_HEIGHT ? Chart.MINIMUM_HEIGHT : newHeight;

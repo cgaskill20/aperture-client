@@ -1,3 +1,8 @@
+.charting-resizable-window {
+    height: 100%;
+    width: 100%;
+}
+
 .add-graph-box {
     padding: 20px;
     border-bottom-style: double;

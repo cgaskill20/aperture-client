@@ -1,20 +1,20 @@
-import {encode_geohash, geohash_adjacent} from './geohash_util.js';
+import { encode_geohash, geohash_adjacent } from './geohash_util.js';
 
 export default {
     buckets: null, //loaded at config
     geohashResolution: 3,
 
     config: async function (collection) {
-        if(collection === "tract_geo_140mb_no_2d_index"){
+        if (collection === "tract_geo_140mb_no_2d_index") {
             this.buckets = await import('../../json/tractGeohashBuckets.json');
         }
-        else{
+        else {
             this.buckets = await import('../../json/countyGeohashBuckets.json');
         }
     },
 
     boundsToData: function (bounds, blacklist) {
-        let geohashes = this.boundsToLengthNGeohashes(bounds,blacklist);
+        let geohashes = this.boundsToLengthNGeohashes(bounds, blacklist);
         const datasource = this.buckets;
         if (datasource) {
             const data = {};
@@ -35,7 +35,7 @@ export default {
         return []
     },
 
-    boundsToLengthNGeohashes: function (bounds,blacklist) {
+    boundsToLengthNGeohashes: function (bounds, blacklist) {
         const geohashCorners = {
             sw: encode_geohash(bounds._southWest.lat, bounds._southWest.lng, this.geohashResolution),
             se: encode_geohash(bounds._southWest.lat, bounds._northEast.lng, this.geohashResolution),
@@ -45,7 +45,10 @@ export default {
         return this.fillInSpace(geohashCorners).filter((geohash) => {
             return !blacklist.includes(geohash);
         }).filter((geohash) => {
-            return this.buckets[geohash] && this.buckets[geohash].length !== 0;
+            try {
+                return this.buckets[geohash] && this.buckets[geohash].length !== 0;
+            }
+            catch { return true; }
         });
     },
 
