@@ -2,6 +2,7 @@ import Gradient from "../third-party/Gradient"
 import MapDataFilterWrapper from "./mapDataFilterWrapper"
 import Util from "./apertureUtil"
 import Query from "./Query"
+import newRendering from "./newRendering"
 
 /**
  * @class AutoQuery
@@ -319,6 +320,7 @@ export default class AutoQuery {
         indexData[this.collection]["border"] = this.color.border;
         indexData[this.collection]["opacity"] = this.color.opacity;
 
+        newRendering(data)
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.add(id);
 
