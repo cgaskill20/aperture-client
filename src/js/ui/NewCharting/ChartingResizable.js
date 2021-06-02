@@ -2,6 +2,7 @@ import React, {useState, useEffect, createContext} from 'react';
 import { Rnd } from 'react-rnd';
 import Paper from '@material-ui/core/Paper';
 import ChartingWindow from './ChartingWindow';
+import dataContext from "./dataContext";
 
 
 export default function ChartingResizable() {
@@ -23,6 +24,7 @@ export default function ChartingResizable() {
             width: '800px',
             height: '800px',
         }}>
+            <dataContext.Provider value={chartData}>
             <Rnd default={{
                     x: 500,
                     y: 400,
@@ -45,6 +47,7 @@ export default function ChartingResizable() {
                     </div>
                 </Paper>
             </Rnd>
+            </dataContext.Provider>
         </div>
     );
 }
