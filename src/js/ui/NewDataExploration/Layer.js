@@ -48,6 +48,7 @@ export default function Layer(props) {
                     >
                         <FormControlLabel
                             aria-label="CheckLayer"
+                            onClick={(event) => event.stopPropagation()}
                             onFocus={(event) => event.stopPropagation()}
                             onChange={() => setCheck(!check)}
                             control={
