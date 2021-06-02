@@ -31,7 +31,6 @@ export default function Layer(props) {
     const [check, setCheck] = useState(false);
 
     const [defaultConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
-    // const [activeConstraints, setActiveConstraints] = useState(initializedActiveConstraints);
     const constraints = createConstraints(props.activeConstraints, allLayerConstraints, props.layerIndex, classes);
 
     //FIXME find out if layer is graphable here, pass as boolean
