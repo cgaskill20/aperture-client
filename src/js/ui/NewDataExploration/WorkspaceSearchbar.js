@@ -12,7 +12,7 @@ import {componentIsRendering} from "../TabSystem";
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
 
-function findIndex(layerLabel, layerTitles) {
+export function findIndex(layerLabel, layerTitles) {
     for(let i = 0; i < layerTitles.length; i++) {
         if(layerTitles[i] === layerLabel) {
             return i;
