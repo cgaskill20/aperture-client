@@ -321,7 +321,7 @@ export default class AutoQuery {
         indexData[this.collection]["opacity"] = this.color.opacity;
 
         newRendering(data)
-        this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
+        //this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.add(id);
 
     }

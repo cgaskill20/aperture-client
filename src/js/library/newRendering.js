@@ -70,6 +70,14 @@ const createLayer = () => {
                 const { geometry, tags } = feature;
                 console.log(geometry)
                 console.log(tags)
+                ctx.fillStyle = 'red';
+                ctx.globalAlpha = 0.5; 
+                ctx.beginPath();
+                geometry.forEach(points => {
+                    points.forEach((point,index) => { ctxDrawPolygon(ctx, point, index) });
+                });
+                ctx.fill('evenodd');
+                ctx.stroke();
             })
             return tile;
         }
@@ -77,3 +85,12 @@ const createLayer = () => {
     // Add layer to the canvas
     globalThis.map.addLayer(new CanvasLayer());
 };
+
+const ctxDrawPolygon = (ctx, point, index) => {
+    const pad = 0;
+    const extent = 4096;
+    const x = point[0] / extent * 256;
+    const y = point[1] / extent * 256;
+    if (index) ctx.lineTo(x  + pad, y   + pad)
+    else ctx.moveTo(x  + pad, y  + pad)
+  };
