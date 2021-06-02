@@ -36,6 +36,7 @@
     "data2grid": "^1.0.0",
     "dexie": "^3.0.3",
     "fs": "0.0.1-security",
+    "geojson-vt": "^3.2.1",
     "google-protobuf": "^3.11.4",
     "grpc": "^1.24.9",
     "grpc-web": "^1.0.7",
@@ -53,7 +54,8 @@
     "react-rnd": "^10.3.2",
     "reactstrap": "^8.9.0",
     "set-default-browser": "^1.0.1",
-    "three": "~0.125.0"
+    "three": "~0.125.0",
+    "xyz-affair": "^0.9.1"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
