@@ -10,7 +10,7 @@ export default function ChartingWindow(props) {
     const [frames, setFrames] = useState([]);
 
     const addChartFrame = frame => {   
-        setFrames(frames.concat([<Frame type={frame.type} size={props.size} cb={props.setData}/>]));
+        setFrames(frames.concat([<Frame type={frame.type} size={props.size} cb={props.setData} data={props.data}/>]));
         console.log(frames);
     }
 

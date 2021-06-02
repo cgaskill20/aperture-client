@@ -9,7 +9,7 @@ export default function Frame(props) {
     let frame;
     switch (props.type.name) {
         case "histogram":
-           frame = <Histogram size={props.size}></Histogram>; break;
+           frame = <Histogram size={props.size} data={props.data}></Histogram>; break;
         default: break;
     }
 
