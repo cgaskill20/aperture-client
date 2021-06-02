@@ -5,7 +5,7 @@ import {Button} from "@material-ui/core";
 import SettingsIcon from "@material-ui/icons/Settings";
 import Box from "@material-ui/core/Box";
 import AdvancedConstraintCheckbox from "./AdvancedConstraintCheckbox";
-import {isComponentRerendering} from "./Workspace";
+import {componentIsRendering} from "../TabSystem";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -50,7 +50,7 @@ export default function AdvancedConstraints(props) {
         </Box>
     );
 
-    if(isComponentRerendering) {console.log("|AdvancedContraints Rerending|")}
+    if(componentIsRendering) {console.log("|AdvancedContraints Rerending|")}
     return (
         <div>
             <Button variant="outlined" startIcon={<SettingsIcon/>} onClick={() => setOpen(true)}>

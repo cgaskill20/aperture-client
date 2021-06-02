@@ -7,7 +7,7 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import {makeStyles} from "@material-ui/core/styles";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
-import {isComponentRerendering} from "./Workspace";
+import {componentIsRendering} from "../TabSystem";
 
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
@@ -42,7 +42,7 @@ function graphIcon(index, layers, graphableLayers) {
 export default function WorkspaceSearchbar(props) {
     const classes = useStyles();
 
-    if(isComponentRerendering) {console.log("|WorkspaceSearchbar Rerending|")}
+    if(componentIsRendering) {console.log("|WorkspaceSearchbar Rerending|")}
     return (
         <div>
             <Autocomplete

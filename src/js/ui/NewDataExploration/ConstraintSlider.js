@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
-import {isComponentRerendering} from "./Workspace";
+import {componentIsRendering} from "../TabSystem";
 
 const useStyles = makeStyles({
     root: {
@@ -23,7 +23,7 @@ export default function ConstraintSlider(props) {
     const step = props.constraint.step ? props.constraint.step : 1;
     const [minMax, setMinMax] = useState([min, max]);
 
-    if(isComponentRerendering) {console.log("|ContraintSlider Rerending|")}
+    if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
     return (
         <div className={classes.root} id={`constraint-div-${props.constraint.label}`}>
             <Typography className={classes.title} id={`range-slider-${props.constraint.label}`} gutterBottom>

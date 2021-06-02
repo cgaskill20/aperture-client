@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import {isComponentRerendering} from "./Workspace";
+import {componentIsRendering} from "../TabSystem";
 
 function updateLayerConstraints(activeConstraints, index) {
     let tempActiveConstraints = [...activeConstraints];
@@ -13,7 +13,7 @@ function updateLayerConstraints(activeConstraints, index) {
 export default function AdvancedConstraintCheckbox(props) {
     const [check, setCheck] = useState(props.activeConstraints[props.index]);
 
-    if(isComponentRerendering) {console.log("|AdvancedContraintCheckbox Rerending|")}
+    if(componentIsRendering) {console.log("|AdvancedContraintCheckbox Rerending|")}
     return (
         <FormGroup id={`advanced-constraint-formGroup-${props.layerIndex}-${props.index}`}>
             <FormControlLabel

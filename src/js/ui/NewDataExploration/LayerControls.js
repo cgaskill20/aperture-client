@@ -5,7 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import TuneIcon from '@material-ui/icons/Tune';
 import AdvancedConstraints from "./AdvancedConstraints";
-import {isComponentRerendering} from "./Workspace";
+import {componentIsRendering} from "../TabSystem";
 
 function graphIcon(layer, graphableLayers) {
     const collectionName = layer.collection;
@@ -17,8 +17,14 @@ function graphIcon(layer, graphableLayers) {
     return;
 }
 
+function setDefaultConstraints(activeConstraints, defaultConstraints, layerIndex) {
+    let newActiveConstraints = [...activeConstraints];
+    newActiveConstraints[layerIndex] = defaultConstraints;
+    return newActiveConstraints;
+}
+
 export default function LayerControls(props) {
-    if(isComponentRerendering) {console.log("|LayerControls Rerending|")}
+    if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (
         <Card>
             <CardContent>
@@ -33,7 +39,7 @@ export default function LayerControls(props) {
                         Reset Constraints
                     </Button>
                     <Button startIcon={<TuneIcon />} onClick={() => {
-                        props.setActiveConstraints(props.defaultConstraints);
+                        props.setActiveConstraints(setDefaultConstraints(props.activeConstraints, props.defaultConstraints, props.layerIndex));
                     }}>
                         Default Constraints
                     </Button>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Layer from "./Layer";
-import {isComponentRerendering} from "./Workspace";
+import {componentIsRendering} from "../TabSystem";
 import {randomizeIndex} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,7 +34,7 @@ export default function WorkspaceLayers(props) {
     const workspaceLayers = createWorkspace(props.layers, props.graphableLayers, props.openLayers, props.setOpenLayers,
                                             props.workspace, props.setWorkspace, props.layerTitles, props.activeConstraints, props.setActiveConstraints);
 
-    if(isComponentRerendering) {console.log("|WorkspaceLayers Rerending|")}
+    if(componentIsRendering) {console.log("|WorkspaceLayers Rerending|")}
     return (
         <div className={classes.root}>
             {workspaceLayers.map((layer, index) => {

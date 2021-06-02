@@ -8,7 +8,7 @@ import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
 import {updateOpenLayers, createConstraints, extractActiveConstraints} from "./LayerHelpers";
-import {isComponentRerendering} from "./Workspace";
+import {componentIsRendering} from "../TabSystem";
 import {randomizeIndex} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,13 +30,12 @@ export default function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState(false);
 
-    const [initializedActiveConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
+    const [defaultConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
     // const [activeConstraints, setActiveConstraints] = useState(initializedActiveConstraints);
     const constraints = createConstraints(props.activeConstraints, allLayerConstraints, props.layerIndex, classes);
-    const defaultConstraints = initializedActiveConstraints;
 
     //FIXME find out if layer is graphable here, pass as boolean
-    if(isComponentRerendering) console.log("|Layer|");
+    if(componentIsRendering) console.log("|Layer|");
     return (
         <div id={`layer-div-${props.layerTitles[props.layerIndex]}`} className={classes.root}>
             <Paper elevation={1}>
@@ -53,7 +52,7 @@ export default function Layer(props) {
                             onFocus={(event) => event.stopPropagation()}
                             onChange={() => setCheck(!check)}
                             control={
-                                <Switch onChange={() => {}}
+                                <Switch
                                         color="primary"
                                 />
                             }

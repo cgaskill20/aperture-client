@@ -6,7 +6,7 @@ import {prettifyJSON} from "./Helpers";
 import AutoMenu from "../../library/autoMenu";
 
 function overwrite() {}
-export const isComponentRerendering = false;
+export const componentIsRendering = true;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,8 +61,6 @@ export default function Workspace() {
         setLayerTitles(tempLayerTitles);
     }
 
-    console.log({activeConstraints})
-
     const [graphableLayers, setGraphableLayers] = useState([]);
     function extractGraphableLayers(data) {
         let tempGraphableLayers = [];
@@ -86,7 +84,7 @@ export default function Workspace() {
         });
     }, []);
 
-    if(isComponentRerendering) {console.log("|Workspace Rerending|")}
+    if(componentIsRendering) {console.log("|Workspace Rerending|")}
     return (
         <div className={classes.root}>
             <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
