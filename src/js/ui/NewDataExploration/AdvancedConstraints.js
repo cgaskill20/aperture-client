@@ -41,11 +41,11 @@ export default function AdvancedConstraints(props) {
             </Button>
             {props.allLayerConstraints.map((constraint, index) => {
                     const originalIndex = index;
-                    index = hashIndex(23) + index;
+                    index = props.layerIndex + hashIndex(23) + index;
                     return (
                         <div key={index}>
-                            <AdvancedConstraintCheckbox activeConstraints={layerConstraints}
-                                                        setActiveConstraints={setLayerConstraints}
+                            <AdvancedConstraintCheckbox layerConstraints={layerConstraints}
+                                                        setLayerConstraints={setLayerConstraints}
                                                         index={originalIndex} layerIndex={props.layerIndex} constraint={constraint}/>
                         </div>)
                 }

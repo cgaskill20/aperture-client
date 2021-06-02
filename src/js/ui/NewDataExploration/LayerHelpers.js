@@ -34,12 +34,16 @@ export function extractActiveConstraints(layer) {
 export function createConstraints(activeConstraints, allLayerConstraints, layerIndex, classes) {
     let constraints = [];
     activeConstraints[layerIndex].forEach((constraint, index) => {
-        const originalIndex = index;
-        index = hashIndex(17) + index;
         if(constraint) {
+            const originalIndex = index;
+            index = layerIndex + hashIndex(17) + index;
+
+            // const constraintNumberAndIndex = `${layerIndex}-${originalIndex}: ${index}`
+            // console.log({constraintNumberAndIndex})
+
             constraints.push(
                 <div key={index}>
-                    {renderIndividualConstraint(allLayerConstraints[originalIndex], classes)}
+                    {renderIndividualConstraint(allLayerConstraints[originalIndex], classes, layerIndex)}
                 </div>
             );
         }
@@ -53,7 +57,7 @@ export function updateOpenLayers(openLayers, index) {
     return updatedLayers;
 }
 
-export function renderIndividualConstraint(constraint, classes) {
+export function renderIndividualConstraint(constraint, classes, layerIndex) {
     if(constraint.type === "slider") {
         return (
             <Grid item>
@@ -72,7 +76,7 @@ export function renderIndividualConstraint(constraint, classes) {
                 <Card className={classes.root}>
                     <Typography className={classes.heading}>{constraint.label}</Typography>
                     <CardContent>
-                        {renderCheckboxes(constraint.options)}
+                        {renderCheckboxes(constraint.options, layerIndex)}
                     </CardContent>
                 </Card>
             </Grid>
@@ -80,14 +84,14 @@ export function renderIndividualConstraint(constraint, classes) {
     }
 }
 
-function renderCheckboxes(constraintOptions) {
+function renderCheckboxes(constraintOptions, layerIndex) {
     let options = [];
     for(const option in constraintOptions) {
         options.push(constraintOptions[option]);
     }
     return (
         options.map((option, index) => {
-                index = hashIndex(37) + index;
+                index = layerIndex + hashIndex(37) + index;
                 return(<div key={index}><ConstraintCheckbox constraint={option}/></div>)
             }
         )

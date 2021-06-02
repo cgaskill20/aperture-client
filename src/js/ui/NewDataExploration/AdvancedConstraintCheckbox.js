@@ -11,7 +11,7 @@ function updateLayerConstraints(activeConstraints, index) {
 }
 
 export default function AdvancedConstraintCheckbox(props) {
-    const [check, setCheck] = useState(props.activeConstraints[props.index]);
+    const [check, setCheck] = useState(props.layerConstraints[props.index]);
 
     if(componentIsRendering) {console.log("|AdvancedContraintCheckbox Rerending|")}
     return (
@@ -22,7 +22,7 @@ export default function AdvancedConstraintCheckbox(props) {
                         checked={check}
                         onChange={() => {
                             setCheck(!check);
-                            props.setActiveConstraints(updateLayerConstraints(props.activeConstraints, props.index));
+                            props.setLayerConstraints(updateLayerConstraints(props.layerConstraints, props.index));
                         }}
                         id={`advanced-constraint-checkbox-${props.layerIndex}-${props.index}`}
                         name={`advanced-constraint-checkbox-${props.layerIndex}-${props.index}`}

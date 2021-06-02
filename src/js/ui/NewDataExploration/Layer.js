@@ -67,7 +67,9 @@ export default function Layer(props) {
                                                layerIndex={props.layerIndex} />
                             </Grid>
                             {constraints.map((constraint, index) => {
-                                    index = hashIndex(13) + index;
+                                    index = props.layerIndex + hashIndex(13) + index;
+                                    const constraintAndIndex = `${props.layerIndex}: ${index}`
+                                    console.log({constraintAndIndex})
                                     return (<div key={index}>{constraint}</div>)
                                 }
                             )}

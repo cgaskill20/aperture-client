@@ -12,10 +12,13 @@ const useStyles = makeStyles((theme) => ({
 
 function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, workspace, layerTitles, activeConstraints, setActiveConstraints) {
     let workspaceLayers = [];
+    let referenceIndices = [];
     workspace.forEach((layer, index) => {
         if(layer) {
             const originalIndex = index;
             index = hashIndex(7) + index;
+            const titleAndIndex = `${layerTitles[originalIndex]}: ${index}`
+            console.log({titleAndIndex})
             workspaceLayers.push(
                 <div key={index} id={`layer-div-${originalIndex}`}>
                     <Layer layer={layers[originalIndex]} layerIndex={originalIndex} graphableLayers={graphableLayers} layerTitles={layerTitles}
@@ -23,23 +26,27 @@ function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, wor
                            activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
                 </div>
             );
+            referenceIndices.push(originalIndex);
         }
     });
-    return workspaceLayers;
+    return [workspaceLayers, referenceIndices];
 }
 
 export default function WorkspaceLayers(props) {
     const classes = useStyles();
-    const workspaceLayers = createWorkspace(props.layers, props.graphableLayers, props.openLayers, props.setOpenLayers,
-                                            props.workspace, props.layerTitles, props.activeConstraints, props.setActiveConstraints);
+    const [workspaceLayers, referenceIndices] = createWorkspace(props.layers, props.graphableLayers, props.openLayers, props.setOpenLayers,
+                                                                props.workspace, props.layerTitles, props.activeConstraints, props.setActiveConstraints);
 
     if(componentIsRendering) {console.log("|WorkspaceLayers Rerending|")}
     return (
         <div className={classes.root}>
             {workspaceLayers.map((layer, index) => {
-                    index = hashIndex(11) + index;
-                    return (<div key={index}>{layer}</div>)
-                }
+                const layerIndex = referenceIndices[index];
+                index = layerIndex + hashIndex(11) + index;
+                const layerIndexAndIndex = `${layerIndex}: ${index}`
+                console.log({layerIndexAndIndex});
+                return (<div key={index}>{layer}</div>)
+            }
             )}
         </div>
     );
