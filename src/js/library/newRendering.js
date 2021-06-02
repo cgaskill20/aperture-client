@@ -1,0 +1,1 @@
+import geojsonvt from 'geojson-vt';
