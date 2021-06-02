@@ -44,11 +44,11 @@ export default function Layer(props) {
                     expanded={props.openLayers[props.layerIndex]}
                 >
                     <AccordionSummary
-                        expandIcon={<ExpandMoreIcon color="primary" onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.layerIndex))} />}
+                        expandIcon={<ExpandMoreIcon color="primary" />}
+                        onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.layerIndex))}
                     >
                         <FormControlLabel
                             aria-label="CheckLayer"
-                            onClick={(event) => event.stopPropagation()}
                             onFocus={(event) => event.stopPropagation()}
                             onChange={() => setCheck(!check)}
                             control={
