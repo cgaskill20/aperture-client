@@ -14,6 +14,24 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function extractActiveConstraints(layers) {
+    let allActiveConstraints = [];
+    for(const layer in layers) {
+        let theseLayerConstraints = [];
+        const individualLayer = layers[layer]
+        for(const layerConstraint in individualLayer.constraints) {
+            const individualConstraint = individualLayer.constraints[layerConstraint];
+            if(!individualConstraint.hide) {
+                theseLayerConstraints.push(true);
+            }
+            else {
+                theseLayerConstraints.push(false);
+            }
+        }
+        allActiveConstraints.push(theseLayerConstraints);
+    }
+    return allActiveConstraints;
+}
 
 export default function Workspace() {
     const classes = useStyles();
@@ -22,6 +40,7 @@ export default function Workspace() {
     const [workspace, setWorkspace] = useState([]);
     const [openLayers, setOpenLayers] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
+    const [activeConstraints, setActiveConstraints] = useState([]);
     function extractLayers(data) {
         let tempBoolean = [];
         let tempLayers = [];
@@ -35,10 +54,14 @@ export default function Workspace() {
             tempBoolean.push(false);
         }
         setLayers(tempLayers);
+        const extractedActiveConstraints = extractActiveConstraints(tempLayers);
+        setActiveConstraints(extractedActiveConstraints);
         setWorkspace(tempBoolean);
         setOpenLayers(tempBoolean);
         setLayerTitles(tempLayerTitles);
     }
+
+    console.log({activeConstraints})
 
     const [graphableLayers, setGraphableLayers] = useState([]);
     function extractGraphableLayers(data) {
@@ -71,6 +94,7 @@ export default function Workspace() {
                                workspace={workspace} setWorkspace={setWorkspace} />
             <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
                              openLayers={openLayers} setOpenLayers={setOpenLayers}
+                             activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints}
                              workspace={workspace} setWorkspace={setWorkspace} />
         </div>
     );

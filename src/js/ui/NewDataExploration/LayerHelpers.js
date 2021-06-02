@@ -31,12 +31,11 @@ export function extractActiveConstraints(layer) {
     return [activeConstraints, allLayerConstraints];
 }
 
-export function createConstraints(activeConstraints, allLayerConstraints, classes) {
+export function createConstraints(activeConstraints, allLayerConstraints, layerIndex, classes) {
     let constraints = [];
-    activeConstraints.forEach((constraint, index) => {
-        let individualConstraint = renderIndividualConstraint(allLayerConstraints[index], classes);
+    activeConstraints[layerIndex].forEach((constraint, index) => {
         if(constraint) {
-            constraints.push(<div>{individualConstraint}</div>);
+            constraints.push(renderIndividualConstraint(allLayerConstraints[index], classes));
         }
     });
     return constraints;

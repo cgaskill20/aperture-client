@@ -31,8 +31,8 @@ export default function Layer(props) {
     const [check, setCheck] = useState(false);
 
     const [initializedActiveConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
-    const [activeConstraints, setActiveConstraints] = useState(initializedActiveConstraints);
-    const constraints = createConstraints(activeConstraints, allLayerConstraints, classes);
+    // const [activeConstraints, setActiveConstraints] = useState(initializedActiveConstraints);
+    const constraints = createConstraints(props.activeConstraints, allLayerConstraints, props.layerIndex, classes);
     const defaultConstraints = initializedActiveConstraints;
 
     //FIXME find out if layer is graphable here, pass as boolean
@@ -64,7 +64,7 @@ export default function Layer(props) {
                         <Grid container direction="column">
                             <Grid item>
                                 <LayerControls allLayerConstraints={allLayerConstraints} layer={props.layer} graphableLayers={props.graphableLayers}
-                                               defaultConstraints={defaultConstraints} activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints}
+                                               defaultConstraints={defaultConstraints} activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints}
                                                layerIndex={props.layerIndex} />
                             </Grid>
                             {constraints.map((constraint, index) => {
