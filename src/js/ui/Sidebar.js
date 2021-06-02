@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -6,7 +6,7 @@ import TabSystem from "./TabSystem"
 import MenuIcon from '@material-ui/icons/Menu';
 import {Button} from "@material-ui/core";
 
-const drawerWidth = 750;
+const drawerWidth = 800;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,15 +51,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Sidebar() {
     const classes = useStyles();
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
-
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
+    const [open, setOpen] = useState(false);
 
     return (
         <div className={classes.root}>
@@ -69,7 +61,7 @@ export default function Sidebar() {
                 className={clsx(classes.menuButton, open && classes.hide)}
                 startIcon={<MenuIcon />}
                 aria-label="open drawer"
-                onClick={handleDrawerOpen}
+                onClick={() => setOpen(true)}
             >
                 Menu
             </Button>
@@ -82,14 +74,14 @@ export default function Sidebar() {
                     paper: classes.drawerPaper,
                 }}
             >
-                <TabSystem handleDrawerClose={handleDrawerClose}/>
+                <TabSystem handleDrawerClose={() => {setOpen(false)}}/>
             </Drawer>
-            <main
-                className={clsx(classes.content, {
-                    [classes.contentShift]: open,
-                })}
-            >
-            </main>
+            {/*<main*/}
+            {/*    className={clsx(classes.content, {*/}
+            {/*        [classes.contentShift]: open,*/}
+            {/*    })}*/}
+            {/*>*/}
+            {/*</main>*/}
         </div>
     );
 }

@@ -1,62 +1,70 @@
 import React from 'react';
 import AutoMenu from "../../library/autoMenu";
-import Util from "../../library/apertureUtil";
-import AutoQuery from "../../library/autoQuery";
 
-export let finalData;
-export let nested_json_map ={};
-export let layerNames = [];
-export let layerObjs = [];
-export let layerQueriers = [];
-export let layerInfos = [];
-
-const DEFAULT_OBJECT = {
-    group: "Other",
-    subGroup: "Other",
-    color: "#000000",
-    popup: null,
-    constraints: null,
-    map: function () { return window.map; }
-}
-
-$.getJSON("src/json/menumetadata.json", async function (mdata) {
-    finalData = await AutoMenu.build(mdata, overwrite);
-    makeNested(finalData);
-});
-
+export let layers = [];
+export let layerNames2 = [];
 function overwrite() {}
 
-function loopJSON(json) {
-    for(const obj in json) {
-        for(const header in json[obj]) {
-            for(const layer in json[obj][header]) {
-                const layerLabel = Util.capitalizeString(Util.underScoreToSpace(json[obj][header][layer].label ? json[obj][header][layer].label : layer));
-                layerNames.push(layerLabel);
-                layerObjs.push(nested_json_map[obj][header][layer]);
-                layerQueriers.push(new AutoQuery(nested_json_map[obj][header][layer])); //important
-                layerInfos.push(nested_json_map[obj][header][layer].info == null ? "" : nested_json_map[obj][header][layer].info);
-            }
-        }
+$.getJSON("src/json/menumetadata.json", async function (mdata) {
+    const finalData = await AutoMenu.build(mdata, overwrite);
+    extractLayers(finalData);
+});
+
+function extractLayers(data) {
+    for(const layer in data) {
+        const thisLayer = data[layer];
+        layers.push(thisLayer);
+    }
+    extractConstraints();
+}
+
+function extractConstraints() {
+    // console.log({layers});
+    for(const layerInfo in layers) {
+        const layerData = layers[layerInfo];
+        const layerName = layerData["label"] ? layerData["label"] : layerData["collection"];
+        // console.log({layerName})
+        // console.log({layerData});
+        layerNames2.push((layerName));
+        // for(const theseConstraints in layerData["constraints"]) {
+        //     const constraint = layerData["constraints"][theseConstraints];
+        //     if(!constraint["hide"]) {
+        //         if(constraint["type"] === "slider") {
+        //             //FIXME How do I get the name of the constraint if it has no label property?
+        //             const sliderName = constraint["label"] ? constraint["label"] : constraint;
+        //             console.log({sliderName});
+        //         }
+                // if(constraint["options"]) {
+                //     for(const option in constraint["options"]) {
+                //         const optionName = constraint["options"][option];
+                //         console.log({optionName}); //the name of the option
+                //     }
+                // }
+            // }
+        // }
     }
 }
 
-function makeNested(json_map) {
-    for (const obj in json_map) {
-        if (json_map[obj]["notAQueryableLayer"]) {
-            continue;
-        }
-        const mergeWithDefalt = {
-            ...DEFAULT_OBJECT,
-            ...json_map[obj]
-        };
-        if (!nested_json_map[mergeWithDefalt["group"]]) {
-            nested_json_map[mergeWithDefalt["group"]] = {};
-        }
-        if (!nested_json_map[mergeWithDefalt["group"]][mergeWithDefalt["subGroup"]]) {
-            nested_json_map[mergeWithDefalt["group"]][mergeWithDefalt["subGroup"]] = {};
-        }
-        nested_json_map[mergeWithDefalt["group"]][mergeWithDefalt["subGroup"]][obj] = mergeWithDefalt;
-    }
-    loopJSON(nested_json_map);
-}
+// function extractConstraints() {
+//     for(const layerInfo in layers) {
+//         const layerData = layers[layerInfo];
+//         console.log({layerData});
+//         for(const theseConstraints in layerData["constraints"]) {
+//             const constraint = layerData["constraints"][theseConstraints];
+//             if(!constraint["hide"]) {
+//                 console.log({constraint});
+//                 layerConstraints.push(constraint);
+//                 const constraintLabel = constraint["label"] ? constraint["label"] : theseConstraints;
+//                 if(constraint["options"]) {
+//                     for(const option in constraint["options"]) {
+//                         const optionName = constraint["options"][option];
+//                         console.log({optionName});
+//                     }
+//                 }
+//                 console.log({constraintLabel});
+//             }
+//         }
+//     }
+//     console.log({layerConstraints});
+// }
 

@@ -1,51 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Grid, Paper} from "@material-ui/core";
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import NewDataExploration from "./NewDataExploration/NewDataExploration";
-import NewModeling from "./NewModeling/NewModeling";
-import { useGlobalState } from "./global/GlobalState";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
-import BarChartIcon from "@material-ui/icons/BarChart";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import {showGraph} from "../library/charting/chartBtnNewChartWindow"
+import {Equalizer} from "@material-ui/icons";
+import NewModeling from "./NewModeling/NewModeling";
+import Workspace from "./NewDataExploration/Workspace";
+import { useGlobalState } from "./global/GlobalState";
+import { showGraph } from "../library/charting/chartBtnNewChartWindow";
+import {Button, ButtonGroup} from "@material-ui/core";
 
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`auto-tabpanel-${index}`}
-            aria-labelledby={`auto-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-}
-
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-    return {
-        id: `auto-tab-${index}`,
-        'aria-controls': `auto-tabpanel-${index}`,
-    };
-}
+export const componentIsRendering = false;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,18 +21,24 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TabSystem(props) {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
     const [globalState, setGlobalState] = useGlobalState();
-    const valueMap = {
-        0: "dataExploration",
-        1: "modeling"
+
+    //FIXME do something like this: selectedArray = [selectedDatasets, setSelectedDatasets]
+
+    const [dataExplorationDisplay, setDataExplorationDisplay] = useState({display: 'block'});
+    const [modelingDisplay, setModelingDisplay] = useState({display: 'none'})
+    function switchTabs(index) {
+        if(index === 0) {
+            setDataExplorationDisplay({display: 'block'});
+            setModelingDisplay({display: 'none'});
+        }
+        else if(index === 1) {
+            setDataExplorationDisplay({display: 'none'});
+            setModelingDisplay({display: 'block'});
+        }
     }
 
-    const handleChange = (event, newValue) => {
-        setGlobalState({ mode: valueMap[newValue] });
-        setValue(newValue);
-    };
-
+    if(componentIsRendering) console.log("|TabSystem|");
     return (
         <div className={classes.root}>
             <Paper>
@@ -76,43 +48,30 @@ export default function TabSystem(props) {
                     justify="center"
                     alignItems="center"
                 >
-                    <Grid
-                        item
-                    >
+                    <Grid item></Grid>
+                    <Grid item>
+                        <ButtonGroup>
+                            <Button variant="outlined" onClick={() => switchTabs(0)}>Data Exploration</Button>
+                            <Button variant="outlined" onClick={() => switchTabs(1)}>Modeling</Button>
+                        </ButtonGroup>
                     </Grid>
                     <Grid item>
-                        <Tabs
-                            value={value}
-                            onChange={handleChange}
-                            indicatorColor="primary"
-                            textColor="primary"
-                            centered
-                        >
-                            <Tab label="Data Exploration" {...a11yProps(0)} />
-                            <Tab label="Modeling" {...a11yProps(1)} />
-                        </Tabs></Grid>
-                    <Grid
-                        item
-                    >
-                        {/* Not using handleChange because this isn't a tab */}
-                        <IconButton id="nav-graph-button" onClick={() => {
-                            setGlobalState({ chartingOpen: !globalState.chartingOpen })
-                            props.handleDrawerClose()
-                        }}>
-                            <BarChartIcon />
+                        <IconButton id="nav-graph-button" onClick={showGraph}>
+                            <Equalizer color="primary" />
                         </IconButton>
                         <IconButton onClick={props.handleDrawerClose}>
-                            <ChevronLeftIcon />
+                            <ChevronLeftIcon color="primary" />
                         </IconButton>
                     </Grid>
                 </Grid>
             </Paper>
-            <TabPanel value={value} index={0}>
-                <NewDataExploration />
-            </TabPanel>
-            <TabPanel value={value} index={1}>
+            <br/>
+            <div id="data-exploration-display" style={dataExplorationDisplay}>
+                <Workspace />
+            </div>
+            <div id="modeling-display" style={modelingDisplay}>
                 <NewModeling />
-            </TabPanel>
+            </div>
         </div>
     );
 }
