@@ -86,8 +86,10 @@ function renderCheckboxes(constraintOptions) {
         options.push(constraintOptions[option]);
     }
     return (
-        options.map((option) =>
-            <ConstraintCheckbox constraint={option} />
+        options.map((option, index) => {
+                index = hashIndex(37) + index;
+                return(<div key={index}><ConstraintCheckbox constraint={option}/></div>)
+            }
         )
     )
 }
