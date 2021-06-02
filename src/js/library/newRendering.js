@@ -5,6 +5,7 @@ import { GridLayer, DomUtil } from 'leaflet';
 
 let tileIndex;
 let jsonArr = [];
+let layer;
 export default function newRendering(geojson) {
     jsonArr.push(geojson)
 }
@@ -36,15 +37,11 @@ const getTiles = () => {
     return xyz(bounds, globalThis.map.getZoom())
 }
 
-setInterval(() => {
-    //console.log({features: getFeatures()})
-    tileIndex = geojsonvt(Util.createGeoJsonObj(jsonArr));
-}, 3 * 1000)
-
 document.onkeypress = function (e) {
     e = e || window.event;
     if (e.keyCode === 114) {
-        createLayer();
+        tileIndex = geojsonvt(Util.createGeoJsonObj(jsonArr));
+        layer.redraw();
     }
 };
 
@@ -52,6 +49,7 @@ const createLayer = () => {
     console.log("here")
     const CanvasLayer = GridLayer.extend({
         createTile: function ({ x, y, z }) {
+            //console.log({x,y,z})
             let tile = DomUtil.create('canvas', 'leaflet-tile leaflet-sedesol');
             const ctx = tile.getContext('2d');
             // Set the tile size
@@ -68,13 +66,13 @@ const createLayer = () => {
             ctx.strokeStyle = 'grey';
             features.forEach(feature => {
                 const { geometry, tags } = feature;
-                console.log(geometry)
-                console.log(tags)
+                //console.log(geometry)
+                //console.log(tags)
                 ctx.fillStyle = 'red';
-                ctx.globalAlpha = 0.5; 
+                ctx.globalAlpha = 0.5;
                 ctx.beginPath();
                 geometry.forEach(points => {
-                    points.forEach((point,index) => { ctxDrawPolygon(ctx, point, index) });
+                    points.forEach((point, index) => { ctxDrawPolygon(ctx, point, index) });
                 });
                 ctx.fill('evenodd');
                 ctx.stroke();
@@ -82,8 +80,9 @@ const createLayer = () => {
             return tile;
         }
     });
+    return new CanvasLayer();
     // Add layer to the canvas
-    globalThis.map.addLayer(new CanvasLayer());
+    //globalThis.map.addLayer(new CanvasLayer());
 };
 
 const ctxDrawPolygon = (ctx, point, index) => {
@@ -91,6 +90,12 @@ const ctxDrawPolygon = (ctx, point, index) => {
     const extent = 4096;
     const x = point[0] / extent * 256;
     const y = point[1] / extent * 256;
-    if (index) ctx.lineTo(x  + pad, y   + pad)
-    else ctx.moveTo(x  + pad, y  + pad)
-  };
+    if (index) ctx.lineTo(x + pad, y + pad)
+    else ctx.moveTo(x + pad, y + pad)
+};
+
+setTimeout(() => { 
+    tileIndex = geojsonvt(Util.createGeoJsonObj(jsonArr)); 
+    layer = createLayer(); 
+    globalThis.map.addLayer(layer);
+}, 1000)
