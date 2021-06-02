@@ -9,7 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
 import {updateOpenLayers, createConstraints, extractActiveConstraints} from "./LayerHelpers";
 import {componentIsRendering} from "../TabSystem";
-import {randomizeIndex} from "./Helpers";
+import {hashIndex} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -67,7 +67,7 @@ export default function Layer(props) {
                                                layerIndex={props.layerIndex} />
                             </Grid>
                             {constraints.map((constraint, index) => {
-                                    index = randomizeIndex();
+                                    index = hashIndex(13) + index;
                                     return (<div key={index}>{constraint}</div>)
                                 }
                             )}

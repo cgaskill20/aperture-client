@@ -4,9 +4,9 @@ import WorkspaceControls from "./WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
 import {prettifyJSON} from "./Helpers";
 import AutoMenu from "../../library/autoMenu";
+import {componentIsRendering} from "../TabSystem";
 
 function overwrite() {}
-export const componentIsRendering = true;
 
 const useStyles = makeStyles((theme) => ({
     root: {

@@ -6,6 +6,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import Box from "@material-ui/core/Box";
 import AdvancedConstraintCheckbox from "./AdvancedConstraintCheckbox";
 import {componentIsRendering} from "../TabSystem";
+import {hashIndex} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -39,11 +40,13 @@ export default function AdvancedConstraints(props) {
                 Update Constraints
             </Button>
             {props.allLayerConstraints.map((constraint, index) => {
+                    const originalIndex = index;
+                    index = hashIndex(23) + index;
                     return (
                         <div key={index}>
                             <AdvancedConstraintCheckbox activeConstraints={layerConstraints}
                                                         setActiveConstraints={setLayerConstraints}
-                                                        index={index} layerIndex={props.layerIndex} constraint={constraint}/>
+                                                        index={originalIndex} layerIndex={props.layerIndex} constraint={constraint}/>
                         </div>)
                 }
             )}

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Card, Grid, Typography} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
-import {prettifyJSON} from "./Helpers";
+import {prettifyJSON, hashIndex} from "./Helpers";
 import ConstraintSlider from "./ConstraintSlider";
 import ConstraintCheckbox from "./ConstraintCheckbox";
 
@@ -34,8 +34,14 @@ export function extractActiveConstraints(layer) {
 export function createConstraints(activeConstraints, allLayerConstraints, layerIndex, classes) {
     let constraints = [];
     activeConstraints[layerIndex].forEach((constraint, index) => {
+        const originalIndex = index;
+        index = hashIndex(17) + index;
         if(constraint) {
-            constraints.push(renderIndividualConstraint(allLayerConstraints[index], classes));
+            constraints.push(
+                <div key={index}>
+                    {renderIndividualConstraint(allLayerConstraints[originalIndex], classes)}
+                </div>
+            );
         }
     });
     return constraints;
@@ -66,7 +72,7 @@ export function renderIndividualConstraint(constraint, classes) {
                 <Card className={classes.root}>
                     <Typography className={classes.heading}>{constraint.label}</Typography>
                     <CardContent>
-                        {renderCheckboxes(constraint.options, constraint.type)}
+                        {renderCheckboxes(constraint.options)}
                     </CardContent>
                 </Card>
             </Grid>
@@ -74,7 +80,7 @@ export function renderIndividualConstraint(constraint, classes) {
     }
 }
 
-function renderCheckboxes(constraintOptions, type) {
+function renderCheckboxes(constraintOptions) {
     let options = [];
     for(const option in constraintOptions) {
         options.push(constraintOptions[option]);

@@ -9,34 +9,15 @@ import NewModeling from "./NewModeling/NewModeling";
 import Workspace from "./NewDataExploration/Workspace";
 import { useGlobalState } from "./global/GlobalState";
 import { showGraph } from "../library/charting/chartBtnNewChartWindow";
-import {prettifyJSON} from "./NewDataExploration/Helpers";
 import {Button, ButtonGroup} from "@material-ui/core";
 
-export const componentIsRendering = true;
+export const componentIsRendering = false;
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
 }));
-
-//This function will get ALL constraints for EVERY layer and put them in a MASSIVE data structure.
-function extractAllConstraints(layers) {
-    let allConstraints = [];
-    for(const layer in layers) {
-        let theseLayerConstraints = [];
-        const individualLayer = layers[layer]
-        for(const layerConstraint in individualLayer.constraints) {
-            const individualConstraint = individualLayer.constraints[layerConstraint];
-            if(!individualConstraint.label) {
-                individualConstraint.label = prettifyJSON(layerConstraint);
-            }
-            theseLayerConstraints.push(individualConstraint);
-        }
-        allConstraints.push(theseLayerConstraints);
-    }
-    return allConstraints;
-}
 
 export default function TabSystem(props) {
     const classes = useStyles();
