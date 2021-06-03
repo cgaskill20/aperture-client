@@ -9,6 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
 import {updateOpenLayers, createConstraints, extractActiveConstraints} from "./LayerHelpers";
 import {componentIsRendering} from "../TabSystem";
+import {isGraphable} from "./Helpers"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,7 +31,8 @@ export default function Layer(props) {
     const [check, setCheck] = useState(false);
 
     const [defaultConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
-    const constraints = createConstraints(props.activeConstraints, allLayerConstraints, props.layerIndex, classes);
+    const [activeConstraints, setActiveConstraints] = useState(defaultConstraints);
+    const constraints = createConstraints(activeConstraints, allLayerConstraints, props.layerIndex, classes);
 
     //FIXME find out if layer is graphable here, pass as boolean
     if(componentIsRendering) console.log("|Layer|");
@@ -61,9 +63,9 @@ export default function Layer(props) {
                     <AccordionDetails>
                         <Grid container direction="column">
                             <Grid item>
-                                <LayerControls allLayerConstraints={allLayerConstraints} layer={props.layer} graphableLayers={props.graphableLayers}
-                                               defaultConstraints={defaultConstraints} activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints}
-                                               layerIndex={props.layerIndex} />
+                                <LayerControls allLayerConstraints={allLayerConstraints} layer={props.layer} defaultConstraints={defaultConstraints}
+                                               activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints}
+                                               layerIndex={props.layerIndex} graphableLayers={props.graphableLayers} />
                             </Grid>
                             {constraints}
                         </Grid>

@@ -33,7 +33,7 @@ export function extractActiveConstraints(layer) {
 
 export function createConstraints(activeConstraints, allLayerConstraints, layerIndex, classes) {
     let constraints = [];
-    activeConstraints[layerIndex].forEach((constraint, index) => {
+    activeConstraints.forEach((constraint, index) => {
         if(constraint) {
             constraints.push(
                 <div key={index}>

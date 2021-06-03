@@ -6,6 +6,7 @@ import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import WorkspaceSearchbar from "./WorkspaceSearchbar";
 import UpdateIcon from '@material-ui/icons/Update';
 import {componentIsRendering} from "../TabSystem";
+import {isGraphable} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
     root: {

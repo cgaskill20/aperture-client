@@ -8,20 +8,12 @@ import {makeStyles} from "@material-ui/core/styles";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
 import {componentIsRendering} from "../TabSystem";
+import {isGraphable} from "./Helpers";
 
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
 
 function findLayerIndex(layerLabel, layerTitles) {
-    //FIXME This is real weird and obvi should be working, but the loop continues after it finds the index...it's not returning...
-    // console.log(`Searching for ${layerLabel}`)
-    // layerTitles.forEach((title, index) => {
-    //     console.log(`Considering ${title} at index ${index}`)
-    //     if(title === layerLabel) {
-    //         console.log(`Found match at ${index}`)
-    //         return index;
-    //     }
-    // })
     for(let i = 0; i < layerTitles.length; i++) {
         if(layerTitles[i] === layerLabel) {
             return i;
@@ -41,8 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function graphIcon(index, layers, graphableLayers) {
-    const collectionName = layers[index].collection;
-    if(graphableLayers.includes(collectionName)) {
+    if(isGraphable(layers[index], graphableLayers)) {
         return <IconButton><EqualizerIcon color="primary"/></IconButton>
     }
     return;

@@ -9,15 +9,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, workspace, layerTitles, activeConstraints, setActiveConstraints) {
+function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, workspace, layerTitles) {
     let workspaceLayers = [];
     workspace.forEach((layer, index) => {
         if(layer) {
             workspaceLayers.push(
                 <div key={index} id={`layer-div-${index}`}>
                     <Layer layer={layers[index]} layerIndex={index} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                           openLayers={openLayers} setOpenLayers={setOpenLayers}
-                           activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
+                           openLayers={openLayers} setOpenLayers={setOpenLayers} />
                 </div>
             );
         }
@@ -28,7 +27,7 @@ function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, wor
 export default function WorkspaceLayers(props) {
     const classes = useStyles();
     const workspaceLayers = createWorkspace(props.layers, props.graphableLayers, props.openLayers, props.setOpenLayers,
-                                                                props.workspace, props.layerTitles, props.activeConstraints, props.setActiveConstraints);
+                                            props.workspace, props.layerTitles, props.graphableLayers);
 
     if(componentIsRendering) {console.log("|WorkspaceLayers Rerending|")}
     return (
