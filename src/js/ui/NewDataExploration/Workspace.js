@@ -7,6 +7,7 @@ import AutoMenu from "../../library/autoMenu";
 import {componentIsRendering} from "../TabSystem";
 
 function overwrite() {}
+export const printHashes = true;
 
 const useStyles = makeStyles((theme) => ({
     root: {

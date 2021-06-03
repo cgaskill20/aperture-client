@@ -12,7 +12,16 @@ import {componentIsRendering} from "../TabSystem";
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
 
-export function findIndex(layerLabel, layerTitles) {
+function findLayerIndex(layerLabel, layerTitles) {
+    //FIXME This is real weird and obvi should be working, but the loop continues after it finds the index...it's not returning...
+    // console.log(`Searching for ${layerLabel}`)
+    // layerTitles.forEach((title, index) => {
+    //     console.log(`Considering ${title} at index ${index}`)
+    //     if(title === layerLabel) {
+    //         console.log(`Found match at ${index}`)
+    //         return index;
+    //     }
+    // })
     for(let i = 0; i < layerTitles.length; i++) {
         if(layerTitles[i] === layerLabel) {
             return i;
@@ -57,11 +66,12 @@ export default function WorkspaceSearchbar(props) {
                 renderOption={(option, state) => {
                     const selectDatasetIndex = props.selectedDatasets.findIndex(
                         dataset => dataset.toLowerCase() === "all"
-                    , props.layerTitles);
+                    );
                     if (selectDatasetIndex > -1) {
                         state.selected = true;
                     }
-                    const optionIndex = findIndex({option}['option'], props.layerTitles);
+                    const optionIndex = findLayerIndex({option}['option'], props.layerTitles);
+                    // console.log({optionIndex})
                     return (
                         <React.Fragment>
                             <Checkbox

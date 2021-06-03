@@ -4,6 +4,7 @@ import CardContent from "@material-ui/core/CardContent";
 import {prettifyJSON, hashIndex} from "./Helpers";
 import ConstraintSlider from "./ConstraintSlider";
 import ConstraintCheckbox from "./ConstraintCheckbox";
+import {printHashes} from "./Workspace";
 
 export function getAllLayerConstraints(layer) {
     let allConstraints = [];
@@ -39,7 +40,7 @@ export function createConstraints(activeConstraints, allLayerConstraints, layerI
             index = hashIndex(layerIndex, index, 3);
 
             const createConstraints = `${layerIndex}-${originalIndex}: ${index}`
-            console.log({createConstraints})
+            if(printHashes) console.log({createConstraints})
 
             constraints.push(
                 <div key={index}>
@@ -91,9 +92,7 @@ function renderCheckboxes(constraintOptions, layerIndex) {
     }
     return (
         options.map((option, index) => {
-                index = layerIndex + hashIndex(37) + index;
-                return(<div key={index}><ConstraintCheckbox constraint={option}/></div>)
-            }
-        )
+            return(<div key={index}><ConstraintCheckbox constraint={option}/></div>)
+        })
     )
 }

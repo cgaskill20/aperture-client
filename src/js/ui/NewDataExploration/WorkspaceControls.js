@@ -17,15 +17,15 @@ function buildWorkspace(selectedDatasets, openLayers, setOpenLayers, layerTitles
     //FIXME This is some n^2 'ish right here, make it better
     let newWorkspace = [];
     let newOpenLayers = [...openLayers];
-    for(let i = 0; i < layerTitles.length; i++) {
-        if(selectedDatasets.includes(layerTitles[i])) {
-            newWorkspace.push(true);
+    layerTitles.forEach((title, index) => {
+        if(selectedDatasets.includes(title)) {
+            newWorkspace.push(true)
         }
         else {
             newWorkspace.push(false);
-            newOpenLayers[i] = false;
+            newOpenLayers[index] = false;
         }
-    }
+    })
     setOpenLayers(newOpenLayers);
     return newWorkspace;
 }

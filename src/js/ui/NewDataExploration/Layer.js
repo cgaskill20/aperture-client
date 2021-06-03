@@ -10,6 +10,7 @@ import LayerControls from "./LayerControls";
 import {updateOpenLayers, createConstraints, extractActiveConstraints} from "./LayerHelpers";
 import {componentIsRendering} from "../TabSystem";
 import {hashIndex} from "./Helpers";
+import {printHashes} from "./Workspace";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -66,15 +67,7 @@ export default function Layer(props) {
                                                defaultConstraints={defaultConstraints} activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints}
                                                layerIndex={props.layerIndex} />
                             </Grid>
-                            {constraints.map((constraint, index) => {
-                                const originalIndex = index;
-                                // index = props.layerIndex * hashIndex(13) + index;
-                                index = hashIndex(props.layerIndex, index, 4);
-                                const mapActiveConstraints = `${props.layerIndex}-${originalIndex}: ${index}`
-                                console.log({mapActiveConstraints})
-                                return (<div key={index}>{constraint}</div>)
-                            }
-                            )}
+                            {constraints}
                         </Grid>
                     </AccordionDetails>
                 </Accordion>
