@@ -5,18 +5,6 @@ import {prettifyJSON} from "./Helpers";
 import ConstraintSlider from "./ConstraintSlider";
 import ConstraintMultiSelect from "./ConstraintMultiSelect";
 
-export function getAllLayerConstraints(layer) {
-    let allConstraints = [];
-    for(const layerConstraint in layer.constraints) {
-        const constraint = layer.constraints[layerConstraint];
-        if(!constraint.label) {
-            constraint.label = prettifyJSON(layerConstraint);
-        }
-        allConstraints.push(constraint);
-    }
-    return allConstraints;
-}
-
 export function extractActiveConstraints(layer) {
     let activeConstraints = [];
     let allLayerConstraints = [];
@@ -44,12 +32,6 @@ export function createConstraints(activeConstraints, allLayerConstraints, layerI
         }
     });
     return constraints;
-}
-
-export function updateOpenLayers(openLayers, index) {
-    let updatedLayers = [...openLayers];
-    updatedLayers[index] = !updatedLayers[index];
-    return updatedLayers;
 }
 
 export function renderIndividualConstraint(constraint, classes, layerIndex, querier) {

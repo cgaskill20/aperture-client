@@ -9,6 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
 import {componentIsRendering} from "../TabSystem";
 import AutoQuery from '../../library/autoQuery';
+import {createConstraints, extractActiveConstraints} from "./LayerHelpers";
 
 const useStyles = makeStyles((theme) => ({
     root: {

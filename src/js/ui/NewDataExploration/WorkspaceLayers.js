@@ -9,14 +9,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, workspace, layerTitles) {
+function createWorkspace(layers, graphableLayers, workspace, layerTitles) {
     let workspaceLayers = [];
     workspace.forEach((layer, index) => {
         if(layer) {
             workspaceLayers.push(
                 <div key={index} id={`layer-div-${index}`}>
-                    <Layer layer={layers[index]} layerIndex={index} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                           openLayers={openLayers} setOpenLayers={setOpenLayers} />
+                    <Layer layer={layers[index]} layerIndex={index} graphableLayers={graphableLayers} layerTitles={layerTitles} />
                 </div>
             );
         }
