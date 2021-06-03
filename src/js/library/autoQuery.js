@@ -103,12 +103,11 @@ export default class AutoQuery {
       * menuGenerator.js
       * @memberof AutoQuery
       * @method updateConstraint
-      * @param {string} layer name of layer, not actually used anywhere here
       * @param {string} constraint name of constraint
       * @param {?} value value of constraint, type is dependant of type of constraint
       * @param {boolean} isActive is this constraint selected? this is only relevant for multiselector (checkbox) constraints.
       */
-    updateConstraint(layer, constraint, value, isActive) {
+    updateConstraint(constraint, value, isActive) {
         if (!constraint)
             return;
         let changed = false;

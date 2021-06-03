@@ -22,11 +22,18 @@ export default function ConstraintSlider({constraint, querier}) {
     const max = constraint.range[1];
     const step = constraint.step ? constraint.step : 1;
     const [minMax, setMinMax] = useState([min, max]);
+    const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
     
     useEffect(() => {
-        console.log(constraint)
-        //props.querier.updateConstraint();
-    }, [minMax]);
+        querier.constraintSetActive(constraint.name, true);
+        return () => {
+            querier.constraintSetActive(constraint.name, false);
+        }
+    }, []);
+
+    useEffect(() => {
+        querier.updateConstraint(constraint.name, minMaxCommited);
+    }, [minMaxCommited]);
 
     if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
     return (
@@ -38,6 +45,7 @@ export default function ConstraintSlider({constraint, querier}) {
             <Slider
                 value={minMax}
                 onChange={(event, newValue) => setMinMax(newValue)}
+                onChangeCommitted={(event, newValue) => setMinMaxCommited(newValue)}
                 aria-labelledby={`range-slider-${constraint.label}`}
                 min={min}
                 max={max}
