@@ -59,7 +59,6 @@ let oldLayers = [];
 
 export default function WorkspaceSearchbar(props) {
     const classes = useStyles();
-    console.log({oldLayers})
 
     if(componentIsRendering) {console.log("|WorkspaceSearchbar Rerending|")}
     return (
@@ -71,23 +70,21 @@ export default function WorkspaceSearchbar(props) {
                 id="dataset-searchbar"
                 options={props.layerTitles}
                 onChange={(e, layers) => {
-                    console.log({layers})
-                    console.log({oldLayers})
                     if(layers.length === 0) {
                         oldLayers = [];
                         props.setWorkspace(clearWorkspaceOrOpenLayers(props.workspace.length));
                         props.setOpenLayers(clearWorkspaceOrOpenLayers(props.workspace.length));
                     }
                     else if(layers.length > oldLayers.length) {
-                        const newestLayerSelected = findLayerIndex(layers[layers.length - 1], props.layerTitles);
-                        props.setWorkspace(updateWorkspace(props.workspace, newestLayerSelected));
+                        const indexOfAddedLayer = findLayerIndex(layers[layers.length - 1], props.layerTitles);
+                        props.setWorkspace(updateWorkspace(props.workspace, indexOfAddedLayer));
                     }
                     else if(layers.length < oldLayers.length) {
                         let setOfLayers = new Set(layers);
                         const removedLayer = oldLayers.filter(x => !setOfLayers.has(x));
-                        const newestLayerSelected = findLayerIndex(removedLayer[0], props.layerTitles);
-                        props.setWorkspace(updateWorkspace(props.workspace, newestLayerSelected))
-                        props.setOpenLayers(updateOpenLayers(props.openLayers, newestLayerSelected))
+                        const indexOfRemovedLayer = findLayerIndex(removedLayer[0], props.layerTitles);
+                        props.setWorkspace(updateWorkspace(props.workspace, indexOfRemovedLayer))
+                        props.setOpenLayers(updateOpenLayers(props.openLayers, indexOfRemovedLayer))
                     }
                     oldLayers = layers;
                 }}
