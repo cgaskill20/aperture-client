@@ -1,10 +1,9 @@
 import React from 'react';
 import {Card, Grid, Typography} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
-import {prettifyJSON, hashIndex} from "./Helpers";
+import {prettifyJSON} from "./Helpers";
 import ConstraintSlider from "./ConstraintSlider";
 import ConstraintCheckbox from "./ConstraintCheckbox";
-import {printHashes} from "./Workspace";
 
 export function getAllLayerConstraints(layer) {
     let allConstraints = [];
@@ -36,15 +35,9 @@ export function createConstraints(activeConstraints, allLayerConstraints, layerI
     let constraints = [];
     activeConstraints[layerIndex].forEach((constraint, index) => {
         if(constraint) {
-            const originalIndex = index;
-            index = hashIndex(layerIndex, index, 3);
-
-            const createConstraints = `${layerIndex}-${originalIndex}: ${index}`
-            if(printHashes) console.log({createConstraints})
-
             constraints.push(
                 <div key={index}>
-                    {renderIndividualConstraint(allLayerConstraints[originalIndex], classes, layerIndex)}
+                    {renderIndividualConstraint(allLayerConstraints[index], classes, layerIndex)}
                 </div>
             );
         }

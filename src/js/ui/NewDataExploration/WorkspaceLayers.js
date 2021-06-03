@@ -2,8 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Layer from "./Layer";
 import {componentIsRendering} from "../TabSystem";
-import {hashIndex} from "./Helpers";
-import {printHashes} from "./Workspace";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -15,13 +13,9 @@ function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, wor
     let workspaceLayers = [];
     workspace.forEach((layer, index) => {
         if(layer) {
-            const originalIndex = index;
-            index = hashIndex(originalIndex, index, 19);
-            const createWorkspaceLayers = `${layerTitles[originalIndex]}: ${index}`
-            if(printHashes) console.log({createWorkspaceLayers})
             workspaceLayers.push(
-                <div key={index} id={`layer-div-${originalIndex}`}>
-                    <Layer layer={layers[originalIndex]} layerIndex={originalIndex} graphableLayers={graphableLayers} layerTitles={layerTitles}
+                <div key={index} id={`layer-div-${index}`}>
+                    <Layer layer={layers[index]} layerIndex={index} graphableLayers={graphableLayers} layerTitles={layerTitles}
                            openLayers={openLayers} setOpenLayers={setOpenLayers}
                            activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
                 </div>
