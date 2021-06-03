@@ -61,6 +61,10 @@ export default class AutoQuery {
         this.minZoom = this.data.minZoom;
         this.blocked = false;
         AutoQuery.blockers[this.blockerGroup] = 0;
+
+        this.map.on('moveend', () => {
+            this.query();
+        });
     }
 
     /**
@@ -70,6 +74,7 @@ export default class AutoQuery {
       */
     onAdd() {
         this.enabled = true;
+        this.query();
     }
 
     /**
@@ -206,10 +211,10 @@ export default class AutoQuery {
       * new features come in with @method listenForLinkedGeometryUpdates
       */
     query() {
-        if (!this.zoomIsValid()) {
+        if (!this.enabled || !this.zoomIsValid()) {
             return;
         }
-        
+        console.log('here')
         let id;
         const callback = (d) => {
             const { event, payload } = d;

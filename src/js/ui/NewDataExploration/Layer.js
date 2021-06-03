@@ -34,9 +34,8 @@ export default function Layer(props) {
     const [defaultConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
     const [activeConstraints, setActiveConstraints] = useState(defaultConstraints);
     const constraints = createConstraints(activeConstraints, allLayerConstraints, props.layerIndex, classes);
-    
+
     const [ querier ] = useState(new AutoQuery(props.layer));
-    console.log(querier)
 
     if(componentIsRendering) console.log("|Layer|");
     return (
@@ -54,7 +53,11 @@ export default function Layer(props) {
                             aria-label="CheckLayer"
                             onClick={(event) => event.stopPropagation()}
                             onFocus={(event) => event.stopPropagation()}
-                            onChange={() => setCheck(!check)}
+                            onChange={() => { 
+                                setCheck(!check)
+                                !check && querier.onAdd();
+                                !check || querier.onRemove();
+                            }}
                             control={
                                 <Switch
                                         color="primary"
