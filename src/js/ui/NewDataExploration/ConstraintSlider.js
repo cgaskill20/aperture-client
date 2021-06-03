@@ -16,29 +16,34 @@ const useStyles = makeStyles({
     },
 });
 
-export default function ConstraintSlider(props) {
+export default function ConstraintSlider({constraint, querier}) {
     const classes = useStyles();
-    const min = props.constraint.range[0];
-    const max = props.constraint.range[1];
-    const step = props.constraint.step ? props.constraint.step : 1;
+    const min = constraint.range[0];
+    const max = constraint.range[1];
+    const step = constraint.step ? constraint.step : 1;
     const [minMax, setMinMax] = useState([min, max]);
+    
+    useEffect(() => {
+        console.log(constraint)
+        //props.querier.updateConstraint();
+    }, [minMax]);
 
     if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
     return (
-        <div className={classes.root} id={`constraint-div-${props.constraint.label}`}>
-            <Typography className={classes.title} id={`range-slider-${props.constraint.label}`} gutterBottom>
-                {props.constraint.label} &nbsp;
+        <div className={classes.root} id={`constraint-div-${constraint.label}`}>
+            <Typography className={classes.title} id={`range-slider-${constraint.label}`} gutterBottom>
+                {constraint.label} &nbsp;
                 <span className={classes.nowrap}>{minMax[0]} - {minMax[1]}</span>
             </Typography>
             <Slider
                 value={minMax}
                 onChange={(event, newValue) => setMinMax(newValue)}
-                aria-labelledby={`range-slider-${props.constraint.label}`}
+                aria-labelledby={`range-slider-${constraint.label}`}
                 min={min}
                 max={max}
                 step={step}
-                id={`${props.constraint.label}`}
-                name={`${props.constraint.label}`}
+                id={`${constraint.label}`}
+                name={`${constraint.label}`}
             />
         </div>
     );

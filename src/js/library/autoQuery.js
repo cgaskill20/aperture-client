@@ -214,7 +214,6 @@ export default class AutoQuery {
         if (!this.enabled || !this.zoomIsValid()) {
             return;
         }
-        console.log('here')
         let id;
         const callback = (d) => {
             const { event, payload } = d;

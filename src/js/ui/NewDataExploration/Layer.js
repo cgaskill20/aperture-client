@@ -33,7 +33,6 @@ export default function Layer(props) {
 
     const [defaultConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
     const [activeConstraints, setActiveConstraints] = useState(defaultConstraints);
-    const constraints = createConstraints(activeConstraints, allLayerConstraints, props.layerIndex, classes);
 
     const [ querier ] = useState(new AutoQuery(props.layer));
 
@@ -42,6 +41,8 @@ export default function Layer(props) {
             querier.onRemove();
         }
     }, [querier]);
+
+    const constraints = createConstraints(activeConstraints, allLayerConstraints, props.layerIndex, classes, querier);
 
     if(componentIsRendering) console.log("|Layer|");
     return (

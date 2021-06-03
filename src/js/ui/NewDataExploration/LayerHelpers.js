@@ -23,6 +23,7 @@ export function extractActiveConstraints(layer) {
     for(const constraint in layer.constraints) {
         activeConstraints.push(!layer.constraints[constraint].hide);
         layer.constraints[constraint].label = layer.constraints[constraint]?.label ?? constraint;
+        layer.constraints[constraint].name = constraint;
         if(layer.constraints[constraint].label.substring(0, 11) === "properties.") {
             layer.constraints[constraint].label = layer.constraints[constraint].label.substring(11, layer.constraints[constraint].label.length);
         }
@@ -31,13 +32,13 @@ export function extractActiveConstraints(layer) {
     return [activeConstraints, allLayerConstraints];
 }
 
-export function createConstraints(activeConstraints, allLayerConstraints, layerIndex, classes) {
+export function createConstraints(activeConstraints, allLayerConstraints, layerIndex, classes, querier) {
     let constraints = [];
     activeConstraints.forEach((constraint, index) => {
         if(constraint) {
             constraints.push(
                 <div key={index}>
-                    {renderIndividualConstraint(allLayerConstraints[index], classes, layerIndex)}
+                    {renderIndividualConstraint(allLayerConstraints[index], classes, layerIndex, querier)}
                 </div>
             );
         }
@@ -51,13 +52,13 @@ export function updateOpenLayers(openLayers, index) {
     return updatedLayers;
 }
 
-export function renderIndividualConstraint(constraint, classes, layerIndex) {
+export function renderIndividualConstraint(constraint, classes, layerIndex, querier) {
     if(constraint.type === "slider") {
         return (
             <Grid item>
                 <Card className={classes.root}>
                     <CardContent>
-                        <ConstraintSlider constraint={constraint} />
+                        <ConstraintSlider constraint={constraint} querier={querier} />
                     </CardContent>
                 </Card>
             </Grid>
