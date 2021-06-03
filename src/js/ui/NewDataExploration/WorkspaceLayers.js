@@ -26,8 +26,7 @@ function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, wor
 
 export default function WorkspaceLayers(props) {
     const classes = useStyles();
-    const workspaceLayers = createWorkspace(props.layers, props.graphableLayers, props.openLayers, props.setOpenLayers,
-                                            props.workspace, props.layerTitles, props.graphableLayers);
+    const workspaceLayers = createWorkspace(props.layers, props.graphableLayers, props.workspace, props.layerTitles, props.graphableLayers);
 
     if(componentIsRendering) {console.log("|WorkspaceLayers Rerending|")}
     return (

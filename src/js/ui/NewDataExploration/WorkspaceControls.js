@@ -25,7 +25,6 @@ export default function WorkspaceControls(props) {
                 </ButtonGroup>
             </Grid>
             <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
-                                openLayers={props.openLayers} setOpenLayers={props.setOpenLayers}
                                 workspace={props.workspace} setWorkspace={props.setWorkspace} />
         </div>
     )

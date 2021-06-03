@@ -45,13 +45,7 @@ function updateWorkspace(workspace, index) {
     return newWorkspace;
 }
 
-function updateOpenLayers(openLayers, index) {
-    let newOpenLayers = [...openLayers];
-    newOpenLayers[index] = false;
-    return newOpenLayers;
-}
-
-function clearWorkspaceOrOpenLayers(length) {
+function clearWorkspace(length) {
     return new Array(length).fill(false);
 }
 
@@ -72,8 +66,7 @@ export default function WorkspaceSearchbar(props) {
                 onChange={(e, layers) => {
                     if(layers.length === 0) {
                         oldLayers = [];
-                        props.setWorkspace(clearWorkspaceOrOpenLayers(props.workspace.length));
-                        props.setOpenLayers(clearWorkspaceOrOpenLayers(props.workspace.length));
+                        props.setWorkspace(clearWorkspace(props.workspace.length));
                     }
                     else if(layers.length > oldLayers.length) {
                         const indexOfAddedLayer = findLayerIndex(layers[layers.length - 1], props.layerTitles);
@@ -83,8 +76,7 @@ export default function WorkspaceSearchbar(props) {
                         let setOfLayers = new Set(layers);
                         const removedLayer = oldLayers.filter(x => !setOfLayers.has(x));
                         const indexOfRemovedLayer = findLayerIndex(removedLayer[0], props.layerTitles);
-                        props.setWorkspace(updateWorkspace(props.workspace, indexOfRemovedLayer))
-                        props.setOpenLayers(updateOpenLayers(props.openLayers, indexOfRemovedLayer))
+                        props.setWorkspace(updateWorkspace(props.workspace, indexOfRemovedLayer));
                     }
                     oldLayers = layers;
                 }}

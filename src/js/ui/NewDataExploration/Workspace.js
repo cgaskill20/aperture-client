@@ -21,7 +21,6 @@ export default function Workspace() {
 
     const [layers, setLayers] = useState([]);
     const [workspace, setWorkspace] = useState([]);
-    const [openLayers, setOpenLayers] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
     function extractLayers(data) {
         let tempBoolean = [];
@@ -36,7 +35,6 @@ export default function Workspace() {
         }
         setLayers(tempLayers);
         setWorkspace(tempBoolean);
-        setOpenLayers(tempBoolean);
         setLayerTitles(tempLayerTitles);
     }
 
@@ -68,10 +66,8 @@ export default function Workspace() {
     return (
         <div className={classes.root}>
             <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                               openLayers={openLayers} setOpenLayers={setOpenLayers}
                                workspace={workspace} setWorkspace={setWorkspace} />
             <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                             openLayers={openLayers} setOpenLayers={setOpenLayers}
                              workspace={workspace} setWorkspace={setWorkspace} />
         </div>
     );

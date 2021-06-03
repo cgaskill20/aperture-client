@@ -7,9 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {updateOpenLayers, createConstraints, extractActiveConstraints} from "./LayerHelpers";
 import {componentIsRendering} from "../TabSystem";
-import {isGraphable} from "./Helpers"
 import AutoQuery from '../../library/autoQuery';
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState(false);
+    const [expanded, setExpanded] = useState(false);
 
     const [defaultConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
     const [activeConstraints, setActiveConstraints] = useState(defaultConstraints);
@@ -50,11 +49,11 @@ export default function Layer(props) {
             <Paper elevation={1}>
                 <Accordion
                     color="primary"
-                    expanded={props.openLayers[props.layerIndex]}
+                    expanded={expanded}
                 >
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon color="primary" />}
-                        onClick={() => props.setOpenLayers(updateOpenLayers(props.openLayers, props.layerIndex))}
+                        onClick={() => setExpanded(!expanded)}
                     >
                         <FormControlLabel
                             aria-label="CheckLayer"
