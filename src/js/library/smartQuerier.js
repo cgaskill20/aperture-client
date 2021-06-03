@@ -116,7 +116,7 @@ class SmartQuerier {
             onDataCallback(data);
         });
         stream.on('end', () => {
-            this.activeStreams.filter(stream => stream.id !== id);
+            this._remove(id);
             onStreamEndCallback();
         });
 
@@ -132,8 +132,13 @@ class SmartQuerier {
      * @returns {boolean} true if successful, false otherwise
      */
     kill(id) { 
-        const { stream } = this.activeStreams.find(stream => stream.id === id);
-        stream.cancel();
+        const stream = this.activeStreams.find(stream => stream.id === id)?.stream
+        stream?.cancel();
+        stream && this._remove(id);
+    }
+
+    _remove(id) {
+        this.activeStreams = this.activeStreams.filter(stream => stream.id !== id);
     }
 }
 
