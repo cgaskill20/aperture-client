@@ -24,7 +24,7 @@ export default class AutoQuery {
     constructor(layerData, graphPipeID) {
         this.data = layerData;
         this.collection = layerData.collection;
-        this.map = layerData.map();
+        this.map = globalThis.map;
 
         this.constraintData = {};
         this.constraintState = {};

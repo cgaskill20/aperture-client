@@ -10,6 +10,7 @@ import LayerControls from "./LayerControls";
 import {updateOpenLayers, createConstraints, extractActiveConstraints} from "./LayerHelpers";
 import {componentIsRendering} from "../TabSystem";
 import {isGraphable} from "./Helpers"
+import AutoQuery from '../../library/autoQuery';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,6 +34,9 @@ export default function Layer(props) {
     const [defaultConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
     const [activeConstraints, setActiveConstraints] = useState(defaultConstraints);
     const constraints = createConstraints(activeConstraints, allLayerConstraints, props.layerIndex, classes);
+    
+    const [ querier ] = useState(new AutoQuery(props.layer));
+    console.log(querier)
 
     if(componentIsRendering) console.log("|Layer|");
     return (
