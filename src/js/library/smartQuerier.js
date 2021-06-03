@@ -108,7 +108,7 @@ class SmartQuerier {
      * @param {Function} onStreamEndCallback The callback to fire when the stream dies.
      * @returns {Object} The associated stream. Note you don't need to use this - the callbacks should be sufficient to process data in most situations.
      */
-    query(collection, queryParams, onDataCallback, onStreamEndCallback) {
+    query(collection, queryParams, onDataCallback, onStreamEndCallback, id = Math.random().toString(36).substring(2,8)) {
         const stream = this.querier.getStreamForQuery(collection, JSON.stringify(queryParams));
 
         stream.on('data', (res) => {
@@ -117,8 +117,8 @@ class SmartQuerier {
         });
         stream.on('end', onStreamEndCallback);
 
-        this.activeStreams.push({ "stream": stream, "collection": collection });
-        return stream;
+        this.activeStreams.push({ stream, id });
+        return id;
     }
 }
 
