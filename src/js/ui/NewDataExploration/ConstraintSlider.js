@@ -25,15 +25,15 @@ export default function ConstraintSlider({constraint, querier}) {
     const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
     
     useEffect(() => {
+        querier.updateConstraint(constraint.name, minMaxCommited);
+    }, [minMaxCommited]);
+
+    useEffect(() => {
         querier.constraintSetActive(constraint.name, true);
         return () => {
             querier.constraintSetActive(constraint.name, false);
         }
     }, []);
-
-    useEffect(() => {
-        querier.updateConstraint(constraint.name, minMaxCommited);
-    }, [minMaxCommited]);
 
     if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
     return (
