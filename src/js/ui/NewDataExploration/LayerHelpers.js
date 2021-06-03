@@ -3,7 +3,7 @@ import {Card, Grid, Typography} from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import {prettifyJSON} from "./Helpers";
 import ConstraintSlider from "./ConstraintSlider";
-import ConstraintCheckbox from "./ConstraintCheckbox";
+import ConstraintMultiSelect from "./ConstraintMultiSelect";
 
 export function getAllLayerConstraints(layer) {
     let allConstraints = [];
@@ -71,22 +71,10 @@ export function renderIndividualConstraint(constraint, classes, layerIndex, quer
                 <Card className={classes.root}>
                     <Typography className={classes.heading}>{constraint.label}</Typography>
                     <CardContent>
-                        {renderCheckboxes(constraint.options, layerIndex)}
+                        <ConstraintMultiSelect constraint={constraint} querier={querier}/>
                     </CardContent>
                 </Card>
             </Grid>
         );
     }
-}
-
-function renderCheckboxes(constraintOptions, layerIndex) {
-    let options = [];
-    for(const option in constraintOptions) {
-        options.push(constraintOptions[option]);
-    }
-    return (
-        options.map((option, index) => {
-            return(<div key={index}><ConstraintCheckbox constraint={option}/></div>)
-        })
-    )
 }
