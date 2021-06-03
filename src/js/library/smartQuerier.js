@@ -111,13 +111,11 @@ class SmartQuerier {
      */
     query(collection, queryParams, onDataCallback, onStreamEndCallback, id = Math.random().toString(36).substring(2,8)) {
         const stream = this.querier.getStreamForQuery(collection, JSON.stringify(queryParams));
-
         stream.on('data', (res) => {
             const data = JSON.parse(res.getData());
             onDataCallback(data);
         });
         stream.on('end', () => {
-            console.log("streamEnd " + id)
             this.activeStreams.filter(stream => stream.id !== id);
             onStreamEndCallback();
         });
@@ -134,8 +132,8 @@ class SmartQuerier {
      * @returns {boolean} true if successful, false otherwise
      */
     kill(id) { 
-        const stream = this.activeStreams.find(stream => stream.id === id);
-        stream.kill();
+        const { stream } = this.activeStreams.find(stream => stream.id === id);
+        stream.cancel();
     }
 }
 

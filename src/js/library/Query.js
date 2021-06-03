@@ -95,8 +95,10 @@ const Query = {
     * @param {string} qid
     **/
     killQuery(qid){
-        console.log({qid})
-        //TODO
+        this.queryWorker.postMessage({
+            type: "kill",
+            id: qid
+        });
     },
 
     _queryFineOrCoarse(query){
