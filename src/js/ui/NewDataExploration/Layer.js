@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -36,6 +36,12 @@ export default function Layer(props) {
     const constraints = createConstraints(activeConstraints, allLayerConstraints, props.layerIndex, classes);
 
     const [ querier ] = useState(new AutoQuery(props.layer));
+
+    useEffect(() => {
+        return () => {
+            querier.onRemove();
+        }
+    }, [querier]);
 
     if(componentIsRendering) console.log("|Layer|");
     return (
