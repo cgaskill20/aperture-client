@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -39,8 +39,27 @@ function graphIcon(index, layers, graphableLayers) {
     return;
 }
 
+function updateWorkspace(workspace, index) {
+    let newWorkspace = [...workspace];
+    newWorkspace[index] = !newWorkspace[index];
+    return newWorkspace;
+}
+
+function updateOpenLayers(openLayers, index) {
+    let newOpenLayers = [...openLayers];
+    newOpenLayers[index] = false;
+    return newOpenLayers;
+}
+
+function clearWorkspaceOrOpenLayers(length) {
+    return new Array(length).fill(false);
+}
+
+let oldLayers = [];
+
 export default function WorkspaceSearchbar(props) {
     const classes = useStyles();
+    console.log({oldLayers})
 
     if(componentIsRendering) {console.log("|WorkspaceSearchbar Rerending|")}
     return (
@@ -51,28 +70,37 @@ export default function WorkspaceSearchbar(props) {
                 disableCloseOnSelect
                 id="dataset-searchbar"
                 options={props.layerTitles}
-                onChange={(e, dataset) => {
-                    props.setSelectedDatasets(dataset);
+                onChange={(e, layers) => {
+                    console.log({layers})
+                    console.log({oldLayers})
+                    if(layers.length === 0) {
+                        oldLayers = [];
+                        props.setWorkspace(clearWorkspaceOrOpenLayers(props.workspace.length));
+                        props.setOpenLayers(clearWorkspaceOrOpenLayers(props.workspace.length));
+                    }
+                    else if(layers.length > oldLayers.length) {
+                        const newestLayerSelected = findLayerIndex(layers[layers.length - 1], props.layerTitles);
+                        props.setWorkspace(updateWorkspace(props.workspace, newestLayerSelected));
+                    }
+                    else if(layers.length < oldLayers.length) {
+                        let setOfLayers = new Set(layers);
+                        const removedLayer = oldLayers.filter(x => !setOfLayers.has(x));
+                        const newestLayerSelected = findLayerIndex(removedLayer[0], props.layerTitles);
+                        props.setWorkspace(updateWorkspace(props.workspace, newestLayerSelected))
+                        props.setOpenLayers(updateOpenLayers(props.openLayers, newestLayerSelected))
+                    }
+                    oldLayers = layers;
                 }}
                 renderOption={(option, state) => {
-                    const selectDatasetIndex = props.selectedDatasets.findIndex(
-                        dataset => dataset.toLowerCase() === "all"
-                    );
-                    if (selectDatasetIndex > -1) {
-                        state.selected = true;
-                    }
                     const optionIndex = findLayerIndex({option}['option'], props.layerTitles);
-                    // console.log({optionIndex})
                     return (
                         <React.Fragment>
                             <Checkbox
-                                id={`searchbar-checkbox-${optionIndex}`}
-                                name={`searchbar-checkbox-${optionIndex}`}
                                 icon={icon}
                                 color="primary"
                                 checkedIcon={checkedIcon}
                                 style={{ marginRight: 8 }}
-                                checked={state.selected || props.workspace[optionIndex]}
+                                checked={props.workspace[optionIndex]}
                             />
                             {option}
                             <span className={classes.graphIcon}>{graphIcon(optionIndex, props.layers, props.graphableLayers)}</span>

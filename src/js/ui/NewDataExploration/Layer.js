@@ -34,7 +34,6 @@ export default function Layer(props) {
     const [activeConstraints, setActiveConstraints] = useState(defaultConstraints);
     const constraints = createConstraints(activeConstraints, allLayerConstraints, props.layerIndex, classes);
 
-    //FIXME find out if layer is graphable here, pass as boolean
     if(componentIsRendering) console.log("|Layer|");
     return (
         <div id={`layer-div-${props.layerTitles[props.layerIndex]}`} className={classes.root}>
