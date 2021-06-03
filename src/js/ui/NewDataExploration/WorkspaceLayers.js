@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Layer from "./Layer";
 import {componentIsRendering} from "../TabSystem";
-import {hashIndex} from "./Helpers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -10,17 +9,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, workspace, layerTitles, activeConstraints, setActiveConstraints) {
+function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, workspace, layerTitles) {
     let workspaceLayers = [];
     workspace.forEach((layer, index) => {
         if(layer) {
-            const originalIndex = index;
-            index = hashIndex(7) + index;
             workspaceLayers.push(
-                <div key={index} id={`layer-div-${originalIndex}`}>
-                    <Layer layer={layers[originalIndex]} layerIndex={originalIndex} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                           openLayers={openLayers} setOpenLayers={setOpenLayers}
-                           activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints} />
+                <div key={index} id={`layer-div-${index}`}>
+                    <Layer layer={layers[index]} layerIndex={index} graphableLayers={graphableLayers} layerTitles={layerTitles}
+                           openLayers={openLayers} setOpenLayers={setOpenLayers} />
                 </div>
             );
         }
@@ -31,16 +27,12 @@ function createWorkspace(layers, graphableLayers, openLayers, setOpenLayers, wor
 export default function WorkspaceLayers(props) {
     const classes = useStyles();
     const workspaceLayers = createWorkspace(props.layers, props.graphableLayers, props.openLayers, props.setOpenLayers,
-                                            props.workspace, props.layerTitles, props.activeConstraints, props.setActiveConstraints);
+                                            props.workspace, props.layerTitles, props.graphableLayers);
 
     if(componentIsRendering) {console.log("|WorkspaceLayers Rerending|")}
     return (
         <div className={classes.root}>
-            {workspaceLayers.map((layer, index) => {
-                    index = hashIndex(11) + index;
-                    return (<div key={index}>{layer}</div>)
-                }
-            )}
+            {workspaceLayers}
         </div>
     );
 }

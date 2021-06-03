@@ -15,7 +15,7 @@ export default function AdvancedConstraintCheckbox(props) {
 
     if(componentIsRendering) {console.log("|AdvancedContraintCheckbox Rerending|")}
     return (
-        <FormGroup id={`advanced-constraint-formGroup-${props.layerIndex}-${props.index}`}>
+        <FormGroup>
             <FormControlLabel
                 control={
                     <Checkbox
@@ -24,8 +24,6 @@ export default function AdvancedConstraintCheckbox(props) {
                             setCheck(!check);
                             props.setActiveConstraints(updateLayerConstraints(props.activeConstraints, props.index));
                         }}
-                        id={`advanced-constraint-checkbox-${props.layerIndex}-${props.index}`}
-                        name={`advanced-constraint-checkbox-${props.layerIndex}-${props.index}`}
                         color="primary"
                     />
                 }

@@ -6,21 +6,15 @@ import EqualizerIcon from "@material-ui/icons/Equalizer";
 import TuneIcon from '@material-ui/icons/Tune';
 import AdvancedConstraints from "./AdvancedConstraints";
 import {componentIsRendering} from "../TabSystem";
+import {isGraphable} from "./Helpers";
 
 function graphIcon(layer, graphableLayers) {
-    const collectionName = layer.collection;
-    if(graphableLayers.includes(collectionName)) {
+    if(isGraphable(layer, graphableLayers)) {
         return <Button startIcon={<EqualizerIcon />}>
             Graph Me
         </Button>
     }
     return;
-}
-
-function setDefaultConstraints(activeConstraints, defaultConstraints, layerIndex) {
-    let newActiveConstraints = [...activeConstraints];
-    newActiveConstraints[layerIndex] = defaultConstraints;
-    return newActiveConstraints;
 }
 
 export default function LayerControls(props) {
@@ -39,7 +33,7 @@ export default function LayerControls(props) {
                         Reset Constraints
                     </Button>
                     <Button startIcon={<TuneIcon />} onClick={() => {
-                        props.setActiveConstraints(setDefaultConstraints(props.activeConstraints, props.defaultConstraints, props.layerIndex));
+                        props.setActiveConstraints(props.defaultConstraints);
                     }}>
                         Default Constraints
                     </Button>
