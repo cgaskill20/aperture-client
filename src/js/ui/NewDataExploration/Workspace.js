@@ -67,8 +67,7 @@ export default function Workspace() {
         <div className={classes.root}>
             <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
                                workspace={workspace} setWorkspace={setWorkspace} />
-            <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                             workspace={workspace} setWorkspace={setWorkspace} />
+            <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />
         </div>
     );
 }
