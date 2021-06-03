@@ -319,7 +319,7 @@ export default class AutoQuery {
 
         indexData[this.collection]["border"] = this.color.border;
         indexData[this.collection]["opacity"] = this.color.opacity;
-
+        data.properties.color = this.getColor(data.properties);
         newRendering(data)
         //this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.add(id);

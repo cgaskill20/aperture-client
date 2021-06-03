@@ -50,7 +50,7 @@ export default {
                     autoMenuLayer["subGroup"] = metadata["subGroup"] ? metadata["subGroup"] : metadata.level === "tract" ? "Miscellaneous Tract" : "Miscellaneous County";
                     autoMenuLayer["linkedGeometry"] = metadata.level === "tract" ? "tract_geo_140mb_no_2d_index" : "county_geo_30mb_no_2d_index";
                     autoMenuLayer["joinProperty"] = "GISJOIN";
-                    autoMenuLayer["minZoom"] = metadata.level === "tract" ? 9 : 7;
+                    autoMenuLayer["minZoom"] = metadata.level === "tract" ? 4 : 7;
                 }
                 else {
                     autoMenuLayer["group"] = "Infrastructure & Natural Features";

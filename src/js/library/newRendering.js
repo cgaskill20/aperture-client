@@ -68,7 +68,7 @@ const createLayer = () => {
                 const { geometry, tags } = feature;
                 //console.log(geometry)
                 //console.log(tags)
-                ctx.fillStyle = 'red';
+                ctx.fillStyle = tags.color;
                 ctx.globalAlpha = 0.5;
                 ctx.beginPath();
                 geometry.forEach(points => {
