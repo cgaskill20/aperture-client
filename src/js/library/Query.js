@@ -95,7 +95,7 @@ const Query = {
     * @param {string} qid
     **/
     killQuery(qid){
-        console.log(qid)
+        console.log({qid})
         //TODO
     },
 
@@ -155,6 +155,7 @@ const Query = {
                 if (payload.geohashes) {
                     geohashes = payload.geohashes;
                 }
+                query.callback({ event: "info", payload: { geohashes, id } })
             }
             else if (event === "end") {
                 waitingRoomDone = true;
@@ -168,7 +169,6 @@ const Query = {
         }
 
         const finished = () => {
-            query.callback({ event: "info", payload: { geohashes, id } })
             query.callback({ event: "end" })
         }
 

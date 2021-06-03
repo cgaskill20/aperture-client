@@ -156,7 +156,6 @@ export default class AutoQuery {
       * @method killCurrentQueries
       */
     killCurrentQueries(){
-        console.log([...this.currentQueries])
         for(const qid of [...this.currentQueries]){
             Query.killQuery(qid);
         }
@@ -215,7 +214,6 @@ export default class AutoQuery {
         const callback = (d) => {
             const { event, payload } = d;
             if(event === "data"){
-                console.log(id)
                 this.renderGeoJSON(payload.data);
             }
             else if(event === "info"){
@@ -223,11 +221,9 @@ export default class AutoQuery {
                 if(payload.id) { 
                     id = payload.id;
                     this.currentQueries.add(payload.id); 
-                    console.log([...this.currentQueries])
                 }
             }
             else if(event === "end"){
-                console.log("removing " + id)
                 this.currentQueries.delete(id);
             }
         }
