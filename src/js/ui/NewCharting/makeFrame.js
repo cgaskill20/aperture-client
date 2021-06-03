@@ -7,11 +7,11 @@ import dataContext from "./dataContext";
 
 export default function Frame(props) {
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
-    let context = dataContext;
+
     let frame;
     switch (props.type.name) {
         case "histogram":
-           frame = <Histogram size={props.size} data={context}></Histogram>; break;
+           frame = <Histogram size={props.size} data={props.data}></Histogram>; break;
         default: break;
     }
 
@@ -22,7 +22,7 @@ export default function Frame(props) {
             height: props.size.height - 50,
             border: "1px solid red"
         }}>
-            {console.log("rerender")}
+            {console.log("rerenderframe")}
             {frame}
         </div>
     );

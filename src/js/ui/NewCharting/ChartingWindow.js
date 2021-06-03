@@ -10,16 +10,17 @@ export default function ChartingWindow(props) {
     const [frames, setFrames] = useState([]);
 
     const addChartFrame = frame => {   
-        setFrames(frames.concat([<Frame type={frame.type} size={props.size} cb={props.setData} data={props.data}/>]));
-        console.log(frames);
+        //setFrames(frames.concat([<Frame type={frame.type} size={props.size} cb={props.setData} data={props.data}/>]));
+        setFrames(frames.concat([frame.type]))
     }
 
     return (
         <Grid container>
+            {console.log("rerender")}
             <Grid container direction="row" alignItems="center" justify="center" spacing={1}>
                 <Grid container direction="column" alignItems="center" justify="center" style={{ width: "90%" }}>
                     <ChartGlobalControls make={addChartFrame}/>
-                        {frames}
+                        {frames.map((frame, index) => <Frame key={index} type={frame} size={props.size} cb={props.setData} data={props.data}/>)}
                 </Grid>
             </Grid>
         </Grid>

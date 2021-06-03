@@ -3,11 +3,12 @@ import * as d3 from 'd3';
 
 export default function Histogram(props) {
     const d3Chart = useRef()
+
     let [chartData, setChartData] = useState({});
+    let data = props.data
 
     useEffect(()=>{
-            console.log("here");
-            console.log(chartData);
+
             // set the dimensions and margins of the graph
             var margin = {top: 10, right: 30, bottom: 30, left: 40},
             width = props.size.width,
