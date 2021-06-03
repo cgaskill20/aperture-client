@@ -226,7 +226,7 @@ export default class AutoQuery {
             else if(event === "end"){
                 this.currentQueries.delete(id);
             }
-        } 
+        }
 
         Query.makeQuery({
             collection: this.collection,

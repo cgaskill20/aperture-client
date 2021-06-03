@@ -95,7 +95,10 @@ const Query = {
     * @param {string} qid
     **/
     killQuery(qid){
-        //TODO
+        this.queryWorker.postMessage({
+            type: "kill",
+            id: qid
+        });
     },
 
     _queryFineOrCoarse(query){
@@ -154,6 +157,7 @@ const Query = {
                 if (payload.geohashes) {
                     geohashes = payload.geohashes;
                 }
+                query.callback({ event: "info", payload: { geohashes, id } })
             }
             else if (event === "end") {
                 waitingRoomDone = true;
@@ -167,7 +171,6 @@ const Query = {
         }
 
         const finished = () => {
-            query.callback({ event: "info", payload: { geohashes, id } })
             query.callback({ event: "end" })
         }
 
@@ -394,19 +397,17 @@ const Query = {
 
     _queryMongo(query) {
         const { pipeline, collection, callback, id } = query;
-
         query.callback({ event: "info", payload: { id } })
-        const sessionID = Math.random().toString(36).substring(2, 6);
         this.queryWorker.postMessage({
             type: "query",
             collection,
             queryParams: pipeline,
-            senderID: sessionID
+            senderID: id
         });
 
         const responseListener = msg => {
             const data = msg.data;
-            if (data.senderID !== sessionID)
+            if (data.senderID !== id)
                 return;
             if (data.type === "data") {
                 const dataFromServer = data.data;
