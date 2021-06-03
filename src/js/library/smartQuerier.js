@@ -118,6 +118,7 @@ class SmartQuerier {
         });
         stream.on('end', () => {
             console.log("streamEnd " + id)
+            this.activeStreams.filter(stream => stream.id !== id);
             onStreamEndCallback();
         });
 

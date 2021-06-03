@@ -95,6 +95,7 @@ const Query = {
     * @param {string} qid
     **/
     killQuery(qid){
+        console.log(qid)
         //TODO
     },
 
