@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -10,6 +10,7 @@ import LayerControls from "./LayerControls";
 import {updateOpenLayers, createConstraints, extractActiveConstraints} from "./LayerHelpers";
 import {componentIsRendering} from "../TabSystem";
 import {isGraphable} from "./Helpers"
+import AutoQuery from '../../library/autoQuery';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,7 +33,16 @@ export default function Layer(props) {
 
     const [defaultConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
     const [activeConstraints, setActiveConstraints] = useState(defaultConstraints);
-    const constraints = createConstraints(activeConstraints, allLayerConstraints, props.layerIndex, classes);
+
+    const [ querier ] = useState(new AutoQuery(props.layer));
+
+    useEffect(() => {
+        return () => {
+            querier.onRemove();
+        }
+    }, [querier]);
+
+    const constraints = createConstraints(activeConstraints, allLayerConstraints, props.layerIndex, classes, querier);
 
     if(componentIsRendering) console.log("|Layer|");
     return (
@@ -50,7 +60,11 @@ export default function Layer(props) {
                             aria-label="CheckLayer"
                             onClick={(event) => event.stopPropagation()}
                             onFocus={(event) => event.stopPropagation()}
-                            onChange={() => setCheck(!check)}
+                            onChange={() => { 
+                                setCheck(!check)
+                                !check && querier.onAdd();
+                                !check || querier.onRemove();
+                            }}
                             control={
                                 <Switch
                                         color="primary"

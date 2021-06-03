@@ -5,6 +5,7 @@ import WorkspaceLayers from "./WorkspaceLayers";
 import {prettifyJSON} from "./Helpers";
 import AutoMenu from "../../library/autoMenu";
 import {componentIsRendering} from "../TabSystem";
+import Query from "../../library/Query";
 
 function overwrite() {}
 export const printHashes = false;
@@ -53,6 +54,7 @@ export default function Workspace() {
     useEffect(() => {
         $.getJSON("src/json/menumetadata.json", async function (mdata) {
             const finalData = await AutoMenu.build(mdata, overwrite);
+            Query.init(finalData);
             extractLayers(finalData);
         });
 

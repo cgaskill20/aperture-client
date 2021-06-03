@@ -24,7 +24,7 @@ export default class AutoQuery {
     constructor(layerData, graphPipeID) {
         this.data = layerData;
         this.collection = layerData.collection;
-        this.map = layerData.map();
+        this.map = globalThis.map;
 
         this.constraintData = {};
         this.constraintState = {};
@@ -61,6 +61,10 @@ export default class AutoQuery {
         this.minZoom = this.data.minZoom;
         this.blocked = false;
         AutoQuery.blockers[this.blockerGroup] = 0;
+
+        this.map.on('moveend', () => {
+            this.query();
+        });
     }
 
     /**
@@ -70,6 +74,7 @@ export default class AutoQuery {
       */
     onAdd() {
         this.enabled = true;
+        this.query();
     }
 
     /**
@@ -98,12 +103,11 @@ export default class AutoQuery {
       * menuGenerator.js
       * @memberof AutoQuery
       * @method updateConstraint
-      * @param {string} layer name of layer, not actually used anywhere here
       * @param {string} constraint name of constraint
       * @param {?} value value of constraint, type is dependant of type of constraint
       * @param {boolean} isActive is this constraint selected? this is only relevant for multiselector (checkbox) constraints.
       */
-    updateConstraint(layer, constraint, value, isActive) {
+    updateConstraint(constraint, value, isActive) {
         if (!constraint)
             return;
         let changed = false;
@@ -206,10 +210,9 @@ export default class AutoQuery {
       * new features come in with @method listenForLinkedGeometryUpdates
       */
     query() {
-        if (!this.zoomIsValid()) {
+        if (!this.enabled || !this.zoomIsValid()) {
             return;
         }
-        
         let id;
         const callback = (d) => {
             const { event, payload } = d;
