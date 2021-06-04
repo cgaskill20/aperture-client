@@ -20,7 +20,6 @@ function findLayerIndex(layerLabel, layerTitles) {
             return i;
         }
     }
-    return -1;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -33,11 +32,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function graphIcon(index, layers, graphableLayers) {
-    if(isGraphable(layers[index], graphableLayers)) {
+function graphIcon(layer, graphableLayers) {
+    if(isGraphable(layer, graphableLayers)) {
         return <Tooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></Tooltip>
     }
-    return;
 }
 
 function updateWorkspace(workspace, index) {
@@ -65,13 +63,13 @@ export default function WorkspaceSearchbar(props) {
                 id="dataset-searchbar"
                 options={props.layerTitles}
                 onChange={(e, layers) => {
-                    if(layers.length === 0) {
-                        oldLayers = [];
-                        props.setWorkspace(clearWorkspace(props.workspace.length));
-                    }
-                    else if(layers.length > oldLayers.length) {
+                    if(layers.length > oldLayers.length) {
                         const indexOfAddedLayer = findLayerIndex(layers[layers.length - 1], props.layerTitles);
                         props.setWorkspace(updateWorkspace(props.workspace, indexOfAddedLayer));
+                    }
+                    else if(layers.length === 0) {
+                        oldLayers = [];
+                        props.setWorkspace(clearWorkspace(props.workspace.length));
                     }
                     else if(layers.length < oldLayers.length) {
                         let setOfLayers = new Set(layers);
@@ -82,7 +80,7 @@ export default function WorkspaceSearchbar(props) {
                     oldLayers = layers;
                 }}
                 renderOption={(option, state) => {
-                    const optionIndex = findLayerIndex({option}['option'], props.layerTitles);
+                    const optionIndex = findLayerIndex({option}.option, props.layerTitles);
                     return (
                         <React.Fragment>
                             <Checkbox
@@ -93,7 +91,7 @@ export default function WorkspaceSearchbar(props) {
                                 checked={props.workspace[optionIndex]}
                             />
                             {option}
-                            <span className={classes.graphIcon}>{graphIcon(optionIndex, props.layers, props.graphableLayers)}</span>
+                            <span className={classes.graphIcon}>{graphIcon(props.layers[optionIndex], props.graphableLayers)}</span>
                         </React.Fragment>
                     );
                 }}
