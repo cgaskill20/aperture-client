@@ -28,11 +28,7 @@ function getLayerText(layerInfo) {
     }
 }
 
-
-//FIXME Connect this to the layer text
 export default function LayerControls(props) {
-    const layer = props.layer;
-    console.log({layer})
     if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (
         <Card>
