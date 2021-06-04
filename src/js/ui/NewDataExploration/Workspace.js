@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import WorkspaceControls from "./WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
-import {prettifyJSON} from "./Helpers";
 import AutoMenu from "../../library/autoMenu";
 import {componentIsRendering} from "../TabSystem";
 import Query from "../../library/Query";
+import Util from "../../library/apertureUtil";
 
 function overwrite() {}
 export const printHashes = false;
@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme) => ({
         width: '98%',
     },
 }));
+
+function prettifyJSON(name) {
+    return Util.capitalizeString(Util.underScoreToSpace(name));
+}
 
 export default function Workspace() {
     const classes = useStyles();

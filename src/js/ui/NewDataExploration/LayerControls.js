@@ -17,6 +17,7 @@ function graphIcon(layer, graphableLayers) {
     return;
 }
 
+//FIXME Connect this to the layer text
 export default function LayerControls(props) {
     if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (

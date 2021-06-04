@@ -55,7 +55,7 @@ function createConstraints(activeLayerConstraints, allLayerConstraints, classes,
 export default function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState(false);
-    const [expanded, setExpanded] = useState(false);
+    const [layerExpanded, setLayerExpanded] = useState(false);
 
     const [defaultLayerConstraints, allLayerConstraints] = extractLayerConstraints(props.layer);
     const [activeLayerConstraints, setActiveLayerConstraints] = useState(defaultLayerConstraints);
@@ -76,11 +76,11 @@ export default function Layer(props) {
             <Paper elevation={1}>
                 <Accordion
                     color="primary"
-                    expanded={expanded}
+                    expanded={layerExpanded}
                 >
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon color="primary" />}
-                        onClick={() => setExpanded(!expanded)}
+                        onClick={() => setLayerExpanded(!layerExpanded)}
                     >
                         <FormControlLabel
                             aria-label="CheckLayer"

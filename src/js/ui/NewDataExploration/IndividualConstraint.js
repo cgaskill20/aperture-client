@@ -4,7 +4,7 @@ import CardContent from "@material-ui/core/CardContent";
 import ConstraintSlider from "./ConstraintSlider";
 import ConstraintMultiSelect from "./ConstraintMultiSelect";
 
-export default function renderIndividualConstraint(props) {
+export default function IndividualConstraint(props) {
     if(props.constraint.type === "slider") {
         return (
             <Grid item>
