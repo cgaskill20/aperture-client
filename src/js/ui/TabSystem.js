@@ -17,7 +17,7 @@ export const componentIsRendering = false;
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-
+        width: '98%',
     },
     buttonSpacing: {
         margin: theme.spacing(2),

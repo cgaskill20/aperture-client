@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -9,6 +9,7 @@ import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
 import {componentIsRendering} from "../TabSystem";
 import {isGraphable} from "./Helpers";
+import {Tooltip} from "@material-ui/core";
 
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 function graphIcon(index, layers, graphableLayers) {
     if(isGraphable(layers[index], graphableLayers)) {
-        return <IconButton><EqualizerIcon color="primary"/></IconButton>
+        return <Tooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></Tooltip>
     }
     return;
 }
