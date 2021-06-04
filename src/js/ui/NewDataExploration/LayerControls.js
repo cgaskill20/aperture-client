@@ -17,16 +17,27 @@ function graphIcon(layer, graphableLayers) {
     return;
 }
 
+function getLayerText(layerInfo) {
+    if(layerInfo) {
+        return (
+            <div>
+                <Typography>{layerInfo}</Typography>
+                <br/>
+            </div>
+        )
+    }
+}
+
+
 //FIXME Connect this to the layer text
 export default function LayerControls(props) {
+    const layer = props.layer;
+    console.log({layer})
     if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (
         <Card>
             <CardContent>
-                <Typography>
-                    {props.text}
-                </Typography>
-                <br/>
+                {getLayerText(props.layer.info)}
                 <ButtonGroup variant="outlined" aria-label="text primary button group">
                     <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
                                          activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
