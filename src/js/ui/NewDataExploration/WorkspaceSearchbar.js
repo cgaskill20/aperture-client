@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -9,6 +9,7 @@ import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
 import {componentIsRendering} from "../TabSystem";
 import {isGraphable} from "./Helpers";
+import {Tooltip} from "@material-ui/core";
 
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 function graphIcon(index, layers, graphableLayers) {
     if(isGraphable(layers[index], graphableLayers)) {
-        return <IconButton><EqualizerIcon color="primary"/></IconButton>
+        return <Tooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></Tooltip>
     }
     return;
 }
@@ -45,13 +46,7 @@ function updateWorkspace(workspace, index) {
     return newWorkspace;
 }
 
-function updateOpenLayers(openLayers, index) {
-    let newOpenLayers = [...openLayers];
-    newOpenLayers[index] = false;
-    return newOpenLayers;
-}
-
-function clearWorkspaceOrOpenLayers(length) {
+function clearWorkspace(length) {
     return new Array(length).fill(false);
 }
 
@@ -72,8 +67,7 @@ export default function WorkspaceSearchbar(props) {
                 onChange={(e, layers) => {
                     if(layers.length === 0) {
                         oldLayers = [];
-                        props.setWorkspace(clearWorkspaceOrOpenLayers(props.workspace.length));
-                        props.setOpenLayers(clearWorkspaceOrOpenLayers(props.workspace.length));
+                        props.setWorkspace(clearWorkspace(props.workspace.length));
                     }
                     else if(layers.length > oldLayers.length) {
                         const indexOfAddedLayer = findLayerIndex(layers[layers.length - 1], props.layerTitles);
@@ -83,8 +77,7 @@ export default function WorkspaceSearchbar(props) {
                         let setOfLayers = new Set(layers);
                         const removedLayer = oldLayers.filter(x => !setOfLayers.has(x));
                         const indexOfRemovedLayer = findLayerIndex(removedLayer[0], props.layerTitles);
-                        props.setWorkspace(updateWorkspace(props.workspace, indexOfRemovedLayer))
-                        props.setOpenLayers(updateOpenLayers(props.openLayers, indexOfRemovedLayer))
+                        props.setWorkspace(updateWorkspace(props.workspace, indexOfRemovedLayer));
                     }
                     oldLayers = layers;
                 }}
