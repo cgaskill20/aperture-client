@@ -5,28 +5,25 @@ import {prettifyJSON} from "./Helpers";
 import ConstraintSlider from "./ConstraintSlider";
 import ConstraintMultiSelect from "./ConstraintMultiSelect";
 
-export function extractActiveConstraints(layer) {
-    let activeConstraints = [];
+export function extractLayerConstraints(layer) {
+    let defaultLayerConstraints = [];
     let allLayerConstraints = [];
     for(const constraint in layer.constraints) {
-        activeConstraints.push(!layer.constraints[constraint].hide);
+        defaultLayerConstraints.push(!layer.constraints[constraint].hide);
         layer.constraints[constraint].label = layer.constraints[constraint]?.label ?? constraint;
         layer.constraints[constraint].name = constraint;
-        if(layer.constraints[constraint].label.substring(0, 11) === "properties.") {
-            layer.constraints[constraint].label = layer.constraints[constraint].label.substring(11, layer.constraints[constraint].label.length);
-        }
         allLayerConstraints.push(layer.constraints[constraint]);
     }
-    return [activeConstraints, allLayerConstraints];
+    return [defaultLayerConstraints, allLayerConstraints];
 }
 
-export function createConstraints(activeConstraints, allLayerConstraints, layerIndex, classes, querier) {
+export function createConstraints(activeLayerConstraints, allLayerConstraints, classes, querier) {
     let constraints = [];
-    activeConstraints.forEach((constraint, index) => {
+    activeLayerConstraints.forEach((constraint, index) => {
         if(constraint) {
             constraints.push(
                 <div key={index}>
-                    {renderIndividualConstraint(allLayerConstraints[index], classes, layerIndex, querier)}
+                    {renderIndividualConstraint(allLayerConstraints[index], classes, querier)}
                 </div>
             );
         }
@@ -34,7 +31,7 @@ export function createConstraints(activeConstraints, allLayerConstraints, layerI
     return constraints;
 }
 
-export function renderIndividualConstraint(constraint, classes, layerIndex, querier) {
+export function renderIndividualConstraint(constraint, classes, querier) {
     if(constraint.type === "slider") {
         return (
             <Grid item>

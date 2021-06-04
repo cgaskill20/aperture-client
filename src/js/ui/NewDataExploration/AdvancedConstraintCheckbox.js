@@ -4,14 +4,14 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {componentIsRendering} from "../TabSystem";
 
-function updateLayerConstraints(activeConstraints, index) {
-    let tempActiveConstraints = [...activeConstraints];
+function updateLayerConstraints(activeLayerConstraints, index) {
+    let tempActiveConstraints = [...activeLayerConstraints];
     tempActiveConstraints[index] = !tempActiveConstraints[index];
     return tempActiveConstraints;
 }
 
 export default function AdvancedConstraintCheckbox(props) {
-    const [check, setCheck] = useState(props.activeConstraints[props.index]);
+    const [check, setCheck] = useState(props.activeLayerConstraints[props.index]);
 
     if(componentIsRendering) {console.log("|AdvancedContraintCheckbox Rerending|")}
     return (
@@ -22,7 +22,7 @@ export default function AdvancedConstraintCheckbox(props) {
                         checked={check}
                         onChange={() => {
                             setCheck(!check);
-                            props.setActiveConstraints(updateLayerConstraints(props.activeConstraints, props.index));
+                            props.setActiveLayerConstraints(updateLayerConstraints(props.activeLayerConstraints, props.index));
                         }}
                         color="primary"
                     />

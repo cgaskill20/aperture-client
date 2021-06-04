@@ -28,12 +28,12 @@ export default function LayerControls(props) {
                 <br/>
                 <ButtonGroup variant="outlined" aria-label="text primary button group">
                     <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
-                                         activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} />
+                                         activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
                     <Button startIcon={<RotateLeftIcon />}>
                         Reset Constraints
                     </Button>
                     <Button startIcon={<TuneIcon />} onClick={() => {
-                        props.setActiveConstraints(props.defaultConstraints);
+                        props.setActiveLayerConstraints(props.defaultLayerConstraints);
                     }}>
                         Default Constraints
                     </Button>

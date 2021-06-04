@@ -9,7 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
 import {componentIsRendering} from "../TabSystem";
 import AutoQuery from '../../library/autoQuery';
-import {createConstraints, extractActiveConstraints} from "./LayerHelpers";
+import {createConstraints, extractLayerConstraints} from "./LayerHelpers";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,8 +31,8 @@ export default function Layer(props) {
     const [check, setCheck] = useState(false);
     const [expanded, setExpanded] = useState(false);
 
-    const [defaultConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
-    const [activeConstraints, setActiveConstraints] = useState(defaultConstraints);
+    const [defaultLayerConstraints, allLayerConstraints] = extractLayerConstraints(props.layer);
+    const [activeLayerConstraints, setActiveLayerConstraints] = useState(defaultLayerConstraints);
 
     const [ querier ] = useState(new AutoQuery(props.layer));
 
@@ -42,11 +42,11 @@ export default function Layer(props) {
         }
     }, [querier]);
 
-    const constraints = createConstraints(activeConstraints, allLayerConstraints, props.layerIndex, classes, querier);
+    const constraints = createConstraints(activeLayerConstraints, allLayerConstraints, classes, querier);
 
     if(componentIsRendering) console.log("|Layer|");
     return (
-        <div id={`layer-div-${props.layerTitles[props.layerIndex]}`} className={classes.root}>
+        <div className={classes.root}>
             <Paper elevation={1}>
                 <Accordion
                     color="primary"
@@ -76,9 +76,10 @@ export default function Layer(props) {
                     <AccordionDetails>
                         <Grid container direction="column">
                             <Grid item>
-                                <LayerControls allLayerConstraints={allLayerConstraints} layer={props.layer} defaultConstraints={defaultConstraints}
-                                               activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints}
-                                               layerIndex={props.layerIndex} graphableLayers={props.graphableLayers} />
+                                <LayerControls layer={props.layer} graphableLayers={props.graphableLayers}
+                                               allLayerConstraints={allLayerConstraints} defaultLayerConstraints={defaultLayerConstraints}
+                                               activeLayerConstraints={activeLayerConstraints} setActiveLayerConstraints={setActiveLayerConstraints}
+                                               layerIndex={props.layerIndex} />
                             </Grid>
                             {constraints}
                         </Grid>

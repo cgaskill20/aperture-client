@@ -29,7 +29,7 @@ export default function AdvancedConstraints(props) {
             {props.allLayerConstraints.map((constraint, index) => {
                     return (
                         <div key={index}>
-                            <AdvancedConstraintCheckbox activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints}
+                            <AdvancedConstraintCheckbox activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints}
                                                         index={index} constraint={constraint}/>
                         </div>)
                 }
