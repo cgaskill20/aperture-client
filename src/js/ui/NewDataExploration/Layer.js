@@ -9,7 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
 import {componentIsRendering} from "../TabSystem";
 import AutoQuery from '../../library/autoQuery';
-import {createConstraints, extractLayerConstraints} from "./LayerHelpers";
+import IndividualConstraint from "./IndividualConstraint"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,6 +25,32 @@ const useStyles = makeStyles((theme) => ({
         display: 'none',
     },
 }));
+
+function extractLayerConstraints(layer) {
+    let defaultLayerConstraints = [];
+    let allLayerConstraints = [];
+    for(const constraint in layer.constraints) {
+        defaultLayerConstraints.push(!layer.constraints[constraint].hide);
+        layer.constraints[constraint].label = layer.constraints[constraint]?.label ?? constraint;
+        layer.constraints[constraint].name = constraint;
+        allLayerConstraints.push(layer.constraints[constraint]);
+    }
+    return [defaultLayerConstraints, allLayerConstraints];
+}
+
+function createConstraints(activeLayerConstraints, allLayerConstraints, classes, querier) {
+    let constraints = [];
+    activeLayerConstraints.forEach((constraint, index) => {
+        if(constraint) {
+            constraints.push(
+                <div key={index}>
+                    <IndividualConstraint constraint={allLayerConstraints[index]} classes={classes} querier={querier} />
+                </div>
+            );
+        }
+    });
+    return constraints;
+}
 
 export default function Layer(props) {
     const classes = useStyles();
