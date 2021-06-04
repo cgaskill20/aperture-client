@@ -9,7 +9,8 @@ import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
 import {componentIsRendering} from "../TabSystem";
 import {isGraphable} from "./Helpers";
-import {Tooltip} from "@material-ui/core";
+import {Tooltip, withStyles} from "@material-ui/core";
+import InfoIcon from '@material-ui/icons/Info';
 
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
@@ -27,14 +28,26 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         margin: theme.spacing(1),
     },
-    graphIcon: {
+    icon: {
         float: 'right',
     },
 }));
 
-function graphIcon(layer, graphableLayers) {
+const CustomTooltip = withStyles((theme) => ({
+    tooltip: {
+        fontSize: 14,
+    },
+}))(Tooltip);
+
+function graphIcon(layer, graphableLayers, ) {
     if(isGraphable(layer, graphableLayers)) {
-        return <Tooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></Tooltip>
+        return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
+    }
+}
+
+function infoIcon(layerInfo, ) {
+    if(layerInfo) {
+        return <CustomTooltip title={layerInfo} placement="right" arrow><IconButton><InfoIcon color="primary" /></IconButton></CustomTooltip>
     }
 }
 
@@ -91,7 +104,8 @@ export default function WorkspaceSearchbar(props) {
                                 checked={props.workspace[optionIndex]}
                             />
                             {option}
-                            <span className={classes.graphIcon}>{graphIcon(props.layers[optionIndex], props.graphableLayers)}</span>
+                            <span className={classes.icon}>{graphIcon(props.layers[optionIndex], props.graphableLayers)}</span>
+                            <span className={classes.icon}>{infoIcon(props.layers[optionIndex].info)}</span>
                         </React.Fragment>
                     );
                 }}
