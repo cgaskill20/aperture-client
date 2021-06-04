@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ChartingType, DataSourceType } from '../../library/charting/chartSystem';
 import ChartFrameComponent from "./ChartFrameComponent";
 import Histogram from "./Histogram";
-import dataContext from "./dataContext";
 
 
 export default function Frame(props) {
@@ -19,7 +18,7 @@ export default function Frame(props) {
 
         <div style={{
             width: "100%",
-            height: props.size.height - 50,
+            height: props.size.height - 70,
             border: "1px solid red"
         }}>
             {console.log("rerenderframe")}
