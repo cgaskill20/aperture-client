@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ChartingType, DataSourceType } from '../../library/charting/chartSystem';
-import ChartFrameComponent from "./ChartFrameComponent";
 import Histogram from "./Histogram";
 
 

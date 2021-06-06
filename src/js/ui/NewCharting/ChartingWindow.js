@@ -1,18 +1,13 @@
 import React, { useState } from 'react';
 import ChartGlobalControls from './ChartGlobalControls';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import Grid from '@material-ui/core/Grid';
-import ChartFrameComponent from './ChartFrameComponent';
 import Frame from './makeFrame';
 
 export default function ChartingWindow(props) {
     const [frames, setFrames] = useState([]);
 
     const addChartFrame = frame => {   
-        //setFrames(frames.concat([<Frame type={frame.type} size={props.size} cb={props.setData} data={props.data}/>]));
         setFrames(frames.concat([frame.type]))
-        //console.log("here")
     }
 
     return (
