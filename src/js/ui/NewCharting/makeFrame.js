@@ -21,7 +21,6 @@ export default function Frame(props) {
             height: props.size.height - 70,
             border: "1px solid red"
         }}>
-            {console.log("rerenderframe")}
             {frame}
         </div>
     );

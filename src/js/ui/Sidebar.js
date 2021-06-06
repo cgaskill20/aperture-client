@@ -5,6 +5,7 @@ import Drawer from '@material-ui/core/Drawer';
 import TabSystem from "./TabSystem"
 import MenuIcon from '@material-ui/icons/Menu';
 import {Button} from "@material-ui/core";
+import {useGlobalState} from "./global/GlobalState";
 
 const drawerWidth = 750;
 
