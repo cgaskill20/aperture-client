@@ -77,6 +77,21 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\RenderWorker.js$/,
+        loader: "worker-loader",
+        options: {
+          filename: "[name].worker.js",
+          worker: {
+            type: "Worker",
+            options: {
+              type: "classic",
+              credentials: "omit",
+              name: "Render Worker"
+            },
+          },
+        },
+      },
     ]
   },
   watchOptions: {
