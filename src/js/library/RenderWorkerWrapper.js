@@ -1,5 +1,5 @@
 import Util from "./apertureUtil"
-import Worker from "./mapDataFilterWorker.js"
+import Worker from "./RenderWorker.js"
 const RenderWorker = new Worker();
 
 /**
@@ -51,10 +51,12 @@ const RenderWorkerWrapper = {
     get: async (coords) => {
         const senderID = Util.randomString(4);
         return new Promise(resolve => {
+            console.time(senderID)
             const handleResponse = (msg) => {
                 const data = msg.data;
                 if(data.type === "getResponse" && data.senderID === senderID){
                     RenderWorker.removeEventListener("message", handleResponse);
+                    console.timeEnd(senderID)
                     resolve(data.data);
                 }
             }

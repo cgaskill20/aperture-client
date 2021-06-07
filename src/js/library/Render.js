@@ -2,6 +2,7 @@ import Util from './apertureUtil';
 import { GridLayer, DomUtil } from 'leaflet';
 import RenderWorkerWrapper from './RenderWorkerWrapper'
 
+let layer;
 
 export default function newRendering(geojson) {
     return RenderWorkerWrapper.add(geojson);
@@ -23,13 +24,15 @@ const createLayer = () => {
             const ctx = tile.getContext('2d');
 
             RenderWorkerWrapper.get(coords).then(tileToRender => {
+                //console.log({tileToRender})
                 // Set the tile size
                 tile.width = 256;
                 tile.height = 256;
                 ctx.clearRect(0, 0, tile.width, tile.height);
                 // If tileToRender is null return just a clear canvas
                 if (!tileToRender) {
-                    return tile;
+                    done(null, tile);
+                    return;
                 }
 
                 const { features } = tileToRender;
@@ -39,7 +42,7 @@ const createLayer = () => {
                     //console.log(geometry)
                     //console.log(tags)
                     ctx.fillStyle = tags.color;
-                    ctx.globalAlpha = 0.5;
+                    ctx.globalAlpha = 0.3;
                     ctx.beginPath();
                     geometry.forEach(points => {
                         points.forEach((point, index) => { ctxDrawPolygon(ctx, point, index) });
@@ -65,7 +68,6 @@ const ctxDrawPolygon = (ctx, point, index) => {
 };
 
 setTimeout(() => {
-    tileIndex = geojsonvt(Util.createGeoJsonObj(jsonArr));
     layer = createLayer();
     globalThis.map.addLayer(layer);
 }, 1000)

@@ -1,11 +1,13 @@
 import geojsonvt from 'geojson-vt';
 import Util from './apertureUtil';
+console.log = () => {}
 
 let featureArr = [];
 let shouldUpdate = false;
 
 let tileIndex;
 const update = () => {
+    console.log("here")
     tileIndex = geojsonvt(Util.createGeoJsonObj(featureArr));
     shouldUpdate = false;
 }
@@ -60,10 +62,11 @@ onmessage = function (msg) {
     }
     else if (type === "get") {
         const { x, y, z } = coords;
+        console.log(tileIndex)
         postMessage({
             type: "getResponse",
             senderID,
-            data: tileIndex.getTile(x,y,z)
+            data: tileIndex.getTile(z,x,y)
         });
     }
 }
