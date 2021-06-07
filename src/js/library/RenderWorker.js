@@ -1,15 +1,26 @@
 import geojsonvt from 'geojson-vt';
+import Util from './apertureUtil';
+
+let featureArr = [];
+let updateFeatures = false;
+
+let tileIndex;
+const update = () => {
+    tileIndex = geojsonvt(Util.createGeoJsonObj(featureArr));
+}
+update();
+
 
 onmessage = function (msg) {
-    if (msg.data.type === "query") {
-        querier.query(msg.data.collection,
-            msg.data.queryParams,
-            data => { postMessage({ type: "data", data: data, senderID: msg.data.senderID }); },
-            end => { postMessage({ type: "end", senderID: msg.data.senderID }); },
-            msg.data.senderID);
-    } else if (msg.data.type === "kill") {
-        querier.kill(msg.data.id);
-    } else if (msg.data.type === "config") {
-        querier = getSustainQuerier();
+    const { type, coords } = msg.data;
+    if (type === "add") {
+
+        
+    }
+    else if (type === "remove") {
+        
+    }
+    else if (type === "get") {
+        const { x, y, z } = coords;
     }
 }
