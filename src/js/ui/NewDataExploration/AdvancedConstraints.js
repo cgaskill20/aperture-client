@@ -24,32 +24,22 @@ export default function AdvancedConstraints(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
 
-    const body = (
-        <Box className={classes.modal}>
-            {props.allLayerConstraints.map((constraint, index) => {
-                    return (
-                        <div key={index}>
-                            <AdvancedConstraintCheckbox activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints}
-                                                        index={index} constraint={constraint}/>
-                        </div>)
-                }
-            )}
-        </Box>
-    );
-
     if(componentIsRendering) {console.log("|AdvancedContraints Rerending|")}
     return (
         <div>
             <Button variant="outlined" startIcon={<SettingsIcon/>} onClick={() => setOpen(true)}>
                 Advanced...
             </Button>
-            <Modal
-                disableEnforceFocus
-                disableAutoFocus
-                open={open}
-                onClose={() => setOpen(false)}
-            >
-                {body}
+            <Modal disableEnforceFocus disableAutoFocus open={open} onClose={() => setOpen(false)}>
+                <Box className={classes.modal}>
+                    {props.allLayerConstraints.map((constraint, index) => {
+                        return (
+                            <div key={index}>
+                                <AdvancedConstraintCheckbox activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints}
+                                                            constraintIndex={index} constraint={constraint}/>
+                            </div>)
+                    })}
+                </Box>
             </Modal>
         </div>
     );

@@ -9,7 +9,8 @@ import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
 import {componentIsRendering} from "../TabSystem";
 import {isGraphable} from "./Helpers";
-import {Tooltip} from "@material-ui/core";
+import {Tooltip, withStyles} from "@material-ui/core";
+import InfoIcon from '@material-ui/icons/Info';
 
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
@@ -20,7 +21,6 @@ function findLayerIndex(layerLabel, layerTitles) {
             return i;
         }
     }
-    return -1;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -28,16 +28,27 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         margin: theme.spacing(1),
     },
-    graphIcon: {
+    icon: {
         float: 'right',
     },
 }));
 
-function graphIcon(index, layers, graphableLayers) {
-    if(isGraphable(layers[index], graphableLayers)) {
-        return <Tooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></Tooltip>
+const CustomTooltip = withStyles((theme) => ({
+    tooltip: {
+        fontSize: 14,
+    },
+}))(Tooltip);
+
+function graphIcon(layer, graphableLayers, ) {
+    if(isGraphable(layer, graphableLayers)) {
+        return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
     }
-    return;
+}
+
+function infoIcon(layerInfo, ) {
+    if(layerInfo) {
+        return <CustomTooltip title={layerInfo} placement="right" arrow><IconButton><InfoIcon color="primary" /></IconButton></CustomTooltip>
+    }
 }
 
 function updateWorkspace(workspace, index) {
@@ -65,13 +76,13 @@ export default function WorkspaceSearchbar(props) {
                 id="dataset-searchbar"
                 options={props.layerTitles}
                 onChange={(e, layers) => {
-                    if(layers.length === 0) {
-                        oldLayers = [];
-                        props.setWorkspace(clearWorkspace(props.workspace.length));
-                    }
-                    else if(layers.length > oldLayers.length) {
+                    if(layers.length > oldLayers.length) {
                         const indexOfAddedLayer = findLayerIndex(layers[layers.length - 1], props.layerTitles);
                         props.setWorkspace(updateWorkspace(props.workspace, indexOfAddedLayer));
+                    }
+                    else if(layers.length === 0) {
+                        oldLayers = [];
+                        props.setWorkspace(clearWorkspace(props.workspace.length));
                     }
                     else if(layers.length < oldLayers.length) {
                         let setOfLayers = new Set(layers);
@@ -82,7 +93,7 @@ export default function WorkspaceSearchbar(props) {
                     oldLayers = layers;
                 }}
                 renderOption={(option, state) => {
-                    const optionIndex = findLayerIndex({option}['option'], props.layerTitles);
+                    const optionIndex = findLayerIndex({option}.option, props.layerTitles);
                     return (
                         <React.Fragment>
                             <Checkbox
@@ -93,7 +104,8 @@ export default function WorkspaceSearchbar(props) {
                                 checked={props.workspace[optionIndex]}
                             />
                             {option}
-                            <span className={classes.graphIcon}>{graphIcon(optionIndex, props.layers, props.graphableLayers)}</span>
+                            <span className={classes.icon}>{graphIcon(props.layers[optionIndex], props.graphableLayers)}</span>
+                            <span className={classes.icon}>{infoIcon(props.layers[optionIndex].info)}</span>
                         </React.Fragment>
                     );
                 }}

@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createWorkspace(layers, graphableLayers, workspace, layerTitles) {
+function createWorkspace(workspace, layers, graphableLayers, layerTitles) {
     let workspaceLayers = [];
     workspace.forEach((layer, index) => {
         if(layer) {
@@ -25,7 +25,7 @@ function createWorkspace(layers, graphableLayers, workspace, layerTitles) {
 
 export default function WorkspaceLayers(props) {
     const classes = useStyles();
-    const workspaceLayers = createWorkspace(props.layers, props.graphableLayers, props.workspace, props.layerTitles, props.graphableLayers);
+    const workspaceLayers = createWorkspace(props.workspace, props.layers, props.graphableLayers, props.layerTitles);
 
     if(componentIsRendering) {console.log("|WorkspaceLayers Rerending|")}
     return (

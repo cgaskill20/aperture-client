@@ -9,7 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
 import {componentIsRendering} from "../TabSystem";
 import AutoQuery from '../../library/autoQuery';
-import {createConstraints, extractActiveConstraints} from "./LayerHelpers";
+import IndividualConstraint from "./IndividualConstraint"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,13 +26,39 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function extractLayerConstraints(layer) {
+    let defaultLayerConstraints = [];
+    let allLayerConstraints = [];
+    for(const constraint in layer.constraints) {
+        defaultLayerConstraints.push(!layer.constraints[constraint].hide);
+        layer.constraints[constraint].label = layer.constraints[constraint]?.label ?? constraint;
+        layer.constraints[constraint].name = constraint;
+        allLayerConstraints.push(layer.constraints[constraint]);
+    }
+    return [defaultLayerConstraints, allLayerConstraints];
+}
+
+function createConstraints(activeLayerConstraints, allLayerConstraints, classes, querier) {
+    let constraints = [];
+    activeLayerConstraints.forEach((constraint, index) => {
+        if(constraint) {
+            constraints.push(
+                <div key={index}>
+                    <IndividualConstraint constraint={allLayerConstraints[index]} classes={classes} querier={querier} />
+                </div>
+            );
+        }
+    });
+    return constraints;
+}
+
 export default function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState(false);
-    const [expanded, setExpanded] = useState(false);
+    const [layerExpanded, setLayerExpanded] = useState(false);
 
-    const [defaultConstraints, allLayerConstraints] = extractActiveConstraints(props.layer);
-    const [activeConstraints, setActiveConstraints] = useState(defaultConstraints);
+    const [defaultLayerConstraints, allLayerConstraints] = extractLayerConstraints(props.layer);
+    const [activeLayerConstraints, setActiveLayerConstraints] = useState(defaultLayerConstraints);
 
     const [ querier ] = useState(new AutoQuery(props.layer));
 
@@ -42,19 +68,19 @@ export default function Layer(props) {
         }
     }, [querier]);
 
-    const constraints = createConstraints(activeConstraints, allLayerConstraints, props.layerIndex, classes, querier);
+    const constraints = createConstraints(activeLayerConstraints, allLayerConstraints, classes, querier);
 
     if(componentIsRendering) console.log("|Layer|");
     return (
-        <div id={`layer-div-${props.layerTitles[props.layerIndex]}`} className={classes.root}>
+        <div className={classes.root}>
             <Paper elevation={1}>
                 <Accordion
                     color="primary"
-                    expanded={expanded}
+                    expanded={layerExpanded}
                 >
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon color="primary" />}
-                        onClick={() => setExpanded(!expanded)}
+                        onClick={() => setLayerExpanded(!layerExpanded)}
                     >
                         <FormControlLabel
                             aria-label="CheckLayer"
@@ -76,9 +102,10 @@ export default function Layer(props) {
                     <AccordionDetails>
                         <Grid container direction="column">
                             <Grid item>
-                                <LayerControls allLayerConstraints={allLayerConstraints} layer={props.layer} defaultConstraints={defaultConstraints}
-                                               activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints}
-                                               layerIndex={props.layerIndex} graphableLayers={props.graphableLayers} />
+                                <LayerControls layer={props.layer} graphableLayers={props.graphableLayers}
+                                               allLayerConstraints={allLayerConstraints} defaultLayerConstraints={defaultLayerConstraints}
+                                               activeLayerConstraints={activeLayerConstraints} setActiveLayerConstraints={setActiveLayerConstraints}
+                                               layerIndex={props.layerIndex} />
                             </Grid>
                             {constraints}
                         </Grid>
