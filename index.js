@@ -32,7 +32,6 @@ import ModelMenu from "./src/js/ui/modeling/components/ModelMenu";
 import AutoQuery from "./src/js/library/autoQuery.js";
 import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";
-import MenuGenerator, { updateLayers } from "./src/js/ui/menuGenerator.js";
 // import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
 import Root from "./src/js/ui/Root";
 
@@ -168,24 +167,13 @@ window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplora
 });
 window.chartSystem = new ChartSystem(map, "src/json/graphPriority.json", window.renderInfrastructure);
 
-//where the magic happens
-$.getJSON("src/json/menumetadata.json", async function (mdata) { //this isnt on the mongo server yet so query it locally
-    finalData = await AutoMenu.build(mdata, overwrite);
-    MenuGenerator.generate(finalData, document.getElementById("sidebar-container"));
-});
 
 const uiRoot = document.getElementById("ui-root");
 ReactDOM.render((<Root map={map}/>), uiRoot);
 
-const modelContainer = document.getElementById("model-container");
-ReactDOM.render((<ModelMenu/>), modelContainer);
+// const modelContainer = document.getElementById("model-container");
+// ReactDOM.render((<ModelMenu/>), modelContainer);
 
-// const queryBlockContainer = document.getElementById("query-block-container");
-// ReactDOM.render((<DefensiveOptimization />), queryBlockContainer);
-
-map.on("moveend", function (e) {
-    updateLayers();
-});
 
 import {closeNav} from "./src/js/static/navButtons";
 import "./src/js/static/darkMode.js";

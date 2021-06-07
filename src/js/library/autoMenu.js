@@ -1,5 +1,4 @@
-import { sustain_querier } from "../grpc/GRPC_Querier/grpc_querier.js";
-
+import Query from './Query'
 /**
  * @namespace AutoMenu
  * @file Build a menu based on the metadata catalog & details provided by users about the metadata
@@ -20,25 +19,18 @@ export default {
       * @returns {JSON} JSON which can be used with menuGenerator.js to build a menu
       */
     build: async function (menuMetaData, overwrite) {
-        this._sustainQuerier = sustain_querier();
-        return new Promise(((resolve) => {
-            let catalog = {};
-            const stream = this._sustainQuerier.getStreamForQuery("Metadata", "[]");
-            stream.on('data', (r) => {
-                const data = JSON.parse(r.getData());
-                catalog[data.collection] = data; // do da data dance
-            });
-            stream.on('end', () => {
-                //build it
-                const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
-
-                //return it
-                resolve({
-                    ...autoMenu,
-                    ...overwrite,
-                });
-            });
-        }));
+        const { data } = await Query.makeQuery({
+            collection: "Metadata"
+        });
+        const catalog = data.reduce((acc,feature) => {
+            acc[feature.collection] = feature;
+            return acc;
+        }, {})
+        const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
+        return{
+            ...autoMenu,
+            ...overwrite,
+        };
     },
 
     /**
