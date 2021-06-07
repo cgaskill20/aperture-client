@@ -41,7 +41,7 @@ const removeMultiple = (idsToRemove) => {
 }
 
 onmessage = function (msg) {
-    const { type, coords, toAdd, toRemove } = msg.data;
+    const { type, coords, toAdd, toRemove, senderID } = msg.data;
     if (type === "add") {
         if (Array.isArray(toAdd)) {
             addMultiple(toAdd);
@@ -60,5 +60,10 @@ onmessage = function (msg) {
     }
     else if (type === "get") {
         const { x, y, z } = coords;
+        postMessage({
+            type: "getResponse",
+            senderID,
+            data: tileIndex.getTile(x,y,z)
+        });
     }
 }

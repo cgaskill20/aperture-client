@@ -81,8 +81,6 @@ const createLayer = () => {
         }
     });
     return new CanvasLayer();
-    // Add layer to the canvas
-    //globalThis.map.addLayer(new CanvasLayer());
 };
 
 const ctxDrawPolygon = (ctx, point, index) => {
