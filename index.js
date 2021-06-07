@@ -13,7 +13,6 @@ import "./src/css/third-party/bootstrap4-toggle.min.css";
 import "./src/css/third-party/bootstrap.min.css";
 import "./src/css/third-party/MarkerCluster.css";
 import "./src/css/third-party/MarkerCluster.Default.css";
-import "./src/css/third-party/chart.css";
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
