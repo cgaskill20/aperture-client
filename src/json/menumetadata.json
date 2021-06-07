@@ -930,6 +930,7 @@
         ]
     },
     {
-        "collection": "covid_county"
+        "collection": "covid_county",
+        "level": "county"
     }
 ]

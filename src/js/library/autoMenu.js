@@ -195,6 +195,7 @@ export default {
                         console.error(constraint);
                     }
             }
+            constraint.step = 86400 * 1000;
         }
 
         const DEFAULTS = {
