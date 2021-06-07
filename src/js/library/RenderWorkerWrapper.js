@@ -28,7 +28,46 @@ const RenderWorkerWrapper = {
         else {
             return [toAdd.id];
         }
-    }
+    },
+
+    /**
+    * Removes from the render list
+    * @memberof RenderWorkerWrapper
+    * @param {string | string[]} toAdd GeoJSON features to add
+    **/
+    remove: async (toRemove) => {
+        RenderWorker.postMessage({
+            type: "remove",
+            toRemove,
+            senderID: Util.randomString(4)
+        });
+    },
+
+    /**
+    * Gets data from tile coords
+    * @memberof RenderWorkerWrapper
+    * @param {object} coords xyz to get
+    **/
+    get: async (coords) => {
+        const senderID = Util.randomString(4);
+        return new Promise(resolve => {
+            const handleResponse = (msg) => {
+                const data = msg.data;
+                if(data.type === "getResponse" && data.senderID === senderID){
+                    RenderWorker.removeEventListener("message", handleResponse);
+                    resolve(data.data);
+                }
+            }
+
+            RenderWorker.addEventListener("message", handleResponse);
+
+            RenderWorker.postMessage({
+                type: "get",
+                coords,
+                senderID
+            });
+        });
+    },
 }
 
 export default RenderWorkerWrapper;
