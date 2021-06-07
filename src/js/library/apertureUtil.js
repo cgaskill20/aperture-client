@@ -448,6 +448,16 @@ export default {
         }
 
         return false;
+    },
+
+    /** Makes random alphanumeric string
+      * @memberof Util
+      * @method randomString
+      * @param {number} length - length of id
+      * @returns {string} random string
+      */
+    randomString(length) {
+        return Math.random().toString(36).substring(2, 2 + length)
     }
 }
 
