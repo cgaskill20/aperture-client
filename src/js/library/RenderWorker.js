@@ -8,7 +8,10 @@ let shouldUpdate = false;
 let tileIndex;
 const update = () => {
     console.log("here")
-    tileIndex = geojsonvt(Util.createGeoJsonObj(featureArr));
+    tileIndex = geojsonvt(Util.createGeoJsonObj(featureArr), {
+        indexMaxZoom: 19,
+        maxZoom: 19
+    });
     shouldUpdate = false;
 }
 update();
