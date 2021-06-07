@@ -2,7 +2,7 @@ import Gradient from "../third-party/Gradient"
 import MapDataFilterWrapper from "./mapDataFilterWrapper"
 import Util from "./apertureUtil"
 import Query from "./Query"
-import newRendering from "./newRendering"
+import newRendering from "./Render"
 
 /**
  * @class AutoQuery

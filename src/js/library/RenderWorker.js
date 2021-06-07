@@ -1,0 +1,15 @@
+import geojsonvt from 'geojson-vt';
+
+onmessage = function (msg) {
+    if (msg.data.type === "query") {
+        querier.query(msg.data.collection,
+            msg.data.queryParams,
+            data => { postMessage({ type: "data", data: data, senderID: msg.data.senderID }); },
+            end => { postMessage({ type: "end", senderID: msg.data.senderID }); },
+            msg.data.senderID);
+    } else if (msg.data.type === "kill") {
+        querier.kill(msg.data.id);
+    } else if (msg.data.type === "config") {
+        querier = getSustainQuerier();
+    }
+}

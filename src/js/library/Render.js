@@ -48,7 +48,7 @@ document.onkeypress = function (e) {
 const createLayer = () => {
     console.log("here")
     const CanvasLayer = GridLayer.extend({
-        createTile: function ({ x, y, z }) {
+        createTile: function ({ x, y, z }, done) {
             //console.log({x,y,z})
             let tile = DomUtil.create('canvas', 'leaflet-tile leaflet-sedesol');
             const ctx = tile.getContext('2d');
