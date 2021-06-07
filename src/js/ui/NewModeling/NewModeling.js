@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Button} from "@material-ui/core";
 import {componentIsRendering} from "../TabSystem"
+import Typography from "@material-ui/core/Typography";
 
 export default function NewModeling() {
     const [state, setState] = useState(0)
@@ -11,6 +12,7 @@ export default function NewModeling() {
 
     if(componentIsRendering) console.log("|NewModeling|");
     return (
-        <Button variant="outlined" onClick={() => increment()}>{state}</Button>
+        <Typography>Coming Soon</Typography>
+        // <Button variant="outlined" onClick={() => increment()}>{state}</Button>
     )
 }

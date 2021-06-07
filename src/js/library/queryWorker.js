@@ -7,9 +7,10 @@ onmessage = function (msg) {
         querier.query(msg.data.collection,
             msg.data.queryParams,
             data => { postMessage({ type: "data", data: data, senderID: msg.data.senderID }); },
-            end => { postMessage({ type: "end", senderID: msg.data.senderID }); });
+            end => { postMessage({ type: "end", senderID: msg.data.senderID }); },
+            msg.data.senderID);
     } else if (msg.data.type === "kill") {
-        querier.killAllStreamsOverCollection(msg.data.collection);
+        querier.kill(msg.data.id);
     } else if (msg.data.type === "config") {
         querier = getSustainQuerier();
     }

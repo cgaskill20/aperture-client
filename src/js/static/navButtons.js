@@ -1,4 +1,4 @@
-document.getElementById('nav-menu-button').addEventListener('click', openNav);
+// document.getElementById('nav-menu-button').addEventListener('click', openNav);
 document.getElementById('nav-close-button').addEventListener('click', closeNav);
 document.getElementById('nav-data-exploration-button').addEventListener('click', showDataExploration);
 document.getElementById('nav-modeling-button').addEventListener('click', showModeling);

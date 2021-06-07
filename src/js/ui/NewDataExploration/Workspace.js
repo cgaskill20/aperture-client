@@ -2,11 +2,13 @@ import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import WorkspaceControls from "./WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
-import {prettifyJSON} from "./Helpers";
 import AutoMenu from "../../library/autoMenu";
 import {componentIsRendering} from "../TabSystem";
+import Query from "../../library/Query";
+import Util from "../../library/apertureUtil";
 
 function overwrite() {}
+export const printHashes = false;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -14,23 +16,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function extractActiveConstraints(layers) {
-    let allActiveConstraints = [];
-    for(const layer in layers) {
-        let theseLayerConstraints = [];
-        const individualLayer = layers[layer]
-        for(const layerConstraint in individualLayer.constraints) {
-            const individualConstraint = individualLayer.constraints[layerConstraint];
-            if(!individualConstraint.hide) {
-                theseLayerConstraints.push(true);
-            }
-            else {
-                theseLayerConstraints.push(false);
-            }
-        }
-        allActiveConstraints.push(theseLayerConstraints);
-    }
-    return allActiveConstraints;
+function prettifyJSON(name) {
+    return Util.capitalizeString(Util.underScoreToSpace(name));
 }
 
 export default function Workspace() {
@@ -38,9 +25,7 @@ export default function Workspace() {
 
     const [layers, setLayers] = useState([]);
     const [workspace, setWorkspace] = useState([]);
-    const [openLayers, setOpenLayers] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
-    const [activeConstraints, setActiveConstraints] = useState([]);
     function extractLayers(data) {
         let tempBoolean = [];
         let tempLayers = [];
@@ -48,16 +33,12 @@ export default function Workspace() {
         for(const layer in data) {
             const thisLayer = data[layer];
             tempLayers.push(data[layer]);
-            // const layerName = thisLayer.label ? thisLayer.label : prettifyJSON(thisLayer.collection);
             const layerName = thisLayer?.label ?? prettifyJSON(thisLayer.collection);
             tempLayerTitles.push(layerName);
             tempBoolean.push(false);
         }
         setLayers(tempLayers);
-        const extractedActiveConstraints = extractActiveConstraints(tempLayers);
-        setActiveConstraints(extractedActiveConstraints);
         setWorkspace(tempBoolean);
-        setOpenLayers(tempBoolean);
         setLayerTitles(tempLayerTitles);
     }
 
@@ -75,6 +56,7 @@ export default function Workspace() {
     useEffect(() => {
         $.getJSON("src/json/menumetadata.json", async function (mdata) {
             const finalData = await AutoMenu.build(mdata, overwrite);
+            Query.init(finalData);
             extractLayers(finalData);
         });
 
@@ -88,12 +70,8 @@ export default function Workspace() {
     return (
         <div className={classes.root}>
             <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                               openLayers={openLayers} setOpenLayers={setOpenLayers}
                                workspace={workspace} setWorkspace={setWorkspace} />
-            <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                             openLayers={openLayers} setOpenLayers={setOpenLayers}
-                             activeConstraints={activeConstraints} setActiveConstraints={setActiveConstraints}
-                             workspace={workspace} setWorkspace={setWorkspace} />
+            <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />
         </div>
     );
 }

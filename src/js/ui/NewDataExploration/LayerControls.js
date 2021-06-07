@@ -6,10 +6,10 @@ import EqualizerIcon from "@material-ui/icons/Equalizer";
 import TuneIcon from '@material-ui/icons/Tune';
 import AdvancedConstraints from "./AdvancedConstraints";
 import {componentIsRendering} from "../TabSystem";
+import {isGraphable} from "./Helpers";
 
 function graphIcon(layer, graphableLayers) {
-    const collectionName = layer.collection;
-    if(graphableLayers.includes(collectionName)) {
+    if(isGraphable(layer, graphableLayers)) {
         return <Button startIcon={<EqualizerIcon />}>
             Graph Me
         </Button>
@@ -17,10 +17,15 @@ function graphIcon(layer, graphableLayers) {
     return;
 }
 
-function setDefaultConstraints(activeConstraints, defaultConstraints, layerIndex) {
-    let newActiveConstraints = [...activeConstraints];
-    newActiveConstraints[layerIndex] = defaultConstraints;
-    return newActiveConstraints;
+function getLayerText(layerInfo) {
+    if(layerInfo) {
+        return (
+            <div>
+                <Typography>{layerInfo}</Typography>
+                <br/>
+            </div>
+        )
+    }
 }
 
 export default function LayerControls(props) {
@@ -28,18 +33,15 @@ export default function LayerControls(props) {
     return (
         <Card>
             <CardContent>
-                <Typography>
-                    {props.text}
-                </Typography>
-                <br/>
+                {getLayerText(props.layer.info)}
                 <ButtonGroup variant="outlined" aria-label="text primary button group">
                     <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
-                                         activeConstraints={props.activeConstraints} setActiveConstraints={props.setActiveConstraints} />
+                                         activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
                     <Button startIcon={<RotateLeftIcon />}>
                         Reset Constraints
                     </Button>
                     <Button startIcon={<TuneIcon />} onClick={() => {
-                        props.setActiveConstraints(setDefaultConstraints(props.activeConstraints, props.defaultConstraints, props.layerIndex));
+                        props.setActiveLayerConstraints(props.defaultLayerConstraints);
                     }}>
                         Default Constraints
                     </Button>

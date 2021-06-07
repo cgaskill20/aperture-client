@@ -8,17 +8,19 @@ import {makeStyles} from "@material-ui/core/styles";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
 import {componentIsRendering} from "../TabSystem";
+import {isGraphable} from "./Helpers";
+import {Tooltip, withStyles} from "@material-ui/core";
+import InfoIcon from '@material-ui/icons/Info';
 
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
 
-export function findIndex(layerLabel, layerTitles) {
+function findLayerIndex(layerLabel, layerTitles) {
     for(let i = 0; i < layerTitles.length; i++) {
         if(layerTitles[i] === layerLabel) {
             return i;
         }
     }
-    return -1;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -26,18 +28,40 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         margin: theme.spacing(1),
     },
-    graphIcon: {
+    icon: {
         float: 'right',
     },
 }));
 
-function graphIcon(index, layers, graphableLayers) {
-    const collectionName = layers[index].collection;
-    if(graphableLayers.includes(collectionName)) {
-        return <IconButton><EqualizerIcon color="primary"/></IconButton>
+const CustomTooltip = withStyles((theme) => ({
+    tooltip: {
+        fontSize: 14,
+    },
+}))(Tooltip);
+
+function graphIcon(layer, graphableLayers, ) {
+    if(isGraphable(layer, graphableLayers)) {
+        return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
     }
-    return;
 }
+
+function infoIcon(layerInfo, ) {
+    if(layerInfo) {
+        return <CustomTooltip title={layerInfo} placement="right" arrow><IconButton><InfoIcon color="primary" /></IconButton></CustomTooltip>
+    }
+}
+
+function updateWorkspace(workspace, index) {
+    let newWorkspace = [...workspace];
+    newWorkspace[index] = !newWorkspace[index];
+    return newWorkspace;
+}
+
+function clearWorkspace(length) {
+    return new Array(length).fill(false);
+}
+
+let oldLayers = [];
 
 export default function WorkspaceSearchbar(props) {
     const classes = useStyles();
@@ -51,30 +75,37 @@ export default function WorkspaceSearchbar(props) {
                 disableCloseOnSelect
                 id="dataset-searchbar"
                 options={props.layerTitles}
-                onChange={(e, dataset) => {
-                    props.setSelectedDatasets(dataset);
+                onChange={(e, layers) => {
+                    if(layers.length > oldLayers.length) {
+                        const indexOfAddedLayer = findLayerIndex(layers[layers.length - 1], props.layerTitles);
+                        props.setWorkspace(updateWorkspace(props.workspace, indexOfAddedLayer));
+                    }
+                    else if(layers.length === 0) {
+                        oldLayers = [];
+                        props.setWorkspace(clearWorkspace(props.workspace.length));
+                    }
+                    else if(layers.length < oldLayers.length) {
+                        let setOfLayers = new Set(layers);
+                        const removedLayer = oldLayers.filter(x => !setOfLayers.has(x));
+                        const indexOfRemovedLayer = findLayerIndex(removedLayer[0], props.layerTitles);
+                        props.setWorkspace(updateWorkspace(props.workspace, indexOfRemovedLayer));
+                    }
+                    oldLayers = layers;
                 }}
                 renderOption={(option, state) => {
-                    const selectDatasetIndex = props.selectedDatasets.findIndex(
-                        dataset => dataset.toLowerCase() === "all"
-                    , props.layerTitles);
-                    if (selectDatasetIndex > -1) {
-                        state.selected = true;
-                    }
-                    const optionIndex = findIndex({option}['option'], props.layerTitles);
+                    const optionIndex = findLayerIndex({option}.option, props.layerTitles);
                     return (
                         <React.Fragment>
                             <Checkbox
-                                id={`searchbar-checkbox-${optionIndex}`}
-                                name={`searchbar-checkbox-${optionIndex}`}
                                 icon={icon}
                                 color="primary"
                                 checkedIcon={checkedIcon}
                                 style={{ marginRight: 8 }}
-                                checked={state.selected || props.workspace[optionIndex]}
+                                checked={props.workspace[optionIndex]}
                             />
                             {option}
-                            <span className={classes.graphIcon}>{graphIcon(optionIndex, props.layers, props.graphableLayers)}</span>
+                            <span className={classes.icon}>{graphIcon(props.layers[optionIndex], props.graphableLayers)}</span>
+                            <span className={classes.icon}>{infoIcon(props.layers[optionIndex].info)}</span>
                         </React.Fragment>
                     );
                 }}
