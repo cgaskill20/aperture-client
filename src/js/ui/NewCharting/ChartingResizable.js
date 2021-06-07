@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, createContext} from 'react';
 import { Rnd } from 'react-rnd';
 import Paper from '@material-ui/core/Paper';
 import ChartingWindow from './ChartingWindow';
 
+
+
 export default function ChartingResizable() {
     let [size, setSize] = useState({ width: 500, height: 400 });
     let [chartData, setChartData] = useState({});
+
 
     useEffect(() => {
         window.chartSystem.registerDataConsumer('charting-resizable', setChartData);
@@ -13,7 +16,7 @@ export default function ChartingResizable() {
     }, []);
 
     useEffect(() => {
-        console.log(chartData);
+        setChartData(chartData);
     });
 
     return (
@@ -21,10 +24,9 @@ export default function ChartingResizable() {
             width: '800px',
             height: '800px',
         }}>
-            {console.log("rerenderresizable")}
             <Rnd default={{
                     x: 500,
-                    y: 400,
+                    y: 100,
                     width: size.width,
                     height: size.height
                 }}
@@ -36,15 +38,16 @@ export default function ChartingResizable() {
                 bounds="window"
                 onResizeStop={(e, dir, refToElement, delta, position) => {
                     setSize({ width: size.width + delta.width, height: size.height + delta.height});
-                    console.log(size.width);
                 }}
             >
                 <Paper className={'charting-resizable-window'}>
                     <div style={{ overflowY: "scroll", maxHeight: size.height }}>
-                        <ChartingWindow size={size}/>
+                        <ChartingWindow size={size} data={chartData}/>
                     </div>
                 </Paper>
             </Rnd>
         </div>
     );
 }
+
+
