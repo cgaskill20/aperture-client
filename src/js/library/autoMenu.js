@@ -26,6 +26,7 @@ export default {
             acc[feature.collection] = feature;
             return acc;
         }, {})
+        console.log(catalog)
         const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
         return{
             ...autoMenu,
