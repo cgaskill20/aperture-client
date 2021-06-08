@@ -41,6 +41,14 @@ export default class AutoQuery {
 
         this.linked = this.data.linkedGeometry ? true : false;
 
+        if(layerData.temporal){
+            this.temporal = layerData.temporal;
+            this.temporalFields = Object.entries(layerData.constraints)
+                .filter(([constraintName, constraint]) => constraint.temporalType != null)
+                .reduce((acc, [constraintName, constraint]) => {
+                    return {...acc, [constraintName]: constraint.temporalType}
+                }, {});
+        }
 
         this.color = layerData.color;
         this.colorStyle = layerData.color.style;
