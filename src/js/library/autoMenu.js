@@ -89,6 +89,7 @@ export default {
                 autoMenuLayer["constraints"] = this.buildConstraintsFromCatalog(metadata, catalogLayer);
                 autoMenuLayer["collection"] = catalogLayer.collection;
                 autoMenuLayer["label"] = metadata.label;
+                autoMenuLayer["temporal"] = metadata.temporal;
                 //gets label if provided, names it the collection name otherwise
                 const label = catalogLayer.collection;
 

@@ -18,6 +18,7 @@ const defaultQuery = {
 const Query = {
     linked: {},
     linkedCollections: [],
+    temporal: {},
     backgroundLoader: null,
     queryWorker: new Worker(),
     /**
@@ -30,7 +31,15 @@ const Query = {
             if (data.linkedGeometry) {
                 this.linked[collection] = data.linkedGeometry;
             }
+            if(data.temporal){
+                this.temporal[collection] = Object.entries(data.constraints)
+                    .filter(([constraintName, constraintData]) => constraintData.temporalType != null)
+                    .reduce((acc, [constraintName, constraintData]) => {
+                        return {...acc, [constraintName]: constraintData.temporalType}
+                    }, {});
+            }
         }
+        console.log(this.temporal)
         this.linkedCollections = [...new Set(Object.values(this.linked))]
         this.backgroundLoader = (linked) => linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
     },
