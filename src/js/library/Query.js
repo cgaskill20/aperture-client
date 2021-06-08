@@ -39,7 +39,6 @@ const Query = {
                     }, {});
             }
         }
-        console.log(this.temporal)
         this.linkedCollections = [...new Set(Object.values(this.linked))]
         this.backgroundLoader = (linked) => linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
     },
@@ -74,9 +73,7 @@ const Query = {
     * }
     **/
     async makeQuery(query) {
-        query = { ...defaultQuery, ...query }
-        query.id = Math.random().toString(36).substring(2, 6);
-        const { collection, granularity } = query;
+        query = this._preProcessQuery(query);
 
         let promiseFlag = false;
         let callbackToPromise;
@@ -108,6 +105,12 @@ const Query = {
             type: "kill",
             id: qid
         });
+    },
+
+    _preProcessQuery(query){
+        query = { ...defaultQuery, ...query }
+        query.id = Math.random().toString(36).substring(2, 6);
+        return query;
     },
 
     _queryFineOrCoarse(query){

@@ -932,7 +932,7 @@
     {
         "collection": "covid_county",
         "level": "county",
-        "temporal": true,
+        "temporal": "epoch_time",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
