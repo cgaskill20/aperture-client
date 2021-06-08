@@ -8,18 +8,24 @@
             "colorCode": "#FF0000",
             "style": "solid"
         },
+        "temporal": "epoch_time",
         "fieldMetadata": [
             {
                 "name": "temp",
-                "label": "Heatwave Temperature",
+                "label": "Max Heatwave Temperature",
                 "type": "range",
-                "unit": "farenheit"
+                "unit": "farenheit",
+                "temporalType": "max"
             },
             {
                 "name": "year",
-                "label": "Years",
-                "type": "range",
-                "unit": "year"
+                "remove": "true"
+            },
+            {
+                "name": "epoch_time",
+                "label": "Year",
+                "type": "date",
+                "step": "year"
             }
         ]
     },
@@ -938,7 +944,7 @@
                 "name": "epoch_time",
                 "label": "Date",
                 "type": "date",
-                "step": 86400000
+                "step": "day"
             },
             {
                 "name": "newDeathCount",
