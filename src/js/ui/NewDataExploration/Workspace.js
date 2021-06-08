@@ -7,9 +7,6 @@ import {componentIsRendering} from "../TabSystem";
 import Query from "../../library/Query";
 import Util from "../../library/apertureUtil";
 
-function overwrite() {}
-export const printHashes = false;
-
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '98%',
@@ -55,13 +52,13 @@ export default function Workspace() {
 
     useEffect(() => {
         $.getJSON("src/json/menumetadata.json", async function (mdata) {
-            const finalData = await AutoMenu.build(mdata, overwrite);
+            const finalData = await AutoMenu.build(mdata, () => {});
             Query.init(finalData);
             extractLayers(finalData);
         });
 
         $.getJSON("src/json/graphPriority.json", async function (mdata) {
-            const graphableLayers = await AutoMenu.build(mdata, overwrite);
+            const graphableLayers = await AutoMenu.build(mdata, () => {});
             extractGraphableLayers(graphableLayers);
         });
     }, []);

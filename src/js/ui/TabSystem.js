@@ -28,30 +28,17 @@ export default function TabSystem(props) {
     const classes = useStyles();
     const [globalState, setGlobalState] = useGlobalState();
 
-    //FIXME do something like this: selectedArray = [selectedDatasets, setSelectedDatasets]
-
-    const [dataExplorationDisplay, setDataExplorationDisplay] = useState({display: 'block'});
-    const [modelingDisplay, setModelingDisplay] = useState({display: 'none'})
-    const [dataExplorationButtonDisplay, setDataExplorationButtonDisplay] = useState('contained')
-    const [modelingButtonDisplay, setModelingButtonDisplay] = useState('outlined')
-    const [dataExplorationButtonColor, setDataExplorationButtonColor] = useState('primary')
-    const [modelingButtonColor, setModelingButtonColor] = useState('')
+    const tabSwitchingStyles = [[{display: 'block'}, 'contained', 'primary'], [{display: 'none'}, 'outlined', '']];
+    const [dataExplortaionButtonStyles, setDataExplorationButtonStyles] = useState(tabSwitchingStyles[0]);
+    const [modelingButtonStyles, setModelingButtonStyles] = useState(tabSwitchingStyles[1]);
     function switchTabs(index) {
         if(index === 0) {
-            setDataExplorationDisplay({display: 'block'});
-            setModelingDisplay({display: 'none'});
-            setDataExplorationButtonDisplay('contained');
-            setModelingButtonDisplay('outlined');
-            setDataExplorationButtonColor('primary');
-            setModelingButtonColor('');
+            setDataExplorationButtonStyles(tabSwitchingStyles[0]);
+            setModelingButtonStyles(tabSwitchingStyles[1]);
         }
         else if(index === 1) {
-            setDataExplorationDisplay({display: 'none'});
-            setModelingDisplay({display: 'block'});
-            setDataExplorationButtonDisplay('outlined');
-            setModelingButtonDisplay('contained');
-            setDataExplorationButtonColor('');
-            setModelingButtonColor('primary');
+            setDataExplorationButtonStyles(tabSwitchingStyles[1]);
+            setModelingButtonStyles(tabSwitchingStyles[0]);
         }
     }
 
@@ -67,8 +54,8 @@ export default function TabSystem(props) {
                 >
                     <Grid item>
                         <ButtonGroup className={classes.buttonSpacing} size="large">
-                            <Button variant={dataExplorationButtonDisplay} color={dataExplorationButtonColor} startIcon={<ExploreIcon/>} onClick={() => switchTabs(0)}>Data Exploration</Button>
-                            <Button variant={modelingButtonDisplay} color={modelingButtonColor} startIcon={<DataUsageIcon/>} onClick={() => switchTabs(1)}>Modeling</Button>
+                            <Button variant={dataExplortaionButtonStyles[1]} color={dataExplortaionButtonStyles[2]} startIcon={<ExploreIcon/>} onClick={() => switchTabs(0)}>Data Exploration</Button>
+                            <Button variant={modelingButtonStyles[1]} color={modelingButtonStyles[2]} startIcon={<DataUsageIcon/>} onClick={() => switchTabs(1)}>Modeling</Button>
                             <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => {
                                 setGlobalState({ chartingOpen: !globalState.chartingOpen })
                                 props.handleDrawerClose()
@@ -79,10 +66,10 @@ export default function TabSystem(props) {
                 </Grid>
             </Paper>
             <br/>
-            <div id="data-exploration-display" style={dataExplorationDisplay}>
+            <div id="data-exploration-display" style={dataExplortaionButtonStyles[0]}>
                 <Workspace />
             </div>
-            <div id="modeling-display" style={modelingDisplay}>
+            <div id="modeling-display" style={modelingButtonStyles[0]}>
                 <NewModeling />
             </div>
         </div>
