@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
         width: '100%',
+        overflowX: "hidden",
     },
     buttonSpacing: {
         margin: theme.spacing(2),
