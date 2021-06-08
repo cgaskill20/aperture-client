@@ -16,11 +16,6 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         margin: theme.spacing(1),
     },
-    heading: {
-        fontSize: theme.typography.pxToRem(20),
-        fontWeight: theme.typography.fontWeightRegular,
-        margin: theme.spacing(2),
-    },
     hide: {
         display: 'none',
     },
