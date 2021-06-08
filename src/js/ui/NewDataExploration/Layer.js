@@ -36,7 +36,7 @@ function createConstraints(activeLayerConstraints, allLayerConstraints, classes,
         if(constraint) {
             constraints.push(
                 <div key={index}>
-                    <Paper elevation={4}>
+                    <Paper elevation={3}>
                         <IndividualConstraint constraint={allLayerConstraints[index]} classes={classes} querier={querier} />
                     </Paper>
                 </div>
@@ -67,7 +67,7 @@ export default function Layer(props) {
     if(componentIsRendering) console.log("|Layer|");
     return (
         <div className={classes.root}>
-            <Paper elevation={6}>
+            <Paper elevation={5}>
                 <Accordion
                     color="primary"
                     expanded={layerExpanded}

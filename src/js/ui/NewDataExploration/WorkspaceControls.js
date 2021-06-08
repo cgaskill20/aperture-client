@@ -22,7 +22,7 @@ export default function WorkspaceControls(props) {
 
     if(componentIsRendering) {console.log("|WorkspaceControls Rerending|")}
     return (
-        <Paper className={classes.root} elevation={6}>
+        <Paper className={classes.root} elevation={5}>
             <Grid container direction="row" justify="center" alignItems="center">
                 <ButtonGroup className={classes.buttons}>
                     <Button variant="outlined" startIcon={<SaveIcon />}>Save Workspace</Button>

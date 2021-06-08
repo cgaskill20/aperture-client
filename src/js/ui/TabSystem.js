@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NewModeling from "./NewModeling/NewModeling";
 import Workspace from "./NewDataExploration/Workspace";
 import { useGlobalState } from "./global/GlobalState";
@@ -25,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(3),
     },
     tabs: {
-        borderBottom: 'black',
+        borderBottom: '2px solid #adadad',
     },
 }));
 
