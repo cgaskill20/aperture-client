@@ -931,6 +931,14 @@
     },
     {
         "collection": "covid_county",
-        "level": "county"
+        "level": "county",
+        "temporal": true,
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date"
+            }
+        ]
     }
 ]
