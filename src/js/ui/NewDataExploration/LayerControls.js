@@ -7,6 +7,14 @@ import TuneIcon from '@material-ui/icons/Tune';
 import AdvancedConstraints from "./AdvancedConstraints";
 import {componentIsRendering} from "../TabSystem";
 import {isGraphable} from "./Helpers";
+import {makeStyles} from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+
+const useStyles = makeStyles((theme) => ({
+    text: {
+        // textAlign: 'center',
+    },
+}));
 
 function graphIcon(layer, graphableLayers) {
     if(isGraphable(layer, graphableLayers)) {
@@ -17,36 +25,46 @@ function graphIcon(layer, graphableLayers) {
     return;
 }
 
-function getLayerText(layerInfo) {
+function getLayerText(layerInfo, classes) {
     if(layerInfo) {
         return (
-            <div>
-                <Typography>{layerInfo}</Typography>
+            <Grid item>
+                <Typography className={classes.text}>{layerInfo}</Typography>
                 <br/>
-            </div>
+            </Grid>
         )
     }
 }
 
 export default function LayerControls(props) {
+    const classes = useStyles();
     if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (
         <Card>
             <CardContent>
-                {getLayerText(props.layer.info)}
-                <ButtonGroup variant="outlined" aria-label="text primary button group">
-                    <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
-                                         activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
-                    <Button startIcon={<RotateLeftIcon />}>
-                        Reset Constraints
-                    </Button>
-                    <Button startIcon={<TuneIcon />} onClick={() => {
-                        props.setActiveLayerConstraints(props.defaultLayerConstraints);
-                    }}>
-                        Default Constraints
-                    </Button>
-                    {graphIcon(props.layer, props.graphableLayers)}
-                </ButtonGroup>
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                >
+                    {getLayerText(props.layer.info, classes)}
+                    <Grid item>
+                        <ButtonGroup variant="outlined">
+                            <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
+                                                 activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
+                            <Button startIcon={<RotateLeftIcon />}>
+                                Reset Constraints
+                            </Button>
+                            <Button startIcon={<TuneIcon />} onClick={() => {
+                                props.setActiveLayerConstraints(props.defaultLayerConstraints);
+                            }}>
+                                Default Constraints
+                            </Button>
+                            {graphIcon(props.layer, props.graphableLayers)}
+                        </ButtonGroup>
+                    </Grid>
+                </Grid>
             </CardContent>
         </Card>
     )

@@ -10,6 +10,7 @@ import {Button, ButtonGroup} from "@material-ui/core";
 import ExploreIcon from '@material-ui/icons/Explore';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
 import EqualizerIcon from "@material-ui/icons/Equalizer";
+import CloseIcon from "@material-ui/icons/Close";
 
 export const componentIsRendering = false;
 
@@ -61,7 +62,7 @@ export default function TabSystem(props) {
                                 setGlobalState({ chartingOpen: !globalState.chartingOpen })
                                 props.handleDrawerClose()
                             }}>Graphing</Button>
-                            <Button variant="outlined" startIcon={<ChevronLeftIcon/>} onClick={props.handleDrawerClose}>Close</Button>
+                            <Button variant="outlined" startIcon={<CloseIcon/>} onClick={props.handleDrawerClose}>Close</Button>
                         </ButtonGroup>
                     </Grid>
                 </Grid>
