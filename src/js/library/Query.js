@@ -411,6 +411,7 @@ const Query = {
         const { pipeline, collection, callback, id } = query;
         console.log({pipeline})
         query.callback({ event: "info", payload: { id } })
+        //console.log({pipe: JSON.stringify(pipeline)})
         this.queryWorker.postMessage({
             type: "query",
             collection,

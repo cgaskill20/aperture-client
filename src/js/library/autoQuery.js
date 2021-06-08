@@ -376,8 +376,14 @@ export default class AutoQuery {
 
     buildTemporalPreProcess() {
         let groupStage = {
-            _id: "$GISJOIN"
+            _id: "$GISJOIN",
+            GISJOIN: {"$first": "$GISJOIN"}
         }
+        const fieldsNotGrouped = Object.keys(this.data.constraints).filter(name => !Object.keys(this.temporalFields).includes(name)) 
+        for(const field of fieldsNotGrouped){
+            groupStage[field] = {"$first": `$${field}`}
+        }
+        console.log(this.data.constraints)
         for(const [field, type] of Object.entries(this.temporalFields)){
             const typeToMongo = (type) => {
                 switch (type) {
