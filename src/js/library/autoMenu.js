@@ -1,4 +1,5 @@
 import Query from './Query'
+import Util from './apertureUtil'
 /**
  * @namespace AutoMenu
  * @file Build a menu based on the metadata catalog & details provided by users about the metadata
@@ -26,7 +27,7 @@ export default {
             acc[feature.collection] = feature;
             return acc;
         }, {})
-        console.log(catalog)
+        console.log(JSON.parse(JSON.stringify(catalog)))
         const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
         return{
             ...autoMenu,
@@ -108,29 +109,22 @@ export default {
     buildConstraintsFromCatalog: function (metadata, catalogLayer) {
         let result = {};
         catalogLayer.fieldMetadata.forEach(constraint => {
-            const fieldIndex = this.arrayIndexOf(constraint.name, metadata.fieldMetadata);
+            const fieldIndex = metadata.fieldMetadata?.findIndex(field => field.name === constraint.name) ?? -1;
             const constraintName = constraint.name;
             if (fieldIndex !== -1) {
                 const hideByDefaultMask = {
                     hideByDefault: false
                 }
-                // console.log("----------------")
-                // console.log(constraintName);
-                // console.log(JSON.parse(JSON.stringify(constraint)))
-                // console.log(">>>>>>>>>>>>>")
                 constraint = { //bind defined values
                     ...constraint,
                     ...hideByDefaultMask,
                     ...metadata.fieldMetadata[fieldIndex]
                 }
-                // console.log(JSON.parse(JSON.stringify(constraint)))
-                // console.log("----------------")
             }
-            constraint = this.convertFromDefault(constraint);
+            constraint = this.convertFromDefault(constraint, metadata.temporal ?? false);
             constraint = this.selectToRange(constraint);
             constraint = this.buildStandardConstraint(constraint);
             if (constraint) {
-                //console.log(constraint);
                 result[constraintName] = constraint;
             }
         });
@@ -142,34 +136,17 @@ export default {
     /**
       * Helper function for @method buildConstraintsFromCatalog
       * @memberof AutoMenu
-      * @method arrayIndexOf
-      */
-    arrayIndexOf: function (fieldName, fieldMetadata) {
-        if (!fieldMetadata) {
-            return -1;
-        }
-
-        let count = 0;
-        for (let i = 0; i < fieldMetadata.length; i++) {
-            if (fieldMetadata[i].name === fieldName) {
-                return i;
-            }
-        }
-        return -1;
-    },
-
-
-    /**
-      * Helper function for @method buildConstraintsFromCatalog
-      * @memberof AutoMenu
       * @method convertFromDefault
       */
-    convertFromDefault: function (constraint) {
+    convertFromDefault: function (constraint, temporal=false) {
         if (constraint.type === "STRING") {
             constraint.type = "multiselect";
         }
         else if (constraint.type === "NUMBER" || constraint.type === "range") {
             constraint.type = "range";
+            if(temporal){
+                constraint.label = `Mean ${constraint.label ?? Util.cleanUpString(constraint.name)}`;
+            }
             if (!constraint.min || constraint.min === -999) {
                 constraint.min = 0;
             }
