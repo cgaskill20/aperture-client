@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/Project-Sustain/aperture-client#readme",
   "dependencies": {
+    "@data-ui/histogram": "0.0.84",
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
@@ -32,7 +33,6 @@
     "chroma-js": "^2.1.0",
     "clsx": "^1.1.1",
     "create-react-app": "^2.1.1",
-    "d3": "^4.13.0",
     "data2grid": "^1.0.0",
     "dexie": "^3.0.3",
     "fs": "0.0.1-security",
