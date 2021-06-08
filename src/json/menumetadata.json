@@ -956,8 +956,12 @@
             },
             {
                 "name": "totalCaseCount",
-                "label": "MaxTotal Case Count",
+                "label": "Max Total Case Count",
                 "temporalType": "max"
+            },
+            {
+                "name": "date",
+                "remove": true
             }
         ]
     }

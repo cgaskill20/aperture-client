@@ -56,7 +56,6 @@ export default function Workspace() {
     useEffect(() => {
         $.getJSON("src/json/menumetadata.json", async function (mdata) {
             const finalData = await AutoMenu.build(mdata, overwrite);
-            console.log(finalData)
             Query.init(finalData);
             extractLayers(finalData);
         });

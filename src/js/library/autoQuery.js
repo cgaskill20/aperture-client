@@ -355,12 +355,10 @@ export default class AutoQuery {
     buildConstraintPipeline() {
         let pipeline = [];
         if(this.temporal){
-            pipeline =  this.buildTemporalPreProcess();
-            console.log(pipeline)
+            pipeline = this.buildTemporalPreProcess();
         }
         for (const constraintName in this.constraintState) {
             if (constraintName !== this.temporal && this.constraintState[constraintName]) {
-                console.log(constraintName)
                 const constraintData = this.constraintData[constraintName];
 
                 if (!this.constraintIsRelevant(constraintName, constraintData))
@@ -383,7 +381,6 @@ export default class AutoQuery {
         for(const field of fieldsNotGrouped){
             groupStage[field] = {"$first": `$${field}`}
         }
-        console.log(this.data.constraints)
         for(const [field, type] of Object.entries(this.temporalFields)){
             const typeToMongo = (type) => {
 

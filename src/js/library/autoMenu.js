@@ -27,7 +27,6 @@ export default {
             acc[feature.collection] = feature;
             return acc;
         }, {})
-        console.log(JSON.parse(JSON.stringify(catalog)))
         const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
         return{
             ...autoMenu,
@@ -121,6 +120,9 @@ export default {
                     ...hideByDefaultMask,
                     ...metadata.fieldMetadata[fieldIndex]
                 }
+            }
+            if(constraint.remove){
+                return;
             }
             constraint = this.convertFromDefault(constraint, metadata.temporal ?? false);
             constraint = this.selectToRange(constraint);

@@ -409,7 +409,6 @@ const Query = {
 
     _queryMongo(query) {
         const { pipeline, collection, callback, id } = query;
-        console.log({pipeline})
         query.callback({ event: "info", payload: { id } })
         //console.log({pipe: JSON.stringify(pipeline)})
         this.queryWorker.postMessage({
