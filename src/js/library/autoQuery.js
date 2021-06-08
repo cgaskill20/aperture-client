@@ -354,8 +354,13 @@ export default class AutoQuery {
       */
     buildConstraintPipeline() {
         let pipeline = [];
+        if(this.temporal){
+            pipeline =  this.buildTemporalPreProcess();
+            console.log(pipeline)
+        }
         for (const constraintName in this.constraintState) {
-            if (this.constraintState[constraintName]) {
+            if (constraintName !== this.temporal && this.constraintState[constraintName]) {
+                console.log(constraintName)
                 const constraintData = this.constraintData[constraintName];
 
                 if (!this.constraintIsRelevant(constraintName, constraintData))
@@ -367,6 +372,26 @@ export default class AutoQuery {
         }
 
         return pipeline;
+    }
+
+    buildTemporalPreProcess() {
+        let groupStage = {
+            _id: "$GISJOIN"
+        }
+        for(const [field, type] of Object.entries(this.temporalFields)){
+            const typeToMongo = (type) => {
+                switch (type) {
+                    case "mean":
+                        return { $avg: `$${field}`}
+                }
+            }
+            groupStage[field] = typeToMongo(type);
+        }
+        groupStage = {
+            "$group": groupStage
+        }
+        
+        return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, groupStage]
     }
 
     addMongoProject() {
