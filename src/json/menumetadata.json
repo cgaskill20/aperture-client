@@ -937,7 +937,8 @@
             {
                 "name": "epoch_time",
                 "label": "Date",
-                "type": "date"
+                "type": "date",
+                "step": 86400000
             },
             {
                 "name": "newDeathCount",

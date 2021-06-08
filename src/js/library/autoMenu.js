@@ -124,7 +124,7 @@ export default {
             if(constraint.remove){
                 return;
             }
-            constraint = this.convertFromDefault(constraint, metadata.temporal ?? false);
+            constraint = this.convertFromDefault(constraint);
             constraint = this.selectToRange(constraint);
             constraint = this.buildStandardConstraint(constraint);
             if (constraint) {
@@ -141,7 +141,7 @@ export default {
       * @memberof AutoMenu
       * @method convertFromDefault
       */
-    convertFromDefault: function (constraint, temporal=false) {
+    convertFromDefault: function (constraint) {
         if (constraint.type === "STRING") {
             constraint.type = "multiselect";
         }
@@ -172,7 +172,7 @@ export default {
                         console.error(constraint);
                     }
             }
-            constraint.step = 86400 * 1000;
+            constraint.step = constraint.step ?? 86400 * 1000;
         }
 
         const DEFAULTS = {
