@@ -942,7 +942,7 @@
             {
                 "name": "newDeathCount",
                 "label": "Mean New Death Count",
-                "temporalType": "mean"
+                "temporalType": "avg"
             },
             {
                 "name": "totalDeathCount",
@@ -952,7 +952,7 @@
             {
                 "name": "newCaseCount",
                 "label": "Mean New Case Count",
-                "temporalType": "mean"
+                "temporalType": "avg"
             },
             {
                 "name": "totalCaseCount",

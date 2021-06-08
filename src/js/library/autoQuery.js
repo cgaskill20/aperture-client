@@ -382,16 +382,7 @@ export default class AutoQuery {
             groupStage[field] = {"$first": `$${field}`}
         }
         for(const [field, type] of Object.entries(this.temporalFields)){
-            const typeToMongo = (type) => {
-
-                switch (type) {
-                    case "mean":
-                        return { $avg: `$${field}`}
-                    case "max":
-                        return { $max: `$${field}`}
-                }
-            }
-            groupStage[field] = typeToMongo(type);
+            groupStage[field] = { [`$${type}`]: `$${field}`}
         }
         groupStage = {
             "$group": groupStage
