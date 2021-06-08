@@ -5,6 +5,6 @@ import Typography from "@material-ui/core/Typography";
 export default function NewModeling() {
     if(componentIsRendering) console.log("|NewModeling|");
     return (
-        <Typography>Coming Soon</Typography>
+        <Typography style={{textAlign: 'center', fontSize: '18'}}>Coming Soon</Typography>
     )
 }

@@ -39,13 +39,13 @@ const CustomTooltip = withStyles((theme) => ({
     },
 }))(Tooltip);
 
-function graphIcon(layer, graphableLayers, ) {
+function graphIcon(layer, graphableLayers) {
     if(isGraphable(layer, graphableLayers)) {
         return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
     }
 }
 
-function infoIcon(layerInfo, ) {
+function infoIcon(layerInfo) {
     if(layerInfo) {
         return <CustomTooltip title={layerInfo} placement="right" arrow><IconButton><InfoIcon color="primary" /></IconButton></CustomTooltip>
     }

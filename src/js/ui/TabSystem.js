@@ -6,7 +6,6 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NewModeling from "./NewModeling/NewModeling";
 import Workspace from "./NewDataExploration/Workspace";
 import { useGlobalState } from "./global/GlobalState";
-import { showGraph } from "../library/charting/chartBtnNewChartWindow";
 import {Button, ButtonGroup} from "@material-ui/core";
 import ExploreIcon from '@material-ui/icons/Explore';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
@@ -17,7 +16,7 @@ export const componentIsRendering = false;
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        width: '98%',
+        width: '100%',
     },
     buttonSpacing: {
         margin: theme.spacing(2),
