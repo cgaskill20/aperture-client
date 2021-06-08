@@ -146,6 +146,7 @@ export default {
             constraint.type = "range";
             if(temporal){
                 constraint.label = `Mean ${constraint.label ?? Util.cleanUpString(constraint.name)}`;
+                constraint.temporalType = 'mean';
             }
             if (!constraint.min || constraint.min === -999) {
                 constraint.min = 0;
@@ -237,6 +238,9 @@ export default {
 
             if (constraint.type === "date")
                 result.isDate = true;
+            
+            if (constraint.temporalType) 
+                result.temporalType = constraint.temporalType;
         }
         else if (constraint.type = "multiselect") {
             result.type = "multiselector";
