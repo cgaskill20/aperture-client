@@ -15,9 +15,6 @@ export default function ChartingResizable() {
         return () => window.chartSystem.unregisterDataConsumer('charting-resizable');
     }, []);
 
-    useEffect(() => {
-        setChartData(chartData);
-    });
 
     return (
         <div style={{
