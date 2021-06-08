@@ -938,6 +938,26 @@
                 "name": "epoch_time",
                 "label": "Date",
                 "type": "date"
+            },
+            {
+                "name": "newDeathCount",
+                "label": "Mean New Death Count",
+                "temporalType": "mean"
+            },
+            {
+                "name": "totalDeathCount",
+                "label": "Max Total Death Count",
+                "temporalType": "max"
+            },
+            {
+                "name": "newCaseCount",
+                "label": "Mean New Case Count",
+                "temporalType": "mean"
+            },
+            {
+                "name": "totalCaseCount",
+                "label": "MaxTotal Case Count",
+                "temporalType": "max"
             }
         ]
     }

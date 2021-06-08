@@ -386,9 +386,12 @@ export default class AutoQuery {
         console.log(this.data.constraints)
         for(const [field, type] of Object.entries(this.temporalFields)){
             const typeToMongo = (type) => {
+
                 switch (type) {
                     case "mean":
                         return { $avg: `$${field}`}
+                    case "max":
+                        return { $max: `$${field}`}
                 }
             }
             groupStage[field] = typeToMongo(type);

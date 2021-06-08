@@ -145,10 +145,6 @@ export default {
         }
         else if (constraint.type === "NUMBER" || constraint.type === "range") {
             constraint.type = "range";
-            if(temporal){
-                constraint.label = `Mean ${constraint.label ?? Util.cleanUpString(constraint.name)}`;
-                constraint.temporalType = 'mean';
-            }
             if (!constraint.min || constraint.min === -999) {
                 constraint.min = 0;
             }
