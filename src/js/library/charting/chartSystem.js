@@ -228,11 +228,11 @@ export default class ChartSystem {
 
         this.dataConsumers.forEach(async consumer => {
             let data = {};
-            Object.values(DataSourceType).forEach(async source => {
+            for (const source of Object.values(DataSourceType)) {
                 data[source.name] = await source.sourceInstance.get();
-            });
+            }
             consumer.dataCallback(data);
-        });
+        })
         
         this.doNotUpdate = true;
         window.setTimeout(() => { this.doNotUpdate = false; }, 200);
