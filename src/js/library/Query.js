@@ -18,7 +18,6 @@ const defaultQuery = {
 const Query = {
     linked: {},
     linkedCollections: [],
-    temporal: {},
     backgroundLoader: null,
     queryWorker: new Worker(),
     /**
@@ -30,13 +29,6 @@ const Query = {
         for (const [collection, data] of Object.entries(queryableData)) {
             if (data.linkedGeometry) {
                 this.linked[collection] = data.linkedGeometry;
-            }
-            if(data.temporal){
-                this.temporal[collection] = Object.entries(data.constraints)
-                    .filter(([constraintName, constraintData]) => constraintData.temporalType != null)
-                    .reduce((acc, [constraintName, constraintData]) => {
-                        return {...acc, [constraintName]: constraintData.temporalType}
-                    }, {});
             }
         }
         this.linkedCollections = [...new Set(Object.values(this.linked))]
@@ -73,7 +65,9 @@ const Query = {
     * }
     **/
     async makeQuery(query) {
-        query = this._preProcessQuery(query);
+        query = { ...defaultQuery, ...query }
+        query.id = Math.random().toString(36).substring(2, 6);
+        const { collection, granularity } = query;
 
         let promiseFlag = false;
         let callbackToPromise;
@@ -105,12 +99,6 @@ const Query = {
             type: "kill",
             id: qid
         });
-    },
-
-    _preProcessQuery(query){
-        query = { ...defaultQuery, ...query }
-        query.id = Math.random().toString(36).substring(2, 6);
-        return query;
     },
 
     _queryFineOrCoarse(query){
@@ -410,7 +398,6 @@ const Query = {
     _queryMongo(query) {
         const { pipeline, collection, callback, id } = query;
         query.callback({ event: "info", payload: { id } })
-        //console.log({pipe: JSON.stringify(pipeline)})
         this.queryWorker.postMessage({
             type: "query",
             collection,
