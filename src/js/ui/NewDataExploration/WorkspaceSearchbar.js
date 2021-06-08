@@ -24,10 +24,6 @@ function findLayerIndex(layerLabel, layerTitles) {
 }
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        margin: theme.spacing(1),
-    },
     icon: {
         float: 'right',
     },
@@ -113,7 +109,7 @@ export default function WorkspaceSearchbar(props) {
                     <TextField
                         {...params}
                         variant="outlined"
-                        label="Browse Datasets..."
+                        label="Explore Datasets..."
                     />
                 )}
             />

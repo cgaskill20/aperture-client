@@ -35,7 +35,7 @@ export default function AdvancedConstraints(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
 
-    if(componentIsRendering) {console.log("|AdvancedContraints Rerending|")}
+    if(componentIsRendering) {console.log("|AdvancedConstraints Rerending|")}
     return (
         <div>
             <Button variant="outlined" startIcon={<SettingsIcon/>} onClick={() => setOpen(true)}>

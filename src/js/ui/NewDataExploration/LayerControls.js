@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, ButtonGroup, Card, Typography} from "@material-ui/core";
+import {Button, ButtonGroup, Card, Paper, Typography} from "@material-ui/core";
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import CardContent from "@material-ui/core/CardContent";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
@@ -40,7 +40,7 @@ export default function LayerControls(props) {
     const classes = useStyles();
     if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (
-        <Card>
+        <Paper elevation={4}>
             <CardContent>
                 <Grid
                     container
@@ -66,6 +66,6 @@ export default function LayerControls(props) {
                     </Grid>
                 </Grid>
             </CardContent>
-        </Card>
+        </Paper>
     )
 }

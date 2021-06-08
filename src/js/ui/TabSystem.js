@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(2),
         marginTop: theme.spacing(3),
     },
+    tabs: {
+        borderBottom: 'black',
+    },
 }));
 
 export default function TabSystem(props) {
@@ -47,7 +50,7 @@ export default function TabSystem(props) {
     if(componentIsRendering) console.log("|TabSystem|");
     return (
         <div className={classes.root}>
-            <Paper>
+            <div className={classes.tabs}>
                 <Grid
                     container
                     spacing={3}
@@ -66,7 +69,8 @@ export default function TabSystem(props) {
                         </ButtonGroup>
                     </Grid>
                 </Grid>
-            </Paper>
+            </div>
+
             <br/>
             <div id="data-exploration-display" style={dataExplortaionButtonStyles[0]}>
                 <Workspace />

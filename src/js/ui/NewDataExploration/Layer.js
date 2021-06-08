@@ -16,9 +16,6 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         margin: theme.spacing(1),
     },
-    hide: {
-        display: 'none',
-    },
 }));
 
 function extractLayerConstraints(layer) {
@@ -39,7 +36,9 @@ function createConstraints(activeLayerConstraints, allLayerConstraints, classes,
         if(constraint) {
             constraints.push(
                 <div key={index}>
-                    <IndividualConstraint constraint={allLayerConstraints[index]} classes={classes} querier={querier} />
+                    <Paper elevation={4}>
+                        <IndividualConstraint constraint={allLayerConstraints[index]} classes={classes} querier={querier} />
+                    </Paper>
                 </div>
             );
         }
@@ -68,7 +67,7 @@ export default function Layer(props) {
     if(componentIsRendering) console.log("|Layer|");
     return (
         <div className={classes.root}>
-            <Paper elevation={1}>
+            <Paper elevation={6}>
                 <Accordion
                     color="primary"
                     expanded={layerExpanded}

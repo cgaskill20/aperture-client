@@ -7,6 +7,7 @@ import {componentIsRendering} from "../TabSystem";
 import Query from "../../library/Query";
 import Util from "../../library/apertureUtil";
 import Grid from "@material-ui/core/Grid";
+import {Paper} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {
