@@ -5,6 +5,17 @@ import Slider from '@material-ui/core/Slider';
 import {componentIsRendering} from "../TabSystem";
 import { DatePicker } from '@material-ui/pickers'
 
+const configs = {
+    year: {
+        views: ["year"]
+    },
+    day: {
+        views: ["year", "month", "day"],
+        format: "MM/DD/yyyy"
+    }
+}
+
+
 const useStyles = makeStyles({
     root: {
         width: '100%',
@@ -30,8 +41,8 @@ export default function ConstraintDate({constraint, querier}) {
     const classes = useStyles();
     const min = constraint.range[0];
     const max = constraint.range[1];
-    const step = constraint.step ? constraint.step : 1;
     const [minMaxDate, setMinMaxDate] = useState([epochToDate(min), epochToDate(max)]);
+    const config = configs[constraint.step];
 
     
     useEffect(() => {
@@ -49,12 +60,13 @@ export default function ConstraintDate({constraint, querier}) {
     if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
-            <Typography className={classes.title} id={`range-slider-${constraint.label}`} gutterBottom>
+            <Typography className={classes.title} id={`date-picker-${constraint.label}`} gutterBottom>
                 {constraint.label} &nbsp;
-                {/* <span className={classes.nowrap}>{minMax[0]} - {minMax[1]}</span> */}
+                <span className={classes.nowrap}>{minMaxDate[0].toDateString()} - {minMaxDate[1].toDateString()}</span>
             </Typography>
             <DatePicker
-                views={["year"]}
+                {...config}
+                openTo="year"
                 label="Min Date"
                 value={minMaxDate[0]}
                 minDate={epochToDate(min)}
@@ -63,17 +75,17 @@ export default function ConstraintDate({constraint, querier}) {
                     setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]])
                 }}
             />
-            {/* <Slider
-                value={minMax}
-                onChange={(event, newValue) => setMinMax(newValue)}
-                onChangeCommitted={(event, newValue) => setMinMaxCommited(newValue)}
-                aria-labelledby={`range-slider-${constraint.label}`}
-                min={min}
-                max={max}
-                step={step}
-                id={`${constraint.label}`}
-                name={`${constraint.label}`}
-            /> */}
+            <DatePicker
+                {...config}
+                openTo="year"
+                label="Max Date"
+                value={minMaxDate[1]}
+                minDate={minMaxDate[0]}
+                maxDate={epochToDate(max)}
+                onChange={(e) => {
+                    setMinMaxDate([minMaxDate[0], new Date(e.valueOf())])
+                }}
+            />
         </div>
     );
 }
