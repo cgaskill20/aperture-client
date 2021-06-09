@@ -66,7 +66,6 @@ export default function ConstraintDate({constraint, querier}) {
             </Typography>
             <DatePicker
                 {...config}
-                openTo="year"
                 label="Min Date"
                 value={minMaxDate[0]}
                 minDate={epochToDate(min)}
@@ -77,7 +76,6 @@ export default function ConstraintDate({constraint, querier}) {
             />
             <DatePicker
                 {...config}
-                openTo="year"
                 label="Max Date"
                 value={minMaxDate[1]}
                 minDate={minMaxDate[0]}

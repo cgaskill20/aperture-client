@@ -11,19 +11,10 @@ export default function IndividualConstraint(props) {
             <Grid item>
                 <Card className={props.classes.root}>
                     <CardContent>
-                        <ConstraintSlider constraint={props.constraint} querier={props.querier} />
-                    </CardContent>
-                </Card>
-            </Grid>
-        );
-    }
-
-    else if(props.constraint.type === "slider" && props.constraint.isDate){
-        return (
-            <Grid item>
-                <Card className={props.classes.root}>
-                    <CardContent>
-                        <ConstraintDate constraint={props.constraint} querier={props.querier} />
+                        {!props.constraint.isDate ? 
+                            <ConstraintSlider constraint={props.constraint} querier={props.querier} /> :
+                            <ConstraintDate constraint={props.constraint} querier={props.querier} />
+                        }
                     </CardContent>
                 </Card>
             </Grid>

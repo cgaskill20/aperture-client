@@ -18,7 +18,6 @@ const useStyles = makeStyles({
 
 export default function ConstraintSlider({constraint, querier}) {
     const classes = useStyles();
-    const {isDate} = constraint;
     const min = constraint.range[0];
     const max = constraint.range[1];
     const step = constraint.step ? constraint.step : 1;
