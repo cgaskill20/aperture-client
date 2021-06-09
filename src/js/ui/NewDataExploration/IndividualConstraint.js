@@ -6,7 +6,7 @@ import ConstraintDate from "./ConstraintDate";
 import ConstraintMultiSelect from "./ConstraintMultiSelect";
 
 export default function IndividualConstraint(props) {
-    if(props.constraint.type === "slider" && !props.constraint.isDate) {
+    if(props.constraint.type === "slider") {
         return (
             <Grid item>
                 <Card className={props.classes.root}>
