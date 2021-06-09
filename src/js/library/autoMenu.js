@@ -173,7 +173,7 @@ export default {
                         console.error(constraint);
                     }
             }
-            constraint.step = constraint.step ?? 86400 * 1000;
+            constraint.step = constraint.step ?? "day";
         }
 
         const DEFAULTS = {
