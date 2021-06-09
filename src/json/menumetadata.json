@@ -948,23 +948,23 @@
             },
             {
                 "name": "newDeathCount",
-                "label": "Mean New Death Count",
+                "label": "Mean New Death Count per Day",
                 "temporalType": "avg"
             },
             {
                 "name": "totalDeathCount",
-                "label": "Max Total Death Count",
-                "temporalType": "max"
+                "label": "Total Death Count, End of Period",
+                "temporalType": "last"
             },
             {
                 "name": "newCaseCount",
-                "label": "Mean New Case Count",
+                "label": "Mean New Case Count per Day",
                 "temporalType": "avg"
             },
             {
                 "name": "totalCaseCount",
-                "label": "Max Total Case Count",
-                "temporalType": "max"
+                "label": "Total Case Count, End of Period",
+                "temporalType": "last"
             },
             {
                 "name": "date",
