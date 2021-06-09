@@ -17,18 +17,27 @@ const useStyles = makeStyles({
     },
 });
 
+const epochToDate = (epoch) => {
+    const refrenceTime = new Date(epoch);
+    return new Date(epoch + refrenceTime.getTimezoneOffset() * 60000);
+}
+
+const dateToEpoch = (date) => {
+    return date.valueOf() - date.getTimezoneOffset() * 60000;
+}
+
 export default function ConstraintDate({constraint, querier}) {
     const classes = useStyles();
     const min = constraint.range[0];
     const max = constraint.range[1];
     const step = constraint.step ? constraint.step : 1;
-    const [minMaxDate, setMinMaxDate] = useState([new Date(min), new Date(max)]);
-    const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
+    const [minMaxDate, setMinMaxDate] = useState([epochToDate(min), epochToDate(max)]);
 
     
     useEffect(() => {
+        const minMaxCommited = [dateToEpoch(minMaxDate[0]), dateToEpoch(minMaxDate[1])]
         querier.updateConstraint(constraint.name, minMaxCommited);
-    }, [minMaxCommited]);
+    }, [minMaxDate]);
 
     useEffect(() => {
         querier.constraintSetActive(constraint.name, true);
@@ -48,8 +57,11 @@ export default function ConstraintDate({constraint, querier}) {
                 views={["year"]}
                 label="Min Date"
                 value={minMaxDate[0]}
-                minDate={minMaxDate[0]}
-                onChange={(e) => {console.log(e)}}
+                minDate={epochToDate(min)}
+                maxDate={minMaxDate[1]}
+                onChange={(e) => {
+                    setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]])
+                }}
             />
             {/* <Slider
                 value={minMax}
