@@ -1,4 +1,5 @@
 import Query from './Query'
+import Util from './apertureUtil'
 /**
  * @namespace AutoMenu
  * @file Build a menu based on the metadata catalog & details provided by users about the metadata
@@ -26,6 +27,7 @@ export default {
             acc[feature.collection] = feature;
             return acc;
         }, {})
+        //console.log(JSON.parse(JSON.stringify({catalog})))
         const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
         return{
             ...autoMenu,
@@ -87,6 +89,7 @@ export default {
                 autoMenuLayer["constraints"] = this.buildConstraintsFromCatalog(metadata, catalogLayer);
                 autoMenuLayer["collection"] = catalogLayer.collection;
                 autoMenuLayer["label"] = metadata.label;
+                autoMenuLayer["temporal"] = metadata.temporal;
                 //gets label if provided, names it the collection name otherwise
                 const label = catalogLayer.collection;
 
@@ -107,54 +110,30 @@ export default {
     buildConstraintsFromCatalog: function (metadata, catalogLayer) {
         let result = {};
         catalogLayer.fieldMetadata.forEach(constraint => {
-            const fieldIndex = this.arrayIndexOf(constraint.name, metadata.fieldMetadata);
+            const fieldIndex = metadata.fieldMetadata?.findIndex(field => field.name === constraint.name) ?? -1;
             const constraintName = constraint.name;
             if (fieldIndex !== -1) {
                 const hideByDefaultMask = {
                     hideByDefault: false
                 }
-                // console.log("----------------")
-                // console.log(constraintName);
-                // console.log(JSON.parse(JSON.stringify(constraint)))
-                // console.log(">>>>>>>>>>>>>")
                 constraint = { //bind defined values
                     ...constraint,
                     ...hideByDefaultMask,
                     ...metadata.fieldMetadata[fieldIndex]
                 }
-                // console.log(JSON.parse(JSON.stringify(constraint)))
-                // console.log("----------------")
+            }
+            if(constraint.remove){
+                return;
             }
             constraint = this.convertFromDefault(constraint);
             constraint = this.selectToRange(constraint);
             constraint = this.buildStandardConstraint(constraint);
             if (constraint) {
-                //console.log(constraint);
                 result[constraintName] = constraint;
             }
         });
 
         return result;
-    },
-
-
-    /**
-      * Helper function for @method buildConstraintsFromCatalog
-      * @memberof AutoMenu
-      * @method arrayIndexOf
-      */
-    arrayIndexOf: function (fieldName, fieldMetadata) {
-        if (!fieldMetadata) {
-            return -1;
-        }
-
-        let count = 0;
-        for (let i = 0; i < fieldMetadata.length; i++) {
-            if (fieldMetadata[i].name === fieldName) {
-                return i;
-            }
-        }
-        return -1;
     },
 
 
@@ -194,6 +173,7 @@ export default {
                         console.error(constraint);
                     }
             }
+            constraint.step = constraint.step ?? "day";
         }
 
         const DEFAULTS = {
@@ -258,6 +238,9 @@ export default {
 
             if (constraint.type === "date")
                 result.isDate = true;
+            
+            if (constraint.temporalType) 
+                result.temporalType = constraint.temporalType;
         }
         else if (constraint.type = "multiselect") {
             result.type = "multiselector";
