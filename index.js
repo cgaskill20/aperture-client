@@ -175,11 +175,11 @@ ReactDOM.render((<Root map={map}/>), uiRoot);
 // ReactDOM.render((<ModelMenu/>), modelContainer);
 
 
-import {closeNav} from "./src/js/static/navButtons";
+// import {closeNav} from "./src/js/static/navButtons";
 import "./src/js/static/darkMode.js";
 import "./src/js/library/charting/chartBtnNewChartWindow.js";
 
-map.on('click', function () {
-    closeNav();
-});
+// map.on('click', function () {
+//     closeNav();
+// });
 
