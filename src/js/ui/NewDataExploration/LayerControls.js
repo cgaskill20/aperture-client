@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Button, ButtonGroup, Card, Paper, Typography} from "@material-ui/core";
+import React from 'react';
+import {Button, ButtonGroup, Paper, Typography} from "@material-ui/core";
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import CardContent from "@material-ui/core/CardContent";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
@@ -11,6 +11,9 @@ import {makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
+    centerButtons: {
+        marginTop: theme.spacing(1),
+    },
 }));
 
 function graphIcon(layer, graphableLayers) {
@@ -48,7 +51,7 @@ export default function LayerControls(props) {
                     >
                         {getLayerText(props.layer.info, classes)}
                         <Grid item>
-                            <ButtonGroup variant="outlined">
+                            <ButtonGroup className={classes.centerButtons} variant="outlined">
                                 <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
                                                      activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
                                 <Button startIcon={<RotateLeftIcon />}>

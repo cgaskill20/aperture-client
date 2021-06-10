@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: theme.typography.pxToRem(20),
         fontWeight: theme.typography.fontWeightRegular,
         margin: theme.spacing(2),
+        marginBottom: theme.spacing(1),
     },
 }));
 
