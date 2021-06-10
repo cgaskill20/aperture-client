@@ -5,6 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Frame from "./makeFrame";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SimpleSelect() {
+export default function SimpleSelect(props) {
     const classes = useStyles();
     const [age, setAge] = React.useState('');
 
@@ -24,19 +25,18 @@ export default function SimpleSelect() {
         setAge(event.target.value);
     };
 
+
     return (
         <div>
             <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                <InputLabel id="demo-simple-select-label">Select Constraint</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={age}
                     onChange={handleChange}
                 >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    {props.selected.map((name, index) => <MenuItem key={index} value={name}>{name.split("::")[2]}</MenuItem>)}
                 </Select>
             </FormControl>
         </div>

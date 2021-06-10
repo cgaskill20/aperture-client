@@ -13,13 +13,21 @@ export default function Frame(props) {
         default: break;
     }
     let data = props.data
+    let selectedConstraints = []
+    if(data['map_features']){
+        Object.keys(data['map_features']).map(constraint =>{
+            if(data['map_features'][constraint].length > 0){
+                selectedConstraints.push(constraint)
+            }
+        })
+    }
     return (
         <div style={{
             width: "100%",
             height: props.size.height - 70,
             border: "1px solid red"
         }}>
-            <ConstraintDropDown></ConstraintDropDown>
+            <ConstraintDropDown selected={selectedConstraints}></ConstraintDropDown>
             {frame}
         </div>
     );
