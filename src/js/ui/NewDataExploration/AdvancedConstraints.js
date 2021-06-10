@@ -58,7 +58,7 @@ export default function AdvancedConstraints(props) {
                     alignItems="stretch"
                 >
                     <Grid item>
-                        <Paper className={classes.closeButtonSection} elevation={1}>
+                        <Paper className={classes.closeButtonSection} elevation={3}>
                             <Button
                                 className={classes.closeButton}
                                 startIcon={<CloseIcon/>}
@@ -70,7 +70,7 @@ export default function AdvancedConstraints(props) {
                         </Paper>
                     </Grid>
                     <Grid item>
-                        <Paper elevation={1} className={classes.constraintSection}>
+                        <Paper elevation={3} className={classes.constraintSection}>
                             {props.allLayerConstraints.map((constraint, index) => {
                                 return (
                                     <div key={index}>
