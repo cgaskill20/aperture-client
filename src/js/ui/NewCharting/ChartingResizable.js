@@ -15,7 +15,7 @@ export default function ChartingResizable() {
         return () => window.chartSystem.unregisterDataConsumer('charting-resizable');
     }, []);
 
-
+    console.log(chartData);
 
 
     return (

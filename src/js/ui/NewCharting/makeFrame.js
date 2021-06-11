@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import HistogramGraph from "./ChartTemplates/Histogram";
 import ConstraintDropDown from "./constraintDropDown"
+import LineChart from "./ChartTemplates/LineChart";
 
 
 export default function Frame(props) {
@@ -9,9 +10,12 @@ export default function Frame(props) {
     let frame;
     switch (props.type.name) {
         case "histogram":
-           frame = <HistogramGraph size={props.size} data={props.data} selected={constraint} />; break;
+            frame = <HistogramGraph size={props.size} data={props.data} selected={constraint} />; break;
+        case "line":
+            frame = <LineChart size={props.size} data={props.data} selected={constraint} />; break;
         default: break;
     }
+
     let data = props.data
     let selectedConstraints = []
     if(data['map_features']){
