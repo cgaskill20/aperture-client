@@ -57,7 +57,7 @@ END OF TERMS AND CONDITIONS
 
 import Scatterplot from "./scatterplot";
 import Feature from "./feature";
-import { DataSourceType } from "./chartSystem";
+import { DataSourceType } from "../../ui/NewCharting/chartSystem";
 import { FeatureChartMessageType } from "./featureChartMessageType";
 import ChartManager from "./chartManager"
 

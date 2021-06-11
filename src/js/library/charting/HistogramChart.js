@@ -1,6 +1,6 @@
 import React from 'react';
 import * as d3 from '../../third-party/d3.min.js';
-import KernelDensityEstimator from '../../library/charting/kernelDensityEstimator';
+import KernelDensityEstimator from './kernelDensityEstimator';
 
 export default class HistogramChart extends React.Component {
     constructor(props) {
@@ -26,7 +26,7 @@ export default class HistogramChart extends React.Component {
 
     render() {
         return (
-            <div ref={this.containerRef}></div>
+            <div ref={this.containerRef} />
         );
     }
 

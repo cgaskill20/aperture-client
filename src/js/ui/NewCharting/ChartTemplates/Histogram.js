@@ -1,6 +1,5 @@
 import React from "react";
 import { Histogram, DensitySeries, BarSeries, withParentSize, XAxis, YAxis } from '@data-ui/histogram';
-
 export default function HistogramGraph(props) {
     const ResponsiveHistogram = withParentSize(({ parentWidth, parentHeight, ...rest}) => (
         <Histogram

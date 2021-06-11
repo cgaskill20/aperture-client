@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import HistogramGraph from "./Histogram";
+import React, { useState } from 'react';
+import HistogramGraph from "./ChartTemplates/Histogram";
 import ConstraintDropDown from "./constraintDropDown"
 
 
@@ -9,7 +9,7 @@ export default function Frame(props) {
     let frame;
     switch (props.type.name) {
         case "histogram":
-           frame = <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph>; break;
+           frame = <HistogramGraph size={props.size} data={props.data} selected={constraint} />; break;
         default: break;
     }
     let data = props.data
@@ -21,14 +21,13 @@ export default function Frame(props) {
             }
         })
     }
-    let selected = ""
     return (
         <div style={{
             width: "100%",
             height: props.size.height - 70,
             border: "1px solid red"
         }}>
-            <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
+            <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint} />
             {frame}
         </div>
     );

@@ -2,7 +2,7 @@ let maxGraphs = 6;
 let totalGraphs = 0;
 let maxGraphsReached = false;
 
-import { ChartingType } from "./chartSystem"
+import { ChartingType } from "../../ui/NewCharting/chartSystem"
 import { createChartControl } from "./chartBtnControls.js"
 
 export function reduceTotalGraphs(n) {
@@ -64,12 +64,7 @@ function moreGraphsPossible() {
 }
 
 export function checkNumberOfGraphs() {
-    if(totalGraphs >= maxGraphs) {
-        maxGraphsReached = true;
-    }
-    else {
-        maxGraphsReached = false;
-    }
+    maxGraphsReached = totalGraphs >= maxGraphs;
     buttonsOnOff();
 }
 
