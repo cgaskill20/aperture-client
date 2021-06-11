@@ -5,11 +5,11 @@ import ConstraintDropDown from "./constraintDropDown"
 
 export default function Frame(props) {
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
-
+    const [constraint, setConstraint] = useState()
     let frame;
     switch (props.type.name) {
         case "histogram":
-           frame = <HistogramGraph size={props.size} data={props.data} selected={selected}></HistogramGraph>; break;
+           frame = <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph>; break;
         default: break;
     }
     let data = props.data
@@ -28,7 +28,7 @@ export default function Frame(props) {
             height: props.size.height - 70,
             border: "1px solid red"
         }}>
-            <ConstraintDropDown options={selectedConstraints} selected = {selected}></ConstraintDropDown>
+            <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
             {frame}
         </div>
     );

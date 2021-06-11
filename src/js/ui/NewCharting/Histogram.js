@@ -2,7 +2,7 @@ import React from "react";
 import { Histogram, DensitySeries, BarSeries, withParentSize, XAxis, YAxis } from '@data-ui/histogram';
 
 export default function HistogramGraph(props) {
-
+    console.log(props.constraint)
     const ResponsiveHistogram = withParentSize(({ parentWidth, parentHeight, ...rest}) => (
         <Histogram
             width={parentWidth}

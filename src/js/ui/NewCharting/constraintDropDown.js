@@ -22,7 +22,7 @@ export default function SimpleSelect(props) {
     const [age, setAge] = React.useState('');
 
     const handleChange = (event) => {
-        props.selected = event.target.value;
+        props.setConstraint(event.target.value);
         setAge(event.target.value);
     };
 
