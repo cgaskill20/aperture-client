@@ -9,7 +9,7 @@ export default function Frame(props) {
     let frame;
     switch (props.type.name) {
         case "histogram":
-           frame = <HistogramGraph size={props.size} data={props.data}></HistogramGraph>; break;
+           frame = <HistogramGraph size={props.size} data={props.data} selected={selected}></HistogramGraph>; break;
         default: break;
     }
     let data = props.data
@@ -21,13 +21,14 @@ export default function Frame(props) {
             }
         })
     }
+    let selected = ""
     return (
         <div style={{
             width: "100%",
             height: props.size.height - 70,
             border: "1px solid red"
         }}>
-            <ConstraintDropDown selected={selectedConstraints}></ConstraintDropDown>
+            <ConstraintDropDown options={selectedConstraints} selected = {selected}></ConstraintDropDown>
             {frame}
         </div>
     );

@@ -22,6 +22,7 @@ export default function SimpleSelect(props) {
     const [age, setAge] = React.useState('');
 
     const handleChange = (event) => {
+        props.selected = event.target.value;
         setAge(event.target.value);
     };
 
@@ -36,7 +37,7 @@ export default function SimpleSelect(props) {
                     value={age}
                     onChange={handleChange}
                 >
-                    {props.selected.map((name, index) => <MenuItem key={index} value={name}>{name.split("::")[2]}</MenuItem>)}
+                    {props.options.map((name, index) => <MenuItem key={index} value={name}>{name.split("::")[2]}</MenuItem>)}
                 </Select>
             </FormControl>
         </div>
