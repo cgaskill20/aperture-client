@@ -2,7 +2,6 @@ import React from "react";
 import { Histogram, DensitySeries, BarSeries, withParentSize, XAxis, YAxis } from '@data-ui/histogram';
 
 export default function HistogramGraph(props) {
-    console.log(props.constraint)
     const ResponsiveHistogram = withParentSize(({ parentWidth, parentHeight, ...rest}) => (
         <Histogram
             width={parentWidth}
@@ -16,9 +15,9 @@ export default function HistogramGraph(props) {
 
     // Random code trying to fix this issue, doesnt seem to work, ignore
     let doReturn = null
-    if(props.data['map_features'] && props.data['map_features']["future_heat::temp::Heatwave Temperature"].length > 0) {
+    if(props.selected) {
         const rawData = [];
-        props.data['map_features']["future_heat::temp::Heatwave Temperature"].map(data=>{
+        props.data['map_features'][props.selected].map(data=>{
                 rawData.push(data['data'])
             })
         doReturn = <ResponsiveHistogram
