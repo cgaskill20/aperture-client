@@ -971,5 +971,21 @@
                 "remove": true
             }
         ]
+    },
+    {
+        "collection": "neon_barometric_pressure",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "temporal": "epoch_time",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            }
+        ]
     }
 ]
