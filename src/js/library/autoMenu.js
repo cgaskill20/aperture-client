@@ -27,8 +27,10 @@ export default {
             acc[feature.collection] = feature;
             return acc;
         }, {})
+        console.log({catalog})
         //console.log(JSON.parse(JSON.stringify({catalog})))
         const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
+        console.log({autoMenu})
         return{
             ...autoMenu,
             ...overwrite,
@@ -47,11 +49,11 @@ export default {
                 const catalogLayer = catalog[metadata.collection];
                 //These are hardcoded for now
                 let autoMenuLayer = {};
-                if (metadata.level) {
+                if (metadata.level || metadata.linked) {
                     autoMenuLayer["group"] = metadata["group"] ? metadata["group"] : "Tract, County, & State Data";
                     autoMenuLayer["subGroup"] = metadata["subGroup"] ? metadata["subGroup"] : metadata.level === "tract" ? "Miscellaneous Tract" : "Miscellaneous County";
-                    autoMenuLayer["linkedGeometry"] = metadata.level === "tract" ? "tract_geo_140mb_no_2d_index" : "county_geo_30mb_no_2d_index";
-                    autoMenuLayer["joinProperty"] = "GISJOIN";
+                    autoMenuLayer["linkedGeometry"] = metadata.linked ? metadata.linked.collection : metadata.level === "tract" ? "tract_geo_140mb_no_2d_index" : "county_geo_30mb_no_2d_index";
+                    autoMenuLayer["joinProperty"] = metadata.linked ? metadata.linked.field : "GISJOIN";
                     autoMenuLayer["minZoom"] = metadata.level === "tract" ? 9 : 7;
                 }
                 else {
