@@ -67,7 +67,7 @@ export default function Layer(props) {
     if(componentIsRendering) console.log("|Layer|");
     return (
         <div className={classes.root}>
-            <Paper elevation={5}>
+            <Paper elevation={3}>
                 <Accordion
                     color="primary"
                     expanded={layerExpanded}
