@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     },
     drawerPaper: {
         width: drawerWidth,
-        opacity: 0.85,
+        opacity: 0.95,
     },
 }));
 
