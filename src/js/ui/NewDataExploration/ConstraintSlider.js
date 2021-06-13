@@ -7,7 +7,6 @@ import {componentIsRendering} from "../TabSystem";
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
-        marginTop: theme.spacing(1),
     },
     title: {
         textAlign: "center",
