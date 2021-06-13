@@ -25,7 +25,7 @@ export default function ChartingResizable() {
             height: '800px',
         }}>
             <Rnd default={{
-                    x: 500,
+                    x: 900,
                     y: 100,
                     width: size.width,
                     height: size.height
