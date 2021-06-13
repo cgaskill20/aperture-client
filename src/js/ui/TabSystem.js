@@ -58,10 +58,7 @@ export default function TabSystem(props) {
                         <ButtonGroup className={classes.buttonSpacing} size="large">
                             <Button variant={dataExplortaionButtonStyles[1]} color={dataExplortaionButtonStyles[2]} startIcon={<ExploreIcon/>} onClick={() => switchTabs(0)}>Data Exploration</Button>
                             <Button variant={modelingButtonStyles[1]} color={modelingButtonStyles[2]} startIcon={<DataUsageIcon/>} onClick={() => switchTabs(1)}>Modeling</Button>
-                            <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => {
-                                setGlobalState({ chartingOpen: !globalState.chartingOpen })
-                                props.handleDrawerClose()
-                            }}>Graphing</Button>
+                            <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => setGlobalState({ chartingOpen: !globalState.chartingOpen })}>Graphing</Button>
                             <Button variant="outlined" startIcon={<CloseIcon/>} onClick={props.handleDrawerClose}>Close</Button>
                         </ButtonGroup>
                     </Grid>
