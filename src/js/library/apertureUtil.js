@@ -448,6 +448,19 @@ export default {
         }
 
         return false;
-    }
+    },
+
+    /** Makes it so you can use mongoDB dot notation on objects, ie obj[field1.field2] = object[field1][field2]
+      * @memberof Util
+      * @method resolvePath
+      * @param {string} path - a single entry of GeoJSON data, as directly from the database
+      * @param {obj} obj
+      * @returns {?} whatever is the path
+      */
+    resolvePath(path, obj) {
+        return path.split('.').reduce(function(prev, curr) {
+            return prev ? prev[curr] : null
+        }, obj || self)
+    },
 }
 

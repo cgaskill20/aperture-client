@@ -187,7 +187,7 @@ const Query = {
             const { event } = d;
             if (event === "data") {
                 const complimentaryData = { ...d.payload.data };
-                const realData = waitingRoomSnapshot.find(entry => entry.GISJOIN === complimentaryData.GISJOIN);
+                const realData = waitingRoomSnapshot.find(entry => entry[field] === complimentaryData[field]);
                 Util.normalizeFeatureID(realData);
                 realData.id = `${realData.id}_${complimentaryData.id}`
                 realData.properties = {
@@ -208,9 +208,10 @@ const Query = {
 
         const dumpWaitingRoom = (final = false) => {
             const queryDump = JSON.parse(JSON.stringify(query))
-            const JOINS = waitingRoom.map(entry => entry.GISJOIN);
+            console.log({waitingRoom})
+            const JOINS = waitingRoom.map(entry => Util.resolvePath(field, entry));
             const waitingRoomSnapshot = JSON.parse(JSON.stringify(waitingRoom))
-            queryDump.pipeline = [{ "$match": { "GISJOIN": { "$in": JOINS } } }, ...queryDump.pipeline]
+            queryDump.pipeline = [{ "$match": { [field]: { "$in": JOINS } } }, ...queryDump.pipeline]
             queryDump.callback = (d) => { dumpCallback(d, !final, waitingRoomSnapshot) };
             this._queryMongo(queryDump);
             waitingRoom = [];
