@@ -978,6 +978,7 @@
             "collection": "neon_sites",
             "field": "site"
         },
+        "icon": "science",
         "temporal": "epoch_time",
         "fieldMetadata": [
             {
