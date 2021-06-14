@@ -17,7 +17,6 @@ const defaultQuery = {
 
 const Query = {
     linked: {},
-    linkedCollections: [],
     backgroundLoader: null,
     queryWorker: new Worker(),
     /**
@@ -34,9 +33,15 @@ const Query = {
                 };
             }
         }
-        console.log(this.linked)
-        this.linkedCollections = [...new Set(Object.values(this.linked))]
-        this.backgroundLoader = (linked) => linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
+        this.backgroundLoader = (linked) => { 
+            if(linked === "tract_geo_140mb_no_2d_index"){
+                return window.backgroundTract;
+            }
+            else if(linked === "county_geo_30mb_no_2d_index"){
+                return window.backgroundCounty;
+            }
+            return null;
+        }
     },
 
     /**
@@ -142,7 +147,7 @@ const Query = {
         });
     },
 
-    _linkedQuery(linked, query) {
+    _linkedQuery({collection, field}, query) {
         const { granularity, id } = query;
         const epsilon = 100;
         let waitingRoom = [];
@@ -203,16 +208,17 @@ const Query = {
 
         const dumpWaitingRoom = (final = false) => {
             const queryDump = JSON.parse(JSON.stringify(query))
-            const GISJOINS = waitingRoom.map(entry => entry.GISJOIN);
+            const JOINS = waitingRoom.map(entry => entry.GISJOIN);
             const waitingRoomSnapshot = JSON.parse(JSON.stringify(waitingRoom))
-            queryDump.pipeline = [{ "$match": { "GISJOIN": { "$in": GISJOINS } } }, ...queryDump.pipeline]
+            queryDump.pipeline = [{ "$match": { "GISJOIN": { "$in": JOINS } } }, ...queryDump.pipeline]
             queryDump.callback = (d) => { dumpCallback(d, !final, waitingRoomSnapshot) };
             this._queryMongo(queryDump);
             waitingRoom = [];
         }
 
         const queryLinked = JSON.parse(JSON.stringify(query))
-        queryLinked.collection = linked;
+        queryLinked.collection = collection;
+        queryLinked.pipeline = [];
         queryLinked.callback = waitingRoomListener;
         this._queryFineOrCoarse(queryLinked);
     },
@@ -222,7 +228,7 @@ const Query = {
         if (!query.geohashBlacklist) {
             query.geohashBlacklist = [];
         }
-        if (bounds && this.linkedCollections.includes(collection)) {
+        if (bounds && this.backgroundLoader(collection)) {
             this._queryPreloadedData(query)
         }
         else if (bounds) {
@@ -401,6 +407,7 @@ const Query = {
 
     _queryMongo(query) {
         const { pipeline, collection, callback, id } = query;
+        console.log({pipeline})
         query.callback({ event: "info", payload: { id } })
         this.queryWorker.postMessage({
             type: "query",
