@@ -115,29 +115,8 @@ export default {
      * @returns {string} name/id of feature, "none" if not found
      */
     getNameFromGeoJsonFeature: function (feature, indexData) {
-        let pTObj = this.getParamsAndTagsFromGeoJsonFeature(feature);
-        let params = pTObj.params;
-        let tagsObj = pTObj.tagsObj;
-        const datasource = indexData ? indexData : window.renderInfrastructure.data;
         if (indexData) { //this is quite a bit simpler than the other way.
             return Object.keys(indexData)[0];
-        }
-        for (element in datasource) {
-            if (datasource[element]["identityField"]) {
-                for (let i = 0; i < params.length; i++) {
-                    if (params[i] === datasource[element]["identityField"]) {
-                        if (datasource[element]["identityKey"]) {
-                            if (tagsObj[params[i]] === datasource[element]["identityKey"]) {
-                                return element;
-                            }
-                        }
-                        else {
-                            return element;
-                        }
-                    }
-                }
-            }
-
         }
         return 'none';
     },
@@ -300,8 +279,12 @@ export default {
      * @param {Object} feature geojson feature
      */
     normalizeFeatureID: function (feature) {
-        if (!feature.id && feature._id.$oid)
+        if (!feature.id && feature._id?.$oid) {
             feature.id = feature._id.$oid;
+        }
+        else if(typeof feature._id === "string") {
+            feature.id = feature._id;
+        }
     },
     /**                                                                            
      * Makes popup text

@@ -57,7 +57,7 @@ export default class AutoQuery {
         this.graphPipeID = graphPipeID;
 
         this.blockerGroup = this.data.linkedGeometry ?
-            this.linked === "tract_geo_140mb_no_2d_index" ?
+            this.data.linkedGeometry === "tract_geo_140mb_no_2d_index" ?
                 "tracts" : "counties"
             : this.data.label ?
                 this.data.label : Util.cleanUpString(this.collection);
@@ -329,7 +329,7 @@ export default class AutoQuery {
 
         indexData[this.collection]["border"] = this.color.border;
         indexData[this.collection]["opacity"] = this.color.opacity;
-
+        console.log(data)
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.add(id);
 
@@ -374,8 +374,8 @@ export default class AutoQuery {
 
     buildTemporalPreProcess() {
         let groupStage = {
-            _id: "$GISJOIN",
-            GISJOIN: {"$first": "$GISJOIN"}
+            _id: `$${this.data.joinField}`,
+            [this.data.joinField]: {"$first": `$${this.data.joinField}`}
         }
         const fieldsNotGrouped = Object.keys(this.data.constraints).filter(name => !Object.keys(this.temporalFields).includes(name)) 
         for(const field of fieldsNotGrouped){
