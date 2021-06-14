@@ -976,7 +976,7 @@
         "collection": "neon_barometric_pressure",
         "linked": {
             "collection": "neon_sites",
-            "field": "site"
+            "field": "properties.site"
         },
         "temporal": "epoch_time",
         "fieldMetadata": [
@@ -985,6 +985,248 @@
                 "label": "Date",
                 "type": "date",
                 "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "staPresMean",
+                "label": "Average Station Pressure over Time Constraint",
+                "unit": "kilopascal",
+                "temporalType": "avg"
+            },
+            {
+                "name": "staPresMinimum",
+                "label": "Minimum Station Pressure of Time Constraint",
+                "unit": "kilopascal",
+                "temporalType": "min"
+                
+            },
+            {
+                "name": "staPresMaximum",
+                "label": "Maximum Station Pressure of Time Constraint",
+                "unit": "kilopascal",
+                "temporalType": "max"
+            },
+            {
+                "name": "staPresVariance",
+                "label": "Variance in station pressure",
+                "unit": "kilopascalsSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of station pressure",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresExpUncert",
+                "label": "Expanded uncertainty for station pressure",
+                "unit": "kilopascal",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresStdErMean",
+                "label": "Standard error of the mean for station pressure",
+                "unit": "kilopascal",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresRangeFailQM",
+                "label": "Station pressure quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresRangePassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresRangeNAQM",
+                "label": "Station pressure quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresPersistenceFailQM",
+                "label": "Station pressure quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresPersistencePassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresPersistenceNAQM",
+                "label": "Station pressure quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresStepFailQM",
+                "label": "Station pressure quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresStepPassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresStepNAQM",
+                "label": "Station pressure quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresNullFailQM",
+                "label": "Station pressure quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresNullPassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresNullNAQM",
+                "label": "Station pressure quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresGapFailQM",
+                "label": "Station pressure quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresGapPassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresGapNAQM",
+                "label": "Station pressure quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresSpikeFailQM",
+                "label": "Station pressure quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresSpikePassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresSpikeNAQM",
+                "label": "Station pressure quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresValidCalFailQM",
+                "label": "Station pressure quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresValidCalPassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresValidCalNAQM",
+                "label": "Station pressure quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresAlphaQM",
+                "label": "Station pressure quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresBetaQM",
+                "label": "Station pressure quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresFinalQF",
+                "label": "Station pressure quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresFinalQFSciRvw",
+                "label": "Station pressure quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "corPres",
+                "label": "Mean station pressure corrected to sea level",
+                "unit": "kilopascal",
+                "temporalType": "avg",
+                "hideByDefault": true
+            },
+            {
+                "name": "corPresExpUncert",
+                "label": "Expanded uncertainty for pressure corrected to sea level",
+                "unit": "kilopascal",
+                "hideByDefault": true
+            },
+            {
+                "name": "corPresTempQF",
+                "label": "Corrected pressure quality flag that assesses whether temperature measurements for correcting pressure were available (0=yes, 1=no)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "corPresDewPtQF",
+                "label": "Corrected pressure quality flag that assesses whether dew point measurements for correcting pressure were available (0=yes, 1=no)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "corPresFinalQF",
+                "label": "Pressure corrected to sea level quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.000653 and NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "corPresFinalQFSciRvw",
+                "label": "Pressure corrected to sea level quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
             }
         ]
     }

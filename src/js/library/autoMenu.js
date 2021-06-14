@@ -53,7 +53,7 @@ export default {
                     autoMenuLayer["group"] = metadata["group"] ? metadata["group"] : "Tract, County, & State Data";
                     autoMenuLayer["subGroup"] = metadata["subGroup"] ? metadata["subGroup"] : metadata.level === "tract" ? "Miscellaneous Tract" : "Miscellaneous County";
                     autoMenuLayer["linkedGeometry"] = metadata.linked ? metadata.linked.collection : metadata.level === "tract" ? "tract_geo_140mb_no_2d_index" : "county_geo_30mb_no_2d_index";
-                    autoMenuLayer["joinProperty"] = metadata.linked ? metadata.linked.field : "GISJOIN";
+                    autoMenuLayer["joinField"] = metadata.linked ? metadata.linked.field : "GISJOIN";
                     autoMenuLayer["minZoom"] = metadata.level === "tract" ? 9 : 7;
                 }
                 else {

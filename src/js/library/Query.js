@@ -28,9 +28,13 @@ const Query = {
     init(queryableData) {
         for (const [collection, data] of Object.entries(queryableData)) {
             if (data.linkedGeometry) {
-                this.linked[collection] = data.linkedGeometry;
+                this.linked[collection] = { 
+                    collection: data.linkedGeometry,
+                    field: data.joinField
+                };
             }
         }
+        console.log(this.linked)
         this.linkedCollections = [...new Set(Object.values(this.linked))]
         this.backgroundLoader = (linked) => linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
     },
