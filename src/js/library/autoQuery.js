@@ -61,6 +61,10 @@ export default class AutoQuery {
                 "tracts" : "counties"
             : this.data.label ?
                 this.data.label : Util.cleanUpString(this.collection);
+        
+        if(this.data.linkedGeometry === "neon_sites"){ //edge case for now
+            this.blockerGroup = "Neon Sites";
+        }
                 
         if(this.blockerGroup.charAt(this.blockerGroup.length-1) !== "s"){
             this.blockerGroup += "s";
@@ -329,7 +333,6 @@ export default class AutoQuery {
 
         indexData[this.collection]["border"] = this.color.border;
         indexData[this.collection]["opacity"] = this.color.opacity;
-        console.log(data)
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.add(id);
 

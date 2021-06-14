@@ -208,7 +208,6 @@ const Query = {
 
         const dumpWaitingRoom = (final = false) => {
             const queryDump = JSON.parse(JSON.stringify(query))
-            console.log({waitingRoom})
             const JOINS = waitingRoom.map(entry => Util.resolvePath(field, entry));
             const waitingRoomSnapshot = JSON.parse(JSON.stringify(waitingRoom))
             queryDump.pipeline = [{ "$match": { [field]: { "$in": JOINS } } }, ...queryDump.pipeline]
@@ -408,7 +407,6 @@ const Query = {
 
     _queryMongo(query) {
         const { pipeline, collection, callback, id } = query;
-        console.log({pipeline})
         query.callback({ event: "info", payload: { id } })
         this.queryWorker.postMessage({
             type: "query",
