@@ -1,6 +1,7 @@
 import React from 'react';
 import {Grid, Typography} from "@material-ui/core";
 import ConstraintSlider from "./ConstraintSlider";
+import ConstraintDate from "./ConstraintDate";
 import ConstraintMultiSelect from "./ConstraintMultiSelect";
 import {makeStyles} from "@material-ui/core/styles";
 

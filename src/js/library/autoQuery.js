@@ -41,6 +41,14 @@ export default class AutoQuery {
 
         this.linked = this.data.linkedGeometry ? true : false;
 
+        if(layerData.temporal){
+            this.temporal = layerData.temporal;
+            this.temporalFields = Object.entries(layerData.constraints)
+                .filter(([constraintName, constraint]) => constraint.temporalType != null)
+                .reduce((acc, [constraintName, constraint]) => {
+                    return {...acc, [constraintName]: constraint.temporalType}
+                }, {});
+        }
 
         this.color = layerData.color;
         this.colorStyle = layerData.color.style;
@@ -346,8 +354,11 @@ export default class AutoQuery {
       */
     buildConstraintPipeline() {
         let pipeline = [];
+        if(this.temporal){
+            pipeline = this.buildTemporalPreProcess();
+        }
         for (const constraintName in this.constraintState) {
-            if (this.constraintState[constraintName]) {
+            if (constraintName !== this.temporal && this.constraintState[constraintName]) {
                 const constraintData = this.constraintData[constraintName];
 
                 if (!this.constraintIsRelevant(constraintName, constraintData))
@@ -359,6 +370,25 @@ export default class AutoQuery {
         }
 
         return pipeline;
+    }
+
+    buildTemporalPreProcess() {
+        let groupStage = {
+            _id: "$GISJOIN",
+            GISJOIN: {"$first": "$GISJOIN"}
+        }
+        const fieldsNotGrouped = Object.keys(this.data.constraints).filter(name => !Object.keys(this.temporalFields).includes(name)) 
+        for(const field of fieldsNotGrouped){
+            groupStage[field] = {"$first": `$${field}`}
+        }
+        for(const [field, type] of Object.entries(this.temporalFields)){
+            groupStage[field] = { [`$${type}`]: `$${field}`}
+        }
+        groupStage = {
+            "$group": groupStage
+        }
+        
+        return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, groupStage]
     }
 
     addMongoProject() {
