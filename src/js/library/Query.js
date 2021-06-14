@@ -19,6 +19,16 @@ const Query = {
     linked: {},
     backgroundLoader: null,
     queryWorker: new Worker(),
+    backgroundLoader = (linked) => { 
+        if(linked === "tract_geo_140mb_no_2d_index"){
+            return window.backgroundTract;
+        }
+        else if(linked === "county_geo_30mb_no_2d_index"){
+            return window.backgroundCounty;
+        }
+        return null;
+    },
+    
     /**
       * Inits this namespace
       * @memberof Query
@@ -32,15 +42,6 @@ const Query = {
                     field: data.joinField
                 };
             }
-        }
-        this.backgroundLoader = (linked) => { 
-            if(linked === "tract_geo_140mb_no_2d_index"){
-                return window.backgroundTract;
-            }
-            else if(linked === "county_geo_30mb_no_2d_index"){
-                return window.backgroundCounty;
-            }
-            return null;
         }
     },
 
