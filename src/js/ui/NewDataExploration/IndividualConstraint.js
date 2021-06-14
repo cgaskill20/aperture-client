@@ -23,7 +23,10 @@ export default function IndividualConstraint(props) {
     if(props.constraint.type === "slider") {
         return (
             <Grid item className={classes.root}>
-                <ConstraintSlider constraint={props.constraint} querier={props.querier} />
+                {!props.constraint.isDate ?
+                    <ConstraintSlider constraint={props.constraint} querier={props.querier} /> :
+                    <ConstraintDate constraint={props.constraint} querier={props.querier} />
+                }
             </Grid>
         );
     }
