@@ -19,7 +19,7 @@ const Query = {
     linked: {},
     backgroundLoader: null,
     queryWorker: new Worker(),
-    backgroundLoader = (linked) => { 
+    backgroundLoader: (linked) => { 
         if(linked === "tract_geo_140mb_no_2d_index"){
             return window.backgroundTract;
         }
@@ -28,7 +28,7 @@ const Query = {
         }
         return null;
     },
-    
+
     /**
       * Inits this namespace
       * @memberof Query
