@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import HistogramGraph from "./Histogram";
+import HistogramGraph from "./HistogramChart";
 import ConstraintDropDown from "./constraintDropDown"
 
 

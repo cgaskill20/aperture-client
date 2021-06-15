@@ -10,9 +10,6 @@ export default function HistogramGraph(props) {
         />
     ))
 
-
-
-
     // Random code trying to fix this issue, doesnt seem to work, ignore
     let doReturn = null
     if(props.selected) {
