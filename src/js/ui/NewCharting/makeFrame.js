@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import HistogramGraph from "./HistogramChart";
 import ConstraintDropDown from "./constraintDropDown"
 import LineGraph from "./LineGraph"
+import PieGraph from "./PieTEST";
 
 export default function Frame(props) {
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
@@ -12,6 +13,8 @@ export default function Frame(props) {
             frame = <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph>; break;
         case "line":
             frame = <LineGraph size={props.size} data={props.data} selected={constraint}></LineGraph>; break;
+        case "scatterplot":
+            frame = <PieGraph size={props.size} data={props.data} selected={constraint}></PieGraph>; break;
         default: break;
     }
     let data = props.data
