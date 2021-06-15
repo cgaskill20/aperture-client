@@ -5,7 +5,7 @@ export default function HistogramGraph(props) {
     const ResponsiveHistogram = withParentSize(({ parentWidth, parentHeight, ...rest}) => (
         <Histogram
             width={parentWidth}
-            height={parentHeight}
+            height={parentHeight-80}
             {...rest}
         />
     ))

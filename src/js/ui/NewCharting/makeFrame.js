@@ -23,10 +23,10 @@ export default function Frame(props) {
     }
     let selected = ""
     return (
+
         <div style={{
             width: "100%",
-            height: props.size.height - 70,
-            border: "1px solid red"
+            height: props.size.height - 80,
         }}>
             <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
             {frame}
