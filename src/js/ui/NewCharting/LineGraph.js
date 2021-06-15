@@ -110,9 +110,7 @@ export default function LineGraph(props) {
             .text("SUBTITLE");
         
         setOnMouseMove(event => {
-            if (data.length === 0) {
-                return;
-            }
+			return;
 
 			console.log(event);
             let rawMouse = d3.pointer(event, svgRef.current);
