@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
 import {componentIsRendering} from "../TabSystem";
 import { DatePicker } from '@material-ui/pickers'
+import Grid from "@material-ui/core/Grid";
 
 const configs = {
     year: {
@@ -25,6 +25,12 @@ const useStyles = makeStyles({
     },
     nowrap: {
         whiteSpace: "nowrap",
+    },
+    fullWidth: {
+        width: '75%',
+    },
+    halfSize: {
+        width: '50%',
     },
 });
 
@@ -60,30 +66,42 @@ export default function ConstraintDate({constraint, querier}) {
     if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
-            <Typography className={classes.title} id={`date-picker-${constraint.label}`} gutterBottom>
-                {constraint.label} &nbsp;
-                <span className={classes.nowrap}>{minMaxDate[0].toDateString()} - {minMaxDate[1].toDateString()}</span>
-            </Typography>
-            <DatePicker
-                {...config}
-                label="Min Date"
-                value={minMaxDate[0]}
-                minDate={epochToDate(min)}
-                maxDate={minMaxDate[1]}
-                onChange={(e) => {
-                    setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]])
-                }}
-            />
-            <DatePicker
-                {...config}
-                label="Max Date"
-                value={minMaxDate[1]}
-                minDate={minMaxDate[0]}
-                maxDate={epochToDate(max)}
-                onChange={(e) => {
-                    setMinMaxDate([minMaxDate[0], new Date(e.valueOf())])
-                }}
-            />
-        </div>
+            <Grid container direction="row" justify="center" alignItems="center">
+                <Grid item>
+                    <Typography className={classes.title} id={`date-picker-${constraint.label}`} gutterBottom>
+                        {/*<strong>{constraint.label}:</strong> &nbsp;*/}
+                        <span className={classes.nowrap}>{minMaxDate[0].toDateString()} - {minMaxDate[1].toDateString()}</span>
+                    </Typography>
+                </Grid>
+            </Grid>
+            <Grid container direction="row" justify="center" alignItems="center">
+                <Grid item className={classes.halfSize}>
+                    <DatePicker
+                        className={classes.fullWidth}
+                        {...config}
+                        label="Min Date"
+                        value={minMaxDate[0]}
+                        minDate={epochToDate(min)}
+                        maxDate={minMaxDate[1]}
+                        onChange={(e) => {
+                            setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]])
+                        }}
+                    />
+                </Grid>
+                <Grid item className={classes.halfSize}>
+                    <DatePicker
+                        className={classes.fullWidth}
+                        {...config}
+                        label="Max Date"
+                        value={minMaxDate[1]}
+                        minDate={minMaxDate[0]}
+                        maxDate={epochToDate(max)}
+                        onChange={(e) => {
+                            setMinMaxDate([minMaxDate[0], new Date(e.valueOf())])
+                        }}
+                    />
+                </Grid>
+            </Grid>
+         </div>
     );
 }
