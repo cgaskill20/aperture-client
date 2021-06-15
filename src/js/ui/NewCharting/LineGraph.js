@@ -109,12 +109,13 @@ export default function LineGraph(props) {
             .attr("fill", "#666")
             .text("SUBTITLE");
         
-        setOnMouseMove(() => {
+        setOnMouseMove(event => {
             if (data.length === 0) {
                 return;
             }
 
-            let rawMouse = d3.pointer(event, svg.node());
+			console.log(event);
+            let rawMouse = d3.pointer(event, svgRef.current);
             let mouse = [ x.invert(rawMouse[0]).valueOf(), y.invert(rawMouse[1]) ];
 
             let dates = [];
@@ -129,7 +130,7 @@ export default function LineGraph(props) {
             dates.sort();
 
             let searchDateIndex = d3.bisectCenter(dates, mouse[0]);
-            let closest = d3.least(this.data, d => {
+            let closest = d3.least(data, d => {
                 let entry = d.data[searchDateIndex];
                 if (!entry) {
                     return; // JAVASCRIPT EXCELLENCE AWARD 2021 
@@ -139,7 +140,7 @@ export default function LineGraph(props) {
             });
 
             svg.select("g#lines").selectAll("path").each(function() {
-                d3.select(this).attr("stroke", s => s.gisJoin === closest.gisJoin ? 'steelblue' : chart.getInvertedThemeColor());
+                d3.select(this).attr("stroke", s => s.gisJoin === closest.gisJoin ? 'steelblue' : "#eee");
             });
 
             let textSpaceTolerance = closest.name.length * 7;
