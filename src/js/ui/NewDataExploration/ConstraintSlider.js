@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import {componentIsRendering} from "../TabSystem";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
     },
@@ -14,7 +14,7 @@ const useStyles = makeStyles({
     nowrap: {
         whiteSpace: "nowrap",
     },
-});
+}));
 
 export default function ConstraintSlider({constraint, querier}) {
     const classes = useStyles();
