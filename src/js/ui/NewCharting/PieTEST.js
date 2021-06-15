@@ -18,8 +18,8 @@ export default function PieTEST(props) {
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
-
-
+        svg.append("g").attr("id", "bars");
+        svg.append("g").attr("id", "labels");
     }
 
     let prepareData = data => {
@@ -38,6 +38,8 @@ export default function PieTEST(props) {
         let svg = d3.select(svgRef.current);
         let data = prepareData(props.data);
 
+        svg.attr('viewBox', [0, 0, width, height]);
+
         var x = d3.scaleBand()
             .range([0, 2 * Math.PI])    // X axis goes from 0 to 2pi = all around the circle. If I stop at 1Pi, it will be around a half circle
             .align(0)                  // This does nothing
@@ -47,12 +49,13 @@ export default function PieTEST(props) {
             .domain([0, 14000]); // Domain of Y is from 0 to the max seen in the data
 
         // Add the bars
-        svg.append("g")
+        svg.select("g#bars")
             .selectAll("path")
             .data(data)
             .enter()
             .append("path")
             .attr("fill", "#69b3a2")
+            .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")")
             .attr("d", d3.arc()     // imagine your doing a part of a donut plot
                 .innerRadius(innerRadius)
                 .outerRadius(function(d) { return y(d['Value']); })
@@ -62,7 +65,8 @@ export default function PieTEST(props) {
                 .padRadius(innerRadius))
 
         // Add the labels
-        svg.append("g")
+        svg.select("g#labels")
+            .attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")")
             .selectAll("g")
             .data(data)
             .enter()
