@@ -9,7 +9,9 @@ export default function Frame(props) {
     let frame;
     switch (props.type.name) {
         case "histogram":
-           frame = <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph>; break;
+            frame = <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph>; break;
+        case "line":
+            frame = <LineGraph size={props.size} data={props.data} selected={constraint}></LineGraph>; break;
         default: break;
     }
     let data = props.data

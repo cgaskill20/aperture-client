@@ -4,22 +4,16 @@ import KernelDensityEstimator from '../../library/charting/kernelDensityEstimato
 
 export default function Histogram(props) {
     let svgRef = React.createRef();
-
-    let [state, setState] = useState({
-        margin: {
+    let [margin, setMargin] = useState({
             top: 60,
             right: 20,
             bottom: 30,
             left: 40,
-        },
-        kdeEnabled: false
     });
 
-    let [bins, setBins] = useState();
-    
-    let setup = () => {
-        console.log('hey');
+    let [kdeEnabled, setKdeEnabled] = useState(false);
 
+    let setup = () => {
         let svg = d3.select(svgRef.current);
 
         svg.append("g").attr("id", "rects");
@@ -42,19 +36,19 @@ export default function Histogram(props) {
 		svg.attr("viewBox", [0, 0, width, height]);
 
         let x = d3.scaleLinear()
-            .range([state.margin.left, width - state.margin.right])
+            .range([margin.left, width - margin.right])
             .domain([bins[0].x0, bins[bins.length - 1].x1]);
 
         let y = d3.scaleLinear()
-            .range([height - state.margin.bottom, state.margin.top])
+            .range([height - margin.bottom, margin.top])
             .domain([0, d3.max(bins, d => d.length)]).nice();
 
         let xAxis = g => g
-            .attr("transform", `translate(0,${height - state.margin.bottom})`)
+            .attr("transform", `translate(0,${height - margin.bottom})`)
             .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
 
         let yAxis = g => g
-            .attr("transform", `translate(${state.margin.left}, 0)`)
+            .attr("transform", `translate(${margin.left}, 0)`)
             .call(d3.axisLeft(y).ticks(height / 40))
 
         svg.select("g#xAxis").call(xAxis);
