@@ -4,12 +4,7 @@ import KernelDensityEstimator from '../../library/charting/kernelDensityEstimato
 
 export default function Histogram(props) {
     let svgRef = React.createRef();
-    let [margin, setMargin] = useState({
-            top: 60,
-            right: 20,
-            bottom: 30,
-            left: 40,
-    });
+    let [margin, setMargin] = useState({ top: 60, right: 20, bottom: 30, left: 40 });
 
     let [kdeEnabled, setKdeEnabled] = useState(false);
 
@@ -23,12 +18,16 @@ export default function Histogram(props) {
         svg.append("path").attr("id", "kdecurve");
     }
 
+    let prepareData = data => {
+        return data['map_features'][props.selected].map(e => e.data);
+    }
+
     let rerender = (width, height) => {
         if (!props.data || !props.selected) {
             return;
         }
 
-        let data = props.data['map_features'][props.selected].map(e => e.data);
+        let data = prepareData(props.data);
         let bins = d3.bin().thresholds(8)(data);
 
         let svg = d3.select(svgRef.current);

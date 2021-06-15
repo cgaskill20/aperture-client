@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HistogramGraph from "./HistogramChart";
 import ConstraintDropDown from "./constraintDropDown"
-
+import LineGraph from "./LineGraph"
 
 export default function Frame(props) {
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
