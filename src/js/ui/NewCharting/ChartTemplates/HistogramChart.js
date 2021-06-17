@@ -24,6 +24,7 @@ export default function Histogram(props) {
     }
 
     let rerender = (width, height) => {
+
         if (!props.data || !props.selected) {
             return;
         }

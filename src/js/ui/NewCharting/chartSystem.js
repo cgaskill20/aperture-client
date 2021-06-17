@@ -196,6 +196,9 @@ export default class ChartSystem {
     }
 
     initializeUpdateHooks() {
+        let interval = window.setInterval(e =>{
+            this.update();
+        }, 2000);
         this.map.on('move', e => { 
             this.update(); 
         });

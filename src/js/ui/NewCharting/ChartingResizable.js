@@ -17,7 +17,6 @@ export default function ChartingResizable() {
 
 
 
-
     return (
         <div style={{
             width: '800px',
