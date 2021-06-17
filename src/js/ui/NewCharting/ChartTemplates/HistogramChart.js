@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import * as d3 from '../../third-party/d3.min.js';
-import KernelDensityEstimator from '../../library/charting/kernelDensityEstimator';
+import * as d3 from '../../../third-party/d3.min.js';
+import KernelDensityEstimator from '../../../library/charting/kernelDensityEstimator';
 
 export default function Histogram(props) {
-    console.log(props);
+
     let svgRef = React.createRef();
-    let [margin, setMargin] = useState({ top: 60, right: 20, bottom: 30, left: 40 });
+    let [margin, setMargin] = useState({ top: 0, right: 10, bottom: 150, left: 20 });
 
     let [kdeEnabled, setKdeEnabled] = useState(false);
 

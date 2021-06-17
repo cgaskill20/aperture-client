@@ -56,7 +56,7 @@ END OF TERMS AND CONDITIONS
 */
 
 import ChartManager from "./chartManager"
-import { CommonChartMessageType } from "./chartSystem"
+import { CommonChartMessageType } from "../../ui/NewCharting/chartSystem"
 
 export const LineChartMessageType = {
     // Change the type of feature plotted by the line chart and/or the window size.

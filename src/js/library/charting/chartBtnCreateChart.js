@@ -2,7 +2,7 @@ let maxGraphs = 6;
 let totalGraphs = 0;
 let maxGraphsReached = false;
 
-import { ChartingType } from "./chartSystem"
+import { ChartingType } from "../../ui/NewCharting/chartSystem"
 import { createChartControl } from "./chartBtnControls.js"
 
 export function reduceTotalGraphs(n) {

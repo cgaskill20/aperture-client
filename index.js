@@ -27,7 +27,7 @@ L.Icon.Default.mergeOptions({
     shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-import ChartSystem from "./src/js/library/charting/chartSystem"
+import ChartSystem from "./src/js/ui/NewCharting/chartSystem"
 import ModelMenu from "./src/js/ui/modeling/components/ModelMenu";
 import AutoQuery from "./src/js/library/autoQuery.js";
 import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import * as d3 from '../../third-party/d3.min.js';
+import * as d3 from '../../../third-party/d3.min.js';
 
 export default function PieTEST(props) {
     let svgRef = React.createRef();

@@ -55,22 +55,22 @@ END OF TERMS AND CONDITIONS
 
 */
 
-import SingleChartManager from "./singleChartManager";
-import SingleChartArea from "./singleChartArea";
-import LineGraph from "./lineGraph";
-import Histogram from "./histogram";
-import Scatterplot from "./scatterplot";
-import ScatterplotManager from "./scatterplotManager";
-import ScatterplotArea from "./scatterplotArea";
-import LineChartManager from "./lineChartManager";
-import LineChartArea from "./lineChartArea";
-import ValidFeatureManager from "./validFeatureManager";
-import Feature from "./feature";
-import resizable from "../resizable";
-import ChartFrame from "./chartFrame";
-import CovidDataSource from "./covidDataSource"
-import MapDataSource from "./mapDataSource"
-import HistogramChart from '../../ui/NewCharting/HistogramChart';
+import SingleChartManager from "../../library/charting/singleChartManager";
+import SingleChartArea from "../../library/charting/singleChartArea";
+import LineGraph from "../../library/charting/lineGraph";
+import Histogram from "../../library/charting/histogram";
+import Scatterplot from "../../library/charting/scatterplot";
+import ScatterplotManager from "../../library/charting/scatterplotManager";
+import ScatterplotArea from "../../library/charting/scatterplotArea";
+import LineChartManager from "../../library/charting/lineChartManager";
+import LineChartArea from "../../library/charting/lineChartArea";
+import ValidFeatureManager from "../../library/charting/validFeatureManager";
+import Feature from "../../library/charting/feature";
+import resizable from "../../library/resizable";
+import ChartFrame from "../../library/charting/chartFrame";
+import CovidDataSource from "../../library/charting/covidDataSource"
+import MapDataSource from "../../library/charting/mapDataSource"
+import HistogramChart from './ChartTemplates/HistogramChart';
 
 // An enumeration of each type of data source recognized by the ChartSystem.
 // See DataSource for more information about what a "data source" is.

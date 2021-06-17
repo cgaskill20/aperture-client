@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import HistogramGraph from "./HistogramChart";
+import HistogramGraph from "./ChartTemplates/HistogramChart";
 import ConstraintDropDown from "./constraintDropDown"
-import LineGraph from "./LineGraph"
-import PieGraph from "./PieTEST";
+import LineGraph from "./ChartTemplates/LineGraph"
+import PieGraph from "./ChartTemplates/PieTEST";
 
 export default function Frame(props) {
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
