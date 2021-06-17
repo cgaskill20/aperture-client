@@ -7,7 +7,8 @@ import ScatterPlot from "./ChartTemplates/ScatterPlot";
 
 export default function Frame(props) {
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
-    const [constraint, setConstraint] = useState()
+    const [constraint, setConstraint] = useState();
+    const [constraint2, setConstraint2] = useState();
     let frame;
     let data = props.data
     let selectedConstraints = []
@@ -28,7 +29,10 @@ export default function Frame(props) {
         case "pie":
             frame = <PieGraph size={props.size} data={props.data} selected={constraint}></PieGraph>; break;
         case "scatterplot":
-            frame = <ScatterPlot size={props.size} data={props.data} selected={constraint}></ScatterPlot>; break;
+            frame = <div>
+                <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
+                <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint2}></ConstraintDropDown>
+                <ScatterPlot size={props.size} data={props.data} selected={[constraint, constraint2]}></ScatterPlot></div>; break;
         default: break;
     }
 
