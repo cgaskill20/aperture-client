@@ -5,7 +5,7 @@ import KernelDensityEstimator from '../../../library/charting/kernelDensityEstim
 export default function LineGraph(props) {
     let svgRef = React.createRef();
 
-    let [margin, setMargin] = useState({ top: 50, right: 20, bottom: 30, left: 50 });
+    let [margin, setMargin] = useState({ top: 30, right: 20, bottom: 75, left: 50 });
     let [mouseIn, setMouseIn] = useState(false);
 	let [onMouseMove, setOnMouseMove] = useState(() => {});
     
@@ -20,16 +20,7 @@ export default function LineGraph(props) {
             .attr("stroke-width", 1.5)
             .attr("stroke-linejoin", "round")
             .attr("stroke-linecap", "round");
-        svg.append("text")
-            .attr("id", "title")
-            .attr("y", 12)
-            .attr("text-anchor", "middle");
         svg.append("text").attr("id", "marker");
-        svg.append("text").attr("id", "subtitle")
-            .attr("y", 24)
-            .attr("text-anchor", "middle")
-            .attr("font-size", "0.7em")
-            .attr("fill", "#666");
         svg.append("text").attr("id", "queryNotice")
             .attr("y", 12)
             .attr("x", 12)

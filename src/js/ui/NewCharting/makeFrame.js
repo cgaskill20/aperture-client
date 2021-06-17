@@ -3,20 +3,12 @@ import HistogramGraph from "./ChartTemplates/HistogramChart";
 import ConstraintDropDown from "./constraintDropDown"
 import LineGraph from "./ChartTemplates/LineGraph"
 import PieGraph from "./ChartTemplates/PieTEST";
+import ScatterPlot from "./ChartTemplates/ScatterPlot";
 
 export default function Frame(props) {
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
     const [constraint, setConstraint] = useState()
     let frame;
-    switch (props.type.name) {
-        case "histogram":
-            frame = <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph>; break;
-        case "line":
-            frame = <LineGraph size={props.size} data={props.data} selected={constraint}></LineGraph>; break;
-        case "scatterplot":
-            frame = <PieGraph size={props.size} data={props.data} selected={constraint}></PieGraph>; break;
-        default: break;
-    }
     let data = props.data
     let selectedConstraints = []
     if(data['map_features']){
@@ -26,14 +18,26 @@ export default function Frame(props) {
             }
         })
     }
-    let selected = ""
+    switch (props.type.name) {
+        case "histogram":
+            frame = <div>
+                <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
+                <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph></div>; break;
+        case "line":
+            frame = <LineGraph size={props.size} data={props.data} selected={constraint}></LineGraph>; break;
+        case "pie":
+            frame = <PieGraph size={props.size} data={props.data} selected={constraint}></PieGraph>; break;
+        case "scatterplot":
+            frame = <ScatterPlot size={props.size} data={props.data} selected={constraint}></ScatterPlot>; break;
+        default: break;
+    }
+
     return (
 
         <div style={{
             width: "100%",
             height: props.size.height - 80,
         }}>
-            <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
             {frame}
         </div>
     );
