@@ -27,7 +27,9 @@ export default function ScatterPlot(props) {
         });
 
         data['map_features'][yVar].map(e => {
-            retData[e['locationName']][yVar] = e.data;
+            if (e['locationName'] in retData) {
+                retData[e['locationName']][yVar] = e.data;
+            }
         });
 
         return retData;
