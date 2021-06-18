@@ -8,13 +8,18 @@ export default function ScatterPlot(props) {
     let svgRef = React.createRef();
     let [margin, setMargin] = useState({ top: 0, right: 10, bottom: 150, left: 20 });
     let setup = () => {
-
+        let svg = d3.select(svgRef.current);
+        svg.append('g').attr("id", "chartG");
+        svg.append('g'.attr("id", "xAxis"));
+        svg.append('g'.attr("id", "yAxis"));
+        svg.append('text'.attr("id", "title"));
+        svg.append('text'.attr("id", "xAxisText"));
+        svg.append('text'.attr("id", "yAxisText"));
     }
 
     let prepareData = (data, xVar, yVar) => {
 
         let retData = {};
-
         data['map_features'][xVar].map(e => {
             retData[e['locationName']] = {
                 [xVar]: e.data,
@@ -46,15 +51,13 @@ export default function ScatterPlot(props) {
         let drawHeight = height - margin.top - margin.bottom;
         let xVar = props.selected[0];
         let yVar = xVar;
+
         if(props.selected[1]){
+
             yVar = props.selected[1];
         }
 
-
-        svg.append('svg')
-            .attr('width', width)
-            .attr('height', height);
-        let chartG = svg.append('g')
+        svg.select("chartG")
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
             .attr('height', drawHeight)
             .attr('width', drawWidth);
@@ -62,17 +65,14 @@ export default function ScatterPlot(props) {
         let rawData = prepareData(props.data,xVar,yVar);
 
         let data = [];
-        console.log(rawData);
 
         for (const [key, value] of Object.entries(rawData)) {
-            console.log(value);
             data.push({
-                x: value[props.selected[0]],
-                y: value[props.selected[1]],
+                x: value[xVar],
+                y: value[yVar],
                 label: key
             })
         }
-
 
         let xMax = d3.max(data, (d) => +d.x) * 1.05;
 
@@ -98,30 +98,30 @@ export default function ScatterPlot(props) {
 
         let yAxis = d3.axisLeft(yScale);
 
-        let xAxisLabel = svg.append('g')
+        svg.select("xAxis")
             .attr('transform', 'translate(' + margin.left + ',' + (drawHeight + margin.top) + ')')
             .attr('class', 'axis')
             .call(xAxis);
 
 
-        let yAxisLabel = svg.append('g')
+        svg.select("yAxis")
             .attr('transform', 'translate(' + margin.left + ',' + (margin.top) + ')')
             .attr('class', 'axis')
             .call(yAxis);
 
 
-        let title = svg.append('text')
+        svg.select("title")
             .attr('transform', `translate(${margin.left},15)`)
             .text("Midwest Counties");
 
 
-        let xAxisText = svg.append('text')
+        svg.select("xAxisText")
             .attr('transform', `translate(${(margin.left + drawWidth / 2)}, ${(height - margin.bottom + 30)})`)
             .attr('class', 'axis-label')
             .text(xVar);
 
 
-        svg.append('text')
+        svg.select("yAxisText")
             .attr('transform', `translate( ${(margin.left - 30)},${(margin.top + drawHeight / 2)}) rotate(-90)`)
             .attr('class', 'axis-label')
             .text(yVar);
