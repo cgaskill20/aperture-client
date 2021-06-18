@@ -13,7 +13,10 @@ function openNav() {
 export function closeNav() {
   document.getElementById("sidebar-id").style.width = "0";
   document.getElementById("sidebar-id").style.transition = "0.7s";
-  document.getElementById("main").style.opacity = "1";
+  if(document.getElementById("main")){
+      document.getElementById("main").style.opacity = "1";
+  }
+
 }
 
 function showDataExploration() {

@@ -26,8 +26,9 @@ export default function Frame(props) {
                 <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph></div>; break;
         case "line":
             frame = <LineGraph size={props.size} data={props.data} selected={constraint}></LineGraph>; break;
-        case "pie":
-            frame = <PieGraph size={props.size} data={props.data} selected={constraint}></PieGraph>; break;
+        case "piegraph":
+            frame = <div><ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
+                <PieGraph size={props.size} data={props.data} selected={constraint}></PieGraph></div>; break;
         case "scatterplot":
             frame = <div>
                 <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
