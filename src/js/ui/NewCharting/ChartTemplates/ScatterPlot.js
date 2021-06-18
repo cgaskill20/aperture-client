@@ -35,15 +35,17 @@ export default function ScatterPlot(props) {
     }
 
     let rerender = (width, height) => {
+
         const margin = {
-            top: 20,
+            top: 0,
             right: 10,
-            bottom: 50,
-            left: 60
+            bottom: 150,
+            left: 20
         };
         const radius = 5;
         const color = "blue";
         let svg = d3.select(svgRef.current);
+        svg.attr("viewBox", [0, 0, width, height]);
         if(!props.selected[0]){
             return;
         }
@@ -59,8 +61,7 @@ export default function ScatterPlot(props) {
 
         let chartG = svg.select("#chartG")
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-            .attr('height', drawHeight)
-            .attr('width', drawWidth);
+
 
         let rawData = prepareData(props.data,xVar,yVar);
 
