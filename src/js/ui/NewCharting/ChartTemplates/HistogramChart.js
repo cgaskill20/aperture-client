@@ -6,8 +6,7 @@ export default function HistogramGraph(props) {
 
     let svgRef = React.createRef();
     let [margin, setMargin] = useState({ top: 0, right: 10, bottom: 150, left: 20 });
-
-    let [kdeEnabled, setKdeEnabled] = useState(false);
+    let [kde, setKde] = useState(new KernelDensityEstimator());
 
     let setup = () => {
         let svg = d3.select(svgRef.current);
@@ -70,25 +69,24 @@ export default function HistogramGraph(props) {
             .attr("fill", "#eee")
             .text("TITLE");
 
-        /*
-        if (kdeEnabled) {
-            let maxBarHeight = d3.max(this.bins, d => d.length);
-            let kdePoints = this.kde.estimate(view.x.ticks(30), this.data, maxBarHeight);
+        if (props.kdeEnabled) {
+            let maxBarHeight = d3.max(bins, d => d.length);
+            let kdePoints = kde.estimate(x.ticks(30), data, maxBarHeight);
 
-            view.kdeLine = d3.line()
+            let kdeLine = d3.line()
                 .curve(d3.curveBasis)
-                .x(d => view.x(d[0]))
-                .y(d => view.y(d[1]));
-            view.svg.select("path#kdecurve")
+                .x(d => x(d[0]))
+                .y(d => y(d[1]));
+            svg.select("path#kdecurve")
                 .datum(kdePoints)
-                .attr("stroke", this.getBasicThemeColor())
-                .attr("d", view.kdeLine)
+                .attr("stroke", "#111")
+                .attr("fill", "none")
+                .attr("d", kdeLine)
                 .attr("display", "default");
         } else {
-            view.svg.select("path#kdecurve")
+            svg.select("path#kdecurve")
                 .attr("display", "none");
         }
-        */
     }
 
     useEffect(setup, []);

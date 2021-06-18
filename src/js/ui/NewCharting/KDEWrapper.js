@@ -14,7 +14,9 @@ export default function KDEWrapper(props) {
                 onChange={handleChange}
                 aria-labelledby="input-slider"
             />
-            { props.children }
+            {React.Children.map(props.children, child =>
+                React.cloneElement(child, { bandwidth: bandwidth, kdeEnabled: true })
+            )}
         </div>
     );
 }
