@@ -55,181 +55,170 @@ END OF TERMS AND CONDITIONS
 
 */
 
-import Chart from "./chart";
-import KernelDensityEstimator from "./kernelDensityEstimator";
-import * as d3 from "../../third-party/d3.min.js";
+import Feature from "../../library/charting/feature";
+import CovidDataSource from "../../library/charting/covidDataSource"
+import MapDataSource from "../../library/charting/mapDataSource"
 
-export default class Histogram extends Chart {
-    constructor() {
-        super([]);
-        this.binNum = 10;
-        this.changeBins(this.binNum);
-        this.colorScale = () => "steelblue";
-        this.kdeEnabled = false;
-        this.kde = new KernelDensityEstimator();
+// An enumeration of each type of data source recognized by the ChartSystem.
+// See DataSource for more information about what a "data source" is.
+// DataSources are singleton with respect to each ChartSystem - only one
+// exists at a time, and it's stored within these objects.
+export const DataSourceType = {
+    MAP_FEATURES: {
+        name: "map_features",
+        sourceType: MapDataSource,
+        sourceInstance: undefined,
+    },
+    COUNTY_COVID: {
+        name: "county_covid",
+        sourceType: CovidDataSource,
+        sourceInstance: undefined,
+    }
+};
+
+// An enumeration of the each type of chart recognzied by the ChartSystem.
+// Each type has a type of manager, area, and chart, as well as a list of each
+// kind of DataSource it can use.  (At the moment, charts only support one data
+// source at a time.) These objects are passed into ChartSystem's getFrame
+// function to create new charts.
+export const ChartingType = {
+    LINE: {
+        name: "line",
+        wantsSources: [ DataSourceType.COUNTY_COVID ],
+    },
+    HISTOGRAM: {
+        name: "histogram",
+        wantsSources: [ DataSourceType.MAP_FEATURES ],
+    },
+    SCATTERPLOT: {
+        name: "scatterplot",
+        wantsSources: [ DataSourceType.MAP_FEATURES ],
+    },
+};
+
+// Chart message types that any chart can accept.
+export const CommonChartMessageType = {
+    // Notify the chart that a query has started/ended.
+    // Has:
+    //  started: true if a query began, false if a query ended
+    NOTIFY_QUERY_STATE: 1 << 10,
+};
+
+/**
+ * The brains that holds the entire charting operation together.
+ * Every chart lives underneath this class. All ChartFrames originate from
+ * this class. All data flows from this class to underlying charts. This class 
+ * is your only god. 
+ *
+ * A single instance of this is instantiated in index.js, which is used for all
+ * charting in Aperture. Creating another ChartSystem instance will create an 
+ * entirely new, isolated charting ecosystem, and may cause horrible issues as
+ * such a thing has not been properly tested.
+ *
+ * Construction of a ChartSystem automatically also creates a resizable. You
+ * do not need to manually create and attach any resizables.
+ *
+ * This class contains a few useful properties:
+ * - this.catalog: The charting catalog, in raw object form
+ * - this.graphable: A list of every graphable feature, as reported from the
+ *   charting catalog
+ * - this.resizable: The resizable that this ChartSystem lives in
+ *
+ * @author Pierce Smith and Matt Young
+ * @file An orchestrator for all charting operations
+ */
+export default class ChartSystem {
+    // In pixels.
+    static MAX_CHART_HEIGHT = 350;
+
+    // Do not call this directly.
+    constructor(map, chartCatalogFilename) {
+        this.map = map;
+
+        this.dataConsumers = [];
+
+        $.getJSON(chartCatalogFilename, (catalog) => {
+            this.initializeUpdateHooks();
+            this.catalog = catalog;
+            this.graphable = catalog.map(e => {
+                return Object.entries(e.constraints).map(kv => {
+                    return Feature.compose(e.collection, kv[0], kv[1].label);
+                })
+            }).flat();
+
+            this.createDataSources();
+        });
+
+        this.doNotUpdate = false;
     }
 
-    changeSize(newWidth, newHeight) {
-        if (this.data.length === 0) {
+    /** 
+     * Initialize every needed data source for the ChartSytem's charts.
+     * This is only to be called once, and is done so in the constructor.
+     * Do not call this manually.
+     * @memberof ChartSystem
+     * @method createDataSource
+     */
+    createDataSources() {
+        Object.values(DataSourceType).forEach(source => {
+            source.sourceInstance = new source.sourceType(this.map, this.graphable);
+            if (source.supplementObjectType) {
+                source.supplementObjectInstance = new source.supplementObjectType();
+            }
+        });
+    }
+
+    initializeUpdateHooks() {
+        let interval = window.setInterval(e =>{
+            this.update();
+        }, 2000);
+        this.map.on('move', e => { 
+            this.update(); 
+        });
+
+        this.map.on('zoomstart', e => { 
+            this.doNotUpdate = true;
+        });
+
+        this.map.on('zoomend', e => { 
+            this.doNotUpdate = false; 
+            this.update(); 
+        });
+    }
+
+    /**
+     * Refreshes every data source and re-renders every chart.
+     * If something related to data sources changes, this function should be
+     * called. It is also called naturally every 2 seconds, and whenever the
+     * map moves.
+     * It is safe to call this function from inside chart code.
+     * @memberof ChartSystem
+     * @method update
+     * @param {object=} parameters An optional object with extra information
+     * for this update event
+     */
+    async update(parameters = {}) {
+        if (this.doNotUpdate && !parameters.force) {
             return;
         }
 
-        let view = this.view;
-
-        newWidth = newWidth < Chart.MINIMUM_WIDTH ? Chart.MINIMUM_WIDTH : newWidth;
-        newHeight = newHeight < Chart.MINIMUM_HEIGHT ? Chart.MINIMUM_HEIGHT : newHeight;
-        view.width = newWidth;
-        view.height = newHeight;
-
-        view.svg.attr("viewBox", [0, 0, newWidth, newHeight]);
-
-        view.x = d3.scaleLinear()
-            .range([view.margin.left, newWidth - view.margin.right])
-            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1]);
-
-        view.y = d3.scaleLinear()
-            .range([newHeight - view.margin.bottom, view.margin.top])
-            .domain([0, d3.max(this.bins, d => d.length)]).nice();
-
-        view.xAxis = g => g
-            .attr("transform", `translate(0,${newHeight - view.margin.bottom})`)
-            .call(d3.axisBottom(view.x).ticks(newWidth / 80).tickSizeOuter(0))
-
-        view.yAxis = g => g
-            .attr("transform", `translate(${view.margin.left}, 0)`)
-            .call(d3.axisLeft(view.y).ticks(newHeight / 40))
-
-        view.svg.select("g#xAxis").call(view.xAxis);
-        view.svg.select("g#yAxis").call(view.yAxis);
-        view.svg.select("g#rects")
-            .selectAll("rect")
-                .attr("fill", d => this.colorScale(d.x1))
-            .data(this.bins)
-            .join("rect")
-                .attr("x", d => view.x(d.x0) + 1)
-                .attr("width", d => Math.max(0, view.x(d.x1) - view.x(d.x0) - 1))
-                .attr("y", d => view.y(d.length))
-                .attr("height", d => view.y(0) - view.y(d.length));
-        view.svg.select("text#title")
-            .attr("x", newWidth / 2)
-            .attr("y", 24)
-            .attr("text-anchor", "middle")
-            .attr("fill", this.getBasicThemeColor())
-            .text(this.title);
-
-        if (this.kdeEnabled) {
-            let maxBarHeight = d3.max(this.bins, d => d.length);
-            let kdePoints = this.kde.estimate(view.x.ticks(30), this.data, maxBarHeight);
-
-            view.kdeLine = d3.line()
-                .curve(d3.curveBasis)
-                .x(d => view.x(d[0]))
-                .y(d => view.y(d[1]));
-            view.svg.select("path#kdecurve")
-                .datum(kdePoints)
-                .attr("stroke", this.getBasicThemeColor())
-                .attr("d", view.kdeLine)
-                .attr("display", "default");
-        } else {
-            view.svg.select("path#kdecurve")
-                .attr("display", "none");
-        }
-    }
-
-    changeBins(binNum) {
-        this.bins = d3.bin().thresholds(binNum)(this.data);
-        this.rerender();
-    }
-
-    changeData(newData, binNum) {
-        this.data = newData;
-        this.changeBins(binNum);
-        this.rerender();
-    }
-
-    setColors(start, end) {
-        this.colorScale = d3.scaleLinear()
-            .domain([this.bins[0].x0, this.bins[this.bins.length - 1].x1])
-            .range([start, end]);
-    }
-
-    setTitle(title) {
-        this.title = title;
-        this.rerender();
-    }
-
-    makeNewView(width, height, selector) {
-        let view = {};
-        view.width = width;
-        view.height = height;
-        view.svg = d3.select(selector).append("svg").attr("viewBox", [0, 0, width, height]);
-
-        view.bins = d3.bin().thresholds(8)(this.data);
-        view.margin = { top: 60, right: 20, bottom: 30, left: 40 };
-
-        view.svg.append("g").attr("id", "rects");
-        view.svg.append("g").attr("id", "xAxis");
-        view.svg.append("g").attr("id", "yAxis");
-        view.svg.append("text").attr("id", "title");
-        view.svg.append("path").attr("id", "kdecurve")
-            .attr("fill", "none")
-            .attr("stroke-width", 1.5)
-            .attr("stroke-linejoin", "round");
-
-        this.addBandwidthSlider(view.svg);
-        this.addKDEToggle(view.svg);
-
-        return view;
-    }
-
-    addBandwidthSlider(svg) {
-        svg.append("foreignObject")
-            .attr("x", 20)
-            .attr("y", 20)
-            .attr("width", 300)
-            .attr("height", 40)
-            .append("xhtml:div")
-            .append("xhtml:input")
-            .attr("name", "bwslider")
-            .attr("type", "range")
-            .attr("min", 0.4)
-            .attr("max", 10)
-            .attr("step", "any")
-            .attr("id", "kdeSlider");
-
-        svg.select("foreignObject div")
-            .append("text")
-
-        let kde = this.kde;
-        let histogram = this;
-        svg.select("foreignObject input#kdeSlider").node().oninput = function() { 
-            if (histogram.kdeEnabled) {
-                kde.setBandwidth(this.value); 
-
-                svg.select("foreignObject div text")
-                    .text(`${Number.parseFloat(this.value).toPrecision(2)}`)
-
-                histogram.rerender();
+        this.dataConsumers.forEach(async consumer => {
+            let data = {};
+            for (const source of Object.values(DataSourceType)) {
+                data[source.name] = await source.sourceInstance.get();
             }
-        };
+            consumer.dataCallback(data);
+        })
+        
+        this.doNotUpdate = true;
+        window.setTimeout(() => { this.doNotUpdate = false; }, 200);
     }
 
-    addKDEToggle(svg) {
-        svg.append("foreignObject")
-            .attr("x", 0)
-            .attr("y", 20)
-            .attr("width", 50)
-            .attr("height", 50)
-            .append("xhtml:div")
-            .append("xhtml:input")
-            .attr("type", "checkbox")
-            .attr("id", "kdeToggle");
+    registerDataConsumer(id, setData) {
+        this.dataConsumers.push({ id: id, dataCallback: setData });
+    }
 
-        let histogram = this;
-        let checkboxNode = svg.select("foreignObject input#kdeToggle").node();
-        checkboxNode.onclick = function() { 
-            histogram.kdeEnabled = checkboxNode.checked;
-            histogram.rerender();
-        };
+    unregisterDataConsumer(id) {
+        this.dataConsumers = this.dataConsumers.filter(c => c.id !== id);
     }
 }

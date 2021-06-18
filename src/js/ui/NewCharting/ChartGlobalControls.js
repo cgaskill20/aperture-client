@@ -4,7 +4,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { useGlobalState } from '../global/GlobalState';
-import { ChartingType } from './chartSystem';
+import { ChartingType } from '../../library/charting/chartSystem';
 
 export default function ChartGlobalControls(props) {
     const [globalState, setGlobalState] = useGlobalState();

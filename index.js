@@ -27,7 +27,7 @@ L.Icon.Default.mergeOptions({
     shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-import ChartSystem from "./src/js/ui/NewCharting/chartSystem"
+import ChartSystem from "./src/js/library/charting/chartSystem"
 import ModelMenu from "./src/js/ui/modeling/components/ModelMenu";
 import AutoQuery from "./src/js/library/autoQuery.js";
 import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
@@ -177,7 +177,6 @@ ReactDOM.render((<Root map={map}/>), uiRoot);
 
 import {closeNav} from "./src/js/static/navButtons";
 import "./src/js/static/darkMode.js";
-import "./src/js/library/charting/chartBtnNewChartWindow.js";
 
 map.on('click', function () {
     closeNav();
