@@ -12,7 +12,6 @@ export default function ScatterPlot(props) {
         svg.append('g').attr("id", "chartG");
         svg.append('g').attr("id", "xAxis");
         svg.append('g').attr("id", "yAxis");
-        svg.append('text').attr("id", "title");
         svg.append('text').attr("id", "xAxisText");
         svg.append('text').attr("id", "yAxisText");
     }
@@ -110,10 +109,6 @@ export default function ScatterPlot(props) {
             .attr('class', 'axis')
             .call(yAxis);
 
-
-        svg.select("#title")
-            .attr('transform', `translate(${margin.left},15)`)
-            .text("Midwest Counties");
 
 
         svg.select("#xAxisText")
