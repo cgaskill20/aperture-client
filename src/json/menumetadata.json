@@ -1230,5 +1230,639 @@
                 "hideByDefault": true
             }
         ]
+    },
+    {
+        "collection": "neon_2d_wind",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "windSpeedMean",
+                "label": "Arithmetic mean of wind speed",
+                "unit": "metersPerSecond",
+                "temporalType": "avg"
+            },
+            {
+                "name": "windSpeedMinimum",
+                "label": "Minimum wind speed",
+                "unit": "metersPerSecond",
+                "temporalType": "min"
+            },
+            {
+                "name": "windSpeedMaximum",
+                "label": "Maximum wind speed",
+                "unit": "metersPerSecond",
+                "temporalType": "max"
+            },
+            {
+                "name": "windSpeedVariance",
+                "label": "Variance in wind speed",
+                "unit": "metersPerSecondSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of wind speed",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedExpUncert",
+                "label": "Expanded uncertainty for wind speed",
+                "unit": "metersPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedStdErMean",
+                "label": "Standard error of the mean for wind speed",
+                "unit": "metersPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedRangeFailQM",
+                "label": "Wind speed quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedRangePassQM",
+                "label": "Wind speed quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedRangeNAQM",
+                "label": "Wind speed quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedPersistenceFailQM",
+                "label": "Wind speed quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedPersistencePassQM",
+                "label": "Wind speed quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedPersistenceNAQM",
+                "label": "Wind speed quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedNullFailQM",
+                "label": "Wind speed quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedNullPassQM",
+                "label": "Wind speed quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedNullNAQM",
+                "label": "Wind speed quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedGapFailQM",
+                "label": "Wind speed quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedGapPassQM",
+                "label": "Wind speed quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedGapNAQM",
+                "label": "Wind speed quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedSensorErrorFailQM",
+                "label": "Wind speed quality metric that summarizes the failed outcomes of the sensor error test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedSensorErrorPassQM",
+                "label": "Wind speed quality metric that summarizes the passed outcomes of the sensor error test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedSensorErrorNAQM",
+                "label": "Wind speed quality metric that summarizes when the sensor error test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedValidCalFailQM",
+                "label": "Wind speed quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedValidCalPassQM",
+                "label": "Wind speed quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedValidCalNAQM",
+                "label": "Wind speed quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedAlphaQM",
+                "label": "Wind speed quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedBetaQM",
+                "label": "Wind speed quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedCalmWindQF",
+                "label": "Wind speed quality flag for the calm wind test, as detailed in NEON.DOC.000780 (1=fail, 0=pass, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedFinalQF",
+                "label": "Wind speed quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedFinalQFSciRvw",
+                "label": "Wind speed quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirMean",
+                "label": "Arithmetic mean of wind direction",
+                "unit": "degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirVariance",
+                "label": "Variance in wind direction",
+                "unit": "degreesSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of wind direction",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirExpUncert",
+                "label": "Expanded uncertainty for wind direction",
+                "unit": "degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirStdErMean",
+                "label": "Standard error of the mean for wind direction",
+                "unit": "degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirPersistenceFailQM",
+                "label": "Wind direction quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirPersistencePassQM",
+                "label": "Wind direction quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirPersistenceNAQM",
+                "label": "Wind direction quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirNullFailQM",
+                "label": "Wind direction quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirNullPassQM",
+                "label": "Wind direction quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirNullNAQM",
+                "label": "Wind direction quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirGapFailQM",
+                "label": "Wind direction quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirGapPassQM",
+                "label": "Wind direction quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirGapNAQM",
+                "label": "Wind direction quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirSensorErrorFailQM",
+                "label": "Wind direction quality metric that summarizes the failed outcomes of the sensor error test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirSensorErrorPassQM",
+                "label": "Wind direction quality metric that summarizes the passed outcomes of the sensor error test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirSensorErrorNAQM",
+                "label": "Wind direction quality metric that summarizes when the sensor error test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirDistortedFlowFailQM",
+                "label": "Wind direction quality metric that summarizes the failed outcomes of the distorted flow test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirDistortedFlowPassQM",
+                "label": "Wind direction quality metric that summarizes the passed outcomes of the distorted flow test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirDistortedFlowNAQM",
+                "label": "Wind direction quality metric that summarizes when the distorted flow test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirValidCalFailQM",
+                "label": "Wind direction quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirValidCalPassQM",
+                "label": "Wind direction quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirValidCalNAQM",
+                "label": "Wind direction quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirAlphaQM",
+                "label": "Wind direction quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirBetaQM",
+                "label": "Wind direction quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirCalmWindQF",
+                "label": "Wind direction quality flag for the calm wind test, as detailed in NEON.DOC.000780 (1=fail, 0=pass, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirFinalQF",
+                "label": "Wind direction quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirFinalQFSciRvw",
+                "label": "Wind direction quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_single_asp_air_temperature",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "tempSingleMean",
+                "label": "Arithmetic mean of single aspirated air temperature",
+                "unit": "celsius",
+                "temporalType": "avg"
+            },
+            {
+                "name": "tempSingleMinimum",
+                "label": "Minimum single aspirated air temperature",
+                "unit": "celsius",
+                "temporalType": "min"
+            },
+            {
+                "name": "tempSingleMaximum",
+                "label": "Maximum single aspirated air temperature",
+                "unit": "celsius",
+                "temporalType": "max"
+            },
+            {
+                "name": "tempSingleVariance",
+                "label": "Variance in single aspirated air temperature",
+                "unit": "celsiusSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempSingleNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of single aspirated air temperature",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempSingleExpUncert",
+                "label": "Expanded uncertainty for single aspirated air temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempSingleStdErMean",
+                "label": "Standard error of the mean for single aspirated air temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeNAQM",
+                "label": "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceFailQM",
+                "label": "Quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistencePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceNAQM",
+                "label": "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepNAQM",
+                "label": "Quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullNAQM",
+                "label": "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapNAQM",
+                "label": "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeNAQM",
+                "label": "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "flowFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the flow rate test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "flowPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the flow rate test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "flowNAQM",
+                "label": "Quality metric that summarizes when the flow rate test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterFailQM",
+                "label": "Quality metric that summarizes when the heater was on over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterPassQM",
+                "label": "Quality metric that summarizes when the heater was off over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterNAQM",
+                "label": "Quality metric that summarizes when the heater status was unknown over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalNAQM",
+                "label": "Quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "alphaQM",
+                "label": "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "betaQM",
+                "label": "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQF",
+                "label": "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQFSciRvw",
+                "label": "Quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
     }
 ]
