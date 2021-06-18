@@ -1260,19 +1260,19 @@
             },
             {
                 "name": "windSpeedMean",
-                "label": "Arithmetic mean of wind speed",
+                "label": "Arithmetic mean of wind speed over time period",
                 "unit": "metersPerSecond",
                 "temporalType": "avg"
             },
             {
                 "name": "windSpeedMinimum",
-                "label": "Minimum wind speed",
+                "label": "Minimum wind speed over time period",
                 "unit": "metersPerSecond",
                 "temporalType": "min"
             },
             {
                 "name": "windSpeedMaximum",
-                "label": "Maximum wind speed",
+                "label": "Maximum wind speed over time period",
                 "unit": "metersPerSecond",
                 "temporalType": "max"
             },
@@ -1637,19 +1637,19 @@
             },
             {
                 "name": "tempSingleMean",
-                "label": "Arithmetic mean of single aspirated air temperature",
+                "label": "Arithmetic mean of single aspirated air temperature over time period",
                 "unit": "celsius",
                 "temporalType": "avg"
             },
             {
                 "name": "tempSingleMinimum",
-                "label": "Minimum single aspirated air temperature",
+                "label": "Minimum single aspirated air temperature over time period",
                 "unit": "celsius",
                 "temporalType": "min"
             },
             {
                 "name": "tempSingleMaximum",
-                "label": "Maximum single aspirated air temperature",
+                "label": "Maximum single aspirated air temperature over time period",
                 "unit": "celsius",
                 "temporalType": "max"
             },
@@ -1894,19 +1894,19 @@
             },
             {
                 "name": "tempTripleMean",
-                "label": "Arithmetic mean of triple aspirated air temperature",
+                "label": "Arithmetic mean of triple aspirated air temperature over time period",
                 "unit": "celsius",
                 "temporalType": "avg"
             },
             {
                 "name": "tempTripleMinimum",
-                "label": "Minimum triple aspirated air temperature",
+                "label": "Minimum triple aspirated air temperature over time period",
                 "unit": "celsius",
                 "temporalType": "min"
             },
             {
                 "name": "tempTripleMaximum",
-                "label": "Maximum triple aspirated air temperature",
+                "label": "Maximum triple aspirated air temperature over time period",
                 "unit": "celsius",
                 "temporalType": "max"
             },
@@ -2199,19 +2199,19 @@
             },
             {
                 "name": "bioTempMean",
-                "label": "Arithmetic mean of IR biological temperature",
+                "label": "Arithmetic mean of IR biological temperature over time period",
                 "unit": "celsius",
                 "temporalType": "avg"
             },
             {
                 "name": "bioTempMinimum",
-                "label": "Minimum IR biological temperature",
+                "label": "Minimum IR biological temperature over time period",
                 "unit": "celsius",
                 "temporalType": "min"
             },
             {
                 "name": "bioTempMaximum",
-                "label": "Maximum IR biological temperature",
+                "label": "Maximum IR biological temperature over time period",
                 "unit": "celsius",
                 "temporalType": "max"
             },
@@ -2386,6 +2386,148 @@
             {
                 "name": "finalQFSciRvw",
                 "label": "Quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_secondary_precipitation",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "secPrecipBulk",
+                "label": "Average Bulk secondary precipitation over time period",
+                "unit": "millimeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "secPrecipExpUncert",
+                "label": "Expanded uncertainty for secondary precipitation",
+                "unit": "millimeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipValidCalQF",
+                "label": "Secondary precipitation quality flag for the valid calibration check detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipRangeQF",
+                "label": "Secondary precipitation quality flag for the range test, which indicates whether a datum exceeds a realistic value, detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipSciRvwQF",
+                "label": "Secondary precipitation stand-alone quality flag (does not interact with final quality flag) indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipHeater0QM",
+                "label": "Secondary precipitation quality metric that summarizes when the heater flag was set to 0 over the averaging period, as a percent and detailed in NEON.DOC.000816",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipHeater1QM",
+                "label": "Secondary precipitation quality metric that summarizes when the heater flag was set to 1 over the averaging period, as a percent and detailed in NEON.DOC.000816",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipHeater2QM",
+                "label": "Secondary precipitation quality metric that summarizes when the heater flag was set to 2 over the averaging period, as a percent and detailed in NEON.DOC.000816",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipHeater3QM",
+                "label": "Secondary precipitation quality metric that summarizes when the heater flag was set to 3 over the averaging period, as a percent and detailed in NEON.DOC.000816",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_throughfall_precipitation",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "TFPrecipBulk",
+                "label": "Mean Bulk throughfall precipitation over Time period",
+                "unit": "millimeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "TFPrecipExpUncert",
+                "label": "Expanded uncertainty for throughfall precipitation",
+                "unit": "millimeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "TFPrecipValidCalQF",
+                "label": "Throughfall precipitation quality flag for the valid calibration check detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "TFPrecipRangeQF",
+                "label": "Throughfall precipitation quality flag for the range test, which indicates whether a bulk precipitation value exceeds a realistic value, detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "TFPrecipSciRvwQF",
+                "label": "Throughfall precipitation stand-alone quality flag (does not interact with final quality flag) indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
                 "unit": "NA",
                 "hideByDefault": true
             }
