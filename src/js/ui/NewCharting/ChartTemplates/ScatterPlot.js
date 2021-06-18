@@ -10,11 +10,11 @@ export default function ScatterPlot(props) {
     let setup = () => {
         let svg = d3.select(svgRef.current);
         svg.append('g').attr("id", "chartG");
-        svg.append('g'.attr("id", "xAxis"));
-        svg.append('g'.attr("id", "yAxis"));
-        svg.append('text'.attr("id", "title"));
-        svg.append('text'.attr("id", "xAxisText"));
-        svg.append('text'.attr("id", "yAxisText"));
+        svg.append('g').attr("id", "xAxis");
+        svg.append('g').attr("id", "yAxis");
+        svg.append('text').attr("id", "title");
+        svg.append('text').attr("id", "xAxisText");
+        svg.append('text').attr("id", "yAxisText");
     }
 
     let prepareData = (data, xVar, yVar) => {
