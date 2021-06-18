@@ -57,7 +57,7 @@ export default function ScatterPlot(props) {
             yVar = props.selected[1];
         }
 
-        svg.select("chartG")
+        let chartG = svg.select("#chartG")
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
             .attr('height', drawHeight)
             .attr('width', drawWidth);
@@ -98,30 +98,30 @@ export default function ScatterPlot(props) {
 
         let yAxis = d3.axisLeft(yScale);
 
-        svg.select("xAxis")
+        svg.select("#xAxis")
             .attr('transform', 'translate(' + margin.left + ',' + (drawHeight + margin.top) + ')')
             .attr('class', 'axis')
             .call(xAxis);
 
 
-        svg.select("yAxis")
+        svg.select("#yAxis")
             .attr('transform', 'translate(' + margin.left + ',' + (margin.top) + ')')
             .attr('class', 'axis')
             .call(yAxis);
 
 
-        svg.select("title")
+        svg.select("#title")
             .attr('transform', `translate(${margin.left},15)`)
             .text("Midwest Counties");
 
 
-        svg.select("xAxisText")
+        svg.select("#xAxisText")
             .attr('transform', `translate(${(margin.left + drawWidth / 2)}, ${(height - margin.bottom + 30)})`)
             .attr('class', 'axis-label')
             .text(xVar);
 
 
-        svg.select("yAxisText")
+        svg.select("#yAxisText")
             .attr('transform', `translate( ${(margin.left - 30)},${(margin.top + drawHeight / 2)}) rotate(-90)`)
             .attr('class', 'axis-label')
             .text(yVar);
