@@ -1864,5 +1864,531 @@
                 "hideByDefault": true
             }
         ]
+    },
+    {
+        "collection": "neon_triple_asp_air_temperature",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "tempTripleMean",
+                "label": "Arithmetic mean of triple aspirated air temperature",
+                "unit": "celsius",
+                "temporalType": "avg"
+            },
+            {
+                "name": "tempTripleMinimum",
+                "label": "Minimum triple aspirated air temperature",
+                "unit": "celsius",
+                "temporalType": "min"
+            },
+            {
+                "name": "tempTripleMaximum",
+                "label": "Maximum triple aspirated air temperature",
+                "unit": "celsius",
+                "temporalType": "max"
+            },
+            {
+                "name": "tempTripleVariance",
+                "label": "Variance in triple aspirated air temperature",
+                "unit": "celsiusSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempTripleNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of triple aspirated air temperature",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempTripleExpUncert",
+                "label": "Expanded uncertainty for triple aspirated air temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempTripleStdErMean",
+                "label": "Standard error of the mean for triple aspirated air temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeNAQM",
+                "label": "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceFailQM",
+                "label": "Quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistencePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceNAQM",
+                "label": "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepNAQM",
+                "label": "Quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullNAQM",
+                "label": "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapNAQM",
+                "label": "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeNAQM",
+                "label": "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "flowFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the flow rate test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "flowPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the flow rate test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "flowNAQM",
+                "label": "Quality metric that summarizes when the flow rate test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterFailQM",
+                "label": "Quality metric that summarizes when the heater was on over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterPassQM",
+                "label": "Quality metric that summarizes when the heater was off over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterNAQM",
+                "label": "Quality metric that summarizes when the heater status was unknown over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalNAQM",
+                "label": "Quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "alphaQM",
+                "label": "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "betaQM",
+                "label": "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQF",
+                "label": "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQFSciRvw",
+                "label": "Quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve0QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 0 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve1QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 1 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve2QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 2 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve3QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 3 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve4QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 4 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve5QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 5 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve6QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 6 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve7QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 7 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_ir_bio_temp",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "bioTempMean",
+                "label": "Arithmetic mean of IR biological temperature",
+                "unit": "celsius",
+                "temporalType": "avg"
+            },
+            {
+                "name": "bioTempMinimum",
+                "label": "Minimum IR biological temperature",
+                "unit": "celsius",
+                "temporalType": "min"
+            },
+            {
+                "name": "bioTempMaximum",
+                "label": "Maximum IR biological temperature",
+                "unit": "celsius",
+                "temporalType": "max"
+            },
+            {
+                "name": "bioTempVariance",
+                "label": "Variance in IR biological temperature",
+                "unit": "celsiusSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "bioTempNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of IR biological temperature",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "bioTempExpUncert",
+                "label": "Expanded uncertainty for IR biological temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "bioTempStdErMean",
+                "label": "Standard error of the mean for IR biological temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeNAQM",
+                "label": "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceFailQM",
+                "label": "Quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistencePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceNAQM",
+                "label": "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullNAQM",
+                "label": "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapNAQM",
+                "label": "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeNAQM",
+                "label": "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "NANFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the not a number test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "NANPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the not a number test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "NANNAQM",
+                "label": "Quality metric that summarizes when the not a number test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalNAQM",
+                "label": "Quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "alphaQM",
+                "label": "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "betaQM",
+                "label": "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQF",
+                "label": "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQFSciRvw",
+                "label": "Quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
     }
 ]
