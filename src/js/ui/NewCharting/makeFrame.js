@@ -4,6 +4,7 @@ import ConstraintDropDown from "./constraintDropDown"
 import LineGraph from "./ChartTemplates/LineGraph"
 import PieGraph from "./ChartTemplates/PieTEST";
 import ScatterPlot from "./ChartTemplates/ScatterPlot";
+import KDEWrapper from "./KDEWrapper";
 
 export default function Frame(props) {
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
@@ -21,19 +22,26 @@ export default function Frame(props) {
     }
     switch (props.type.name) {
         case "histogram":
-            frame = <div>
-                <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
-                <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph></div>; break;
+            frame = 
+                <div>
+                    <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
+                    <KDEWrapper>
+                        <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph>
+                    </KDEWrapper>
+                </div>;
+                break;
         case "line":
             frame = <LineGraph size={props.size} data={props.data} selected={constraint}></LineGraph>; break;
         case "piegraph":
             frame = <div><ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
                 <PieGraph size={props.size} data={props.data} selected={constraint}></PieGraph></div>; break;
         case "scatterplot":
-            frame = <div>
-                <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
-                <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint2}></ConstraintDropDown>
-                <ScatterPlot size={props.size} data={props.data} selected={[constraint, constraint2]}></ScatterPlot></div>; break;
+            frame = 
+                <div>
+                    <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
+                    <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint2}></ConstraintDropDown>
+                    <ScatterPlot size={props.size} data={props.data} selected={[constraint, constraint2]}></ScatterPlot>
+                </div>; break;
         default: break;
     }
 
