@@ -27,7 +27,9 @@ export default function ChartingResizable() {
                     y: 100,
                     width: size.width,
                     height: size.height
+
                 }}
+
                 style={{
                     zIndex: 1000,
                 }}

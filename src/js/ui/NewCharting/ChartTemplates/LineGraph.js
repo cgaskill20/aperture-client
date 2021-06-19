@@ -40,7 +40,6 @@ export default function LineGraph(props) {
     }
 
     let prepareData = data => {
-        console.log(data);
         return data['county_covid'].filter(entry => entry).map(entry => {
             return { data: entry.data.map(d => {
                 return { value: d.avg, date: d.date.$date };
@@ -103,7 +102,6 @@ export default function LineGraph(props) {
         setOnMouseMove(event => {
 			return;
 
-			console.log(event);
             let rawMouse = d3.pointer(event, svgRef.current);
             let mouse = [ x.invert(rawMouse[0]).valueOf(), y.invert(rawMouse[1]) ];
 
