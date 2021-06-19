@@ -23,6 +23,7 @@ export default function HistogramGraph(props) {
     }
 
     let rerender = (width, height) => {
+        kde.setBandwidth(props.bandwidth)
 
         if (!props.data || !props.selected) {
             return;

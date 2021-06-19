@@ -4,11 +4,11 @@ import Paper from '@material-ui/core/Paper';
 import ChartingWindow from './ChartingWindow';
 
 function shouldAvoidDragging(node) {
-    if (!node || !node.className) {
+    if (!node || !node.className || !node.className.includes) {
         return false;
     }
 
-    const avoidClasses = [ "MuiSlider" ];
+    const avoidClasses = [ "MuiSlider", "MuiInput" ];
     return avoidClasses.some(_class => node.className.includes(_class));
 }
 
