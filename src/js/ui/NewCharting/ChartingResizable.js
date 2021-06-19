@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import ChartingWindow from './ChartingWindow';
 
 function shouldAvoidDragging(node) {
-    if (!node || !node.target || !node.target.className) {
+    if (!node || !node.className) {
         return false;
     }
 
