@@ -23,6 +23,9 @@ export default function KDEWrapper(props) {
                     <Slider 
                         value={bandwidth}
                         onChange={handleChange(setBandwidth)}
+                        step={0.1}
+                        min={0.1}
+                        max={10}
                         aria-labelledby="input-slider"
                     />
                 </Grid>
@@ -35,6 +38,7 @@ export default function KDEWrapper(props) {
                             step: 0.1,
                             min: 0.1,
                             max: 10,
+                            'aria-labelledby': "input-slider"
                         }}
                     />
                 </Grid>
