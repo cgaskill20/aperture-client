@@ -94,6 +94,10 @@ export const ChartingType = {
         name: "scatterplot",
         wantsSources: [ DataSourceType.MAP_FEATURES ],
     },
+    PIEGRAPH:{
+        name: "piegraph",
+        wantsSources: [ DataSourceType.MAP_FEATURES ],
+    },
 };
 
 // Chart message types that any chart can accept.

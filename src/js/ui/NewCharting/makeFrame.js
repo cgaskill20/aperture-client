@@ -5,6 +5,7 @@ import LineGraph from "./ChartTemplates/LineGraph"
 import PieGraph from "./ChartTemplates/PieTEST";
 import ScatterPlot from "./ChartTemplates/ScatterPlot";
 import KDEWrapper from "./KDEWrapper";
+import BoxPlot from "./ChartTemplates/BoxPlotChart";
 
 export default function Frame(props) {
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
@@ -21,6 +22,7 @@ export default function Frame(props) {
         })
     }
     switch (props.type.name) {
+
         case "histogram":
             frame = 
                 <div>
@@ -32,7 +34,7 @@ export default function Frame(props) {
                 break;
         case "line":
             frame = <LineGraph size={props.size} data={props.data} selected={constraint}></LineGraph>; break;
-        case "piegraph":
+        case "piegraph2":
             frame = <div><ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
                 <PieGraph size={props.size} data={props.data} selected={constraint}></PieGraph></div>; break;
         case "scatterplot":
@@ -42,6 +44,10 @@ export default function Frame(props) {
                     <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint2}></ConstraintDropDown>
                     <ScatterPlot size={props.size} data={props.data} selected={[constraint, constraint2]}></ScatterPlot>
                 </div>; break;
+        case "piegraph":
+            frame = <div><ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
+                <BoxPlot size={props.size} data={props.data} selected={constraint}></BoxPlot></div>; break;
+
         default: break;
     }
 

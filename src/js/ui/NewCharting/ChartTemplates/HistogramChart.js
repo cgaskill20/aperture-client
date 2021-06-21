@@ -5,7 +5,7 @@ import KernelDensityEstimator from '../../../library/charting/kernelDensityEstim
 export default function HistogramGraph(props) {
 
     let svgRef = React.createRef();
-    let [margin, setMargin] = useState({ top: 0, right: 10, bottom: 150, left: 20 });
+    let [margin, setMargin] = useState({ top: 0, right: 10, bottom: 250, left: 20 });
     let [kde, setKde] = useState(new KernelDensityEstimator());
 
     let setup = () => {
@@ -14,7 +14,6 @@ export default function HistogramGraph(props) {
         svg.append("g").attr("id", "rects");
         svg.append("g").attr("id", "xAxis");
         svg.append("g").attr("id", "yAxis");
-        svg.append("text").attr("id", "title");
         svg.append("path").attr("id", "kdecurve");
     }
 
@@ -63,12 +62,7 @@ export default function HistogramGraph(props) {
                 .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
                 .attr("y", d => y(d.length))
                 .attr("height", d => y(0) - y(d.length));
-        svg.select("text#title")
-            .attr("x", width / 2)
-            .attr("y", 24)
-            .attr("text-anchor", "middle")
-            .attr("fill", "#eee")
-            .text("TITLE");
+
 
         if (props.kdeEnabled) {
             let maxBarHeight = d3.max(bins, d => d.length);
