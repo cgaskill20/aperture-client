@@ -68,6 +68,9 @@ export default {
                 if (metadata.info)
                     autoMenuLayer.info = metadata.info;
 
+                if (metadata.source)
+                    autoMenuLayer.source = metadata.source;
+
                 if (metadata.color) {
                     if (typeof metadata.color === "string") {
                         autoMenuLayer.color = {

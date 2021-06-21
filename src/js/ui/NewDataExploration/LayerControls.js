@@ -38,7 +38,9 @@ function getLayerText(layerInfo) {
 
 function sourceIcon(layerInfo) {
     if(layerInfo.source){
-        return <Button startIcon={<LinkIcon />}>Source</Button>
+        return <Button startIcon={<LinkIcon />} onClick={() => window.open(layerInfo.source, "_blank")}>
+            Source
+            </Button>
     }
 }
 
