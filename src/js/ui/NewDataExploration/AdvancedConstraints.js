@@ -37,7 +37,7 @@ export default function AdvancedConstraints(props) {
 
     if(componentIsRendering) {console.log("|AdvancedConstraints Rerending|")}
     return (
-        <div>
+        <>
             <Button variant="outlined" startIcon={<SettingsIcon/>} onClick={() => setOpen(true)}>
                 Advanced...
             </Button>
@@ -82,6 +82,6 @@ export default function AdvancedConstraints(props) {
                     </Grid>
                 </Grid>
             </Modal>
-        </div>
+        </>
     );
 }

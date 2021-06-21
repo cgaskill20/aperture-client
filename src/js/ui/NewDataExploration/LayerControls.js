@@ -3,6 +3,7 @@ import {Button, ButtonGroup, Paper, Typography} from "@material-ui/core";
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import TuneIcon from '@material-ui/icons/Tune';
+import LinkIcon from '@material-ui/icons/Link';
 import AdvancedConstraints from "./AdvancedConstraints";
 import {componentIsRendering} from "../TabSystem";
 import {isGraphable} from "./Helpers";
@@ -35,6 +36,14 @@ function getLayerText(layerInfo) {
     }
 }
 
+function sourceIcon(layerInfo) {
+    if(layerInfo.source){
+        return <Button startIcon={<LinkIcon />} onClick={() => window.open(layerInfo.source, "_blank")}>
+            Source
+        </Button>
+    }
+}
+
 export default function LayerControls(props) {
     const classes = useStyles();
     if(componentIsRendering) {console.log("|LayerControls Rerending|")}
@@ -60,6 +69,7 @@ export default function LayerControls(props) {
                             Default Constraints
                         </Button>
                         {graphIcon(props.layer, props.graphableLayers)}
+                        {sourceIcon(props.layer)}
                     </ButtonGroup>
                 </Grid>
             </Grid>
