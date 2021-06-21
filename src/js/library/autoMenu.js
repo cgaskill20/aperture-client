@@ -29,6 +29,7 @@ export default {
         }, {})
         //console.log(JSON.parse(JSON.stringify({catalog})))
         const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
+        console.log(autoMenu) 
         return{
             ...autoMenu,
             ...overwrite,
@@ -241,6 +242,9 @@ export default {
             
             if (constraint.temporalType) 
                 result.temporalType = constraint.temporalType;
+
+            if(constraint.unit)
+                result.unit = constraint.unit;
         }
         else if (constraint.type = "multiselect") {
             result.type = "multiselector";
