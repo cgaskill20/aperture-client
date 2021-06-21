@@ -38,7 +38,6 @@ export default function ConstraintSlider({constraint, querier}) {
     const buildSliderLabel = () => {
         return <b>{minMax[0]} ➔ {minMax[1]} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
     }
-    console.log(constraint)
     if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
