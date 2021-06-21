@@ -979,6 +979,7 @@
             "field": "site"
         },
         "source": "https://data.neonscience.org/data-products/DP1.00004.001",
+        "info": "Barometric pressure, or static atmospheric pressure, is a vital measurement for NEON. Barometric pressure is significant in influencing weather conditions as well as aqueous chemistry (e.g. the amount of gas that can dissolve in solution). Recording static atmospheric pressure will allow atmospheric gas mixing ratios to be converted into mass quantities. Barometric pressure will be recorded over NEON’s entire operational range.",
         "icon": "science",
         "temporal": "epoch_time",
         "fieldMetadata": [
@@ -1241,6 +1242,7 @@
             "field": "site"
         },
         "source": "https://data.neonscience.org/data-products/DP1.00001.001",
+        "info": "Wind plays an important role in atmospheric and environmental sciences. A function of differential heating of Earth’s surface and subsequent pressure gradients, horizontal and vertical winds are responsible for advection of atmospheric pollutants, moisture, heat and momentum (Stull 1988). As such, horizontal and vertical winds will be measured throughout the Observatory.",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
@@ -1619,6 +1621,7 @@
             "field": "site"
         },
         "source": "https://data.neonscience.org/data-products/DP1.00002.001",
+        "info": "Single aspirated air temperature measurements, available as one- and thirty-minute averages of 1 Hz observations. Temperature is one of the most fundamental physical measurements. It is a primary driving factor for countless physical, chemical, and biological processes. The single aspirated sensor assembly comprises an individual Platinum Resistance Thermometer (PRT) housed within an aspirated shield.",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
@@ -1877,6 +1880,7 @@
             "field": "site"
         },
         "source": "https://data.neonscience.org/data-products/DP1.00003.001",
+        "info": "Triple aspirated air temperature measurements, available as one- and thirty-minute averages of 1 Hz observations. Temperature is one of the most fundamental physical measurements. It is a primary driving factor for countless physical, chemical, and biological processes. The triple aspirated sensor assembly comprises three individual Platinum Resistance Thermometers (PRTs) housed within an aspirated shield.",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
@@ -2183,6 +2187,7 @@
             "field": "site"
         },
         "source": "https://data.neonscience.org/data-products/DP1.00005.001",
+        "info": "Infrared Biological Temperature (i.e., surface temperature) is available as one- and thirty-minute averages of 1 Hz observations. Biological temperature can be used in conjunction with other measurements to draw conclusions on topics such as plant respiration, evapotranspiration rates, and stomatal conductance.",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
@@ -2405,6 +2410,7 @@
             "field": "site"
         },
         "source": "https://data.neonscience.org/data-products/DP1.00006.001",
+        "info": "Across NEON sites two methods will be used to determine bulk precipitation. Bulk precipitation measurements at core sites consist of a weighing gauge surrounded by a double fence inter-comparison reference (DFIR). Bulk precipitation measurements at relocatable sites are made with a tipping bucket. Bulk precipitation measured using a DFIR and a weighing gauge is known to provide improved results over tipping bucket measurements. Thus, the weighing gauge surrounded by the DFIR is considered the “primary” method, while the tipping bucket is referred to as the “secondary” method.",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
@@ -2489,6 +2495,7 @@
             "field": "site"
         },
         "source": "https://data.neonscience.org/data-products/DP1.00006.001",
+        "info": "Across NEON sites two methods will be used to determine bulk precipitation. Bulk precipitation measurements at core sites consist of a weighing gauge surrounded by a double fence inter-comparison reference (DFIR). Bulk precipitation measurements at relocatable sites are made with a tipping bucket. Bulk precipitation measured using a DFIR and a weighing gauge is known to provide improved results over tipping bucket measurements. Thus, the weighing gauge surrounded by the DFIR is considered the “primary” method, while the tipping bucket is referred to as the “secondary” method.",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
