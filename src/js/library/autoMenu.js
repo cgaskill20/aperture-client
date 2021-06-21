@@ -49,48 +49,48 @@ export default {
                 //These are hardcoded for now
                 let autoMenuLayer = {};
                 if (metadata.level || metadata.linked) {
-                    autoMenuLayer["group"] = metadata["group"] ? metadata["group"] : "Tract, County, & State Data";
-                    autoMenuLayer["subGroup"] = metadata["subGroup"] ? metadata["subGroup"] : metadata.level === "tract" ? "Miscellaneous Tract" : "Miscellaneous County";
-                    autoMenuLayer["linkedGeometry"] = metadata.linked ? metadata.linked.collection : metadata.level === "tract" ? "tract_geo_140mb_no_2d_index" : "county_geo_30mb_no_2d_index";
-                    autoMenuLayer["joinField"] = metadata.linked ? metadata.linked.field : "GISJOIN";
-                    autoMenuLayer["minZoom"] = metadata.level === "tract" ? 9 : 7;
+                    autoMenuLayer.group = metadata.group ? metadata.group : "Tract, County, & State Data";
+                    autoMenuLayer.subGroup = metadata.subGroup ? metadata.subGroup : metadata.level === "tract" ? "Miscellaneous Tract" : "Miscellaneous County";
+                    autoMenuLayer.linkedGeometry = metadata.linked ? metadata.linked.collection : metadata.level === "tract" ? "tract_geo_140mb_no_2d_index" : "county_geo_30mb_no_2d_index";
+                    autoMenuLayer.joinField = metadata.linked ? metadata.linked.field : "GISJOIN";
+                    autoMenuLayer.minZoom = metadata.level === "tract" ? 9 : 7;
                 }
                 else {
-                    autoMenuLayer["group"] = "Infrastructure & Natural Features";
-                    autoMenuLayer["subGroup"] = metadata["subGroup"] ? metadata["subGroup"] : "Miscellaneous";
-                    autoMenuLayer["minZoom"] = metadata.minZoom ? metadata.minZoom : 7;
+                    autoMenuLayer.group = "Infrastructure & Natural Features";
+                    autoMenuLayer.subGroup = metadata.subGroup ? metadata.subGroup : "Miscellaneous";
+                    autoMenuLayer.minZoom = metadata.minZoom ? metadata.minZoom : 7;
                 }
 
 
                 if (metadata.icon)
-                    autoMenuLayer["icon"] = metadata.icon;
+                    autoMenuLayer.icon = metadata.icon;
 
                 if (metadata.info)
-                    autoMenuLayer["info"] = metadata.info;
+                    autoMenuLayer.info = metadata.info;
 
                 if (metadata.color) {
                     if (typeof metadata.color === "string") {
-                        autoMenuLayer["color"] = {
+                        autoMenuLayer.color = {
                             style: "solid",
                             colorCode: metadata.color
                         };
                     }
                     else {
-                        autoMenuLayer["color"] = metadata.color;
+                        autoMenuLayer.color = metadata.color;
                     }
                 }
                 else {
-                    autoMenuLayer["color"] = autoMenuLayer["color"] = {
+                    autoMenuLayer.color = autoMenuLayer.color = {
                         style: "solid",
                         colorCode: "#000000"
                     };
                 }
 
                 //where the constraints are added, lots of cool stuff here
-                autoMenuLayer["constraints"] = this.buildConstraintsFromCatalog(metadata, catalogLayer);
-                autoMenuLayer["collection"] = catalogLayer.collection;
-                autoMenuLayer["label"] = metadata.label;
-                autoMenuLayer["temporal"] = metadata.temporal;
+                autoMenuLayer.constraints = this.buildConstraintsFromCatalog(metadata, catalogLayer);
+                autoMenuLayer.collection = catalogLayer.collection;
+                autoMenuLayer.label = metadata.label;
+                autoMenuLayer.temporal = metadata.temporal;
                 //gets label if provided, names it the collection name otherwise
                 const label = catalogLayer.collection;
 
