@@ -36,6 +36,11 @@ function getLayerText(layerInfo) {
     }
 }
 
+function sourceIcon(layerInfo) {
+    console.log({layerInfo})
+    return <Button startIcon={<LinkIcon />}>Source</Button>
+}
+
 export default function LayerControls(props) {
     const classes = useStyles();
     if(componentIsRendering) {console.log("|LayerControls Rerending|")}
@@ -61,7 +66,7 @@ export default function LayerControls(props) {
                             Default Constraints
                         </Button>
                         {graphIcon(props.layer, props.graphableLayers)}
-                        <Button startIcon={<LinkIcon />}>Source</Button>
+                        {sourceIcon(props.layer.info)}
                     </ButtonGroup>
                 </Grid>
             </Grid>
