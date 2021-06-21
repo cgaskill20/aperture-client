@@ -1240,6 +1240,7 @@
             "collection": "neon_sites",
             "field": "site"
         },
+        "source": "https://data.neonscience.org/data-products/DP1.00001.001",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
@@ -1617,6 +1618,7 @@
             "collection": "neon_sites",
             "field": "site"
         },
+        "source": "https://data.neonscience.org/data-products/DP1.00002.001",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
@@ -1874,6 +1876,7 @@
             "collection": "neon_sites",
             "field": "site"
         },
+        "source": "https://data.neonscience.org/data-products/DP1.00003.001",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
@@ -2179,6 +2182,7 @@
             "collection": "neon_sites",
             "field": "site"
         },
+        "source": "https://data.neonscience.org/data-products/DP1.00005.001",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
@@ -2400,6 +2404,7 @@
             "collection": "neon_sites",
             "field": "site"
         },
+        "source": "https://data.neonscience.org/data-products/DP1.00006.001",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
@@ -2483,6 +2488,7 @@
             "collection": "neon_sites",
             "field": "site"
         },
+        "source": "https://data.neonscience.org/data-products/DP1.00006.001",
         "fieldMetadata": [
             {
                 "name": "epoch_time",
