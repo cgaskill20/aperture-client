@@ -1,933 +1,2550 @@
 [
-  {
-    "collection": "future_heat",
-    "label": "Heatwaves",
-    "level": "county",
-    "subGroup": "Climate",
-    "color": {
-      "colorCode": "#FF0000",
-      "style": "solid"
-    },
-    "fieldMetadata": [
-      {
-        "name": "temp",
-        "label": "Heatwave Temperature",
-        "type": "range",
-        "unit": "farenheit"
-      },
-      {
-        "name": "year",
-        "label": "Years",
-        "type": "range",
-        "unit": "year"
-      }
-    ]
-  },
-  {
-    "collection": "tract_median_household_income",
-    "label": "Tract Median Household Income",
-    "level": "tract",
-    "subGroup": "Income",
-    "color": {
-      "style": "gradient",
-      "variable": "2010_median_household_income",
-      "border": 1
-    },
-    "fieldMetadata": [
-      {
-        "name": "2000_median_household_income",
-        "max": 99899.0,
-        "type": "range",
-        "step": 100,
-        "unit": "dollars",
-        "hideByDefault": true,
-        "plus": true
-      },
-      {
-        "name": "1990_median_household_income",
-        "max": 9982.0,
-        "type": "range",
-        "step": 100,
-        "unit": "dollars",
-        "hideByDefault": true,
-        "plus": true
-      },
-      {
-        "name": "1980_median_household_income",
-        "max": 9994.0,
-        "type": "range",
-        "step": 100,
-        "unit": "dollars",
-        "hideByDefault": true,
-        "plus": true
-      },
-      {
-        "name": "2010_median_household_income",
-        "label": "2010 Median Household Income",
-        "min": 2499.0,
-        "max": 100000,
-        "type": "range",
-        "step": 100,
-        "unit": "dollars",
-        "plus": true
-      }
-    ]
-  },
-  {
-    "collection": "county_median_household_income",
-    "label": "County Median Household Income",
-    "level": "county",
-    "subGroup": "Income",
-    "color": {
-      "style": "gradient",
-      "variable": "2010_median_household_income",
-      "border": 1
-    },
-    "fieldMetadata": [
-      {
-        "name": "2000_median_household_income",
-        "max": 99899.0,
-        "type": "range",
-        "step": 100,
-        "unit": "dollars",
-        "hideByDefault": true,
-        "plus": true
-      },
-      {
-        "name": "1990_median_household_income",
-        "max": 9982.0,
-        "type": "range",
-        "step": 100,
-        "unit": "dollars",
-        "hideByDefault": true,
-        "plus": true
-      },
-      {
-        "name": "1980_median_household_income",
-        "max": 9994.0,
-        "type": "range",
-        "step": 100,
-        "unit": "dollars",
-        "hideByDefault": true,
-        "plus": true
-      },
-      {
-        "name": "2010_median_household_income",
-        "label": "2010 Median Household Income",
-        "min": 2499.0,
-        "max": 120000,
-        "type": "range",
-        "step": 100,
-        "unit": "dollars",
-        "plus": true
-      }
-    ]
-  },
-  {
-    "collection": "transmission_lines_geo",
-    "label": "Power Transmission Lines",
-    "subGroup": "Energy Infrastructure"
-  },
-  {
-    "collection": "svi_county_GISJOIN",
-    "level": "county",
-    "label": "Social Vulnerability Index County",
-    "subGroup": "Social Vulnerability Index",
-    "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
-    "color": {
-      "style": "gradient",
-      "gradient": [
-        "#00FF00",
-        "#FF0000"
-      ],
-      "variable": "RPL_THEMES"
-    },
-    "fieldMetadata": [
-      {
-        "label": "Social Vulnerability Index",
-        "name": "RPL_THEMES",
-        "type": "range",
-        "step": 0.05,
-        "min": 0,
-        "max": 1
-      }
-    ]
-  },
-  {
-    "collection": "svi_tract_GISJOIN",
-    "level": "tract",
-    "label": "Social Vulnerability Index Tract",
-    "subGroup": "Social Vulnerability Index",
-    "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
-    "color": {
-      "style": "gradient",
-      "gradient": [
-        "#00FF00",
-        "#FF0000"
-      ],
-      "variable": "RPL_THEMES",
-      "border": 1
-    },
-    "fieldMetadata": [
-      {
-        "label": "Social Vulnerability Index",
-        "name": "RPL_THEMES",
-        "type": "range",
-        "step": 0.05,
-        "min": 0,
-        "max": 1
-      }
-    ]
-  },
-  {
-    "collection": "tract_median_age",
-    "label": "Median Tract Age",
-    "level": "tract",
-    "subGroup": "Age",
-    "color": {
-      "style": "gradient",
-      "gradient": [
-        "#00FF00",
-        "#FF0000"
-      ],
-      "variable": "median_age_total",
-      "border": 1
-    },
-    "fieldMetadata": [
-      {
-        "name": "median_age_female",
-        "type": "range",
-        "min": 6.2,
-        "max": 83.5
-      },
-      {
-        "name": "median_age_male",
-        "type": "range",
-        "min": 3.8,
-        "max": 85.2
-      },
-      {
-        "name": "median_age_total",
-        "type": "range",
-        "min": 5.8,
-        "max": 84.5
-      }
-    ]
-  },
-  {
-    "collection": "county_median_age",
-    "label": "Median County Age",
-    "level": "county",
-    "subGroup": "Age",
-    "color": {
-      "style": "gradient",
-      "gradient": [
-        "#00FF00",
-        "#FF0000"
-      ],
-      "variable": "median_age_total",
-      "border": 1
-    },
-    "fieldMetadata": [
-      {
-        "name": "median_age_female",
-        "type": "range",
-        "min": 6.2,
-        "max": 83.5
-      },
-      {
-        "name": "median_age_male",
-        "type": "range",
-        "min": 3.8,
-        "max": 85.2
-      },
-      {
-        "name": "median_age_total",
-        "type": "range",
-        "min": 5.8,
-        "max": 84.5
-      }
-    ]
-  },
-  {
-    "collection": "public_schools",
-    "icon": "school",
-    "subGroup": "Education",
-    "fieldMetadata": [
-      {
-        "label": "Total Students",
-        "name": "properties.ENROLLMENT",
-        "type": "range",
-        "min": 0,
-        "max": 4000,
-        "plus": true
-        
-      },
-      {
-        "name": "properties.FT_TEACHER",
-        "label": "Faculty Count",
-        "type": "range",
-        "min": 0,
-        "max": 200,
-        "plus": true
-      },
-      {
-        "label": "Highest Grade Level",
-        "name": "properties.END_GRADE",
-        "type": "multiselect",
-        "hideByDefault": true
-      },
-      {
-        "name": "properties.LEVEL_",
-        "type": "multiselect",
-        "label": "Level"
-      }
-    ]
-  },
-  {
-    "collection": "flood_zones_geo",
-    "label": "Flood Zone",
-    "subGroup": "Floods",
-    "minZoom": 11,
-    "color": {
-      "style": "sequential",
-      "variable": "properties.FLD_ZONE",
-      "border": 1
-    },
-    "fieldMetadata": [
-      {
-        "name": "properties.FLD_ZONE",
-        "label": "Flood Zone Code",
-        "type": "multiselect"
-      }
-    ]
-  },
-  {
-    "collection": "fire_stations_geo",
-    "icon": "fire_station",
-    "subGroup": "Emergency Infrastructure",
-    "label": "Fire Stations"
-  },
-  {
-    "collection": "dams_geo",
-    "color": "#FF0000",
-    "label": "Dams",
-    "icon": "dam",
-    "fieldMetadata": [
-      {
-        "name": "properties.STR_HEIGHT",
-        "label": "Height",
-        "type": "range",
-        "max": 770.0,
-        "unit": "feet"
-      }
-    ]
-  },
-  {
-    "collection": "hospitals_geo",
-    "icon": "hospital",
-    "label": "Hospitals",
-    "subGroup": "Emergency Infrastructure",
-    "fieldMetadata": [
-      {
-        "name": "properties.BEDS",
-        "type": "range",
-        "min": 0,
-        "max": 1000,
-        "plus": true
-      },
-      {
-        "name": "properties.HELIPAD",
-        "label": "Has Helipad",
-        "type": "select"
-      }
-    ]
-  },
-  {
-    "collection": "electrical_substations_geo",
-    "icon": "substation",
-    "label": "Electrical Substations",
-    "subGroup": "Energy Infrastructure"
-  },
-  {
-    "collection": "power_plants_geo",
-    "icon": "power_plant",
-    "label": "Power Plants",
-    "subGroup": "Energy Infrastructure",
-    "fieldMetadata": [
-      {
-        "name": "properties.ENERGY_SRC",
-        "type": "multiselect",
-        "label": "Energy Source"
-      }
-    ]
-  },
-  {
-    "collection": "natural_gas_pipelines_geo",
-    "label": "Natural Gas Pipelines",
-    "subGroup": "Energy Infrastructure"
-  },
-  {
-    "collection":"risk_county",
-    "subGroup": "National Risk Index",
-    "level": "county",
-    "info": "In the National Risk Index, risk is defined as the potential for negative impacts as a result of a natural hazard. It ranges from 0 (lowest risk) to 100 (highest risk).",
-    "color":{
-      "style": "sequential",
-      "variable": "RISK_RATNG",
-      "map":{
-        "Very High": "#c7445d",
-        "Relatively High": "#e07069",
-        "Relatively Moderate": "#f0d55d",
-        "Relatively Low": "#509bc7",
-        "Very Low": "#4d6dbd"
-      },
-      "border":1,
-      "opacity": 0.5
-    },
-    "fieldMetadata": [
-      {
-        "name": "RISK_RATNG",
-        "label": "Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "SOVI_RATNG",
-        "label": "Social Vulnerability Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "RESL_RATNG",
-        "label": "Community Resilience Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "AVLN_RISKR",
-        "label":"Avalanche Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "CFLD_RISKR",
-        "label": "Coastal Flooding Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "CWAV_RISKR",
-        "label": "Cold Wave Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "DRGT_RISKR",
-        "label": "Drought Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "ERQK_RISKR",
-        "label": "Earthquake Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "HAIL_RISKR",
-        "label": "Hail Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "HWAV_RISKR",
-        "label": "Heatwave Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "HRCN_RISKR",
-        "label": "Hurricane Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "ISTM_RISKR",
-        "label": "Ice Storm Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "LNDS_RISKR",
-        "label": "Landslide Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "LTNG_RISKR",
-        "label": "Lightning Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "RFLD_RISKR",
-        "label": "Riverine Flooding Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "SWND_RISKR",
-        "label": "Strong Wind Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "TRND_RISKR",
-        "label": "Tornado Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "TSUN_RISKR",
-        "label": "Tsunami Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "VLCN_RISKR",
-        "label": "Volcanic Activity Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "WFIR_RISKR",
-        "label": "Wildfire Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "WNTW_RISKR",
-        "label": "Winter Weather Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      }
-    ]
-  },
-  {
-    "collection":"risk_tract",
-    "subGroup": "National Risk Index",
-    "level": "tract",
-    "info": "In the National Risk Index, risk is defined as the potential for negative impacts as a result of a natural hazard. It ranges from 0 (lowest risk) to 100 (highest risk).",
-    "color":{
-      "style": "sequential",
-      "variable": "RISK_RATNG",
-      "map":{
-        "Very High": "#c7445d",
-        "Relatively High": "#e07069",
-        "Relatively Moderate": "#f0d55d",
-        "Relatively Low": "#509bc7",
-        "Very Low": "#4d6dbd"
-      },
-      "opacity": 0.5,
-      "border": 1
-    },
-    "fieldMetadata": [
-      {
-        "name": "RISK_RATNG",
-        "label": "Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "SOVI_RATNG",
-        "label": "Social Vulnerability Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "RESL_RATNG",
-        "label": "Community Resilience Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "AVLN_RISKR",
-        "label":"Avalanche Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "CFLD_RISKR",
-        "label": "Coastal Flooding Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "CWAV_RISKR",
-        "label": "Cold Wave Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "DRGT_RISKR",
-        "label": "Drought Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "ERQK_RISKR",
-        "label": "Earthquake Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "HAIL_RISKR",
-        "label": "Hail Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "HWAV_RISKR",
-        "label": "Heatwave Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "HRCN_RISKR",
-        "label": "Hurricane Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "ISTM_RISKR",
-        "label": "Ice Storm Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "LNDS_RISKR",
-        "label": "Landslide Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "LTNG_RISKR",
-        "label": "Lightning Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "RFLD_RISKR",
-        "label": "Riverine Flooding Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "SWND_RISKR",
-        "label": "Strong Wind Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "TRND_RISKR",
-        "label": "Tornado Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "TSUN_RISKR",
-        "label": "Tsunami Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "VLCN_RISKR",
-        "label": "Volcanic Activity Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "WFIR_RISKR",
-        "label": "Wildfire Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      },
-      {
-        "name": "WNTW_RISKR",
-        "label": "Winter Weather Risk Rating",
-        "selectToRangeMap": {
-          "Very High": 4,
-          "Relatively High": 3,
-          "Relatively Moderate": 2,
-          "Relatively Low": 1,
-          "Very Low": 0
-        }
-      }
-    ]
-  },
-  {
-    "collection": "tract_proximity",
-    "label": "Tract Proximity",
-    "subGroup": "Proximity",
-    "level": "tract",
-    "color": "#4682B4",
-    "fieldMetadata": [
-        {
-          "name": "nearest_hospital",
-          "label": "Nearest Hospital (mi)",
-          "min": 0,
-          "max": 30,
-          "type": "range",
-          "step": 0.5,
-          "unit": "miles",
-          "plus": true
+    {
+        "collection": "future_heat",
+        "label": "Heatwaves",
+        "level": "county",
+        "subGroup": "Climate",
+        "color": {
+            "colorCode": "#FF0000",
+            "style": "solid"
         },
-        {
-          "name": "nearest_fire_station",
-          "label": "Nearest Fire Station (mi)",
-          "min": 0,
-          "max": 30,
-          "type": "range",
-          "step": 0.5,
-          "unit": "miles",
-          "plus": true
+        "temporal": "epoch_time",
+        "fieldMetadata": [
+            {
+                "name": "temp",
+                "label": "Max Heatwave Temperature",
+                "type": "range",
+                "unit": "farenheit",
+                "temporalType": "max"
+            },
+            {
+                "name": "year",
+                "remove": "true"
+            },
+            {
+                "name": "epoch_time",
+                "label": "Year",
+                "type": "date",
+                "step": "year"
+            }
+        ]
+    },
+    {
+        "collection": "tract_median_household_income",
+        "label": "Tract Median Household Income",
+        "level": "tract",
+        "subGroup": "Income",
+        "color": {
+            "style": "gradient",
+            "variable": "2010_median_household_income",
+            "border": 1
         },
-        {
-          "name": "nearest_public_school",
-          "label": "Nearest Public School (mi)",
-          "min": 0,
-          "max": 30,
-          "type": "range",
-          "step": 0.5,
-          "unit": "miles",
-          "plus": true
+        "fieldMetadata": [
+            {
+                "name": "2000_median_household_income",
+                "max": 99899.0,
+                "type": "range",
+                "step": 100,
+                "unit": "dollars",
+                "hideByDefault": true,
+                "plus": true
+            },
+            {
+                "name": "1990_median_household_income",
+                "max": 9982.0,
+                "type": "range",
+                "step": 100,
+                "unit": "dollars",
+                "hideByDefault": true,
+                "plus": true
+            },
+            {
+                "name": "1980_median_household_income",
+                "max": 9994.0,
+                "type": "range",
+                "step": 100,
+                "unit": "dollars",
+                "hideByDefault": true,
+                "plus": true
+            },
+            {
+                "name": "2010_median_household_income",
+                "label": "2010 Median Household Income",
+                "min": 2499.0,
+                "max": 100000,
+                "type": "range",
+                "step": 100,
+                "unit": "dollars",
+                "plus": true
+            }
+        ]
+    },
+    {
+        "collection": "county_median_household_income",
+        "label": "County Median Household Income",
+        "level": "county",
+        "subGroup": "Income",
+        "color": {
+            "style": "gradient",
+            "variable": "2010_median_household_income",
+            "border": 1
         },
-        {
-          "name": "nearest_electrical_substation",
-          "label": "Nearest Electrical Substation (mi)",
-          "min": 0,
-          "max": 30,
-          "type": "range",
-          "step": 0.5,
-          "unit": "miles",
-          "plus": true
+        "fieldMetadata": [
+            {
+                "name": "2000_median_household_income",
+                "max": 99899.0,
+                "type": "range",
+                "step": 100,
+                "unit": "dollars",
+                "hideByDefault": true,
+                "plus": true
+            },
+            {
+                "name": "1990_median_household_income",
+                "max": 9982.0,
+                "type": "range",
+                "step": 100,
+                "unit": "dollars",
+                "hideByDefault": true,
+                "plus": true
+            },
+            {
+                "name": "1980_median_household_income",
+                "max": 9994.0,
+                "type": "range",
+                "step": 100,
+                "unit": "dollars",
+                "hideByDefault": true,
+                "plus": true
+            },
+            {
+                "name": "2010_median_household_income",
+                "label": "2010 Median Household Income",
+                "min": 2499.0,
+                "max": 120000,
+                "type": "range",
+                "step": 100,
+                "unit": "dollars",
+                "plus": true
+            }
+        ]
+    },
+    {
+        "collection": "transmission_lines_geo",
+        "label": "Power Transmission Lines",
+        "subGroup": "Energy Infrastructure"
+    },
+    {
+        "collection": "svi_county_GISJOIN",
+        "level": "county",
+        "label": "Social Vulnerability Index County",
+        "subGroup": "Social Vulnerability Index",
+        "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
+        "color": {
+            "style": "gradient",
+            "gradient": [
+                "#00FF00",
+                "#FF0000"
+            ],
+            "variable": "RPL_THEMES"
         },
-        {
-          "name": "nearest_power_plant",
-          "label": "Nearest Power Plant (mi)",
-          "min": 0,
-          "max": 30,
-          "type": "range",
-          "step": 0.5,
-          "unit": "miles",
-          "plus": true
-        }
-    ]
-  }
+        "fieldMetadata": [
+            {
+                "label": "Social Vulnerability Index",
+                "name": "RPL_THEMES",
+                "type": "range",
+                "step": 0.05,
+                "min": 0,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "collection": "svi_tract_GISJOIN",
+        "level": "tract",
+        "label": "Social Vulnerability Index Tract",
+        "subGroup": "Social Vulnerability Index",
+        "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
+        "color": {
+            "style": "gradient",
+            "gradient": [
+                "#00FF00",
+                "#FF0000"
+            ],
+            "variable": "RPL_THEMES",
+            "border": 1
+        },
+        "fieldMetadata": [
+            {
+                "label": "Social Vulnerability Index",
+                "name": "RPL_THEMES",
+                "type": "range",
+                "step": 0.05,
+                "min": 0,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "collection": "tract_median_age",
+        "label": "Median Tract Age",
+        "level": "tract",
+        "subGroup": "Age",
+        "color": {
+            "style": "gradient",
+            "gradient": [
+                "#00FF00",
+                "#FF0000"
+            ],
+            "variable": "median_age_total",
+            "border": 1
+        },
+        "fieldMetadata": [
+            {
+                "name": "median_age_female",
+                "type": "range",
+                "min": 6.2,
+                "max": 83.5
+            },
+            {
+                "name": "median_age_male",
+                "type": "range",
+                "min": 3.8,
+                "max": 85.2
+            },
+            {
+                "name": "median_age_total",
+                "type": "range",
+                "min": 5.8,
+                "max": 84.5
+            }
+        ]
+    },
+    {
+        "collection": "county_median_age",
+        "label": "Median County Age",
+        "level": "county",
+        "subGroup": "Age",
+        "color": {
+            "style": "gradient",
+            "gradient": [
+                "#00FF00",
+                "#FF0000"
+            ],
+            "variable": "median_age_total",
+            "border": 1
+        },
+        "fieldMetadata": [
+            {
+                "name": "median_age_female",
+                "type": "range",
+                "min": 6.2,
+                "max": 83.5
+            },
+            {
+                "name": "median_age_male",
+                "type": "range",
+                "min": 3.8,
+                "max": 85.2
+            },
+            {
+                "name": "median_age_total",
+                "type": "range",
+                "min": 5.8,
+                "max": 84.5
+            }
+        ]
+    },
+    {
+        "collection": "public_schools",
+        "icon": "school",
+        "subGroup": "Education",
+        "fieldMetadata": [
+            {
+                "label": "Total Students",
+                "name": "properties.ENROLLMENT",
+                "type": "range",
+                "min": 0,
+                "max": 4000,
+                "plus": true
+            },
+            {
+                "name": "properties.FT_TEACHER",
+                "label": "Faculty Count",
+                "type": "range",
+                "min": 0,
+                "max": 200,
+                "plus": true
+            },
+            {
+                "label": "Highest Grade Level",
+                "name": "properties.END_GRADE",
+                "type": "multiselect",
+                "hideByDefault": true
+            },
+            {
+                "name": "properties.LEVEL_",
+                "type": "multiselect",
+                "label": "Level"
+            }
+        ]
+    },
+    {
+        "collection": "flood_zones_geo",
+        "label": "Flood Zone",
+        "subGroup": "Floods",
+        "minZoom": 11,
+        "color": {
+            "style": "sequential",
+            "variable": "properties.FLD_ZONE",
+            "border": 1
+        },
+        "fieldMetadata": [
+            {
+                "name": "properties.FLD_ZONE",
+                "label": "Flood Zone Code",
+                "type": "multiselect"
+            }
+        ]
+    },
+    {
+        "collection": "fire_stations_geo",
+        "icon": "fire_station",
+        "subGroup": "Emergency Infrastructure",
+        "label": "Fire Stations"
+    },
+    {
+        "collection": "dams_geo",
+        "color": "#FF0000",
+        "label": "Dams",
+        "icon": "dam",
+        "fieldMetadata": [
+            {
+                "name": "properties.STR_HEIGHT",
+                "label": "Height",
+                "type": "range",
+                "max": 770.0,
+                "unit": "feet"
+            }
+        ]
+    },
+    {
+        "collection": "hospitals_geo",
+        "icon": "hospital",
+        "label": "Hospitals",
+        "subGroup": "Emergency Infrastructure",
+        "fieldMetadata": [
+            {
+                "name": "properties.BEDS",
+                "type": "range",
+                "min": 0,
+                "max": 1000,
+                "plus": true
+            },
+            {
+                "name": "properties.HELIPAD",
+                "label": "Has Helipad",
+                "type": "select"
+            }
+        ]
+    },
+    {
+        "collection": "electrical_substations_geo",
+        "icon": "substation",
+        "label": "Electrical Substations",
+        "subGroup": "Energy Infrastructure"
+    },
+    {
+        "collection": "power_plants_geo",
+        "icon": "power_plant",
+        "label": "Power Plants",
+        "subGroup": "Energy Infrastructure",
+        "fieldMetadata": [
+            {
+                "name": "properties.ENERGY_SRC",
+                "type": "multiselect",
+                "label": "Energy Source"
+            }
+        ]
+    },
+    {
+        "collection": "natural_gas_pipelines_geo",
+        "label": "Natural Gas Pipelines",
+        "subGroup": "Energy Infrastructure"
+    },
+    {
+        "collection": "risk_county",
+        "subGroup": "National Risk Index",
+        "level": "county",
+        "info": "In the National Risk Index, risk is defined as the potential for negative impacts as a result of a natural hazard. It ranges from 0 (lowest risk) to 100 (highest risk).",
+        "color": {
+            "style": "sequential",
+            "variable": "RISK_RATNG",
+            "map": {
+                "Very High": "#c7445d",
+                "Relatively High": "#e07069",
+                "Relatively Moderate": "#f0d55d",
+                "Relatively Low": "#509bc7",
+                "Very Low": "#4d6dbd"
+            },
+            "border": 1,
+            "opacity": 0.5
+        },
+        "fieldMetadata": [
+            {
+                "name": "RISK_RATNG",
+                "label": "Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "SOVI_RATNG",
+                "label": "Social Vulnerability Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "RESL_RATNG",
+                "label": "Community Resilience Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "AVLN_RISKR",
+                "label": "Avalanche Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "CFLD_RISKR",
+                "label": "Coastal Flooding Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "CWAV_RISKR",
+                "label": "Cold Wave Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "DRGT_RISKR",
+                "label": "Drought Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "ERQK_RISKR",
+                "label": "Earthquake Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "HAIL_RISKR",
+                "label": "Hail Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "HWAV_RISKR",
+                "label": "Heatwave Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "HRCN_RISKR",
+                "label": "Hurricane Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "ISTM_RISKR",
+                "label": "Ice Storm Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "LNDS_RISKR",
+                "label": "Landslide Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "LTNG_RISKR",
+                "label": "Lightning Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "RFLD_RISKR",
+                "label": "Riverine Flooding Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "SWND_RISKR",
+                "label": "Strong Wind Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "TRND_RISKR",
+                "label": "Tornado Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "TSUN_RISKR",
+                "label": "Tsunami Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "VLCN_RISKR",
+                "label": "Volcanic Activity Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "WFIR_RISKR",
+                "label": "Wildfire Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "WNTW_RISKR",
+                "label": "Winter Weather Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            }
+        ]
+    },
+    {
+        "collection": "risk_tract",
+        "subGroup": "National Risk Index",
+        "level": "tract",
+        "info": "In the National Risk Index, risk is defined as the potential for negative impacts as a result of a natural hazard. It ranges from 0 (lowest risk) to 100 (highest risk).",
+        "color": {
+            "style": "sequential",
+            "variable": "RISK_RATNG",
+            "map": {
+                "Very High": "#c7445d",
+                "Relatively High": "#e07069",
+                "Relatively Moderate": "#f0d55d",
+                "Relatively Low": "#509bc7",
+                "Very Low": "#4d6dbd"
+            },
+            "opacity": 0.5,
+            "border": 1
+        },
+        "fieldMetadata": [
+            {
+                "name": "RISK_RATNG",
+                "label": "Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "SOVI_RATNG",
+                "label": "Social Vulnerability Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "RESL_RATNG",
+                "label": "Community Resilience Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "AVLN_RISKR",
+                "label": "Avalanche Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "CFLD_RISKR",
+                "label": "Coastal Flooding Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "CWAV_RISKR",
+                "label": "Cold Wave Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "DRGT_RISKR",
+                "label": "Drought Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "ERQK_RISKR",
+                "label": "Earthquake Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "HAIL_RISKR",
+                "label": "Hail Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "HWAV_RISKR",
+                "label": "Heatwave Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "HRCN_RISKR",
+                "label": "Hurricane Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "ISTM_RISKR",
+                "label": "Ice Storm Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "LNDS_RISKR",
+                "label": "Landslide Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "LTNG_RISKR",
+                "label": "Lightning Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "RFLD_RISKR",
+                "label": "Riverine Flooding Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "SWND_RISKR",
+                "label": "Strong Wind Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "TRND_RISKR",
+                "label": "Tornado Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "TSUN_RISKR",
+                "label": "Tsunami Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "VLCN_RISKR",
+                "label": "Volcanic Activity Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "WFIR_RISKR",
+                "label": "Wildfire Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            },
+            {
+                "name": "WNTW_RISKR",
+                "label": "Winter Weather Risk Rating",
+                "selectToRangeMap": {
+                    "Very High": 4,
+                    "Relatively High": 3,
+                    "Relatively Moderate": 2,
+                    "Relatively Low": 1,
+                    "Very Low": 0
+                }
+            }
+        ]
+    },
+    {
+        "collection": "tract_proximity",
+        "label": "Tract Proximity",
+        "subGroup": "Proximity",
+        "level": "tract",
+        "color": "#4682B4",
+        "fieldMetadata": [
+            {
+                "name": "nearest_hospital",
+                "label": "Nearest Hospital (mi)",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true
+            },
+            {
+                "name": "nearest_fire_station",
+                "label": "Nearest Fire Station (mi)",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true
+            },
+            {
+                "name": "nearest_public_school",
+                "label": "Nearest Public School (mi)",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true
+            },
+            {
+                "name": "nearest_electrical_substation",
+                "label": "Nearest Electrical Substation (mi)",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true
+            },
+            {
+                "name": "nearest_power_plant",
+                "label": "Nearest Power Plant (mi)",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true
+            }
+        ]
+    },
+    {
+        "collection": "covid_county",
+        "level": "county",
+        "temporal": "epoch_time",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "newDeathCount",
+                "label": "Mean New Death Count per Day",
+                "temporalType": "avg"
+            },
+            {
+                "name": "totalDeathCount",
+                "label": "Total Death Count, End of Period",
+                "temporalType": "last"
+            },
+            {
+                "name": "newCaseCount",
+                "label": "Mean New Case Count per Day",
+                "temporalType": "avg"
+            },
+            {
+                "name": "totalCaseCount",
+                "label": "Total Case Count, End of Period",
+                "temporalType": "last"
+            },
+            {
+                "name": "date",
+                "remove": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_barometric_pressure",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "source": "https://data.neonscience.org/data-products/DP1.00004.001",
+        "info": "Barometric pressure, or static atmospheric pressure, is a vital measurement for NEON. Barometric pressure is significant in influencing weather conditions as well as aqueous chemistry (e.g. the amount of gas that can dissolve in solution). Recording static atmospheric pressure will allow atmospheric gas mixing ratios to be converted into mass quantities. Barometric pressure will be recorded over NEON’s entire operational range.",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "staPresMean",
+                "label": "Average Station Pressure during Time Constraint",
+                "unit": "kilopascal",
+                "temporalType": "avg"
+            },
+            {
+                "name": "staPresMinimum",
+                "label": "Minimum Station Pressure during Time Constraint",
+                "unit": "kilopascal",
+                "temporalType": "min"
+                
+            },
+            {
+                "name": "staPresMaximum",
+                "label": "Maximum Station Pressure during Time Constraint",
+                "unit": "kilopascal",
+                "temporalType": "max"
+            },
+            {
+                "name": "staPresVariance",
+                "label": "Variance in station pressure",
+                "unit": "kilopascalsSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of station pressure",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresExpUncert",
+                "label": "Expanded uncertainty for station pressure",
+                "unit": "kilopascal",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresStdErMean",
+                "label": "Standard error of the mean for station pressure",
+                "unit": "kilopascal",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresRangeFailQM",
+                "label": "Station pressure quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresRangePassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresRangeNAQM",
+                "label": "Station pressure quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresPersistenceFailQM",
+                "label": "Station pressure quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresPersistencePassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresPersistenceNAQM",
+                "label": "Station pressure quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresStepFailQM",
+                "label": "Station pressure quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresStepPassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresStepNAQM",
+                "label": "Station pressure quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresNullFailQM",
+                "label": "Station pressure quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresNullPassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresNullNAQM",
+                "label": "Station pressure quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresGapFailQM",
+                "label": "Station pressure quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresGapPassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresGapNAQM",
+                "label": "Station pressure quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresSpikeFailQM",
+                "label": "Station pressure quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresSpikePassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresSpikeNAQM",
+                "label": "Station pressure quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresValidCalFailQM",
+                "label": "Station pressure quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresValidCalPassQM",
+                "label": "Station pressure quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresValidCalNAQM",
+                "label": "Station pressure quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresAlphaQM",
+                "label": "Station pressure quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresBetaQM",
+                "label": "Station pressure quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresFinalQF",
+                "label": "Station pressure quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "staPresFinalQFSciRvw",
+                "label": "Station pressure quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "corPres",
+                "label": "Mean station pressure corrected to sea level",
+                "unit": "kilopascal",
+                "temporalType": "avg",
+                "hideByDefault": true
+            },
+            {
+                "name": "corPresExpUncert",
+                "label": "Expanded uncertainty for pressure corrected to sea level",
+                "unit": "kilopascal",
+                "hideByDefault": true
+            },
+            {
+                "name": "corPresTempQF",
+                "label": "Corrected pressure quality flag that assesses whether temperature measurements for correcting pressure were available (0=yes, 1=no)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "corPresDewPtQF",
+                "label": "Corrected pressure quality flag that assesses whether dew point measurements for correcting pressure were available (0=yes, 1=no)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "corPresFinalQF",
+                "label": "Pressure corrected to sea level quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.000653 and NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "corPresFinalQFSciRvw",
+                "label": "Pressure corrected to sea level quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_2d_wind",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "source": "https://data.neonscience.org/data-products/DP1.00001.001",
+        "info": "Wind plays an important role in atmospheric and environmental sciences. A function of differential heating of Earth’s surface and subsequent pressure gradients, horizontal and vertical winds are responsible for advection of atmospheric pollutants, moisture, heat and momentum (Stull 1988). As such, horizontal and vertical winds will be measured throughout the Observatory.",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "windSpeedMean",
+                "label": "Arithmetic mean of wind speed over time period",
+                "unit": "metersPerSecond",
+                "temporalType": "avg"
+            },
+            {
+                "name": "windSpeedMinimum",
+                "label": "Minimum wind speed over time period",
+                "unit": "metersPerSecond",
+                "temporalType": "min"
+            },
+            {
+                "name": "windSpeedMaximum",
+                "label": "Maximum wind speed over time period",
+                "unit": "metersPerSecond",
+                "temporalType": "max"
+            },
+            {
+                "name": "windSpeedVariance",
+                "label": "Variance in wind speed",
+                "unit": "metersPerSecondSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of wind speed",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedExpUncert",
+                "label": "Expanded uncertainty for wind speed",
+                "unit": "metersPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedStdErMean",
+                "label": "Standard error of the mean for wind speed",
+                "unit": "metersPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedRangeFailQM",
+                "label": "Wind speed quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedRangePassQM",
+                "label": "Wind speed quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedRangeNAQM",
+                "label": "Wind speed quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedPersistenceFailQM",
+                "label": "Wind speed quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedPersistencePassQM",
+                "label": "Wind speed quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedPersistenceNAQM",
+                "label": "Wind speed quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedNullFailQM",
+                "label": "Wind speed quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedNullPassQM",
+                "label": "Wind speed quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedNullNAQM",
+                "label": "Wind speed quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedGapFailQM",
+                "label": "Wind speed quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedGapPassQM",
+                "label": "Wind speed quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedGapNAQM",
+                "label": "Wind speed quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedSensorErrorFailQM",
+                "label": "Wind speed quality metric that summarizes the failed outcomes of the sensor error test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedSensorErrorPassQM",
+                "label": "Wind speed quality metric that summarizes the passed outcomes of the sensor error test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedSensorErrorNAQM",
+                "label": "Wind speed quality metric that summarizes when the sensor error test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedValidCalFailQM",
+                "label": "Wind speed quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedValidCalPassQM",
+                "label": "Wind speed quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedValidCalNAQM",
+                "label": "Wind speed quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedAlphaQM",
+                "label": "Wind speed quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedBetaQM",
+                "label": "Wind speed quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedCalmWindQF",
+                "label": "Wind speed quality flag for the calm wind test, as detailed in NEON.DOC.000780 (1=fail, 0=pass, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedFinalQF",
+                "label": "Wind speed quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "windSpeedFinalQFSciRvw",
+                "label": "Wind speed quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirMean",
+                "label": "Arithmetic mean of wind direction",
+                "unit": "degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirVariance",
+                "label": "Variance in wind direction",
+                "unit": "degreesSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of wind direction",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirExpUncert",
+                "label": "Expanded uncertainty for wind direction",
+                "unit": "degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirStdErMean",
+                "label": "Standard error of the mean for wind direction",
+                "unit": "degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirPersistenceFailQM",
+                "label": "Wind direction quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirPersistencePassQM",
+                "label": "Wind direction quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirPersistenceNAQM",
+                "label": "Wind direction quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirNullFailQM",
+                "label": "Wind direction quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirNullPassQM",
+                "label": "Wind direction quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirNullNAQM",
+                "label": "Wind direction quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirGapFailQM",
+                "label": "Wind direction quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirGapPassQM",
+                "label": "Wind direction quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirGapNAQM",
+                "label": "Wind direction quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirSensorErrorFailQM",
+                "label": "Wind direction quality metric that summarizes the failed outcomes of the sensor error test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirSensorErrorPassQM",
+                "label": "Wind direction quality metric that summarizes the passed outcomes of the sensor error test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirSensorErrorNAQM",
+                "label": "Wind direction quality metric that summarizes when the sensor error test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirDistortedFlowFailQM",
+                "label": "Wind direction quality metric that summarizes the failed outcomes of the distorted flow test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirDistortedFlowPassQM",
+                "label": "Wind direction quality metric that summarizes the passed outcomes of the distorted flow test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirDistortedFlowNAQM",
+                "label": "Wind direction quality metric that summarizes when the distorted flow test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirValidCalFailQM",
+                "label": "Wind direction quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirValidCalPassQM",
+                "label": "Wind direction quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirValidCalNAQM",
+                "label": "Wind direction quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirAlphaQM",
+                "label": "Wind direction quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirBetaQM",
+                "label": "Wind direction quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirCalmWindQF",
+                "label": "Wind direction quality flag for the calm wind test, as detailed in NEON.DOC.000780 (1=fail, 0=pass, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirFinalQF",
+                "label": "Wind direction quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "windDirFinalQFSciRvw",
+                "label": "Wind direction quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_single_asp_air_temperature",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "source": "https://data.neonscience.org/data-products/DP1.00002.001",
+        "info": "Single aspirated air temperature measurements, available as one- and thirty-minute averages of 1 Hz observations. Temperature is one of the most fundamental physical measurements. It is a primary driving factor for countless physical, chemical, and biological processes. The single aspirated sensor assembly comprises an individual Platinum Resistance Thermometer (PRT) housed within an aspirated shield.",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "tempSingleMean",
+                "label": "Arithmetic mean of single aspirated air temperature over time period",
+                "unit": "celsius",
+                "temporalType": "avg"
+            },
+            {
+                "name": "tempSingleMinimum",
+                "label": "Minimum single aspirated air temperature over time period",
+                "unit": "celsius",
+                "temporalType": "min"
+            },
+            {
+                "name": "tempSingleMaximum",
+                "label": "Maximum single aspirated air temperature over time period",
+                "unit": "celsius",
+                "temporalType": "max"
+            },
+            {
+                "name": "tempSingleVariance",
+                "label": "Variance in single aspirated air temperature",
+                "unit": "celsiusSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempSingleNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of single aspirated air temperature",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempSingleExpUncert",
+                "label": "Expanded uncertainty for single aspirated air temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempSingleStdErMean",
+                "label": "Standard error of the mean for single aspirated air temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeNAQM",
+                "label": "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceFailQM",
+                "label": "Quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistencePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceNAQM",
+                "label": "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepNAQM",
+                "label": "Quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullNAQM",
+                "label": "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapNAQM",
+                "label": "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeNAQM",
+                "label": "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "flowFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the flow rate test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "flowPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the flow rate test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "flowNAQM",
+                "label": "Quality metric that summarizes when the flow rate test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterFailQM",
+                "label": "Quality metric that summarizes when the heater was on over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterPassQM",
+                "label": "Quality metric that summarizes when the heater was off over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterNAQM",
+                "label": "Quality metric that summarizes when the heater status was unknown over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalNAQM",
+                "label": "Quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "alphaQM",
+                "label": "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "betaQM",
+                "label": "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQF",
+                "label": "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQFSciRvw",
+                "label": "Quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_triple_asp_air_temperature",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "source": "https://data.neonscience.org/data-products/DP1.00003.001",
+        "info": "Triple aspirated air temperature measurements, available as one- and thirty-minute averages of 1 Hz observations. Temperature is one of the most fundamental physical measurements. It is a primary driving factor for countless physical, chemical, and biological processes. The triple aspirated sensor assembly comprises three individual Platinum Resistance Thermometers (PRTs) housed within an aspirated shield.",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "tempTripleMean",
+                "label": "Arithmetic mean of triple aspirated air temperature over time period",
+                "unit": "celsius",
+                "temporalType": "avg"
+            },
+            {
+                "name": "tempTripleMinimum",
+                "label": "Minimum triple aspirated air temperature over time period",
+                "unit": "celsius",
+                "temporalType": "min"
+            },
+            {
+                "name": "tempTripleMaximum",
+                "label": "Maximum triple aspirated air temperature over time period",
+                "unit": "celsius",
+                "temporalType": "max"
+            },
+            {
+                "name": "tempTripleVariance",
+                "label": "Variance in triple aspirated air temperature",
+                "unit": "celsiusSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempTripleNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of triple aspirated air temperature",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempTripleExpUncert",
+                "label": "Expanded uncertainty for triple aspirated air temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempTripleStdErMean",
+                "label": "Standard error of the mean for triple aspirated air temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeNAQM",
+                "label": "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceFailQM",
+                "label": "Quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistencePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceNAQM",
+                "label": "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepNAQM",
+                "label": "Quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullNAQM",
+                "label": "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapNAQM",
+                "label": "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeNAQM",
+                "label": "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "flowFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the flow rate test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "flowPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the flow rate test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "flowNAQM",
+                "label": "Quality metric that summarizes when the flow rate test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterFailQM",
+                "label": "Quality metric that summarizes when the heater was on over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterPassQM",
+                "label": "Quality metric that summarizes when the heater was off over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterNAQM",
+                "label": "Quality metric that summarizes when the heater status was unknown over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalNAQM",
+                "label": "Quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "alphaQM",
+                "label": "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "betaQM",
+                "label": "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQF",
+                "label": "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQFSciRvw",
+                "label": "Quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve0QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 0 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve1QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 1 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve2QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 2 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve3QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 3 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve4QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 4 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve5QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 5 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve6QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 6 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempAve7QM",
+                "label": "Quality metric that summarizes when the averaging flag was set to 7 over the averaging period, as a percent and detailed in NEON.DOC.000654",
+                "unit": "percent",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_ir_bio_temp",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "source": "https://data.neonscience.org/data-products/DP1.00005.001",
+        "info": "Infrared Biological Temperature (i.e., surface temperature) is available as one- and thirty-minute averages of 1 Hz observations. Biological temperature can be used in conjunction with other measurements to draw conclusions on topics such as plant respiration, evapotranspiration rates, and stomatal conductance.",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "bioTempMean",
+                "label": "Arithmetic mean of IR biological temperature over time period",
+                "unit": "celsius",
+                "temporalType": "avg"
+            },
+            {
+                "name": "bioTempMinimum",
+                "label": "Minimum IR biological temperature over time period",
+                "unit": "celsius",
+                "temporalType": "min"
+            },
+            {
+                "name": "bioTempMaximum",
+                "label": "Maximum IR biological temperature over time period",
+                "unit": "celsius",
+                "temporalType": "max"
+            },
+            {
+                "name": "bioTempVariance",
+                "label": "Variance in IR biological temperature",
+                "unit": "celsiusSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "bioTempNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of IR biological temperature",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "bioTempExpUncert",
+                "label": "Expanded uncertainty for IR biological temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "bioTempStdErMean",
+                "label": "Standard error of the mean for IR biological temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeNAQM",
+                "label": "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceFailQM",
+                "label": "Quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistencePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceNAQM",
+                "label": "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullNAQM",
+                "label": "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapNAQM",
+                "label": "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeNAQM",
+                "label": "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "NANFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the not a number test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "NANPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the not a number test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "NANNAQM",
+                "label": "Quality metric that summarizes when the not a number test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalNAQM",
+                "label": "Quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "alphaQM",
+                "label": "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "betaQM",
+                "label": "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQF",
+                "label": "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQFSciRvw",
+                "label": "Quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_secondary_precipitation",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "source": "https://data.neonscience.org/data-products/DP1.00006.001",
+        "info": "Across NEON sites two methods will be used to determine bulk precipitation. Bulk precipitation measurements at core sites consist of a weighing gauge surrounded by a double fence inter-comparison reference (DFIR). Bulk precipitation measurements at relocatable sites are made with a tipping bucket. Bulk precipitation measured using a DFIR and a weighing gauge is known to provide improved results over tipping bucket measurements. Thus, the weighing gauge surrounded by the DFIR is considered the “primary” method, while the tipping bucket is referred to as the “secondary” method.",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "secPrecipBulk",
+                "label": "Average Bulk secondary precipitation over time period",
+                "unit": "millimeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "secPrecipExpUncert",
+                "label": "Expanded uncertainty for secondary precipitation",
+                "unit": "millimeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipValidCalQF",
+                "label": "Secondary precipitation quality flag for the valid calibration check detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipRangeQF",
+                "label": "Secondary precipitation quality flag for the range test, which indicates whether a datum exceeds a realistic value, detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipSciRvwQF",
+                "label": "Secondary precipitation stand-alone quality flag (does not interact with final quality flag) indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipHeater0QM",
+                "label": "Secondary precipitation quality metric that summarizes when the heater flag was set to 0 over the averaging period, as a percent and detailed in NEON.DOC.000816",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipHeater1QM",
+                "label": "Secondary precipitation quality metric that summarizes when the heater flag was set to 1 over the averaging period, as a percent and detailed in NEON.DOC.000816",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipHeater2QM",
+                "label": "Secondary precipitation quality metric that summarizes when the heater flag was set to 2 over the averaging period, as a percent and detailed in NEON.DOC.000816",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "secPrecipHeater3QM",
+                "label": "Secondary precipitation quality metric that summarizes when the heater flag was set to 3 over the averaging period, as a percent and detailed in NEON.DOC.000816",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_throughfall_precipitation",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "source": "https://data.neonscience.org/data-products/DP1.00006.001",
+        "info": "Across NEON sites two methods will be used to determine bulk precipitation. Bulk precipitation measurements at core sites consist of a weighing gauge surrounded by a double fence inter-comparison reference (DFIR). Bulk precipitation measurements at relocatable sites are made with a tipping bucket. Bulk precipitation measured using a DFIR and a weighing gauge is known to provide improved results over tipping bucket measurements. Thus, the weighing gauge surrounded by the DFIR is considered the “primary” method, while the tipping bucket is referred to as the “secondary” method.",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "day"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "TFPrecipBulk",
+                "label": "Mean Bulk throughfall precipitation over Time period",
+                "unit": "millimeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "TFPrecipExpUncert",
+                "label": "Expanded uncertainty for throughfall precipitation",
+                "unit": "millimeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "TFPrecipValidCalQF",
+                "label": "Throughfall precipitation quality flag for the valid calibration check detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "TFPrecipRangeQF",
+                "label": "Throughfall precipitation quality flag for the range test, which indicates whether a bulk precipitation value exceeds a realistic value, detailed in NEON.DOC.011081 (1=fail, 0=pass, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "TFPrecipSciRvwQF",
+                "label": "Throughfall precipitation stand-alone quality flag (does not interact with final quality flag) indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
+    }
 ]

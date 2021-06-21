@@ -41,6 +41,14 @@ export default class AutoQuery {
 
         this.linked = this.data.linkedGeometry ? true : false;
 
+        if(layerData.temporal){
+            this.temporal = layerData.temporal;
+            this.temporalFields = Object.entries(layerData.constraints)
+                .filter(([constraintName, constraint]) => constraint.temporalType != null)
+                .reduce((acc, [constraintName, constraint]) => {
+                    return {...acc, [constraintName]: constraint.temporalType}
+                }, {});
+        }
 
         this.color = layerData.color;
         this.colorStyle = layerData.color.style;
@@ -49,10 +57,14 @@ export default class AutoQuery {
         this.graphPipeID = graphPipeID;
 
         this.blockerGroup = this.data.linkedGeometry ?
-            this.linked === "tract_geo_140mb_no_2d_index" ?
+            this.data.linkedGeometry === "tract_geo_140mb_no_2d_index" ?
                 "tracts" : "counties"
             : this.data.label ?
                 this.data.label : Util.cleanUpString(this.collection);
+        
+        if(this.data.linkedGeometry === "neon_sites"){ //edge case for now
+            this.blockerGroup = "Neon Sites";
+        }
                 
         if(this.blockerGroup.charAt(this.blockerGroup.length-1) !== "s"){
             this.blockerGroup += "s";
@@ -321,7 +333,6 @@ export default class AutoQuery {
 
         indexData[this.collection]["border"] = this.color.border;
         indexData[this.collection]["opacity"] = this.color.opacity;
-
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.add(id);
 
@@ -346,8 +357,11 @@ export default class AutoQuery {
       */
     buildConstraintPipeline() {
         let pipeline = [];
+        if(this.temporal){
+            pipeline = this.buildTemporalPreProcess();
+        }
         for (const constraintName in this.constraintState) {
-            if (this.constraintState[constraintName]) {
+            if (constraintName !== this.temporal && this.constraintState[constraintName]) {
                 const constraintData = this.constraintData[constraintName];
 
                 if (!this.constraintIsRelevant(constraintName, constraintData))
@@ -359,6 +373,25 @@ export default class AutoQuery {
         }
 
         return pipeline;
+    }
+
+    buildTemporalPreProcess() {
+        let groupStage = {
+            _id: `$${this.data.joinField}`,
+            [this.data.joinField]: {"$first": `$${this.data.joinField}`}
+        }
+        const fieldsNotGrouped = Object.keys(this.data.constraints).filter(name => !Object.keys(this.temporalFields).includes(name)) 
+        for(const field of fieldsNotGrouped){
+            groupStage[field] = {"$first": `$${field}`}
+        }
+        for(const [field, type] of Object.entries(this.temporalFields)){
+            groupStage[field] = { [`$${type}`]: `$${field}`}
+        }
+        groupStage = {
+            "$group": groupStage
+        }
+        
+        return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, groupStage]
     }
 
     addMongoProject() {

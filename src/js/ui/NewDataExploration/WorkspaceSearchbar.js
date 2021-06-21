@@ -24,10 +24,6 @@ function findLayerIndex(layerLabel, layerTitles) {
 }
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        margin: theme.spacing(1),
-    },
     icon: {
         float: 'right',
     },
@@ -39,13 +35,13 @@ const CustomTooltip = withStyles((theme) => ({
     },
 }))(Tooltip);
 
-function graphIcon(layer, graphableLayers, ) {
+function graphIcon(layer, graphableLayers) {
     if(isGraphable(layer, graphableLayers)) {
         return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
     }
 }
 
-function infoIcon(layerInfo, ) {
+function infoIcon(layerInfo) {
     if(layerInfo) {
         return <CustomTooltip title={layerInfo} placement="right" arrow><IconButton><InfoIcon color="primary" /></IconButton></CustomTooltip>
     }
@@ -113,7 +109,7 @@ export default function WorkspaceSearchbar(props) {
                     <TextField
                         {...params}
                         variant="outlined"
-                        label="Browse Datasets..."
+                        label="Explore Datasets..."
                     />
                 )}
             />

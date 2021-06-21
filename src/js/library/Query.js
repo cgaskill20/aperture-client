@@ -17,9 +17,18 @@ const defaultQuery = {
 
 const Query = {
     linked: {},
-    linkedCollections: [],
     backgroundLoader: null,
     queryWorker: new Worker(),
+    backgroundLoader: (linked) => { 
+        if(linked === "tract_geo_140mb_no_2d_index"){
+            return window.backgroundTract;
+        }
+        else if(linked === "county_geo_30mb_no_2d_index"){
+            return window.backgroundCounty;
+        }
+        return null;
+    },
+
     /**
       * Inits this namespace
       * @memberof Query
@@ -28,11 +37,12 @@ const Query = {
     init(queryableData) {
         for (const [collection, data] of Object.entries(queryableData)) {
             if (data.linkedGeometry) {
-                this.linked[collection] = data.linkedGeometry;
+                this.linked[collection] = { 
+                    collection: data.linkedGeometry,
+                    field: data.joinField
+                };
             }
         }
-        this.linkedCollections = [...new Set(Object.values(this.linked))]
-        this.backgroundLoader = (linked) => linked === "tract_geo_140mb_no_2d_index" ? window.backgroundTract : window.backgroundCounty;
     },
 
     /**
@@ -138,7 +148,7 @@ const Query = {
         });
     },
 
-    _linkedQuery(linked, query) {
+    _linkedQuery({collection, field}, query) {
         const { granularity, id } = query;
         const epsilon = 100;
         let waitingRoom = [];
@@ -178,7 +188,7 @@ const Query = {
             const { event } = d;
             if (event === "data") {
                 const complimentaryData = { ...d.payload.data };
-                const realData = waitingRoomSnapshot.find(entry => entry.GISJOIN === complimentaryData.GISJOIN);
+                const realData = waitingRoomSnapshot.find(entry => entry[field] === complimentaryData[field]);
                 Util.normalizeFeatureID(realData);
                 realData.id = `${realData.id}_${complimentaryData.id}`
                 realData.properties = {
@@ -199,16 +209,17 @@ const Query = {
 
         const dumpWaitingRoom = (final = false) => {
             const queryDump = JSON.parse(JSON.stringify(query))
-            const GISJOINS = waitingRoom.map(entry => entry.GISJOIN);
+            const JOINS = waitingRoom.map(entry => Util.resolvePath(field, entry));
             const waitingRoomSnapshot = JSON.parse(JSON.stringify(waitingRoom))
-            queryDump.pipeline = [{ "$match": { "GISJOIN": { "$in": GISJOINS } } }, ...queryDump.pipeline]
+            queryDump.pipeline = [{ "$match": { [field]: { "$in": JOINS } } }, ...queryDump.pipeline]
             queryDump.callback = (d) => { dumpCallback(d, !final, waitingRoomSnapshot) };
             this._queryMongo(queryDump);
             waitingRoom = [];
         }
 
         const queryLinked = JSON.parse(JSON.stringify(query))
-        queryLinked.collection = linked;
+        queryLinked.collection = collection;
+        queryLinked.pipeline = [];
         queryLinked.callback = waitingRoomListener;
         this._queryFineOrCoarse(queryLinked);
     },
@@ -218,7 +229,7 @@ const Query = {
         if (!query.geohashBlacklist) {
             query.geohashBlacklist = [];
         }
-        if (bounds && this.linkedCollections.includes(collection)) {
+        if (bounds && this.backgroundLoader(collection)) {
             this._queryPreloadedData(query)
         }
         else if (bounds) {

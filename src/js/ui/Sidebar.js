@@ -28,29 +28,12 @@ const useStyles = makeStyles((theme) => ({
     },
     drawerPaper: {
         width: drawerWidth,
-        opacity: 0.85,
-    },
-    content: {
-        flexGrow: 1,
-        padding: theme.spacing(3),
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        marginLeft: -drawerWidth,
-    },
-    contentShift: {
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: 0,
+        opacity: 0.95,
     },
 }));
 
 export default function Sidebar() {
     const classes = useStyles();
-    const theme = useTheme();
     const [open, setOpen] = useState(false);
 
     return (
@@ -76,12 +59,6 @@ export default function Sidebar() {
             >
                 <TabSystem handleDrawerClose={() => {setOpen(false)}}/>
             </Drawer>
-            {/*<main*/}
-            {/*    className={clsx(classes.content, {*/}
-            {/*        [classes.contentShift]: open,*/}
-            {/*    })}*/}
-            {/*>*/}
-            {/*</main>*/}
         </div>
     );
 }
