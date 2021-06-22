@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, Grid } from "@material-ui/core";
+import { Typography, Card, CardActionArea, CardContent, Grid } from "@material-ui/core";
 import LinkIcon from '@material-ui/icons/Link';
 
 const useStyles = makeStyles({
