@@ -13,7 +13,6 @@ import "./src/css/third-party/bootstrap4-toggle.min.css";
 import "./src/css/third-party/bootstrap.min.css";
 import "./src/css/third-party/MarkerCluster.css";
 import "./src/css/third-party/MarkerCluster.Default.css";
-import "./src/css/third-party/chart.css";
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
@@ -175,11 +174,11 @@ ReactDOM.render((<Root map={map}/>), uiRoot);
 // ReactDOM.render((<ModelMenu/>), modelContainer);
 
 
-import {closeNav} from "./src/js/static/navButtons";
+// import {closeNav} from "./src/js/static/navButtons";
 import "./src/js/static/darkMode.js";
 import "./src/js/library/charting/chartBtnNewChartWindow.js";
 
-map.on('click', function () {
-    closeNav();
-});
+// map.on('click', function () {
+//     closeNav();
+// });
 

@@ -115,29 +115,8 @@ export default {
      * @returns {string} name/id of feature, "none" if not found
      */
     getNameFromGeoJsonFeature: function (feature, indexData) {
-        let pTObj = this.getParamsAndTagsFromGeoJsonFeature(feature);
-        let params = pTObj.params;
-        let tagsObj = pTObj.tagsObj;
-        const datasource = indexData ? indexData : window.renderInfrastructure.data;
         if (indexData) { //this is quite a bit simpler than the other way.
             return Object.keys(indexData)[0];
-        }
-        for (element in datasource) {
-            if (datasource[element]["identityField"]) {
-                for (let i = 0; i < params.length; i++) {
-                    if (params[i] === datasource[element]["identityField"]) {
-                        if (datasource[element]["identityKey"]) {
-                            if (tagsObj[params[i]] === datasource[element]["identityKey"]) {
-                                return element;
-                            }
-                        }
-                        else {
-                            return element;
-                        }
-                    }
-                }
-            }
-
         }
         return 'none';
     },
@@ -300,8 +279,12 @@ export default {
      * @param {Object} feature geojson feature
      */
     normalizeFeatureID: function (feature) {
-        if (!feature.id && feature._id.$oid)
+        if (!feature.id && feature._id?.$oid) {
             feature.id = feature._id.$oid;
+        }
+        else if(typeof feature._id === "string") {
+            feature.id = feature._id;
+        }
     },
     /**                                                                            
      * Makes popup text
@@ -458,6 +441,19 @@ export default {
       */
     randomString(length) {
         return Math.random().toString(36).substring(2, 2 + length)
-    }
+    },
+    
+    /** Makes it so you can use mongoDB dot notation on objects, ie obj[field1.field2] = object[field1][field2]
+      * @memberof Util
+      * @method resolvePath
+      * @param {string} path - a single entry of GeoJSON data, as directly from the database
+      * @param {obj} obj
+      * @returns {?} whatever is the path
+      */
+    resolvePath(path, obj) {
+        return path.split('.').reduce(function(prev, curr) {
+            return prev ? prev[curr] : null
+        }, obj || self)
+    },
 }
 

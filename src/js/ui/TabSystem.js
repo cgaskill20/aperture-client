@@ -1,27 +1,28 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NewModeling from "./NewModeling/NewModeling";
 import Workspace from "./NewDataExploration/Workspace";
 import { useGlobalState } from "./global/GlobalState";
-import { showGraph } from "../library/charting/chartBtnNewChartWindow";
 import {Button, ButtonGroup} from "@material-ui/core";
 import ExploreIcon from '@material-ui/icons/Explore';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
 import EqualizerIcon from "@material-ui/icons/Equalizer";
+import CloseIcon from "@material-ui/icons/Close";
 
 export const componentIsRendering = false;
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        width: '98%',
+        width: '100%',
+        overflowX: "hidden",
     },
     buttonSpacing: {
-        margin: theme.spacing(2),
-        marginTop: theme.spacing(3),
+        margin: theme.spacing(3),
+    },
+    tabs: {
+        borderBottom: '2px solid #adadad',
     },
 }));
 
@@ -29,37 +30,24 @@ export default function TabSystem(props) {
     const classes = useStyles();
     const [globalState, setGlobalState] = useGlobalState();
 
-    //FIXME do something like this: selectedArray = [selectedDatasets, setSelectedDatasets]
-
-    const [dataExplorationDisplay, setDataExplorationDisplay] = useState({display: 'block'});
-    const [modelingDisplay, setModelingDisplay] = useState({display: 'none'})
-    const [dataExplorationButtonDisplay, setDataExplorationButtonDisplay] = useState('contained')
-    const [modelingButtonDisplay, setModelingButtonDisplay] = useState('outlined')
-    const [dataExplorationButtonColor, setDataExplorationButtonColor] = useState('primary')
-    const [modelingButtonColor, setModelingButtonColor] = useState('')
+    const tabSwitchingStyles = [[{display: 'block'}, 'contained', 'primary'], [{display: 'none'}, 'outlined', '']];
+    const [dataExplortaionButtonStyles, setDataExplorationButtonStyles] = useState(tabSwitchingStyles[0]);
+    const [modelingButtonStyles, setModelingButtonStyles] = useState(tabSwitchingStyles[1]);
     function switchTabs(index) {
         if(index === 0) {
-            setDataExplorationDisplay({display: 'block'});
-            setModelingDisplay({display: 'none'});
-            setDataExplorationButtonDisplay('contained');
-            setModelingButtonDisplay('outlined');
-            setDataExplorationButtonColor('primary');
-            setModelingButtonColor('');
+            setDataExplorationButtonStyles(tabSwitchingStyles[0]);
+            setModelingButtonStyles(tabSwitchingStyles[1]);
         }
         else if(index === 1) {
-            setDataExplorationDisplay({display: 'none'});
-            setModelingDisplay({display: 'block'});
-            setDataExplorationButtonDisplay('outlined');
-            setModelingButtonDisplay('contained');
-            setDataExplorationButtonColor('');
-            setModelingButtonColor('primary');
+            setDataExplorationButtonStyles(tabSwitchingStyles[1]);
+            setModelingButtonStyles(tabSwitchingStyles[0]);
         }
     }
 
     if(componentIsRendering) console.log("|TabSystem|");
     return (
         <div className={classes.root}>
-            <Paper>
+            <div className={classes.tabs}>
                 <Grid
                     container
                     spacing={3}
@@ -68,19 +56,20 @@ export default function TabSystem(props) {
                 >
                     <Grid item>
                         <ButtonGroup className={classes.buttonSpacing} size="large">
-                            <Button variant={dataExplorationButtonDisplay} color={dataExplorationButtonColor} startIcon={<ExploreIcon/>} onClick={() => switchTabs(0)}>Data Exploration</Button>
-                            <Button variant={modelingButtonDisplay} color={modelingButtonColor} startIcon={<DataUsageIcon/>} onClick={() => switchTabs(1)}>Modeling</Button>
-                            <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => showGraph}>Graphing</Button>
-                            <Button variant="outlined" startIcon={<ChevronLeftIcon/>} onClick={props.handleDrawerClose}>Close</Button>
+                            <Button variant={dataExplortaionButtonStyles[1]} color={dataExplortaionButtonStyles[2]} startIcon={<ExploreIcon/>} onClick={() => switchTabs(0)}>Data Exploration</Button>
+                            <Button variant={modelingButtonStyles[1]} color={modelingButtonStyles[2]} startIcon={<DataUsageIcon/>} onClick={() => switchTabs(1)}>Modeling</Button>
+                            <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => setGlobalState({ chartingOpen: !globalState.chartingOpen })}>Graphing</Button>
+                            <Button variant="outlined" startIcon={<CloseIcon/>} onClick={props.handleDrawerClose}>Close</Button>
                         </ButtonGroup>
                     </Grid>
                 </Grid>
-            </Paper>
+            </div>
+
             <br/>
-            <div id="data-exploration-display" style={dataExplorationDisplay}>
+            <div id="data-exploration-display" style={dataExplortaionButtonStyles[0]}>
                 <Workspace />
             </div>
-            <div id="modeling-display" style={modelingDisplay}>
+            <div id="modeling-display" style={modelingButtonStyles[0]}>
                 <NewModeling />
             </div>
         </div>

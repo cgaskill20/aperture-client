@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import {componentIsRendering} from "../TabSystem";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
     },
@@ -14,7 +14,7 @@ const useStyles = makeStyles({
     nowrap: {
         whiteSpace: "nowrap",
     },
-});
+}));
 
 export default function ConstraintSlider({constraint, querier}) {
     const classes = useStyles();
@@ -35,12 +35,15 @@ export default function ConstraintSlider({constraint, querier}) {
         }
     }, []);
 
+    const buildSliderLabel = () => {
+        return <b>{minMax[0]} ➔ {minMax[1]} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
+    }
     if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
             <Typography className={classes.title} id={`range-slider-${constraint.label}`} gutterBottom>
                 {constraint.label} &nbsp;
-                <span className={classes.nowrap}>{minMax[0]} - {minMax[1]}</span>
+                <span className={classes.nowrap}>{buildSliderLabel()}</span>
             </Typography>
             <Slider
                 value={minMax}

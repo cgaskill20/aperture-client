@@ -6,9 +6,7 @@ import AutoMenu from "../../library/autoMenu";
 import {componentIsRendering} from "../TabSystem";
 import Query from "../../library/Query";
 import Util from "../../library/apertureUtil";
-
-function overwrite() {}
-export const printHashes = false;
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,23 +53,33 @@ export default function Workspace() {
 
     useEffect(() => {
         $.getJSON("src/json/menumetadata.json", async function (mdata) {
-            const finalData = await AutoMenu.build(mdata, overwrite);
+            const finalData = await AutoMenu.build(mdata, () => {});
             Query.init(finalData);
             extractLayers(finalData);
         });
 
         $.getJSON("src/json/graphPriority.json", async function (mdata) {
-            const graphableLayers = await AutoMenu.build(mdata, overwrite);
+            const graphableLayers = await AutoMenu.build(mdata, () => {});
             extractGraphableLayers(graphableLayers);
         });
     }, []);
 
     if(componentIsRendering) {console.log("|Workspace Rerending|")}
     return (
-        <div className={classes.root}>
-            <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                               workspace={workspace} setWorkspace={setWorkspace} />
-            <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />
-        </div>
+        <Grid
+            className={classes.root}
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+        >
+            <Grid item className={classes.root}>
+                <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
+                                   workspace={workspace} setWorkspace={setWorkspace} />
+            </Grid>
+            <Grid item className={classes.root}>
+                <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />
+            </Grid>
+        </Grid>
     );
 }
