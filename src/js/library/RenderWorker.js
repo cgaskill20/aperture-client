@@ -46,7 +46,7 @@ const removeMultiple = (idsToRemove) => {
 }
 
 onmessage = function (msg) {
-    const { type, coords, toAdd, toRemove, senderID } = msg.data;
+    const { type, coords, coordsList, toAdd, toRemove, senderID } = msg.data;
     if (type === "add") {
         if (Array.isArray(toAdd)) {
             addMultiple(toAdd);
@@ -65,11 +65,26 @@ onmessage = function (msg) {
     }
     else if (type === "get") {
         const { x, y, z } = coords;
-        console.log(tileIndex)
+        tryUpdate();
+        //console.time(senderID)
+        const data = tileIndex.getTile(z,x,y);
+        //console.timeEnd(senderID)
         postMessage({
             type: "getResponse",
             senderID,
-            data: tileIndex.getTile(z,x,y)
+            data,
+            timeStart: Date.now()
+        });
+    }
+    else if (type === "getMany") {
+        tryUpdate();
+        const data = coordsList.map(({x,y,z}) => tileIndex.getTile(z,x,y));
+        //console.timeEnd(senderID)
+        postMessage({
+            type: "getResponse",
+            senderID,
+            data,
+            timeStart: Date.now()
         });
     }
 }
