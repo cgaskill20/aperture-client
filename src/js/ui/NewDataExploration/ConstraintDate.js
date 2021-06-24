@@ -2,9 +2,8 @@ import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import {componentIsRendering} from "../TabSystem";
-import { DatePicker } from '@material-ui/pickers'
 import Grid from "@material-ui/core/Grid";
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
 
 const configs = {
     year: {
@@ -13,7 +12,11 @@ const configs = {
     day: {
         views: ["year", "month", "day"],
         format: "MM/DD/yyyy"
-    }
+    },
+    "30min": {
+        views: ["year", "month", "day"],
+        format: "MM/DD/yyyy"
+    },
 }
 
 
@@ -51,7 +54,11 @@ export default function ConstraintDate({constraint, querier}) {
     const [minMaxDate, setMinMaxDate] = useState([epochToDate(min), epochToDate(max)]);
     const config = configs[constraint.step];
 
-    
+    function handleUpdate(e, setMin) {
+        setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
+            setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
+    }
+
     useEffect(() => {
         const minMaxCommited = [dateToEpoch(minMaxDate[0]), dateToEpoch(minMaxDate[1])]
         querier.updateConstraint(constraint.name, minMaxCommited);
@@ -64,63 +71,75 @@ export default function ConstraintDate({constraint, querier}) {
         }
     }, []);
 
+    function renderTime() {
+        if(constraint.step === "30min") {
+            return (
+                <div>
+                    <br/>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                        <Grid item className={classes.halfSize}>
+                            <KeyboardTimePicker
+                                label="Min Time"
+                                value={minMaxDate[0]}
+                                onChange={(e) => {
+                                    handleUpdate(e, true)
+                                }}
+                            />
+                        </Grid>
+                        <Grid item className={classes.halfSize}>
+                            <KeyboardTimePicker
+                                label="Max Time"
+                                value={minMaxDate[1]}
+                                onChange={(e) => {
+                                    handleUpdate(e, false)
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
+                </div>
+            );
+        }
+    }
+
     if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
-    console.log(minMaxDate[0])
-    console.log(minMaxDate[0].toISOString())
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
             <Grid container direction="row" justify="center" alignItems="center">
                 <Grid item>
                     <Typography className={classes.title} id={`date-picker-${constraint.label}`} gutterBottom>
-                        {/*<strong>{constraint.label}:</strong> &nbsp;*/}
                         <span className={classes.nowrap}>{minMaxDate[0].toDateString()} - {minMaxDate[1].toDateString()}</span>
                     </Typography>
                 </Grid>
             </Grid>
             <Grid container direction="row" justify="center" alignItems="center">
                 <Grid item className={classes.halfSize}>
-
                     <KeyboardDatePicker
+                        {...config}
                         label="Min Date"
-                        format="MM/dd/yyyy"
-                        // value={minMaxDate[0].toISOString()}
-                        value={'12-13-2017'}
+                        format="MM/DD/yyyy"
+                        value={minMaxDate[0]}
                         minDate={epochToDate(min)}
                         maxDate={minMaxDate[1]}
                         onChange={(e) => {
-                            setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]])
+                            handleUpdate(e, true)
                         }}
                     />
-
-                    {/*<DatePicker*/}
-                    {/*    className={classes.fullWidth}*/}
-                    {/*    {...config}*/}
-                    {/*    label="Min Date"*/}
-                    {/*    value={minMaxDate[0]}*/}
-                    {/*    minDate={epochToDate(min)}*/}
-                    {/*    maxDate={minMaxDate[1]}*/}
-                    {/*    onChange={(e) => {*/}
-                    {/*        setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]])*/}
-                    {/*    }}*/}
-                    {/*/>*/}
-
-
-
-                </Grid>
+            </Grid>
                 <Grid item className={classes.halfSize}>
-                    <DatePicker
-                        className={classes.fullWidth}
+                    <KeyboardDatePicker
                         {...config}
                         label="Max Date"
+                        format="MM/DD/yyyy"
                         value={minMaxDate[1]}
                         minDate={minMaxDate[0]}
                         maxDate={epochToDate(max)}
                         onChange={(e) => {
-                            setMinMaxDate([minMaxDate[0], new Date(e.valueOf())])
+                            handleUpdate(e, false)
                         }}
                     />
                 </Grid>
             </Grid>
+            {renderTime()}
          </div>
     );
 }
