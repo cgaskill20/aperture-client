@@ -1,6 +1,9 @@
 import geojsonvt from 'geojson-vt';
 import Util from './apertureUtil';
+import { str2sab } from './bufferUtils';
 //console.log = () => {}
+
+const sab = new SharedArrayBuffer(50000000)
 
 let featureArr = [];
 let shouldUpdate = false;
@@ -68,7 +71,8 @@ onmessage = function (msg) {
         tryUpdate();
         //console.time(senderID)
         const data = tileIndex.getTile(z,x,y);
-        //console.timeEnd(senderID)
+        const view = str2sab(JSON.stringify(data), sab)
+        console.log(view)
         postMessage({
             type: "getResponse",
             senderID,

@@ -1,5 +1,6 @@
 import Util from "./apertureUtil"
 import Worker from "./RenderWorker.js"
+import { str2sab, sab2str } from "./bufferUtils";
 const RenderWorker = new Worker();
 
 /**
@@ -14,6 +15,8 @@ let _currentCoordBatch = {
     id: Util.randomString(4), 
     sent: false
 };
+
+let maxSize = 0;
 
 const _coordBatchEpsilon = 10;
 
@@ -113,12 +116,17 @@ const RenderWorkerWrapper = {
      get: async (coords) => {
         const senderID = Util.randomString(4);
         return new Promise(resolve => {
-            console.time(senderID)
+            //console.time(senderID)
             const handleResponse = (msg) => {
                 const data = msg.data;
+                
+                if(len > maxSize){
+                    maxSize = len;
+                    console.log(`NEW MAX = ${len}`)
+                }
                 if(data.type === "getResponse" && data.senderID === senderID){
                     RenderWorker.removeEventListener("message", handleResponse);
-                    console.timeEnd(senderID)
+                    //console.timeEnd(senderID)
                     resolve(data.data);
                 }
             }
