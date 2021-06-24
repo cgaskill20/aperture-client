@@ -22,11 +22,12 @@ export default function HistogramGraph(props) {
     }
 
     let rerender = (width, height) => {
-        kde.setBandwidth(props.bandwidth)
 
-        if (!props.data || !props.selected) {
+        if (!props.data || !props.selected || props.data['map_features'][props.selected].length == 0) {
+
             return;
         }
+        kde.setBandwidth(props.bandwidth)
 
         let data = prepareData(props.data);
         let bins = d3.bin().thresholds(8)(data);
