@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import {componentIsRendering} from "../TabSystem";
 import { DatePicker } from '@material-ui/pickers'
 import Grid from "@material-ui/core/Grid";
+import { KeyboardDatePicker } from '@material-ui/pickers';
 
 const configs = {
     year: {
@@ -64,6 +65,7 @@ export default function ConstraintDate({constraint, querier}) {
     }, []);
 
     if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
+    console.log(minMaxDate[0])
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
             <Grid container direction="row" justify="center" alignItems="center">
@@ -76,10 +78,10 @@ export default function ConstraintDate({constraint, querier}) {
             </Grid>
             <Grid container direction="row" justify="center" alignItems="center">
                 <Grid item className={classes.halfSize}>
-                    <DatePicker
-                        className={classes.fullWidth}
-                        {...config}
+
+                    <KeyboardDatePicker
                         label="Min Date"
+                        format="MM/dd/yyyy"
                         value={minMaxDate[0]}
                         minDate={epochToDate(min)}
                         maxDate={minMaxDate[1]}
@@ -87,6 +89,21 @@ export default function ConstraintDate({constraint, querier}) {
                             setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]])
                         }}
                     />
+
+                    {/*<DatePicker*/}
+                    {/*    className={classes.fullWidth}*/}
+                    {/*    {...config}*/}
+                    {/*    label="Min Date"*/}
+                    {/*    value={minMaxDate[0]}*/}
+                    {/*    minDate={epochToDate(min)}*/}
+                    {/*    maxDate={minMaxDate[1]}*/}
+                    {/*    onChange={(e) => {*/}
+                    {/*        setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]])*/}
+                    {/*    }}*/}
+                    {/*/>*/}
+
+
+
                 </Grid>
                 <Grid item className={classes.halfSize}>
                     <DatePicker
