@@ -30,9 +30,6 @@ const useStyles = makeStyles({
     nowrap: {
         whiteSpace: "nowrap",
     },
-    fullWidth: {
-        width: '75%',
-    },
     halfSize: {
         width: '50%',
     },
