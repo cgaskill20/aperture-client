@@ -27,6 +27,7 @@ const RenderWorkerWrapper = {
     * @returns {string[]} list of id's which can be used to remove the added features
     **/
     add: async (toAdd) => {
+        console.log("add")
         RenderWorker.postMessage({
             type: "add",
             toAdd,
@@ -55,15 +56,14 @@ const RenderWorkerWrapper = {
     },
 
     /**
-    * Gets data from tile coords
+    * Gets data from tile coords without a shared array buffer
     * @memberof RenderWorkerWrapper
     * @param {object} coords xyz to get
     **/
-    get: async (coords) => {
+    getSafari: async (coords) => {
         return new Promise(resolve => {
             const senderID = _currentCoordBatch.id;
             _currentCoordBatch.list.push(coords);
-            console.log(JSON.stringify(coords))
             resolves[JSON.stringify(coords)] = resolve;
 
 
@@ -71,16 +71,15 @@ const RenderWorkerWrapper = {
                 if(_currentCoordBatch.id === senderID && !_currentCoordBatch.sent){
                     const handleResponse = (msg) => {
                         const data = msg.data;
-                        console.log({data})
                         if(data.type === "getManyResponse" && data.senderID === senderID){
                             RenderWorker.removeEventListener("message", handleResponse);
                             console.log(`MTime: ${Date.now() - data.timeStart}`)
-                            console.log(data.data)
+                            //console.log(data.data)
                             for(const d of data.data){
                                 const {x,y,z} = d;
                                 const id = JSON.stringify({x,y,z});
-                                console.log({id})
                                 resolves[id] && resolves[id](d)
+                                delete resolves[id]
                             }
                         }
                     }
@@ -104,7 +103,35 @@ const RenderWorkerWrapper = {
                 }
             }, _coordBatchEpsilon)
         });
-    }
+    },
+
+    /**
+    * Gets data from tile coords
+    * @memberof RenderWorkerWrapper
+    * @param {object} coords xyz to get
+    **/
+     get: async (coords) => {
+        const senderID = Util.randomString(4);
+        return new Promise(resolve => {
+            console.time(senderID)
+            const handleResponse = (msg) => {
+                const data = msg.data;
+                if(data.type === "getResponse" && data.senderID === senderID){
+                    RenderWorker.removeEventListener("message", handleResponse);
+                    console.timeEnd(senderID)
+                    resolve(data.data);
+                }
+            }
+
+            RenderWorker.addEventListener("message", handleResponse);
+
+            RenderWorker.postMessage({
+                type: "get",
+                coords,
+                senderID
+            });
+        });
+    },
 }
 
 export default RenderWorkerWrapper;

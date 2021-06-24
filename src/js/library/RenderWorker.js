@@ -77,8 +77,10 @@ onmessage = function (msg) {
         });
     }
     else if (type === "getMany") {
+        console.time("Processing")
         tryUpdate();
         const data = coordsList.map(({x,y,z}) => tileIndex.getTile(z,x,y)).filter(t => t != null);
+        console.timeEnd("Processing")
         postMessage({
             type: "getManyResponse",
             senderID,
