@@ -17,6 +17,8 @@ let _currentCoordBatch = {
 
 const _coordBatchEpsilon = 10;
 
+let resolves = {};
+
 const RenderWorkerWrapper = {
     /**
     * Adds to the render list
@@ -61,20 +63,30 @@ const RenderWorkerWrapper = {
         return new Promise(resolve => {
             const senderID = _currentCoordBatch.id;
             _currentCoordBatch.list.push(coords);
-            const handleResponse = (msg) => {
-                const data = msg.data;
-                if(data.type === "getResponse" && data.senderID === senderID){
-                    RenderWorker.removeEventListener("message", handleResponse);
-                    console.log(`MTime: ${Date.now() - data.timeStart}`)
-                    console.log(data.data)
-                    resolve();
-                }
-            }
+            console.log(JSON.stringify(coords))
+            resolves[JSON.stringify(coords)] = resolve;
 
-            RenderWorker.addEventListener("message", handleResponse);
 
             setTimeout(() => {
                 if(_currentCoordBatch.id === senderID && !_currentCoordBatch.sent){
+                    const handleResponse = (msg) => {
+                        const data = msg.data;
+                        console.log({data})
+                        if(data.type === "getManyResponse" && data.senderID === senderID){
+                            RenderWorker.removeEventListener("message", handleResponse);
+                            console.log(`MTime: ${Date.now() - data.timeStart}`)
+                            console.log(data.data)
+                            for(const d of data.data){
+                                const {x,y,z} = d;
+                                const id = JSON.stringify({x,y,z});
+                                console.log({id})
+                                resolves[id] && resolves[id](d)
+                            }
+                        }
+                    }
+                    RenderWorker.addEventListener("message", handleResponse);
+
+                    console.log(`SEMT ${senderID}`)
                     _currentCoordBatch.sent = true;
 
                     RenderWorker.postMessage({

@@ -1,6 +1,6 @@
 import geojsonvt from 'geojson-vt';
 import Util from './apertureUtil';
-console.log = () => {}
+//console.log = () => {}
 
 let featureArr = [];
 let shouldUpdate = false;
@@ -78,10 +78,9 @@ onmessage = function (msg) {
     }
     else if (type === "getMany") {
         tryUpdate();
-        const data = coordsList.map(({x,y,z}) => tileIndex.getTile(z,x,y));
-        //console.timeEnd(senderID)
+        const data = coordsList.map(({x,y,z}) => tileIndex.getTile(z,x,y)).filter(t => t != null);
         postMessage({
-            type: "getResponse",
+            type: "getManyResponse",
             senderID,
             data,
             timeStart: Date.now()
