@@ -12,7 +12,7 @@ const RenderWorker = new Worker();
 let _currentCoordBatch = {
     list: [],
     time: Date.now(),
-    id: Util.randomString(4), 
+    id: Util.randomString(4),
     sent: false
 };
 
@@ -71,16 +71,16 @@ const RenderWorkerWrapper = {
 
 
             setTimeout(() => {
-                if(_currentCoordBatch.id === senderID && !_currentCoordBatch.sent){
+                if (_currentCoordBatch.id === senderID && !_currentCoordBatch.sent) {
                     const handleResponse = (msg) => {
                         const data = msg.data;
-                        if(data.type === "getManyResponse" && data.senderID === senderID){
+                        if (data.type === "getManyResponse" && data.senderID === senderID) {
                             RenderWorker.removeEventListener("message", handleResponse);
                             console.log(`MTime: ${Date.now() - data.timeStart}`)
                             //console.log(data.data)
-                            for(const d of data.data){
-                                const {x,y,z} = d;
-                                const id = JSON.stringify({x,y,z});
+                            for (const d of data.data) {
+                                const { x, y, z } = d;
+                                const id = JSON.stringify({ x, y, z });
                                 resolves[id] && resolves[id](d)
                                 delete resolves[id]
                             }
@@ -100,7 +100,7 @@ const RenderWorkerWrapper = {
                     _currentCoordBatch = {
                         list: [],
                         time: Date.now(),
-                        id: Util.randomString(4), 
+                        id: Util.randomString(4),
                         sent: false
                     }
                 }
@@ -113,31 +113,48 @@ const RenderWorkerWrapper = {
     * @memberof RenderWorkerWrapper
     * @param {object} coords xyz to get
     **/
-     get: async (coords) => {
-        const senderID = Util.randomString(4);
+    get: async (coords) => {
         return new Promise(resolve => {
-            //console.time(senderID)
-            const handleResponse = (msg) => {
-                const data = msg.data;
-                
-                if(len > maxSize){
-                    maxSize = len;
-                    console.log(`NEW MAX = ${len}`)
-                }
-                if(data.type === "getResponse" && data.senderID === senderID){
-                    RenderWorker.removeEventListener("message", handleResponse);
-                    //console.timeEnd(senderID)
-                    resolve(data.data);
-                }
-            }
+            const senderID = _currentCoordBatch.id;
+            _currentCoordBatch.list.push(coords);
+            resolves[JSON.stringify(coords)] = resolve;
 
-            RenderWorker.addEventListener("message", handleResponse);
 
-            RenderWorker.postMessage({
-                type: "get",
-                coords,
-                senderID
-            });
+            setTimeout(() => {
+                if (_currentCoordBatch.id === senderID && !_currentCoordBatch.sent) {
+                    const handleResponse = (msg) => {
+                        const data = msg.data;
+                        if (data.type === "getManySABResponse" && data.senderID === senderID) {
+                            RenderWorker.removeEventListener("message", handleResponse);
+                            console.log(`MTime: ${Date.now() - data.timeStart}`)
+                            //console.log(data.data)
+                            for (const d of data.data) {
+                                const { x, y, z } = d;
+                                const id = JSON.stringify({ x, y, z });
+                                resolves[id] && resolves[id](d)
+                                delete resolves[id]
+                            }
+                        }
+                    }
+                    RenderWorker.addEventListener("message", handleResponse);
+
+                    console.log(`SEMT ${senderID}`)
+                    _currentCoordBatch.sent = true;
+
+                    RenderWorker.postMessage({
+                        type: "getManySAB",
+                        coordsList: _currentCoordBatch.list,
+                        senderID
+                    });
+
+                    _currentCoordBatch = {
+                        list: [],
+                        time: Date.now(),
+                        id: Util.randomString(4),
+                        sent: false
+                    }
+                }
+            }, _coordBatchEpsilon)
         });
     },
 }

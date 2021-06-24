@@ -1,9 +1,10 @@
 import geojsonvt from 'geojson-vt';
 import Util from './apertureUtil';
-import { str2sab } from './bufferUtils';
+import { sab2str, str2sab } from './bufferUtils';
 //console.log = () => {}
 
-const sab = new SharedArrayBuffer(50000000)
+const sabSize = 50000000;
+const sab = new SharedArrayBuffer(sabSize);
 
 let featureArr = [];
 let shouldUpdate = false;
@@ -48,7 +49,7 @@ const removeMultiple = (idsToRemove) => {
     featureArr.filter(feature => !idsToRemove.includes(feature.id));
 }
 
-onmessage = function (msg) {
+onmessage = async function (msg) {
     const { type, coords, coordsList, toAdd, toRemove, senderID } = msg.data;
     if (type === "add") {
         if (Array.isArray(toAdd)) {
@@ -66,17 +67,23 @@ onmessage = function (msg) {
             removeOne(toRemove);
         }
     }
-    else if (type === "get") {
-        const { x, y, z } = coords;
+    else if (type === "getManySAB") {
+        console.time("Processing")
         tryUpdate();
-        //console.time(senderID)
-        const data = tileIndex.getTile(z,x,y);
-        const view = str2sab(JSON.stringify(data), sab)
-        console.log(view)
+        //console.log(coordsList)
+        const data = coordsList.map(({x,y,z}) => tileIndex.getTile(z,x,y)).filter(t => t != null);
+        let bytesLeft = sabSize;
+        for(const d of data){
+            const stringified = JSON.stringify(d)
+            const byteTake = stringified.length * 2;
+            str2sab(stringified, sab)
+            console.log(sab2str(sab,stringified.length))
+        }
+        console.timeEnd("Processing")
         postMessage({
-            type: "getResponse",
+            type: "getManySABResponse",
             senderID,
-            data,
+            final: true,
             timeStart: Date.now()
         });
     }
