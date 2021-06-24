@@ -81,7 +81,6 @@ onmessage = async function (msg) {
             let arr = [];
             data = data.filter((d) => {
                 const byteTake = d.length * 2 + 2;
-                console.log({bytesLeft, byteTake})
                 if (bytesLeft - byteTake > 0) {
                     bytesLeft -= byteTake;
                     arr.push(d);
@@ -89,7 +88,17 @@ onmessage = async function (msg) {
                 }
                 return true;
             });
-            
+            await new Promise(resolve => {
+                const arrStr = JSON.stringify(arr);
+                str2sab(JSON.stringify(arr), sab)
+                postMessage({
+                    type: "getManySABResponse",
+                    senderID,
+                    sab,
+                    length: arrStr,
+                    timeStart: Date.now()
+                });
+            });
         }
         console.timeEnd("Processing")
         postMessage({
