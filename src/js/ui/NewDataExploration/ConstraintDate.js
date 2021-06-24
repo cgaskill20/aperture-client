@@ -66,6 +66,7 @@ export default function ConstraintDate({constraint, querier}) {
 
     if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
     console.log(minMaxDate[0])
+    console.log(minMaxDate[0].toISOString())
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
             <Grid container direction="row" justify="center" alignItems="center">
@@ -82,7 +83,8 @@ export default function ConstraintDate({constraint, querier}) {
                     <KeyboardDatePicker
                         label="Min Date"
                         format="MM/dd/yyyy"
-                        value={minMaxDate[0]}
+                        // value={minMaxDate[0].toISOString()}
+                        value={'12-13-2017'}
                         minDate={epochToDate(min)}
                         maxDate={minMaxDate[1]}
                         onChange={(e) => {
