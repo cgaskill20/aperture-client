@@ -71,13 +71,25 @@ onmessage = async function (msg) {
         console.time("Processing")
         tryUpdate();
         //console.log(coordsList)
-        const data = coordsList.map(({x,y,z}) => tileIndex.getTile(z,x,y)).filter(t => t != null);
-        let bytesLeft = sabSize;
-        for(const d of data){
-            const stringified = JSON.stringify(d)
-            const byteTake = stringified.length * 2;
-            str2sab(stringified, sab)
-            console.log(sab2str(sab,stringified.length))
+        let data = coordsList.map(({ x, y, z }) => tileIndex.getTile(z, x, y))
+            .filter(d => d != null)
+            .map(d => JSON.stringify(d))
+            //.sort((a,b) => b - a);
+
+        while (data.length > 0) {
+            let bytesLeft = sabSize - 4;
+            let arr = [];
+            data = data.filter((d) => {
+                const byteTake = d.length * 2 + 2;
+                console.log({bytesLeft, byteTake})
+                if (bytesLeft - byteTake > 0) {
+                    bytesLeft -= byteTake;
+                    arr.push(d);
+                    return false;
+                }
+                return true;
+            });
+            
         }
         console.timeEnd("Processing")
         postMessage({
@@ -90,7 +102,7 @@ onmessage = async function (msg) {
     else if (type === "getMany") {
         console.time("Processing")
         tryUpdate();
-        const data = coordsList.map(({x,y,z}) => tileIndex.getTile(z,x,y)).filter(t => t != null);
+        const data = coordsList.map(({ x, y, z }) => tileIndex.getTile(z, x, y)).filter(t => t != null);
         console.timeEnd("Processing")
         postMessage({
             type: "getManyResponse",
