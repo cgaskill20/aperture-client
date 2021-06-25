@@ -211,7 +211,9 @@ export default class ChartSystem {
             for (const source of Object.values(DataSourceType)) {
                 data[source.name] = await source.sourceInstance.get();
             }
-            consumer.dataCallback(data);
+            if (consumer.valid) {
+                consumer.dataCallback(data);
+            }
         })
         
         this.doNotUpdate = true;
@@ -219,10 +221,14 @@ export default class ChartSystem {
     }
 
     registerDataConsumer(id, setData) {
-        this.dataConsumers.push({ id: id, dataCallback: setData });
+        this.dataConsumers.push({ id: id, dataCallback: setData, valid: true });
     }
 
     unregisterDataConsumer(id) {
-        this.dataConsumers = this.dataConsumers.filter(c => c.id !== id);
+        this.dataConsumers.find(e => e.id === id).valid = false;
+    }
+
+    cleanupUnregisteredConsumers() {
+        this.dataConsumers = this.dataConsumers.filter(e => e.valid);
     }
 }
