@@ -45,15 +45,28 @@ export default function Popup() {
 
     const dateToDisplay = (value) => {
         if(typeof value === 'number'){
-            return epochToString(value);
+            return epochToDateString(value);
         }
-        console.log({value})
+        else if(typeof value === 'object'){
+            return mongoObjectToDateString(value);
+        }
         return JSON.stringify(value)
     }
 
-    const epochToString = (epoch) => {
+    const epochToDateString = (epoch) => {
         const str = new Date(epoch).toUTCString();
         return str.substr(0,str.length - 4);
+    }
+
+    const mongoObjectToDateString = (object) => {
+        if(object.$numberLong){
+            if(typeof object.$numberLong === 'string'){
+                object.$numberLong = Number(object.$numberLong);
+            }
+            return epochToDateString(object.$numberLong);
+        }
+        console.log({object})
+        return JSON.stringify(object)
     }
 
     const makeTable = () => {
