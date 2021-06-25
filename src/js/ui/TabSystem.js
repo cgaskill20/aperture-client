@@ -69,10 +69,10 @@ export default function TabSystem(props) {
             <br/>
             <div id="data-exploration-display" style={dataExplortaionButtonStyles[0]}>
                 <Workspace />
+                <Popup />
             </div>
             <div id="modeling-display" style={modelingButtonStyles[0]}>
                 <NewModeling />
-                <Popup />
             </div>
         </div>
     );
