@@ -14,7 +14,8 @@ const Root = ({ map }) => {
         mode: "dataExploration",
         chartingOpen: false,
         clusterLegendOpen: false,
-        preloading: true
+        preloading: true,
+        sidebarOpen: false
     }
 
 
