@@ -5,6 +5,8 @@ import {componentIsRendering} from "../TabSystem";
 import Grid from "@material-ui/core/Grid";
 import { KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
 import {Alert} from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 const configs = {
     year: {
@@ -34,10 +36,6 @@ const useStyles = makeStyles({
     halfSize: {
         width: '50%',
     },
-    errorMessage: {
-        width: '50%',
-        display: "none"
-    },
 });
 
 const epochToDate = (epoch) => {
@@ -56,9 +54,9 @@ export default function ConstraintDate({constraint, querier}) {
     const [minMaxDate, setMinMaxDate] = useState([epochToDate(min), epochToDate(max)]);
     const config = configs[constraint.step];
 
-    let errorMessageDisplay = [{display: "none"}, {display: "block"}];
-    const [minErrorMessage, setMinErrorMessage] = useState(errorMessageDisplay[0]);
-    const [maxErrorMessage, setMaxErrorMessage] = useState(errorMessageDisplay[0]);
+    let errorMessageDisplay = [{display: "none"}, {display: "block", width: '100%'}];
+    const [errorMessage, setErrorMessage] = useState(errorMessageDisplay[0]);
+    const [errorMessageText, setErrorMessageText] = useState("");
 
     useEffect(() => {
         const minMaxCommited = [dateToEpoch(minMaxDate[0]), dateToEpoch(minMaxDate[1])]
@@ -80,60 +78,17 @@ export default function ConstraintDate({constraint, querier}) {
     }
 
     function handleTimeUpdate(e, setMin) {
-        const newTime = new Date(e.valueOf());
-        if(setMin && newTime > minMaxDate[1]) {
-            setMinErrorMessage(errorMessageDisplay[1]);
-        }
-        else if(newTime < minMaxDate[0]) {
-            setMaxErrorMessage(errorMessageDisplay[1]);
-        }
-        else if(e){
-            setMinErrorMessage(errorMessageDisplay[0]);
-            setMaxErrorMessage(errorMessageDisplay[0]);
-            setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
-                setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
-        }
-    }
-
-    function renderTime() {
-        if(constraint.step === "30min") {
-            return (
-                <div>
-                    <br/>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                        <Grid item className={classes.halfSize}>
-                            <KeyboardTimePicker
-                                label="Min Time"
-                                value={minMaxDate[0]}
-                                minDate={epochToDate(min)}
-                                maxDate={minMaxDate[1]}
-                                onChange={(e) => {
-                                    handleTimeUpdate(e, true)
-                                }}
-                            />
-                        </Grid>
-                        <Grid item className={classes.halfSize}>
-                            <KeyboardTimePicker
-                                label="Max Time"
-                                value={minMaxDate[1]}
-                                minDate={minMaxDate[0]}
-                                maxDate={epochToDate(max)}
-                                onChange={(e) => {
-                                    handleTimeUpdate(e, false)
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                        <Grid id="min-time-error-message" item className={classes.halfSize} style={minErrorMessage}>
-                            <Alert severity="error">Min Time must be less than Max Time</Alert>
-                        </Grid>
-                        <Grid id="max-time-error-message" item className={classes.halfSize} style={maxErrorMessage}>
-                            <Alert severity="error">Max Time must be greater than Min Time</Alert>
-                        </Grid>
-                    </Grid>
-                </div>
-            );
+        if(e) {
+            const newTime = new Date(e.valueOf());
+            if (setMin && newTime > minMaxDate[1] || !setMin && newTime < minMaxDate[0]) {
+                setErrorMessageText(setMin ? "Min Date must be less than Max Date" : "Max Date must be greater than Min Date");
+                setErrorMessage(errorMessageDisplay[1]);
+            }
+            else {
+                setErrorMessage(errorMessageDisplay[0]);
+                setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
+                    setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
+            }
         }
     }
 
@@ -176,4 +131,52 @@ export default function ConstraintDate({constraint, querier}) {
             {renderTime()}
          </div>
     );
+
+    function renderTime() {
+        if(constraint.step === "30min") {
+            return (
+                <div>
+                    <br/>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                        <Grid item className={classes.halfSize}>
+                            <KeyboardTimePicker
+                                label="Min Time"
+                                value={minMaxDate[0]}
+                                minDate={epochToDate(min)}
+                                maxDate={minMaxDate[1]}
+                                onChange={(e) => {
+                                    handleTimeUpdate(e, true)
+                                }}
+                            />
+                        </Grid>
+                        <Grid item className={classes.halfSize}>
+                            <KeyboardTimePicker
+                                label="Max Time"
+                                value={minMaxDate[1]}
+                                minDate={minMaxDate[0]}
+                                maxDate={epochToDate(max)}
+                                onChange={(e) => {
+                                    handleTimeUpdate(e, false)
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
+                    {renderErrorMessage()}
+                </div>
+            );
+        }
+    }
+
+    function renderErrorMessage() {
+        return <div style={errorMessage}>
+            <br/>
+            <Alert severity="error">{errorMessageText}
+                <span>
+                        <IconButton onClick={() => {setErrorMessage(errorMessageDisplay[0])}}>
+                          <HighlightOffIcon />
+                        </IconButton>
+                    </span>
+            </Alert>
+        </div>
+    }
 }
