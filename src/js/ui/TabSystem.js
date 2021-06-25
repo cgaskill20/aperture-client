@@ -9,6 +9,7 @@ import ExploreIcon from '@material-ui/icons/Explore';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import CloseIcon from "@material-ui/icons/Close";
+import Popup from './widgets/Popup';
 
 export const componentIsRendering = false;
 
@@ -71,6 +72,7 @@ export default function TabSystem(props) {
             </div>
             <div id="modeling-display" style={modelingButtonStyles[0]}>
                 <NewModeling />
+                <Popup />
             </div>
         </div>
     );
