@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import {componentIsRendering} from "../TabSystem";
 import Grid from "@material-ui/core/Grid";
 import { KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
+import {Alert} from "@material-ui/lab";
 
 const configs = {
     year: {
@@ -33,6 +34,10 @@ const useStyles = makeStyles({
     halfSize: {
         width: '50%',
     },
+    errorMessage: {
+        width: '50%',
+        display: "none"
+    },
 });
 
 const epochToDate = (epoch) => {
@@ -51,6 +56,10 @@ export default function ConstraintDate({constraint, querier}) {
     const [minMaxDate, setMinMaxDate] = useState([epochToDate(min), epochToDate(max)]);
     const config = configs[constraint.step];
 
+    let errorMessageDisplay = [{display: "none"}, {display: "block"}];
+    const [minErrorMessage, setMinErrorMessage] = useState(errorMessageDisplay[0]);
+    const [maxErrorMessage, setMaxErrorMessage] = useState(errorMessageDisplay[0]);
+
     useEffect(() => {
         const minMaxCommited = [dateToEpoch(minMaxDate[0]), dateToEpoch(minMaxDate[1])]
         querier.updateConstraint(constraint.name, minMaxCommited);
@@ -63,8 +72,24 @@ export default function ConstraintDate({constraint, querier}) {
         }
     }, []);
 
-    function handleUpdate(e, setMin) {
+    function handleDateUpdate(e, setMin) {
         if(e){
+            setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
+                setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
+        }
+    }
+
+    function handleTimeUpdate(e, setMin) {
+        const newTime = new Date(e.valueOf());
+        if(setMin && newTime > minMaxDate[1]) {
+            setMinErrorMessage(errorMessageDisplay[1]);
+        }
+        else if(newTime < minMaxDate[0]) {
+            setMaxErrorMessage(errorMessageDisplay[1]);
+        }
+        else if(e){
+            setMinErrorMessage(errorMessageDisplay[0]);
+            setMaxErrorMessage(errorMessageDisplay[0]);
             setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
                 setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
         }
@@ -83,7 +108,7 @@ export default function ConstraintDate({constraint, querier}) {
                                 minDate={epochToDate(min)}
                                 maxDate={minMaxDate[1]}
                                 onChange={(e) => {
-                                    handleUpdate(e, true)
+                                    handleTimeUpdate(e, true)
                                 }}
                             />
                         </Grid>
@@ -94,9 +119,17 @@ export default function ConstraintDate({constraint, querier}) {
                                 minDate={minMaxDate[0]}
                                 maxDate={epochToDate(max)}
                                 onChange={(e) => {
-                                    handleUpdate(e, false)
+                                    handleTimeUpdate(e, false)
                                 }}
                             />
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                        <Grid id="min-time-error-message" item className={classes.halfSize} style={minErrorMessage}>
+                            <Alert severity="error">Min Time must be less than Max Time</Alert>
+                        </Grid>
+                        <Grid id="max-time-error-message" item className={classes.halfSize} style={maxErrorMessage}>
+                            <Alert severity="error">Max Time must be greater than Min Time</Alert>
                         </Grid>
                     </Grid>
                 </div>
@@ -123,7 +156,7 @@ export default function ConstraintDate({constraint, querier}) {
                         minDate={epochToDate(min)}
                         maxDate={minMaxDate[1]}
                         onChange={(e) => {
-                            handleUpdate(e, true)
+                            handleDateUpdate(e, true)
                         }}
                     />
             </Grid>
@@ -135,7 +168,7 @@ export default function ConstraintDate({constraint, querier}) {
                         minDate={minMaxDate[0]}
                         maxDate={epochToDate(max)}
                         onChange={(e) => {
-                            handleUpdate(e, false)
+                            handleDateUpdate(e, false)
                         }}
                     />
                 </Grid>
