@@ -7,20 +7,20 @@ import ScatterPlot from "./ChartTemplates/ScatterPlot";
 import KDEWrapper from "./KDEWrapper";
 import BoxPlot from "./ChartTemplates/BoxPlotChart";
 import RadarChart from "./ChartTemplates/RadarChart";
-
+import FrameControls from "./frameControls";
 
 
 export default function Frame(props) {
 
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
+
+    let frame;
     const [constraint, setConstraint] = useState();
     const [constraint2, setConstraint2] = useState();
-    let frame;
-    let data = props.data
     let selectedConstraints = []
-    if(data['map_features']){
-        Object.keys(data['map_features']).map(constraint =>{
-            if(data['map_features'][constraint].length > 0){
+    if(props.data['map_features']){
+        Object.keys(props.data['map_features']).map(constraint =>{
+            if(props.data['map_features'][constraint].length > 0){
                 selectedConstraints.push(constraint)
             }
         })
@@ -31,7 +31,7 @@ export default function Frame(props) {
         case "histogram":
             frame =
                 <div>
-                    <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
+                    <FrameControls options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                     <KDEWrapper>
                         <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph>
                     </KDEWrapper>
