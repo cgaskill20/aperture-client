@@ -70,14 +70,14 @@ export default function ConstraintDate({constraint, querier}) {
         }
     }, []);
 
-    function handleDateUpdate(e, setMin) {
-        if(e){
-            setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
-                setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
-        }
-    }
+    // function handleDateUpdate(e, setMin) {
+    //     if(e){
+    //         setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
+    //             setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
+    //     }
+    // }
 
-    function handleTimeUpdate(e, setMin) {
+    function handleDateUpdate(e, setMin) {
         if(e) {
             const newTime = new Date(e.valueOf());
             if (setMin && newTime > minMaxDate[1] || !setMin && newTime < minMaxDate[0]) {
@@ -145,7 +145,7 @@ export default function ConstraintDate({constraint, querier}) {
                                 minDate={epochToDate(min)}
                                 maxDate={minMaxDate[1]}
                                 onChange={(e) => {
-                                    handleTimeUpdate(e, true)
+                                    handleDateUpdate(e, true)
                                 }}
                             />
                         </Grid>
@@ -156,7 +156,7 @@ export default function ConstraintDate({constraint, querier}) {
                                 minDate={minMaxDate[0]}
                                 maxDate={epochToDate(max)}
                                 onChange={(e) => {
-                                    handleTimeUpdate(e, false)
+                                    handleDateUpdate(e, false)
                                 }}
                             />
                         </Grid>
