@@ -64,7 +64,7 @@ export default function Frame(props) {
 
         <div style={{
             width: "100%",
-            height: props.size.height - 80,
+            height: props.size.height - 200,
         }}>
             {frame}
         </div>
