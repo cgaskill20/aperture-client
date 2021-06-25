@@ -9,7 +9,7 @@ const widgetEnum = {
     defensiveOptimization: 0,
     clusterLegend: 1,
     preloading: 2,
-    chartingResizble: 3,
+    chartingResizable: 3,
 }
 
 const ConditionalWidgetRendering = () => {

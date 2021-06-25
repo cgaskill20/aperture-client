@@ -55,22 +55,9 @@ END OF TERMS AND CONDITIONS
 
 */
 
-import SingleChartManager from "./singleChartManager";
-import SingleChartArea from "./singleChartArea";
-import LineGraph from "./lineGraph";
-import Histogram from "./histogram";
-import Scatterplot from "./scatterplot";
-import ScatterplotManager from "./scatterplotManager";
-import ScatterplotArea from "./scatterplotArea";
-import LineChartManager from "./lineChartManager";
-import LineChartArea from "./lineChartArea";
-import ValidFeatureManager from "./validFeatureManager";
-import Feature from "./feature";
-import resizable from "../resizable";
-import ChartFrame from "./chartFrame";
-import CovidDataSource from "./covidDataSource"
-import MapDataSource from "./mapDataSource"
-import HistogramChart from '../../ui/NewCharting/HistogramChart';
+import Feature from "../../library/charting/feature";
+import CovidDataSource from "../../library/charting/covidDataSource"
+import MapDataSource from "../../library/charting/mapDataSource"
 
 // An enumeration of each type of data source recognized by the ChartSystem.
 // See DataSource for more information about what a "data source" is.
@@ -81,15 +68,11 @@ export const DataSourceType = {
         name: "map_features",
         sourceType: MapDataSource,
         sourceInstance: undefined,
-        supplementObjectType: ValidFeatureManager,
-        supplementObjectInstance: undefined,
     },
     COUNTY_COVID: {
         name: "county_covid",
         sourceType: CovidDataSource,
         sourceInstance: undefined,
-        supplementObjectType: undefined,
-        supplementObjectInstance: undefined,
     }
 };
 
@@ -101,24 +84,18 @@ export const DataSourceType = {
 export const ChartingType = {
     LINE: {
         name: "line",
-        managerType: LineChartManager,
-        areaType: SingleChartArea,
-        chartType: LineGraph,
         wantsSources: [ DataSourceType.COUNTY_COVID ],
     },
     HISTOGRAM: {
         name: "histogram",
-        managerType: SingleChartManager,
-        areaType: SingleChartArea,
-        chartType: Histogram,
-        componentType: HistogramChart,
         wantsSources: [ DataSourceType.MAP_FEATURES ],
     },
     SCATTERPLOT: {
         name: "scatterplot",
-        managerType: ScatterplotManager,
-        areaType: ScatterplotArea,
-        chartType: Scatterplot,
+        wantsSources: [ DataSourceType.MAP_FEATURES ],
+    },
+    PIEGRAPH:{
+        name: "piegraph",
         wantsSources: [ DataSourceType.MAP_FEATURES ],
     },
 };
@@ -196,6 +173,9 @@ export default class ChartSystem {
     }
 
     initializeUpdateHooks() {
+        let interval = window.setInterval(e =>{
+            this.update();
+        }, 2000);
         this.map.on('move', e => { 
             this.update(); 
         });
@@ -228,21 +208,29 @@ export default class ChartSystem {
 
         this.dataConsumers.forEach(async consumer => {
             let data = {};
-            Object.values(DataSourceType).forEach(async source => {
+            for (const source of Object.values(DataSourceType)) {
                 data[source.name] = await source.sourceInstance.get();
-            });
-            consumer.dataCallback(data);
-        });
+            }
+            if (consumer.valid) {
+                consumer.dataCallback(data);
+            }
+        })
         
         this.doNotUpdate = true;
         window.setTimeout(() => { this.doNotUpdate = false; }, 200);
+
+        this.cleanupUnregisteredConsumers();
     }
 
     registerDataConsumer(id, setData) {
-        this.dataConsumers.push({ id: id, dataCallback: setData });
+        this.dataConsumers.push({ id: id, dataCallback: setData, valid: true });
     }
 
     unregisterDataConsumer(id) {
-        this.dataConsumers = this.dataConsumers.filter(c => c.id !== id);
+        this.dataConsumers.find(e => e.id === id).valid = false;
+    }
+
+    cleanupUnregisteredConsumers() {
+        this.dataConsumers = this.dataConsumers.filter(e => e.valid);
     }
 }

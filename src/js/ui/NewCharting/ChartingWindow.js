@@ -9,7 +9,6 @@ export default function ChartingWindow(props) {
     const addChartFrame = frame => {   
         setFrames(frames.concat([frame.type]))
     }
-
     return (
         <Grid container>
             <Grid container direction="row" alignItems="center" justify="center" spacing={1}>
