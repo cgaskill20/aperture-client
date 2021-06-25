@@ -18,6 +18,9 @@ export default function Popup() {
     }, [])
 
     const makeTable = () => {
+        if(!obj?.properties){
+            return;
+        }
         return <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
                 <TableHead>
@@ -27,7 +30,7 @@ export default function Popup() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {Object.entries(obj).map(([key, value]) => (
+                    {Object.entries(obj.properties).map(([key, value]) => (
                         <TableRow key={key}>
                             <TableCell component="th" scope="row">
                                 {key}

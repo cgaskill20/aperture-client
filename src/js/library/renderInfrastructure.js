@@ -101,11 +101,15 @@ export default class RenderInfrastructure {
                 }
                 layer.specifiedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
                 let iconName = Util.getNameFromGeoJsonFeature(feature, indexData);
-                let obj = Util.getParamsAndTagsFromGeoJsonFeature(feature).tagsObj
-                this.addIconToMap(iconName, latlng, obj, indexData, layer.specifiedId);
+                let popupObj = {
+                    name: iconName,
+                    meta: feature.properties.meta,
+                    properties: feature.properties
+                }
+                this.addIconToMap(iconName, latlng, popupObj, indexData, layer.specifiedId);
                 //layer.bindPopup(iconDetails);
                 layer.on('click', function (e) {
-                    window.setPopupObj(obj);
+                    window.setPopupObj(popupObj);
                     this.map.flyTo(e.latlng, this.map.getZoom(), FLYTOOPTIONS);
                     if (datasource[iconName].onClick) {
                         datasource[iconName].onClick(this.layerGroup);
