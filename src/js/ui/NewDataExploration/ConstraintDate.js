@@ -64,8 +64,10 @@ export default function ConstraintDate({constraint, querier}) {
     }, []);
 
     function handleUpdate(e, setMin) {
-        setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
-            setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
+        if(e){
+            setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
+                setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
+        }
     }
 
     function renderTime() {
@@ -78,6 +80,8 @@ export default function ConstraintDate({constraint, querier}) {
                             <KeyboardTimePicker
                                 label="Min Time"
                                 value={minMaxDate[0]}
+                                minDate={epochToDate(min)}
+                                maxDate={minMaxDate[1]}
                                 onChange={(e) => {
                                     handleUpdate(e, true)
                                 }}
@@ -87,6 +91,8 @@ export default function ConstraintDate({constraint, querier}) {
                             <KeyboardTimePicker
                                 label="Max Time"
                                 value={minMaxDate[1]}
+                                minDate={minMaxDate[0]}
+                                maxDate={epochToDate(max)}
                                 onChange={(e) => {
                                     handleUpdate(e, false)
                                 }}
@@ -111,7 +117,6 @@ export default function ConstraintDate({constraint, querier}) {
             <Grid container direction="row" justify="center" alignItems="center">
                 <Grid item className={classes.halfSize}>
                     <KeyboardDatePicker
-                        margin="normal"
                         label="Min Date"
                         format="MM/DD/yyyy"
                         value={minMaxDate[0]}
@@ -124,7 +129,6 @@ export default function ConstraintDate({constraint, querier}) {
             </Grid>
                 <Grid item className={classes.halfSize}>
                     <KeyboardDatePicker
-                        margin="normal"
                         label="Max Date"
                         format="MM/DD/yyyy"
                         value={minMaxDate[1]}
