@@ -18,21 +18,46 @@ export default function Popup() {
     }, [])
 
     const keyValueIsValid = (key, value) => {
-        if(key === 'meta'){
+        if (key === 'meta') {
             return false;
         }
         return true;
     }
 
     const keyToDisplay = (key) => {
-        if(obj?.meta?.[key]?.label){
+        if (obj?.meta?.[key]?.label) {
             return obj.meta[key].label;
         }
         return key;
     }
 
+    const valueToDisplay = (key, value) => {
+        if (obj?.meta?.[key]?.isDate) {
+            return dateToDisplay(value);
+        }
+        else if (typeof value === 'string' || typeof value === 'number') {
+            return value;
+        }
+        else {
+            return JSON.stringify(value);
+        }
+    }
+
+    const dateToDisplay = (value) => {
+        if(typeof value === 'number'){
+            return epochToString(value);
+        }
+        console.log({value})
+        return JSON.stringify(value)
+    }
+
+    const epochToString = (epoch) => {
+        const str = new Date(epoch).toUTCString();
+        return str.substr(0,str.length - 4);
+    }
+
     const makeTable = () => {
-        if(!obj?.properties){
+        if (!obj?.properties) {
             return;
         }
         return <TableContainer component={Paper}>
@@ -45,15 +70,15 @@ export default function Popup() {
                 </TableHead>
                 <TableBody>
                     {Object.entries(obj.properties)
-                    .filter(([key, value]) => keyValueIsValid(key,value))
-                    .map(([key, value]) => (
-                        <TableRow key={key}>
-                            <TableCell component="th" scope="row">
-                                {keyToDisplay(key)}
-                            </TableCell>
-                            <TableCell align="right">{JSON.stringify(value)}</TableCell>
-                        </TableRow>
-                    ))}
+                        .filter(([key, value]) => keyValueIsValid(key, value))
+                        .map(([key, value]) => (
+                            <TableRow key={key}>
+                                <TableCell component="th" scope="row">
+                                    {keyToDisplay(key)}
+                                </TableCell>
+                                <TableCell align="right">{valueToDisplay(key, value)}</TableCell>
+                            </TableRow>
+                        ))}
                 </TableBody>
             </Table>
         </TableContainer>
