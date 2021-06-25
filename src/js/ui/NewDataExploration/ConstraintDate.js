@@ -51,11 +51,6 @@ export default function ConstraintDate({constraint, querier}) {
     const [minMaxDate, setMinMaxDate] = useState([epochToDate(min), epochToDate(max)]);
     const config = configs[constraint.step];
 
-    function handleUpdate(e, setMin) {
-        setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
-            setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
-    }
-
     useEffect(() => {
         const minMaxCommited = [dateToEpoch(minMaxDate[0]), dateToEpoch(minMaxDate[1])]
         querier.updateConstraint(constraint.name, minMaxCommited);
@@ -67,6 +62,11 @@ export default function ConstraintDate({constraint, querier}) {
             querier.constraintSetActive(constraint.name, false);
         }
     }, []);
+
+    function handleUpdate(e, setMin) {
+        setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
+            setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
+    }
 
     function renderTime() {
         if(constraint.step === "30min") {
@@ -111,7 +111,7 @@ export default function ConstraintDate({constraint, querier}) {
             <Grid container direction="row" justify="center" alignItems="center">
                 <Grid item className={classes.halfSize}>
                     <KeyboardDatePicker
-                        {...config}
+                        margin="normal"
                         label="Min Date"
                         format="MM/DD/yyyy"
                         value={minMaxDate[0]}
@@ -124,7 +124,7 @@ export default function ConstraintDate({constraint, querier}) {
             </Grid>
                 <Grid item className={classes.halfSize}>
                     <KeyboardDatePicker
-                        {...config}
+                        margin="normal"
                         label="Max Date"
                         format="MM/DD/yyyy"
                         value={minMaxDate[1]}
