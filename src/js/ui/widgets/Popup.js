@@ -17,6 +17,20 @@ export default function Popup() {
         return () => { window.setPopupObj = () => { } };
     }, [])
 
+    const keyValueIsValid = (key, value) => {
+        if(key === 'meta'){
+            return false;
+        }
+        return true;
+    }
+
+    const keyToDisplay = (key) => {
+        if(obj?.meta?.[key]?.label){
+            return obj.meta[key].label;
+        }
+        return key;
+    }
+
     const makeTable = () => {
         if(!obj?.properties){
             return;
@@ -30,10 +44,12 @@ export default function Popup() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {Object.entries(obj.properties).map(([key, value]) => (
+                    {Object.entries(obj.properties)
+                    .filter(([key, value]) => keyValueIsValid(key,value))
+                    .map(([key, value]) => (
                         <TableRow key={key}>
                             <TableCell component="th" scope="row">
-                                {key}
+                                {keyToDisplay(key)}
                             </TableCell>
                             <TableCell align="right">{JSON.stringify(value)}</TableCell>
                         </TableRow>
