@@ -3,7 +3,7 @@ import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper
 
 const useStyles = makeStyles({
     table: {
-        width: '98%',
+        maxWidth: '300px',
     },
 });
 
@@ -22,14 +22,13 @@ export default function Popup() {
             <Table className={classes.table} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Key</TableCell>
-                        <TableCell align="right">Value</TableCell>
+                        <TableCell><b>Key</b></TableCell>
+                        <TableCell align="right"><b>Value</b></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {Object.entries(obj).map(([key, value]) => (
                         <TableRow key={key}>
-                            {console.log({ key, value })}
                             <TableCell component="th" scope="row">
                                 {key}
                             </TableCell>

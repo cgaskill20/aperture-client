@@ -327,6 +327,8 @@ export default class AutoQuery {
             "color": this.getColor(data.properties),
         }
 
+        data.properties.meta = this.buildMetaMap();
+
         indexData[this.collection].popup = this.buildPopup();
         if (this.getIcon())
             indexData[this.collection]["iconAddr"] = `./images/map-icons/${this.getIcon()}.png`;
@@ -402,6 +404,16 @@ export default class AutoQuery {
             }
         }
         return { "$project": project };
+    }
+
+    buildMetaMap() {
+        return Object.entries(this.data.constraints).reduce((ret, [constraintName, constraintMeta]) => {
+            const add = {};
+            add.label = constraintMeta.label;
+            add.isDate = constraintMeta.isDate;
+            ret[constraintName] = add;
+            return ret;
+        }, {})
     }
 
     /**
