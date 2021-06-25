@@ -1,19 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles } from "@material-ui/core";
+import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Drawer } from "@material-ui/core";
+import { useGlobalState } from "../global/GlobalState";
+
+const drawerWidth = '300px';
 
 const useStyles = makeStyles({
     table: {
-        maxWidth: '300px',
+        maxWidth: drawerWidth,
+    },
+    root: {
+        display: 'flex',
+        zIndex: 10000,
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+    },
+    drawerPaper: {
+        width: drawerWidth,
+        opacity: 0.95,
     },
 });
 
 export default function Popup() {
     const [obj, setObj] = useState({});
+    const [globalState, setGlobalState] = useGlobalState();
 
     const classes = useStyles();
 
     useEffect(() => {
-        window.setPopupObj = setObj;
+        window.setPopupObj = (o) => { 
+            setObj(o); 
+            setGlobalState({ popupOpen: true, sidebarOpen: false });
+        };
         return () => { window.setPopupObj = () => { } };
     }, [])
 
@@ -44,10 +63,10 @@ export default function Popup() {
     }
 
     const dateToDisplay = (value) => {
-        if(typeof value === 'number'){
+        if (typeof value === 'number') {
             return epochToDateString(value);
         }
-        else if(typeof value === 'object'){
+        else if (typeof value === 'object') {
             return mongoObjectToDateString(value);
         }
         return JSON.stringify(value)
@@ -55,17 +74,17 @@ export default function Popup() {
 
     const epochToDateString = (epoch) => {
         const str = new Date(epoch).toUTCString();
-        return str.substr(0,str.length - 4);
+        return str.substr(0, str.length - 4);
     }
 
     const mongoObjectToDateString = (object) => {
-        if(object.$numberLong){
-            if(typeof object.$numberLong === 'string'){
+        if (object.$numberLong) {
+            if (typeof object.$numberLong === 'string') {
                 object.$numberLong = Number(object.$numberLong);
             }
             return epochToDateString(object.$numberLong);
         }
-        console.log({object})
+        console.log({ object })
         return JSON.stringify(object)
     }
 
@@ -97,7 +116,17 @@ export default function Popup() {
         </TableContainer>
     }
 
-    return <>
-        {makeTable()}
-    </>;
+    return <div className={classes.root}>
+        <Drawer
+            className={classes.drawer}
+            variant="persistent"
+            anchor="right"
+            open={globalState.popupOpen}
+            classes={{
+                paper: classes.drawerPaper,
+            }}
+        >
+            {makeTable()}
+        </Drawer>
+    </div>
 }
