@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Drawer } from "@material-ui/core";
 import { useGlobalState } from "../global/GlobalState";
 
-const drawerWidth = '300px';
+const drawerWidth = '450px';
 
 const useStyles = makeStyles({
     table: {
@@ -31,7 +31,7 @@ export default function Popup() {
     useEffect(() => {
         window.setPopupObj = (o) => { 
             setObj(o); 
-            setGlobalState({ popupOpen: true, sidebarOpen: false });
+            setGlobalState({ popupOpen: true, sidebarOpen: false, preloading: false });
         };
         return () => { window.setPopupObj = () => { } };
     }, [])

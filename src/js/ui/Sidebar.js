@@ -45,7 +45,7 @@ export default function Sidebar() {
                 className={clsx(classes.menuButton, globalState.sidebarOpen && classes.hide)}
                 startIcon={<MenuIcon />}
                 aria-label="open drawer"
-                onClick={() => setGlobalState({sidebarOpen: true})}
+                onClick={() => setGlobalState({sidebarOpen: true, popupOpen: false})}
             >
                 Menu
             </Button>
