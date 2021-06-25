@@ -218,6 +218,8 @@ export default class ChartSystem {
         
         this.doNotUpdate = true;
         window.setTimeout(() => { this.doNotUpdate = false; }, 200);
+
+        this.cleanupUnregisteredConsumers();
     }
 
     registerDataConsumer(id, setData) {
