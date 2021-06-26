@@ -411,6 +411,7 @@ export default class AutoQuery {
             const add = {};
             add.label = constraintMeta.label;
             add.isDate = constraintMeta.isDate;
+            add.unit = constraintMeta.unit;
             ret[constraintName] = add;
             return ret;
         }, {})

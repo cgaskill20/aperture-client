@@ -55,11 +55,12 @@ export default function Popup() {
     }
 
     const valueToDisplay = (key, value) => {
+        const unit = obj?.meta?.[key]?.unit;
         if (obj?.meta?.[key]?.isDate) {
             return dateToDisplay(value);
         }
         else if (typeof value === 'string' || typeof value === 'number') {
-            return value;
+            return `${value}${unit ? ` ${Util.cleanUpString(unit)}` : ''}`;
         }
         else {
             return JSON.stringify(value);
