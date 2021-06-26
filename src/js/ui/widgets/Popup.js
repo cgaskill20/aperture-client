@@ -119,6 +119,7 @@ export default function Popup() {
         </TableContainer>
     }
 
+    console.log({obj})
     return <div className={classes.root}>
         <Drawer
             className={classes.drawer}
@@ -130,7 +131,9 @@ export default function Popup() {
             }}
         >
             <div className={classes.contentContainer}>
-                <Typography variant="h5">All fields</Typography>
+                <Typography variant="h4" gutterBottom>
+                    {Util.cleanUpString(obj.name)}
+                </Typography>
                 {makeTable()}
             </div>
         </Drawer>
