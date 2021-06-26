@@ -101,7 +101,7 @@ export default function Popup() {
                 <TableHead>
                     <TableRow>
                         <TableCell><b>Key</b></TableCell>
-                        <TableCell align="right"><b>Value</b></TableCell>
+                        <TableCell><b>Value</b></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -112,7 +112,7 @@ export default function Popup() {
                                 <TableCell component="th" scope="row">
                                     {keyToDisplay(key)}
                                 </TableCell>
-                                <TableCell align="right">{valueToDisplay(key, value)}</TableCell>
+                                <TableCell>{valueToDisplay(key, value)}</TableCell>
                             </TableRow>
                         ))}
                 </TableBody>
