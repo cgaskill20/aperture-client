@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Drawer } from "@material-ui/core";
+import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Drawer, Typography } from "@material-ui/core";
 import { useGlobalState } from "../global/GlobalState";
+import Util from "../../library/apertureUtil";
 
 const drawerWidth = '450px';
 
@@ -14,12 +15,15 @@ const useStyles = makeStyles({
     },
     drawer: {
         width: drawerWidth,
-        flexShrink: 0,
+        flexShrink: 0
     },
     drawerPaper: {
         width: drawerWidth,
         opacity: 0.95,
     },
+    contentContainer: {
+        margin: '20px'
+    }
 });
 
 export default function Popup() {
@@ -47,7 +51,7 @@ export default function Popup() {
         if (obj?.meta?.[key]?.label) {
             return obj.meta[key].label;
         }
-        return key;
+        return Util.cleanUpString(key);
     }
 
     const valueToDisplay = (key, value) => {
@@ -84,7 +88,6 @@ export default function Popup() {
             }
             return epochToDateString(object.$numberLong);
         }
-        console.log({ object })
         return JSON.stringify(object)
     }
 
@@ -126,7 +129,10 @@ export default function Popup() {
                 paper: classes.drawerPaper,
             }}
         >
-            {makeTable()}
+            <div className={classes.contentContainer}>
+                <Typography variant="h5">All fields</Typography>
+                {makeTable()}
+            </div>
         </Drawer>
     </div>
 }
