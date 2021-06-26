@@ -33,8 +33,8 @@ export default function Popup() {
     const classes = useStyles();
 
     useEffect(() => {
-        window.setPopupObj = (o) => { 
-            setObj(o); 
+        window.setPopupObj = (o) => {
+            setObj(o);
             setGlobalState({ popupOpen: true, sidebarOpen: false, preloading: false });
         };
         return () => { window.setPopupObj = () => { } };
@@ -92,8 +92,8 @@ export default function Popup() {
         return JSON.stringify(object)
     }
 
-    const makeTable = () => {
-        if (!obj?.properties) {
+    const makeTable = (keyValPairs) => {
+        if (!keyValPairs || !keyValPairs.length) {
             return;
         }
         return <TableContainer component={Paper}>
@@ -105,7 +105,7 @@ export default function Popup() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {Object.entries(obj.properties)
+                    {keyValPairs
                         .filter(([key, value]) => keyValueIsValid(key, value))
                         .map(([key, value]) => (
                             <TableRow key={key}>
@@ -120,7 +120,29 @@ export default function Popup() {
         </TableContainer>
     }
 
-    console.log({obj})
+    const makeTables = () => {
+        if (obj.properties) {
+            const importantFields = Object.entries(obj.properties).filter(([key, value]) => obj.properties?.meta?.[key]?.important);
+            return <>
+                {
+                    importantFields.length ?
+                        <>
+                            <Typography variant="h6" gutterBottom>
+                                Important Fields
+                            </Typography>
+                            {makeTable(importantFields)}
+                            <br/>
+                        </> : null
+                }
+                <Typography variant="h6" gutterBottom>
+                    All Fields
+                </Typography>
+                {makeTable(Object.entries(obj.properties))}
+            </>
+        }
+    }
+
+    console.log({ obj })
     return <div className={classes.root}>
         <Drawer
             className={classes.drawer}
@@ -135,7 +157,7 @@ export default function Popup() {
                 <Typography variant="h4" gutterBottom>
                     {Util.cleanUpString(obj.name)}
                 </Typography>
-                {makeTable()}
+                {makeTables()}
             </div>
         </Drawer>
     </div>
