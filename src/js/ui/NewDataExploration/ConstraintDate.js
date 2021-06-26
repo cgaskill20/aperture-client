@@ -70,13 +70,6 @@ export default function ConstraintDate({constraint, querier}) {
         }
     }, []);
 
-    // function handleDateUpdate(e, setMin) {
-    //     if(e){
-    //         setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
-    //             setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
-    //     }
-    // }
-
     function handleDateUpdate(e, setMin) {
         if(e) {
             const newTime = new Date(e.valueOf());
