@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Drawer, Typography } from "@material-ui/core";
+import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Drawer, Typography, IconButton, Grid } from "@material-ui/core";
 import { useGlobalState } from "../global/GlobalState";
 import Util from "../../library/apertureUtil";
+import CloseIcon from "@material-ui/icons/Close";
 
 const drawerWidth = '450px';
 
@@ -131,7 +132,7 @@ export default function Popup() {
                                 Important Fields
                             </Typography>
                             {makeTable(importantFields)}
-                            <br/>
+                            <br />
                         </> : null
                 }
                 <Typography variant="h6" gutterBottom>
@@ -153,10 +154,21 @@ export default function Popup() {
             }}
         >
             <div className={classes.contentContainer}>
-                <Typography variant="h4" gutterBottom>
-                    {Util.cleanUpString(obj.name)}
-                </Typography>
-                {makeTables()}
+                <Grid container>
+                    <Grid item xs={10}>
+                        <Typography variant="h4" gutterBottom>
+                            {Util.cleanUpString(obj.name)}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <IconButton onClick={() => setGlobalState({ popupOpen: false })}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={12}>
+                        {makeTables()}
+                    </Grid>
+                </Grid>
             </div>
         </Drawer>
     </div>
