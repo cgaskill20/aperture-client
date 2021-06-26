@@ -142,7 +142,6 @@ export default function Popup() {
         }
     }
 
-    console.log({ obj })
     return <div className={classes.root}>
         <Drawer
             className={classes.drawer}
