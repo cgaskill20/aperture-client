@@ -92,9 +92,15 @@ export default function Popup() {
 
     const mongoObjectToSomething = (object, func) => { //this function will be extended as more mongo objects leak in
         const numericTypes = ['$numberLong', '$numberDecimal'];
+        const stringTypes = ['$oid']
         for (const numericType of numericTypes) {
             if (object?.[numericType]) {
                 return func(Number(object[numericType]));
+            }
+        }
+        for (const stringType of stringTypes) {
+            if (object?.[stringType]) {
+                return func(object[stringType]);
             }
         }
         return JSON.stringify(object);
