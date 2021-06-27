@@ -23,7 +23,6 @@ function extractLayerConstraints(layer) {
     let allLayerConstraints = [];
     for(const constraint in layer.constraints) {
         defaultLayerConstraints.push(!layer.constraints[constraint].hide);
-        layer.constraints[constraint].label = layer.constraints[constraint]?.label ?? constraint;
         layer.constraints[constraint].name = constraint;
         allLayerConstraints.push(layer.constraints[constraint]);
     }
