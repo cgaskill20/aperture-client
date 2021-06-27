@@ -987,7 +987,7 @@
                 "name": "epoch_time",
                 "label": "Date",
                 "type": "date",
-                "step": "day"
+                "step": "30min"
             },
             {
                 "name": "startDateTime",
@@ -1248,7 +1248,7 @@
                 "name": "epoch_time",
                 "label": "Date",
                 "type": "date",
-                "step": "day"
+                "step": "30min"
             },
             {
                 "name": "startDateTime",
@@ -1627,7 +1627,7 @@
                 "name": "epoch_time",
                 "label": "Date",
                 "type": "date",
-                "step": "day"
+                "step": "30min"
             },
             {
                 "name": "startDateTime",
@@ -1886,7 +1886,7 @@
                 "name": "epoch_time",
                 "label": "Date",
                 "type": "date",
-                "step": "day"
+                "step": "30min"
             },
             {
                 "name": "startDateTime",
@@ -2193,7 +2193,7 @@
                 "name": "epoch_time",
                 "label": "Date",
                 "type": "date",
-                "step": "day"
+                "step": "30min"
             },
             {
                 "name": "startDateTime",
@@ -2416,7 +2416,7 @@
                 "name": "epoch_time",
                 "label": "Date",
                 "type": "date",
-                "step": "day"
+                "step": "30min"
             },
             {
                 "name": "startDateTime",
@@ -2501,7 +2501,7 @@
                 "name": "epoch_time",
                 "label": "Date",
                 "type": "date",
-                "step": "day"
+                "step": "30min"
             },
             {
                 "name": "startDateTime",
