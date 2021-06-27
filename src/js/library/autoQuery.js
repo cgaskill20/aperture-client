@@ -413,6 +413,7 @@ export default class AutoQuery {
             add.isDate = constraintMeta.isDate;
             add.unit = constraintMeta.unit;
             add.important = this.constraintState[constraintName] ? true : false;
+            
             ret[Util.removePropertiesPrefix(constraintName)] = add;
             return ret;
         }, {})
