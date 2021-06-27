@@ -227,7 +227,6 @@ export default {
      * @returns {string} 
      */
     cleanUpString: function (str) {
-        //console.log(`${str} => ${this.capitalizeString(this.camelCaseToSpaced(this.underScoreToSpace(this.removePropertiesPrefix(str))))}` )
         return this.capitalizeString(this.camelCaseToSpaced(this.underScoreToSpace(this.removePropertiesPrefix(str))));
     },
     /**                                                                            
