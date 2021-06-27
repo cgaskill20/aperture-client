@@ -62,14 +62,14 @@ export default function Popup() {
 
     const valueToDisplay = (key, value) => {
         let unit = obj?.meta?.[key]?.unit;
-        if(unit.toUpperCase() === 'NA'){
+        if(unit?.toUpperCase() === 'NA'){
             unit = null;
         }
 
         if (obj?.meta?.[key]?.isDate) {
             return dateToDisplay(value);
         }
-        else if(defaultImportantFields[key].type && !['string', 'number'].includes(defaultImportantFields[key].type)){
+        else if(defaultImportantFields[key]?.type && !['string', 'number'].includes(defaultImportantFields[key]?.type)){
             return specialTypeToDisplay(defaultImportantFields[key].type, value);
         }
         else if (['string', 'number'].includes(typeof value)) {

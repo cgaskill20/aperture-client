@@ -6,5 +6,9 @@
     "STATEFP10": { 
         "type": "stateFips",
         "label": "State"
+    },
+    "description": {
+        "type": "string",
+        "label": "Description"
     }
 }
