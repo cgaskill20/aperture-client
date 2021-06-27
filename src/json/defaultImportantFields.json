@@ -18,5 +18,13 @@
     "COUNTY": {
         "type": "string",
         "label": "County"
+    },
+    "CITY": {
+        "type": "string",
+        "label": "City"
+    },
+    "NAME": {
+        "type": "string",
+        "label": "Name"
     }
 }
