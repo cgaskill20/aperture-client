@@ -1,0 +1,30 @@
+{
+    "NAMELSAD10": { 
+        "type": "string",
+        "label": "County"
+    },
+    "STATEFP10": { 
+        "type": "stateFips",
+        "label": "State"
+    },
+    "description": {
+        "type": "string",
+        "label": "Description"
+    },
+    "STATE": {
+        "type": "string",
+        "label": "State"
+    },
+    "COUNTY": {
+        "type": "string",
+        "label": "County"
+    },
+    "CITY": {
+        "type": "string",
+        "label": "City"
+    },
+    "NAME": {
+        "type": "string",
+        "label": "Name"
+    }
+}

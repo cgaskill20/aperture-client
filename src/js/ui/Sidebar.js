@@ -5,6 +5,7 @@ import Drawer from '@material-ui/core/Drawer';
 import TabSystem from "./TabSystem"
 import MenuIcon from '@material-ui/icons/Menu';
 import {Button} from "@material-ui/core";
+import { useGlobalState } from './global/GlobalState';
 
 const drawerWidth = 800;
 
@@ -34,17 +35,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Sidebar() {
     const classes = useStyles();
-    const [open, setOpen] = useState(false);
+    const [globalState, setGlobalState] = useGlobalState();
 
     return (
         <div className={classes.root}>
             <Button
                 variant="outlined"
                 color="inherit"
-                className={clsx(classes.menuButton, open && classes.hide)}
+                className={clsx(classes.menuButton, globalState.sidebarOpen && classes.hide)}
                 startIcon={<MenuIcon />}
                 aria-label="open drawer"
-                onClick={() => setOpen(true)}
+                onClick={() => setGlobalState({sidebarOpen: true, popupOpen: false})}
             >
                 Menu
             </Button>
@@ -52,12 +53,12 @@ export default function Sidebar() {
                 className={classes.drawer}
                 variant="persistent"
                 anchor="left"
-                open={open}
+                open={globalState.sidebarOpen}
                 classes={{
                     paper: classes.drawerPaper,
                 }}
             >
-                <TabSystem handleDrawerClose={() => {setOpen(false)}}/>
+                <TabSystem handleDrawerClose={() => { setGlobalState({sidebarOpen: false}) }}/>
             </Drawer>
         </div>
     );

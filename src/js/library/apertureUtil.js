@@ -203,7 +203,7 @@ export default {
      */
     camelCaseToSpaced: function (str){
         if(str.includes(" ")) return str; //its not camel case if it has space
-        let result = str.replace( /([A-Z])/g, " $1" );
+        let result = str.replace( /(([a-z]|[0-9])[A-Z])/g, (str) => `${str.charAt(0)} ${str.slice(1)}`);
         let finalResult = result.charAt(0).toUpperCase() + result.slice(1);
         return finalResult;
     },
@@ -227,7 +227,7 @@ export default {
      * @returns {string} 
      */
     cleanUpString: function (str) {
-        return this.capitalizeString(this.camelCaseToSpaced(this.underScoreToSpace(str)));
+        return this.capitalizeString(this.camelCaseToSpaced(this.underScoreToSpace(this.removePropertiesPrefix(str))));
     },
     /**                                                                            
      * Creates a full geojson object from a feature array
@@ -333,6 +333,9 @@ export default {
       * @returns {string} string with truncated properties.
       */
     removePropertiesPrefix: function (str) {
+        if(!str){
+            return str;
+        }
         return str.substr(0, 11) === "properties." ? str.substring(11, str.length) : str; //removes a "properties." if it exists
     },
     /**

@@ -14,7 +14,7 @@
                 "name": "temp",
                 "label": "Max Heatwave Temperature",
                 "type": "range",
-                "unit": "farenheit",
+                "unit": "fahrenheit",
                 "temporalType": "max"
             },
             {

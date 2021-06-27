@@ -101,10 +101,15 @@ export default class RenderInfrastructure {
                 }
                 layer.specifiedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
                 let iconName = Util.getNameFromGeoJsonFeature(feature, indexData);
-                let iconDetails = Util.createDetailsFromGeoJsonFeature(feature, iconName, indexData);
-                this.addIconToMap(iconName, latlng, iconDetails, indexData, layer.specifiedId);
-                layer.bindPopup(iconDetails);
+                let popupObj = {
+                    name: iconName,
+                    meta: feature.properties.meta,
+                    properties: feature.properties
+                }
+                this.addIconToMap(iconName, latlng, popupObj, indexData, layer.specifiedId);
+                //layer.bindPopup(iconDetails);
                 layer.on('click', function (e) {
+                    window.setPopupObj(popupObj);
                     this.map.flyTo(e.latlng, this.map.getZoom(), FLYTOOPTIONS);
                     if (datasource[iconName].onClick) {
                         datasource[iconName].onClick(this.layerGroup);
@@ -280,9 +285,9 @@ export default class RenderInfrastructure {
      * @method addIconToMap
      * @param {string} iconName defines the bit of the JSON the icon will pull from
      * @param {Array} latLng latlng array where the icon will be put
-     * @param {string} popUpContent the content that will display for this element when clicked, accepts HTML formatting
+     * @param {string} obj the content that will display for this element when clicked, accepts HTML formatting
      */
-    addIconToMap(iconName, latLng, popUpContent, indexData, specifiedId) {
+    addIconToMap(iconName, latLng, obj, indexData, specifiedId) {
         let icon = this.getAttribute(iconName, ATTRIBUTE.icon, indexData)
         if (!icon || icon === "noicon") {
             return false;
@@ -294,10 +299,11 @@ export default class RenderInfrastructure {
         marker.uniqueId = iconName;
         marker.specifiedId = specifiedId;
         this.markerLayer.addLayer(marker.on('click', function (e) {
+            window.setPopupObj(obj);
             if (e.target.__parent._group._spiderfied)
                 return;
             this.map.flyTo(e.latlng, this.map.getZoom(), FLYTOOPTIONS);
-        }.bind(this)).bindPopup(popUpContent));
+        }.bind(this)));
         return true;
     }
 

@@ -7,6 +7,7 @@ import GlobalTheme from './global/GlobalTheme'
 import GoTo from './widgets/GoTo'
 import Sidebar from './Sidebar'
 import ConditionalWidgetRendering from './ConditionalWidgetRendering'
+import Popup from './widgets/Popup';
 
 const Root = ({ map }) => {
     const defaultState = {
@@ -14,7 +15,9 @@ const Root = ({ map }) => {
         mode: "dataExploration",
         chartingOpen: false,
         clusterLegendOpen: false,
-        preloading: true
+        preloading: true,
+        sidebarOpen: false,
+        popupOpen: false
     }
 
 
@@ -31,6 +34,8 @@ const Root = ({ map }) => {
                 </div>
 
                 <ConditionalWidgetRendering/>
+
+                <Popup />
 
             </MuiPickersUtilsProvider>
         </ThemeProvider>
