@@ -63,9 +63,22 @@ export default function Popup() {
         else if (typeof value === 'string' || typeof value === 'number') {
             return `${value}${unit ? ` ${Util.cleanUpString(unit)}` : ''}`;
         }
+        else if (typeof value === 'object') {
+            return mongoObjectToSomething(value, (s) => s);
+        }
         else {
             return JSON.stringify(value);
         }
+    }
+
+    const mongoObjectToSomething = (object, func) => {
+        const numericTypes = ['$numberLong', '$numberDecimal'];
+        for (const numericType of numericTypes) {
+            if (object[numericType]) {
+                return func(Number(object[numericType]));
+            }
+        }
+        return JSON.stringify(object);
     }
 
     const dateToDisplay = (value) => {
@@ -84,13 +97,7 @@ export default function Popup() {
     }
 
     const mongoObjectToDateString = (object) => {
-        if (object.$numberLong) {
-            if (typeof object.$numberLong === 'string') {
-                object.$numberLong = Number(object.$numberLong);
-            }
-            return epochToDateString(object.$numberLong);
-        }
-        return JSON.stringify(object)
+        return mongoObjectToSomething(object, epochToDateString);
     }
 
     const makeTable = (keyValPairs) => {
