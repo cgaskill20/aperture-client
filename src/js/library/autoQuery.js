@@ -2,6 +2,8 @@ import Gradient from "../third-party/Gradient"
 import MapDataFilterWrapper from "./mapDataFilterWrapper"
 import Util from "./apertureUtil"
 import Query from "./Query"
+import fipsToState from "../../json/fipsToState.json"
+import defaultImportantFields from "../../json/defaultImportantFields.json"
 
 /**
  * @class AutoQuery
@@ -413,7 +415,7 @@ export default class AutoQuery {
             add.isDate = constraintMeta.isDate;
             add.unit = constraintMeta.unit;
             add.important = this.constraintState[constraintName] ? true : false;
-            
+
             ret[Util.removePropertiesPrefix(constraintName)] = add;
             return ret;
         }, {})
