@@ -227,7 +227,8 @@ export default {
      * @returns {string} 
      */
     cleanUpString: function (str) {
-        return this.capitalizeString(this.camelCaseToSpaced(this.underScoreToSpace(str)));
+        //console.log(`${str} => ${this.capitalizeString(this.camelCaseToSpaced(this.underScoreToSpace(this.removePropertiesPrefix(str))))}` )
+        return this.capitalizeString(this.camelCaseToSpaced(this.underScoreToSpace(this.removePropertiesPrefix(str))));
     },
     /**                                                                            
      * Creates a full geojson object from a feature array
@@ -333,6 +334,9 @@ export default {
       * @returns {string} string with truncated properties.
       */
     removePropertiesPrefix: function (str) {
+        if(!str){
+            return str;
+        }
         return str.substr(0, 11) === "properties." ? str.substring(11, str.length) : str; //removes a "properties." if it exists
     },
     /**

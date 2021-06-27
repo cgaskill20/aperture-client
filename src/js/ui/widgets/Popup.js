@@ -55,8 +55,9 @@ export default function Popup() {
             return obj.meta[key].label;
         }
         if(defaultImportantFields[key]) {
-            return defaultImportantFields[key].label ?? key;
+            return defaultImportantFields[key].label ?? Util.cleanUpString(key);
         }
+    
         return Util.cleanUpString(key);
     }
 
@@ -92,7 +93,7 @@ export default function Popup() {
     const mongoObjectToSomething = (object, func) => { //this function will be extended as more mongo objects leak in
         const numericTypes = ['$numberLong', '$numberDecimal'];
         for (const numericType of numericTypes) {
-            if (object[numericType]) {
+            if (object?.[numericType]) {
                 return func(Number(object[numericType]));
             }
         }

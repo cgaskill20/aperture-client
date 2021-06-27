@@ -10,5 +10,13 @@
     "description": {
         "type": "string",
         "label": "Description"
+    },
+    "STATE": {
+        "type": "string",
+        "label": "State"
+    },
+    "COUNTY": {
+        "type": "string",
+        "label": "County"
     }
 }
