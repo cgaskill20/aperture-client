@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Drawer, Typography, IconButton, Grid } from "@material-ui/core";
 import { useGlobalState } from "../global/GlobalState";
 import Util from "../../library/apertureUtil";
+import fipsToState from "../../../json/fipsToState.json"
+import defaultImportantFields from "../../../json/defaultImportantFields.json"
 import CloseIcon from "@material-ui/icons/Close";
 
 const drawerWidth = '450px';
@@ -52,15 +54,25 @@ export default function Popup() {
         if (obj?.meta?.[key]?.label) {
             return obj.meta[key].label;
         }
+        if(defaultImportantFields[key]) {
+            return defaultImportantFields[key].label ?? key;
+        }
         return Util.cleanUpString(key);
     }
 
     const valueToDisplay = (key, value) => {
-        const unit = obj?.meta?.[key]?.unit;
+        let unit = obj?.meta?.[key]?.unit;
+        if(unit.toUpperCase() === 'NA'){
+            unit = null;
+        }
+
         if (obj?.meta?.[key]?.isDate) {
             return dateToDisplay(value);
         }
-        else if (typeof value === 'string' || typeof value === 'number') {
+        else if(defaultImportantFields[key].type && !['string', 'number'].includes(defaultImportantFields[key].type)){
+            return specialTypeToDisplay(defaultImportantFields[key].type, value);
+        }
+        else if (['string', 'number'].includes(typeof value)) {
             return `${value}${unit ? ` ${Util.cleanUpString(unit)}` : ''}`;
         }
         else if (typeof value === 'object') {
@@ -68,6 +80,12 @@ export default function Popup() {
         }
         else {
             return JSON.stringify(value);
+        }
+    }
+
+    const specialTypeToDisplay = (type, value) => {
+        if(type === "stateFips"){
+            return fipsToState[value];
         }
     }
 
@@ -130,7 +148,7 @@ export default function Popup() {
 
     const makeTables = () => {
         if (obj.properties) {
-            const importantFields = Object.entries(obj.properties).filter(([key, value]) => obj.properties?.meta?.[key]?.important);
+            const importantFields = Object.entries(obj.properties).filter(([key, value]) => obj.properties?.meta?.[key]?.important || defaultImportantFields[key]);
             return <>
                 {
                     importantFields.length ?

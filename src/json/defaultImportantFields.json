@@ -1,4 +1,10 @@
 {
-    "NAMELSAD10": "string",
-    "STATEFP10": "special"
+    "NAMELSAD10": { 
+        "type": "string",
+        "label": "County"
+    },
+    "STATEFP10": { 
+        "type": "stateFips",
+        "label": "State"
+    }
 }
