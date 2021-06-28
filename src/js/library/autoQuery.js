@@ -323,14 +323,15 @@ export default class AutoQuery {
         MapDataFilterWrapper.add(data, this.collection);
 
         let indexData = {};
+        //console.log(this.constraintData[this.temporal])
         indexData[this.collection] = {
             "color": this.getColor(data.properties),
-            "joinField": this.data.joinField
+            "joinField": this.data.joinField,
+            "temporalRange": this.constraintData[this.temporal]
         }
 
         data.properties.meta = this.buildMetaMap();
 
-        indexData[this.collection].popup = this.buildPopup();
         if (this.getIcon())
             indexData[this.collection]["iconAddr"] = `./images/map-icons/${this.getIcon()}.png`;
 
@@ -540,24 +541,6 @@ export default class AutoQuery {
                 colorGradient.setMidpoint(numOptions);
                 return colorGradient.getArray();
         }
-    }
-
-    /**
-      * Generates popup text
-      * @memberof AutoQuery
-      * @method buildPopup
-      * @returns {string} popup text
-      */
-    buildPopup() {
-        let returnText = "<ul style='padding-inline-start:20px;margin-block-start:2.5px;'>";
-        for (const constraint in this.constraintState) {
-            if (this.constraintState[constraint]) {
-                const constraintNoPrefix = Util.removePropertiesPrefix(constraint);
-                const constraintLabel = this.getConstraintMetadata(constraint).label ? this.getConstraintMetadata(constraint).label : constraintNoPrefix;
-                returnText += "<li><b>" + constraintLabel + ":</b> @@" + constraintNoPrefix + "@@</li>";
-            }
-        }
-        return returnText + "</ul>";
     }
 }
 
