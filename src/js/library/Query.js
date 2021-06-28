@@ -57,7 +57,7 @@ const Query = {
     *     bounds?: L.LatLngBounds, //bounds to query
     *     collection: string, //mongo dataset to query. Required!
     *     pipeline?: {}[], //mongodb aggregation pipeline
-    *
+    *     dontLink?: boolean, //dont link this query to another collection
     * }
     *
     * interface CallbackResponse {
@@ -77,7 +77,7 @@ const Query = {
     async makeQuery(query) {
         query = { ...defaultQuery, ...query }
         query.id = Math.random().toString(36).substring(2, 6);
-        const { collection, granularity } = query;
+        const { dontLink } = query;
 
         let promiseFlag = false;
         let callbackToPromise;
@@ -87,7 +87,7 @@ const Query = {
         }
 
         const linked = this.linked[query.collection];
-        if (linked) { //making an edge case for this one cause it is fast as hell
+        if (linked && !dontLink) { //making an edge case for this one cause it is fast as hell
             this._linkedQuery(linked, query);
         }
         else {

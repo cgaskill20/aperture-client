@@ -15,20 +15,32 @@ export default function PopupTimeChart({ collection, join, fieldToChart }) {
     useEffect(async () => {
         const pipe = [
             { $match: join },
-            { $sample: { size: 3 } },
-            { $project: { [fieldToChart]: 1, epoch_time: 1 } }
+            { $sample: { size: 100 } },
+            { $project: { [fieldToChart]: 1, epoch_time: 1, [Object.keys(join)[0]]: 1 } }
         ];
-        console.log(JSON.stringify(pipe))
         const d = await Query.makeQuery({
             collection,
-            pipeline: pipe
+            pipeline: pipe,
+            dontLink: true
         })
-        console.log(d)
+        setData(d.data.map(p => {
+            if(typeof p.epoch_time === 'object'){
+                p.epoch_time = p.epoch_time.$numberLong ? Number(p.epoch_time.$numberLong) : Number(p.epoch_time.$numberDecimal)
+            }
+            return { x: p.epoch_time, y: p[fieldToChart] }
+        }))
     }, []);
 
     const classes = useStyles();
 
     return <div className={classes.root}>
-
+        <ResponsiveLine
+            data={[
+                {
+                    id: collection,
+                    data
+                }
+            ]}
+        />
     </div>
 }

@@ -176,6 +176,7 @@ export default function Popup() {
             return Object.entries(obj.properties)
             .filter(([key, value]) => obj.properties?.meta?.[key]?.temporal)
             .map(([key, value]) => <PopupTimeChart
+                key={key}
                 collection={obj.name}
                 fieldToChart={key}
                 join={obj.join}
