@@ -7,6 +7,11 @@ import Util from "../../library/apertureUtil";
 const useStyles = makeStyles({
     root: {
         height: '300px'
+    },
+    tooltip: {
+        backgroundColor: 'white',
+        padding: '2.5px',
+        borderRadius: '2.5px'
     }
 });
 
@@ -29,7 +34,6 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
             { $sample: { size: 1000 } },
             { $project: { [fieldToChart]: 1, epoch_time: 1, [Object.keys(join)[0]]: 1 } }
         ];
-        console.log({ pipe })
         const d = await Query.makeQuery({
             collection,
             pipeline: pipe,
@@ -47,12 +51,16 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
         // }));
     }, []);
 
+    const epochTimeToShortString = (value) => {
+        const offset = new Date(value).getTimezoneOffset() * 60000
+        return new Date(value + offset).toLocaleDateString("en-US");
+    }
+
     const classes = useStyles();
 
     const renderChart = (data) => {
         if (data.length) {
             const bottomTicks = data.filter((d, i) => i % Math.floor(data.length / 4) === 0 || i === data.length - 1).map(d => d.x);
-            console.log({bottomTicks})
             return <ResponsiveLineCanvas
                 data={[
                     {
@@ -60,7 +68,7 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
                         data
                     }
                 ]}
-                margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
+                margin={{ top: 20, right: 50, bottom: 50, left: 50 }}
                 yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
                 curve="natural"
                 axisTop={null}
@@ -75,11 +83,14 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
                 axisBottom={{
                     legend: "Date",
                     legendOffset: 36,
-                    format: (value) => {
-                        const offset = new Date(value).getTimezoneOffset() * 60000
-                        return new Date(value + offset).toLocaleDateString("en-US");
-                    },
+                    format: epochTimeToShortString,
                     tickValues: bottomTicks
+                }}
+                tooltip={(e) => {
+                    return <div className={classes.tooltip}>
+                        <Typography gutterBottom>{`Date: ${epochTimeToShortString(e.point.data.x)}`}</Typography>
+                        <Typography>{`${Util.cleanUpString(fieldToChart)}: ${e.point.data.y}`}</Typography>
+                    </div>
                 }}
             />
         }
