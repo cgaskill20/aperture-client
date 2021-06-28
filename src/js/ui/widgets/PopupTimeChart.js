@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { makeStyles, Typography } from "@material-ui/core";
 import Query from "../../library/Query";
 import { ResponsiveLineCanvas } from '@nivo/line'
+import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles({
     root: {
@@ -12,9 +13,8 @@ const useStyles = makeStyles({
 //react.memo means this wont re-render unless the props change
 export default React.memo(function PopupTimeChart({ collection, join, fieldToChart, temporalRange }) {
     const [data, setData] = useState([]);
-    console.log({join})
+
     useEffect(async () => {
-        console.log("requery")
         const pipe = [
             { $match: join },
             {
@@ -41,12 +41,18 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
             }
             return { x: p.epoch_time, y: p[fieldToChart] }
         }).sort((a, b) => a.x - b.x));
+        // .map(p => {
+        //     p.x = new Date(p.x);
+        //     return p;
+        // }));
     }, []);
 
     const classes = useStyles();
 
     const renderChart = (data) => {
         if (data.length) {
+            const bottomTicks = data.filter((d, i) => i % Math.floor(data.length / 4) === 0 || i === data.length - 1).map(d => d.x);
+            console.log({bottomTicks})
             return <ResponsiveLineCanvas
                 data={[
                     {
@@ -54,7 +60,7 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
                         data
                     }
                 ]}
-                margin={{ top: 50, right: 50, bottom: 50, left: 50 }}
+                margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
                 yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
                 curve="natural"
                 axisTop={null}
@@ -62,6 +68,19 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
                 enablePoints={data.length < 50}
                 enableGridX={false}
                 enableGridY={false}
+                axisLeft={{
+                    legend: Util.cleanUpString(fieldToChart),
+                    legendOffset: -31
+                }}
+                axisBottom={{
+                    legend: "Date",
+                    legendOffset: 36,
+                    format: (value) => {
+                        const offset = new Date(value).getTimezoneOffset() * 60000
+                        return new Date(value + offset).toLocaleDateString("en-US");
+                    },
+                    tickValues: bottomTicks
+                }}
             />
         }
     }

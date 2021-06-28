@@ -187,7 +187,7 @@ export default function Popup() {
                 </React.Fragment>)
         }
     }
-    console.log("rerender")
+
     return <div className={classes.root}>
         <Drawer
             className={classes.drawer}
