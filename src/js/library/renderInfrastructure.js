@@ -101,10 +101,12 @@ export default class RenderInfrastructure {
                 }
                 layer.specifiedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
                 let iconName = Util.getNameFromGeoJsonFeature(feature, indexData);
+                const joinField = indexData[Object.keys(indexData)[0]].joinField;
                 let popupObj = {
                     name: iconName,
                     meta: feature.properties.meta,
-                    properties: feature.properties
+                    properties: feature.properties,
+                    join: { [joinField]: feature.properties[joinField] }
                 }
                 this.addIconToMap(iconName, latlng, popupObj, indexData, layer.specifiedId);
                 //layer.bindPopup(iconDetails);

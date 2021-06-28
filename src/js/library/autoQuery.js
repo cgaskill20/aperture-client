@@ -325,6 +325,7 @@ export default class AutoQuery {
         let indexData = {};
         indexData[this.collection] = {
             "color": this.getColor(data.properties),
+            "joinField": this.data.joinField
         }
 
         data.properties.meta = this.buildMetaMap();
@@ -413,6 +414,7 @@ export default class AutoQuery {
             add.isDate = constraintMeta.isDate;
             add.unit = constraintMeta.unit;
             add.important = this.constraintState[constraintName] ? true : false;
+            add.temporal = constraintMeta.temporalType ? true : false;
 
             ret[Util.removePropertiesPrefix(constraintName)] = add;
             return ret;

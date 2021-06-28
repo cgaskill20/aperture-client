@@ -5,6 +5,7 @@ import Util from "../../library/apertureUtil";
 import fipsToState from "../../../json/fipsToState.json"
 import defaultImportantFields from "../../../json/defaultImportantFields.json"
 import CloseIcon from "@material-ui/icons/Close";
+import PopupTimeChart from "./PopupTimeChart";
 
 const drawerWidth = '450px';
 
@@ -161,11 +162,24 @@ export default function Popup() {
                             <br />
                         </> : null
                 }
+                {makeCharts()}
                 <Typography variant="h6" gutterBottom>
                     All Fields
                 </Typography>
                 {makeTable(Object.entries(obj.properties))}
             </>
+        }
+    }
+
+    const makeCharts = () => {
+        if(obj.properties) {
+            return Object.entries(obj.properties)
+            .filter(([key, value]) => obj.properties?.meta?.[key]?.temporal)
+            .map(([key, value]) => <PopupTimeChart
+                collection={obj.name}
+                fieldToChart={key}
+                join={obj.join}
+            />)
         }
     }
 
