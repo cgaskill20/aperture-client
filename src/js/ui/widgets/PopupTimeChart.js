@@ -70,7 +70,8 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
                 ]}
                 margin={{ top: 20, right: 50, bottom: 50, left: 50 }}
                 yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
-                curve="natural"
+                curve="cardinal"
+                colors="rgb(27, 158, 119)"
                 axisTop={null}
                 isInteractive={true}
                 enablePoints={data.length < 50}
@@ -78,7 +79,7 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
                 enableGridY={false}
                 axisLeft={{
                     legend: Util.cleanUpString(fieldToChart),
-                    legendOffset: -31
+                    legendOffset: -39
                 }}
                 axisBottom={{
                     legend: "Date",
