@@ -55,23 +55,23 @@ export default function Popup() {
         if (obj?.meta?.[key]?.label) {
             return obj.meta[key].label;
         }
-        if(defaultImportantFields[key]) {
+        if (defaultImportantFields[key]) {
             return defaultImportantFields[key].label ?? Util.cleanUpString(key);
         }
-    
+
         return Util.cleanUpString(key);
     }
 
     const valueToDisplay = (key, value) => {
         let unit = obj?.meta?.[key]?.unit;
-        if(unit?.toUpperCase() === 'NA'){
+        if (unit?.toUpperCase() === 'NA') {
             unit = null;
         }
 
         if (obj?.meta?.[key]?.isDate) {
             return dateToDisplay(value);
         }
-        else if(defaultImportantFields[key]?.type && !['string', 'number'].includes(defaultImportantFields[key]?.type)){
+        else if (defaultImportantFields[key]?.type && !['string', 'number'].includes(defaultImportantFields[key]?.type)) {
             return specialTypeToDisplay(defaultImportantFields[key].type, value);
         }
         else if (['string', 'number'].includes(typeof value)) {
@@ -86,7 +86,7 @@ export default function Popup() {
     }
 
     const specialTypeToDisplay = (type, value) => {
-        if(type === "stateFips"){
+        if (type === "stateFips") {
             return fipsToState[value];
         }
     }
@@ -172,18 +172,21 @@ export default function Popup() {
     }
 
     const makeCharts = () => {
-        if(obj.properties) {
+        if (obj.properties) {
             return Object.entries(obj.properties)
-            .filter(([key, value]) => obj.properties?.meta?.[key]?.temporal)
-            .map(([key, value]) => <PopupTimeChart
-                key={key}
-                collection={obj.name}
-                fieldToChart={key}
-                join={obj.join}
-            />)
+                .filter(([key, value]) => obj.properties?.meta?.[key]?.temporal)
+                .map(([key, value]) => <React.Fragment key={key}>
+                    <Typography gutterBottom variant="h4">{Util.cleanUpString(key)}</Typography>
+                    <PopupTimeChart
+                        collection={obj.name}
+                        fieldToChart={key}
+                        join={obj.join}
+                    />
+                    <br/>
+                </React.Fragment>)
         }
     }
-
+    console.log("rerender")
     return <div className={classes.root}>
         <Drawer
             className={classes.drawer}
