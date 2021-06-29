@@ -12,12 +12,18 @@ export default function frameControls(props) {
     if(props.numDropDowns == 2){
         extraDropDown = <ConstraintDropDown options={props.options} setConstraint={props.setConstraint2}></ConstraintDropDown>
     }
+    const handleChange = () => {
+        props.popout(true);
+
+    };
 
     return(
         <div>
             <ConstraintDropDown options={props.options} setConstraint={props.setConstraint}></ConstraintDropDown>
             {extraDropDown}
-            <IconButton color="secondary">
+            <IconButton color="secondary"
+                        onClick={handleChange}
+            >
                 <EjectIcon/>
             </IconButton>
         </div>

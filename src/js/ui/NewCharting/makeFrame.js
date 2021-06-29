@@ -7,6 +7,8 @@ import ScatterPlot from "./ChartTemplates/ScatterPlot";
 import KDEWrapper from "./KDEWrapper";
 import BoxPlot from "./ChartTemplates/BoxPlotChart";
 import FrameControls from "./frameControls";
+import ChartPopOut from "./ChartPopOut";
+import ChartingResizable from "./ChartingResizable";
 
 
 export default function Frame(props) {
@@ -16,6 +18,7 @@ export default function Frame(props) {
     let frame;
     const [constraint, setConstraint] = useState();
     const [constraint2, setConstraint2] = useState();
+    const [popped, setPopped] = useState(false);
     let selectedConstraints = []
     if(props.data['map_features']){
         Object.keys(props.data['map_features']).map(constraint =>{
@@ -25,15 +28,16 @@ export default function Frame(props) {
         })
     }
 
-    switch (props.type.name) {
 
+    switch (props.type.name) {
         case "histogram":
             frame =
                 <div>
-                    <FrameControls options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
+                    <ChartPopOut>
+                    <FrameControls options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1} popout={setPopped}></FrameControls>
                     <KDEWrapper>
                         <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph>
-                    </KDEWrapper>
+                    </KDEWrapper></ChartPopOut>
                 </div>;
                 break;
         case "line":
