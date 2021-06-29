@@ -6,8 +6,9 @@ export default function LineGraph(props) {
     let svgRef = React.createRef();
 
     let [margin, setMargin] = useState({ top: 30, right: 20, bottom: 75, left: 50 });
-    let [mouseIn, setMouseIn] = useState(false);
-	let [onMouseMove, setOnMouseMove] = useState(() => {});
+
+    let mouseIn = false;
+    let onMouseMove = () => {};
     
     let setup = () => {
         let svg = d3.select(svgRef.current);
@@ -28,9 +29,10 @@ export default function LineGraph(props) {
             .attr("fill", "#666")
             .text("getting data...");
 
-		svg.on('mouseenter', () => setMouseIn(true));
-        svg.on('mouseleave', () => {
-            setMouseIn(false);
+		svg.on('mouseenter', (event) => { mouseIn = true; });
+        svg.on('mouseleave', (event) => {
+            console.log(event);
+            mouseIn = false;
             svg.select("text#marker").attr("display", "none");
             svg.select("g#lines").selectAll("path").each(function() {
                 d3.select(this).attr("stroke", "steelblue");
@@ -98,10 +100,9 @@ export default function LineGraph(props) {
             .attr("x", width / 2)
             .attr("fill", "#666")
             .text("SUBTITLE");
-        
-        setOnMouseMove(event => {
-			return;
 
+
+        onMouseMove = event => {
             let rawMouse = d3.pointer(event, svgRef.current);
             let mouse = [ x.invert(rawMouse[0]).valueOf(), y.invert(rawMouse[1]) ];
 
@@ -139,17 +140,8 @@ export default function LineGraph(props) {
                 .attr("font-size", "smaller")
                 .attr("fill", "#111")
                 .text(closest.name);
-        });
-
-        /*
-        if (this.makingQuery && !this.lastDataFailed) {
-            view.svg.select("text#queryNotice")
-                .attr("display", "default");
-        } else {
-            view.svg.select("text#queryNotice")
-                .attr("display", "none");
-        }
-        */
+        };
+        svg.on('mousemove', onMouseMove);
     };
 
     useEffect(setup, []);
