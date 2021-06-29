@@ -102,16 +102,20 @@ export default function LineGraph(props) {
 
 
         onMouseMove = event => {
-            // Hello darkness my old friend
             if (svgRef.current == null) {
                 return;
             }
 
             let rawMouse = d3.pointer(event, svgRef.current);
-            
-            // I've come to speak with you again
-            rawMouse[0] -= props.pos.x / svgRef.current.getScreenCTM().a;
-            rawMouse[1] -= props.pos.y / svgRef.current.getScreenCTM().d;
+            console.log(rawMouse);
+
+            // d3.pointer does not give accurate reuslts on some browsers,
+            // If rawMouse is outside the resizable window, adjust it.
+            if (rawMouse[0] > props.size.width || rawMouse[1] > props.size.height) {
+                rawMouse[0] -= props.pos.x / svgRef.current.getScreenCTM().a;
+                rawMouse[1] -= props.pos.y / svgRef.current.getScreenCTM().d;
+                //console.log(rawMouse);
+            }
 
             let mouse = [ x.invert(rawMouse[0]).valueOf(), y.invert(rawMouse[1]) ];
 
