@@ -14,6 +14,7 @@ function shouldAvoidDragging(node) {
 
 export default function ChartingResizable() {
     let [size, setSize] = useState({ width: 500, height: 400 });
+    let [pos, setPos] = useState({ x: 900, y: 100 });
     let [chartData, setChartData] = useState({});
 
     useEffect(() => {
@@ -46,10 +47,14 @@ export default function ChartingResizable() {
                 onDrag={(node, x, y, deltaX, deltaY, lastX, lastY) => {
                     return !shouldAvoidDragging(node.target);
                 }}
+                onDragStop={(node, x, y, deltaX, deltaY, lastX, lastY) => {
+                    // Yes, this is not a mistake, the library is bugged.
+                    setPos({ x: x.x, y: x.y });
+                }}
             >
                 <Paper className={'charting-resizable-window'}>
                     <div style={{ overflowY: "scroll", maxHeight: size.height }}>
-                        <ChartingWindow size={size} data={chartData}/>
+                        <ChartingWindow size={size} pos={pos} data={chartData}/>
                     </div>
                 </Paper>
             </Rnd>
