@@ -18,7 +18,7 @@ function prettifyJSON(name) {
     return Util.capitalizeString(Util.underScoreToSpace(name));
 }
 
-export default function Workspace() {
+export default React.memo(function Workspace() {
     const classes = useStyles();
 
     const [layers, setLayers] = useState([]);
@@ -82,4 +82,4 @@ export default function Workspace() {
             </Grid>
         </Grid>
     );
-}
+})
