@@ -31,7 +31,6 @@ export default function LineGraph(props) {
 
 		svg.on('mouseenter', (event) => { mouseIn = true; });
         svg.on('mouseleave', (event) => {
-            console.log(event);
             mouseIn = false;
             svg.select("text#marker").attr("display", "none");
             svg.select("g#lines").selectAll("path").each(function() {
@@ -103,8 +102,14 @@ export default function LineGraph(props) {
 
 
         onMouseMove = event => {
-            let rawMouse = d3.pointer(event, svgRef.current);
+            // Hello darkness my old friend
+            if (svgRef.current == null) {
+                return;
+            }
 
+            let rawMouse = d3.pointer(event, svgRef.current);
+            
+            // I've come to speak with you again
             rawMouse[0] -= props.pos.x / svgRef.current.getScreenCTM().a;
             rawMouse[1] -= props.pos.y / svgRef.current.getScreenCTM().d;
 
