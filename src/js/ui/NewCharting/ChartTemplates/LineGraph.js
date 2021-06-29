@@ -103,7 +103,10 @@ export default function LineGraph(props) {
 
 
         onMouseMove = event => {
-            let rawMouse = d3.pointer(event, svgRef.current);
+            console.log(event);
+            //let rawMouse = d3.pointer(event, svgRef.current);
+            let rawMouse = [event.layerX, event.layerY];
+
             let mouse = [ x.invert(rawMouse[0]).valueOf(), y.invert(rawMouse[1]) ];
 
             let dates = [];
