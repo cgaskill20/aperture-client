@@ -21,38 +21,44 @@ export default function Frame(props) {
             }
         })
     }
-    switch (props.type.name) {
 
+    let wrapWithDropDown = (component, opts, setc) => {
+        return (
+            <div>
+                <ConstraintDropDown options={opts} setConstraint={setc}/>
+                {component}
+            </div>
+        );
+    }
+
+    switch (props.type.name) {
         case "histogram":
             frame = 
-                <div>
-                    <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
-                    <KDEWrapper>
-                        <HistogramGraph size={props.size} pos={props.pos} data={props.data} selected={constraint}></HistogramGraph>
-                    </KDEWrapper>
-                </div>;
-                break;
+                <KDEWrapper>
+                    <HistogramGraph size={props.size} pos={props.pos} data={props.data} selected={constraint}/>
+                </KDEWrapper>
+            frame = wrapWithDropDown(frame, selectedConstraints, setConstraint);
+            break;
         case "line":
-            frame = <LineGraph size={props.size} pos={props.pos} data={props.data} selected={constraint}></LineGraph>; break;
+            frame = <LineGraph size={props.size} pos={props.pos} data={props.data} selected={constraint}/>;
+            break;
         case "piegraph2":
-            frame = <div><ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
-                <PieGraph size={props.size} pos={props.pos} data={props.data} selected={constraint}></PieGraph></div>; break;
+            frame = <PieGraph size={props.size} pos={props.pos} data={props.data} selected={constraint}/>; 
+            frame = wrapWithDropDown(frame, selectedConstraints, setConstraint);
+            break;
         case "scatterplot":
-            frame = 
-                <div>
-                    <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
-                    <ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint2}></ConstraintDropDown>
-                    <ScatterPlot size={props.size} pos={props.pos} data={props.data} selected={[constraint, constraint2]}></ScatterPlot>
-                </div>; break;
+            frame =  <ScatterPlot size={props.size} pos={props.pos} data={props.data} selected={[constraint, constraint2]}/>
+            frame = wrapWithDropDown(frame, selectedConstraints, setConstraint);
+            frame = wrapWithDropDown(frame, selectedConstraints, setConstraint2);
+            break;
         case "piegraph":
-            frame = <div><ConstraintDropDown options={selectedConstraints} setConstraint={setConstraint}></ConstraintDropDown>
-                <BoxPlot size={props.size} pos={props.pos} data={props.data} selected={constraint}></BoxPlot></div>; break;
-
+            frame = <BoxPlot size={props.size} pos={props.pos} data={props.data} selected={constraint}/>;
+            frame = wrapWithDropDown(frame, selectedConstraints, setConstraint);
+            break;
         default: break;
     }
 
     return (
-
         <div style={{
             width: "100%",
             height: props.size.height - 80,
