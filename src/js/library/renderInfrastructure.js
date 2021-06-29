@@ -220,7 +220,8 @@ export default class RenderInfrastructure {
         return refs.reduce((acc, curr) => {
             return {
                 ...acc,
-                ...curr.properties
+                ...curr.properties,
+                meta: { ...acc.meta, ...curr.properties.meta }
             }
         }, {});
     }
