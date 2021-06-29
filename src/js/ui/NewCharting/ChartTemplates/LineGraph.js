@@ -55,7 +55,7 @@ export default function LineGraph(props) {
         let svg = d3.select(svgRef.current);
         let data = prepareData(props.data);
 
-        svg.attr("viewBox", [0, 0, width, height]);
+        svg.attr("viewBox", [0, 0, width, height-50]);
 
 		let x = d3.scaleUtc()
             .domain([d3.min(data, entry => d3.min(entry.data, d => d.date)), 

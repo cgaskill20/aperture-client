@@ -13,13 +13,14 @@ function shouldAvoidDragging(node) {
 }
 
 export default function ChartingResizable() {
-    let [size, setSize] = useState({ width: 500, height: 400 });
+    let [size, setSize] = useState({ width: 700, height: 450 });
     let [chartData, setChartData] = useState({});
 
     useEffect(() => {
         window.chartSystem.registerDataConsumer('charting-resizable', setChartData);
         return () => window.chartSystem.unregisterDataConsumer('charting-resizable');
     }, []);
+
 
     return (
         <div style={{

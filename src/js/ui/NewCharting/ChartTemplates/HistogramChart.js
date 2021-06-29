@@ -5,7 +5,7 @@ import KernelDensityEstimator from '../../../library/charting/kernelDensityEstim
 export default function HistogramGraph(props) {
 
     let svgRef = React.createRef();
-    let [margin, setMargin] = useState({ top: 0, right: 10, bottom: 250, left: 20 });
+    let [margin, setMargin] = useState({ top: 10, right: 10, bottom: 200, left: 20 });
     let [kde, setKde] = useState(new KernelDensityEstimator());
 
     let setup = () => {

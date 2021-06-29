@@ -38,10 +38,10 @@ export default function ScatterPlot(props) {
     let rerender = (width, height) => {
 
         const margin = {
-            top: 0,
-            right: 10,
+            top: 20,
+            right: 20,
             bottom: 150,
-            left: 20
+            left: 80
         };
         const radius = 5;
         const color = "blue";
@@ -114,15 +114,15 @@ export default function ScatterPlot(props) {
 
 
         svg.select("#xAxisText")
-            .attr('transform', `translate(${(margin.left + drawWidth / 2)}, ${(height - margin.bottom + 30)})`)
+            .attr('transform', `translate(${(margin.left + drawWidth / 4)}, ${(height - margin.bottom + 30)})`)
             .attr('class', 'axis-label')
-            .text(xVar);
+            .text(xVar.split("::")[2]);
 
 
         svg.select("#yAxisText")
-            .attr('transform', `translate( ${(margin.left - 30)},${(margin.top + drawHeight / 2)}) rotate(-90)`)
+            .attr('transform', `translate( ${(margin.left - 60)},${(margin.top + drawHeight - 10)}) rotate(-90)`)
             .attr('class', 'axis-label')
-            .text(yVar);
+            .text(yVar.split("::")[2]);
 
 
 
