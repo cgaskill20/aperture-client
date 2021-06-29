@@ -6,7 +6,6 @@ import PieGraph from "./ChartTemplates/PieTEST";
 import ScatterPlot from "./ChartTemplates/ScatterPlot";
 import KDEWrapper from "./KDEWrapper";
 import BoxPlot from "./ChartTemplates/BoxPlotChart";
-import RadarChart from "./ChartTemplates/RadarChart";
 import FrameControls from "./frameControls";
 
 
@@ -51,9 +50,6 @@ export default function Frame(props) {
         case "boxplot":
             frame = <div><FrameControls options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                 <BoxPlot size={props.size} data={props.data} selected={constraint}></BoxPlot></div>; break;
-        case "radarchart":
-            frame = <div>
-                <RadarChart size={props.size} data={props.data}></RadarChart></div>; break;
 
         default: break;
     }
@@ -65,7 +61,6 @@ export default function Frame(props) {
         <div style={{
             width: "100%",
             height: props.size.height - 80,
-            border: "1px solid red",
         }}>
             {frame}
         </div>

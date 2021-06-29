@@ -102,10 +102,6 @@ export const ChartingType = {
         name: "boxplot",
         wantsSources: [ DataSourceType.MAP_FEATURES ],
     },
-    RADARCHART:{
-        name: "radarchart",
-        wantsSources: [ DataSourceType.MAP_FEATURES ],
-    },
 };
 
 // Chart message types that any chart can accept.
