@@ -3,7 +3,7 @@ import { Rnd } from 'react-rnd';
 import Paper from '@material-ui/core/Paper';
 import ChartingWindow from './ChartingWindow';
 
-function shouldAvoidDragging(node) {
+export function shouldAvoidDragging(node) {
     if (!node || !node.className || !node.className.includes) {
         return false;
     }
