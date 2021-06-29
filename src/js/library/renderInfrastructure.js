@@ -38,7 +38,7 @@ export default class RenderInfrastructure {
      * @param {JSON} data - JSON that contains needed information for renderable things
      * @param {object} options - object with attributes
      */
-    constructor(map, markerLayer, layerGroup, options) { 
+    constructor(map, markerLayer, layerGroup, options) {
         this.options = JSON.parse(JSON.stringify(DEFAULTOPTIONS));
         L.Util.setOptions(this, options);
         this.map = map;
@@ -58,14 +58,14 @@ export default class RenderInfrastructure {
      * @param {JSON} indexData (optional) custom JSON data (if you don't want to use Renderinfrastructure.data as your indexing file)
      * @returns {Array<int>} array of integers which contain the id of added layers
      */
-    renderGeoJson(geoJsonData, indexData, specifiedId=-1) {
+    renderGeoJson(geoJsonData, indexData, specifiedId = -1) {
         if (this.options.simplifyThreshold !== -1) {
             Util.simplifyGeoJSON(geoJsonData, this.options.simplifyThreshold);
         }
         //console.log(geoJsonData)
 
         Util.fixGeoJSONID(geoJsonData);
-        if(specifiedId === -1){
+        if (specifiedId === -1) {
             this.gisjoinUpdate(geoJsonData, indexData);
         }
         //console.log("rendering")
@@ -101,10 +101,13 @@ export default class RenderInfrastructure {
                 }
                 layer.specifiedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
                 let iconName = Util.getNameFromGeoJsonFeature(feature, indexData);
+                const { joinField, temporalRange } = indexData[Object.keys(indexData)[0]]
                 let popupObj = {
                     name: iconName,
                     meta: feature.properties.meta,
-                    properties: feature.properties
+                    properties: feature.properties,
+                    join: { [joinField]: feature.properties[joinField] },
+                    temporalRange
                 }
                 this.addIconToMap(iconName, latlng, popupObj, indexData, layer.specifiedId);
                 //layer.bindPopup(iconDetails);
@@ -129,8 +132,8 @@ export default class RenderInfrastructure {
                 });
             }.bind(this)
         });
-        
-        if(layers.length){
+
+        if (layers.length) {
             this.gisjoinUpdateLayer(geoJsonData, layers[0]);
         }
 
@@ -139,9 +142,9 @@ export default class RenderInfrastructure {
     }
 
 
-    gisjoinUpdate(geojson, indexData){
+    gisjoinUpdate(geojson, indexData) {
         const GISJOIN = geojson?.properties?.GISJOIN;
-        if(!GISJOIN){
+        if (!GISJOIN) {
             return;
         }
         const index = this.gisjoinIndex(GISJOIN);
@@ -153,7 +156,7 @@ export default class RenderInfrastructure {
             properties: JSON.parse(JSON.stringify(geojson.properties))
         };
 
-        if(index === -1){
+        if (index === -1) {
             this.currentGISJOINLayers.push({
                 GISJOIN,
                 geojson,
@@ -165,56 +168,56 @@ export default class RenderInfrastructure {
             layer.refs = layer.refs.filter(ref => ref.name !== thisRef.name);
             layer.refs.push(thisRef);
 
-            if(layer.refs.length > 1){
+            if (layer.refs.length > 1) {
                 const dataToEdit = indexData[oldName];
                 dataToEdit.color = this.refsToColor(layer.refs);
                 dataToEdit.opacity = this.refsToOpacity(layer.refs);
                 dataToEdit.popup = this.refsToPopup(layer.refs);
                 geojson.properties = this.refsToProperties(layer.refs);
                 const newName = this.refsToName(layer.refs);
-                indexData[newName] = {...indexData[oldName]};
+                indexData[newName] = { ...indexData[oldName] };
                 delete indexData[oldName];
 
-                if(layer.layerID != undefined){
+                if (layer.layerID != undefined) {
                     //console.log(`Removing ${layer.layerID}`)
                     this.removeSpecifiedLayersFromMap([layer.layerID], false)
                 }
             }
         }
     }
-    
-    refsToName(refs){
-        return refs.reduce((acc,curr) => {
+
+    refsToName(refs) {
+        return refs.reduce((acc, curr) => {
             return `${acc} ∩ ${curr.name}`
         }, "").substring(3);
     }
 
-    refsToColor(refs){
-        if(refs.length > 1){
+    refsToColor(refs) {
+        if (refs.length > 1) {
             return "#242B2E";
         }
-        else{
+        else {
             return refs[0].indexData[refs[0].name].color;
         }
     }
 
-    refsToOpacity(refs){
-        if(refs.length > 1){
+    refsToOpacity(refs) {
+        if (refs.length > 1) {
             return 0.5;
         }
-        else{
+        else {
             return refs[0].indexData[refs[0].name].opacity;
         }
     }
 
-    refsToPopup(refs){
-        return refs.reduce((acc,curr) => {
+    refsToPopup(refs) {
+        return refs.reduce((acc, curr) => {
             return `${acc}${curr.indexData[curr.name].popup}`
         }, "");
     }
 
-    refsToProperties(refs){
-        return refs.reduce((acc,curr) => {
+    refsToProperties(refs) {
+        return refs.reduce((acc, curr) => {
             return {
                 ...acc,
                 ...curr.properties
@@ -222,25 +225,25 @@ export default class RenderInfrastructure {
         }, {});
     }
 
-    gisjoinUpdateLayer(geojson, layerID){
+    gisjoinUpdateLayer(geojson, layerID) {
         const GISJOIN = geojson?.properties?.GISJOIN;
-        if(!GISJOIN){
+        if (!GISJOIN) {
             return;
         }
         //console.log(`Just rendered ${layerID}`)
         const index = this.gisjoinIndex(GISJOIN);
         const layer = this.currentGISJOINLayers[index];
         layer.layerID = layerID;
-        if(!layer.refs[layer.refs.length-1].layerID){
-            layer.refs[layer.refs.length-1].layerID = layerID;
+        if (!layer.refs[layer.refs.length - 1].layerID) {
+            layer.refs[layer.refs.length - 1].layerID = layerID;
         }
     }
 
-    gisjoinIndex(GISJOIN){
+    gisjoinIndex(GISJOIN) {
         return this.currentGISJOINLayers.findIndex(layer => layer.GISJOIN === GISJOIN);
     }
 
-    removeRefs(layerIDs){
+    removeRefs(layerIDs) {
         const layersRemovedFrom = [];
         this.currentGISJOINLayers.forEach(layer => {
             const lenBefore = layer.refs.length;
@@ -248,16 +251,16 @@ export default class RenderInfrastructure {
             layer.refs = layer.refs.filter(ref => {
                 return !layerIDs.includes(ref.layerID);
             });
-        
-            if(layer.refs.length !== lenBefore){
+
+            if (layer.refs.length !== lenBefore) {
                 layersRemovedFrom.push(layer.GISJOIN);
             }
         });
         this.currentGISJOINLayers = this.currentGISJOINLayers.filter(layer => {
-            if(layer.refs.length === 0){
+            if (layer.refs.length === 0) {
                 return false;
             }
-            else if(layersRemovedFrom.includes(layer.GISJOIN)){
+            else if (layersRemovedFrom.includes(layer.GISJOIN)) {
                 const geojson = layer.geojson;
                 geojson.properties = this.refsToProperties(layer.refs);
                 //console.log(JSON.parse(JSON.stringify(layer.refs)))
@@ -268,11 +271,11 @@ export default class RenderInfrastructure {
                         opacity: this.refsToOpacity(layer.refs)
                     }
                 }
-                if(layer.layerID != undefined){
+                if (layer.layerID != undefined) {
                     //console.log(`Removing ${layer.layerID}`)
                     this.removeSpecifiedLayersFromMap([layer.layerID], false)
                 }
-                this.renderGeoJson(geojson,indexData,layer.refs[layer.refs.length-1].layerID);
+                this.renderGeoJson(geojson, indexData, layer.refs[layer.refs.length - 1].layerID);
                 return true;
             }
             return true;
@@ -314,8 +317,8 @@ export default class RenderInfrastructure {
      * @param {Array<int>} specifiedIds id which should be removed from map, ex: 'dam' or 'weir'
      * @returns {boolean} true if ids were removed
      */
-    removeSpecifiedLayersFromMap(specifiedIds, removeRefs=true) {
-        if(removeRefs){
+    removeSpecifiedLayersFromMap(specifiedIds, removeRefs = true) {
+        if (removeRefs) {
             this.removeRefs(specifiedIds);
         }
         this.markerLayer.eachLayer(function (layer) {

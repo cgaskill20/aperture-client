@@ -5,6 +5,7 @@ import Util from "../../library/apertureUtil";
 import fipsToState from "../../../json/fipsToState.json"
 import defaultImportantFields from "../../../json/defaultImportantFields.json"
 import CloseIcon from "@material-ui/icons/Close";
+import PopupTimeChart from "./PopupTimeChart";
 
 const drawerWidth = '450px';
 
@@ -54,23 +55,23 @@ export default function Popup() {
         if (obj?.meta?.[key]?.label) {
             return obj.meta[key].label;
         }
-        if(defaultImportantFields[key]) {
+        if (defaultImportantFields[key]) {
             return defaultImportantFields[key].label ?? Util.cleanUpString(key);
         }
-    
+
         return Util.cleanUpString(key);
     }
 
     const valueToDisplay = (key, value) => {
         let unit = obj?.meta?.[key]?.unit;
-        if(unit?.toUpperCase() === 'NA'){
+        if (unit?.toUpperCase() === 'NA') {
             unit = null;
         }
 
         if (obj?.meta?.[key]?.isDate) {
             return dateToDisplay(value);
         }
-        else if(defaultImportantFields[key]?.type && !['string', 'number'].includes(defaultImportantFields[key]?.type)){
+        else if (defaultImportantFields[key]?.type && !['string', 'number'].includes(defaultImportantFields[key]?.type)) {
             return specialTypeToDisplay(defaultImportantFields[key].type, value);
         }
         else if (['string', 'number'].includes(typeof value)) {
@@ -85,7 +86,7 @@ export default function Popup() {
     }
 
     const specialTypeToDisplay = (type, value) => {
-        if(type === "stateFips"){
+        if (type === "stateFips") {
             return fipsToState[value];
         }
     }
@@ -161,11 +162,29 @@ export default function Popup() {
                             <br />
                         </> : null
                 }
+                {makeCharts()}
                 <Typography variant="h6" gutterBottom>
                     All Fields
                 </Typography>
                 {makeTable(Object.entries(obj.properties))}
             </>
+        }
+    }
+
+    const makeCharts = () => {
+        if (obj.properties) {
+            return Object.entries(obj.properties)
+                .filter(([key, value]) => obj.properties?.meta?.[key]?.temporal)
+                .map(([key, value]) => <React.Fragment key={`${key}${JSON.stringify(obj.join)}${JSON.stringify(obj.temporalRange)}`}>
+                    <Typography gutterBottom variant="h4">{Util.cleanUpString(key)}</Typography>
+                    <PopupTimeChart
+                        collection={obj.name}
+                        fieldToChart={key}
+                        join={obj.join}
+                        temporalRange={obj.temporalRange}
+                    />
+                    <br/>
+                </React.Fragment>)
         }
     }
 
