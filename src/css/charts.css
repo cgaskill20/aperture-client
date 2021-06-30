@@ -127,3 +127,9 @@
 .chart-container {
     display: flex;
 }
+
+.chart-tooltip {
+    z-index: 10000;
+    border-radius: 5px;
+    padding: 10px;
+}
