@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Drawer, Typography, IconButton, Grid } from "@material-ui/core";
+import { makeStyles, Drawer, Typography, IconButton, Grid } from "@material-ui/core";
 import { useGlobalState } from "../global/GlobalState";
 import Util from "../../library/apertureUtil";
 import CloseIcon from "@material-ui/icons/Close";
 import PopupTable from "./PopupTable";
 import PopupTimeChart from "./PopupTimeChart";
-import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
+import { keyToDisplay } from "./PopupUtils";
 import defaultImportantFields from "../../../json/defaultImportantFields.json"
 
 const drawerWidth = '450px';
