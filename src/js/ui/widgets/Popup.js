@@ -155,7 +155,7 @@ export default function Popup() {
                 .filter(([key, value]) => obj.properties?.meta?.[key]?.important || defaultImportantFields[key])
                 .filter(([key, value]) => {
                     const keyDisp = keyToDisplay(key);
-                    if(importantNames.has(keyDisp)){
+                    if (importantNames.has(keyDisp)) {
                         return false;
                     }
                     importantNames.add(keyDisp)
@@ -188,12 +188,12 @@ export default function Popup() {
                 .map(([key, value]) => <React.Fragment key={`${key}${JSON.stringify(obj.join)}${JSON.stringify(obj.temporalRange)}`}>
                     <Typography gutterBottom variant="h4">{Util.cleanUpString(key)}</Typography>
                     <PopupTimeChart
-                        collection={obj.name}
+                        collection={obj.properties.meta[key].temporal.collection}
                         fieldToChart={key}
                         join={obj.join}
-                        temporalRange={obj.temporalRange}
+                        temporalRange={obj.properties.meta[key].temporal.temporalRange}
                     />
-                    <br/>
+                    <br />
                 </React.Fragment>)
         }
     }

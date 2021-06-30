@@ -106,12 +106,12 @@ export default class RenderInfrastructure {
                     name: iconName,
                     meta: feature.properties.meta,
                     properties: feature.properties,
-                    join: { [joinField]: feature.properties[joinField] },
-                    temporalRange
+                    join: { [joinField]: feature.properties[joinField] }
                 }
                 this.addIconToMap(iconName, latlng, popupObj, indexData, layer.specifiedId);
                 //layer.bindPopup(iconDetails);
                 layer.on('click', function (e) {
+                    console.log({feature})
                     window.setPopupObj(popupObj);
                     this.map.flyTo(e.latlng, this.map.getZoom(), FLYTOOPTIONS);
                     if (datasource[iconName].onClick) {
