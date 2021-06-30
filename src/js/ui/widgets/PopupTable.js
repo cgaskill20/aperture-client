@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Drawer, Typography, IconButton, Grid } from "@material-ui/core";
+import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
+
+const drawerWidth = '450px';
 
 const useStyles = makeStyles({
     table: {
@@ -7,7 +10,7 @@ const useStyles = makeStyles({
     }
 });
 
-export default function PopupTable({ keyValPairs }) {
+export default function PopupTable({ keyValPairs, obj }) {
     const classes = useStyles();
 
     return <TableContainer component={Paper}>
@@ -24,9 +27,9 @@ export default function PopupTable({ keyValPairs }) {
                     .map(([key, value]) => (
                         <TableRow key={key}>
                             <TableCell component="th" scope="row">
-                                {keyToDisplay(key)}
+                                {keyToDisplay(obj, key)}
                             </TableCell>
-                            <TableCell>{valueToDisplay(key, value)}</TableCell>
+                            <TableCell>{valueToDisplay(obj, key, value)}</TableCell>
                         </TableRow>
                     ))}
             </TableBody>

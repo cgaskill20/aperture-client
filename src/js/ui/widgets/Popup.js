@@ -3,6 +3,7 @@ import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper
 import { useGlobalState } from "../global/GlobalState";
 import Util from "../../library/apertureUtil";
 import CloseIcon from "@material-ui/icons/Close";
+import PopupTable from "./PopupTable";
 import PopupTimeChart from "./PopupTimeChart";
 import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
 import defaultImportantFields from "../../../json/defaultImportantFields.json"
@@ -48,28 +49,7 @@ export default function Popup() {
         if (!keyValPairs || !keyValPairs.length) {
             return;
         }
-        return <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell><b>Key</b></TableCell>
-                        <TableCell><b>Value</b></TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {keyValPairs
-                        .filter(([key, value]) => keyValueIsValid(key, value))
-                        .map(([key, value]) => (
-                            <TableRow key={key}>
-                                <TableCell component="th" scope="row">
-                                    {keyToDisplay(obj, key)}
-                                </TableCell>
-                                <TableCell>{valueToDisplay(obj, key, value)}</TableCell>
-                            </TableRow>
-                        ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        return <PopupTable keyValPairs={keyValPairs} obj={obj} />
     }
 
     const makeTables = () => {
