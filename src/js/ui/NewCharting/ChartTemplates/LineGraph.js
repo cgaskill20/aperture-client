@@ -1,14 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import * as d3 from '../../../third-party/d3.min.js';
-
+import d3tip from 'd3-tip';
 
 export default function LineGraph(props) {
     let svgRef = React.createRef();
 
     let [margin, setMargin] = useState({ top: 30, right: 20, bottom: 75, left: 50 });
-    let [mouseIn, setMouseIn] = useState(false);
-	let [onMouseMove, setOnMouseMove] = useState(() => {});
-    
+    let [tip, setTip] = useState({ element: { show: console.log, hide: console.log  } });
+
+    let handleMouseMove = (event, svg, params) => {
+        let rawMouse = d3.pointer(event, svg);
+        let mouse = [ params.x.invert(rawMouse[0]).valueOf(), params.y.invert(rawMouse[1]) ];
+
+        let dates = [];
+        params.data.forEach(county => {
+            county.data.forEach(entry => {
+                if (!dates.includes(entry.date)) {
+                    dates.push(entry.date);
+                }
+            });
+        });
+
+        dates.sort();
+
+        let searchDateIndex = d3.bisectCenter(dates, mouse[0]);
+        let closest = d3.least(params.data, d => {
+            let entry = d.data[searchDateIndex];
+            if (!entry) {
+                return; // JAVASCRIPT EXCELLENCE AWARD 2021 
+            }   
+
+            return Math.abs(d.data[searchDateIndex].value - mouse[1])
+        });
+
+        svg.select("g#lines").selectAll("path").each(function() {
+            d3.select(this).attr("stroke", s => s.gisJoin === closest.gisJoin ? 'steelblue' : "#eee");
+        });
+
+        let textSpaceTolerance = closest.name.length * 7;
+
+        svg.select("text#marker")
+            .attr("display", "default")
+            .attr("x", ((rawMouse[0] - params.width) > -textSpaceTolerance) ? rawMouse[0] - textSpaceTolerance : rawMouse[0])
+            .attr("y", rawMouse[1] - 20)
+            .attr("font-size", "smaller")
+            .attr("fill", "#111")
+            .text(closest.name);
+    };
+
     let setup = () => {
         let svg = d3.select(svgRef.current);
 
@@ -28,15 +67,16 @@ export default function LineGraph(props) {
             .attr("fill", "#666")
             .text("getting data...");
 
-		svg.on('mouseenter', () => setMouseIn(true));
-        svg.on('mouseleave', () => {
-            setMouseIn(false);
-            svg.select("text#marker").attr("display", "none");
-            svg.select("g#lines").selectAll("path").each(function() {
-                d3.select(this).attr("stroke", "steelblue");
-            });
-        });
-        svg.on('mousemove', onMouseMove);
+        let svgTip = d3tip(svg)
+            .attr('class', 'd3-tip')
+            .html(function(d) { return 'hey' });
+        
+        // In the d3-tip library, the tip is a function.
+        // If a function is passed into react state, it will call it, causing a crash.
+        // So we wrap it in this ugly thing...
+        setTip({ element: svgTip });
+
+        svg.call(svgTip);
     }
 
     let prepareData = data => {
@@ -84,10 +124,12 @@ export default function LineGraph(props) {
         svg.select("g#yAxis").call(yAxis);
         svg.select("g#lines")
             .selectAll("path")
+            .on('mouseover', tip.element.show)
+            .on('mouseout', tip.element.hide)
             .data(data)
             .join("path")
             .style("mix-blend-mode", "multiply")
-            .attr("d", d => line(d.data));
+            .attr("d", d => line(d.data))
 
         svg.select("text#title")
             .attr("x", width / 2)
@@ -98,58 +140,6 @@ export default function LineGraph(props) {
             .attr("x", width / 2)
             .attr("fill", "#666")
             .text("SUBTITLE");
-        
-        setOnMouseMove(event => {
-			return;
-
-            let rawMouse = d3.pointer(event, svgRef.current);
-            let mouse = [ x.invert(rawMouse[0]).valueOf(), y.invert(rawMouse[1]) ];
-
-            let dates = [];
-            data.forEach(county => {
-                county.data.forEach(entry => {
-                    if (!dates.includes(entry.date)) {
-                        dates.push(entry.date);
-                    }
-                });
-            });
-
-            dates.sort();
-
-            let searchDateIndex = d3.bisectCenter(dates, mouse[0]);
-            let closest = d3.least(data, d => {
-                let entry = d.data[searchDateIndex];
-                if (!entry) {
-                    return; // JAVASCRIPT EXCELLENCE AWARD 2021 
-                }   
-
-                return Math.abs(d.data[searchDateIndex].value - mouse[1])
-            });
-
-            svg.select("g#lines").selectAll("path").each(function() {
-                d3.select(this).attr("stroke", s => s.gisJoin === closest.gisJoin ? 'steelblue' : "#eee");
-            });
-
-            let textSpaceTolerance = closest.name.length * 7;
-
-            svg.select("text#marker")
-                .attr("display", "default")
-                .attr("x", ((rawMouse[0] - width) > -textSpaceTolerance) ? rawMouse[0] - textSpaceTolerance : rawMouse[0])
-                .attr("y", rawMouse[1] - 20)
-                .attr("font-size", "smaller")
-                .attr("fill", "#111")
-                .text(closest.name);
-        });
-
-        /*
-        if (this.makingQuery && !this.lastDataFailed) {
-            view.svg.select("text#queryNotice")
-                .attr("display", "default");
-        } else {
-            view.svg.select("text#queryNotice")
-                .attr("display", "none");
-        }
-        */
     };
 
     useEffect(setup, []);

@@ -37,6 +37,7 @@
     "clsx": "^1.1.1",
     "create-react-app": "^2.1.1",
     "d3": "^4.13.0",
+    "d3-tip": "^0.9.1",
     "data2grid": "^1.0.0",
     "dexie": "^3.0.3",
     "fs": "0.0.1-security",
