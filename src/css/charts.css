@@ -3,6 +3,10 @@
     width: 100%;
 }
 
+.charting-resizable-window svg {
+    cursor: normal;
+}
+
 .add-graph-box {
     padding: 20px;
     border-bottom-style: double;

@@ -14,7 +14,7 @@ export default function ChartingWindow(props) {
             <Grid container direction="row" alignItems="center" justify="center" spacing={1}>
                 <Grid container direction="column" alignItems="center" justify="center" style={{ width: "90%" }}>
                     <ChartGlobalControls make={addChartFrame} />
-                    {frames.map((frameType, index) => <Frame key={index} type={frameType} size={props.size} data={props.data}/>)}
+                    {frames.map((frameType, index) => <Frame key={index} type={frameType} size={props.size} pos={props.pos} data={props.data}/>)}
                 </Grid>
             </Grid>
         </Grid>
