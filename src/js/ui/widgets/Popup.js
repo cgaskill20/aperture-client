@@ -150,7 +150,17 @@ export default function Popup() {
 
     const makeTables = () => {
         if (obj.properties) {
-            const importantFields = Object.entries(obj.properties).filter(([key, value]) => obj.properties?.meta?.[key]?.important || defaultImportantFields[key]);
+            const importantNames = new Set();
+            const importantFields = Object.entries(obj.properties)
+                .filter(([key, value]) => obj.properties?.meta?.[key]?.important || defaultImportantFields[key])
+                .filter(([key, value]) => {
+                    const keyDisp = keyToDisplay(key);
+                    if(importantNames.has(keyDisp)){
+                        return false;
+                    }
+                    importantNames.add(keyDisp)
+                    return true;
+                });
             return <>
                 {
                     importantFields.length ?
