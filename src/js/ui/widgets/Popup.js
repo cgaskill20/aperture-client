@@ -27,6 +27,9 @@ const useStyles = makeStyles({
     },
     contentContainer: {
         margin: '20px'
+    },
+    header: {
+        
     }
 });
 
@@ -210,17 +213,21 @@ export default function Popup() {
         >
             <div className={classes.contentContainer}>
                 <Grid container>
-                    <Grid item xs={10}>
-                        <Typography variant="h4" gutterBottom>
-                            {Util.cleanUpString(obj.name)}
-                        </Typography>
+                    <Grid item xs={12} className={classes.header}>
+                        <Grid container>
+                            <Grid item xs={10}>
+                                <Typography variant="h4" gutterBottom>
+                                    {Util.cleanUpString(obj.name)}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={2}>
+                                <IconButton onClick={() => setGlobalState({ popupOpen: false })}>
+                                    <CloseIcon />
+                                </IconButton>
+                            </Grid>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={2}>
-                        <IconButton onClick={() => setGlobalState({ popupOpen: false })}>
-                            <CloseIcon />
-                        </IconButton>
-                    </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} className={classes.contentContainer}>
                         {makeTables()}
                     </Grid>
                 </Grid>

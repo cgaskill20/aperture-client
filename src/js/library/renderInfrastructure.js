@@ -101,7 +101,7 @@ export default class RenderInfrastructure {
                 }
                 layer.specifiedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
                 let iconName = Util.getNameFromGeoJsonFeature(feature, indexData);
-                const { joinField, temporalRange } = indexData[Object.keys(indexData)[0]]
+                const { joinField } = indexData[Object.keys(indexData)[0]]
                 let popupObj = {
                     name: iconName,
                     meta: feature.properties.meta,
@@ -111,7 +111,6 @@ export default class RenderInfrastructure {
                 this.addIconToMap(iconName, latlng, popupObj, indexData, layer.specifiedId);
                 //layer.bindPopup(iconDetails);
                 layer.on('click', function (e) {
-                    console.log({feature})
                     window.setPopupObj(popupObj);
                     this.map.flyTo(e.latlng, this.map.getZoom(), FLYTOOPTIONS);
                     if (datasource[iconName].onClick) {
