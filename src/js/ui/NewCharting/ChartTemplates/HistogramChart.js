@@ -5,7 +5,7 @@ import KernelDensityEstimator from '../../../library/charting/kernelDensityEstim
 export default function HistogramGraph(props) {
 
     let svgRef = React.createRef();
-    let [margin, setMargin] = useState({ top: 10, right: 10, bottom: 200, left: 20 });
+    let [margin, setMargin] = useState({ top: 10, right: 10, bottom: 200, left: 30 });
     let [kde, setKde] = useState(new KernelDensityEstimator());
 
     let setup = () => {
@@ -34,7 +34,7 @@ export default function HistogramGraph(props) {
 
         let svg = d3.select(svgRef.current);
         
-		svg.attr("viewBox", [0, 0, width, height]);
+		svg.attr("viewBox", [0, 0, width, height-100]);
 
         let x = d3.scaleLinear()
             .range([margin.left, width - margin.right])
