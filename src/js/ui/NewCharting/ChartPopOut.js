@@ -5,29 +5,33 @@ import Paper from '@material-ui/core/Paper';
 
 
 export default function ChartPopOut(props){
-    let [size, setSize] = useState({ width: 700, height: 450 });
+    let [size, setSize] = useState({ width: 200, height: 200 });
+
 
     return (
         <div style={{
-            width: '800px',
-            height: '800px',
+            width: '200px',
+            height: '200px',
         }}>
             <Rnd default={{
                 x: 500,
-                y: 100,
+                y: 0,
                 width: size.width,
                 height: size.height
 
             }}
 
                  style={{
-                     zIndex: 1000,
+                     zIndex: 1001,
                  }}
-                 minWidth={500}
+                 minWidth={200}
                  minHeight={190}
                  bounds="window"
                  onResizeStop={(e, dir, refToElement, delta, position) => {
                      setSize({ width: size.width + delta.width, height: size.height + delta.height});
+                 }}
+                 onDrag={e => {
+                     e.stopImmediatePropagation();
                  }}
 
             >

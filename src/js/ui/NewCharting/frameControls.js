@@ -21,11 +21,6 @@ export default function frameControls(props) {
         <div>
             <ConstraintDropDown options={props.options} setConstraint={props.setConstraint}></ConstraintDropDown>
             {extraDropDown}
-            <IconButton color="secondary"
-                        onClick={handleChange}
-            >
-                <EjectIcon/>
-            </IconButton>
         </div>
     )
 

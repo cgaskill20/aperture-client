@@ -14,6 +14,9 @@ export function shouldAvoidDragging(node) {
 
 export default function ChartingResizable() {
     let [size, setSize] = useState({ width: 700, height: 450 });
+    let [coordinates, setCoordinates] = useState({x: 500, y: 100});
+
+
     let [chartData, setChartData] = useState({});
 
     useEffect(() => {
@@ -21,32 +24,33 @@ export default function ChartingResizable() {
         return () => window.chartSystem.unregisterDataConsumer('charting-resizable');
     }, []);
 
-
     return (
         <div style={{
             width: '800px',
             height: '800px',
         }}>
             <Rnd default={{
-                    x: 500,
-                    y: 100,
-                    width: size.width,
-                    height: size.height
+                x: 500,
+                y: 100,
+                width: size.width,
+                height: size.height
 
-                }}
+            }}
 
-                style={{
-                    zIndex: 1000,
-                }}
-                minWidth={500}
-                minHeight={190}
-                bounds="window"
-                onResizeStop={(e, dir, refToElement, delta, position) => {
-                    setSize({ width: size.width + delta.width, height: size.height + delta.height});
-                }}
-                onDrag={(node, x, y, deltaX, deltaY, lastX, lastY) => {
-                    return !shouldAvoidDragging(node.target);
-                }}
+                 style={{
+                     zIndex: 1001,
+                 }}
+                 minWidth={200}
+                 minHeight={190}
+                 bounds="window"
+                 onResizeStop={(e, dir, refToElement, delta, position) => {
+                     setSize({ width: size.width + delta.width, height: size.height + delta.height});
+                 }}
+                 onDrag={(node, x, y, deltaX, deltaY, lastX, lastY) => {
+                     console.log(node.target);
+                     return !shouldAvoidDragging(node.target);
+                 }}
+
             >
                 <Paper className={'charting-resizable-window'}>
                     <div style={{ overflowY: "scroll", maxHeight: size.height }}>

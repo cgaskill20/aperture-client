@@ -7,8 +7,7 @@ import ScatterPlot from "./ChartTemplates/ScatterPlot";
 import KDEWrapper from "./KDEWrapper";
 import BoxPlot from "./ChartTemplates/BoxPlotChart";
 import FrameControls from "./frameControls";
-import ChartPopOut from "./ChartPopOut";
-import ChartingResizable from "./ChartingResizable";
+
 
 
 export default function Frame(props) {
@@ -33,11 +32,10 @@ export default function Frame(props) {
         case "histogram":
             frame =
                 <div>
-                    <ChartPopOut>
                     <FrameControls options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1} popout={setPopped}></FrameControls>
                     <KDEWrapper>
                         <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph>
-                    </KDEWrapper></ChartPopOut>
+                    </KDEWrapper>
                 </div>;
                 break;
         case "line":
