@@ -17,6 +17,7 @@ export default function ChartGlobalControls(props) {
                 <Button onClick={() => props.make({ type: ChartingType.SCATTERPLOT })}>Scatterplot</Button>
                 <Button onClick={() => props.make({ type: ChartingType.LINE })}>COVID-19</Button>
                 <Button onClick={() => props.make({ type:  ChartingType.BOXPLOT })}>Box Plot</Button>
+                <Button onClick={() => props.make({ type:  ChartingType.CORRELOGRAM })}>Correlogram</Button>
             </ButtonGroup>
 
             {/* Close button */}

@@ -7,6 +7,7 @@ import ScatterPlot from "./ChartTemplates/ScatterPlot";
 import KDEWrapper from "./KDEWrapper";
 import BoxPlot from "./ChartTemplates/BoxPlotChart";
 import FrameControls from "./frameControls";
+import CorrelogramChart from "./ChartTemplates/CorrelogramChart";
 
 
 
@@ -52,6 +53,9 @@ export default function Frame(props) {
         case "boxplot":
             frame = <div><FrameControls options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                 <BoxPlot size={props.size} data={props.data} selected={constraint}></BoxPlot></div>; break;
+        case "correlogram":
+            frame = <div><FrameControls options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
+                <CorrelogramChart size={props.size} data={props.data} selected={constraint}></CorrelogramChart></div>; break;
 
         default: break;
     }

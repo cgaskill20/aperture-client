@@ -47,7 +47,6 @@ export default function ChartingResizable() {
                      setSize({ width: size.width + delta.width, height: size.height + delta.height});
                  }}
                  onDrag={(node, x, y, deltaX, deltaY, lastX, lastY) => {
-                     console.log(node.target);
                      return !shouldAvoidDragging(node.target);
                  }}
 
