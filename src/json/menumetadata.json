@@ -2546,5 +2546,1644 @@
                 "hideByDefault": true
             }
         ]
+    },
+    {
+        "collection": "ACS_10_years_test",
+        "temporal": "epoch_time",
+        "level": "county",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Year",
+                "step": "year"
+            },
+            {
+                "name": "GISJOIN",
+                "label": "GIS Join Match Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "YEAR",
+                "label": "Data File Year",
+                "remove": true
+            },
+            {
+                "name": "REGIONA",
+                "label": "Region Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "DIVISIONA",
+                "label": "Division Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "STATE",
+                "label": "State Name",
+                "hideByDefault": true
+            },
+            {
+                "name": "STATEA",
+                "label": "State Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "COUNTY",
+                "label": "County Name",
+                "hideByDefault": true
+            },
+            {
+                "name": "COUNTYA",
+                "label": "County Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "COUSUBA",
+                "label": "County Subdivision Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "PLACEA",
+                "label": "Place Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "AIANHHA",
+                "label": "American Indian Area/Alaska Native Area/Hawaiian Home Land Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "ANRCA",
+                "label": "Alaska Native Regional Corporation Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CBSAA",
+                "label": "Metropolitan Statistical Area/Micropolitan Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CSAA",
+                "label": "Combined Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "METDIVA",
+                "label": "Metropolitan Division Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "NECTAA",
+                "label": "New England City and Town Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CNECTAA",
+                "label": "Combined New England City and Town Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "NECTADIVA",
+                "label": "New England City and Town Area Division Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "UAA",
+                "label": "Urban Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CDCURRA",
+                "label": "Congressional District (2019-2021, 116th Congress) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SDELMA",
+                "label": "School District (Elementary)/Remainder Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SDSECA",
+                "label": "School District (Secondary)/Remainder Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SDUNIA",
+                "label": "School District (Unified)/Remainder Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "PUMA5A",
+                "label": "Public Use Microdata Sample Area (PUMA) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "NAME_E",
+                "label": "Estimates: Area Name",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E001",
+                "label": "Estimates: Total",
+                "temporalType": "avg",
+                "hideByDefault": false
+            },
+            {
+                "name": "IG4E002",
+                "label": "Estimates: Male",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E003",
+                "label": "Estimates: Male: Under 5 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E004",
+                "label": "Estimates: Male: 5 to 9 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E005",
+                "label": "Estimates: Male: 10 to 14 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E006",
+                "label": "Estimates: Male: 15 to 17 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E007",
+                "label": "Estimates: Male: 18 and 19 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E008",
+                "label": "Estimates: Male: 20 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E009",
+                "label": "Estimates: Male: 21 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E010",
+                "label": "Estimates: Male: 22 to 24 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E011",
+                "label": "Estimates: Male: 25 to 29 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E012",
+                "label": "Estimates: Male: 30 to 34 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E013",
+                "label": "Estimates: Male: 35 to 39 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E014",
+                "label": "Estimates: Male: 40 to 44 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E015",
+                "label": "Estimates: Male: 45 to 49 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E016",
+                "label": "Estimates: Male: 50 to 54 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E017",
+                "label": "Estimates: Male: 55 to 59 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E018",
+                "label": "Estimates: Male: 60 and 61 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E019",
+                "label": "Estimates: Male: 62 to 64 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E020",
+                "label": "Estimates: Male: 65 and 66 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E021",
+                "label": "Estimates: Male: 67 to 69 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E022",
+                "label": "Estimates: Male: 70 to 74 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E023",
+                "label": "Estimates: Male: 75 to 79 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E024",
+                "label": "Estimates: Male: 80 to 84 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E025",
+                "label": "Estimates: Male: 85 years and over",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E026",
+                "label": "Estimates: Female",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E027",
+                "label": "Estimates: Female: Under 5 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E028",
+                "label": "Estimates: Female: 5 to 9 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E029",
+                "label": "Estimates: Female: 10 to 14 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E030",
+                "label": "Estimates: Female: 15 to 17 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E031",
+                "label": "Estimates: Female: 18 and 19 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E032",
+                "label": "Estimates: Female: 20 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E033",
+                "label": "Estimates: Female: 21 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E034",
+                "label": "Estimates: Female: 22 to 24 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E035",
+                "label": "Estimates: Female: 25 to 29 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E036",
+                "label": "Estimates: Female: 30 to 34 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E037",
+                "label": "Estimates: Female: 35 to 39 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E038",
+                "label": "Estimates: Female: 40 to 44 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E039",
+                "label": "Estimates: Female: 45 to 49 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E040",
+                "label": "Estimates: Female: 50 to 54 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E041",
+                "label": "Estimates: Female: 55 to 59 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E042",
+                "label": "Estimates: Female: 60 and 61 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E043",
+                "label": "Estimates: Female: 62 to 64 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E044",
+                "label": "Estimates: Female: 65 and 66 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E045",
+                "label": "Estimates: Female: 67 to 69 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E046",
+                "label": "Estimates: Female: 70 to 74 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E047",
+                "label": "Estimates: Female: 75 to 79 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E048",
+                "label": "Estimates: Female: 80 to 84 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4E049",
+                "label": "Estimates: Female: 85 years and over",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E002",
+                "label": "Estimates: Women who had a birth in the past 12 months",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E003",
+                "label": "Estimates: Women who had a birth in the past 12 months: 15 to 19 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E004",
+                "label": "Estimates: Women who had a birth in the past 12 months: 20 to 24 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E005",
+                "label": "Estimates: Women who had a birth in the past 12 months: 25 to 29 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E006",
+                "label": "Estimates: Women who had a birth in the past 12 months: 30 to 34 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E007",
+                "label": "Estimates: Women who had a birth in the past 12 months: 35 to 39 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E008",
+                "label": "Estimates: Women who had a birth in the past 12 months: 40 to 44 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E009",
+                "label": "Estimates: Women who had a birth in the past 12 months: 45 to 50 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E010",
+                "label": "Estimates: Women who did not have a birth in the past 12 months",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E011",
+                "label": "Estimates: Women who did not have a birth in the past 12 months: 15 to 19 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E012",
+                "label": "Estimates: Women who did not have a birth in the past 12 months: 20 to 24 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E013",
+                "label": "Estimates: Women who did not have a birth in the past 12 months: 25 to 29 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E014",
+                "label": "Estimates: Women who did not have a birth in the past 12 months: 30 to 34 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E015",
+                "label": "Estimates: Women who did not have a birth in the past 12 months: 35 to 39 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E016",
+                "label": "Estimates: Women who did not have a birth in the past 12 months: 40 to 44 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6E017",
+                "label": "Estimates: Women who did not have a birth in the past 12 months: 45 to 50 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME002",
+                "label": "Estimates: No schooling completed",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME003",
+                "label": "Estimates: Nursery school",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME004",
+                "label": "Estimates: Kindergarten",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME005",
+                "label": "Estimates: 1st grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME006",
+                "label": "Estimates: 2nd grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME007",
+                "label": "Estimates: 3rd grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME008",
+                "label": "Estimates: 4th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME009",
+                "label": "Estimates: 5th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME010",
+                "label": "Estimates: 6th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME011",
+                "label": "Estimates: 7th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME012",
+                "label": "Estimates: 8th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME013",
+                "label": "Estimates: 9th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME014",
+                "label": "Estimates: 10th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME015",
+                "label": "Estimates: 11th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME016",
+                "label": "Estimates: 12th grade, no diploma",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME017",
+                "label": "Estimates: Regular high school diploma",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME018",
+                "label": "Estimates: GED or alternative credential",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME019",
+                "label": "Estimates: Some college, less than 1 year",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME020",
+                "label": "Estimates: Some college, 1 or more years, no degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME021",
+                "label": "Estimates: Associate's degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME022",
+                "label": "Estimates: Bachelor's degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME023",
+                "label": "Estimates: Master's degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME024",
+                "label": "Estimates: Professional school degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXME025",
+                "label": "Estimates: Doctorate degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2E002",
+                "label": "Estimates: Speak only English",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2E003",
+                "label": "Estimates: Spanish or Spanish Creole",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2E004",
+                "label": "Estimates: French (including Patois, Creole, Cajun)",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2E005",
+                "label": "Estimates: German or other West Germanic languages",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2E006",
+                "label": "Estimates: Slavic languages",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2E007",
+                "label": "Estimates: Other Indo-European languages",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2E008",
+                "label": "Estimates: Korean",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2E009",
+                "label": "Estimates: Chinese",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2E010",
+                "label": "Estimates: Vietnamese",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2E011",
+                "label": "Estimates: Tagalog",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2E012",
+                "label": "Estimates: Other Asian and Pacific Island languages",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2E013",
+                "label": "Estimates: Other and unspecified languages",
+                "hideByDefault": true
+            },
+            {
+                "name": "I25E001",
+                "label": "Estimates: Median household income in the past 12 months (in 2010 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "I4YE001",
+                "label": "Estimates: Gini Index",
+                "temporalType": "avg",
+                "hideByDefault": false
+            },
+            {
+                "name": "NAME_M",
+                "label": "Margins of error: Area Name",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M001",
+                "label": "Margins of error: Total",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M002",
+                "label": "Margins of error: Male",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M003",
+                "label": "Margins of error: Male: Under 5 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M004",
+                "label": "Margins of error: Male: 5 to 9 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M005",
+                "label": "Margins of error: Male: 10 to 14 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M006",
+                "label": "Margins of error: Male: 15 to 17 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M007",
+                "label": "Margins of error: Male: 18 and 19 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M008",
+                "label": "Margins of error: Male: 20 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M009",
+                "label": "Margins of error: Male: 21 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M010",
+                "label": "Margins of error: Male: 22 to 24 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M011",
+                "label": "Margins of error: Male: 25 to 29 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M012",
+                "label": "Margins of error: Male: 30 to 34 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M013",
+                "label": "Margins of error: Male: 35 to 39 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M014",
+                "label": "Margins of error: Male: 40 to 44 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M015",
+                "label": "Margins of error: Male: 45 to 49 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M016",
+                "label": "Margins of error: Male: 50 to 54 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M017",
+                "label": "Margins of error: Male: 55 to 59 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M018",
+                "label": "Margins of error: Male: 60 and 61 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M019",
+                "label": "Margins of error: Male: 62 to 64 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M020",
+                "label": "Margins of error: Male: 65 and 66 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M021",
+                "label": "Margins of error: Male: 67 to 69 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M022",
+                "label": "Margins of error: Male: 70 to 74 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M023",
+                "label": "Margins of error: Male: 75 to 79 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M024",
+                "label": "Margins of error: Male: 80 to 84 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M025",
+                "label": "Margins of error: Male: 85 years and over",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M026",
+                "label": "Margins of error: Female",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M027",
+                "label": "Margins of error: Female: Under 5 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M028",
+                "label": "Margins of error: Female: 5 to 9 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M029",
+                "label": "Margins of error: Female: 10 to 14 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M030",
+                "label": "Margins of error: Female: 15 to 17 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M031",
+                "label": "Margins of error: Female: 18 and 19 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M032",
+                "label": "Margins of error: Female: 20 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M033",
+                "label": "Margins of error: Female: 21 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M034",
+                "label": "Margins of error: Female: 22 to 24 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M035",
+                "label": "Margins of error: Female: 25 to 29 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M036",
+                "label": "Margins of error: Female: 30 to 34 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M037",
+                "label": "Margins of error: Female: 35 to 39 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M038",
+                "label": "Margins of error: Female: 40 to 44 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M039",
+                "label": "Margins of error: Female: 45 to 49 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M040",
+                "label": "Margins of error: Female: 50 to 54 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M041",
+                "label": "Margins of error: Female: 55 to 59 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M042",
+                "label": "Margins of error: Female: 60 and 61 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M043",
+                "label": "Margins of error: Female: 62 to 64 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M044",
+                "label": "Margins of error: Female: 65 and 66 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M045",
+                "label": "Margins of error: Female: 67 to 69 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M046",
+                "label": "Margins of error: Female: 70 to 74 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M047",
+                "label": "Margins of error: Female: 75 to 79 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M048",
+                "label": "Margins of error: Female: 80 to 84 years",
+                "hideByDefault": true
+            },
+            {
+                "name": "IG4M049",
+                "label": "Margins of error: Female: 85 years and over",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M002",
+                "label": "Margins of error: Women who had a birth in the past 12 months",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M003",
+                "label": "Margins of error: Women who had a birth in the past 12 months: 15 to 19 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M004",
+                "label": "Margins of error: Women who had a birth in the past 12 months: 20 to 24 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M005",
+                "label": "Margins of error: Women who had a birth in the past 12 months: 25 to 29 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M006",
+                "label": "Margins of error: Women who had a birth in the past 12 months: 30 to 34 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M007",
+                "label": "Margins of error: Women who had a birth in the past 12 months: 35 to 39 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M008",
+                "label": "Margins of error: Women who had a birth in the past 12 months: 40 to 44 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M009",
+                "label": "Margins of error: Women who had a birth in the past 12 months: 45 to 50 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M010",
+                "label": "Margins of error: Women who did not have a birth in the past 12 months",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M011",
+                "label": "Margins of error: Women who did not have a birth in the past 12 months: 15 to 19 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M012",
+                "label": "Margins of error: Women who did not have a birth in the past 12 months: 20 to 24 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M013",
+                "label": "Margins of error: Women who did not have a birth in the past 12 months: 25 to 29 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M014",
+                "label": "Margins of error: Women who did not have a birth in the past 12 months: 30 to 34 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M015",
+                "label": "Margins of error: Women who did not have a birth in the past 12 months: 35 to 39 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M016",
+                "label": "Margins of error: Women who did not have a birth in the past 12 months: 40 to 44 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IV6M017",
+                "label": "Margins of error: Women who did not have a birth in the past 12 months: 45 to 50 years old",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM002",
+                "label": "Margins of error: No schooling completed",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM003",
+                "label": "Margins of error: Nursery school",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM004",
+                "label": "Margins of error: Kindergarten",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM005",
+                "label": "Margins of error: 1st grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM006",
+                "label": "Margins of error: 2nd grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM007",
+                "label": "Margins of error: 3rd grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM008",
+                "label": "Margins of error: 4th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM009",
+                "label": "Margins of error: 5th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM010",
+                "label": "Margins of error: 6th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM011",
+                "label": "Margins of error: 7th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM012",
+                "label": "Margins of error: 8th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM013",
+                "label": "Margins of error: 9th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM014",
+                "label": "Margins of error: 10th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM015",
+                "label": "Margins of error: 11th grade",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM016",
+                "label": "Margins of error: 12th grade, no diploma",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM017",
+                "label": "Margins of error: Regular high school diploma",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM018",
+                "label": "Margins of error: GED or alternative credential",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM019",
+                "label": "Margins of error: Some college, less than 1 year",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM020",
+                "label": "Margins of error: Some college, 1 or more years, no degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM021",
+                "label": "Margins of error: Associate's degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM022",
+                "label": "Margins of error: Bachelor's degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM023",
+                "label": "Margins of error: Master's degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM024",
+                "label": "Margins of error: Professional school degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "IXMM025",
+                "label": "Margins of error: Doctorate degree",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2M002",
+                "label": "Margins of error: Speak only English",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2M003",
+                "label": "Margins of error: Spanish or Spanish Creole",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2M004",
+                "label": "Margins of error: French (including Patois, Creole, Cajun)",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2M005",
+                "label": "Margins of error: German or other West Germanic languages",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2M006",
+                "label": "Margins of error: Slavic languages",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2M007",
+                "label": "Margins of error: Other Indo-European languages",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2M008",
+                "label": "Margins of error: Korean",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2M009",
+                "label": "Margins of error: Chinese",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2M010",
+                "label": "Margins of error: Vietnamese",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2M011",
+                "label": "Margins of error: Tagalog",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2M012",
+                "label": "Margins of error: Other Asian and Pacific Island languages",
+                "hideByDefault": true
+            },
+            {
+                "name": "IX2M013",
+                "label": "Margins of error: Other and unspecified languages",
+                "hideByDefault": true
+            },
+            {
+                "name": "I25M001",
+                "label": "Margins of error: Median household income in the past 12 months (in 2010 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "I4YM001",
+                "label": "Margins of error: Gini Index",
+                "hideByDefault": true
+            },
+            {
+                "name": "LKDE002",
+                "label": "Estimates: U.S. citizen, born in the United States",
+                "hideByDefault": true
+            },
+            {
+                "name": "LKDE003",
+                "label": "Estimates: U.S. citizen, born in Puerto Rico or U.S. Island Areas",
+                "hideByDefault": true
+            },
+            {
+                "name": "LKDE004",
+                "label": "Estimates: U.S. citizen, born abroad of American parent(s)",
+                "hideByDefault": true
+            },
+            {
+                "name": "LKDE005",
+                "label": "Estimates: U.S. citizen by naturalization",
+                "hideByDefault": true
+            },
+            {
+                "name": "LKDE006",
+                "label": "Estimates: Not a U.S. citizen",
+                "hideByDefault": true
+            },
+            {
+                "name": "L4NE001",
+                "label": "Estimates: Median household income in the past 12 months (in 2011 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "LKDM002",
+                "label": "Margins of error: U.S. citizen, born in the United States",
+                "hideByDefault": true
+            },
+            {
+                "name": "LKDM003",
+                "label": "Margins of error: U.S. citizen, born in Puerto Rico or U.S. Island Areas",
+                "hideByDefault": true
+            },
+            {
+                "name": "LKDM004",
+                "label": "Margins of error: U.S. citizen, born abroad of American parent(s)",
+                "hideByDefault": true
+            },
+            {
+                "name": "LKDM005",
+                "label": "Margins of error: U.S. citizen by naturalization",
+                "hideByDefault": true
+            },
+            {
+                "name": "LKDM006",
+                "label": "Margins of error: Not a U.S. citizen",
+                "hideByDefault": true
+            },
+            {
+                "name": "L4NM001",
+                "label": "Margins of error: Median household income in the past 12 months (in 2011 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "O4OE001",
+                "label": "Estimates: Median household income in the past 12 months (in 2012 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "O4OM001",
+                "label": "Margins of error: Median household income in the past 12 months (in 2012 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "SU8E001",
+                "label": "Estimates: Median household income in the past 12 months (in 2013 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "SU8M001",
+                "label": "Margins of error: Median household income in the past 12 months (in 2013 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AATFE001",
+                "label": "Estimates: Median household income in the past 12 months (in 2014 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AATFM001",
+                "label": "Margins of error: Median household income in the past 12 months (in 2014 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AC28E001",
+                "label": "Estimates: Median household income in the past 12 months (in 2015 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AC28M001",
+                "label": "Margins of error: Median household income in the past 12 months (in 2015 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE003",
+                "label": "Estimates: Spanish",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE004",
+                "label": "Estimates: Spanish: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE005",
+                "label": "Estimates: Spanish: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE006",
+                "label": "Estimates: French, Haitian, or Cajun",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE007",
+                "label": "Estimates: French, Haitian, or Cajun: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE008",
+                "label": "Estimates: French, Haitian, or Cajun: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE010",
+                "label": "Estimates: German or other West Germanic languages: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE011",
+                "label": "Estimates: German or other West Germanic languages: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE012",
+                "label": "Estimates: Russian, Polish, or other Slavic languages",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE013",
+                "label": "Estimates: Russian, Polish, or other Slavic languages: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE014",
+                "label": "Estimates: Russian, Polish, or other Slavic languages: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE016",
+                "label": "Estimates: Other Indo-European languages: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE017",
+                "label": "Estimates: Other Indo-European languages: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE019",
+                "label": "Estimates: Korean: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE020",
+                "label": "Estimates: Korean: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE021",
+                "label": "Estimates: Chinese (incl. Mandarin, Cantonese)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE022",
+                "label": "Estimates: Chinese (incl. Mandarin, Cantonese): Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE023",
+                "label": "Estimates: Chinese (incl. Mandarin, Cantonese): Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE025",
+                "label": "Estimates: Vietnamese: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE026",
+                "label": "Estimates: Vietnamese: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE027",
+                "label": "Estimates: Tagalog (incl. Filipino)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE028",
+                "label": "Estimates: Tagalog (incl. Filipino): Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE029",
+                "label": "Estimates: Tagalog (incl. Filipino): Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE031",
+                "label": "Estimates: Other Asian and Pacific Island languages: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE032",
+                "label": "Estimates: Other Asian and Pacific Island languages: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE033",
+                "label": "Estimates: Arabic",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE034",
+                "label": "Estimates: Arabic: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE035",
+                "label": "Estimates: Arabic: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE037",
+                "label": "Estimates: Other and unspecified languages: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWE038",
+                "label": "Estimates: Other and unspecified languages: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFKIE001",
+                "label": "Estimates: Median household income in the past 12 months (in 2016 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM003",
+                "label": "Margins of error: Spanish",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM004",
+                "label": "Margins of error: Spanish: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM005",
+                "label": "Margins of error: Spanish: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM006",
+                "label": "Margins of error: French, Haitian, or Cajun",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM007",
+                "label": "Margins of error: French, Haitian, or Cajun: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM008",
+                "label": "Margins of error: French, Haitian, or Cajun: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM010",
+                "label": "Margins of error: German or other West Germanic languages: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM011",
+                "label": "Margins of error: German or other West Germanic languages: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM012",
+                "label": "Margins of error: Russian, Polish, or other Slavic languages",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM013",
+                "label": "Margins of error: Russian, Polish, or other Slavic languages: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM014",
+                "label": "Margins of error: Russian, Polish, or other Slavic languages: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM016",
+                "label": "Margins of error: Other Indo-European languages: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM017",
+                "label": "Margins of error: Other Indo-European languages: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM019",
+                "label": "Margins of error: Korean: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM020",
+                "label": "Margins of error: Korean: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM021",
+                "label": "Margins of error: Chinese (incl. Mandarin, Cantonese)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM022",
+                "label": "Margins of error: Chinese (incl. Mandarin, Cantonese): Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM023",
+                "label": "Margins of error: Chinese (incl. Mandarin, Cantonese): Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM025",
+                "label": "Margins of error: Vietnamese: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM026",
+                "label": "Margins of error: Vietnamese: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM027",
+                "label": "Margins of error: Tagalog (incl. Filipino)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM028",
+                "label": "Margins of error: Tagalog (incl. Filipino): Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM029",
+                "label": "Margins of error: Tagalog (incl. Filipino): Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM031",
+                "label": "Margins of error: Other Asian and Pacific Island languages: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM032",
+                "label": "Margins of error: Other Asian and Pacific Island languages: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM033",
+                "label": "Margins of error: Arabic",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM034",
+                "label": "Margins of error: Arabic: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM035",
+                "label": "Margins of error: Arabic: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM037",
+                "label": "Margins of error: Other and unspecified languages: Speak English 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFFWM038",
+                "label": "Margins of error: Other and unspecified languages: Speak English less than 'very well'",
+                "hideByDefault": true
+            },
+            {
+                "name": "AFKIM001",
+                "label": "Margins of error: Median household income in the past 12 months (in 2016 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AHFME001",
+                "label": "Estimates: Median household income in the past 12 months (in 2017 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AHFMM001",
+                "label": "Margins of error: Median household income in the past 12 months (in 2017 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AIVUE002",
+                "label": "Estimates: U.S. citizen, born in Puerto Rico",
+                "hideByDefault": true
+            },
+            {
+                "name": "AIVUE003",
+                "label": "Estimates: U.S. citizen, born in U.S. or U.S. Island Areas",
+                "hideByDefault": true
+            },
+            {
+                "name": "AJC3E001",
+                "label": "Estimates: Median household income in the past 12 months (in 2018 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "AIVUM002",
+                "label": "Margins of error: U.S. citizen, born in Puerto Rico",
+                "hideByDefault": true
+            },
+            {
+                "name": "AIVUM003",
+                "label": "Margins of error: U.S. citizen, born in U.S. or U.S. Island Areas",
+                "hideByDefault": true
+            },
+            {
+                "name": "AJC3M001",
+                "label": "Margins of error: Median household income in the past 12 months (in 2018 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "GEOID",
+                "label": "Census Geographic Identifier",
+                "hideByDefault": true
+            },
+            {
+                "name": "ALATE001",
+                "label": "Estimates: Median household income in the past 12 months (in 2019 inflation-adjusted dollars)",
+                "hideByDefault": true
+            },
+            {
+                "name": "ALATM001",
+                "label": "Margins of error: Median household income in the past 12 months (in 2019 inflation-adjusted dollars)",
+                "hideByDefault": true
+            }
+        ]
     }
 ]
