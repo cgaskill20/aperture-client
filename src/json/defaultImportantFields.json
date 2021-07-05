@@ -1,7 +1,7 @@
 {
     "NAMELSAD10": { 
         "type": "string",
-        "label": "County"
+        "label": "Area Name"
     },
     "STATEFP10": { 
         "type": "stateFips",
@@ -14,10 +14,6 @@
     "STATE": {
         "type": "string",
         "label": "State"
-    },
-    "COUNTY": {
-        "type": "string",
-        "label": "County"
     },
     "CITY": {
         "type": "string",
