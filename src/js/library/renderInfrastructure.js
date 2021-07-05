@@ -101,13 +101,12 @@ export default class RenderInfrastructure {
                 }
                 layer.specifiedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
                 let iconName = Util.getNameFromGeoJsonFeature(feature, indexData);
-                const { joinField, temporalRange } = indexData[Object.keys(indexData)[0]]
+                const { joinField } = indexData[Object.keys(indexData)[0]]
                 let popupObj = {
                     name: iconName,
                     meta: feature.properties.meta,
                     properties: feature.properties,
-                    join: { [joinField]: feature.properties[joinField] },
-                    temporalRange
+                    join: { [joinField]: feature.properties[joinField] }
                 }
                 this.addIconToMap(iconName, latlng, popupObj, indexData, layer.specifiedId);
                 //layer.bindPopup(iconDetails);
@@ -220,7 +219,8 @@ export default class RenderInfrastructure {
         return refs.reduce((acc, curr) => {
             return {
                 ...acc,
-                ...curr.properties
+                ...curr.properties,
+                meta: { ...acc.meta, ...curr.properties.meta }
             }
         }, {});
     }
