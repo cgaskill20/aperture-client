@@ -4185,5 +4185,313 @@
                 "hideByDefault": true
             }
         ]
+    },
+    {
+        "collection": "county_population_history",
+        "temporal": "epoch_time",
+        "level": "county",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Year",
+                "step": "year"
+            },
+            {
+                "name": "GISJOIN",
+                "label": "GIS Join Match Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "YEAR",
+                "label": "Data File Year",
+                "hideByDefault": true
+            },
+            {
+                "name": "REGIONA",
+                "label": "Region Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "DIVISIONA",
+                "label": "Division Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "STATE",
+                "label": "State Name",
+                "hideByDefault": true
+            },
+            {
+                "name": "STATEA",
+                "label": "State Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SMSAA",
+                "label": "Standard Metropolitan Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "COUNTY",
+                "label": "County Name",
+                "hideByDefault": true
+            },
+            {
+                "name": "COUNTYA",
+                "label": "County Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CTY_SUBA",
+                "label": "County Subdivision Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "PLACEA",
+                "label": "Place Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "TRACTA",
+                "label": "Census Tract Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "BLCK_GRPA",
+                "label": "Block Group Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "BLOCKA",
+                "label": "Block Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "EDINDA",
+                "label": "Enumeration District Indicator Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "ENUMDISTA",
+                "label": "Enumeration District Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SCSAA",
+                "label": "Standard Consolidated Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "URB_AREAA",
+                "label": "Urban Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CDA",
+                "label": "Congressional District (111th Congress) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "AIANHHA",
+                "label": "American Indian Area/Alaska Native Area/Hawaiian Home Land Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "MCDSEQNOA",
+                "label": "MCD Sequence Number Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "ZIPA",
+                "label": "5-Digit Zip Code Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "AREANAME",
+                "label": "Area Name",
+                "hideByDefault": true
+            },
+            {
+                "name": "C7L001",
+                "label": "Total",
+                "hideByDefault": false,
+                "temporalType": "avg"
+            },
+            {
+                "name": "ANRCA",
+                "label": "Alaska Native Regional Corporation Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "RES_ONLYA",
+                "label": "American Indian Reservation with Trust Lands; reservation only Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "TRUSTA",
+                "label": "American Indian Reservation with Trust Lands; trust lands only Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "RES_TRSTA",
+                "label": "Reservation/Trust Lands Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CD101A",
+                "label": "Congressional District (101st) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "C_CITYA",
+                "label": "Consolidated City Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "MSA_CMSAA",
+                "label": "Metropolitan Statistical Area/Consolidated Metropolitan Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "PMSAA",
+                "label": "Primary Metropolitan Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "URBRURALA",
+                "label": "Urban/Rural Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CD103A",
+                "label": "Congressional District (103rd) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "ANPSADPI",
+                "label": "Area Name/PSAD Term/Part Indicator",
+                "hideByDefault": true
+            },
+            {
+                "name": "TRBL_CTA",
+                "label": "Tribal Census Tract Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "TRBL_BGA",
+                "label": "Tribal Block Group Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "TRBL_SUBA",
+                "label": "Tribal Subdivision Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "NECMAA",
+                "label": "New England County Metropolitan Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CD106A",
+                "label": "Congressional District (106th) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CD108A",
+                "label": "Congressional District (108th) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CD109A",
+                "label": "Congressional District (109th) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "ZIP3A",
+                "label": "3-Digit Zip Code Tabulation Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "ZCTAA",
+                "label": "5-Digit Zip Code Tabulation Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "NAME",
+                "label": "Area Name-Legal/Statistical Area Description (LSAD) Term-Part Indicator",
+                "hideByDefault": true
+            },
+            {
+                "name": "AITSCEA",
+                "label": "Tribal Subdivision/Remainder Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CBSAA",
+                "label": "Metropolitan Statistical Area/Micropolitan Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "METDIVA",
+                "label": "Metropolitan Division Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CSAA",
+                "label": "Combined Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "NECTAA",
+                "label": "New England City and Town Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "NECTADIVA",
+                "label": "NECTA Division Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CNECTAA",
+                "label": "Combined New England City and Town Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SLDUA",
+                "label": "State Legislative District (Upper Chamber) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SLDLA",
+                "label": "State Legislative District (Lower Chamber) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SUBMCDA",
+                "label": "Subminor Civil Division Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SDELMA",
+                "label": "School District (Elementary)/Remainder Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SDSECA",
+                "label": "School District (Secondary)/Remainder Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SDUNIA",
+                "label": "School District (Unified)/Remainder Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SABINSA",
+                "label": "School Attendance Area Code",
+                "hideByDefault": true
+            }
+        ]
     }
 ]
