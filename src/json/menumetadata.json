@@ -12,7 +12,7 @@
         "fieldMetadata": [
             {
                 "name": "temp",
-                "label": "Max Heatwave Temperature",
+                "label": "Heatwave Temperature",
                 "type": "range",
                 "unit": "fahrenheit",
                 "temporalType": "max"
@@ -948,22 +948,22 @@
             },
             {
                 "name": "newDeathCount",
-                "label": "Mean New Death Count per Day",
+                "label": "New Death Count",
                 "temporalType": "avg"
             },
             {
                 "name": "totalDeathCount",
-                "label": "Total Death Count, End of Period",
+                "label": "Total Death Count",
                 "temporalType": "last"
             },
             {
                 "name": "newCaseCount",
-                "label": "Mean New Case Count per Day",
+                "label": "New Case Count",
                 "temporalType": "avg"
             },
             {
                 "name": "totalCaseCount",
-                "label": "Total Case Count, End of Period",
+                "label": "Total Case Count",
                 "temporalType": "last"
             },
             {
@@ -1003,20 +1003,20 @@
             },
             {
                 "name": "staPresMean",
-                "label": "Average Station Pressure during Time Constraint",
+                "label": "Average Station Pressure",
                 "unit": "kilopascal",
                 "temporalType": "avg"
             },
             {
                 "name": "staPresMinimum",
-                "label": "Minimum Station Pressure during Time Constraint",
+                "label": "Minimum Station Pressure",
                 "unit": "kilopascal",
                 "temporalType": "min"
                 
             },
             {
                 "name": "staPresMaximum",
-                "label": "Maximum Station Pressure during Time Constraint",
+                "label": "Maximum Station Pressure",
                 "unit": "kilopascal",
                 "temporalType": "max"
             },
@@ -1264,19 +1264,19 @@
             },
             {
                 "name": "windSpeedMean",
-                "label": "Arithmetic mean of wind speed over time period",
+                "label": "Arithmetic mean of wind speed",
                 "unit": "metersPerSecond",
                 "temporalType": "avg"
             },
             {
                 "name": "windSpeedMinimum",
-                "label": "Minimum wind speed over time period",
+                "label": "Minimum wind speed",
                 "unit": "metersPerSecond",
                 "temporalType": "min"
             },
             {
                 "name": "windSpeedMaximum",
-                "label": "Maximum wind speed over time period",
+                "label": "Maximum wind speed",
                 "unit": "metersPerSecond",
                 "temporalType": "max"
             },
@@ -1643,19 +1643,19 @@
             },
             {
                 "name": "tempSingleMean",
-                "label": "Arithmetic mean of single aspirated air temperature over time period",
+                "label": "Arithmetic mean of single aspirated air temperature",
                 "unit": "celsius",
                 "temporalType": "avg"
             },
             {
                 "name": "tempSingleMinimum",
-                "label": "Minimum single aspirated air temperature over time period",
+                "label": "Minimum single aspirated air temperature",
                 "unit": "celsius",
                 "temporalType": "min"
             },
             {
                 "name": "tempSingleMaximum",
-                "label": "Maximum single aspirated air temperature over time period",
+                "label": "Maximum single aspirated air temperature",
                 "unit": "celsius",
                 "temporalType": "max"
             },
@@ -1902,19 +1902,19 @@
             },
             {
                 "name": "tempTripleMean",
-                "label": "Arithmetic mean of triple aspirated air temperature over time period",
+                "label": "Arithmetic mean of triple aspirated air temperature",
                 "unit": "celsius",
                 "temporalType": "avg"
             },
             {
                 "name": "tempTripleMinimum",
-                "label": "Minimum triple aspirated air temperature over time period",
+                "label": "Minimum triple aspirated air temperature",
                 "unit": "celsius",
                 "temporalType": "min"
             },
             {
                 "name": "tempTripleMaximum",
-                "label": "Maximum triple aspirated air temperature over time period",
+                "label": "Maximum triple aspirated air temperature",
                 "unit": "celsius",
                 "temporalType": "max"
             },
@@ -2209,19 +2209,19 @@
             },
             {
                 "name": "bioTempMean",
-                "label": "Arithmetic mean of IR biological temperature over time period",
+                "label": "Arithmetic mean of IR biological temperature",
                 "unit": "celsius",
                 "temporalType": "avg"
             },
             {
                 "name": "bioTempMinimum",
-                "label": "Minimum IR biological temperature over time period",
+                "label": "Minimum IR biological temperature",
                 "unit": "celsius",
                 "temporalType": "min"
             },
             {
                 "name": "bioTempMaximum",
-                "label": "Maximum IR biological temperature over time period",
+                "label": "Maximum IR biological temperature",
                 "unit": "celsius",
                 "temporalType": "max"
             },
@@ -2432,7 +2432,7 @@
             },
             {
                 "name": "secPrecipBulk",
-                "label": "Average Bulk secondary precipitation over time period",
+                "label": "Average Bulk secondary precipitation",
                 "unit": "millimeter",
                 "temporalType": "avg"
             },
@@ -2517,7 +2517,7 @@
             },
             {
                 "name": "TFPrecipBulk",
-                "label": "Mean Bulk throughfall precipitation over Time period",
+                "label": "Mean Bulk throughfall precipitation",
                 "unit": "millimeter",
                 "temporalType": "avg"
             },

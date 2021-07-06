@@ -97,6 +97,7 @@ export default function Popup() {
                         fieldToChart={key}
                         join={obj.join}
                         temporalRange={obj.properties.meta[key].temporal.temporalRange}
+                        obj={obj}
                     />
                     <br />
                 </React.Fragment>)

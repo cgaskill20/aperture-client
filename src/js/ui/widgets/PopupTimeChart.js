@@ -3,6 +3,7 @@ import { makeStyles, Typography } from "@material-ui/core";
 import Query from "../../library/Query";
 import { ResponsiveLineCanvas } from '@nivo/line'
 import Util from "../../library/apertureUtil";
+import { keyToDisplay } from "./PopupUtils";
 
 const useStyles = makeStyles({
     root: {
@@ -16,7 +17,7 @@ const useStyles = makeStyles({
 });
 
 //react.memo means this wont re-render unless the props change
-export default React.memo(function PopupTimeChart({ collection, join, fieldToChart, temporalRange }) {
+export default React.memo(function PopupTimeChart({ collection, join, fieldToChart, temporalRange, obj }) {
     const [data, setData] = useState([]);
 
     useEffect(async () => {
@@ -78,7 +79,7 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
                 enableGridX={false}
                 enableGridY={false}
                 axisLeft={{
-                    legend: Util.cleanUpString(fieldToChart),
+                    legend: keyToDisplay(obj, fieldToChart),
                     legendOffset: -39
                 }}
                 axisBottom={{
@@ -90,7 +91,7 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
                 tooltip={(e) => {
                     return <div className={classes.tooltip}>
                         <Typography gutterBottom>{`Date: ${epochTimeToShortString(e.point.data.x)}`}</Typography>
-                        <Typography>{`${Util.cleanUpString(fieldToChart)}: ${e.point.data.y}`}</Typography>
+                        <Typography>{`${keyToDisplay(obj, fieldToChart)}: ${e.point.data.y}`}</Typography>
                     </div>
                 }}
             />
