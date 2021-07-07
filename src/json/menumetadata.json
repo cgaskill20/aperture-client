@@ -4493,5 +4493,1814 @@
                 "hideByDefault": true
             }
         ]
+    },
+    {
+        "collection": "neon_photosynthetically_active_radiation",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "30min"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "PARMean",
+                "label": "Arithmetic mean of photosynthetically active radiation",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "temporalType": "avg"
+            },
+            {
+                "name": "PARMinimum",
+                "label": "Minimum photosynthetically active radiation",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "temporalType": "avg"
+            },
+            {
+                "name": "PARMaximum",
+                "label": "Maximum photosynthetically active radiation",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "temporalType": "avg"
+            },
+            {
+                "name": "PARVariance",
+                "label": "Variance in photosynthetically active radiation",
+                "unit": "micromolesPerSquareMeterPerSecondSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of photosynthetically active radiation",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARExpUncert",
+                "label": "Expanded uncertainty for photosynthetically active radiation",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARStdErMean",
+                "label": "Standard error of the mean for photosynthetically active radiation",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARRangeFailQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARRangePassQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARRangeNAQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARPersistenceFailQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARPersistencePassQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARPersistenceNAQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARStepFailQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARStepPassQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARStepNAQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARNullFailQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARNullPassQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARNullNAQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARGapFailQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARGapPassQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARGapNAQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARSpikeFailQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARSpikePassQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARSpikeNAQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARValidCalFailQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARValidCalPassQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARValidCalNAQM",
+                "label": "Photosynthetically active radiation quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARAlphaQM",
+                "label": "Photosynthetically active radiation quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARBetaQM",
+                "label": "Photosynthetically active radiation quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARFinalQF",
+                "label": "Photosynthetically active radiation quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "PARFinalQFSciRvw",
+                "label": "Photosynthetically active radiation quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARMean",
+                "label": "Arithmetic mean of outgoing photosynthetically active radiation",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARMinimum",
+                "label": "Minimum outgoing photosynthetically active radiation",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARMaximum",
+                "label": "Maximum outgoing photosynthetically active radiation",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARVariance",
+                "label": "Variance in outgoing photosynthetically active radiation",
+                "unit": "micromolesPerSquareMeterPerSecondSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of outgoing photosynthetically active radiation",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARExpUncert",
+                "label": "Expanded uncertainty for outgoing photosynthetically active radiation",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARStdErMean",
+                "label": "Standard error of the mean for outgoing photosynthetically active radiation",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARRangeFailQM",
+                "label": "Outgoing PAR quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARRangePassQM",
+                "label": "Outgoing PAR quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARRangeNAQM",
+                "label": "Outgoing photosynthetically active radiation quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARPersistenceFailQM",
+                "label": "Outgoing PAR quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARPersistencePassQM",
+                "label": "Outgoing PAR quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARPersistenceNAQM",
+                "label": "Outgoing PAR quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARStepFailQM",
+                "label": "Outgoing PAR quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARStepPassQM",
+                "label": "Outgoing PAR quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARStepNAQM",
+                "label": "Outgoing PAR quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARNullFailQM",
+                "label": "Outgoing PAR quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARNullPassQM",
+                "label": "Outgoing PAR quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARNullNAQM",
+                "label": "Outgoing PAR quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARGapFailQM",
+                "label": "Outgoing PAR quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARGapPassQM",
+                "label": "Outgoing PAR quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARGapNAQM",
+                "label": "Outgoing PAR quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARSpikeFailQM",
+                "label": "Outgoing PAR quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARSpikePassQM",
+                "label": "Outgoing PAR quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARSpikeNAQM",
+                "label": "Outgoing PAR quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARValidCalFailQM",
+                "label": "Outgoing PAR quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARValidCalPassQM",
+                "label": "Outgoing PAR quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARValidCalNAQM",
+                "label": "Outgoing PAR quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARAlphaQM",
+                "label": "Outgoing PAR quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARBetaQM",
+                "label": "Outgoing PAR quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARFinalQF",
+                "label": "Outgoing PAR quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "outPARFinalQFSciRvw",
+                "label": "Outgoing PAR quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_shortwave_longwave_radiation_net",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "30min"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "inSWMean",
+                "label": "Arithmetic mean of incoming shortwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "inSWMinimum",
+                "label": "Minimum incoming shortwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "inSWMaximum",
+                "label": "Maximum incoming shortwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "inSWVariance",
+                "label": "Variance in incoming shortwave radiation",
+                "unit": "wattsPerSquareMeterSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of incoming shortwave radiation",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWExpUncert",
+                "label": "Expanded uncertainty for incoming shortwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWStdErMean",
+                "label": "Standard error of the mean for incoming shortwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWRangeFailQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWRangePassQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWRangeNAQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWPersistenceFailQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWPersistencePassQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWPersistenceNAQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWStepFailQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWStepPassQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWStepNAQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWNullFailQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWNullPassQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWNullNAQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWGapFailQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWGapPassQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWGapNAQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWSpikeFailQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWSpikePassQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWSpikeNAQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWValidCalFailQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWValidCalPassQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWValidCalNAQM",
+                "label": "Incoming shortwave radiation quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWAlphaQM",
+                "label": "Incoming shortwave radiation quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWBetaQM",
+                "label": "Incoming shortwave radiation quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWFinalQF",
+                "label": "Incoming shortwave radiation quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "inSWFinalQFSciRvw",
+                "label": "Incoming shortwave radiation quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWMean",
+                "label": "Arithmetic mean of outgoing shortwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWMinimum",
+                "label": "Minimum outgoing shortwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWMaximum",
+                "label": "Maximum outgoing shortwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWVariance",
+                "label": "Variance in outgoing shortwave radiation",
+                "unit": "wattsPerSquareMeterSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of outgoing shortwave radiation",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWExpUncert",
+                "label": "Expanded uncertainty for outgoing shortwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWStdErMean",
+                "label": "Standard error of the mean for outgoing shortwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWRangeFailQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWRangePassQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWRangeNAQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWPersistenceFailQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWPersistencePassQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWPersistenceNAQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWNullFailQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWNullPassQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWNullNAQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWGapFailQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWGapPassQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWGapNAQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWSpikeFailQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWSpikePassQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWSpikeNAQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWValidCalFailQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWValidCalPassQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWValidCalNAQM",
+                "label": "Outgoing shortwave radiation quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWAlphaQM",
+                "label": "Outgoing shortwave radiation quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWBetaQM",
+                "label": "Outgoing shortwave radiation quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWFinalQF",
+                "label": "Outgoing shortwave radiation quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "outSWFinalQFSciRvw",
+                "label": "Outgoing shortwave radiation quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWMean",
+                "label": "Arithmetic mean of incoming longwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWMinimum",
+                "label": "Minimum incoming longwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWMaximum",
+                "label": "Maximum incoming longwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWVariance",
+                "label": "Variance in incoming longwave radiation",
+                "unit": "wattsPerSquareMeterSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of incoming longwave radiation",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWExpUncert",
+                "label": "Expanded uncertainty for incoming longwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWStdErMean",
+                "label": "Standard error of the mean for incoming longwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWRangeFailQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWRangePassQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWRangeNAQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWPersistenceFailQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWPersistencePassQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWPersistenceNAQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWNullFailQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWNullPassQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWNullNAQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWGapFailQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWGapPassQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWGapNAQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWSpikeFailQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWSpikePassQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWSpikeNAQM",
+                "label": "Incoming longwave radiation  quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWValidCalFailQM",
+                "label": "Incoming longwave radiation quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWValidCalPassQM",
+                "label": "Incoming longwave radiation quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWValidCalNAQM",
+                "label": "Incoming longwave radiation quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWAlphaQM",
+                "label": "Incoming longwave radiation  quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWBetaQM",
+                "label": "Incoming longwave radiation  quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWFinalQF",
+                "label": "Incoming longwave radiation  quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "inLWFinalQFSciRvw",
+                "label": "Incoming longwave radiation quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWMean",
+                "label": "Arithmetic mean of outgoing longwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWMinimum",
+                "label": "Minimum outgoing longwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWMaximum",
+                "label": "Maximum outgoing longwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWVariance",
+                "label": "Variance in outgoing longwave radiation",
+                "unit": "wattsPerSquareMeterSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of outgoing longwave radiation",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWExpUncert",
+                "label": "Expanded uncertainty for outgoing longwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWStdErMean",
+                "label": "Standard error of the mean for outgoing longwave radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWRangeFailQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWRangePassQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWRangeNAQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWPersistenceFailQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWPersistencePassQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWPersistenceNAQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWNullFailQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWNullPassQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWNullNAQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWGapFailQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWGapPassQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWGapNAQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWSpikeFailQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWSpikePassQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWSpikeNAQM",
+                "label": "Outgoing longwave radiation  quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWValidCalFailQM",
+                "label": "Outgoing longwave radiation quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWValidCalPassQM",
+                "label": "Outgoing longwave radiation quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWValidCalNAQM",
+                "label": "Outgoing longwave radiation quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWAlphaQM",
+                "label": "Outgoing longwave radiation  quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWBetaQM",
+                "label": "Outgoing longwave radiation  quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWFinalQF",
+                "label": "Outgoing longwave radiation quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "outLWFinalQFSciRvw",
+                "label": "Outgoing longwave radiation quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterFailQM",
+                "label": "Quality metric that summarizes when the heater was on over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterPassQM",
+                "label": "Quality metric that summarizes when the heater was off over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "heaterNAQM",
+                "label": "Quality metric that summarizes when the heater status was unknown over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_shortwave_radiation",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "30min"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "difRadMean",
+                "label": "Arithmetic mean of diffuse radiation",
+                "unit": "wattsPerSquareMeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "difRadMinimum",
+                "label": "Minimum diffuse radiation",
+                "unit": "wattsPerSquareMeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "difRadMaximum",
+                "label": "Maximum diffuse radiation",
+                "unit": "wattsPerSquareMeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "difRadVariance",
+                "label": "Variance in diffuse radiation",
+                "unit": "wattsPerSquareMeterSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of diffuse radiation",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadExpUncert",
+                "label": "Expanded uncertainty for diffuse radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadStdErMean",
+                "label": "Standard error of the mean for diffuse radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadRangeFailQM",
+                "label": "Diffuse radiation quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadRangePassQM",
+                "label": "Diffuse radiation quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadRangeNAQM",
+                "label": "Diffuse radiation quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadPersistenceFailQM",
+                "label": "Diffuse radiation quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadPersistencePassQM",
+                "label": "Diffuse radiation quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadPersistenceNAQM",
+                "label": "Diffuse radiation quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadStepFailQM",
+                "label": "Diffuse radiation quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadStepPassQM",
+                "label": "Diffuse radiation quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadStepNAQM",
+                "label": "Diffuse radiation quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadNullFailQM",
+                "label": "Diffuse radiation quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadNullPassQM",
+                "label": "Diffuse radiation quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadNullNAQM",
+                "label": "Diffuse radiation quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadGapFailQM",
+                "label": "Diffuse radiation quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadGapPassQM",
+                "label": "Diffuse radiation quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadGapNAQM",
+                "label": "Diffuse radiation quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadSpikeFailQM",
+                "label": "Diffuse radiation quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadSpikePassQM",
+                "label": "Diffuse radiation quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadSpikeNAQM",
+                "label": "Diffuse radiation quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadValidCalFailQM",
+                "label": "Diffuse radiation quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadValidCalPassQM",
+                "label": "Diffuse radiation quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadValidCalNAQM",
+                "label": "Diffuse radiation quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadAlphaQM",
+                "label": "Diffuse radiation quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadBetaQM",
+                "label": "Diffuse radiation quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadFinalQF",
+                "label": "Diffuse radiation quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "difRadFinalQFSciRvw",
+                "label": "Diffuse radiation quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadMean",
+                "label": "Arithmetic mean of direct radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadMinimum",
+                "label": "Minimum direct radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadMaximum",
+                "label": "Maximum direct radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadVariance",
+                "label": "Variance in direct radiation",
+                "unit": "wattsPerSquareMeterSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of direct radiation",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadExpUncert",
+                "label": "Expanded uncertainty for direct radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadStdErMean",
+                "label": "Standard error of the mean for direct radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadRangeFailQM",
+                "label": "Direct radiation quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadRangePassQM",
+                "label": "Direct radiation quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadRangeNAQM",
+                "label": "Direct radiation quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadPersistenceFailQM",
+                "label": "Direct radiation quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadPersistencePassQM",
+                "label": "Direct radiation quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadPersistenceNAQM",
+                "label": "Direct radiation quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadStepFailQM",
+                "label": "Direct radiation quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadStepPassQM",
+                "label": "Direct radiation quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadStepNAQM",
+                "label": "Direct radiation quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadNullFailQM",
+                "label": "Direct radiation quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadNullPassQM",
+                "label": "Direct radiation quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadNullNAQM",
+                "label": "Direct radiation quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadGapFailQM",
+                "label": "Direct radiation quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadGapPassQM",
+                "label": "Direct radiation quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadGapNAQM",
+                "label": "Direct radiation quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadSpikeFailQM",
+                "label": "Direct radiation quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadSpikePassQM",
+                "label": "Direct radiation quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadSpikeNAQM",
+                "label": "Direct radiation quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadDirectionalFailQM",
+                "label": "Direct radiation quality metric that summarizes the failed outcomes of the directional response test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadDirectionalPassQM",
+                "label": "Direct radiation quality metric that summarizes the passed outcomes of the directional response test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadDirectionalNAQM",
+                "label": "Direct radiation quality metric that summarizes when the directional response test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadValidCalFailQM",
+                "label": "Direct radiation quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadValidCalPassQM",
+                "label": "Direct radiation quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadValidCalNAQM",
+                "label": "Direct radiation quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadAlphaQM",
+                "label": "Direct radiation quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadBetaQM",
+                "label": "Direct radiation quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadFinalQF",
+                "label": "Direct radiation quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "dirRadFinalQFSciRvw",
+                "label": "Direct radiation quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadMean",
+                "label": "Arithmetic mean of global radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadMinimum",
+                "label": "Minimum global radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadMaximum",
+                "label": "Maximum global radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadVariance",
+                "label": "Variance in global radiation",
+                "unit": "wattsPerSquareMeterSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of global radiation",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadExpUncert",
+                "label": "Expanded uncertainty for global radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadStdErMean",
+                "label": "Standard error of the mean for global radiation",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadRangeFailQM",
+                "label": "Global radiation quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadRangePassQM",
+                "label": "Global radiation quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadRangeNAQM",
+                "label": "Global radiation quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadPersistenceFailQM",
+                "label": "Global radiation quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadPersistencePassQM",
+                "label": "Global radiation quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadPersistenceNAQM",
+                "label": "Global radiation quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadStepFailQM",
+                "label": "Global radiation quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadStepPassQM",
+                "label": "Global radiation quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadStepNAQM",
+                "label": "Global radiation quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadNullFailQM",
+                "label": "Global radiation quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadNullPassQM",
+                "label": "Global radiation quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadNullNAQM",
+                "label": "Global radiation quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadGapFailQM",
+                "label": "Global radiation quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadGapPassQM",
+                "label": "Global radiation quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadGapNAQM",
+                "label": "Global radiation quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadSpikeFailQM",
+                "label": "Global radiation quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadSpikePassQM",
+                "label": "Global radiation quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadSpikeNAQM",
+                "label": "Global radiation quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadValidCalFailQM",
+                "label": "Global radiation quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadValidCalPassQM",
+                "label": "Global radiation quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadValidCalNAQM",
+                "label": "Global radiation quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadAlphaQM",
+                "label": "Global radiation quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadBetaQM",
+                "label": "Global radiation quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadFinalQF",
+                "label": "Global radiation quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "gloRadFinalQFSciRvw",
+                "label": "Global radiation quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "sunPres",
+                "label": "Sun presence as calculated as described in NEON.DOC.000815 (1 = sun presence; 0 = no sun presence)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "sunPresNumPts",
+                "label": "Number of points used to calculate sun presence",
+                "unit": "number",
+                "hideByDefault": true
+            }
+        ]
     }
 ]
