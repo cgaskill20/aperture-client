@@ -47,7 +47,7 @@ export default function Frame(props) {
         case "scatterplot":
             frame =
                 <div>
-                    <FrameControls options={selectedConstraints} setConstraint={setConstraint} setConstraint2={setConstraint2} numDropDowns={2} constraint={constraint} constraint2={constraint2}></FrameControls>
+                    <FrameControls options={selectedConstraints} setConstraint={setConstraint} setConstraint2={setConstraint2} numDropDowns={2}></FrameControls>
                     <ScatterPlot size={props.size} data={props.data} selected={[constraint, constraint2]}></ScatterPlot>
                 </div>; break;
         case "boxplot":
