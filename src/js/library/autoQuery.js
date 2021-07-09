@@ -383,8 +383,8 @@ export default class AutoQuery {
             _id: `$${this.data.joinField}`,
             [this.data.joinField]: {"$first": `$${this.data.joinField}`}
         }
-        const fieldsNotGrouped = Object.keys(this.data.constraints).filter(name => !Object.keys(this.temporalFields).includes(name)) 
-        for(const field of fieldsNotGrouped){
+
+        for(const field of Object.keys(this.data.constraints)){
             groupStage[field] = {"$first": `$${field}`}
         }
         for(const [field, type] of Object.entries(this.temporalFields)){

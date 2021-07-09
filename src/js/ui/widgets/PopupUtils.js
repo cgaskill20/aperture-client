@@ -1,6 +1,9 @@
 import Util from "../../library/apertureUtil";
 import fipsToState from "../../../json/fipsToState.json"
 import defaultImportantFields from "../../../json/defaultImportantFields.json"
+import ScheduleIcon from '@material-ui/icons/Schedule';
+import { Tooltip, Typography } from "@material-ui/core";
+import React from "react";
 
 export const keyToDisplay = (obj, key) => {
     if (obj?.meta?.[key]?.label) {
@@ -34,6 +37,18 @@ export const valueToDisplay = (obj, key, value) => {
     else {
         return JSON.stringify(value);
     }
+}
+
+export const prependKey = (key, obj) => {
+    if (obj?.meta?.[key]?.temporal) {
+        return <div style={{ display: "inline-block" }}>
+            <Tooltip title="This field is temporal">
+                <ScheduleIcon />
+            </Tooltip>
+            <Typography>{Util.cleanUpString(key)}</Typography>
+        </div>
+    }
+    return null;
 }
 
 export const keyValueIsValid = (key, value) => {
