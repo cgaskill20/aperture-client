@@ -91,7 +91,7 @@ export default function Popup() {
             return Object.entries(obj.properties)
                 .filter(([key, value]) => obj.properties?.meta?.[key]?.temporal)
                 .map(([key, value]) => <React.Fragment key={`${key}${JSON.stringify(obj.join)}${JSON.stringify(obj.temporalRange)}`}>
-                    <Typography gutterBottom variant="h4">{keyToDisplay(obj, key)}</Typography>
+                    <Typography gutterBottom variant="h3">{keyToDisplay(obj, key)}</Typography>
                     <PopupTimeChart
                         collection={obj.properties.meta[key].temporal.collection}
                         fieldToChart={key}

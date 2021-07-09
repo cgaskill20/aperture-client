@@ -388,7 +388,9 @@ export default class AutoQuery {
             groupStage[field] = {"$first": `$${field}`}
         }
         for(const [field, type] of Object.entries(this.temporalFields)){
-            groupStage[field] = { [`$${type}`]: `$${field}`}
+            groupStage[`${field}_susavg`] = { [`$avg`]: `$${field}`}
+            groupStage[`${field}_susmax`] = { [`$max`]: `$${field}`}
+            groupStage[`${field}_susmin`] = { [`$min`]: `$${field}`}
         }
         groupStage = {
             "$group": groupStage

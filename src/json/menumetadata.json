@@ -6308,5 +6308,294 @@
                 "hideByDefault": true
             }
         ]
+    },
+    {
+        "collection": "neon_soil_heat_flux_plate",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "source": "https://data.neonscience.org/data-products/DP1.00040.001",
+        "info": "Soil heat flux is the amount of thermal energy that moves by conduction across an area of soil in a unit of time and usually expressed in Watts per square meter. This data product represents the soil heat flux at the locations of the heat flux plates below the soil surface. It is reported as 1-minute mean measurements and 30-minute mean values.",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "30min"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "remove": true
+            },
+            {
+                "name": "SHFMean",
+                "label": "Arithmetic mean of soil heat flux",
+                "unit": "wattsPerSquareMeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "SHFMinimum",
+                "label": "Minimum soil heat flux",
+                "unit": "wattsPerSquareMeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "SHFMaximum",
+                "label": "Maximum soil heat flux",
+                "unit": "wattsPerSquareMeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "SHFVariance",
+                "label": "Variance in soil heat flux",
+                "unit": "wattsPerSquareMeterSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of soil heat flux",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFExpUncert",
+                "label": "Expanded uncertainty for soil heat flux",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFStdErMean",
+                "label": "Standard error of the mean for soil heat flux",
+                "unit": "wattsPerSquareMeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFCalHeaterFlag",
+                "label": "Calibration heater flag indicating whether the heater was operational to perform a self-calibration (0 = off, 1 = on)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFCalHeaterQF",
+                "label": "Quality flag indicating whether the calibration heater turned on correctly as described in the sensor specific algorithm theoretical basis document  (ATBD) (1=calibration heater failed to turn on, 0=calibration heater turned on correctly, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFCalPeriodFlag",
+                "label": "Calibration period flag indicating when the sensor is operated under calibration period as described in the sensor specific algorithm theoretical basis document  (ATBD), (1=calibration period, 0=normal operating condition)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFInSituCorQF",
+                "label": "Quality flag indicating whether an error occur during the self-calibration process to determine the in situ correction factor as described in the sensor specific algorithm theoretical basis document  (ATBD) (1=error is detected, 0=no error, -1=NA (i.e., could not be run))",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeNAQM",
+                "label": "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceFailQM",
+                "label": "Quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistencePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceNAQM",
+                "label": "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepNAQM",
+                "label": "Quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullNAQM",
+                "label": "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapNAQM",
+                "label": "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeNAQM",
+                "label": "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFCalHeaterOnMetric",
+                "label": "A metric that summarizes when the calibration heater was on over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFCalHeaterOffMetric",
+                "label": "A metric that summarizes when the calibration heater was off over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFCalHeaterFailQM",
+                "label": "Quality metric that summarizes when the calibration heater was on over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFCalHeaterPassQM",
+                "label": "Quality metric that summarizes when the calibration heater was off over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFCalHeaterNAQM",
+                "label": "Quality metric that summarizes when the calibration heater status was unknown over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFCalPeriodOnMetric",
+                "label": "A metric that summarizes when the sensor is operated during a calibration period over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFCalPeriodOffMetric",
+                "label": "A metric that summarizes when the sensor is operated under normal conditions over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFInSituCorFailQM",
+                "label": "Quality metric that summarizes when an error occur during the self-calibration process to determine the in situ correction factor over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFInSituCorPassQM",
+                "label": "Quality metric that summarizes when no error occur during the self-calibration process to determine the in situ correction factor over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "SHFInSituCorNAQM",
+                "label": "Quality metric that summarizes when  the self-calibration process to determine the in situ correction factor was unknown over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "alphaQM",
+                "label": "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "betaQM",
+                "label": "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQF",
+                "label": "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQFSciRvw",
+                "label": "Quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
     }
 ]
