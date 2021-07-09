@@ -10,16 +10,13 @@ export default function frameControls(props) {
     let extraDropDown = ""
 
     if(props.numDropDowns == 2){
-        extraDropDown = <ConstraintDropDown options={props.options} setConstraint={props.setConstraint2}></ConstraintDropDown>
+        extraDropDown = <ConstraintDropDown options={props.options} otherConstraint={props.constraint} setConstraint={props.setConstraint2}></ConstraintDropDown>
     }
-    const handleChange = () => {
-        props.popout(true);
 
-    };
 
     return(
         <div>
-            <ConstraintDropDown options={props.options} setConstraint={props.setConstraint}></ConstraintDropDown>
+            <ConstraintDropDown options={props.options} otherConstraint={props.constraint2} setConstraint={props.setConstraint}></ConstraintDropDown>
             {extraDropDown}
         </div>
     )

@@ -31,6 +31,25 @@ export default function SimpleSelect(props) {
        age = ""
     }
 
+    if(props.otherConstraint){
+        if(props.otherConstraint.toLowerCase().includes("tract")){
+            for(let i=0; i<props.options.length; i++){
+                if(props.options[i].toLowerCase().includes("county")){
+                    props.options.slice(i);
+                    i--;
+                }
+            }
+        }
+        if(props.otherConstraint.toLowerCase().includes("county")){
+            for(let i=0; i<props.options.length; i++){
+                if(props.options[i].toLowerCase().includes("tract")){
+                    props.options.slice(i);
+                    i--;
+                }
+            }
+        }
+    }
+
 
     return (
         <div>
@@ -42,7 +61,7 @@ export default function SimpleSelect(props) {
                     value={age}
                     onChange={handleChange}
                 >
-                    {props.options.map((name, index) => <MenuItem key={index} value={name}>{name.split("::")[2]}</MenuItem>)}
+                    {props.options.map((name, index) => <MenuItem key={index} value={name}>{name.split("::")[2]} disabled</MenuItem>)}
                 </Select>
             </FormControl>
         </div>
