@@ -16,10 +16,15 @@ export default function frameControls(props) {
 
     let extraDropDown = ""
 
+    let menuOptions = props.options;
+    console.log(menuOptions)
+
     if(props.numDropDowns == 2){
         if(state.checkedA){
-            const result = props.options.map(name => !name.toLowerCase().includes("tract"))
-            console.log(result)
+            menuOptions = props.options.filter(name => !name.toLowerCase().includes("tract"))
+        }
+        if(!state.checkedA){
+            menuOptions = props.options.filter(name => !name.toLowerCase().includes("county"))
         }
 
         extraDropDown = <div><Grid component="label" container alignItems="center" spacing={1}>
@@ -33,14 +38,14 @@ export default function frameControls(props) {
             </Grid>
             <Grid item>County</Grid>
         </Grid>
-        <ConstraintDropDown options={props.options} otherConstraint={props.constraint} setConstraint={props.setConstraint2}></ConstraintDropDown></div>
+        <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint2}></ConstraintDropDown></div>
     }
 
 
     return(
         <div>
             {extraDropDown}
-            <ConstraintDropDown options={props.options} otherConstraint={props.constraint2} setConstraint={props.setConstraint}></ConstraintDropDown>
+            <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint}></ConstraintDropDown>
         </div>
     )
 
