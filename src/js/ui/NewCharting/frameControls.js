@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import ConstraintDropDown from "./constraintDropDown"
 import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
+import CloseIcon from '@material-ui/icons/Close';
 
 
 
@@ -41,11 +42,16 @@ export default function frameControls(props) {
         <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint2}></ConstraintDropDown></div>
     }
 
+    let closeImg = {cursor:'pointer', float:'right'};
 
     return(
         <div>
             {extraDropDown}
             <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint}></ConstraintDropDown>
+            <CloseIcon
+                style={closeImg}
+                onClick={() => { console.log("here") }}
+            />
         </div>
     )
 
