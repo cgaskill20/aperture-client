@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import ConstraintDropDown from "./constraintDropDown"
 import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
-import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 
@@ -48,10 +49,13 @@ export default function frameControls(props) {
         <div>
             {extraDropDown}
             <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint}></ConstraintDropDown>
-            <CloseIcon
-                style={closeImg}
+            <IconButton
                 onClick={() => { props.remove(props.index) }}
-            />
+                aria-label="Delete">
+                <DeleteIcon
+                    style={closeImg}
+                />
+            </IconButton>
         </div>
     )
 

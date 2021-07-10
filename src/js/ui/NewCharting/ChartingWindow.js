@@ -11,7 +11,10 @@ export default function ChartingWindow(props) {
     }
     const removeChartFrame = index => {
         console.log(index);
-        setFrames(frames.splice(index, 1))
+        console.log(frames)
+        frames.splice(index, 1);
+        console.log(frames)
+        setFrames(frames)
     }
     return (
         <Grid container>
