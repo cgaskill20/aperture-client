@@ -17,14 +17,14 @@ export default function frameControls(props) {
     let extraDropDown = ""
 
     let menuOptions = props.options;
-    console.log(menuOptions)
+
 
     if(props.numDropDowns == 2){
         if(state.checkedA){
-            menuOptions = props.options.filter(name => !name.toLowerCase().includes("tract"))
+            menuOptions = props.options[0]
         }
         if(!state.checkedA){
-            menuOptions = props.options.filter(name => !name.toLowerCase().includes("county"))
+            menuOptions = props.options[1]
         }
 
         extraDropDown = <div><Grid component="label" container alignItems="center" spacing={1}>

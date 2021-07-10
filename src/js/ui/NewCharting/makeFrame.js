@@ -19,12 +19,21 @@ export default function Frame(props) {
     const [constraint, setConstraint] = useState();
     const [constraint2, setConstraint2] = useState();
 
-    let selectedConstraints = []
+    let selectedConstraints = [];
+    let trackFilters = [];
+    let countyFilters = [];
     if(props.data['map_features']){
         Object.keys(props.data['map_features']).map(constraint =>{
             if(props.data['map_features'][constraint].length > 0){
                 selectedConstraints.push(constraint)
+                if(props.data['map_features'][constraint][0].type == "county"){
+                    countyFilters.push(constraint);
+                }
+                if(props.data['map_features'][constraint][0].type == "tract"){
+                    trackFilters.push(constraint);
+                }
             }
+
         })
     }
 
@@ -47,7 +56,7 @@ export default function Frame(props) {
         case "scatterplot":
             frame =
                 <div>
-                    <FrameControls options={selectedConstraints} setConstraint={setConstraint} setConstraint2={setConstraint2} numDropDowns={2}></FrameControls>
+                    <FrameControls options={[countyFilters, trackFilters]} setConstraint={setConstraint} setConstraint2={setConstraint2} numDropDowns={2}></FrameControls>
                     <ScatterPlot size={props.size} data={props.data} selected={[constraint, constraint2]}></ScatterPlot>
                 </div>; break;
         case "boxplot":
