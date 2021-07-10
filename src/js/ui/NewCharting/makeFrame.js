@@ -42,7 +42,7 @@ export default function Frame(props) {
         case "histogram":
             frame =
                 <div>
-                    <FrameControls options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
+                    <FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                     <KDEWrapper>
                         <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph>
                     </KDEWrapper>
@@ -51,19 +51,19 @@ export default function Frame(props) {
         case "line":
             frame = <LineGraph size={props.size} data={props.data} selected={constraint}></LineGraph>; break;
         case "piegraph":
-            frame = <div><FrameControls options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
+            frame = <div><FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                 <PieGraph size={props.size} data={props.data} selected={constraint}></PieGraph></div>; break;
         case "scatterplot":
             frame =
                 <div>
-                    <FrameControls options={[countyFilters, trackFilters]} setConstraint={setConstraint} setConstraint2={setConstraint2} numDropDowns={2}></FrameControls>
+                    <FrameControls index={props.index} remove={props.remove} options={[countyFilters, trackFilters]} setConstraint={setConstraint} setConstraint2={setConstraint2} numDropDowns={2}></FrameControls>
                     <ScatterPlot size={props.size} data={props.data} selected={[constraint, constraint2]}></ScatterPlot>
                 </div>; break;
         case "boxplot":
-            frame = <div><FrameControls options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
+            frame = <div><FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                 <BoxPlot size={props.size} data={props.data} selected={constraint}></BoxPlot></div>; break;
         case "correlogram":
-            frame = <div><FrameControls options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
+            frame = <div><FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                 <CorrelogramChart size={props.size} data={props.data} selected={constraint}></CorrelogramChart></div>; break;
 
         default: break;

@@ -50,7 +50,7 @@ export default function frameControls(props) {
             <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint}></ConstraintDropDown>
             <CloseIcon
                 style={closeImg}
-                onClick={() => { console.log("here") }}
+                onClick={() => { props.remove(props.index) }}
             />
         </div>
     )

@@ -10,14 +10,15 @@ export default function ChartingWindow(props) {
         setFrames(frames.concat([frame.type]))
     }
     const removeChartFrame = index => {
+        console.log(index);
         setFrames(frames.splice(index, 1))
     }
     return (
         <Grid container>
             <Grid container direction="row" alignItems="center" justify="center" spacing={1}>
                 <Grid container direction="column" alignItems="center" justify="center" style={{ width: "90%" }}>
-                    <ChartGlobalControls make={addChartFrame} remove={removeChartFrame}/>
-                    {frames.map((frameType, index) => <Frame key={index} type={frameType} size={props.size} data={props.data}/>)}
+                    <ChartGlobalControls make={addChartFrame} />
+                    {frames.map((frameType, index) => <Frame key={index} type={frameType} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>)}
                 </Grid>
             </Grid>
         </Grid>
