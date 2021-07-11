@@ -6597,5 +6597,986 @@
                 "hideByDefault": true
             }
         ]
+    },
+    {
+        "collection": "neon_photosynthetically_active_radiation",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "source": "https://data.neonscience.org/data-products/DP1.00066.001",
+        "info": "Photosynthetically active radiation measured at the soil surface via the quantum line sensor provides information on the light availability at the ground level. It is reported as 1-minute mean measurements and 30-minute mean values.",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "30min"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "linePARMean",
+                "label": "Arithmetic mean of spatial average of photosynthetically active radiation over the sensor length",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "temporalType": "avg"
+            },
+            {
+                "name": "linePARMinimum",
+                "label": "Minimum spatial average of photosynthetically active radiation over the sensor length",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "temporalType": "avg"
+            },
+            {
+                "name": "linePARMaximum",
+                "label": "Maximum spatial average of photosynthetically active radiation over the sensor length",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "linePARVariance",
+                "label": "Variance in spatial average of photosynthetically active radiation over the sensor length",
+                "unit": "micromolesPerSquareMeterPerSecondSquared",
+                "temporalType": "avg"
+            },
+            {
+                "name": "linePARNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of spatial average of photosynthetically active radiation over the sensor length",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "linePARSkewness",
+                "label": "The asymmetry of the distribution of spatial average of photosynthetically active radiation over the sensor length",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "linePARKurtosis",
+                "label": "The peakedness of the distribution of  spatial average of photosynthetically active radiation over the sensor length",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "linePARExpUncert",
+                "label": "Expanded uncertainty for spatial average of photosynthetically active radiation over the sensor length",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "linePARStdErMean",
+                "label": "Standard error of the mean for spatial average of photosynthetically active radiation over the sensor length",
+                "unit": "micromolesPerSquareMeterPerSecond",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeNAQM",
+                "label": "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceFailQM",
+                "label": "Quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistencePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceNAQM",
+                "label": "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepNAQM",
+                "label": "Quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullNAQM",
+                "label": "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapNAQM",
+                "label": "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeNAQM",
+                "label": "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalNAQM",
+                "label": "Quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "alphaQM",
+                "label": "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "betaQM",
+                "label": "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQF",
+                "label": "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQFSciRvw",
+                "label": "Quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_soil_co2_concentration",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "source": "https://data.neonscience.org/data-products/DP1.00095.001",
+        "info": "CO2 concentrations are measured at different depths in the soil to allow the gradient method to be used to estimate soil CO2 efflux rates when combined with other NEON data products. Soil CO2 efflux is an important component of the carbon cycle because it is one of the largest exchanges of carbon between terrestrial ecosystems and the atmosphere. In addition, since the vast majority of soil CO2 is produced by microbial, root and soil faunal respiration, soil CO2 efflux is an indicator of total soil biological activity. CO2 concentrations are measured in all five Instrumented soil plots per terrestrial site and at various depths below the soil surface starting at approximately 2 cm and data are presented as 1-minute and 30-minute averages. CO2 sensors at different depths within a soil plot are typically located within 1 m horizontally of one another. The CO2 concentration of soil air is measured at three depths within each plot, starting at approximately 2 cm.",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "30min"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "soilCO2concentrationMean",
+                "label": "Arithmetic mean of Soil CO2 concentration adjusted for temperature, pressure, oxygen, and humidity conditions",
+                "unit": "partsPerMillion",
+                "temporalType": "avg"
+            },
+            {
+                "name": "soilCO2concentrationMinimum",
+                "label": "Minimum Soil CO2 concentration adjusted for temperature, pressure, oxygen, and humidity conditions",
+                "unit": "partsPerMillion",
+                "temporalType": "avg"
+            },
+            {
+                "name": "soilCO2concentrationMaximum",
+                "label": "Maximum Soil CO2 concentration adjusted for temperature, pressure, oxygen, and humidity conditions",
+                "unit": "partsPerMillion",
+                "temporalType": "avg"
+            },
+            {
+                "name": "soilCO2concentrationVariance",
+                "label": "Variance in Soil CO2 concentration adjusted for temperature, pressure, oxygen, and humidity conditions",
+                "unit": "partsPerMillionSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "soilCO2concentrationNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of Soil CO2 concentration adjusted for temperature, pressure, oxygen, and humidity conditions",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "soilCO2concentrationExpUncert",
+                "label": "Expanded uncertainty for Soil CO2 concentration adjusted for temperature, pressure, oxygen, and humidity conditions",
+                "unit": "partsPerMillion",
+                "hideByDefault": true
+            },
+            {
+                "name": "soilCO2concentrationStdErMean",
+                "label": "Standard error of the mean for Soil CO2 concentration adjusted for temperature, pressure, oxygen, and humidity conditions",
+                "unit": "partsPerMillion",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "rangeNAQM",
+                "label": "Quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceFailQM",
+                "label": "Quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistencePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "persistenceNAQM",
+                "label": "Quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "stepNAQM",
+                "label": "Quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "nullNAQM",
+                "label": "Quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "gapNAQM",
+                "label": "Quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "spikeNAQM",
+                "label": "Quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "warmUpInstallationFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the warm-up and installation test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "warmUpInstallationPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the warm-up and installation test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "warmUpInstallationNAQM",
+                "label": "Quality metric that summarizes when the warm-up and installation test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "sensorErrorStatusFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the sensor error status test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "sensorErrorStatusPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the sensor error status test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "sensorErrorStatusNAQM",
+                "label": "Quality metric that summarizes when the sensor error status test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "temperatureSCO2FailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the SCO2 temperature test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "temperatureSCO2PassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the SCO2 temperature test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "temperatureSCO2NAQM",
+                "label": "Quality metric that summarizes when the SCO2 temperature test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "pressureRangeFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the pressure range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "pressureRangePassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the pressure range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "pressureRangeNAQM",
+                "label": "Quality metric that summarizes when the pressure range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "validCalNAQM",
+                "label": "Quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "alphaQM",
+                "label": "Quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "betaQM",
+                "label": "Quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQF",
+                "label": "Quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "finalQFSciRvw",
+                "label": "Quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "neon_soil_water_content_and_water_salinity",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "source": "https://data.neonscience.org/data-products/DP1.00094.001",
+        "info": "Soil volumetric water content and an index of soil water ion content (salinity) are measured at various depths below the soil surface from approximately 2 cm up to 200 cm at non-permafrost sites (up to 300 cm at Alaskan sites). Soil moisture is an important component of the hydrologic cycle and is the dominant source of water for most plants and soil organisms making it a key indicator of drought. In addition, soil moisture status influences the severity of flooding and temperature extremes, as well as physical, chemical and biological processes in the soil. Measurements are made in vertical profiles consisting of up to eight depths in all five instrumented soil plots at each terrestrial site, and presented as 1-minute and 30-minute averages.",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "30min"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCMean",
+                "label": "Arithmetic mean of volumetric soil water content",
+                "unit": "cubicCentimetersPerCubicCentimeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "VSWCMinimum",
+                "label": "Minimum volumetric soil water content",
+                "unit": "cubicCentimetersPerCubicCentimeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "VSWCMaximum",
+                "label": "Maximum volumetric soil water content",
+                "unit": "cubicCentimetersPerCubicCentimeter",
+                "temporalType": "avg"
+            },
+            {
+                "name": "VSWCVariance",
+                "label": "Variance in volumetric soil water content",
+                "unit": "cubicCentimetersPerCubicCentimeterSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of volumetric soil water content",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCExpUncert",
+                "label": "Expanded uncertainty for volumetric soil water content",
+                "unit": "cubicCentimetersPerCubicCentimeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCStdErMean",
+                "label": "Standard error of the mean for volumetric soil water content",
+                "unit": "cubicCentimetersPerCubicCentimeter",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCRangeFailQM",
+                "label": "Volumetric soil water content quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCRangePassQM",
+                "label": "Volumetric soil water content quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCRangeNAQM",
+                "label": "Volumetric soil water content quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCPersistenceFailQM",
+                "label": "Volumetric soil water content quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCPersistencePassQM",
+                "label": "Volumetric soil water content quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCPersistenceNAQM",
+                "label": "Volumetric soil water content quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCStepFailQM",
+                "label": "Volumetric soil water content quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCStepPassQM",
+                "label": "Volumetric soil water content quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCStepNAQM",
+                "label": "Volumetric soil water content quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCNullFailQM",
+                "label": "Volumetric soil water content quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCNullPassQM",
+                "label": "Volumetric soil water content quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCNullNAQM",
+                "label": "Volumetric soil water content quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCGapFailQM",
+                "label": "Volumetric soil water content quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCGapPassQM",
+                "label": "Volumetric soil water content quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCGapNAQM",
+                "label": "Volumetric soil water content quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCSpikeFailQM",
+                "label": "Volumetric soil water content quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCSpikePassQM",
+                "label": "Volumetric soil water content quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCSpikeNAQM",
+                "label": "Volumetric soil water content quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCValidCalFailQM",
+                "label": "Volumetric soil water content quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCValidCalPassQM",
+                "label": "Volumetric soil water content quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCValidCalNAQM",
+                "label": "Volumetric soil water content quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCAlphaQM",
+                "label": "Volumetric soil water content quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCBetaQM",
+                "label": "Volumetric soil water content quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCFinalQF",
+                "label": "Volumetric soil water content quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSWCFinalQFSciRvw",
+                "label": "Volumetric soil water content quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICMean",
+                "label": "Arithmetic mean of volumetric soil ion content",
+                "unit": "dimensionless",
+                "temporalType": "avg"
+            },
+            {
+                "name": "VSICMinimum",
+                "label": "Minimum volumetric soil ion content",
+                "unit": "dimensionless",
+                "temporalType": "avg"
+            },
+            {
+                "name": "VSICMaximum",
+                "label": "Maximum volumetric soil ion content",
+                "unit": "dimensionless",
+                "temporalType": "avg"
+            },
+            {
+                "name": "VSICVariance",
+                "label": "Variance in volumetric soil ion content",
+                "unit": "dimensionless",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of volumetric soil ion content",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICExpUncert",
+                "label": "Expanded uncertainty for volumetric soil ion content",
+                "unit": "dimensionless",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICStdErMean",
+                "label": "Standard error of the mean for volumetric soil ion content",
+                "unit": "dimensionless",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICRangeFailQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICRangePassQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICRangeNAQM",
+                "label": "Volumetric soil ion content quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICPersistenceFailQM",
+                "label": "Volumetric soil ion content quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICPersistencePassQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICPersistenceNAQM",
+                "label": "Volumetric soil ion content quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICStepFailQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the failed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICStepPassQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the passed outcomes of the step test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICStepNAQM",
+                "label": "Volumetric soil ion content quality metric that summarizes when the step test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICNullFailQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICNullPassQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICNullNAQM",
+                "label": "Volumetric soil ion content quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICGapFailQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICGapPassQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICGapNAQM",
+                "label": "Volumetric soil ion content quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICSpikeFailQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICSpikePassQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICSpikeNAQM",
+                "label": "Volumetric soil ion content quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICValidCalFailQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICValidCalPassQM",
+                "label": "Volumetric soil ion content quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICValidCalNAQM",
+                "label": "Volumetric soil ion content quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICAlphaQM",
+                "label": "Volumetric soil ion content quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICBetaQM",
+                "label": "Volumetric soil ion content quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICFinalQF",
+                "label": "Volumetric soil ion content quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "VSICFinalQFSciRvw",
+                "label": "Volumetric soil ion content quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempFailQM",
+                "label": "Quality metric that summarizes the failed outcomes of the temperature test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempPassQM",
+                "label": "Quality metric that summarizes the passed outcomes of the temperature test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempNAQM",
+                "label": "Quality metric that summarizes when the temperature test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "calDefaultQM",
+                "label": "Quality metric that summarizes the occurrence of manufacturer default calibration coefficient outcomes of the calibration test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "calNEONQM",
+                "label": "Quality metric that summarizes the occurrence of NEON site- and depth-specific calibration coefficient outcomes of the calibration test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "calNAQM",
+                "label": "Quality metric that summarizes when the calibration test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            }
+        ]
     }
 ]
