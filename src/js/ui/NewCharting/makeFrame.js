@@ -63,8 +63,7 @@ export default function Frame(props) {
             frame = <div><FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                 <BoxPlot size={props.size} data={props.data} selected={constraint}></BoxPlot></div>; break;
         case "correlogram":
-            frame = <div><FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
-                <CorrelogramChart size={props.size} data={props.data} selected={constraint}></CorrelogramChart></div>; break;
+            frame = <CorrelogramChart size={props.size} data={props.data} selected={constraint}></CorrelogramChart>; break;
 
         default: break;
     }

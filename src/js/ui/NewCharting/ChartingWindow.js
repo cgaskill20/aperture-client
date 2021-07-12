@@ -10,10 +10,7 @@ export default function ChartingWindow(props) {
         setFrames(frames.concat([frame.type]))
     }
     const removeChartFrame = index => {
-        console.log(index);
-        console.log(frames)
         frames.splice(index, 1);
-        console.log(frames)
         setFrames(frames)
     }
     return (
