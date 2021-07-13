@@ -7578,5 +7578,575 @@
                 "hideByDefault": true
             }
         ]
+    },
+    {
+        "collection": "neon_relative_humidity",
+        "icon": "science",
+        "temporal": "epoch_time",
+        "source": "https://data.neonscience.org/data-products/DP1.00098.001",
+        "linked": {
+            "collection": "neon_sites",
+            "field": "site"
+        },
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "30min"
+            },
+            {
+                "name": "startDateTime",
+                "label": "Date and time at which a sampling is initiated",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "endDateTime",
+                "label": "Date and time at which a sampling is completed",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHMean",
+                "label": "Arithmetic mean of relative humidity",
+                "unit": "percent",
+                "temporalType": "avg"
+            },
+            {
+                "name": "RHMinimum",
+                "label": "Minimum relative humidity",
+                "unit": "percent",
+                "temporalType": "avg"
+            },
+            {
+                "name": "RHMaximum",
+                "label": "Maximum relative humidity",
+                "unit": "percent",
+                "temporalType": "avg"
+            },
+            {
+                "name": "RHVariance",
+                "label": "Variance in relative humidity",
+                "unit": "percentSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of relative humidity",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHExpUncert",
+                "label": "Expanded uncertainty for relative humidity",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHStdErMean",
+                "label": "Standard error of the mean for relative humidity",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHRangeFailQM",
+                "label": "Relative humidity quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHRangePassQM",
+                "label": "Relative humidity quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHRangeNAQM",
+                "label": "Relative humidity quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHPersistenceFailQM",
+                "label": "Relative humidity quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHPersistencePassQM",
+                "label": "Relative humidity quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHPersistenceNAQM",
+                "label": "Relative humidity quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHNullFailQM",
+                "label": "Relative humidity quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHNullPassQM",
+                "label": "Relative humidity quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHNullNAQM",
+                "label": "Relative humidity quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHGapFailQM",
+                "label": "Relative humidity quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHGapPassQM",
+                "label": "Relative humidity quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHGapNAQM",
+                "label": "Relative humidity quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHSpikeFailQM",
+                "label": "Relative humidity quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHSpikePassQM",
+                "label": "Relative humidity quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHSpikeNAQM",
+                "label": "Relative humidity quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHValidCalFailQM",
+                "label": "Relative humidity quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHValidCalPassQM",
+                "label": "Relative humidity quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHValidCalNAQM",
+                "label": "Relative humidity quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHAlphaQM",
+                "label": "Relative humidity quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHBetaQM",
+                "label": "Relative humidity quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHFinalQF",
+                "label": "Relative humidity quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHFinalQFSciRvw",
+                "label": "Relative humidity quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHMean",
+                "label": "Arithmetic mean of temperature measures by RH sensor",
+                "unit": "celsius",
+                "temporalType": "avg"
+            },
+            {
+                "name": "tempRHMinimum",
+                "label": "Minimum temperature measures by RH sensor",
+                "unit": "celsius",
+                "temporalType": "avg"
+            },
+            {
+                "name": "tempRHMaximum",
+                "label": "Maximum temperature measures by RH sensor",
+                "unit": "celsius",
+                "temporalType": "avg"
+            },
+            {
+                "name": "tempRHVariance",
+                "label": "Variance in temperature measures by RH sensor",
+                "unit": "celsiusSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of temperature measures by RH sensor",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHExpUncert",
+                "label": "Expanded uncertainty for temperature measures by RH sensor",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHStdErMean",
+                "label": "Standard error of the mean for temperature measures by RH sensor",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHRangeFailQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHRangePassQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHRangeNAQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHPersistenceFailQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHPersistencePassQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHPersistenceNAQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHNullFailQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHNullPassQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHNullNAQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHGapFailQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHGapPassQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHGapNAQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHSpikeFailQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHSpikePassQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHSpikeNAQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHValidCalFailQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHValidCalPassQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHValidCalNAQM",
+                "label": "Temperature measures by RH sensor quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHAlphaQM",
+                "label": "Temperature measures by RH sensor quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHBetaQM",
+                "label": "Temperature measures by RH sensor quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHFinalQF",
+                "label": "Temperature measures by RH sensor quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "tempRHFinalQFSciRvw",
+                "label": "Temperature measures by RH sensor quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempMean",
+                "label": "Arithmetic mean of dew or frost point temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempMinimum",
+                "label": "Minimum dew or frost point temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempMaximum",
+                "label": "Maximum dew or frost point temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempVariance",
+                "label": "Variance in dew or frost point temperature",
+                "unit": "celsiusSquared",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempNumPts",
+                "label": "Number of points used to calculate the arithmetic mean of dew or frost point temperature",
+                "unit": "number",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempExpUncert",
+                "label": "Expanded uncertainty for dew or frost point temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempStdErMean",
+                "label": "Standard error of the mean for dew or frost point temperature",
+                "unit": "celsius",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempRangeFailQM",
+                "label": "Dew or frost point temperature quality metric that summarizes the failed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempRangePassQM",
+                "label": "Dew or frost point temperature quality metric that summarizes the passed outcomes of the range test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempRangeNAQM",
+                "label": "Dew or frost point temperature quality metric that summarizes when the range test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempPersistenceFailQM",
+                "label": "Dew or frost point temperature quality metric that summarizes  the failed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempPersistencePassQM",
+                "label": "Dew or frost point temperature quality metric that summarizes the passed outcomes of the persistence test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempPersistenceNAQM",
+                "label": "Dew or frost point temperature quality metric that summarizes when the persistence test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempNullFailQM",
+                "label": "Dew or frost point temperature quality metric that summarizes the failed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempNullPassQM",
+                "label": "Dew or frost point temperature quality metric that summarizes the passed outcomes of the null test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempNullNAQM",
+                "label": "Dew or frost point temperature quality metric that summarizes when the null test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempGapFailQM",
+                "label": "Dew or frost point temperature quality metric that summarizes the failed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempGapPassQM",
+                "label": "Dew or frost point temperature quality metric that summarizes the passed outcomes of the gap test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempGapNAQM",
+                "label": "Dew or frost point temperature quality metric that summarizes when the gap test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempSpikeFailQM",
+                "label": "Dew or frost point temperature quality metric that summarizes the failed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempSpikePassQM",
+                "label": "Dew or frost point temperature quality metric that summarizes the passed outcomes of the spike test over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempSpikeNAQM",
+                "label": "Dew or frost point temperature quality metric that summarizes when the spike test could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempValidCalFailQM",
+                "label": "Dew or frost point temperature quality metric that summarizes the failed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempValidCalPassQM",
+                "label": "Dew or frost point temperature quality metric that summarizes the passed outcomes of the valid calibration check over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempValidCalNAQM",
+                "label": "Dew or frost point temperature quality metric that summarizes when the valid calibration check could not be run over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempAlphaQM",
+                "label": "Dew or frost point temperature quality metric detailing the outcomes of the alpha quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempBetaQM",
+                "label": "Dew or frost point temperature quality metric detailing the outcomes of the beta quality flag over the averaging period, as a percent and detailed in NEON.DOC.001113",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempFinalQF",
+                "label": "Dew or frost point temperature quality flag indicating whether a data product has passed or failed an overall assessment of its quality, detailed in NEON.DOC.001113 (1=fail, 0=pass)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "dewTempFinalQFSciRvw",
+                "label": "Dew or frost point temperature quality flag indicating whether a data product has failed a science review of its quality, detailed in NEON.DOC.001113 (2=fail and data redacted, 1=fail but data retained and may be useful with additional corrections or filtering, 0=previous quality concern resolved and final quality flag correctly reflects data quality, Empty=pass/not reviewed)",
+                "unit": "NA",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHSensorErrorFailQM",
+                "label": "Quality metric that summarizes when the sensor error occurred over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHSensorErrorPassQM",
+                "label": "Quality metric that summarizes when the sensor error was not occurred  over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            },
+            {
+                "name": "RHSensorErrorNAQM",
+                "label": "Quality metric that summarizes when the sensor error was unknown over the averaging period, as a percent",
+                "unit": "percent",
+                "hideByDefault": true
+            }
+        ]
     }
 ]
