@@ -9,6 +9,17 @@ export default function CorrelogramChart(props) {
     var marginWhole = { top: 10, right: 10, bottom: 10, left: 10 },
         sizeWhole = 3000 - marginWhole.left - marginWhole.right;
 
+    let setup = () => {
+
+    }
+
+    let prepareData = data => {
+
+    }
+
+    let rerender = (width, height) => {
+
+    }
     React.useEffect(() => {
         let rows2 = [
             {

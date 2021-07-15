@@ -16,10 +16,11 @@ export default function frameControls(props) {
         setState({ ...state, [name]: event.target.checked });
     };
 
-    let extraDropDown = ""
-
     let menuOptions = props.options;
 
+    let dropDown = ""
+
+    let extraDropDown = ""
 
     if(props.numDropDowns == 2){
         if(state.checkedA){
@@ -42,13 +43,16 @@ export default function frameControls(props) {
         </Grid>
         <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint2}></ConstraintDropDown></div>
     }
+    if(props.numDropDowns > 0){
+        dropDown = <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint}></ConstraintDropDown>
+    }
 
     let closeImg = {cursor:'pointer', float:'right'};
 
     return(
         <div>
             {extraDropDown}
-            <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint}></ConstraintDropDown>
+            {dropDown}
             <IconButton
                 onClick={() => { props.remove(props.index) }}
                 aria-label="Delete">
