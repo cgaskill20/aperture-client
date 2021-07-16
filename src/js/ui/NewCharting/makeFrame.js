@@ -56,14 +56,14 @@ export default function Frame(props) {
         case "scatterplot":
             frame =
                 <div>
-                    <FrameControls index={props.index} remove={props.remove} options={[countyFilters, trackFilters]} setConstraint={setConstraint} setConstraint2={setConstraint2} numDropDowns={2}></FrameControls>
+                    <FrameControls index={props.index} remove={props.remove} options={[countyFilters, trackFilters]} setConstraint={setConstraint} setConstraint2={setConstraint2} numDropDowns={2} selector={true}></FrameControls>
                     <ScatterPlot size={props.size} data={props.data} selected={[constraint, constraint2]}></ScatterPlot>
                 </div>; break;
         case "boxplot":
             frame = <div><FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                 <BoxPlot size={props.size} data={props.data} selected={constraint}></BoxPlot></div>; break;
         case "correlogram":
-            frame = <div><FrameControls index={props.index} remove={props.remove} options={[countyFilters, trackFilters]}></FrameControls>
+            frame = <div><FrameControls index={props.index} remove={props.remove} options={[countyFilters, trackFilters]} selector={true}></FrameControls>
                 <CorrelogramChart size={props.size} data={props.data} selected={constraint}></CorrelogramChart></div>; break;
 
         default: break;

@@ -17,12 +17,11 @@ export default function frameControls(props) {
     };
 
     let menuOptions = props.options;
-
+    let selector = ""
     let dropDown = ""
-
     let extraDropDown = ""
 
-    if(props.numDropDowns == 2){
+    if(props.selector){
         if(state.checkedA){
             menuOptions = props.options[0]
         }
@@ -30,7 +29,7 @@ export default function frameControls(props) {
             menuOptions = props.options[1]
         }
 
-        extraDropDown = <div><Grid component="label" container alignItems="center" spacing={1}>
+        selector = <div><Grid component="label" container alignItems="center" spacing={1}>
             <Grid item>Tract</Grid>
             <Grid item>
                 <Switch
@@ -40,8 +39,10 @@ export default function frameControls(props) {
                 />
             </Grid>
             <Grid item>County</Grid>
-        </Grid>
-        <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint2}></ConstraintDropDown></div>
+        </Grid></div>
+    }
+    if(props.numDropDowns == 2){
+        extraDropDown = <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint2}></ConstraintDropDown>
     }
     if(props.numDropDowns > 0){
         dropDown = <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint}></ConstraintDropDown>
@@ -51,6 +52,7 @@ export default function frameControls(props) {
 
     return(
         <div>
+            {selector}
             {extraDropDown}
             {dropDown}
             <IconButton

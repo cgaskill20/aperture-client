@@ -5,12 +5,22 @@ export default function CorrelogramChart(props) {
 
     let svgRef = React.createRef();
 
-    // Dimension of the whole chart. Only one size since it has to be square
-    var marginWhole = { top: 10, right: 10, bottom: 10, left: 10 },
-        sizeWhole = 3000 - marginWhole.left - marginWhole.right;
-
     let setup = () => {
-
+        // Dimension of the whole chart. Only one size since it has to be square
+        var marginWhole = { top: 10, right: 10, bottom: 10, left: 10 },
+            sizeWhole = 3000 - marginWhole.left - marginWhole.right;
+        var margin = {
+                top: 25,
+                right: 80,
+                bottom: 25,
+                left: 25
+            },
+            width = 600 - margin.left - margin.right,
+            height = 600 - margin.top - margin.bottom;
+        var color = d3
+            .scaleLinear()
+            .domain([-1, 0, 1])
+            .range(["#B22222", "#fff", "#000080"]);
     }
 
     let prepareData = data => {
@@ -21,6 +31,7 @@ export default function CorrelogramChart(props) {
 
     }
     React.useEffect(() => {
+
         let rows2 = [
             {
                 "": "mpg",
@@ -194,14 +205,7 @@ export default function CorrelogramChart(props) {
             }
         });
 
-        var margin = {
-                top: 25,
-                right: 80,
-                bottom: 25,
-                left: 25
-            },
-            width = 600 - margin.left - margin.right,
-            height = 600 - margin.top - margin.bottom,
+        var
             domain = [
                 "mpg",
                 "cyl",
@@ -215,11 +219,7 @@ export default function CorrelogramChart(props) {
                 "gear",
                 "carb"
             ],
-            num = Math.sqrt(data.length),
-            color = d3
-                .scaleLinear()
-                .domain([-1, 0, 1])
-                .range(["#B22222", "#fff", "#000080"]);
+            num = Math.sqrt(data.length);
 
         var x = d3.scalePoint().range([0, width]).domain(domain),
             y = d3.scalePoint().range([0, height]).domain(domain),
