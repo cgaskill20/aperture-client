@@ -7584,6 +7584,7 @@
         "icon": "science",
         "temporal": "epoch_time",
         "source": "https://data.neonscience.org/data-products/DP1.00098.001",
+        "info": "This data product contains the relative humidity, air temperature, and dew point/frost point temperature measurements made at all NEON sites. It is reported as 1-minute mean measurements and 30-minute mean values.",
         "linked": {
             "collection": "neon_sites",
             "field": "site"
