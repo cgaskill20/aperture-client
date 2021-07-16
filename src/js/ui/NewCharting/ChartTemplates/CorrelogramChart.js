@@ -5,22 +5,41 @@ export default function CorrelogramChart(props) {
 
     let svgRef = React.createRef();
 
+    // Dimension of the whole chart. Only one size since it has to be square
+    var marginWhole = { top: 10, right: 10, bottom: 10, left: 10 },
+        sizeWhole = 3000 - marginWhole.left - marginWhole.right;
+
     let setup = () => {
-        // Dimension of the whole chart. Only one size since it has to be square
-        var marginWhole = { top: 10, right: 10, bottom: 10, left: 10 },
-            sizeWhole = 3000 - marginWhole.left - marginWhole.right;
-        var margin = {
-                top: 25,
-                right: 80,
-                bottom: 25,
-                left: 25
-            },
-            width = 600 - margin.left - margin.right,
-            height = 600 - margin.top - margin.bottom;
-        var color = d3
-            .scaleLinear()
-            .domain([-1, 0, 1])
-            .range(["#B22222", "#fff", "#000080"]);
+        let retData = {};
+        if(props.data['map_features']) {
+            for (const [key, value] of Object.entries(props.data['map_features'])) {
+                if (value.length > 0) {
+                    retData[key] = {};
+                    value.forEach(loc => {
+                        retData[key][loc['locationName']] = loc.data;
+                    })
+                }
+            }
+            console.log(retData);
+            for (const [key, value] of Object.entries(retData)){
+                let x = []
+                let y = []
+                for (const [key2, value2] of Object.entries(retData)){
+                    if(key == key2){
+                        continue;
+                    }
+                    for (const [key3, value3] of Object.entries(value)){
+                        if(key3 in value2){
+                            x.push(value3)
+                            y.push(value2[key3])
+                        }
+                    }
+                }
+                console.log(x)
+                console.log(y)
+            }
+        }
+        rerender(100,100)
     }
 
     let prepareData = data => {
@@ -28,10 +47,6 @@ export default function CorrelogramChart(props) {
     }
 
     let rerender = (width, height) => {
-
-    }
-    React.useEffect(() => {
-
         let rows2 = [
             {
                 "": "mpg",
@@ -205,7 +220,14 @@ export default function CorrelogramChart(props) {
             }
         });
 
-        var
+        var margin = {
+                top: 25,
+                right: 80,
+                bottom: 25,
+                left: 25
+            },
+            width = 600 - margin.left - margin.right,
+            height = 600 - margin.top - margin.bottom,
             domain = [
                 "mpg",
                 "cyl",
@@ -219,7 +241,11 @@ export default function CorrelogramChart(props) {
                 "gear",
                 "carb"
             ],
-            num = Math.sqrt(data.length);
+            num = Math.sqrt(data.length),
+            color = d3
+                .scaleLinear()
+                .domain([-1, 0, 1])
+                .range(["#B22222", "#fff", "#000080"]);
 
         var x = d3.scalePoint().range([0, width]).domain(domain),
             y = d3.scalePoint().range([0, height]).domain(domain),
@@ -327,7 +353,9 @@ export default function CorrelogramChart(props) {
                 .attr("x", 0)
                 .attr("y", aS(d));
         });
-    }, []);
+    }
+    useEffect(setup, []);
+    //useEffect(rerender.bind(this, props.size.width, props.size.height));
 
     return (
         <div>
