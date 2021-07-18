@@ -60,6 +60,7 @@ import Gradient from "../third-party/Gradient"
 import MapDataFilterWrapper from "./mapDataFilterWrapper"
 import Util from "./apertureUtil"
 import Query from "./Query"
+import Color from "./Color"
 
 /**
  * @class AutoQuery
