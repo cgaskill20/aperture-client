@@ -64,6 +64,8 @@ import Gradient from "../third-party/Gradient"
  * @author Daniel Reynolds
  */
 
+export const defaultGradient = ["#4d6dbd", "#509bc7", "#f0d55d", "#e07069", "#c7445d"];
+
 export default class Color {
     constructor(fieldType = "numeric", optionsOrMinMax = null, predefinedColor = null) {
         if (fieldType === "numeric") {
@@ -76,16 +78,29 @@ export default class Color {
         if (predefinedColor) {
             this._setKnowns(predefinedColor)
         }
+        else {
+            this._setDefaults(fieldType)
+        }
 
         this.fieldType = fieldType;
 
     }
 
     getColor(value) {
-
+        console.log({value, minMax: this.minMax, options: this.options, gradient: this.gradient, overrideColor: this.overrideColor, colorMapping: this.colorMapping })
+        if(this.minMax && typeof value === "number"){
+            const normalizedValue = Math.min(Math.max((value - this.minMax[0]) / (this.minMax[1] - this.minMax[0]), 0), 0.9999999);
+            console.log({normalizedValue})
+            return this.gradient[Math.floor(normalizedValue * 100)]
+        }
+        else if(this.options && typeof value === "string"){
+            return this.colorMapping[value]
+        }
+        return "#000000"
     }
 
     _setKnowns(predefinedColor) {
+        //console.log({predefinedColor})
         if (predefinedColor.style === "solid") {
             this.overrideColor = predefinedColor.colorCode;
             return;
@@ -93,16 +108,14 @@ export default class Color {
         else if (predefinedColor.style === "gradient" && predefinedColor.gradient) {
             this.gradient = this._createGradient(predefinedColor.gradient)
         }
+        else if (predefinedColor.style === "gradient") {
+            this.gradient = this._createGradient(defaultGradient)
+        }
         else if (predefinedColor.style === "sequential" && predefinedColor.map) {
             this.colorMapping = predefinedColor.map;
         }
         else if (predefinedColor.style === "sequential") {
-            const numOptions = predefinedColor.options.length;
-            const grad = this._createGradient(["#4d6dbd", "#509bc7", "#f0d55d", "#e07069", "#c7445d"], numOptions)
-            this.colorMapping = predefinedColor.options.reduce((acc, curr, index) => {
-                acc[curr] = grad[index]
-                return acc;
-            }, {})
+            this._createDefaultColorMapping()
         }
     }
 
@@ -110,8 +123,24 @@ export default class Color {
         const colorGradient = new Gradient();
         colorGradient.setGradient(...gradientArr);
         colorGradient.setMidpoint(resolution);
-        return colorGradient;
+        return colorGradient.getArray();
     }
 
+    _setDefaults(fieldType) {
+        if(fieldType === "numeric"){
+            this.gradient = this._createGradient(defaultGradient)
+        }
+        else{
+            this._createDefaultColorMapping();
+        }
+    }
 
+    _createDefaultColorMapping() {
+        const numOptions = predefinedColor.options.length;
+        const grad = this._createGradient(defaultGradient, numOptions)
+        this.colorMapping = this.options.reduce((acc, curr, index) => {
+            acc[curr] = grad[index]
+            return acc;
+        }, {})
+    }
 }

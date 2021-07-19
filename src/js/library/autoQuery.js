@@ -100,16 +100,29 @@ export default class AutoQuery {
 
         this.linked = this.data.linkedGeometry ? true : false;
 
-        if(layerData.temporal){
+        if (layerData.temporal) {
             this.temporal = layerData.temporal;
             this.temporalFields = Object.entries(layerData.constraints)
                 .filter(([constraintName, constraint]) => constraint.temporalType != null)
                 .reduce((acc, [constraintName, constraint]) => {
-                    return {...acc, [constraintName]: constraint.temporalType}
+                    return { ...acc, [constraintName]: constraint.temporalType }
                 }, {});
         }
 
+        //this.protoColor = new Color("numeric",);
         this.color = layerData.color;
+        if (this.color.variable) {
+            const colorField = this.data.constraints[this.color.variable]
+            if (colorField?.type === "slider") {
+                this.protoColor = new Color("numeric", colorField.range, this.color);
+            }
+            else if (colorField?.type === "multiselector") {
+                this.protoColor = new Color("string", colorField.options, this.color);
+            }
+        }
+        else {
+            console.log(this.color)
+        }
         this.colorStyle = layerData.color.style;
         this.colorCode = this.buildColorCode(layerData);
 
@@ -120,12 +133,12 @@ export default class AutoQuery {
                 "tracts" : "counties"
             : this.data.label ?
                 this.data.label : Util.cleanUpString(this.collection);
-        
-        if(this.data.linkedGeometry === "neon_sites"){ //edge case for now
+
+        if (this.data.linkedGeometry === "neon_sites") { //edge case for now
             this.blockerGroup = "Neon Sites";
         }
-                
-        if(this.blockerGroup.charAt(this.blockerGroup.length-1) !== "s"){
+
+        if (this.blockerGroup.charAt(this.blockerGroup.length - 1) !== "s") {
             this.blockerGroup += "s";
         }
 
@@ -230,8 +243,8 @@ export default class AutoQuery {
       * @memberof AutoQuery
       * @method killCurrentQueries
       */
-    killCurrentQueries(){
-        for(const qid of [...this.currentQueries]){
+    killCurrentQueries() {
+        for (const qid of [...this.currentQueries]) {
             Query.killQuery(qid);
         }
         this.currentQueries.clear();
@@ -287,17 +300,17 @@ export default class AutoQuery {
         let id;
         const callback = (d) => {
             const { event, payload } = d;
-            if(event === "data"){
+            if (event === "data") {
                 this.renderGeoJSON(payload.data);
             }
-            else if(event === "info"){
+            else if (event === "info") {
                 payload.geohashes && this.geohashCache.push(...payload.geohashes);
-                if(payload.id) { 
+                if (payload.id) {
                     id = payload.id;
-                    this.currentQueries.add(payload.id); 
+                    this.currentQueries.add(payload.id);
                 }
             }
-            else if(event === "end"){
+            else if (event === "end") {
                 this.currentQueries.delete(id);
             }
         }
@@ -419,7 +432,7 @@ export default class AutoQuery {
       */
     buildConstraintPipeline() {
         let pipeline = [];
-        if(this.temporal){
+        if (this.temporal) {
             pipeline = this.buildTemporalPreProcess();
         }
         for (const constraintName in this.constraintState) {
@@ -440,19 +453,19 @@ export default class AutoQuery {
     buildTemporalPreProcess() {
         let groupStage = {
             _id: `$${this.data.joinField}`,
-            [this.data.joinField]: {"$first": `$${this.data.joinField}`}
+            [this.data.joinField]: { "$first": `$${this.data.joinField}` }
         }
-        const fieldsNotGrouped = Object.keys(this.data.constraints).filter(name => !Object.keys(this.temporalFields).includes(name)) 
-        for(const field of fieldsNotGrouped){
-            groupStage[field] = {"$first": `$${field}`}
+        const fieldsNotGrouped = Object.keys(this.data.constraints).filter(name => !Object.keys(this.temporalFields).includes(name))
+        for (const field of fieldsNotGrouped) {
+            groupStage[field] = { "$first": `$${field}` }
         }
-        for(const [field, type] of Object.entries(this.temporalFields)){
-            groupStage[field] = { [`$${type}`]: `$${field}`}
+        for (const [field, type] of Object.entries(this.temporalFields)) {
+            groupStage[field] = { [`$${type}`]: `$${field}` }
         }
         groupStage = {
             "$group": groupStage
         }
-        
+
         return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, groupStage]
     }
 
@@ -558,6 +571,7 @@ export default class AutoQuery {
         if (this.color.variable) {
             const propsVarName = Util.removePropertiesPrefix(this.color.variable);
             value = properties[propsVarName];
+            return this.protoColor?.getColor(value)
         }
         const skew = this.color.skew != null ? this.color.skew + 1 : 1;
         const skewDir = this.color.skewDir != null ? this.color.skewDir : "right";
