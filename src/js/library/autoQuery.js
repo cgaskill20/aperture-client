@@ -573,25 +573,6 @@ export default class AutoQuery {
             value = properties[propsVarName];
             return this.protoColor?.getColor(value)
         }
-        const skew = this.color.skew != null ? this.color.skew + 1 : 1;
-        const skewDir = this.color.skewDir != null ? this.color.skewDir : "right";
-        switch (this.colorStyle) {
-            case "solid":
-                return this.colorCode;
-            case "gradient":
-                const range = this.getConstraintMetadata(this.color.variable).range;
-                const normalizedValue = Math.min(Math.max((value - range[0]) / (range[1] - range[0]), 0), 0.9999999);
-                const skewCorrectedValue = skewDir === "right" ? (1 - (Math.pow(1 - normalizedValue, skew))) : Math.pow(normalizedValue, skew); // https://www.desmos.com/calculator/gezo3xfbfj
-                const colorindex = Math.floor(skewCorrectedValue * 32); //normalizes value on range. results in #0 - 31
-                return this.colorCode[colorindex];
-            case "sequential":
-                if (this.color.map)
-                    return this.color.map[value];
-                else {
-                    const index = this.getConstraintMetadata(this.color.variable).options.indexOf(value);
-                    return this.colorCode[index];
-                }
-        }
     }
 
     /**

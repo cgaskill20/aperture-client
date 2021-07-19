@@ -64,7 +64,7 @@ import Gradient from "../third-party/Gradient"
  * @author Daniel Reynolds
  */
 
-export const defaultGradient = ["#4d6dbd", "#509bc7", "#f0d55d", "#e07069", "#c7445d"];
+export const defaultGradient = ["#c7445d", "#e07069", "#f0d55d", "#509bc7", "#4d6dbd"];
 
 export default class Color {
     constructor(fieldType = "numeric", optionsOrMinMax = null, predefinedColor = null) {
@@ -72,7 +72,7 @@ export default class Color {
             this.minMax = optionsOrMinMax
         }
         else {
-            this.options = options
+            this.options = optionsOrMinMax
         }
 
         if (predefinedColor) {
@@ -87,10 +87,8 @@ export default class Color {
     }
 
     getColor(value) {
-        console.log({value, minMax: this.minMax, options: this.options, gradient: this.gradient, overrideColor: this.overrideColor, colorMapping: this.colorMapping })
         if(this.minMax && typeof value === "number"){
             const normalizedValue = Math.min(Math.max((value - this.minMax[0]) / (this.minMax[1] - this.minMax[0]), 0), 0.9999999);
-            console.log({normalizedValue})
             return this.gradient[Math.floor(normalizedValue * 100)]
         }
         else if(this.options && typeof value === "string"){
@@ -100,7 +98,6 @@ export default class Color {
     }
 
     _setKnowns(predefinedColor) {
-        //console.log({predefinedColor})
         if (predefinedColor.style === "solid") {
             this.overrideColor = predefinedColor.colorCode;
             return;
@@ -136,7 +133,7 @@ export default class Color {
     }
 
     _createDefaultColorMapping() {
-        const numOptions = predefinedColor.options.length;
+        const numOptions = this.options.length;
         const grad = this._createGradient(defaultGradient, numOptions)
         this.colorMapping = this.options.reduce((acc, curr, index) => {
             acc[curr] = grad[index]
