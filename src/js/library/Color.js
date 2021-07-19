@@ -56,7 +56,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-
+import Gradient from "../third-party/Gradient"
 
 /**
  * @class Color
@@ -65,11 +65,53 @@ END OF TERMS AND CONDITIONS
  */
 
 export default class Color {
-    constructor(fieldType="numeric",optionsOrMinMax=null,predefinedColor=null) {
+    constructor(fieldType = "numeric", optionsOrMinMax = null, predefinedColor = null) {
+        if (fieldType === "numeric") {
+            this.minMax = optionsOrMinMax
+        }
+        else {
+            this.options = options
+        }
+
+        if (predefinedColor) {
+            this._setKnowns(predefinedColor)
+        }
+
+        this.fieldType = fieldType;
 
     }
 
-    getColor(value){
+    getColor(value) {
 
     }
+
+    _setKnowns(predefinedColor) {
+        if (predefinedColor.style === "solid") {
+            this.overrideColor = predefinedColor.colorCode;
+            return;
+        }
+        else if (predefinedColor.style === "gradient" && predefinedColor.gradient) {
+            this.gradient = this._createGradient(predefinedColor.gradient)
+        }
+        else if (predefinedColor.style === "sequential" && predefinedColor.map) {
+            this.colorMapping = predefinedColor.map;
+        }
+        else if (predefinedColor.style === "sequential") {
+            const numOptions = predefinedColor.options.length;
+            const grad = this._createGradient(["#4d6dbd", "#509bc7", "#f0d55d", "#e07069", "#c7445d"], numOptions)
+            this.colorMapping = predefinedColor.options.reduce((acc, curr, index) => {
+                acc[curr] = grad[index]
+                return acc;
+            }, {})
+        }
+    }
+
+    _createGradient(gradientArr, resolution = 100) {
+        const colorGradient = new Gradient();
+        colorGradient.setGradient(...gradientArr);
+        colorGradient.setMidpoint(resolution);
+        return colorGradient;
+    }
+
+
 }
