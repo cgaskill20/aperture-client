@@ -101,7 +101,7 @@ export default function ConstraintSlider({constraint, querier}) {
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
             <Typography className={classes.title} id={`range-slider-${constraint.label}`} gutterBottom>
-                {props.constraint.label ?? Util.cleanUpString(props.constraint.name)} &nbsp;
+                {constraint.label ?? Util.cleanUpString(constraint.name)} &nbsp;
                 <span className={classes.nowrap}>{buildSliderLabel()}</span>
             </Typography>
             <Slider
