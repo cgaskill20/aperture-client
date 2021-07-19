@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Tooltip } from "@material-ui/core";
 import PaletteIcon from '@material-ui/icons/Palette';
@@ -11,22 +11,27 @@ const useStyles = makeStyles({
     }
 });
 
-export default function PopupTableEntry({ obj, keyValue, value }) {
+export default React.memo(function PopupTableEntry({ obj, keyValue, value }) {
     //console.log({ obj, keyValue })
     const classes = useStyles()
     const [hoverRef, isHovered] = useHover();
     const [currentColorField, setCurrentColorField] = useState(obj.properties.colorInfo.currentColorFieldName);
-    const changeColorField = obj.properties.colorInfo.updateColorFieldName;
+    const changeColorField = obj.properties.colorInfo.validColorFieldNames.includes(keyValue) ? obj.properties.colorInfo.updateColorFieldName : null;
+
+    useEffect(() => {
+        obj.properties.colorInfo.subscribeToColorFieldNameChange(setCurrentColorField);
+    }, [])
 
     return <TableRow key={keyValue} className={classes.root} ref={hoverRef} onClick={() => {
-        if (currentColorField !== keyValue) {
+        if (changeColorField && currentColorField !== keyValue) {
             changeColorField(keyValue)
-            setCurrentColorField(keyValue)
         }
     }}>
         <TableCell component="th" scope="row">
             {keyToDisplay(obj, keyValue)}
         </TableCell>
-        <TableCell><PopupTableValue obj={obj} keyValue={keyValue} value={value} currentColorField={currentColorField} isHovered={isHovered} /></TableCell>
+        <TableCell>
+            <PopupTableValue obj={obj} keyValue={keyValue} value={value} currentColorField={currentColorField} isHovered={changeColorField != null && isHovered} />
+        </TableCell>
     </TableRow>
-}
+});

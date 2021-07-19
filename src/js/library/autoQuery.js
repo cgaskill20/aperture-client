@@ -109,7 +109,7 @@ export default class AutoQuery {
                 }, {});
         }
 
-        //this.protoColor = new Color("numeric",);
+        this.colorFieldNameChangeSubscribers = [];
         this.color = layerData.color;
         if(this.color.variable){
             this.changeColorCodeField(this.color.variable, this.color)
@@ -252,6 +252,7 @@ export default class AutoQuery {
             else if (colorField?.type === "multiselector") {
                 this.protoColor = new Color("string", colorField.options, predefinedColor);
             }
+            this.colorFieldNameChangeSubscribers.forEach(func => func(this.colorFieldName))
         }
     }
 
@@ -409,7 +410,9 @@ export default class AutoQuery {
         data.properties.meta = this.buildMetaMap();
         data.properties.colorInfo = {
             currentColorFieldName: this.colorFieldName,
-            updateColorFieldName: this.changeColorCodeField.bind(this)
+            updateColorFieldName: this.changeColorCodeField.bind(this),
+            validColorFieldNames: Object.keys(this.data.constraints),
+            subscribeToColorFieldNameChange: this.subscribeToColorFieldNameChange.bind(this)
         }
 
         if (this.getIcon())
@@ -420,6 +423,10 @@ export default class AutoQuery {
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.add(id);
 
+    }
+
+    subscribeToColorFieldNameChange (func) {
+        this.colorFieldNameChangeSubscribers.push(func)
     }
 
     /**
