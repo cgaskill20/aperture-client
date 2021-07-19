@@ -91,6 +91,7 @@ export default class AutoQuery {
 
         this.streams = [];
         this.mapLayers = [];
+        this.currentGeoJSON = [];
         this.layerIDs = new Set();
         this.currentQueries = new Set();
 
@@ -168,6 +169,7 @@ export default class AutoQuery {
         this.checkAndDispatch(oldBlockers);
 
         this.layerIDs.clear()
+        this.currentGeoJSON = [];
         this.enabled = false;
         this.geohashCache = [];
         MapDataFilterWrapper.removeCollection(this.collection);
@@ -253,6 +255,8 @@ export default class AutoQuery {
                 this.protoColor = new Color("string", colorField.options, predefinedColor);
             }
             this.colorFieldNameChangeSubscribers.forEach(func => func(this.colorFieldName))
+            this.clearMapLayers();
+            this.currentGeoJSON.forEach(geoJSON => this.renderGeoJSON(geoJSON))
         }
     }
 
@@ -398,7 +402,7 @@ export default class AutoQuery {
         if (!this.enabled || this.layerIDs.has(id))
             return;
 
-        MapDataFilterWrapper.add(data, this.collection);
+        //MapDataFilterWrapper.add(data, this.collection);
 
         let indexData = {};
         //console.log(this.constraintData[this.temporal])
@@ -421,6 +425,7 @@ export default class AutoQuery {
         indexData[this.collection]["border"] = this.color.border;
         indexData[this.collection]["opacity"] = this.color.opacity;
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
+        this.currentGeoJSON.push(data)
         this.layerIDs.add(id);
 
     }
