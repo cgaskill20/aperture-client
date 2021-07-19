@@ -111,28 +111,12 @@ export default class AutoQuery {
 
         //this.protoColor = new Color("numeric",);
         this.color = layerData.color;
-        if (this.color.variable) {
-            this.colorFieldName = this.color.variable
-            const colorField = this.data.constraints[this.colorFieldName]
-            if (colorField?.type === "slider") {
-                this.protoColor = new Color("numeric", colorField.range, this.color);
-            }
-            else if (colorField?.type === "multiselector") {
-                this.protoColor = new Color("string", colorField.options, this.color);
-            }
+        if(this.color.variable){
+            this.changeColorCodeField(this.color.variable, this.color)
         }
         else {
-            this.colorFieldName = Object.keys(this.data.constraints)[0]
-            const colorField = this.data.constraints[this.colorFieldName]
-            if (colorField?.type === "slider") {
-                this.protoColor = new Color("numeric", colorField.range);
-            }
-            else if (colorField?.type === "multiselector") {
-                this.protoColor = new Color("string", colorField.options);
-            }
+            this.changeColorCodeField(Object.keys(this.data.constraints)[0])
         }
-        this.colorStyle = layerData.color.style;
-        this.colorCode = this.buildColorCode(layerData);
 
         this.graphPipeID = graphPipeID;
 
@@ -256,6 +240,19 @@ export default class AutoQuery {
             Query.killQuery(qid);
         }
         this.currentQueries.clear();
+    }
+
+    changeColorCodeField(fieldName, predefinedColor=null) {
+        this.colorFieldName = fieldName;
+        const colorField = this.data.constraints[fieldName]
+        if(colorField){
+            if (colorField?.type === "slider") {
+                this.protoColor = new Color("numeric", colorField.range, predefinedColor);
+            }
+            else if (colorField?.type === "multiselector") {
+                this.protoColor = new Color("string", colorField.options, predefinedColor);
+            }
+        }
     }
 
     /**
@@ -578,30 +575,6 @@ export default class AutoQuery {
         const propsVarName = Util.removePropertiesPrefix(this.colorFieldName);
         const value = properties[propsVarName];
         return this.protoColor?.getColor(value)
-    }
-
-    /**
-      * Builds a color code/spectrum for the layer
-      * @memberof AutoQuery
-      * @method buildColorCode
-      * @returns {?} color code or spectrum which is relevant to the layer
-      */
-    buildColorCode() {
-        const colorGradient = new Gradient();
-        switch (this.colorStyle) {
-            case "solid":
-                return this.data.color.colorCode;
-            case "gradient":
-                const colors = this.color.gradient ? this.color.gradient : ["#FF0000", "#00FF00"];
-                colorGradient.setGradient(colors[0], colors[1]);
-                colorGradient.setMidpoint(32);
-                return colorGradient.getArray();
-            case "sequential":
-                const numOptions = this.data.constraints[this.data.color.variable].options.length;
-                colorGradient.setGradient("#FF0000", "#00FF00");
-                colorGradient.setMidpoint(numOptions);
-                return colorGradient.getArray();
-        }
     }
 }
 
