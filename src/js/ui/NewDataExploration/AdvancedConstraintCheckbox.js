@@ -61,6 +61,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {componentIsRendering} from "../TabSystem";
+import Util from "../../library/apertureUtil"
 
 function updateLayerConstraints(activeLayerConstraints, index) {
     let tempActiveConstraints = [...activeLayerConstraints];
@@ -85,7 +86,7 @@ export default function AdvancedConstraintCheckbox(props) {
                         color="primary"
                     />
                 }
-                label={props.constraint.label}
+                label={props.constraint.label ?? Util.cleanUpString(props.constraint.name)}
             />
         </FormGroup>
     );
