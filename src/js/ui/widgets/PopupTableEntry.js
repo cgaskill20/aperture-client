@@ -6,8 +6,11 @@ import useHover from "../hooks/useHover";
 import PopupTableValue from "./PopupTableValue";
 
 const useStyles = makeStyles({
-    root: {
-        cursor: 'pointer'
+    clickable: {
+        cursor: 'pointer',
+        "&:hover": {
+            backgroundColor: '#dedede'
+        }
     }
 });
 
@@ -22,7 +25,7 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value }) {
         obj.properties.colorInfo.subscribeToColorFieldNameChange(setCurrentColorField);
     }, [])
 
-    return <TableRow key={keyValue} className={classes.root} ref={hoverRef} onClick={() => {
+    return <TableRow key={keyValue} className={changeColorField !== null ? classes.clickable : ''} ref={hoverRef} onClick={() => {
         if (changeColorField && currentColorField !== keyValue) {
             changeColorField(keyValue)
         }

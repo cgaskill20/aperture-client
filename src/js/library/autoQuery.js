@@ -256,7 +256,9 @@ export default class AutoQuery {
             }
             this.colorFieldNameChangeSubscribers.forEach(func => func(this.colorFieldName))
             this.clearMapLayers();
-            this.currentGeoJSON.forEach(geoJSON => this.renderGeoJSON(geoJSON))
+            const currentGeoJSONCopy = JSON.parse(JSON.stringify(this.currentGeoJSON))
+            this.currentGeoJSON = []
+            currentGeoJSONCopy.forEach(geoJSON => this.renderGeoJSON(geoJSON))
         }
     }
 
@@ -416,7 +418,8 @@ export default class AutoQuery {
             currentColorFieldName: this.colorFieldName,
             updateColorFieldName: this.changeColorCodeField.bind(this),
             validColorFieldNames: Object.keys(this.data.constraints),
-            subscribeToColorFieldNameChange: this.subscribeToColorFieldNameChange.bind(this)
+            subscribeToColorFieldNameChange: this.subscribeToColorFieldNameChange.bind(this),
+            colorSummary: this.protoColor.getColorSummary()
         }
 
         if (this.getIcon())

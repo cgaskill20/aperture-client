@@ -97,6 +97,20 @@ export default class Color {
         return "#000000"
     }
 
+    getColorSummary() {
+        if(this.minMax){
+            return {
+                minMax: this.minMax,
+                gradient: this.gradient
+            }
+        }
+        else if(this.options){
+            return {
+                colorMapping: this.colorMapping
+            }
+        }
+    }
+
     _setKnowns(predefinedColor) {
         if (predefinedColor.style === "solid") {
             this.overrideColor = predefinedColor.colorCode;
