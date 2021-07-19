@@ -407,6 +407,10 @@ export default class AutoQuery {
         }
 
         data.properties.meta = this.buildMetaMap();
+        data.properties.colorInfo = {
+            currentColorFieldName: this.colorFieldName,
+            updateColorFieldName: this.changeColorCodeField.bind(this)
+        }
 
         if (this.getIcon())
             indexData[this.collection]["iconAddr"] = `./images/map-icons/${this.getIcon()}.png`;
