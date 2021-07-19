@@ -59,7 +59,8 @@ END OF TERMS AND CONDITIONS
 import React from "react";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles } from "@material-ui/core";
 import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
-import PopupTableValue from "./PopupTableValue"
+import PopupTableEntry from "./PopupTableEntry"
+import useHover from "../hooks/useHover";
 
 const drawerWidth = '450px';
 
@@ -84,12 +85,7 @@ export default React.memo(function PopupTable({ keyValPairs, obj }) {
                 {keyValPairs
                     .filter(([key, value]) => keyValueIsValid(key, value))
                     .map(([key, value]) => (
-                        <TableRow key={key}>
-                            <TableCell component="th" scope="row">
-                                {keyToDisplay(obj, key)}
-                            </TableCell>
-                            <TableCell><PopupTableValue obj={obj} keyValue={key} value={value}/></TableCell>
-                        </TableRow>
+                        <PopupTableEntry obj={obj} keyValue={key} value={value} key={key}/> 
                     ))}
             </TableBody>
         </Table>
