@@ -112,7 +112,8 @@ export default class AutoQuery {
         //this.protoColor = new Color("numeric",);
         this.color = layerData.color;
         if (this.color.variable) {
-            const colorField = this.data.constraints[this.color.variable]
+            this.colorFieldName = this.color.variable
+            const colorField = this.data.constraints[this.colorFieldName]
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, this.color);
             }
@@ -121,7 +122,14 @@ export default class AutoQuery {
             }
         }
         else {
-            console.log(this.color)
+            this.colorFieldName = Object.keys(this.data.constraints)[0]
+            const colorField = this.data.constraints[this.colorFieldName]
+            if (colorField?.type === "slider") {
+                this.protoColor = new Color("numeric", colorField.range);
+            }
+            else if (colorField?.type === "multiselector") {
+                this.protoColor = new Color("string", colorField.options);
+            }
         }
         this.colorStyle = layerData.color.style;
         this.colorCode = this.buildColorCode(layerData);
@@ -567,12 +575,9 @@ export default class AutoQuery {
       * @returns {string} hex color code
       */
     getColor(properties) {
-        let value;
-        if (this.color.variable) {
-            const propsVarName = Util.removePropertiesPrefix(this.color.variable);
-            value = properties[propsVarName];
-            return this.protoColor?.getColor(value)
-        }
+        const propsVarName = Util.removePropertiesPrefix(this.colorFieldName);
+        const value = properties[propsVarName];
+        return this.protoColor?.getColor(value)
     }
 
     /**

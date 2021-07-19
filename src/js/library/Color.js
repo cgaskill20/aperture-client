@@ -87,6 +87,7 @@ export default class Color {
     }
 
     getColor(value) {
+        console.log({value})
         if(this.minMax && typeof value === "number"){
             const normalizedValue = Math.min(Math.max((value - this.minMax[0]) / (this.minMax[1] - this.minMax[0]), 0), 0.9999999);
             return this.gradient[Math.floor(normalizedValue * 100)]
