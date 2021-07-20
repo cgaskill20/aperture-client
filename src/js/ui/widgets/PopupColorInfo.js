@@ -61,6 +61,7 @@ import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper
 import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
 import PopupTableEntry from "./PopupTableEntry"
 import useHover from "../hooks/useHover";
+import Util from "../../library/apertureUtil"
 import * as d3 from '../../third-party/d3.min.js';
 
 export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary, obj }) {
@@ -72,6 +73,7 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
             const marginBottom = 20;
             const marginLeftRight = 10;
             const svg = d3.select(svgRef.current);
+            svg.selectAll('*').remove();
             svg.attr("viewBox", [0, 0, width, height]);
 
             const linearGradient = svg.append("defs")
@@ -86,11 +88,7 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                     .attr("stop-color", colorSummary.gradient[i]);
             }
 
-            const linearScale = d3.scaleLinear()
-                .domain(d3.extent(colorSummary.minMax))
-                .range([0, width - marginLeftRight * 2])
-                .nice()
-            const axis = d3.axisBottom(linearScale)
+            //add gradient
             svg.append("rect")
                 .attr("transform", `translate(${marginLeftRight},0)`)
                 .attr("x", 0)
@@ -99,9 +97,26 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                 .attr("height", height - marginBottom)
                 .style("fill", "url(#linear-gradient)");
 
+            //add line
+            const value = obj.properties[colorFieldName];
+            const xValue = (width - marginLeftRight * 2) * Math.min(Math.max((value - colorSummary.minMax[0]) / (colorSummary.minMax[1] - colorSummary.minMax[0]), 0), 1) + marginLeftRight;
+            svg.append('line')
+                .style("stroke", "black")
+                .style("stroke-width", 3)
+                .attr("x1", xValue)
+                .attr("y1", 0)
+                .attr("x2", xValue)
+                .attr("y2", height - marginBottom);
+
+            //add axis
+            const linearScale = d3.scaleLinear()
+                .domain(d3.extent(colorSummary.minMax))
+                .range([0, width - marginLeftRight * 2])
+                .nice()
+            const axis = d3.axisBottom(linearScale).ticks(5);
             svg.append('g').attr("transform", `translate(${marginLeftRight},${height - marginBottom})`).call(axis);
         }
-    }, []);
+    }, [colorSummary]);
 
     if (colorSummary.minMax) {
         const useStyles = makeStyles({
@@ -129,7 +144,7 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                 </TableHead>
                 <TableBody>
                     {Object.entries(colorSummary.colorMapping).map(([value, color]) => {
-                        const isThisValue = value === obj.properties[colorFieldName];
+                        const isThisValue = value === obj.properties[Util.removePropertiesPrefix(colorFieldName)];
                         const rowStyle = {}
                         if (isThisValue) {
                             rowStyle.backgroundColor = '#dedede'
