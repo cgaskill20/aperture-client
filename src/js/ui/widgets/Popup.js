@@ -63,6 +63,7 @@ import Util from "../../library/apertureUtil";
 import CloseIcon from "@material-ui/icons/Close";
 import PopupTable from "./PopupTable";
 import PopupTimeChart from "./PopupTimeChart";
+import PopupColorInfo from "./PopupColorInfo";
 import { keyToDisplay } from "./PopupUtils";
 import defaultImportantFields from "../../../json/defaultImportantFields.json"
 
@@ -92,8 +93,20 @@ const useStyles = makeStyles({
 export default function Popup() {
     const [obj, setObj] = useState({});
     const [globalState, setGlobalState] = useGlobalState();
+    const [colorSummary, setColorSummary] = useState(obj?.properties?.colorInfo.colorSummary());
+    const [colorFieldName, setColorFieldName] = useState(obj?.properties?.colorInfo.currentColorFieldName);
 
     const classes = useStyles();
+
+    useEffect(() => {
+        setColorSummary(obj?.properties?.colorInfo.colorSummary())
+        setColorFieldName(obj?.properties?.colorInfo.currentColorFieldName)
+        obj?.properties?.colorInfo.subscribeToColorFieldNameChange((newName) => {
+            console.log(newName)
+            setColorFieldName(newName)
+            setColorSummary(obj?.properties?.colorInfo.colorSummary())
+        })
+    }, [obj])
 
     useEffect(() => {
         window.setPopupObj = (o) => {
@@ -134,6 +147,7 @@ export default function Popup() {
                             <br />
                         </> : null
                 }
+                {makeColors()}
                 {makeCharts()}
                 <Typography variant="h6" gutterBottom>
                     All Fields
@@ -160,7 +174,17 @@ export default function Popup() {
         }
     }
 
-    console.log(obj?.properties?.colorInfo.colorSummary)
+    const makeColors = () => {
+        if (colorSummary) {
+            return <>
+                <Typography gutterBottom variant="h5">Color Coding Based on {Util.cleanUpString(colorFieldName)}</Typography>
+                <PopupColorInfo colorFieldName={colorFieldName} colorSummary={colorSummary} />
+                <br />
+            </>
+        }
+    }
+
+    //console.log(obj?.properties?.colorInfo.colorSummary)
 
     return <div className={classes.root}>
         <Drawer

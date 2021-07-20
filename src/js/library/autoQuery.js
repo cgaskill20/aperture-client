@@ -419,7 +419,7 @@ export default class AutoQuery {
             updateColorFieldName: this.changeColorCodeField.bind(this),
             validColorFieldNames: Object.keys(this.data.constraints),
             subscribeToColorFieldNameChange: this.subscribeToColorFieldNameChange.bind(this),
-            colorSummary: this.protoColor.getColorSummary()
+            colorSummary: () => { return this.protoColor.getColorSummary() }
         }
 
         if (this.getIcon())
