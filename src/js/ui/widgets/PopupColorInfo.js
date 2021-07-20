@@ -56,25 +56,65 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from "react";
+import React, { useEffect } from "react";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Grid } from "@material-ui/core";
 import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
 import PopupTableEntry from "./PopupTableEntry"
 import useHover from "../hooks/useHover";
+import * as d3 from '../../third-party/d3.min.js';
 
 export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary, obj }) {
-    console.log(colorSummary)
+    const svgRef = React.createRef();
+    useEffect(() => {
+        if (colorSummary.minMax) {
+            const width = 350;
+            const height = 85;
+            const marginBottom = 20;
+            const marginLeftRight = 10;
+            const svg = d3.select(svgRef.current);
+            svg.attr("viewBox", [0, 0, width, height]);
+
+            const linearGradient = svg.append("defs")
+                .append("linearGradient")
+                .attr("id", "linear-gradient");
+
+            const gradientLength = colorSummary.gradient.length;
+
+            for (let i = 0; i < gradientLength; i++) {
+                linearGradient.append("stop")
+                    .attr("offset", `${Math.round(i * 100 / gradientLength)}%`)
+                    .attr("stop-color", colorSummary.gradient[i]);
+            }
+
+            const linearScale = d3.scaleLinear()
+                .domain(d3.extent(colorSummary.minMax))
+                .range([0, width - marginLeftRight * 2])
+                .nice()
+            const axis = d3.axisBottom(linearScale)
+            svg.append("rect")
+                .attr("transform", `translate(${marginLeftRight},0)`)
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", width - marginLeftRight * 2)
+                .attr("height", height - marginBottom)
+                .style("fill", "url(#linear-gradient)");
+
+            svg.append('g').attr("transform", `translate(${marginLeftRight},${height - marginBottom})`).call(axis);
+        }
+    }, []);
+
     if (colorSummary.minMax) {
         const useStyles = makeStyles({
             colorDiv: {
                 background: `linear-gradient(to right, ${colorSummary.gradient.join(',')})`,
+                width: '350px',
                 height: '65px'
             }
         });
         const classes = useStyles();
         return <Grid container>
             <Grid item xs={12}>
-                <div className={classes.colorDiv}></div>
+                <svg ref={svgRef}></svg>
             </Grid>
         </Grid>
     }
@@ -91,7 +131,7 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                     {Object.entries(colorSummary.colorMapping).map(([value, color]) => {
                         const isThisValue = value === obj.properties[colorFieldName];
                         const rowStyle = {}
-                        if(isThisValue){
+                        if (isThisValue) {
                             rowStyle.backgroundColor = '#dedede'
                         }
                         return <TableRow style={rowStyle}>
