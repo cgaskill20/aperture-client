@@ -178,7 +178,7 @@ export default function Popup() {
         if (colorSummary) {
             return <>
                 <Typography gutterBottom variant="h5">Color Coding Based on {colorField.label ?? Util.cleanUpString(colorField.name)}</Typography>
-                <PopupColorInfo colorFieldName={colorField.name} colorSummary={colorSummary} />
+                <PopupColorInfo colorFieldName={colorField.name} colorSummary={colorSummary} obj={obj} />
                 <br />
             </>
         }

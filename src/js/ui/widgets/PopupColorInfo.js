@@ -62,7 +62,7 @@ import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
 import PopupTableEntry from "./PopupTableEntry"
 import useHover from "../hooks/useHover";
 
-export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary }) {
+export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary, obj }) {
     console.log(colorSummary)
     if (colorSummary.minMax) {
         const useStyles = makeStyles({
@@ -89,9 +89,14 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                 </TableHead>
                 <TableBody>
                     {Object.entries(colorSummary.colorMapping).map(([value, color]) => {
-                        return <TableRow>
-                            <TableCell>{value}</TableCell>
-                            <TableCell><div style={{ backgroundColor: color, height: '25px' }} /></TableCell>
+                        const isThisValue = value === obj.properties[colorFieldName];
+                        const rowStyle = {}
+                        if(isThisValue){
+                            rowStyle.backgroundColor = '#dedede'
+                        }
+                        return <TableRow style={rowStyle}>
+                            <TableCell>{isThisValue ? <b>{value}</b> : value}</TableCell>
+                            <TableCell><div style={{ backgroundColor: color, height: '25px', border: '1px solid black' }} /></TableCell>
                         </TableRow>
                     })}
                 </TableBody>
