@@ -133,9 +133,10 @@ export default class RenderInfrastructure {
         let layers = [];
         const newLayer = L.geoJson(geoJsonData, {
             style: function (feature) {
-                let weight = 1;
+                let weight = Util.getFeatureType(feature) === Util.FEATURETYPE.lineString ? 3 : 1;
                 let fillOpacity = 0.35;
                 let name = Util.getNameFromGeoJsonFeature(feature, indexData);
+
                 if (datasource[name] && datasource[name]["border"] !== null && datasource[name]["border"] !== undefined)
                     weight = datasource[name]["border"];
                 if (datasource[name] && datasource[name]["opacity"] !== null && datasource[name]["opacity"] !== undefined)

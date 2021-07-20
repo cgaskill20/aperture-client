@@ -245,9 +245,12 @@ export default class AutoQuery {
     }
 
     changeColorCodeField(fieldName, predefinedColor=null) {
-        this.colorFieldName = fieldName;
-        const colorField = this.data.constraints[fieldName]
+        if(fieldName === this.color.variable){
+            predefinedColor = this.color;
+        }
+        const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
         if(colorField){
+            this.colorFieldName = fieldName;
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor);
             }
@@ -417,7 +420,7 @@ export default class AutoQuery {
         data.properties.colorInfo = {
             currentColorFieldName: this.colorFieldName,
             updateColorFieldName: this.changeColorCodeField.bind(this),
-            validColorFieldNames: Object.keys(this.data.constraints),
+            validColorFieldNames: Object.keys(this.data.constraints).map(Util.removePropertiesPrefix),
             subscribeToColorFieldNameChange: this.subscribeToColorFieldNameChange.bind(this),
             colorSummary: () => { return this.protoColor.getColorSummary() }
         }
