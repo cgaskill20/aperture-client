@@ -208,11 +208,15 @@ export default class RenderInfrastructure {
         const index = this.gisjoinIndex(GISJOIN);
         const oldName = Object.keys(indexData)[0];
 
+        const colorInfo = geojson.properties.colorInfo;
+
         const thisRef = {
             name: oldName,
             indexData: JSON.parse(JSON.stringify(indexData)),
             properties: JSON.parse(JSON.stringify(geojson.properties))
         };
+
+        thisRef.properties.colorInfo = colorInfo;
 
         if (index === -1) {
             this.currentGISJOINLayers.push({
@@ -276,12 +280,26 @@ export default class RenderInfrastructure {
 
     refsToProperties(refs) {
         return refs.reduce((acc, curr) => {
+            console.log(curr.properties.colorInfo)
             return {
                 ...acc,
                 ...curr.properties,
-                meta: { ...acc.meta, ...curr.properties.meta }
+                meta: { ...acc.meta, ...curr.properties.meta },
+                colorInfo: {
+                    ...acc.colorInfo, ...curr.properties.colorInfo,
+                    validColorFieldNames: [...acc?.colorInfo?.validColorFieldNames, ...curr.properties.colorInfo.validColorFieldNames],
+                    subscribeToColorFieldNameChange: (func) => {
+                        curr.properties.colorInfo.subscribeToColorFieldNameChange(func);
+                        acc?.colorInfo?.subscribeToColorFieldNameChange(func)
+                    }
+                }
             }
-        }, {});
+        }, {
+            colorInfo: {
+                validColorFieldNames: [],
+                subscribeToColorFieldNameChange: () => {}
+            }
+        });
     }
 
     gisjoinUpdateLayer(geojson, layerID) {
