@@ -8,6 +8,7 @@ import KDEWrapper from "./KDEWrapper";
 import BoxPlot from "./ChartTemplates/BoxPlotChart";
 import FrameControls from "./frameControls";
 import CorrelogramChart from "./ChartTemplates/CorrelogramChart";
+import Heatmaptest from "./ChartTemplates/heatmaptest";
 
 
 
@@ -63,8 +64,8 @@ export default function Frame(props) {
             frame = <div><FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                 <BoxPlot size={props.size} data={props.data} selected={constraint}></BoxPlot></div>; break;
         case "correlogram":
-            frame = <div><FrameControls index={props.index} remove={props.remove}></FrameControls>
-                <CorrelogramChart size={props.size} data={props.data} selected={constraint}></CorrelogramChart></div>; break;
+            frame =
+                <Heatmaptest size={props.size} data={props.data} selected={constraint}></Heatmaptest>; break;
 
         default: break;
     }
