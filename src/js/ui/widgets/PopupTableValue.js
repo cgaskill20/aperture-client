@@ -15,7 +15,7 @@ export default function PopupTableValue({ obj, keyValue, value, currentColorFiel
     const classes = useStyles()
 
     const colorIcon = () => {
-        if (currentColorField === keyValue) {
+        if (currentColorField.name === keyValue) {
             return <Tooltip title="Color coding is based on this field.">
                 <PaletteIcon />
             </Tooltip>;

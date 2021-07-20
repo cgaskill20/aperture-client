@@ -110,7 +110,7 @@ export default class AutoQuery {
                 }, {});
         }
 
-        this.colorFieldNameChangeSubscribers = [];
+        this.colorFieldChangeSubscribers = [];
         this.color = layerData.color;
         if(this.color.variable){
             this.changeColorCodeField(this.color.variable, this.color)
@@ -250,14 +250,15 @@ export default class AutoQuery {
         }
         const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
         if(colorField){
-            this.colorFieldName = fieldName;
+            this.colorField = { name: fieldName, label: colorField.label };
+
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor);
             }
             else if (colorField?.type === "multiselector") {
                 this.protoColor = new Color("string", colorField.options, predefinedColor);
             }
-            this.colorFieldNameChangeSubscribers.forEach(func => func(this.colorFieldName))
+            this.colorFieldChangeSubscribers.forEach(func => func(this.colorField))
             this.clearMapLayers();
             const currentGeoJSONCopy = JSON.parse(JSON.stringify(this.currentGeoJSON))
             this.currentGeoJSON = []
@@ -418,10 +419,10 @@ export default class AutoQuery {
 
         data.properties.meta = this.buildMetaMap();
         data.properties.colorInfo = {
-            currentColorFieldName: this.colorFieldName,
+            currentColorField: this.colorField,
             updateColorFieldName: this.changeColorCodeField.bind(this),
             validColorFieldNames: Object.keys(this.data.constraints).map(Util.removePropertiesPrefix),
-            subscribeToColorFieldNameChange: this.subscribeToColorFieldNameChange.bind(this),
+            subscribeToColorFieldChange: this.subscribeToColorFieldChange.bind(this),
             colorSummary: () => { return this.protoColor.getColorSummary() }
         }
 
@@ -436,8 +437,8 @@ export default class AutoQuery {
 
     }
 
-    subscribeToColorFieldNameChange (func) {
-        this.colorFieldNameChangeSubscribers.push(func)
+    subscribeToColorFieldChange (func) {
+        this.colorFieldChangeSubscribers.push(func)
     }
 
     /**
@@ -594,7 +595,7 @@ export default class AutoQuery {
       * @returns {string} hex color code
       */
     getColor(properties) {
-        const propsVarName = Util.removePropertiesPrefix(this.colorFieldName);
+        const propsVarName = Util.removePropertiesPrefix(this.colorField.name);
         const value = properties[propsVarName];
         return this.protoColor?.getColor(value)
     }

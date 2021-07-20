@@ -95,15 +95,15 @@ export default function Popup() {
     const [globalState, setGlobalState] = useGlobalState();
     //console.log(obj?.properties?.colorInfo)
     const [colorSummary, setColorSummary] = useState(obj?.properties?.colorInfo?.colorSummary());
-    const [colorFieldName, setColorFieldName] = useState(obj?.properties?.colorInfo?.currentColorFieldName);
+    const [colorField, setColorField] = useState(obj?.properties?.colorInfo?.currentColorFieldName);
 
     const classes = useStyles();
 
     useEffect(() => {
         setColorSummary(obj?.properties?.colorInfo?.colorSummary())
-        setColorFieldName(obj?.properties?.colorInfo?.currentColorFieldName)
-        obj?.properties?.colorInfo?.subscribeToColorFieldNameChange((newName) => {
-            setColorFieldName(newName)
+        setColorField(obj?.properties?.colorInfo?.currentColorField)
+        obj?.properties?.colorInfo?.subscribeToColorFieldChange((newField) => {
+            setColorField(newField)
             setColorSummary(obj?.properties?.colorInfo.colorSummary())
         })
     }, [obj])
@@ -177,8 +177,8 @@ export default function Popup() {
     const makeColors = () => {
         if (colorSummary) {
             return <>
-                <Typography gutterBottom variant="h5">Color Coding Based on {Util.cleanUpString(colorFieldName)}</Typography>
-                <PopupColorInfo colorFieldName={colorFieldName} colorSummary={colorSummary} />
+                <Typography gutterBottom variant="h5">Color Coding Based on {colorField.label ?? Util.cleanUpString(colorField.name)}</Typography>
+                <PopupColorInfo colorFieldName={colorField.name} colorSummary={colorSummary} />
                 <br />
             </>
         }

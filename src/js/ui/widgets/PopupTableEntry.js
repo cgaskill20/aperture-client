@@ -18,23 +18,23 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value }) {
     //console.log({ obj, keyValue })
     const classes = useStyles()
     const [hoverRef, isHovered] = useHover();
-    const [currentColorField, setCurrentColorField] = useState(obj.properties.colorInfo.currentColorFieldName);
-    const changeColorField = obj.properties.colorInfo.validColorFieldNames.includes(keyValue) ? obj.properties.colorInfo.updateColorFieldName : null;
+    const [currentColorField, setCurrentColorField] = useState(obj.properties.colorInfo.currentColorField);
+    const changeColorFieldName = obj.properties.colorInfo.validColorFieldNames.includes(keyValue) ? obj.properties.colorInfo.updateColorFieldName : null;
 
     useEffect(() => {
-        obj.properties.colorInfo.subscribeToColorFieldNameChange(setCurrentColorField);
+        obj.properties.colorInfo.subscribeToColorFieldChange(setCurrentColorField);
     }, [])
 
-    return <TableRow key={keyValue} className={changeColorField !== null ? classes.clickable : ''} ref={hoverRef} onClick={() => {
-        if (changeColorField && currentColorField !== keyValue) {
-            changeColorField(keyValue)
+    return <TableRow key={keyValue} className={changeColorFieldName !== null ? classes.clickable : ''} ref={hoverRef} onClick={() => {
+        if (changeColorFieldName && currentColorField.name !== keyValue) {
+            changeColorFieldName(keyValue)
         }
     }}>
         <TableCell component="th" scope="row">
             {keyToDisplay(obj, keyValue)}
         </TableCell>
         <TableCell>
-            <PopupTableValue obj={obj} keyValue={keyValue} value={value} currentColorField={currentColorField} isHovered={changeColorField != null && isHovered} />
+            <PopupTableValue obj={obj} keyValue={keyValue} value={value} currentColorField={currentColorField} isHovered={changeColorFieldName != null && isHovered} />
         </TableCell>
     </TableRow>
 });

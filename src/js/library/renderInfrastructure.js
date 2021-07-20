@@ -280,7 +280,6 @@ export default class RenderInfrastructure {
 
     refsToProperties(refs) {
         return refs.reduce((acc, curr) => {
-            console.log(curr.properties.colorInfo)
             return {
                 ...acc,
                 ...curr.properties,
