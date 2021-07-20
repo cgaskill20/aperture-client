@@ -102,7 +102,6 @@ export default function Popup() {
         setColorSummary(obj?.properties?.colorInfo.colorSummary())
         setColorFieldName(obj?.properties?.colorInfo.currentColorFieldName)
         obj?.properties?.colorInfo.subscribeToColorFieldNameChange((newName) => {
-            console.log(newName)
             setColorFieldName(newName)
             setColorSummary(obj?.properties?.colorInfo.colorSummary())
         })

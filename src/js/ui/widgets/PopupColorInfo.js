@@ -79,7 +79,24 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
         </Grid>
     }
     else if (colorSummary.colorMapping) {
-
+        return <TableContainer component={Paper}>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Value</TableCell>
+                        <TableCell>Color</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {Object.entries(colorSummary.colorMapping).map(([value, color]) => {
+                        return <TableRow>
+                            <TableCell>{value}</TableCell>
+                            <TableCell><div style={{ backgroundColor: color, height: '25px' }} /></TableCell>
+                        </TableRow>
+                    })}
+                </TableBody>
+            </Table>
+        </TableContainer>
     }
     return <div></div>
 });
