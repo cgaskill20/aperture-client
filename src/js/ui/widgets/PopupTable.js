@@ -70,8 +70,9 @@ const useStyles = makeStyles({
     }
 });
 
-export default React.memo(function PopupTable({ keyValPairs, obj }) {
+export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) {
     const classes = useStyles();
+    console.log(colorField)
 
     return <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
@@ -85,7 +86,7 @@ export default React.memo(function PopupTable({ keyValPairs, obj }) {
                 {keyValPairs
                     .filter(([key, value]) => keyValueIsValid(key, value))
                     .map(([key, value]) => (
-                        <PopupTableEntry obj={obj} keyValue={key} value={value} key={key}/> 
+                        <PopupTableEntry obj={obj} keyValue={key} value={value} key={key} currentColorField={colorField} /> 
                     ))}
             </TableBody>
         </Table>

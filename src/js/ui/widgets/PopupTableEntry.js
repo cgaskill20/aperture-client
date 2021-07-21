@@ -14,19 +14,15 @@ const useStyles = makeStyles({
     }
 });
 
-export default React.memo(function PopupTableEntry({ obj, keyValue, value }) {
+export default React.memo(function PopupTableEntry({ obj, keyValue, value, currentColorField }) {
     //console.log({ obj, keyValue })
     const classes = useStyles()
     const [hoverRef, isHovered] = useHover();
-    const [currentColorField, setCurrentColorField] = useState(obj.properties.colorInfo.currentColorField);
     const changeColorFieldName = obj.properties.colorInfo.validColorFieldNames.includes(keyValue) ? obj.properties.colorInfo.updateColorFieldName : null;
 
-    useEffect(() => {
-        obj.properties.colorInfo.subscribeToColorFieldChange(setCurrentColorField);
-    }, [])
 
     return <TableRow key={keyValue} className={changeColorFieldName !== null ? classes.clickable : ''} ref={hoverRef} onClick={() => {
-        if (changeColorFieldName && currentColorField.name !== keyValue) {
+        if (changeColorFieldName && currentColorField?.name !== keyValue) {
             changeColorFieldName(keyValue)
         }
     }}>

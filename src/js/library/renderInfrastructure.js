@@ -290,13 +290,18 @@ export default class RenderInfrastructure {
                     subscribeToColorFieldNameChange: (func) => {
                         curr.properties.colorInfo.subscribeToColorFieldNameChange(func);
                         acc?.colorInfo?.subscribeToColorFieldNameChange(func)
+                    },
+                    updateColorFieldName: (name) => {
+                        curr.properties.colorInfo.updateColorFieldName(name);
+                        acc.colorInfo.updateColorFieldName(name)
                     }
                 }
             }
         }, {
             colorInfo: {
                 validColorFieldNames: [],
-                subscribeToColorFieldNameChange: () => {}
+                subscribeToColorFieldNameChange: () => {},
+                updateColorFieldName: (name) => {}
             }
         });
     }

@@ -120,7 +120,7 @@ export default function Popup() {
         if (!keyValPairs || !keyValPairs.length) {
             return;
         }
-        return <PopupTable keyValPairs={keyValPairs} obj={obj} />
+        return <PopupTable keyValPairs={keyValPairs} obj={obj} colorField={colorField} />
     }
 
     const makeTables = () => {
