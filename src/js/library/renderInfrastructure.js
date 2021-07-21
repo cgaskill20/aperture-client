@@ -449,10 +449,20 @@ export default class RenderInfrastructure {
      * @param {string} address
      * @returns {object} leaflet icon
      */
-    makeIcon(address) {
-        const icon = new L.Icon({
-            iconUrl: address,
-            iconSize: this.options.iconSize
+    makeIcon(address, color) {
+        const iconHTML = document.createElement('img')
+        const iconMargin = 6;
+        const iconSize = 40;
+        iconHTML.setAttribute('src', address);
+        iconHTML.setAttribute('width', iconSize)
+        iconHTML.setAttribute('height', iconSize)
+        iconHTML.style.padding = `${iconMargin}px`
+        iconHTML.style.backgroundColor = color ?? 'white';
+        iconHTML.style.borderRadius = `${iconSize / 2}px`
+
+        const icon = new L.DivIcon({
+            className: '',
+            html: iconHTML
         });
         return icon;
     }
@@ -475,7 +485,7 @@ export default class RenderInfrastructure {
             }
             else {
                 if (datasource[tag]["iconAddr"]) {
-                    return this.makeIcon(datasource[tag]["iconAddr"]);
+                    return this.makeIcon(datasource[tag]["iconAddr"], indexData[Object.keys(indexData)[0]].color ?? 'white');
                 }
             }
         }
