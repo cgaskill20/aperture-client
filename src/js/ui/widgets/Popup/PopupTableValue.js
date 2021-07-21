@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { valueToDisplay } from "./PopupUtils";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Tooltip } from "@material-ui/core";
 import PaletteIcon from '@material-ui/icons/Palette';
-import useHover from "../hooks/useHover";
+import useHover from "../../hooks/useHover";
 
 const useStyles = makeStyles({
     root: {

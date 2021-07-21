@@ -60,9 +60,9 @@ import React, { useEffect } from "react";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Grid } from "@material-ui/core";
 import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
 import PopupTableEntry from "./PopupTableEntry"
-import useHover from "../hooks/useHover";
-import Util from "../../library/apertureUtil"
-import * as d3 from '../../third-party/d3.min.js';
+import useHover from "../../hooks/useHover";
+import Util from "../../../library/apertureUtil"
+import * as d3 from '../../../third-party/d3.min.js';
 
 export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary, obj }) {
     const svgRef = React.createRef();

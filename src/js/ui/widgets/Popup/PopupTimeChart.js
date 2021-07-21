@@ -58,9 +58,9 @@ END OF TERMS AND CONDITIONS
 */
 import React, { useEffect, useState } from "react";
 import { makeStyles, Typography } from "@material-ui/core";
-import Query from "../../library/Query";
+import Query from "../../../library/Query";
 import { ResponsiveLineCanvas } from '@nivo/line'
-import Util from "../../library/apertureUtil";
+import Util from "../../../library/apertureUtil";
 
 const useStyles = makeStyles({
     root: {
