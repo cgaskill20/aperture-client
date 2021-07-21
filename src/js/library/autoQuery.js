@@ -250,8 +250,6 @@ export default class AutoQuery {
         }
         const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
         if(colorField){
-            console.log(fieldName)
-            console.log(this.collection)
             this.colorField = { name: fieldName, label: colorField.label };
 
             if (colorField?.type === "slider") {
