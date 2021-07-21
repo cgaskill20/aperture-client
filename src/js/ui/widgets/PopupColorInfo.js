@@ -119,14 +119,6 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
     }, [colorSummary]);
 
     if (colorSummary.minMax) {
-        const useStyles = makeStyles({
-            colorDiv: {
-                background: `linear-gradient(to right, ${colorSummary.gradient.join(',')})`,
-                width: '350px',
-                height: '65px'
-            }
-        });
-        const classes = useStyles();
         return <Grid container>
             <Grid item xs={12}>
                 <svg ref={svgRef}></svg>
