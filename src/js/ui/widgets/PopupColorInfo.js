@@ -141,7 +141,7 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                         if (isThisValue) {
                             rowStyle.backgroundColor = '#dedede'
                         }
-                        return <TableRow style={rowStyle}>
+                        return <TableRow style={rowStyle} key={value}>
                             <TableCell>{isThisValue ? <b>{value}</b> : value}</TableCell>
                             <TableCell><div style={{ backgroundColor: color, height: '25px', border: '1px solid black' }} /></TableCell>
                         </TableRow>

@@ -264,6 +264,7 @@ export default class AutoQuery {
             this.clearMapLayers();
             const currentGeoJSONCopy = JSON.parse(JSON.stringify(this.currentGeoJSON))
             this.currentGeoJSON = []
+            MapDataFilterWrapper.removeCollection(this.collection);
             currentGeoJSONCopy.forEach(geoJSON => this.renderGeoJSON(geoJSON))
         }
     }
@@ -410,7 +411,7 @@ export default class AutoQuery {
         if (!this.enabled || this.layerIDs.has(id))
             return;
 
-        //MapDataFilterWrapper.add(data, this.collection);
+        MapDataFilterWrapper.add(data, this.collection);
 
         let indexData = {};
         //console.log(this.constraintData[this.temporal])
