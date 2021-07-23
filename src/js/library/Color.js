@@ -57,6 +57,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import Gradient from "../third-party/Gradient"
+import Util from "./apertureUtil";
 
 /**
  * @class Color
@@ -86,13 +87,19 @@ export default class Color {
 
     }
 
-    getColor(value) {
+    getColor(value, featureType) {
         if(this.minMax && typeof value === "number"){
             const normalizedValue = Math.min(Math.max((value - this.minMax[0]) / (this.minMax[1] - this.minMax[0]), 0), 0.9999999);
             return this.gradient[Math.floor(normalizedValue * 100)]
         }
         else if(this.options && typeof value === "string"){
             return this.colorMapping[value]
+        }
+
+        //only happens if no field is currently set for the collection
+        //make it white by default for points, black for everything else
+        if(featureType === Util.FEATURETYPE.point){
+            return "#FFFFFF"
         }
         return "#000000"
     }
@@ -109,6 +116,7 @@ export default class Color {
                 colorMapping: this.colorMapping
             }
         }
+        return { noSummary: true }
     }
 
     _setKnowns(predefinedColor) {

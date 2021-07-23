@@ -414,7 +414,7 @@ export default class AutoQuery {
         let indexData = {};
         //console.log(this.constraintData[this.temporal])
         indexData[this.collection] = {
-            "color": this.getColor(data.properties),
+            "color": this.getColor(data.properties, Util.getFeatureType(data)),
             "joinField": this.data.joinField
         }
 
@@ -595,10 +595,10 @@ export default class AutoQuery {
       * being rendered.
       * @returns {string} hex color code
       */
-    getColor(properties) {
+    getColor(properties, featureType) {
         const propsVarName = Util.removePropertiesPrefix(this.colorField.name);
         const value = properties[propsVarName];
-        return this.protoColor?.getColor(value)
+        return this.protoColor?.getColor(value, featureType)
     }
 }
 
