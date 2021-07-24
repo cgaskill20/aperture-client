@@ -127,7 +127,7 @@ export default function Popup() {
         if (obj.properties) {
             const importantNames = new Set();
             const importantFields = Object.entries(obj.properties)
-                .filter(([key, value]) => obj.properties?.meta?.[key]?.important || defaultImportantFields[key])
+                .filter(([key, value]) => obj.properties?.meta?.[key]?.important || defaultImportantFields[key] || key === colorField?.name)
                 .filter(([key, value]) => {
                     const keyDisp = keyToDisplay(obj, key);
                     if (importantNames.has(keyDisp)) {
