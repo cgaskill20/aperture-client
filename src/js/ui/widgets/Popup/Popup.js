@@ -176,7 +176,6 @@ export default function Popup() {
 
     const makeColors = () => {
         if (colorSummary && !colorSummary.noSummary) {
-            console.log({colorSummary})
             return <>
                 <Typography gutterBottom variant="h5">Color Coding Based on {colorField.label ?? Util.cleanUpString(colorField.name)}</Typography>
                 <PopupColorInfo colorFieldName={colorField.name} colorSummary={colorSummary} obj={obj} />
