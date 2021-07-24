@@ -56,3 +56,35 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
+import React from 'react';
+import FormLabel from "@material-ui/core/FormLabel";
+import {makeStyles} from "@material-ui/core/styles";
+import HyperparameterSlider from "./HyperparameterSlider"
+import HyperparameterSelect from "./HyperparameterSelect"
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        margin: theme.spacing(1),
+    },
+}));
+
+export default function Hyperparameters(props) {
+    const classes = useStyles();
+
+    function getHyperparameters() {
+        let allHyperparameters = [];
+        props.hyperparameters.forEach((hyperparameter, index) => {
+            if(hyperparameter.type === 'slider') {
+                allHyperparameters.push(<HyperparameterSlider key={index} hyperparameter={hyperparameter} />)
+            }
+            else if(hyperparameter.type === 'select') {
+                allHyperparameters.push(<HyperparameterSelect key={index} hyperparameter={hyperparameter}/>)
+            }
+        })
+        return allHyperparameters;
+    }
+
+    return (
+        <FormLabel className={classes.root}>Hyperparameters</FormLabel>
+    )
+}
