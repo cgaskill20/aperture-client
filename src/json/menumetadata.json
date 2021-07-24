@@ -14,7 +14,8 @@
                 "label": "Max Heatwave Temperature",
                 "type": "range",
                 "unit": "fahrenheit",
-                "temporalType": "max"
+                "temporalType": "max",
+                "reverseGradient": true 
             },
             {
                 "name": "year",
@@ -141,10 +142,6 @@
         "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
         "color": {
             "style": "gradient",
-            "gradient": [
-                "#00FF00",
-                "#FF0000"
-            ],
             "variable": "RPL_THEMES"
         },
         "fieldMetadata": [
@@ -154,7 +151,8 @@
                 "type": "range",
                 "step": 0.05,
                 "min": 0,
-                "max": 1
+                "max": 1,
+                "reverseGradient": true 
             }
         ]
     },
@@ -166,10 +164,6 @@
         "info": "Social vulnerability refers to the potential negative effects on communities caused by external stresses on human health. This index, computed by the CDC, ranges from 0 (low vulnerability) to 1 (high vulnerability).",
         "color": {
             "style": "gradient",
-            "gradient": [
-                "#00FF00",
-                "#FF0000"
-            ],
             "variable": "RPL_THEMES",
             "border": 1
         },
@@ -180,7 +174,8 @@
                 "type": "range",
                 "step": 0.05,
                 "min": 0,
-                "max": 1
+                "max": 1,
+                "reverseGradient": true 
             }
         ]
     },
@@ -199,19 +194,22 @@
                 "name": "median_age_female",
                 "type": "range",
                 "min": 6.2,
-                "max": 83.5
+                "max": 83.5,
+                "reverseGradient": true 
             },
             {
                 "name": "median_age_male",
                 "type": "range",
                 "min": 3.8,
-                "max": 85.2
+                "max": 85.2,
+                "reverseGradient": true 
             },
             {
                 "name": "median_age_total",
                 "type": "range",
                 "min": 5.8,
-                "max": 84.5
+                "max": 84.5,
+                "reverseGradient": true 
             }
         ]
     },
@@ -230,19 +228,22 @@
                 "name": "median_age_female",
                 "type": "range",
                 "min": 6.2,
-                "max": 83.5
+                "max": 83.5,
+                "reverseGradient": true 
             },
             {
                 "name": "median_age_male",
                 "type": "range",
                 "min": 3.8,
-                "max": 85.2
+                "max": 85.2,
+                "reverseGradient": true 
             },
             {
                 "name": "median_age_total",
                 "type": "range",
                 "min": 5.8,
-                "max": 84.5
+                "max": 84.5,
+                "reverseGradient": true 
             }
         ]
     },

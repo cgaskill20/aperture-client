@@ -68,9 +68,10 @@ import Util from "./apertureUtil";
 export const defaultGradient = ["#c7445d", "#e07069", "#f0d55d", "#509bc7", "#4d6dbd"];
 
 export default class Color {
-    constructor(fieldType = "numeric", optionsOrMinMax = null, predefinedColor = null) {
+    constructor(fieldType = "numeric", optionsOrMinMax = null, predefinedColor = null, reverseGradient = null) {
         if (fieldType === "numeric") {
             this.minMax = optionsOrMinMax
+            this.reverseGradient = reverseGradient;
         }
         else {
             this.options = optionsOrMinMax
@@ -84,7 +85,6 @@ export default class Color {
         }
 
         this.fieldType = fieldType;
-
     }
 
     getColor(value, featureType) {
@@ -139,6 +139,9 @@ export default class Color {
     }
 
     _createGradient(gradientArr, resolution = 100) {
+        if(this.reverseGradient) {
+            gradientArr = gradientArr.reverse();
+        }
         const colorGradient = new Gradient();
         colorGradient.setGradient(...gradientArr);
         colorGradient.setMidpoint(resolution);

@@ -251,9 +251,8 @@ export default class AutoQuery {
         const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
         if(colorField){
             this.colorField = { name: fieldName, label: colorField.label };
-
             if (colorField?.type === "slider") {
-                this.protoColor = new Color("numeric", colorField.range, predefinedColor);
+                this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);
             }
             else if (colorField?.type === "multiselector") {
                 this.protoColor = new Color("string", colorField.options, predefinedColor);
@@ -514,6 +513,7 @@ export default class AutoQuery {
             add.label = constraintMeta.label;
             add.isDate = constraintMeta.isDate;
             add.unit = constraintMeta.unit;
+            add.reverseGradient = constraintMeta.reverseGradient;
             add.important = this.constraintState[constraintName] ? true : false;
             add.temporal = constraintMeta.temporalType ? {
                 temporalRange: this.constraintData[this.temporal],
