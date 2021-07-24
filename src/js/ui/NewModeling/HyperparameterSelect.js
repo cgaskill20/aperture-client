@@ -56,3 +56,50 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
+import React, {useState} from 'react';
+import FormControl from "@material-ui/core/FormControl";
+import {InputLabel, makeStyles, Select} from "@material-ui/core";
+
+export default function HyperparameterSelect(props) {
+    const useStyles = makeStyles((theme) => ({
+        formControl: {
+            margin: theme.spacing(1),
+            minWidth: 120,
+            width: "98%"
+        },
+    }));
+
+    const classes = useStyles();
+    const [option, setOption] = useState(props.hyperparameter.options[0]);
+    const handleChange = (event) => {
+        const newValue = event.target.name;
+        setOption(newValue);
+    };
+
+    function getOptions() {
+        let allOptions = [];
+        props.hyperparameter.options.forEach((option, index) => {
+            allOptions.push(<option key={index}>{option}</option>)
+        })
+        return allOptions;
+    }
+
+    return (
+        <div>
+            <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel>{props.hyperparameter.title}</InputLabel>
+                <Select
+                    native
+                    value={option}
+                    onChange={handleChange}
+                    label={props.hyperparameter.title}
+                    inputProps={{
+                        name: 'age',
+                    }}
+                >
+                    {getOptions()}
+                </Select>
+            </FormControl>
+        </div>
+    );
+}

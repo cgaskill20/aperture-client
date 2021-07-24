@@ -63,7 +63,8 @@ import Slider from '@material-ui/core/Slider';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: '100%',
+        width: '98%',
+        margin: theme.spacing(1)
     },
     title: {
         textAlign: "center",
@@ -82,13 +83,13 @@ export default function Hyperparameters(props) {
     const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
 
     const buildSliderLabel = () => {
-        return <b>{minMax[0]} ➔ {minMax[1]}}</b>
+        return <b>{minMax[0]} ➔ {minMax[1]}</b>
     }
 
     return (
         <div className={classes.root}>
             <Typography className={classes.title} gutterBottom>
-                {props.label} &nbsp;
+                {props.hyperparameter.title} &nbsp;
                 <span className={classes.nowrap}>{buildSliderLabel()}</span>
             </Typography>
             <Slider

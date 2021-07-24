@@ -74,6 +74,7 @@ export default function Hyperparameters(props) {
     function getHyperparameters() {
         let allHyperparameters = [];
         props.hyperparameters.forEach((hyperparameter, index) => {
+            console.log({hyperparameter})
             if(hyperparameter.type === 'slider') {
                 allHyperparameters.push(<HyperparameterSlider key={index} hyperparameter={hyperparameter} />)
             }
@@ -84,7 +85,9 @@ export default function Hyperparameters(props) {
         return allHyperparameters;
     }
 
-    return (
+    return (<>
         <FormLabel className={classes.root}>Hyperparameters</FormLabel>
+        {getHyperparameters()}
+        </>
     )
 }

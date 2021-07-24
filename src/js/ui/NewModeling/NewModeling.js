@@ -79,7 +79,11 @@ export default React.memo(function NewModeling() {
     const [features, setFeatures] = useState(["Feature 1" , "Feature 2", "Feature 3"]);
     const [featuresTitle, setFeaturesTitle] = useState("Feature Title");
 
-    const [hyperparameters, setHyperparameters] = useState({type: 'slider', title: 'Slider 1'}, {type: 'slider', title: 'Slider 2'}, {type: 'select', options: ['Option 1', 'Option 2']})
+    const [hyperparameters, setHyperparameters] = useState([{type: 'slider', title: 'Slider 1'}, {type: 'slider', title: 'Slider 2'}, {type: 'select', title: 'Selector 1', options: ['Option 1', 'Option 2']}])
+
+    console.log({hyperparameters});
+    const typeOne = hyperparameters[0].type;
+    console.log({typeOne})
 
     if(componentIsRendering) console.log("|NewModeling|");
     return (
