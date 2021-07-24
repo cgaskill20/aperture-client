@@ -108,11 +108,14 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                 .attr("x2", xValue)
                 .attr("y2", height - marginBottom);
 
+            let scale = obj.meta[colorFieldName].isDate ? d3.scaleUtc() : d3.scaleLinear()
+
             //add axis
-            const linearScale = d3.scaleLinear()
+            const linearScale = scale
                 .domain(d3.extent(colorSummary.minMax))
                 .range([0, width - marginLeftRight * 2])
                 .nice()
+            
             const axis = d3.axisBottom(linearScale).ticks(5);
             svg.append('g').attr("transform", `translate(${marginLeftRight},${height - marginBottom})`).call(axis);
         }
