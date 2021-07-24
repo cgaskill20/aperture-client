@@ -116,7 +116,7 @@ export default class AutoQuery {
             this.changeColorCodeField(this.color.variable, this.color)
         }
         else {
-            this.changeColorCodeField(Object.keys(this.data.constraints)[0])
+            Object.keys(this.constraintState)[0] ? this.changeColorCodeField(Object.keys(this.constraintState)[0]) : null;
         }
 
         this.graphPipeID = graphPipeID;
@@ -424,7 +424,7 @@ export default class AutoQuery {
             updateColorFieldName: this.changeColorCodeField.bind(this),
             validColorFieldNames: Object.keys(this.data.constraints).map(Util.removePropertiesPrefix),
             subscribeToColorFieldChange: this.subscribeToColorFieldChange.bind(this),
-            colorSummary: () => { return this.protoColor.getColorSummary() }
+            colorSummary: () => { return this.protoColor?.getColorSummary() }
         }
 
         if (this.getIcon())
@@ -596,7 +596,7 @@ export default class AutoQuery {
       * @returns {string} hex color code
       */
     getColor(properties, featureType) {
-        const propsVarName = Util.removePropertiesPrefix(this.colorField.name);
+        const propsVarName = Util.removePropertiesPrefix(this.colorField?.name);
         const value = properties[propsVarName];
         return this.protoColor?.getColor(value, featureType)
     }
