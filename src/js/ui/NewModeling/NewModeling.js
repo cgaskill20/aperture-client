@@ -56,13 +56,48 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react';
+import React, {useState} from 'react';
 import {componentIsRendering} from "../TabSystem"
-import Typography from "@material-ui/core/Typography";
+import ModelingDropdown from "./ModelingDropdown";
+import Grid from "@material-ui/core/Grid";
+import {makeStyles} from "@material-ui/core";
+import ModelingCheckbox from "./ModelingCheckbox";
 
 export default React.memo(function NewModeling() {
+    const useStyles = makeStyles((theme) => ({
+        fullWidth: {
+            width: "98%"
+        }
+    }));
+
+    const classes = useStyles();
+    const [categories, setCategories] = useState(["Clustering", "Regression"]);
+    const [types, setTypes] = useState(["K Means Clustering", "Bisection K Means", "Latent Dirichlet Allocation", "Gaussian Mixture"]);
+    const [resolutions, setResolutions] = useState(["County"]);
+
+    const [features, setFeatures] = useState(["Feature 1" , "Feature 2", "Feature 3"]);
+    const [featuresTitle, setFeaturesTitle] = useState("Feature Title");
+
     if(componentIsRendering) console.log("|NewModeling|");
     return (
-        <Typography style={{textAlign: 'center', fontSize: '18'}}>Coming Soon</Typography>
+        <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+        >
+            <Grid item className={classes.fullWidth}>
+                <ModelingDropdown options={categories} title="Category" />
+            </Grid>
+            <Grid item className={classes.fullWidth}>
+                <ModelingDropdown options={types} title="Type" />
+            </Grid>
+            <Grid item className={classes.fullWidth}>
+                <ModelingDropdown options={resolutions} title="Resolution" />
+            </Grid>
+            <Grid item className={classes.fullWidth}>
+                <ModelingCheckbox features={features} featuresTitle={featuresTitle} />
+            </Grid>
+        </Grid>
     )
 })
