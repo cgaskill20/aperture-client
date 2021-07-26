@@ -81,10 +81,6 @@ export default React.memo(function NewModeling() {
 
     const [hyperparameters, setHyperparameters] = useState([{type: 'slider', title: 'Slider 1'}, {type: 'slider', title: 'Slider 2'}, {type: 'select', title: 'Selector 1', options: ['Option 1', 'Option 2']}])
 
-    console.log({hyperparameters});
-    const typeOne = hyperparameters[0].type;
-    console.log({typeOne})
-
     if(componentIsRendering) console.log("|NewModeling|");
     return (
         <Grid
