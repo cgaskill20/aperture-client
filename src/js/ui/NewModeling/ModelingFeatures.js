@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ModelingCheckbox(props) {
+export default function ModelingFeatures(props) {
     const classes = useStyles();
 
     function getFeatures() {

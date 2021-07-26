@@ -61,7 +61,7 @@ import {componentIsRendering} from "../TabSystem"
 import ModelingDropdown from "./ModelingDropdown";
 import Grid from "@material-ui/core/Grid";
 import {makeStyles} from "@material-ui/core";
-import ModelingCheckbox from "./ModelingCheckbox";
+import ModelingFeatures from "./ModelingFeatures";
 import Hyperparameters from "./Hyperparameters";
 
 export default React.memo(function NewModeling() {
@@ -103,7 +103,7 @@ export default React.memo(function NewModeling() {
                 <ModelingDropdown options={resolutions} title="Resolution" />
             </Grid>
             <Grid item className={classes.fullWidth}>
-                <ModelingCheckbox features={features} featuresTitle={featuresTitle} />
+                <ModelingFeatures features={features} featuresTitle={featuresTitle} />
             </Grid>
             <Grid item className={classes.fullWidth}>
                 <Hyperparameters hyperparameters={hyperparameters} />
