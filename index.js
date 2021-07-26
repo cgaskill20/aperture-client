@@ -155,8 +155,8 @@ var markers = L.markerClusterGroup({
 });
 map.addLayer(markers);
 
-const dataExplorationGroup = L.layerGroup().addTo(map);
-const dataModelingGroup = L.layerGroup();
+const dataExplorationGroup = L.featureGroup().addTo(map);
+const dataModelingGroup = L.featureGroup();
 window.dataExplorationGroup = dataExplorationGroup;
 window.dataModelingGroup = dataModelingGroup;
 

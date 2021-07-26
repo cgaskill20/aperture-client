@@ -114,7 +114,7 @@ export default function Popup() {
             setGlobalState({ popupOpen: true, sidebarOpen: false, preloading: false });
         };
         return () => { window.setPopupObj = () => { } };
-    }, [])
+    }, [globalState])
 
     const makeTable = (keyValPairs) => {
         if (!keyValPairs || !keyValPairs.length) {
