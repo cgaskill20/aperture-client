@@ -64,7 +64,7 @@ import Slider from '@material-ui/core/Slider';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '98%',
-        margin: theme.spacing(1)
+        margin: theme.spacing(1),
     },
     title: {
         textAlign: "center",
