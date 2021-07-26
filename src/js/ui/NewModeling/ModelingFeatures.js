@@ -61,7 +61,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
-import IndividualModelingCheckbox from "./IndividualModelingCheckbox";
+import IndividualFeature from "./IndividualFeature";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -78,7 +78,7 @@ export default function ModelingFeatures(props) {
     function getFeatures() {
         let allFeatures = [];
         props.features.forEach((feature, index) => {
-            allFeatures.push(<IndividualModelingCheckbox key={index} feature={feature} />)
+            allFeatures.push(<IndividualFeature key={index} feature={feature} />)
         })
         return allFeatures;
     }
