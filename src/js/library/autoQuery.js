@@ -112,7 +112,7 @@ export default class AutoQuery {
 
         this.colorFieldChangeSubscribers = [];
         this.color = layerData.color;
-        if(this.color.variable){
+        if (this.color.variable) {
             this.changeColorCodeField(this.color.variable, this.color)
         }
         else {
@@ -244,12 +244,12 @@ export default class AutoQuery {
         this.currentQueries.clear();
     }
 
-    changeColorCodeField(fieldName, predefinedColor=null) {
-        if(fieldName === this.color.variable){
+    changeColorCodeField(fieldName, predefinedColor = null) {
+        if (fieldName === this.color.variable) {
             predefinedColor = this.color;
         }
         const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
-        if(colorField){
+        if (colorField) {
             this.colorField = { name: fieldName, label: colorField.label };
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);
@@ -407,7 +407,7 @@ export default class AutoQuery {
         const id = this.linked ? data.id.split("_")[0] : data.id;
         if (!this.enabled || this.layerIDs.has(id))
             return;
-
+    
         MapDataFilterWrapper.add(data, this.collection);
 
         let indexData = {};
@@ -437,7 +437,7 @@ export default class AutoQuery {
 
     }
 
-    subscribeToColorFieldChange (func) {
+    subscribeToColorFieldChange(func) {
         this.colorFieldChangeSubscribers.push(func)
     }
 

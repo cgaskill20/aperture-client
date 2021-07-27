@@ -147,10 +147,23 @@ export default class RenderInfrastructure {
                 Util.normalizeFeatureID(feature);
                 let name = Util.getNameFromGeoJsonFeature(feature, indexData);
                 if (this.currentLayers.includes(feature.id) || this.map.getZoom() < this.options.minRenderZoom || datasource[name] == null) {
-                    //console.log("rejected")
                     return false;
                 }
                 this.currentLayers.push(feature.id);
+                if (Util.getFeatureType(feature) === Util.FEATURETYPE.point) {
+                    let latlng = Util.getLatLngFromGeoJsonFeature(feature);
+                    const speccedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
+                    let iconName = Util.getNameFromGeoJsonFeature(feature, indexData);
+                    const { joinField } = indexData[Object.keys(indexData)[0]]
+                    let popupObj = {
+                        name: iconName,
+                        meta: feature.properties.meta,
+                        properties: feature.properties,
+                        join: { [joinField]: feature.properties[joinField] }
+                    }
+                    this.addIconToMap(iconName, latlng, popupObj, indexData, speccedId);
+                    layers.push(speccedId);
+                }
                 return true;
             }.bind(this),
             onEachFeature: function (feature, layer) {
@@ -167,7 +180,6 @@ export default class RenderInfrastructure {
                     properties: feature.properties,
                     join: { [joinField]: feature.properties[joinField] }
                 }
-                this.addIconToMap(iconName, latlng, popupObj, indexData, layer.specifiedId);
                 //layer.bindPopup(iconDetails);
                 layer.on('click', function (e) {
                     window.setPopupObj(popupObj);
@@ -184,11 +196,7 @@ export default class RenderInfrastructure {
                 }
                 layers.push(layer.specifiedId);
             }.bind(this),
-            pointToLayer: function () {
-                return L.marker([0, 0], {
-                    opacity: 0
-                });
-            }.bind(this)
+            pointToLayer: function () { }.bind(this)
         });
 
         if (layers.length) {
@@ -300,8 +308,8 @@ export default class RenderInfrastructure {
         }, {
             colorInfo: {
                 validColorFieldNames: [],
-                subscribeToColorFieldNameChange: () => {},
-                updateColorFieldName: (name) => {}
+                subscribeToColorFieldNameChange: () => { },
+                updateColorFieldName: (name) => { }
             }
         });
     }
@@ -404,6 +412,7 @@ export default class RenderInfrastructure {
         }
         this.markerLayer.eachLayer(function (layer) {
             if (layer.specifiedId !== null && specifiedIds.includes(layer.specifiedId)) {
+                this.currentLayers.splice(this.currentLayers.indexOf(layer.specifiedId), 1);
                 this.markerLayer.removeLayer(layer);
             }
         }.bind(this));
