@@ -305,6 +305,9 @@ export default {
 
             if(constraint.unit)
                 result.unit = constraint.unit;
+            
+            if(constraint.reverseGradient)
+                result.reverseGradient = constraint.reverseGradient;
         }
         else if (constraint.type = "multiselect") {
             result.type = "multiselector";

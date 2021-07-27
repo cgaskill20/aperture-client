@@ -58,13 +58,14 @@ END OF TERMS AND CONDITIONS
 */
 import React, { useEffect, useState } from "react";
 import { makeStyles, Drawer, Typography, IconButton, Grid } from "@material-ui/core";
-import { useGlobalState } from "../global/GlobalState";
-import Util from "../../library/apertureUtil";
+import { useGlobalState } from "../../global/GlobalState";
+import Util from "../../../library/apertureUtil";
 import CloseIcon from "@material-ui/icons/Close";
 import PopupTable from "./PopupTable";
 import PopupTimeChart from "./PopupTimeChart";
+import PopupColorInfo from "./PopupColorInfo";
 import { keyToDisplay } from "./PopupUtils";
-import defaultImportantFields from "../../../json/defaultImportantFields.json"
+import defaultImportantFields from "../../../../json/defaultImportantFields.json"
 
 const drawerWidth = '450px';
 
@@ -92,8 +93,20 @@ const useStyles = makeStyles({
 export default function Popup() {
     const [obj, setObj] = useState({});
     const [globalState, setGlobalState] = useGlobalState();
+    //console.log(obj?.properties?.colorInfo)
+    const [colorSummary, setColorSummary] = useState(obj?.properties?.colorInfo?.colorSummary());
+    const [colorField, setColorField] = useState(obj?.properties?.colorInfo?.currentColorFieldName);
 
     const classes = useStyles();
+
+    useEffect(() => {
+        setColorSummary(obj?.properties?.colorInfo?.colorSummary())
+        setColorField(obj?.properties?.colorInfo?.currentColorField)
+        obj?.properties?.colorInfo?.subscribeToColorFieldChange((newField) => {
+            setColorField(newField)
+            setColorSummary(obj?.properties?.colorInfo.colorSummary())
+        })
+    }, [obj])
 
     useEffect(() => {
         window.setPopupObj = (o) => {
@@ -101,20 +114,20 @@ export default function Popup() {
             setGlobalState({ popupOpen: true, sidebarOpen: false, preloading: false });
         };
         return () => { window.setPopupObj = () => { } };
-    }, [])
+    }, [globalState])
 
     const makeTable = (keyValPairs) => {
         if (!keyValPairs || !keyValPairs.length) {
             return;
         }
-        return <PopupTable keyValPairs={keyValPairs} obj={obj} />
+        return <PopupTable keyValPairs={keyValPairs} obj={obj} colorField={colorField} />
     }
 
     const makeTables = () => {
         if (obj.properties) {
             const importantNames = new Set();
             const importantFields = Object.entries(obj.properties)
-                .filter(([key, value]) => obj.properties?.meta?.[key]?.important || defaultImportantFields[key])
+                .filter(([key, value]) => obj.properties?.meta?.[key]?.important || defaultImportantFields[key] || key === colorField?.name)
                 .filter(([key, value]) => {
                     const keyDisp = keyToDisplay(obj, key);
                     if (importantNames.has(keyDisp)) {
@@ -134,6 +147,7 @@ export default function Popup() {
                             <br />
                         </> : null
                 }
+                {makeColors()}
                 {makeCharts()}
                 <Typography variant="h6" gutterBottom>
                     All Fields
@@ -159,6 +173,18 @@ export default function Popup() {
                 </React.Fragment>)
         }
     }
+
+    const makeColors = () => {
+        if (colorSummary && !colorSummary.noSummary) {
+            return <>
+                <Typography gutterBottom variant="h5">Color Coding Based on {colorField.label ?? Util.cleanUpString(colorField.name)}</Typography>
+                <PopupColorInfo colorFieldName={colorField.name} colorSummary={colorSummary} obj={obj} />
+                <br />
+            </>
+        }
+    }
+
+    //console.log(obj?.properties?.colorInfo.colorSummary)
 
     return <div className={classes.root}>
         <Drawer

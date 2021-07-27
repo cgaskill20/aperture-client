@@ -56,38 +56,102 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useState} from 'react';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import {componentIsRendering} from "../TabSystem";
-import Util from "../../library/apertureUtil"
+import React, { useEffect } from "react";
+import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Grid } from "@material-ui/core";
+import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
+import PopupTableEntry from "./PopupTableEntry"
+import useHover from "../../hooks/useHover";
+import Util from "../../../library/apertureUtil"
+import * as d3 from '../../../third-party/d3.min.js';
 
-function updateLayerConstraints(activeLayerConstraints, index) {
-    let tempActiveConstraints = [...activeLayerConstraints];
-    tempActiveConstraints[index] = !tempActiveConstraints[index];
-    return tempActiveConstraints;
-}
+export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary, obj }) {
+    const svgRef = React.createRef();
+    useEffect(() => {
+        if (colorSummary.minMax) {
+            const width = 350;
+            const height = 85;
+            const marginBottom = 20;
+            const marginLeftRight = 10;
+            const svg = d3.select(svgRef.current);
+            svg.selectAll('*').remove();
+            svg.attr("viewBox", [0, 0, width, height]);
 
-export default function AdvancedConstraintCheckbox(props) {
-    const [check, setCheck] = useState(props.activeLayerConstraints[props.constraintIndex]);
+            const linearGradient = svg.append("defs")
+                .append("linearGradient")
+                .attr("id", "linear-gradient");
 
-    if(componentIsRendering) {console.log("|AdvancedContraintCheckbox Rerending|")}
-    return (
-        <FormGroup>
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={check}
-                        onChange={() => {
-                            setCheck(!check);
-                            props.setActiveLayerConstraints(updateLayerConstraints(props.activeLayerConstraints, props.constraintIndex));
-                        }}
-                        color="primary"
-                    />
-                }
-                label={props.constraint.label ?? Util.cleanUpString(props.constraint.name)}
-            />
-        </FormGroup>
-    );
-}
+            const gradientLength = colorSummary.gradient.length;
+
+            for (let i = 0; i < gradientLength; i++) {
+                linearGradient.append("stop")
+                    .attr("offset", `${Math.round(i * 100 / gradientLength)}%`)
+                    .attr("stop-color", colorSummary.gradient[i]);
+            }
+
+            //add gradient
+            svg.append("rect")
+                .attr("transform", `translate(${marginLeftRight},0)`)
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", width - marginLeftRight * 2)
+                .attr("height", height - marginBottom)
+                .style("fill", "url(#linear-gradient)");
+
+            //add line
+            const value = obj.properties[colorFieldName];
+            const xValue = (width - marginLeftRight * 2) * Math.min(Math.max((value - colorSummary.minMax[0]) / (colorSummary.minMax[1] - colorSummary.minMax[0]), 0), 1) + marginLeftRight;
+            svg.append('line')
+                .style("stroke", "black")
+                .style("stroke-width", 3)
+                .attr("x1", xValue)
+                .attr("y1", 0)
+                .attr("x2", xValue)
+                .attr("y2", height - marginBottom);
+
+            let scale = obj.meta[colorFieldName].isDate ? d3.scaleUtc() : d3.scaleLinear()
+
+            //add axis
+            const linearScale = scale
+                .domain(d3.extent(colorSummary.minMax))
+                .range([0, width - marginLeftRight * 2])
+                .nice()
+            
+            const axis = d3.axisBottom(linearScale).ticks(5);
+            svg.append('g').attr("transform", `translate(${marginLeftRight},${height - marginBottom})`).call(axis);
+        }
+    }, [colorSummary]);
+
+    if (colorSummary.minMax) {
+        return <Grid container>
+            <Grid item xs={12}>
+                <svg ref={svgRef}></svg>
+            </Grid>
+        </Grid>
+    }
+    else if (colorSummary.colorMapping) {
+        return <TableContainer component={Paper}>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Value</TableCell>
+                        <TableCell>Color</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {Object.entries(colorSummary.colorMapping).map(([value, color]) => {
+                        const isThisValue = value === obj.properties[Util.removePropertiesPrefix(colorFieldName)];
+                        const rowStyle = {}
+                        if (isThisValue) {
+                            rowStyle.backgroundColor = '#dedede'
+                        }
+                        return <TableRow style={rowStyle} key={value}>
+                            <TableCell>{isThisValue ? <b>{value}</b> : value}</TableCell>
+                            <TableCell><div style={{ backgroundColor: color, height: '25px', border: '1px solid black' }} /></TableCell>
+                        </TableRow>
+                    })}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    }
+    return <div></div>
+});

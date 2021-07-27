@@ -56,38 +56,118 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useState} from 'react';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import {componentIsRendering} from "../TabSystem";
-import Util from "../../library/apertureUtil"
+import Gradient from "../third-party/Gradient"
+import Util from "./apertureUtil";
 
-function updateLayerConstraints(activeLayerConstraints, index) {
-    let tempActiveConstraints = [...activeLayerConstraints];
-    tempActiveConstraints[index] = !tempActiveConstraints[index];
-    return tempActiveConstraints;
-}
+/**
+ * @class Color
+ * @file Takes some parameters about a field in constructor, has a method for getting the color of a field based on whatever value is present.
+ * @author Daniel Reynolds
+ */
 
-export default function AdvancedConstraintCheckbox(props) {
-    const [check, setCheck] = useState(props.activeLayerConstraints[props.constraintIndex]);
+export const defaultGradient = ["#c7445d", "#e07069", "#f0d55d", "#509bc7", "#4d6dbd"];
 
-    if(componentIsRendering) {console.log("|AdvancedContraintCheckbox Rerending|")}
-    return (
-        <FormGroup>
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={check}
-                        onChange={() => {
-                            setCheck(!check);
-                            props.setActiveLayerConstraints(updateLayerConstraints(props.activeLayerConstraints, props.constraintIndex));
-                        }}
-                        color="primary"
-                    />
-                }
-                label={props.constraint.label ?? Util.cleanUpString(props.constraint.name)}
-            />
-        </FormGroup>
-    );
+export default class Color {
+    constructor(fieldType = "numeric", optionsOrMinMax = null, predefinedColor = null, reverseGradient = null) {
+        if (fieldType === "numeric") {
+            this.minMax = optionsOrMinMax
+            this.reverseGradient = reverseGradient;
+        }
+        else {
+            this.options = optionsOrMinMax
+        }
+
+        if (predefinedColor) {
+            this._setKnowns(predefinedColor)
+        }
+        else {
+            this._setDefaults(fieldType)
+        }
+
+        this.fieldType = fieldType;
+    }
+
+    getColor(value, featureType) {
+        if(this.minMax && typeof value === "number"){
+            const normalizedValue = Math.min(Math.max((value - this.minMax[0]) / (this.minMax[1] - this.minMax[0]), 0), 0.9999999);
+            return this.gradient[Math.floor(normalizedValue * 100)]
+        }
+        else if(this.options && typeof value === "string"){
+            return this.colorMapping[value]
+        }
+
+        //only happens if no field is currently set for the collection
+        //make it white by default for points, black for everything else
+        if(featureType === Util.FEATURETYPE.point){
+            return "#FFFFFF"
+        }
+        return "#000000"
+    }
+
+    getColorSummary() {
+        if(this.minMax){
+            return {
+                minMax: this.minMax,
+                gradient: this.gradient
+            }
+        }
+        else if(this.options){
+            return {
+                colorMapping: this.colorMapping
+            }
+        }
+        return { noSummary: true }
+    }
+
+    _setKnowns(predefinedColor) {
+        if (predefinedColor.style === "solid") {
+            this.overrideColor = predefinedColor.colorCode;
+            return;
+        }
+        else if (predefinedColor.style === "gradient" && predefinedColor.gradient) {
+            this.gradient = this._createGradient(predefinedColor.gradient)
+        }
+        else if (predefinedColor.style === "gradient" || this.minMax) {
+            this.gradient = this._createGradient(defaultGradient)
+        }
+        else if (predefinedColor.style === "sequential" && predefinedColor.map) {
+            this.colorMapping = predefinedColor.map;
+        }
+        else if (predefinedColor.style === "sequential" || this.options) {
+            this._createDefaultColorMapping()
+        }
+    }
+
+    _createGradient(gradientArr, resolution = 100) {
+        if(this.reverseGradient) {
+            gradientArr = gradientArr.reverse();
+        }
+        const colorGradient = new Gradient();
+        colorGradient.setGradient(...gradientArr);
+        colorGradient.setMidpoint(resolution);
+        return colorGradient.getArray();
+    }
+
+    _setDefaults(fieldType) {
+        if(fieldType === "numeric"){
+            this.gradient = this._createGradient(defaultGradient)
+        }
+        else{
+            this._createDefaultColorMapping();
+        }
+    }
+
+    _createDefaultColorMapping() {
+        const numOptions = this.options.length;
+        const grad = this._createGradient(defaultGradient, numOptions)
+        this.colorMapping = this.options.reduce((acc, curr, index) => {
+            if(curr === '') {
+                acc[curr] = "#adadad"
+            }
+            else { 
+                acc[curr] = grad[index]
+            }
+            return acc;
+        }, {})
+    }
 }

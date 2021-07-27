@@ -56,41 +56,40 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from "react";
-import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles } from "@material-ui/core";
-import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
 
-const drawerWidth = '450px';
+import React, { useEffect, useState } from "react";
+import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
+import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Tooltip } from "@material-ui/core";
+import PaletteIcon from '@material-ui/icons/Palette';
+import useHover from "../../hooks/useHover";
+import PopupTableValue from "./PopupTableValue";
 
 const useStyles = makeStyles({
-    table: {
-        maxWidth: drawerWidth,
+    clickable: {
+        cursor: 'pointer',
+        "&:hover": {
+            backgroundColor: '#dedede'
+        }
     }
 });
 
-export default React.memo(function PopupTable({ keyValPairs, obj }) {
-    const classes = useStyles();
+export default React.memo(function PopupTableEntry({ obj, keyValue, value, currentColorField }) {
+    //console.log({ obj, keyValue })
+    const classes = useStyles()
+    const [hoverRef, isHovered] = useHover();
+    const changeColorFieldName = obj.properties.colorInfo.validColorFieldNames.includes(keyValue) ? obj.properties.colorInfo.updateColorFieldName : null;
 
-    return <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-                <TableRow>
-                    <TableCell><b>Key</b></TableCell>
-                    <TableCell><b>Value</b></TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {keyValPairs
-                    .filter(([key, value]) => keyValueIsValid(key, value))
-                    .map(([key, value]) => (
-                        <TableRow key={key}>
-                            <TableCell component="th" scope="row">
-                                {keyToDisplay(obj, key)}
-                            </TableCell>
-                            <TableCell>{valueToDisplay(obj, key, value)}</TableCell>
-                        </TableRow>
-                    ))}
-            </TableBody>
-        </Table>
-    </TableContainer>;
+
+    return <TableRow key={keyValue} className={changeColorFieldName !== null ? classes.clickable : ''} ref={hoverRef} onClick={() => {
+        if (changeColorFieldName && currentColorField?.name !== keyValue) {
+            changeColorFieldName(keyValue)
+        }
+    }}>
+        <TableCell component="th" scope="row">
+            {keyToDisplay(obj, keyValue)}
+        </TableCell>
+        <TableCell>
+            <PopupTableValue obj={obj} keyValue={keyValue} value={value} currentColorField={currentColorField} isHovered={changeColorFieldName != null && isHovered} />
+        </TableCell>
+    </TableRow>
 });
