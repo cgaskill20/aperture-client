@@ -260,6 +260,7 @@ export default class AutoQuery {
             const layers = window.renderInfrastructure.getLayersForSpecifiedIds(this.mapLayers);
             for (const layer of layers) {
                 const { feature, options } = layer;
+                feature.properties.colorInfo.currentColorField = this.colorField;
                 const color = this.getColor(feature.properties, Util.getFeatureType(feature));
                 if (feature && !options.icon) {
                     layer.setStyle({ color })
