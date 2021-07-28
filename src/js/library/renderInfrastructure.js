@@ -412,40 +412,44 @@ export default class RenderInfrastructure {
         if (removeRefs) {
             this.removeRefs(specifiedIds);
         }
-        this.markerLayer.eachLayer(function (layer) {
-            if (layer.specifiedId !== null && specifiedIds.includes(layer.specifiedId)) {
-                this.currentLayers.splice(this.currentLayers.indexOf(layer.specifiedId), 1);
-                this.markerLayer.removeLayer(layer);
-            }
-        }.bind(this));
-        this.layerGroup.eachLayer(function (layer) {
-            const subLayer = layer.getLayers()[0];
-            if (!subLayer)
-                return;
-            if (subLayer.feature && specifiedIds.includes(subLayer.specifiedId)) {
-                this.currentLayers.splice(this.currentLayers.indexOf(subLayer.feature.id), 1);
-                this.layerGroup.removeLayer(layer);
-            }
-        }.bind(this));
+        const specifiedIdsSet = new Set(specifiedIds)
+        const markerLayers = this.getMarkerLayersForSpecifiedIds(specifiedIdsSet)
+        for(const markerLayer of markerLayers) {
+            this.markerLayer.removeLayer(markerLayer);
+        }
+        const mapLayers = this.getMapLayersForSpecifiedIds(specifiedIdsSet);
+        for(const mapLayer of mapLayers) {
+            this.layerGroup.removeLayer(mapLayer);
+        }
+        this.currentLayers.filter(layerId => !specifiedIdsSet.has(layerId))
         return true;
     }
 
-    getLayersForSpecifiedIds(specifiedIds) {
+    getLayersForSpecifiedIds(specifiedIdsSet) {
+        let layersFound = this.getMarkerLayersForSpecifiedIds(specifiedIdsSet)
+        layersFound = [...layersFound, ...this.getMapLayersForSpecifiedIds(specifiedIdsSet).map(layer => layer.getLayers()[0])]
+        //console.log({layersFound})
+        return layersFound;
+    }
+
+    getMarkerLayersForSpecifiedIds(specifiedIdsSet) {
         let layersFound = [];
-        const specifiedIdsSet = new Set(specifiedIds)
         this.markerLayer.eachLayer(function (layer) {
             if (layer?.specifiedId && specifiedIdsSet.has(layer.specifiedId)) {
                 layersFound.push(layer)
             }
         }.bind(this));
+        return layersFound;
+    } 
 
+    getMapLayersForSpecifiedIds(specifiedIdsSet) {
+        let layersFound = [];
         this.layerGroup.eachLayer(function (layer) {
             const subLayer = layer.getLayers()[0];
             if (subLayer?.feature && specifiedIdsSet.has(subLayer?.specifiedId)) {
-                layersFound.push(subLayer);
+                layersFound.push(layer);
             }
         }.bind(this));
-
         return layersFound;
     }
 

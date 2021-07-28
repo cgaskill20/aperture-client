@@ -257,7 +257,7 @@ export default class AutoQuery {
             }
             this.colorFieldChangeSubscribers.forEach(func => func(this.colorField))
 
-            const layers = window.renderInfrastructure.getLayersForSpecifiedIds(this.mapLayers);
+            const layers = window.renderInfrastructure.getLayersForSpecifiedIds(new Set(this.mapLayers));
             for (const layer of layers) {
                 const { feature, options } = layer;
                 feature.properties.colorInfo.currentColorField = this.colorField;
