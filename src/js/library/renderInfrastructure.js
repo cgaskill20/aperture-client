@@ -161,12 +161,13 @@ export default class RenderInfrastructure {
                         properties: feature.properties,
                         join: { [joinField]: feature.properties[joinField] }
                     }
-                    this.addIconToMap(iconName, latlng, popupObj, indexData, speccedId);
+                    this.addIconToMap(iconName, latlng, popupObj, indexData, speccedId, feature);
                     layers.push(speccedId);
                 }
                 return true;
             }.bind(this),
             onEachFeature: function (feature, layer) {
+                //console.log({layer})
                 let latlng = Util.getLatLngFromGeoJsonFeature(feature);
                 if (latlng === -1) {
                     return;
@@ -379,7 +380,7 @@ export default class RenderInfrastructure {
      * @param {Array} latLng latlng array where the icon will be put
      * @param {string} obj the content that will display for this element when clicked, accepts HTML formatting
      */
-    addIconToMap(iconName, latLng, obj, indexData, specifiedId) {
+    addIconToMap(iconName, latLng, obj, indexData, specifiedId, feature) {
         let icon = this.getAttribute(iconName, ATTRIBUTE.icon, indexData)
         if (!icon || icon === "noicon") {
             return false;
@@ -390,6 +391,7 @@ export default class RenderInfrastructure {
         });
         marker.uniqueId = iconName;
         marker.specifiedId = specifiedId;
+        marker.feature = feature;
         this.markerLayer.addLayer(marker.on('click', function (e) {
             window.setPopupObj(obj);
             if (e.target.__parent._group._spiderfied)
@@ -426,6 +428,25 @@ export default class RenderInfrastructure {
             }
         }.bind(this));
         return true;
+    }
+
+    getLayersForSpecifiedIds(specifiedIds) {
+        let layersFound = [];
+        const specifiedIdsSet = new Set(specifiedIds)
+        this.markerLayer.eachLayer(function (layer) {
+            if (layer?.specifiedId && specifiedIdsSet.has(layer.specifiedId)) {
+                layersFound.push(layer)
+            }
+        }.bind(this));
+
+        this.layerGroup.eachLayer(function (layer) {
+            const subLayer = layer.getLayers()[0];
+            if (subLayer?.feature && specifiedIdsSet.has(subLayer?.specifiedId)) {
+                layersFound.push(subLayer);
+            }
+        }.bind(this));
+
+        return layersFound;
     }
 
     /**

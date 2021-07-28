@@ -258,11 +258,22 @@ export default class AutoQuery {
                 this.protoColor = new Color("string", colorField.options, predefinedColor);
             }
             this.colorFieldChangeSubscribers.forEach(func => func(this.colorField))
-            this.clearMapLayers();
-            const currentGeoJSONCopy = JSON.parse(JSON.stringify(this.currentGeoJSON))
-            this.currentGeoJSON = []
-            MapDataFilterWrapper.removeCollection(this.collection);
-            currentGeoJSONCopy.forEach(geoJSON => this.renderGeoJSON(geoJSON))
+            // this.clearMapLayers();
+            // const currentGeoJSONCopy = JSON.parse(JSON.stringify(this.currentGeoJSON))
+            // this.currentGeoJSON = []
+            // MapDataFilterWrapper.removeCollection(this.collection);
+            // currentGeoJSONCopy.forEach(geoJSON => this.renderGeoJSON(geoJSON))
+            const layers = window.renderInfrastructure.getLayersForSpecifiedIds(this.mapLayers);
+            for (const layer of layers) {
+                const { feature, options } = layer;
+                const color = this.getColor(feature.properties, Util.getFeatureType(feature));
+                if (feature && !options.icon) {
+                    layer.setStyle({ color })
+                }
+                else if(options.icon) {
+                    options.icon.options.html.style.backgroundColor = color;
+                }
+            }
         }
     }
 
@@ -407,7 +418,7 @@ export default class AutoQuery {
         const id = this.linked ? data.id.split("_")[0] : data.id;
         if (!this.enabled || this.layerIDs.has(id))
             return;
-    
+
         MapDataFilterWrapper.add(data, this.collection);
 
         let indexData = {};
