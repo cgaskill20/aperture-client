@@ -71,7 +71,6 @@ export default React.memo(function NewModeling() {
         }
     }));
 
-    const [modelingCatalog, setModelingCatalog] = useState({});
     const classes = useStyles();
     const [categories, setCategories] = useState([]);
     const [selectedCategoryTypes, setSelectedCategoryTypes] = useState([]);
@@ -97,7 +96,6 @@ export default React.memo(function NewModeling() {
         }, {});
 
         const mappedCatalog = catalogMap(catalog);
-        setModelingCatalog(mappedCatalog);
 
         let tempCategories = [];
         for(const category in mappedCatalog) {
