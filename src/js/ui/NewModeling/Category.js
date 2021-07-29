@@ -56,7 +56,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel, makeStyles, Select} from "@material-ui/core";
 import Type from "./Type"
@@ -74,24 +74,15 @@ export default function Category(props) {
     console.log("|Category.js|")
     console.log({categories});
 
-    const [selectedCategory, setSelectedCategory] = useState("CLUSTERING");
-
     let categoryNames = [];
     for(const categoryName in props.categories) {
         categoryNames.push(props.categories[categoryName].label);
     }
 
     const switchCategory = (event) => {
-        setSelectedCategory(event.target.value);
-        console.log({selectedCategory});
-        switchType();
-    }
-
-    function switchType() {
-        const indexOfCategory = findCategoryByIndex(selectedCategory);
+        const indexOfCategory = findCategoryByIndex(event.target.value);
         if(indexOfCategory) {
             let newTypes = [];
-            console.log({indexOfCategory});
             const category = props.categories[indexOfCategory];
             for(const type in category) {
                 newTypes.push(category[type]);
@@ -126,7 +117,6 @@ export default function Category(props) {
                 <Select
                     native
                     label="Category"
-                    value={selectedCategory}
                     onChange={
                         switchCategory
                     }
