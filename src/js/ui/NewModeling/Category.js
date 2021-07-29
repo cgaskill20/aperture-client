@@ -60,29 +60,33 @@ import React, {useState} from 'react';
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel, makeStyles, Select} from "@material-ui/core";
 
-export default function ModelingDropdown(props) {
-    const useStyles = makeStyles((theme) => ({
-        formControl: {
-            margin: theme.spacing(1),
-            minWidth: 120,
-            width: "98%"
-        },
-    }));
+const useStyles = makeStyles((theme) => ({
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+        width: "98%"
+    },
+}));
 
+export default function Category(props) {
     const classes = useStyles();
-    const [category, setCategory] = useState(props.options[0]);
-    const handleChange = (event) => {
-        const newValue = event.target.name;
-        setCategory(newValue);
-    };
+    const categories = props.categories;
+    console.log("|Category.js|")
+    console.log({categories});
 
-    function getOptions() {
-        let allOptions = [];
-        props.options.forEach((option, index) => {
-            allOptions.push(<option key={index}>{option}</option>)
-        })
-        return allOptions;
-    }
+    // const [switchCategory, setSwitchCategory] = useState(props.options[0]);
+    // const handleChange = (event) => {
+    //     const newValue = event.target.name;
+    //     setSwitchCategory(newValue);
+    // };
+
+    // function getOptions() {
+    //     let allOptions = [];
+    //     props.categories.forEach((option, index) => {
+    //         allOptions.push(<option key={index}>{option}</option>)
+    //     })
+    //     return allOptions;
+    // }
 
     return (
         <div>
@@ -90,14 +94,15 @@ export default function ModelingDropdown(props) {
                 <InputLabel htmlFor="outlined-age-native-simple">{props.title}</InputLabel>
                 <Select
                     native
-                    value={category}
-                    onChange={handleChange}
+                    // value={switchCategory}
+                    // onChange={handleChange}
                     label={props.title}
                     inputProps={{
                         name: 'age',
                     }}
                 >
-                    {getOptions()}
+                    {/*<option>Clustering</option>*/}
+                    {/*<option>Regression</option>*/}
                 </Select>
             </FormControl>
         </div>

@@ -58,7 +58,7 @@ END OF TERMS AND CONDITIONS
 */
 import React, { useState, useEffect } from 'react';
 import { componentIsRendering } from "../TabSystem"
-import ModelingDropdown from "./ModelingDropdown";
+import Category from "./Category";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core";
 import ModelingFeatures from "./ModelingFeatures";
@@ -72,22 +72,12 @@ export default React.memo(function NewModeling() {
     }));
 
     const [modelingCatalog, setModelingCatalog] = useState({});
-
     const classes = useStyles();
-    const [categories, setCategories] = useState(["Clustering", "Regression"]);
-    const [types, setTypes] = useState(["K Means Clustering", "Bisection K Means", "Latent Dirichlet Allocation", "Gaussian Mixture"]);
-    const [resolutions, setResolutions] = useState(["County"]);
-
-    const [features, setFeatures] = useState(["Feature 1", "Feature 2", "Feature 3"]);
-    const [featuresTitle, setFeaturesTitle] = useState("Feature Title");
-
-    const [hyperparameters, setHyperparameters] = useState([{ type: 'slider', title: 'Slider 1' }, { type: 'slider', title: 'Slider 2' }, { type: 'select', title: 'Selector 1', options: ['Option 1', 'Option 2'] }])
+    const [categories, setCategories] = useState([]);
 
     const catalogMap = (catalog) => {
         const ret = {};
         for (const entry in catalog) {
-            // if (!this.whitelist.includes(entry))
-            //     continue;
             if (!ret[catalog[entry].category])
                 ret[catalog[entry].category] = {}
 
@@ -97,7 +87,6 @@ export default React.memo(function NewModeling() {
     }
 
     useEffect(async () => {
-        //code to get and populate the modeling catalog
         const { data } = await Query.makeQuery({
             collection: "model_catalogue"
         });
@@ -106,9 +95,19 @@ export default React.memo(function NewModeling() {
             return acc;
         }, {});
 
-        //@matt, this is where you'll want to set the state for everything
-        const mappedCatalog = catalogMap(catalog); //this just makes the catalog a bit more hierarchical
-        setModelingCatalog(mappedCatalog)
+        const mappedCatalog = catalogMap(catalog);
+        setModelingCatalog(mappedCatalog);
+
+        let tempCategories = [];
+        for(const category in mappedCatalog) {
+            for(const extractCategoryLabel in mappedCatalog[category]) {
+                const categoryLabelName = mappedCatalog[category][extractCategoryLabel].category;
+                mappedCatalog[category].label = categoryLabelName;
+                break;
+            }
+            tempCategories.push(mappedCatalog[category]);
+        }
+        setCategories(tempCategories);
     }, [])
 
 
@@ -121,19 +120,7 @@ export default React.memo(function NewModeling() {
             alignItems="center"
         >
             <Grid item className={classes.fullWidth}>
-                <ModelingDropdown options={categories} title="Category" />
-            </Grid>
-            <Grid item className={classes.fullWidth}>
-                <ModelingDropdown options={types} title="Type" />
-            </Grid>
-            <Grid item className={classes.fullWidth}>
-                <ModelingDropdown options={resolutions} title="Resolution" />
-            </Grid>
-            <Grid item className={classes.fullWidth}>
-                <ModelingFeatures features={features} featuresTitle={featuresTitle} />
-            </Grid>
-            <Grid item className={classes.fullWidth}>
-                <Hyperparameters hyperparameters={hyperparameters} />
+                <Category categories={categories} />
             </Grid>
         </Grid>
     )
