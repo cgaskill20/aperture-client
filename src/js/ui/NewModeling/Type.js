@@ -59,7 +59,6 @@ END OF TERMS AND CONDITIONS
 import React, {useState} from 'react';
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel, makeStyles, Select} from "@material-ui/core";
-import Type from "./Type"
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -68,20 +67,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Category(props) {
+export default function Type(props) {
     const classes = useStyles();
-    const categories = props.categories;
-    console.log("|Category.js|")
-    console.log({categories});
 
-    let categoryNames = [];
-    for(const categoryName in props.categories) {
-        categoryNames.push(props.categories[categoryName].label);
-    }
+    const categories = props.categories;
 
     function getOptions() {
         let allOptions = [];
-        categoryNames.forEach((option, index) => {
+        categories.forEach((option, index) => {
             allOptions.push(<option key={index}>{option}</option>)
         })
         return allOptions;
@@ -90,15 +83,14 @@ export default function Category(props) {
     return (
         <div>
             <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel>Category</InputLabel>
+                <InputLabel>Type</InputLabel>
                 <Select
                     native
-                    label="Category"
+                    label="Type"
                 >
-                    {getOptions()}
+                    {/*{getOptions()}*/}
                 </Select>
             </FormControl>
-            <Type categories={props.categories} />
         </div>
     );
 }
