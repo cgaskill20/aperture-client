@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import HistogramGraph from "./ChartTemplates/HistogramChart";
-import ConstraintDropDown from "./constraintDropDown"
 import LineGraph from "./ChartTemplates/LineGraph"
 import PieGraph from "./ChartTemplates/PieTEST";
 import ScatterPlot from "./ChartTemplates/ScatterPlot";
 import KDEWrapper from "./KDEWrapper";
 import BoxPlot from "./ChartTemplates/BoxPlotChart";
 import FrameControls from "./frameControls";
-import CorrelogramChart from "./ChartTemplates/CorrelogramChart";
-import Heatmaptest from "./ChartTemplates/heatmaptest";
+import CorrelogramGraph from "./ChartTemplates/CorrelogramGraph";
 
 
 
@@ -65,7 +63,7 @@ export default function Frame(props) {
                 <BoxPlot size={props.size} data={props.data} selected={constraint}></BoxPlot></div>; break;
         case "correlogram":
             frame =
-                <Heatmaptest size={props.size} data={props.data} selected={constraint}></Heatmaptest>; break;
+                <CorrelogramGraph size={props.size} data={props.data} selected={constraint}></CorrelogramGraph>; break;
 
         default: break;
     }
