@@ -266,6 +266,7 @@ export default class AutoQuery {
                     layer.setStyle({ color })
                 }
                 else if(options.icon) {
+                    // :)
                     options.icon.options.html.style.backgroundColor = color;
                 }
             }

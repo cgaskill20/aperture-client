@@ -103,8 +103,8 @@ export default class RenderInfrastructure {
         this.markerLayer = markerLayer;
         this.layerGroup = layerGroup;
         this.currentBounds = [];
-        this.currentLayers = [];
-        this.currentGISJOINLayers = [];
+        this.currentLayers = new Set();
+        this.currentGISJOINLayers = {};
         this.idCounter = 0;
     }
 
@@ -146,10 +146,10 @@ export default class RenderInfrastructure {
             filter: function (feature) {
                 Util.normalizeFeatureID(feature);
                 let name = Util.getNameFromGeoJsonFeature(feature, indexData);
-                if (this.currentLayers.includes(feature.id) || this.map.getZoom() < this.options.minRenderZoom || datasource[name] == null) {
+                if (this.currentLayers.has(feature.id) || this.map.getZoom() < this.options.minRenderZoom || datasource[name] == null) {
                     return false;
                 }
-                this.currentLayers.push(feature.id);
+                this.currentLayers.add(feature.id);
                 if (Util.getFeatureType(feature) === Util.FEATURETYPE.point) {
                     let latlng = Util.getLatLngFromGeoJsonFeature(feature);
                     const speccedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
@@ -214,7 +214,6 @@ export default class RenderInfrastructure {
         if (!GISJOIN) {
             return;
         }
-        const index = this.gisjoinIndex(GISJOIN);
         const oldName = Object.keys(indexData)[0];
 
         const colorInfo = geojson.properties.colorInfo;
@@ -227,15 +226,15 @@ export default class RenderInfrastructure {
 
         thisRef.properties.colorInfo = colorInfo;
 
-        if (index === -1) {
-            this.currentGISJOINLayers.push({
+        if (!this.currentGISJOINLayers[GISJOIN]) {
+            this.currentGISJOINLayers[GISJOIN] = {
                 GISJOIN,
                 geojson,
                 refs: [thisRef]
-            });
+            };
         }
         else {
-            const layer = this.currentGISJOINLayers[index];
+            const layer = this.currentGISJOINLayers[GISJOIN];
             layer.refs = layer.refs.filter(ref => ref.name !== thisRef.name);
             layer.refs.push(thisRef);
 
@@ -321,21 +320,16 @@ export default class RenderInfrastructure {
             return;
         }
         //console.log(`Just rendered ${layerID}`)
-        const index = this.gisjoinIndex(GISJOIN);
-        const layer = this.currentGISJOINLayers[index];
+        const layer = this.currentGISJOINLayers[GISJOIN];
         layer.layerID = layerID;
         if (!layer.refs[layer.refs.length - 1].layerID) {
             layer.refs[layer.refs.length - 1].layerID = layerID;
         }
     }
 
-    gisjoinIndex(GISJOIN) {
-        return this.currentGISJOINLayers.findIndex(layer => layer.GISJOIN === GISJOIN);
-    }
-
     removeRefs(layerIDs) {
         const layersRemovedFrom = [];
-        this.currentGISJOINLayers.forEach(layer => {
+        Object.values(this.currentGISJOINLayers).forEach(layer => {
             const lenBefore = layer.refs.length;
 
             layer.refs = layer.refs.filter(ref => {
@@ -346,11 +340,13 @@ export default class RenderInfrastructure {
                 layersRemovedFrom.push(layer.GISJOIN);
             }
         });
-        this.currentGISJOINLayers = this.currentGISJOINLayers.filter(layer => {
+
+        for(const GISJOIN in this.currentGISJOINLayers) {
+            const layer = this.currentGISJOINLayers[GISJOIN]
             if (layer.refs.length === 0) {
-                return false;
+                delete this.currentGISJOINLayers[GISJOIN]
             }
-            else if (layersRemovedFrom.includes(layer.GISJOIN)) {
+            else if (layersRemovedFrom.includes(GISJOIN)) {
                 const geojson = layer.geojson;
                 geojson.properties = this.refsToProperties(layer.refs);
                 //console.log(JSON.parse(JSON.stringify(layer.refs)))
@@ -366,10 +362,8 @@ export default class RenderInfrastructure {
                     this.removeSpecifiedLayersFromMap([layer.layerID], false)
                 }
                 this.renderGeoJson(geojson, indexData, layer.refs[layer.refs.length - 1].layerID);
-                return true;
             }
-            return true;
-        });
+        }
     }
 
     /**
@@ -421,7 +415,7 @@ export default class RenderInfrastructure {
         for(const mapLayer of mapLayers) {
             this.layerGroup.removeLayer(mapLayer);
         }
-        this.currentLayers.filter(layerId => !specifiedIdsSet.has(layerId))
+        this.currentLayers = new Set([...this.currentLayers].filter(layerId => !specifiedIdsSet.has(layerId)))
         return true;
     }
 
@@ -472,7 +466,7 @@ export default class RenderInfrastructure {
                 this.layerGroup.removeLayer(layer);
             }
         }.bind(this));
-        this.currentLayers = [];
+        this.currentLayers = new Set();
         return true;
     }
 
