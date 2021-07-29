@@ -60,6 +60,7 @@ import React from 'react';
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel, makeStyles, Select} from "@material-ui/core";
 import Type from "./Type"
+import ModelingFeatures from "./ModelingFeatures";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -72,6 +73,8 @@ export default function Category(props) {
     const classes = useStyles();
     const categories = props.categories;
     console.log({categories});
+    const types = props.types;
+    console.log(types)
 
     let categoryNames = [];
     for(const categoryName in props.categories) {
@@ -124,6 +127,7 @@ export default function Category(props) {
                 </Select>
             </FormControl>
             <Type types={props.types} />
+            <ModelingFeatures features={props.features} setFeatures={props.setFeatures} />
         </div>
     );
 }
