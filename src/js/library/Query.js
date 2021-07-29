@@ -77,11 +77,11 @@ const Query = {
     linked: {},
     backgroundLoader: null,
     queryWorker: new Worker(),
-    backgroundLoader: (linked) => { 
-        if(linked === "tract_geo_140mb_no_2d_index"){
+    backgroundLoader: (linked) => {
+        if (linked === "tract_geo_140mb_no_2d_index") {
             return window.backgroundTract;
         }
-        else if(linked === "county_geo_30mb_no_2d_index"){
+        else if (linked === "county_geo_30mb_no_2d_index") {
             return window.backgroundCounty;
         }
         return null;
@@ -95,7 +95,7 @@ const Query = {
     init(queryableData) {
         for (const [collection, data] of Object.entries(queryableData)) {
             if (data.linkedGeometry) {
-                this.linked[collection] = { 
+                this.linked[collection] = {
                     collection: data.linkedGeometry,
                     field: data.joinField
                 };
@@ -139,7 +139,7 @@ const Query = {
 
         let promiseFlag = false;
         let callbackToPromise;
-        if(!query.callback){
+        if (!query.callback) {
             promiseFlag = true;
             callbackToPromise = this._callbackToPromise(query);
         }
@@ -162,14 +162,14 @@ const Query = {
     * @memberof Query
     * @param {string} qid
     **/
-    killQuery(qid){
+    killQuery(qid) {
         this.queryWorker.postMessage({
             type: "kill",
             id: qid
         });
     },
 
-    _queryFineOrCoarse(query){
+    _queryFineOrCoarse(query) {
         const { granularity } = query;
         if (granularity === "coarse") {
             this._queryCoarse(query);
@@ -206,7 +206,7 @@ const Query = {
         });
     },
 
-    _linkedQuery({collection, field}, query) {
+    _linkedQuery({ collection, field }, query) {
         const { granularity, id } = query;
         const epsilon = 100;
         let waitingRoom = [];
@@ -247,6 +247,7 @@ const Query = {
             if (event === "data") {
                 const complimentaryData = { ...d.payload.data };
                 const realData = waitingRoomSnapshot.find(entry => entry[field] === complimentaryData[field]);
+
                 Util.normalizeFeatureID(realData);
                 realData.id = `${realData.id}_${complimentaryData.id}`
                 realData.properties = {
@@ -255,6 +256,7 @@ const Query = {
                 }
                 d.payload.data = realData;
                 query.callback(d);
+
             }
             else if (event === "end" && !ignoreEnd) {
                 waitingRoomSnapshot = null;
@@ -265,11 +267,20 @@ const Query = {
             }
         }
 
+        let dumpNum = 0;
         const dumpWaitingRoom = (final = false) => {
             const queryDump = JSON.parse(JSON.stringify(query))
-            const JOINS = waitingRoom.map(entry => Util.resolvePath(field, entry));
-            const waitingRoomSnapshot = JSON.parse(JSON.stringify(waitingRoom))
+            let waitingRoomSnapshotNames = new Set();
+            const waitingRoomSnapshot = JSON.parse(JSON.stringify(waitingRoom)).filter(waitingObject => {
+                if (!waitingRoomSnapshotNames.has(waitingObject[field])) {
+                    waitingRoomSnapshotNames.add(waitingObject[field])
+                    return true;
+                }
+                return false;
+            })
+            const JOINS = waitingRoomSnapshot.map(entry => Util.resolvePath(field, entry));
             queryDump.pipeline = [{ "$match": { [field]: { "$in": JOINS } } }, ...queryDump.pipeline]
+            queryDump.id = `${queryDump.id}_dump${dumpNum++}`
             queryDump.callback = (d) => { dumpCallback(d, !final, waitingRoomSnapshot) };
             this._queryMongo(queryDump);
             waitingRoom = [];
@@ -278,6 +289,7 @@ const Query = {
         const queryLinked = JSON.parse(JSON.stringify(query))
         queryLinked.collection = collection;
         queryLinked.pipeline = [];
+        queryLinked.id = `${queryLinked.id}_LINKED`
         queryLinked.callback = waitingRoomListener;
         this._queryFineOrCoarse(queryLinked);
     },
