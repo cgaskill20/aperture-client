@@ -74,6 +74,7 @@ export default React.memo(function NewModeling() {
     const [modelingCatalog, setModelingCatalog] = useState({});
     const classes = useStyles();
     const [categories, setCategories] = useState([]);
+    const [selectedCategoryTypes, setSelectedCategoryTypes] = useState([])
 
     const catalogMap = (catalog) => {
         const ret = {};
@@ -108,6 +109,11 @@ export default React.memo(function NewModeling() {
             tempCategories.push(mappedCatalog[category]);
         }
         setCategories(tempCategories);
+        let tempSelectedCategoryTypes = [];
+        for(const type in tempCategories[0]) {
+            tempSelectedCategoryTypes.push(tempCategories[0][type])
+        }
+        setSelectedCategoryTypes(tempSelectedCategoryTypes);
     }, [])
 
 
@@ -120,7 +126,7 @@ export default React.memo(function NewModeling() {
             alignItems="center"
         >
             <Grid item className={classes.fullWidth}>
-                <Category categories={categories} />
+                <Category categories={categories} types={selectedCategoryTypes} setTypes={setSelectedCategoryTypes} />
             </Grid>
         </Grid>
     )

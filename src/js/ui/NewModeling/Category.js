@@ -56,7 +56,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel, makeStyles, Select} from "@material-ui/core";
 import Type from "./Type"
@@ -74,15 +74,47 @@ export default function Category(props) {
     console.log("|Category.js|")
     console.log({categories});
 
+    const [selectedCategory, setSelectedCategory] = useState("CLUSTERING");
+
     let categoryNames = [];
     for(const categoryName in props.categories) {
         categoryNames.push(props.categories[categoryName].label);
     }
 
+    const switchCategory = (event) => {
+        setSelectedCategory(event.target.value);
+        console.log({selectedCategory});
+        switchType();
+    }
+
+    function switchType() {
+        const indexOfCategory = findCategoryByIndex(selectedCategory);
+        if(indexOfCategory) {
+            let newTypes = [];
+            console.log({indexOfCategory});
+            const category = props.categories[indexOfCategory];
+            for(const type in category) {
+                newTypes.push(category[type]);
+            }
+            props.setTypes(newTypes);
+        }
+    }
+
+    function findCategoryByIndex(categoryName) {
+        for(const category in props.categories) {
+            for(const categoryLabel in props.categories[category]) {
+                if(props.categories[category][categoryLabel].category === categoryName) {
+                    return category;
+                }
+                else break;
+            }
+        }
+    }
+
     function getOptions() {
         let allOptions = [];
         categoryNames.forEach((option, index) => {
-            allOptions.push(<option key={index}>{option}</option>)
+            allOptions.push(<option key={index} value={option}>{option}</option>)
         })
         return allOptions;
     }
@@ -94,11 +126,15 @@ export default function Category(props) {
                 <Select
                     native
                     label="Category"
+                    value={selectedCategory}
+                    onChange={
+                        switchCategory
+                    }
                 >
                     {getOptions()}
                 </Select>
             </FormControl>
-            <Type categories={props.categories} />
+            <Type types={props.types} />
         </div>
     );
 }

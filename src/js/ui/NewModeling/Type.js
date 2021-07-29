@@ -70,12 +70,12 @@ const useStyles = makeStyles((theme) => ({
 export default function Type(props) {
     const classes = useStyles();
 
-    const categories = props.categories;
-
     function getOptions() {
         let allOptions = [];
-        categories.forEach((option, index) => {
-            allOptions.push(<option key={index}>{option}</option>)
+        props.types.forEach((option, index) => {
+            if(option.type) {
+                allOptions.push(<option key={index}>{option.type}</option>)
+            }
         })
         return allOptions;
     }
@@ -88,7 +88,7 @@ export default function Type(props) {
                     native
                     label="Type"
                 >
-                    {/*{getOptions()}*/}
+                    {getOptions()}
                 </Select>
             </FormControl>
         </div>
