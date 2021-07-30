@@ -61,6 +61,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import {makeStyles} from "@material-ui/core/styles";
 import HyperparameterSlider from "./HyperparameterSlider"
 import HyperparameterSelect from "./HyperparameterSelect"
+import IndividualCheckbox from "./IndividualCheckbox";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -71,22 +72,23 @@ const useStyles = makeStyles((theme) => ({
 export default function Hyperparameters(props) {
     const classes = useStyles();
 
-    const localHyperparameters = props.hyperparameters[0];
+    const localHyperparameters = props.hyperparameters;
     console.log({localHyperparameters})
 
     function getHyperparameters() {
         let allHyperparameters = [];
         props.hyperparameters.forEach((hyperparameter, index) => {
-            console.log({index})
             console.log({hyperparameter})
-            if(hyperparameter.type === 'integer') {
+            if(hyperparameter.type === 'integer' || hyperparameter.type === "double") {
                 allHyperparameters.push(<HyperparameterSlider key={index} hyperparameter={hyperparameter} />)
             }
-            else {
-                // allHyperparameters.push(<HyperparameterSelect key={index} hyperparameter={hyperparameter}/>)
+            else if(hyperparameter.type === "boolean") {
+                allHyperparameters.push(<IndividualCheckbox key={index} feature={hyperparameter.name} />)
+            }
+            else if(hyperparameter.type === "string") {
+                allHyperparameters.push(<HyperparameterSelect key={index} hyperparameter={hyperparameter} />)
             }
         })
-        console.log({allHyperparameters})
         return allHyperparameters;
     }
 

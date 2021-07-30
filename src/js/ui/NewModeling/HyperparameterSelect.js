@@ -64,13 +64,12 @@ export default function HyperparameterSelect(props) {
     const useStyles = makeStyles((theme) => ({
         formControl: {
             margin: theme.spacing(1),
-            minWidth: 120,
             width: "98%"
         },
     }));
 
     const classes = useStyles();
-    const [option, setOption] = useState(props.hyperparameter.options[0]);
+    const [option, setOption] = useState(props.hyperparameter.default);
     const handleChange = (event) => {
         const newValue = event.target.name;
         setOption(newValue);
@@ -78,7 +77,8 @@ export default function HyperparameterSelect(props) {
 
     function getOptions() {
         let allOptions = [];
-        props.hyperparameter.options.forEach((option, index) => {
+        props.hyperparameter.allowedValues.forEach((option, index) => {
+            console.log({option})
             allOptions.push(<option key={index}>{option}</option>)
         })
         return allOptions;
@@ -87,15 +87,12 @@ export default function HyperparameterSelect(props) {
     return (
         <div>
             <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel>{props.hyperparameter.title}</InputLabel>
+                <InputLabel>{props.hyperparameter.name}</InputLabel>
                 <Select
                     native
                     value={option}
                     onChange={handleChange}
-                    label={props.hyperparameter.title}
-                    inputProps={{
-                        name: 'age',
-                    }}
+                    label={props.hyperparameter.name}
                 >
                     {getOptions()}
                 </Select>
