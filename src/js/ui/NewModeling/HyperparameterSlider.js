@@ -78,7 +78,7 @@ export default function Hyperparameters(props) {
     const classes = useStyles();
     const min = props.hyperparameter.min;
     const max = props.hyperparameter.max;
-    const step = 1;
+    const step = props.hyperparameter.type === "integer" ? 1 : 0.01;
     const [sliderValue, setSliderValue] = useState(props.hyperparameter.default);
     const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
 
