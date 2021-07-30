@@ -79,32 +79,26 @@ export default function Category(props) {
     }
 
     const switchCategory = (event) => {
-        const indexOfCategory = findCategoryByIndex(event.target.value);
-        if(indexOfCategory) {
-            let newTypes = [];
-            const category = props.categories[indexOfCategory];
-            for(const type in category) {
-                newTypes.push(category[type]);
-            }
-            props.setTypes(newTypes);
+        const newIndex = event.target.value;
+        let newTypes = [];
+        const category = props.categories[newIndex];
+        for(const type in category) {
+            newTypes.push(category[type]);
         }
-    }
+        props.setTypes(newTypes);
 
-    function findCategoryByIndex(categoryName) {
-        for(const category in props.categories) {
-            for(const categoryLabel in props.categories[category]) {
-                if(props.categories[category][categoryLabel].category === categoryName) {
-                    return category;
-                }
-                else break;
-            }
-        }
+        let newFeatures = [];
+        newFeatures.push(newTypes[newIndex].collections[0].name);
+        newFeatures.push(newTypes[newIndex].collections[0].features);
+        props.setFeatures(newFeatures);
+
+        props.setHyperparameters(newTypes[newIndex].parameters)
     }
 
     function getOptions() {
         let allOptions = [];
         categoryNames.forEach((option, index) => {
-            allOptions.push(<option key={index} value={option}>{option}</option>)
+            allOptions.push(<option key={index} value={index}>{option}</option>)
         })
         return allOptions;
     }
