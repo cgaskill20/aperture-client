@@ -68,18 +68,18 @@ export default function HyperparameterSelect(props) {
         },
     }));
 
+
     const classes = useStyles();
     const [option, setOption] = useState(props.hyperparameter.default);
     const handleChange = (event) => {
-        const newValue = event.target.name;
-        setOption(newValue);
+        setOption(event.target.value)
+        // @Daniel get the newly selected value here, do stuff
     };
 
     function getOptions() {
         let allOptions = [];
         props.hyperparameter.allowedValues.forEach((option, index) => {
-            console.log({option})
-            allOptions.push(<option key={index}>{option}</option>)
+            allOptions.push(<option key={index} value={option}>{option}</option>)
         })
         return allOptions;
     }
@@ -90,7 +90,6 @@ export default function HyperparameterSelect(props) {
                 <InputLabel>{props.hyperparameter.name}</InputLabel>
                 <Select
                     native
-                    value={option}
                     onChange={handleChange}
                     label={props.hyperparameter.name}
                 >
