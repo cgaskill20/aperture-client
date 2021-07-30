@@ -88,11 +88,11 @@ export default function Category(props) {
         props.setTypes(newTypes);
 
         let newFeatures = [];
-        newFeatures.push(newTypes[newIndex].collections[0].name);
-        newFeatures.push(newTypes[newIndex].collections[0].features);
+        newFeatures.push(newTypes[0].collections[0].name);
+        newFeatures.push(newTypes[0].collections[0].features);
         props.setFeatures(newFeatures);
 
-        props.setHyperparameters(newTypes[newIndex].parameters)
+        props.setHyperparameters(newTypes[0].parameters)
     }
 
     function getOptions() {

@@ -77,7 +77,7 @@ export default React.memo(function NewModeling() {
     const [selectedTypeFeatures, setSelectedTypeFeatures] = useState([]);
     const [selectedTypeHyperarameters, setSelectedTypeHyperparameters] = useState([]);
 
-    console.log({categories})
+    // console.log({categories})
     console.log({selectedCategoryTypes})
     console.log({selectedTypeFeatures})
     console.log({selectedTypeHyperarameters})
