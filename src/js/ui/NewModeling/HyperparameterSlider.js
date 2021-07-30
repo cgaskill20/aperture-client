@@ -79,11 +79,11 @@ export default function Hyperparameters(props) {
     const min = props.hyperparameter.min;
     const max = props.hyperparameter.max;
     const step = 1;
-    const [minMax, setMinMax] = useState([min, max]);
+    const [sliderValue, setSliderValue] = useState(props.hyperparameter.default);
     const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
 
     const buildSliderLabel = () => {
-        return <b>{minMax[0]} ➔ {minMax[1]}</b>
+        return <b>{sliderValue}</b>
     }
 
     return (
@@ -93,8 +93,9 @@ export default function Hyperparameters(props) {
                 <span className={classes.nowrap}>{buildSliderLabel()}</span>
             </Typography>
             <Slider
-                value={minMax}
-                onChange={(event, newValue) => setMinMax(newValue)}
+                defaultValue={props.hyperparameter.default}
+                value={sliderValue}
+                onChange={(event, newValue) => setSliderValue(newValue)}
                 onChangeCommitted={(event, newValue) => setMinMaxCommited(newValue)}
                 min={min}
                 max={max}

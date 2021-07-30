@@ -78,15 +78,15 @@ export default function Hyperparameters(props) {
         let allHyperparameters = [];
         props.hyperparameters.forEach((hyperparameter, index) => {
             console.log({index})
-            const thisHyperparameter = hyperparameter[index]
-            console.log({thisHyperparameter})
-            if(thisHyperparameter.type === 'integer') {
-                allHyperparameters.push(<HyperparameterSlider key={index} hyperparameter={thisHyperparameter} />)
+            console.log({hyperparameter})
+            if(hyperparameter.type === 'integer') {
+                allHyperparameters.push(<HyperparameterSlider key={index} hyperparameter={hyperparameter} />)
             }
             else {
-                allHyperparameters.push(<HyperparameterSelect key={index} hyperparameter={thisHyperparameter}/>)
+                // allHyperparameters.push(<HyperparameterSelect key={index} hyperparameter={hyperparameter}/>)
             }
         })
+        console.log({allHyperparameters})
         return allHyperparameters;
     }
 

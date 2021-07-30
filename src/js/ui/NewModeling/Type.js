@@ -85,10 +85,7 @@ export default function Type(props) {
         newFeatures.push(props.types[event.target.value].collections[0].name);
         newFeatures.push(props.types[event.target.value].collections[0].features);
         props.setFeatures(newFeatures);
-        let newHyperparameters = [];
-        newHyperparameters.push(props.types[event.target.value].parameters);
-        props.setHyperparameters(newHyperparameters);
-
+        props.setHyperparameters(props.types[event.target.value].parameters);
     }
 
     return (
