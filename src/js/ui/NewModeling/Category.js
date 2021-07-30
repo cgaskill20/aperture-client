@@ -119,14 +119,12 @@ export default function Category(props) {
                 <Select
                     native
                     label="Category"
-                    onChange={
-                        switchCategory
-                    }
+                    onChange={switchCategory}
                 >
                     {getOptions()}
                 </Select>
             </FormControl>
-            <Type types={props.types} />
+            <Type types={props.types} setFeatures={props.setFeatures} />
             <ModelingFeatures features={props.features} setFeatures={props.setFeatures} />
         </div>
     );

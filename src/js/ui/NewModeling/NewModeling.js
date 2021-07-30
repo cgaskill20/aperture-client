@@ -115,6 +115,14 @@ export default React.memo(function NewModeling() {
         setSelectedCategoryTypes(initialSelectedCategoryTypes);
     }, [])
 
+    console.log({selectedCategoryTypes})
+    console.log({selectedTypeFeatures})
+    const firstFeatureSet = selectedCategoryTypes[0]
+    // const initialFeatures = firstFeatureSet.collections[0]
+    console.log({firstFeatureSet})
+    // console.log({initialFeatures})
+
+    // setSelectedTypeFeatures(initialFeatures);
 
     if (componentIsRendering) console.log("|NewModeling|");
     return (

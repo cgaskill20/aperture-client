@@ -77,7 +77,7 @@ export default function ModelingFeatures(props) {
 
     function getFeatures() {
         let allFeatures = [];
-        props.features.forEach((feature, index) => {
+        props.features.features.forEach((feature, index) => {
             allFeatures.push(<IndividualFeature key={index} feature={feature} />)
         })
         return allFeatures;
@@ -86,9 +86,9 @@ export default function ModelingFeatures(props) {
     return (
         <div className={classes.root}>
             <FormControl className={classes.formControl}>
-                <FormLabel>{props.featuresTitle}</FormLabel>
+                <FormLabel>{props.features.name}</FormLabel>
                 <FormGroup>
-                    {getFeatures()}
+                    {/*{getFeatures()}*/}
                 </FormGroup>
             </FormControl>
         </div>

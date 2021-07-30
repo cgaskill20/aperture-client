@@ -74,10 +74,15 @@ export default function Type(props) {
         let allOptions = [];
         props.types.forEach((option, index) => {
             if(option.type) {
-                allOptions.push(<option key={index}>{option.type}</option>)
+                allOptions.push(<option key={index} value={index}>{option.type}</option>)
             }
         })
         return allOptions;
+    }
+
+    const switchType = (event) => {
+        const newFeatures = props.types[event.target.value].collections[0];
+        props.setFeatures(newFeatures);
     }
 
     return (
@@ -87,6 +92,7 @@ export default function Type(props) {
                 <Select
                     native
                     label="Type"
+                    onChange={switchType}
                 >
                     {getOptions()}
                 </Select>
