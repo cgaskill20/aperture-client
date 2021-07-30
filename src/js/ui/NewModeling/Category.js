@@ -61,6 +61,7 @@ import FormControl from "@material-ui/core/FormControl";
 import {InputLabel, makeStyles, Select} from "@material-ui/core";
 import Type from "./Type"
 import ModelingFeatures from "./ModelingFeatures";
+import Hyperparameters from "./Hyperparameters";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -120,8 +121,9 @@ export default function Category(props) {
                     {getOptions()}
                 </Select>
             </FormControl>
-            <Type types={props.types} setFeatures={props.setFeatures} />
-            <ModelingFeatures features={props.features} setFeatures={props.setFeatures} />
+            <Type types={props.types} setFeatures={props.setFeatures} setHyperparameters={props.setHyperparameters} />
+            <ModelingFeatures features={props.features} />
+            <Hyperparameters hyperparameters={props.hyperparameters} />
         </div>
     );
 }

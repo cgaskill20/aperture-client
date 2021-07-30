@@ -74,7 +74,13 @@ export default React.memo(function NewModeling() {
     const classes = useStyles();
     const [categories, setCategories] = useState([]);
     const [selectedCategoryTypes, setSelectedCategoryTypes] = useState([]);
-    const [selectedTypeFeatures, setSelectedTypeFeatures] = useState({});
+    const [selectedTypeFeatures, setSelectedTypeFeatures] = useState([]);
+    const [selectedTypeHyperarameters, setSelectedTypeHyperparameters] = useState([]);
+
+    console.log({categories})
+    console.log({selectedCategoryTypes})
+    console.log({selectedTypeFeatures})
+    console.log({selectedTypeHyperarameters})
 
     const catalogMap = (catalog) => {
         const ret = {};
@@ -98,27 +104,37 @@ export default React.memo(function NewModeling() {
 
         const mappedCatalog = catalogMap(catalog);
 
-        let tempCategories = [];
+        let initialCategories = [];
         for(const category in mappedCatalog) {
             for(const extractCategoryLabel in mappedCatalog[category]) {
                 const categoryLabelName = mappedCatalog[category][extractCategoryLabel].category;
                 mappedCatalog[category].label = categoryLabelName;
                 break;
             }
-            tempCategories.push(mappedCatalog[category]);
+            initialCategories.push(mappedCatalog[category]);
         }
-        setCategories(tempCategories);
+        setCategories(initialCategories);
+
         let initialSelectedCategoryTypes = [];
-        for(const type in tempCategories[0]) {
-            initialSelectedCategoryTypes.push(tempCategories[0][type]);
+        for(const type in initialCategories[0]) {
+            initialSelectedCategoryTypes.push(initialCategories[0][type]);
         }
         setSelectedCategoryTypes(initialSelectedCategoryTypes);
-        // console.log({selectedCategoryTypes})
-        // if(selectedCategoryTypes.length > 0) {
-        //     const initialFeatures = selectedCategoryTypes[0].collections[0];
-        //     setSelectedTypeFeatures(initialFeatures);
-        //     console.log({selectedTypeFeatures})
-        // }
+
+        const numberOfCategoryTypes = selectedCategoryTypes.length
+        console.log({numberOfCategoryTypes})
+        //FIXME this logs as 0, but selectedCategoryTypes logs as an Array(5)...
+
+        if(selectedCategoryTypes.length > 0) {
+            console.log("Hi from if statement in NewModeling")
+            let initialTypeFeatures = [];
+            let initialTyperHyperparameters = [];
+            initialTypeFeatures.push(selectedCategoryTypes[0].collections[0].name);
+            initialTypeFeatures.push(selectedCategoryTypes[0].collections[0].features);
+            setSelectedTypeFeatures(initialTypeFeatures);
+            initialTyperHyperparameters.push(selectedCategoryTypes[0].parameters);
+            setSelectedTypeHyperparameters(initialTyperHyperparameters);
+        }
     }, [])
 
     if (componentIsRendering) console.log("|NewModeling|");
@@ -133,6 +149,7 @@ export default React.memo(function NewModeling() {
                 <Category categories={categories}
                           types={selectedCategoryTypes} setTypes={setSelectedCategoryTypes}
                           features={selectedTypeFeatures} setFeatures={setSelectedTypeFeatures}
+                          hyperparameters={selectedTypeHyperarameters} setHyperparameters={setSelectedTypeHyperparameters}
                 />
             </Grid>
         </Grid>

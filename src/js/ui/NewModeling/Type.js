@@ -81,8 +81,14 @@ export default function Type(props) {
     }
 
     const switchType = (event) => {
-        const newFeatures = props.types[event.target.value].collections[0];
+        let newFeatures = [];
+        newFeatures.push(props.types[event.target.value].collections[0].name);
+        newFeatures.push(props.types[event.target.value].collections[0].features);
         props.setFeatures(newFeatures);
+        let newHyperparameters = [];
+        newHyperparameters.push(props.types[event.target.value].parameters);
+        props.setHyperparameters(newHyperparameters);
+
     }
 
     return (

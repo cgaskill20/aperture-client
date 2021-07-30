@@ -75,13 +75,10 @@ const useStyles = makeStyles((theme) => ({
 export default function ModelingFeatures(props) {
     const classes = useStyles();
 
-    const featuresInModelingFeatures = props.features
-    console.log({featuresInModelingFeatures})
-
     function getFeatures() {
         if(Object.keys(props.features).length !== 0) {
             let allFeatures = [];
-            props.features.features.forEach((feature, index) => {
+            props.features[1].forEach((feature, index) => {
                 allFeatures.push(<IndividualFeature key={index} feature={feature}/>)
             })
             return allFeatures;
@@ -91,7 +88,7 @@ export default function ModelingFeatures(props) {
     return (
         <div className={classes.root}>
             <FormControl className={classes.formControl}>
-                <FormLabel>{props.features.name}</FormLabel>
+                <FormLabel>{props.features[0]}</FormLabel>
                 <FormGroup>
                     {getFeatures()}
                 </FormGroup>

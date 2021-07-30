@@ -71,14 +71,20 @@ const useStyles = makeStyles((theme) => ({
 export default function Hyperparameters(props) {
     const classes = useStyles();
 
+    const localHyperparameters = props.hyperparameters[0];
+    console.log({localHyperparameters})
+
     function getHyperparameters() {
         let allHyperparameters = [];
         props.hyperparameters.forEach((hyperparameter, index) => {
-            if(hyperparameter.type === 'integer') {
-                allHyperparameters.push(<HyperparameterSlider key={index} hyperparameter={hyperparameter} />)
+            console.log({index})
+            const thisHyperparameter = hyperparameter[index]
+            console.log({thisHyperparameter})
+            if(thisHyperparameter.type === 'integer') {
+                allHyperparameters.push(<HyperparameterSlider key={index} hyperparameter={thisHyperparameter} />)
             }
             else {
-                allHyperparameters.push(<HyperparameterSelect key={index} hyperparameter={hyperparameter}/>)
+                allHyperparameters.push(<HyperparameterSelect key={index} hyperparameter={thisHyperparameter}/>)
             }
         })
         return allHyperparameters;

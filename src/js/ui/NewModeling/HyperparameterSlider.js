@@ -76,8 +76,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Hyperparameters(props) {
     const classes = useStyles();
-    const min = 0;
-    const max = 10;
+    const min = props.hyperparameter.min;
+    const max = props.hyperparameter.max;
     const step = 1;
     const [minMax, setMinMax] = useState([min, max]);
     const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
@@ -89,7 +89,7 @@ export default function Hyperparameters(props) {
     return (
         <div className={classes.root}>
             <Typography className={classes.title} gutterBottom>
-                {props.hyperparameter.title} &nbsp;
+                {props.hyperparameter.name} &nbsp;
                 <span className={classes.nowrap}>{buildSliderLabel()}</span>
             </Typography>
             <Slider
