@@ -74,7 +74,7 @@ export default React.memo(function NewModeling() {
     const classes = useStyles();
     const [categories, setCategories] = useState([]);
     const [selectedCategoryTypes, setSelectedCategoryTypes] = useState([]);
-    const [selectedTypeFeatures, setSelectedTypeFeatures] = useState([]);
+    const [selectedTypeFeatures, setSelectedTypeFeatures] = useState({});
 
     const catalogMap = (catalog) => {
         const ret = {};
@@ -113,16 +113,13 @@ export default React.memo(function NewModeling() {
             initialSelectedCategoryTypes.push(tempCategories[0][type]);
         }
         setSelectedCategoryTypes(initialSelectedCategoryTypes);
+        // console.log({selectedCategoryTypes})
+        // if(selectedCategoryTypes.length > 0) {
+        //     const initialFeatures = selectedCategoryTypes[0].collections[0];
+        //     setSelectedTypeFeatures(initialFeatures);
+        //     console.log({selectedTypeFeatures})
+        // }
     }, [])
-
-    console.log({selectedCategoryTypes})
-    console.log({selectedTypeFeatures})
-    const firstFeatureSet = selectedCategoryTypes[0]
-    // const initialFeatures = firstFeatureSet.collections[0]
-    console.log({firstFeatureSet})
-    // console.log({initialFeatures})
-
-    // setSelectedTypeFeatures(initialFeatures);
 
     if (componentIsRendering) console.log("|NewModeling|");
     return (

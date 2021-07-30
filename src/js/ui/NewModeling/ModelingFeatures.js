@@ -75,12 +75,17 @@ const useStyles = makeStyles((theme) => ({
 export default function ModelingFeatures(props) {
     const classes = useStyles();
 
+    const featuresInModelingFeatures = props.features
+    console.log({featuresInModelingFeatures})
+
     function getFeatures() {
-        let allFeatures = [];
-        props.features.features.forEach((feature, index) => {
-            allFeatures.push(<IndividualFeature key={index} feature={feature} />)
-        })
-        return allFeatures;
+        if(Object.keys(props.features).length !== 0) {
+            let allFeatures = [];
+            props.features.features.forEach((feature, index) => {
+                allFeatures.push(<IndividualFeature key={index} feature={feature}/>)
+            })
+            return allFeatures;
+        }
     }
 
     return (
@@ -88,7 +93,7 @@ export default function ModelingFeatures(props) {
             <FormControl className={classes.formControl}>
                 <FormLabel>{props.features.name}</FormLabel>
                 <FormGroup>
-                    {/*{getFeatures()}*/}
+                    {getFeatures()}
                 </FormGroup>
             </FormControl>
         </div>
