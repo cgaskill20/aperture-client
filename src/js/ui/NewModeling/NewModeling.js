@@ -121,20 +121,12 @@ export default React.memo(function NewModeling() {
         }
         setSelectedCategoryTypes(initialSelectedCategoryTypes);
 
-        const numberOfCategoryTypes = selectedCategoryTypes.length
-        console.log({numberOfCategoryTypes})
-        //FIXME this logs as 0, but selectedCategoryTypes logs as an Array(5)...
+        let initialTypeFeatures = [];
+        initialTypeFeatures.push(initialSelectedCategoryTypes[0].collections[0].name);
+        initialTypeFeatures.push(initialSelectedCategoryTypes[0].collections[0].features);
+        setSelectedTypeFeatures(initialTypeFeatures);
 
-        if(selectedCategoryTypes.length > 0) {
-            console.log("Hi from if statement in NewModeling")
-            let initialTypeFeatures = [];
-            let initialTyperHyperparameters = [];
-            initialTypeFeatures.push(selectedCategoryTypes[0].collections[0].name);
-            initialTypeFeatures.push(selectedCategoryTypes[0].collections[0].features);
-            setSelectedTypeFeatures(initialTypeFeatures);
-            initialTyperHyperparameters.push(selectedCategoryTypes[0].parameters);
-            setSelectedTypeHyperparameters(initialTyperHyperparameters);
-        }
+        setSelectedTypeHyperparameters(initialSelectedCategoryTypes[0].parameters)
     }, [])
 
     if (componentIsRendering) console.log("|NewModeling|");

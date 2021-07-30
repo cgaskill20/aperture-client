@@ -72,13 +72,9 @@ const useStyles = makeStyles((theme) => ({
 export default function Hyperparameters(props) {
     const classes = useStyles();
 
-    const localHyperparameters = props.hyperparameters;
-    console.log({localHyperparameters})
-
     function getHyperparameters() {
         let allHyperparameters = [];
         props.hyperparameters.forEach((hyperparameter, index) => {
-            console.log({hyperparameter})
             if(hyperparameter.type === 'integer' || hyperparameter.type === "double") {
                 allHyperparameters.push(<HyperparameterSlider key={index} hyperparameter={hyperparameter} />)
             }
