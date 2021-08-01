@@ -147,6 +147,7 @@ export default class RenderInfrastructure {
                 Util.normalizeFeatureID(feature);
                 let name = Util.getNameFromGeoJsonFeature(feature, indexData);
                 if (this.currentLayers.has(feature.id) || this.map.getZoom() < this.options.minRenderZoom || datasource[name] == null) {
+                    console.log("rejected!")
                     return false;
                 }
                 this.currentLayers.add(feature.id);
@@ -416,7 +417,11 @@ export default class RenderInfrastructure {
         for(const mapLayer of mapLayers) {
             this.layerGroup.removeLayer(mapLayer);
         }
-        this.currentLayers = new Set([...this.currentLayers].filter(layerId => !specifiedIdsSet.has(layerId)))
+        const removedLayerIds = new Set([
+            ...markerLayers.map(markerLayer => markerLayer?.feature?.id),
+            ...mapLayers.map(mapLayer => mapLayer.getLayers()[0]?.feature?.id)
+        ]);
+        this.currentLayers = new Set([...this.currentLayers].filter(layerId => !removedLayerIds.has(layerId)))
         return true;
     }
 
