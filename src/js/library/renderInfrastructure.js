@@ -150,7 +150,7 @@ export default class RenderInfrastructure {
                     return false;
                 }
                 this.currentLayers.add(feature.id);
-                if (Util.getFeatureType(feature) === Util.FEATURETYPE.point) {
+                if (Util.getFeatureType(feature) === Util.FEATURETYPE.point || indexData[name].iconAddr) {
                     let latlng = Util.getLatLngFromGeoJsonFeature(feature);
                     const speccedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
                     let iconName = Util.getNameFromGeoJsonFeature(feature, indexData);
