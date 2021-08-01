@@ -63,6 +63,7 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core";
 import ModelingFeatures from "./ModelingFeatures";
 import Hyperparameters from "./Hyperparameters";
+import Button from "@material-ui/core/Button";
 
 export default React.memo(function NewModeling() {
     const useStyles = makeStyles((theme) => ({
@@ -143,7 +144,9 @@ export default React.memo(function NewModeling() {
                           features={selectedTypeFeatures} setFeatures={setSelectedTypeFeatures}
                           hyperparameters={selectedTypeHyperarameters} setHyperparameters={setSelectedTypeHyperparameters}
                 />
+                <Button variant="outlined">Run This Model</Button>
             </Grid>
+            <br/>
         </Grid>
     )
 })
