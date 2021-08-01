@@ -329,11 +329,12 @@ export default class RenderInfrastructure {
 
     removeRefs(layerIDs) {
         const layersRemovedFrom = [];
+        const layerIDsSet = new Set(layerIDs)
         Object.values(this.currentGISJOINLayers).forEach(layer => {
             const lenBefore = layer.refs.length;
 
             layer.refs = layer.refs.filter(ref => {
-                return !layerIDs.includes(ref.layerID);
+                return !layerIDsSet.has(ref.layerID);
             });
 
             if (layer.refs.length !== lenBefore) {

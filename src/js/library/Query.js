@@ -271,7 +271,7 @@ const Query = {
         const dumpWaitingRoom = (final = false) => {
             const queryDump = JSON.parse(JSON.stringify(query))
             let waitingRoomSnapshotNames = new Set();
-            const waitingRoomSnapshot = JSON.parse(JSON.stringify(waitingRoom)).filter(waitingObject => {
+            const waitingRoomSnapshot = [...waitingRoom].filter(waitingObject => {
                 if (!waitingRoomSnapshotNames.has(waitingObject[field])) {
                     waitingRoomSnapshotNames.add(waitingObject[field])
                     return true;
