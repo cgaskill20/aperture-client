@@ -57,16 +57,19 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React from 'react';
-import FormLabel from "@material-ui/core/FormLabel";
 import {makeStyles} from "@material-ui/core/styles";
 import HyperparameterSlider from "./HyperparameterSlider"
 import HyperparameterSelect from "./HyperparameterSelect"
 import IndividualCheckbox from "./IndividualCheckbox";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         margin: theme.spacing(1),
     },
+    heading: {
+        marginBottom: theme.spacing(2)
+    }
 }));
 
 export default function Hyperparameters(props) {
@@ -89,7 +92,7 @@ export default function Hyperparameters(props) {
     }
 
     return (<>
-        <FormLabel className={classes.root}>Hyperparameters</FormLabel>
+        <Typography className={classes.heading} variant="h6" className={classes.root}>Hyperparameters</Typography>
         {getHyperparameters()}
         </>
     )

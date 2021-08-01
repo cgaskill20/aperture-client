@@ -58,11 +58,11 @@ END OF TERMS AND CONDITIONS
 */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import IndividualCheckbox from "./IndividualCheckbox";
 import {prettifyJSON} from "../NewDataExploration/Workspace";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -71,6 +71,9 @@ const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
     },
+    heading: {
+        marginBottom: theme.spacing(2)
+    }
 }));
 
 export default function ModelingFeatures(props) {
@@ -89,7 +92,7 @@ export default function ModelingFeatures(props) {
     return (
         <div className={classes.root}>
             <FormControl className={classes.formControl}>
-                <FormLabel>{props.features[0]}</FormLabel>
+                <Typography className={classes.heading} variant="h6">{prettifyJSON(props.features[0])}</Typography>
                 <FormGroup>
                     {getFeatures()}
                 </FormGroup>

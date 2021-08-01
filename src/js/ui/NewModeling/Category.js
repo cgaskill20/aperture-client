@@ -63,7 +63,7 @@ import {InputLabel, makeStyles, Select} from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
-        width: "98%"
+        width: "49%"
     },
 }));
 

@@ -60,10 +60,9 @@ import React, { useState, useEffect } from 'react';
 import { componentIsRendering } from "../TabSystem"
 import Category from "./Category";
 import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core";
+import {makeStyles, Paper} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {prettifyJSON} from "../NewDataExploration/Workspace";
-import FormControl from "@material-ui/core/FormControl";
 import Type from "./Type";
 import ModelingFeatures from "./ModelingFeatures";
 import Hyperparameters from "./Hyperparameters";
@@ -75,6 +74,10 @@ export default React.memo(function NewModeling() {
         },
         runButton: {
             margin: theme.spacing(2),
+        },
+        paper: {
+            margin: theme.spacing(1),
+            padding: theme.spacing(1)
         }
     }));
 
@@ -146,10 +149,14 @@ export default React.memo(function NewModeling() {
                 <Type types={selectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
             </Grid>
             <Grid item className={classes.componentWidth}>
-                <ModelingFeatures features={selectedTypeFeatures} />
+                <Paper className={classes.paper} elevation={3}>
+                    <ModelingFeatures features={selectedTypeFeatures} />
+                </Paper>
             </Grid>
             <Grid item className={classes.componentWidth}>
-                <Hyperparameters hyperparameters={selectedTypeHyperarameters} />
+                <Paper className={classes.paper} elevation={3}>
+                    <Hyperparameters hyperparameters={selectedTypeHyperarameters} />
+                </Paper>
             </Grid>
             <Grid item>
                 <Button className={classes.runButton} variant="outlined">Run This Model</Button>
