@@ -63,11 +63,18 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {prettifyJSON} from "../NewDataExploration/Workspace";
+import FormControl from "@material-ui/core/FormControl";
+import Type from "./Type";
+import ModelingFeatures from "./ModelingFeatures";
+import Hyperparameters from "./Hyperparameters";
 
 export default React.memo(function NewModeling() {
     const useStyles = makeStyles((theme) => ({
-        fullWidth: {
+        componentWidth: {
             width: "98%"
+        },
+        runButton: {
+            margin: theme.spacing(2),
         }
     }));
 
@@ -76,11 +83,6 @@ export default React.memo(function NewModeling() {
     const [selectedCategoryTypes, setSelectedCategoryTypes] = useState([]);
     const [selectedTypeFeatures, setSelectedTypeFeatures] = useState([]);
     const [selectedTypeHyperarameters, setSelectedTypeHyperparameters] = useState([]);
-
-    // console.log({categories})
-    // console.log({selectedCategoryTypes})
-    // console.log({selectedTypeFeatures})
-    // console.log({selectedTypeHyperarameters})
 
     const catalogMap = (catalog) => {
         const ret = {};
@@ -134,16 +136,23 @@ export default React.memo(function NewModeling() {
         <Grid
             container
             direction="column"
-            justify="center"
+            justify="flex-start"
             alignItems="center"
         >
-            <Grid item className={classes.fullWidth}>
-                <Category categories={categories}
-                          types={selectedCategoryTypes} setTypes={setSelectedCategoryTypes}
-                          features={selectedTypeFeatures} setFeatures={setSelectedTypeFeatures}
-                          hyperparameters={selectedTypeHyperarameters} setHyperparameters={setSelectedTypeHyperparameters}
-                />
-                <Button variant="outlined">Run This Model</Button>
+            <Grid item className={classes.componentWidth}>
+                <Category categories={categories} setTypes={setSelectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
+            </Grid>
+            <Grid item className={classes.componentWidth}>
+                <Type types={selectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
+            </Grid>
+            <Grid item className={classes.componentWidth}>
+                <ModelingFeatures features={selectedTypeFeatures} />
+            </Grid>
+            <Grid item className={classes.componentWidth}>
+                <Hyperparameters hyperparameters={selectedTypeHyperarameters} />
+            </Grid>
+            <Grid item>
+                <Button className={classes.runButton} variant="outlined">Run This Model</Button>
             </Grid>
             <br/>
         </Grid>
