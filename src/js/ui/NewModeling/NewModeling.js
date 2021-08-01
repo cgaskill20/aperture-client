@@ -61,9 +61,8 @@ import { componentIsRendering } from "../TabSystem"
 import Category from "./Category";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core";
-import ModelingFeatures from "./ModelingFeatures";
-import Hyperparameters from "./Hyperparameters";
 import Button from "@material-ui/core/Button";
+import {prettifyJSON} from "../NewDataExploration/Workspace";
 
 export default React.memo(function NewModeling() {
     const useStyles = makeStyles((theme) => ({
@@ -79,9 +78,9 @@ export default React.memo(function NewModeling() {
     const [selectedTypeHyperarameters, setSelectedTypeHyperparameters] = useState([]);
 
     // console.log({categories})
-    console.log({selectedCategoryTypes})
-    console.log({selectedTypeFeatures})
-    console.log({selectedTypeHyperarameters})
+    // console.log({selectedCategoryTypes})
+    // console.log({selectedTypeFeatures})
+    // console.log({selectedTypeHyperarameters})
 
     const catalogMap = (catalog) => {
         const ret = {};
@@ -109,7 +108,7 @@ export default React.memo(function NewModeling() {
         for(const category in mappedCatalog) {
             for(const extractCategoryLabel in mappedCatalog[category]) {
                 const categoryLabelName = mappedCatalog[category][extractCategoryLabel].category;
-                mappedCatalog[category].label = categoryLabelName;
+                mappedCatalog[category].label = prettifyJSON(categoryLabelName);
                 break;
             }
             initialCategories.push(mappedCatalog[category]);
@@ -123,7 +122,7 @@ export default React.memo(function NewModeling() {
         setSelectedCategoryTypes(initialSelectedCategoryTypes);
 
         let initialTypeFeatures = [];
-        initialTypeFeatures.push(initialSelectedCategoryTypes[0].collections[0].name);
+        initialTypeFeatures.push(prettifyJSON(initialSelectedCategoryTypes[0].collections[0].name));
         initialTypeFeatures.push(initialSelectedCategoryTypes[0].collections[0].features);
         setSelectedTypeFeatures(initialTypeFeatures);
 

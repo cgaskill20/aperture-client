@@ -60,6 +60,8 @@ import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
+import {prettifyJSON} from "../NewDataExploration/Workspace";
+import Util from "../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -89,7 +91,7 @@ export default function Hyperparameters(props) {
     return (
         <div className={classes.root}>
             <Typography className={classes.title} gutterBottom>
-                {props.hyperparameter.name} &nbsp;
+                {Util.camelCaseToSpaced(prettifyJSON(props.hyperparameter.name))} &nbsp;
                 <span className={classes.nowrap}>{buildSliderLabel()}</span>
             </Typography>
             <Slider

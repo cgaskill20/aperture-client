@@ -62,6 +62,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import IndividualCheckbox from "./IndividualCheckbox";
+import {prettifyJSON} from "../NewDataExploration/Workspace";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -79,7 +80,7 @@ export default function ModelingFeatures(props) {
         if(Object.keys(props.features).length !== 0) {
             let allFeatures = [];
             props.features[1].forEach((feature, index) => {
-                allFeatures.push(<IndividualCheckbox key={index} feature={feature}/>)
+                allFeatures.push(<IndividualCheckbox key={index} feature={prettifyJSON(feature)}/>)
             })
             return allFeatures;
         }

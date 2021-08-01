@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function prettifyJSON(name) {
+export function prettifyJSON(name) {
     return Util.capitalizeString(Util.underScoreToSpace(name));
 }
 

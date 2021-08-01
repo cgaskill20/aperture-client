@@ -59,6 +59,7 @@ END OF TERMS AND CONDITIONS
 import React, {useState} from 'react';
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel, makeStyles, Select} from "@material-ui/core";
+import {prettifyJSON} from "../NewDataExploration/Workspace";
 
 export default function HyperparameterSelect(props) {
     const useStyles = makeStyles((theme) => ({
@@ -79,7 +80,7 @@ export default function HyperparameterSelect(props) {
     function getOptions() {
         let allOptions = [];
         props.hyperparameter.allowedValues.forEach((option, index) => {
-            allOptions.push(<option key={index} value={option}>{option}</option>)
+            allOptions.push(<option key={index} value={option}>{prettifyJSON(option)}</option>)
         })
         return allOptions;
     }
