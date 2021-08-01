@@ -60,6 +60,7 @@ import React, {useState} from 'react';
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel, makeStyles, Select} from "@material-ui/core";
 import {prettifyJSON} from "../NewDataExploration/Workspace";
+import Util from "../../library/apertureUtil";
 
 export default function HyperparameterSelect(props) {
     const useStyles = makeStyles((theme) => ({
@@ -88,11 +89,11 @@ export default function HyperparameterSelect(props) {
     return (
         <div>
             <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel>{props.hyperparameter.name}</InputLabel>
+                <InputLabel>{Util.camelCaseToSpaced(prettifyJSON(props.hyperparameter.name))}</InputLabel>
                 <Select
                     native
                     onChange={handleChange}
-                    label={props.hyperparameter.name}
+                    label={Util.camelCaseToSpaced(prettifyJSON(props.hyperparameter.name))}
                 >
                     {getOptions()}
                 </Select>
