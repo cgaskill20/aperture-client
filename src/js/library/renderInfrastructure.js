@@ -220,8 +220,8 @@ export default class RenderInfrastructure {
 
         const thisRef = {
             name: oldName,
-            indexData: JSON.parse(JSON.stringify(indexData)),
-            properties: JSON.parse(JSON.stringify(geojson.properties))
+            indexData: { ...indexData },
+            properties: { ...geojson.properties }
         };
 
         thisRef.properties.colorInfo = colorInfo;

@@ -242,11 +242,11 @@ const Query = {
             query.callback({ event: "end" })
         }
 
-        const dumpCallback = (d, ignoreEnd = true, waitingRoomSnapshot) => {
+        const dumpCallback = (d, ignoreEnd = true, waitingRoomSnapshotMap) => {
             const { event } = d;
             if (event === "data") {
                 const complimentaryData = { ...d.payload.data };
-                const realData = waitingRoomSnapshot.find(entry => entry[field] === complimentaryData[field]);
+                const realData = waitingRoomSnapshotMap[complimentaryData[field]];
 
                 Util.normalizeFeatureID(realData);
                 realData.id = `${realData.id}_${complimentaryData.id}`
@@ -259,29 +259,25 @@ const Query = {
 
             }
             else if (event === "end" && !ignoreEnd) {
-                waitingRoomSnapshot = null;
+                waitingRoomSnapshotMap = null;
                 finished();
             }
             else if (event === "end") {
-                waitingRoomSnapshot = null;
+                waitingRoomSnapshotMap = null;
             }
         }
 
         let dumpNum = 0;
         const dumpWaitingRoom = (final = false) => {
             const queryDump = JSON.parse(JSON.stringify(query))
-            let waitingRoomSnapshotNames = new Set();
-            const waitingRoomSnapshot = [...waitingRoom].filter(waitingObject => {
-                if (!waitingRoomSnapshotNames.has(waitingObject[field])) {
-                    waitingRoomSnapshotNames.add(waitingObject[field])
-                    return true;
-                }
-                return false;
-            })
-            const JOINS = waitingRoomSnapshot.map(entry => Util.resolvePath(field, entry));
+            const waitingRoomSnapshotMap = waitingRoom.reduce((acc, curr) => {
+                acc[curr[field]] = curr;
+                return acc;
+            }, {});
+            const JOINS = Object.keys(waitingRoomSnapshotMap);
             queryDump.pipeline = [{ "$match": { [field]: { "$in": JOINS } } }, ...queryDump.pipeline]
             queryDump.id = `${queryDump.id}_dump${dumpNum++}`
-            queryDump.callback = (d) => { dumpCallback(d, !final, waitingRoomSnapshot) };
+            queryDump.callback = (d) => { dumpCallback(d, !final, waitingRoomSnapshotMap) };
             this._queryMongo(queryDump);
             waitingRoom = [];
         }
