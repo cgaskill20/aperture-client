@@ -128,7 +128,7 @@ export default class Color {
             this.gradient = this._createGradient(predefinedColor.gradient)
         }
         else if (predefinedColor.style === "gradient" || this.minMax) {
-            this.gradient = this._createGradient(defaultGradient)
+            this.gradient = this._createGradient([...defaultGradient])
         }
         else if (predefinedColor.style === "sequential" && predefinedColor.map) {
             this.colorMapping = predefinedColor.map;
@@ -150,7 +150,7 @@ export default class Color {
 
     _setDefaults(fieldType) {
         if(fieldType === "numeric"){
-            this.gradient = this._createGradient(defaultGradient)
+            this.gradient = this._createGradient([...defaultGradient])
         }
         else{
             this._createDefaultColorMapping();
@@ -159,7 +159,7 @@ export default class Color {
 
     _createDefaultColorMapping() {
         const numOptions = this.options.length;
-        const grad = this._createGradient(defaultGradient, numOptions)
+        const grad = this._createGradient([...defaultGradient], numOptions)
         this.colorMapping = this.options.reduce((acc, curr, index) => {
             if(curr === '') {
                 acc[curr] = "#adadad"
