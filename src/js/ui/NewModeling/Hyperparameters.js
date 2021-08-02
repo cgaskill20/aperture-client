@@ -66,6 +66,9 @@ import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles((theme) => ({
     heading: {
         marginBottom: theme.spacing(2)
+    },
+    checkbox: {
+        margin: theme.spacing(1)
     }
 }));
 
@@ -79,7 +82,7 @@ export default function Hyperparameters(props) {
                 allHyperparameters.push(<HyperparameterSlider key={index} hyperparameter={hyperparameter} />)
             }
             else if(hyperparameter.type === "boolean") {
-                allHyperparameters.push(<IndividualCheckbox key={index} feature={hyperparameter.name} />)
+                allHyperparameters.push(<div className={classes.checkbox}><IndividualCheckbox key={index} feature={hyperparameter.name} /></div>)
             }
             else if(hyperparameter.type === "string") {
                 allHyperparameters.push(<HyperparameterSelect key={index} hyperparameter={hyperparameter} />)
