@@ -103,6 +103,7 @@ export default function Popup() {
         setColorSummary(obj?.properties?.colorInfo?.colorSummary())
         setColorField(obj?.properties?.colorInfo?.currentColorField)
         obj?.properties?.colorInfo?.subscribeToColorFieldChange((newField) => {
+            console.log({ newField })
             setColorField(newField)
             setColorSummary(obj?.properties?.colorInfo.colorSummary())
         })

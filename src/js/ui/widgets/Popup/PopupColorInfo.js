@@ -108,7 +108,8 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                 .attr("x2", xValue)
                 .attr("y2", height - marginBottom);
 
-            let scale = obj.meta[colorFieldName].isDate ? d3.scaleUtc() : d3.scaleLinear()
+            //console.log({colorFieldName, obj: obj})
+            let scale = obj.properties.meta[colorFieldName].isDate ? d3.scaleUtc() : d3.scaleLinear()
 
             //add axis
             const linearScale = scale

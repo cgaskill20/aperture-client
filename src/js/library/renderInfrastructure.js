@@ -124,7 +124,10 @@ export default class RenderInfrastructure {
 
         Util.fixGeoJSONID(geoJsonData);
         if (specifiedId === -1) {
-            this.gisjoinUpdate(geoJsonData, indexData);
+            const sharedLayers = this.gisjoinUpdate(geoJsonData, indexData);
+            if(sharedLayers?.length) {
+                return sharedLayers;
+            }
         }
         //console.log("rendering")
         //console.log({geoJsonData, indexData, specifiedId})
@@ -158,7 +161,6 @@ export default class RenderInfrastructure {
                     const { joinField } = indexData[Object.keys(indexData)[0]]
                     let popupObj = {
                         name: iconName,
-                        meta: feature.properties.meta,
                         properties: feature.properties,
                         join: { [joinField]: feature.properties[joinField] }
                     }
@@ -178,7 +180,6 @@ export default class RenderInfrastructure {
                 const { joinField } = indexData[Object.keys(indexData)[0]]
                 let popupObj = {
                     name: iconName,
-                    meta: feature.properties.meta,
                     properties: feature.properties,
                     join: { [joinField]: feature.properties[joinField] }
                 }
@@ -244,6 +245,7 @@ export default class RenderInfrastructure {
                 dataToEdit.color = this.refsToColor(layer.refs);
                 dataToEdit.opacity = this.refsToOpacity(layer.refs);
                 dataToEdit.popup = this.refsToPopup(layer.refs);
+                console.log({refs: layer.refs})
                 geojson.properties = this.refsToProperties(layer.refs);
                 const newName = this.refsToName(layer.refs);
                 indexData[newName] = { ...indexData[oldName] };
@@ -251,7 +253,16 @@ export default class RenderInfrastructure {
 
                 if (layer.layerID != undefined) {
                     //console.log(`Removing ${layer.layerID}`)
-                    this.removeSpecifiedLayersFromMap([layer.layerID], false)
+                    //this.removeSpecifiedLayersFromMap([layer.layerID], false)
+                    const layersToUpdate = this.getLayersForSpecifiedIds(new Set([layer.layerID]));
+                    let sharedLayers = layersToUpdate.map(layerToUpdate => layerToUpdate.specifiedId)
+                    for(const layerToUpdate of layersToUpdate) {
+                        Object.assign(layerToUpdate.feature.properties, geojson.properties)
+                        console.log({meta: layerToUpdate.feature.properties.meta, colorInfo:  layerToUpdate.feature.properties.colorInfo})
+                        layerToUpdate.setStyle({ color: "#000000" })
+                    }
+                    //console.log({layers})
+                    return sharedLayers;
                 }
             }
         }
@@ -298,7 +309,7 @@ export default class RenderInfrastructure {
                     validColorFieldNames: [...acc?.colorInfo?.validColorFieldNames, ...curr.properties.colorInfo.validColorFieldNames],
                     subscribeToColorFieldNameChange: (func) => {
                         curr.properties.colorInfo.subscribeToColorFieldNameChange(func);
-                        acc?.colorInfo?.subscribeToColorFieldNameChange(func)
+                        acc.colorInfo.subscribeToColorFieldNameChange(func)
                     },
                     updateColorFieldName: (name) => {
                         curr.properties.colorInfo.updateColorFieldName(name);
@@ -309,8 +320,8 @@ export default class RenderInfrastructure {
         }, {
             colorInfo: {
                 validColorFieldNames: [],
-                subscribeToColorFieldNameChange: () => { },
-                updateColorFieldName: (name) => { }
+                subscribeToColorFieldNameChange: () => { console.log("here") },
+                updateColorFieldName: (name) => {}
             }
         });
     }
@@ -430,7 +441,7 @@ export default class RenderInfrastructure {
         layersFound = [...layersFound, ...this.getMapLayersForSpecifiedIds(specifiedIdsSet).map(layer => layer.getLayers()[0])]
         //console.log({layersFound})
         return layersFound;
-    }
+    } 
 
     getMarkerLayersForSpecifiedIds(specifiedIdsSet) {
         let layersFound = [];

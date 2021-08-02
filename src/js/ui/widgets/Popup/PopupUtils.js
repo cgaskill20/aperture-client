@@ -62,7 +62,7 @@ import defaultImportantFields from "../../../../json/defaultImportantFields.json
 
 export const keyToDisplay = (obj, key) => {
     if (obj?.meta?.[key]?.label) {
-        return obj.meta[key].label;
+        return obj.properties.meta[key].label;
     }
     if (defaultImportantFields[key]) {
         return defaultImportantFields[key].label ?? Util.cleanUpString(key);
