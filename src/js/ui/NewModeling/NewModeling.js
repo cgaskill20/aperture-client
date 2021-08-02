@@ -69,8 +69,15 @@ import Hyperparameters from "./Hyperparameters";
 
 export default React.memo(function NewModeling() {
     const useStyles = makeStyles((theme) => ({
+        topComponentWidth: {
+            width: "47%",
+            margin: theme.spacing(1)
+        },
         componentWidth: {
             width: "98%"
+        },
+        fullWidth: {
+            width: "100%"
         },
         runButton: {
             margin: theme.spacing(2),
@@ -136,32 +143,43 @@ export default React.memo(function NewModeling() {
 
     if (componentIsRendering) console.log("|NewModeling|");
     return (
-        <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="center"
-        >
-            <Grid item className={classes.componentWidth}>
-                <Category categories={categories} setTypes={setSelectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
+        <div>
+            <Grid
+                className={classes.fullWidth}
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="center"
+            >
+                <Grid item className={classes.topComponentWidth}>
+                    <Category categories={categories} setTypes={setSelectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
+                </Grid>
+                <Grid item className={classes.topComponentWidth}>
+                    <Type types={selectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
+                </Grid>
             </Grid>
-            <Grid item className={classes.componentWidth}>
-                <Type types={selectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
+
+            <Grid
+                container
+                direction="column"
+                justify="flex-start"
+                alignItems="center"
+            >
+                <Grid item className={classes.componentWidth}>
+                    <Paper className={classes.paper} elevation={3}>
+                        <ModelingFeatures features={selectedTypeFeatures} />
+                    </Paper>
+                </Grid>
+                <Grid item className={classes.componentWidth}>
+                    <Paper className={classes.paper} elevation={3}>
+                        <Hyperparameters hyperparameters={selectedTypeHyperarameters} />
+                    </Paper>
+                </Grid>
+                <Grid item>
+                    <Button className={classes.runButton} variant="outlined">Run This Model</Button>
+                </Grid>
+                <br/>
             </Grid>
-            <Grid item className={classes.componentWidth}>
-                <Paper className={classes.paper} elevation={3}>
-                    <ModelingFeatures features={selectedTypeFeatures} />
-                </Paper>
-            </Grid>
-            <Grid item className={classes.componentWidth}>
-                <Paper className={classes.paper} elevation={3}>
-                    <Hyperparameters hyperparameters={selectedTypeHyperarameters} />
-                </Paper>
-            </Grid>
-            <Grid item>
-                <Button className={classes.runButton} variant="outlined">Run This Model</Button>
-            </Grid>
-            <br/>
-        </Grid>
+        </div>
     )
 })
