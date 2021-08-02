@@ -66,6 +66,11 @@ import {prettifyJSON} from "../NewDataExploration/Workspace";
 import Type from "./Type";
 import ModelingFeatures from "./ModelingFeatures";
 import Hyperparameters from "./Hyperparameters";
+import Util from "../../library/apertureUtil";
+
+export function makeJSONPretty(name) {
+    return Util.camelCaseToSpaced(prettifyJSON(name));
+}
 
 export default React.memo(function NewModeling() {
     const useStyles = makeStyles((theme) => ({
@@ -120,7 +125,7 @@ export default React.memo(function NewModeling() {
         for(const category in mappedCatalog) {
             for(const extractCategoryLabel in mappedCatalog[category]) {
                 const categoryLabelName = mappedCatalog[category][extractCategoryLabel].category;
-                mappedCatalog[category].label = prettifyJSON(categoryLabelName);
+                mappedCatalog[category].label = makeJSONPretty(categoryLabelName);
                 break;
             }
             initialCategories.push(mappedCatalog[category]);
@@ -134,7 +139,7 @@ export default React.memo(function NewModeling() {
         setSelectedCategoryTypes(initialSelectedCategoryTypes);
 
         let initialTypeFeatures = [];
-        initialTypeFeatures.push(prettifyJSON(initialSelectedCategoryTypes[0].collections[0].name));
+        initialTypeFeatures.push(makeJSONPretty(initialSelectedCategoryTypes[0].collections[0].name));
         initialTypeFeatures.push(initialSelectedCategoryTypes[0].collections[0].features);
         setSelectedTypeFeatures(initialTypeFeatures);
 

@@ -59,8 +59,7 @@ END OF TERMS AND CONDITIONS
 import React, {useState} from 'react';
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel, makeStyles, Select} from "@material-ui/core";
-import {prettifyJSON} from "../NewDataExploration/Workspace";
-import Util from "../../library/apertureUtil";
+import {makeJSONPretty} from "./NewModeling";
 
 export default function HyperparameterSelect(props) {
     const useStyles = makeStyles((theme) => ({
@@ -81,7 +80,7 @@ export default function HyperparameterSelect(props) {
     function getOptions() {
         let allOptions = [];
         props.hyperparameter.allowedValues.forEach((option, index) => {
-            allOptions.push(<option key={index} value={option}>{prettifyJSON(option)}</option>)
+            allOptions.push(<option key={index} value={option}>{makeJSONPretty(option)}</option>)
         })
         return allOptions;
     }
@@ -89,11 +88,11 @@ export default function HyperparameterSelect(props) {
     return (
         <div>
             <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel>{Util.camelCaseToSpaced(prettifyJSON(props.hyperparameter.name))}</InputLabel>
+                <InputLabel>{makeJSONPretty(props.hyperparameter.name)}</InputLabel>
                 <Select
                     native
                     onChange={handleChange}
-                    label={Util.camelCaseToSpaced(prettifyJSON(props.hyperparameter.name))}
+                    label={makeJSONPretty(props.hyperparameter.name)}
                 >
                     {getOptions()}
                 </Select>

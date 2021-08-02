@@ -64,9 +64,6 @@ import IndividualCheckbox from "./IndividualCheckbox";
 import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        margin: theme.spacing(1),
-    },
     heading: {
         marginBottom: theme.spacing(2)
     }
@@ -92,8 +89,8 @@ export default function Hyperparameters(props) {
     }
 
     return (<>
-        <Typography className={classes.heading} variant="h6" className={classes.root}>Hyperparameters</Typography>
-        {getHyperparameters()}
+        <Typography className={classes.heading} variant="h6">Hyperparameters</Typography>
+            {getHyperparameters()}
         </>
     )
 }

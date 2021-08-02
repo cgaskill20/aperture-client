@@ -59,7 +59,7 @@ END OF TERMS AND CONDITIONS
 import React from 'react';
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel, makeStyles, Select} from "@material-ui/core";
-import {prettifyJSON} from "../NewDataExploration/Workspace";
+import {makeJSONPretty} from "./NewModeling";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -75,7 +75,7 @@ export default function Type(props) {
         let allOptions = [];
         props.types.forEach((option, index) => {
             if(option.type) {
-                allOptions.push(<option key={index} value={index}>{prettifyJSON(option.type)}</option>)
+                allOptions.push(<option key={index} value={index}>{makeJSONPretty(option.type)}</option>)
             }
         })
         return allOptions;

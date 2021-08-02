@@ -61,8 +61,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import IndividualCheckbox from "./IndividualCheckbox";
-import {prettifyJSON} from "../NewDataExploration/Workspace";
 import Typography from "@material-ui/core/Typography";
+import {makeJSONPretty} from "./NewModeling";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -83,7 +83,7 @@ export default function ModelingFeatures(props) {
         if(Object.keys(props.features).length !== 0) {
             let allFeatures = [];
             props.features[1].forEach((feature, index) => {
-                allFeatures.push(<IndividualCheckbox key={index} feature={prettifyJSON(feature)}/>)
+                allFeatures.push(<IndividualCheckbox key={index} feature={makeJSONPretty(feature)}/>)
             })
             return allFeatures;
         }
@@ -92,7 +92,7 @@ export default function ModelingFeatures(props) {
     return (
         <div className={classes.root}>
             <FormControl className={classes.formControl}>
-                <Typography className={classes.heading} variant="h6">{prettifyJSON(props.features[0])}</Typography>
+                <Typography className={classes.heading} variant="h6">{makeJSONPretty(props.features[0])}</Typography>
                 <FormGroup>
                     {getFeatures()}
                 </FormGroup>

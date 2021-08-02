@@ -59,20 +59,30 @@ END OF TERMS AND CONDITIONS
 import React, {useState} from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import {makeStyles} from "@material-ui/core/styles";
+import {makeJSONPretty} from "./NewModeling";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        margin: theme.spacing(1),
+    },
+}));
 
 export default function IndividualCheckbox(props) {
+    const classes = useStyles();
     const [checked, setChecked] = useState(true);
 
     return (
         <FormControlLabel
             control={
                 <Checkbox
+                    className={classes.root}
                     checked={checked}
                     onChange={() => setChecked(!checked)}
                     color="primary"
                 />
             }
-            label={props.feature}
+            label={makeJSONPretty(props.feature)}
         />
     );
 }
