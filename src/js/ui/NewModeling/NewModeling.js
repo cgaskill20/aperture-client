@@ -84,9 +84,6 @@ export default React.memo(function NewModeling() {
         fullWidth: {
             width: "100%"
         },
-        runButton: {
-            margin: theme.spacing(2),
-        },
         paper: {
             margin: theme.spacing(1),
             padding: theme.spacing(1)
@@ -156,12 +153,12 @@ export default React.memo(function NewModeling() {
                 justify="flex-start"
                 alignItems="center"
             >
-                <Grid item className={classes.topComponentWidth}>
-                    <Category categories={categories} setTypes={setSelectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
-                </Grid>
-                <Grid item className={classes.topComponentWidth}>
-                    <Type types={selectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
-                </Grid>
+                    <Grid item className={classes.topComponentWidth}>
+                        <Category categories={categories} setTypes={setSelectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
+                    </Grid>
+                    <Grid item className={classes.topComponentWidth}>
+                        <Type types={selectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
+                    </Grid>
             </Grid>
 
             <Grid
@@ -180,8 +177,10 @@ export default React.memo(function NewModeling() {
                         <Hyperparameters hyperparameters={selectedTypeHyperarameters} />
                     </Paper>
                 </Grid>
-                <Grid item>
-                    <Button className={classes.runButton} variant="outlined">Run This Model</Button>
+                <Grid item className={classes.componentWidth}>
+                    <Paper className={classes.paper} elevation={3}>
+                        <Button className={classes.fullWidth} size="large" variant="outlined">Run This Model</Button>
+                    </Paper>
                 </Grid>
                 <br/>
             </Grid>
