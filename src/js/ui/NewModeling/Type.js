@@ -75,7 +75,7 @@ export default function Type(props) {
         let allOptions = [];
         props.types.forEach((option, index) => {
             if(option.type) {
-                allOptions.push(<option key={`${props.currentCategoryAndType}-${index}`} value={index}>{makeJSONPretty(option.type)}</option>)
+                allOptions.push(<option key={`${option.type}`} value={index}>{makeJSONPretty(option.type)}</option>)
             }
         })
         return allOptions;

@@ -97,6 +97,8 @@ export default React.memo(function NewModeling() {
     const [selectedTypeHyperarameters, setSelectedTypeHyperparameters] = useState([]);
     const [currentCategoryAndType, setCurrentCategoryAndType] = useState([0, 0]);
 
+    console.log({selectedCategoryTypes})
+
     const catalogMap = (catalog) => {
         const ret = {};
         for (const entry in catalog) {
@@ -179,12 +181,12 @@ export default React.memo(function NewModeling() {
             >
                 <Grid item className={classes.componentWidth}>
                     <Paper className={classes.paper} elevation={3}>
-                        <Features currentCategoryAndType={currentCategoryAndType} features={selectedTypeFeatures} />
+                        <Features types={selectedCategoryTypes} currentCategoryAndType={currentCategoryAndType} features={selectedTypeFeatures} />
                     </Paper>
                 </Grid>
                 <Grid item className={classes.componentWidth}>
                     <Paper className={classes.paper} elevation={3}>
-                        <Hyperparameters currentCategoryAndType={currentCategoryAndType} hyperparameters={selectedTypeHyperarameters} />
+                        <Hyperparameters hyperparameters={selectedTypeHyperarameters} />
                     </Paper>
                 </Grid>
                 <Grid item className={classes.componentWidth}>
