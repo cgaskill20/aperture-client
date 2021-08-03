@@ -95,9 +95,7 @@ export default React.memo(function NewModeling() {
     const [selectedCategoryTypes, setSelectedCategoryTypes] = useState([]);
     const [selectedTypeFeatures, setSelectedTypeFeatures] = useState([]);
     const [selectedTypeHyperarameters, setSelectedTypeHyperparameters] = useState([]);
-    const [currentCategoryAndType, setCurrentCategoryAndType] = useState([0, 0])
-
-    console.log({currentCategoryAndType})
+    const [currentCategoryAndType, setCurrentCategoryAndType] = useState([0, 0]);
 
     const catalogMap = (catalog) => {
         const ret = {};

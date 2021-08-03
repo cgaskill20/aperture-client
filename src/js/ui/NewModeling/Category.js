@@ -76,8 +76,8 @@ export default function Category(props) {
     }
 
     const switchCategory = (event) => {
-        const newIndex = event.target.value;
-        const newCurrentCategoryAndType = [parseInt(newIndex), 0];
+        const newIndex = parseInt(event.target.value);
+        const newCurrentCategoryAndType = [newIndex, 0];
         props.setCurrentCategoryAndType(newCurrentCategoryAndType);
         let newTypes = [];
         const category = props.categories[newIndex];
