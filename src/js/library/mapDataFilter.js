@@ -79,7 +79,7 @@ export default class MapDataFilter {
      * formatted "model" of this data in the filter.  
      * Only data entries whose geometry fits in the bounds will be added.
      * For instance, if you want to model temperature, this is stored as a
-     * "temp" property in the data entires, so you'd pass "temp" as
+     * "temp" property in the data entries, so you'd pass "temp" as
      * the feature.
      * Multiple features can also be passed in an array and it will model
      * each one.  
@@ -190,10 +190,10 @@ export default class MapDataFilter {
       */
     dataLocation(entry) {
         let locationName = entry.properties.NAMELSAD10;
-        if (/\bCounty\b/gi.test(locationName)) {
+        if(locationName.includes("County")){
            return "county";
         }
-        if (/\Tract\b/gi.test(locationName)) {
+        if(locationName.includes("Tract")){
             return "tract";
         }
         return undefined;
