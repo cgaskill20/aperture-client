@@ -61,7 +61,7 @@ import fipsToState from "../../../../json/fipsToState.json"
 import defaultImportantFields from "../../../../json/defaultImportantFields.json"
 
 export const keyToDisplay = (obj, key) => {
-    if (obj?.meta?.[key]?.label) {
+    if (obj?.properties?.meta?.[key]?.label) {
         return obj.properties.meta[key].label;
     }
     if (defaultImportantFields[key]) {
