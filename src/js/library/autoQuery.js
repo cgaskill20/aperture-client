@@ -248,7 +248,7 @@ export default class AutoQuery {
         }
         const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
         if (colorField) {
-            console.log({fieldName})
+            //console.log({fieldName})
             this.colorField = { name: fieldName, label: colorField.label };
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);
@@ -444,7 +444,11 @@ export default class AutoQuery {
 
     }
 
-    subscribeToColorFieldChange(func) {
+    subscribeToColorFieldChange(func, unsubscribe=false) {
+        if(unsubscribe) {
+            this.colorFieldChangeSubscribers.splice(this.colorFieldChangeSubscribers.indexOf(func),1)
+            return;
+        }
         this.colorFieldChangeSubscribers.push(func)
     }
 

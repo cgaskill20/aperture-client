@@ -245,7 +245,7 @@ export default class RenderInfrastructure {
                 dataToEdit.color = this.refsToColor(layer.refs);
                 dataToEdit.opacity = this.refsToOpacity(layer.refs);
                 dataToEdit.popup = this.refsToPopup(layer.refs);
-                console.log({refs: layer.refs})
+                //console.log({refs: layer.refs})
                 geojson.properties = this.refsToProperties(layer.refs);
                 const newName = this.refsToName(layer.refs);
                 indexData[newName] = { ...indexData[oldName] };
@@ -261,6 +261,7 @@ export default class RenderInfrastructure {
                         console.log({meta: layerToUpdate.feature.properties.meta, colorInfo:  layerToUpdate.feature.properties.colorInfo})
                         layerToUpdate.setStyle({ color: "#000000" })
                     }
+                    //window.forceUpdatePopupObj();
                     //console.log({layers})
                     return sharedLayers;
                 }
@@ -307,21 +308,29 @@ export default class RenderInfrastructure {
                 colorInfo: {
                     ...acc.colorInfo, ...curr.properties.colorInfo,
                     validColorFieldNames: [...acc?.colorInfo?.validColorFieldNames, ...curr.properties.colorInfo.validColorFieldNames],
-                    subscribeToColorFieldNameChange: (func) => {
-                        curr.properties.colorInfo.subscribeToColorFieldNameChange(func);
-                        acc.colorInfo.subscribeToColorFieldNameChange(func)
+                    subscribeToColorFieldChange: (func, unsubscribe = false) => {
+                        curr.properties.colorInfo.subscribeToColorFieldChange(func, unsubscribe);
+                        acc.colorInfo.subscribeToColorFieldChange(func, unsubscribe)
                     },
                     updateColorFieldName: (name) => {
                         curr.properties.colorInfo.updateColorFieldName(name);
                         acc.colorInfo.updateColorFieldName(name)
+                    },
+                    colorSummary: () => {
+                        //console.log(curr.properties.colorInfo.currentColorField.name)
+                        if(curr.properties.colorInfo.validColorFieldNames.includes(curr.properties.colorInfo.currentColorField.name)) {
+                            return curr.properties.colorInfo.colorSummary();
+                        }
+                        return acc.colorInfo.colorSummary();
                     }
                 }
             }
         }, {
             colorInfo: {
                 validColorFieldNames: [],
-                subscribeToColorFieldNameChange: () => { console.log("here") },
-                updateColorFieldName: (name) => {}
+                subscribeToColorFieldChange: () => { console.log("here") },
+                updateColorFieldName: (name) => {},
+                colorSummary: () => {}
             }
         });
     }
