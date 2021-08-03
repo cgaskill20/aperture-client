@@ -120,7 +120,6 @@ export default class RenderInfrastructure {
         if (this.options.simplifyThreshold !== -1) {
             Util.simplifyGeoJSON(geoJsonData, this.options.simplifyThreshold);
         }
-        //console.log(geoJsonData)
 
         Util.fixGeoJSONID(geoJsonData);
         const iconName = Util.getNameFromGeoJsonFeature(geoJsonData, indexData)
@@ -131,8 +130,6 @@ export default class RenderInfrastructure {
                 return sharedLayers;
             }
         }
-        //console.log("rendering")
-        //console.log({geoJsonData, indexData, specifiedId})
 
         const datasource = indexData ? indexData : this.data;
         let layers = [];
@@ -152,7 +149,6 @@ export default class RenderInfrastructure {
                 Util.normalizeFeatureID(feature);
                 let name = Util.getNameFromGeoJsonFeature(feature, indexData);
                 if (this.currentLayers.has(feature.id) || this.map.getZoom() < this.options.minRenderZoom || datasource[name] == null) {
-                    console.log("rejected!")
                     return false;
                 }
                 this.currentLayers.add(feature.id);
@@ -284,7 +280,6 @@ export default class RenderInfrastructure {
     }
 
     refreshAfterRefsChanged(layerID, refs) {
-        console.log({ refs })
         const properties = this.refsToProperties(refs);
         const layersToUpdate = this.getLayersForSpecifiedIds(new Set([layerID]));
         let sharedLayers = layersToUpdate.map(layerToUpdate => layerToUpdate.specifiedId)
@@ -382,7 +377,6 @@ export default class RenderInfrastructure {
     getLayersForSpecifiedIds(specifiedIdsSet) {
         let layersFound = this.getMarkerLayersForSpecifiedIds(specifiedIdsSet)
         layersFound = [...layersFound, ...this.getMapLayersForSpecifiedIds(specifiedIdsSet).map(layer => layer.getLayers()[0])]
-        //console.log({layersFound})
         return layersFound;
     }
 

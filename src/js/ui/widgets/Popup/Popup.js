@@ -101,11 +101,9 @@ export default function Popup() {
         setColorSummary(obj?.properties?.colorInfo?.colorSummary(colorField?.name))
         setColorField(obj?.properties?.colorInfo?.currentColorField)
         const onFieldChange = (newField) => {
-            console.log({newField})
             setColorField(newField)
             setColorSummary(obj?.properties?.colorInfo.colorSummary(newField?.name))
         }
-        console.log("updating subscriber")
         obj?.properties?.colorInfo?.subscribeToColorFieldChange(onFieldChange)
         return () => {
             obj?.properties?.colorInfo?.subscribeToColorFieldChange(onFieldChange, true)
