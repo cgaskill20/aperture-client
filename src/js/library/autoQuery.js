@@ -438,7 +438,7 @@ export default class AutoQuery {
             indexData[this.collection]["iconAddr"] = `./images/map-icons/${this.getIcon()}.png`;
 
         indexData[this.collection]["border"] = this.color.border;
-        indexData[this.collection]["opacity"] = this.color.opacity;
+        //indexData[this.collection]["opacity"] = this.color.opacity;
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.add(id);
 
