@@ -105,6 +105,7 @@ export default class RenderInfrastructure {
         this.currentBounds = [];
         this.currentLayers = new Set();
         this.currentGISJOINLayers = {};
+        this.joinColor = {};
         this.idCounter = 0;
     }
 
@@ -241,6 +242,12 @@ export default class RenderInfrastructure {
     }
 
     refsToProperties(refs) {
+        const refsJoinName = refs.map(ref => ref.name).sort().join('X')
+        let currentColorField;
+        if(refs.length > 1) {
+            currentColorField = this.joinColor[refsJoinName] ?? refs[0].properties.colorInfo.currentColorField
+            this.joinColor[refsJoinName] = currentColorField;
+        }
         return refs.reduce((acc, curr) => {
             return {
                 ...acc,
@@ -254,9 +261,9 @@ export default class RenderInfrastructure {
                         curr.properties.colorInfo.subscribeToColorFieldChange(func, unsubscribe);
                         acc.colorInfo.subscribeToColorFieldChange(func, unsubscribe)
                     },
-                    updateColorFieldName: (name) => {
-                        curr.properties.colorInfo.updateColorFieldName(name);
-                        acc.colorInfo.updateColorFieldName(name)
+                    updateColorFieldName: (name, predefinedColor, dontRerender) => {
+                        curr.properties.colorInfo.updateColorFieldName(name, predefinedColor, dontRerender);
+                        acc.colorInfo.updateColorFieldName(name, predefinedColor, dontRerender)
                     },
                     colorSummary: (currentColorFieldName) => {
                         if (curr.properties.colorInfo.validColorFieldNames.includes(currentColorFieldName)) {
@@ -265,7 +272,10 @@ export default class RenderInfrastructure {
                         }
                         return acc.colorInfo.colorSummary(currentColorFieldName);
                     },
-                    currentColorField: acc.colorInfo.currentColorField
+                    currentColorField: acc.colorInfo.currentColorField,
+                    getColor: (properties, featureType) => {
+                        return curr.properties.colorInfo.getColor(properties, featureType) ?? acc.colorInfo.getColor(properties, featureType)
+                    }
                 }
             }
         }, {
@@ -274,22 +284,31 @@ export default class RenderInfrastructure {
                 subscribeToColorFieldChange: () => { },
                 updateColorFieldName: () => { },
                 colorSummary: () => { },
-                currentColorField: refs[0].properties.colorInfo.currentColorField
+                currentColorField: currentColorField ?? refs[0].properties.colorInfo.currentColorField,
+                getColor: () => {}
             }
         });
     }
 
-    refreshAfterRefsChanged(layerID, refs) {
+    refreshAfterRefsChanged(layerID, refs, deletion = false) {
         const properties = this.refsToProperties(refs);
         const layersToUpdate = this.getLayersForSpecifiedIds(new Set([layerID]));
         let sharedLayers = layersToUpdate.map(layerToUpdate => layerToUpdate.specifiedId)
         for (const layerToUpdate of layersToUpdate) {
-            const shouldUpdateColor = layerToUpdate.feature.properties.colorInfo.currentColorField.name !== properties.colorInfo.currentColorField.name;
-            Object.assign(layerToUpdate.feature.properties, properties)
-            window.forceUpdateObj(layerToUpdate.feature.properties)
-            if(shouldUpdateColor) {
-                layerToUpdate.feature.properties.colorInfo.updateColorFieldName(layerToUpdate.feature.properties.colorInfo.currentColorField.name);
+            if(deletion) {
+                for(const key in layerToUpdate.feature.properties) {
+                    delete layerToUpdate.feature.properties[key]
+                }
             }
+            const shouldUpdateColor = layerToUpdate?.feature?.properties?.colorInfo?.currentColorField?.name !== properties.colorInfo.currentColorField.name;
+            Object.assign(layerToUpdate.feature.properties, properties)
+            if(shouldUpdateColor) {
+                const { colorInfo } = layerToUpdate.feature.properties;
+                const color = colorInfo.getColor(layerToUpdate.feature.properties, Util.getFeatureType(layerToUpdate.feature))
+                color && layerToUpdate.feature.properties.colorInfo.updateColorFieldName(layerToUpdate.feature.properties.colorInfo.currentColorField.name, null, true)
+                color && layerToUpdate.setStyle({ color });
+            }
+            window.forceUpdateObj(layerToUpdate.feature.properties)
         }
         return sharedLayers;
     }
@@ -312,7 +331,7 @@ export default class RenderInfrastructure {
                     this.removeSpecifiedLayersFromMap([layer.layerID], collectionName, true);
                     continue;
                 }
-                this.refreshAfterRefsChanged(layer.layerID, layer.refs);
+                this.refreshAfterRefsChanged(layer.layerID, layer.refs, true);
             }
         }
         return true;

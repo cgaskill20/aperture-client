@@ -242,7 +242,7 @@ export default class AutoQuery {
         this.currentQueries.clear();
     }
 
-    changeColorCodeField(fieldName, predefinedColor = null) {
+    changeColorCodeField(fieldName, predefinedColor = null, dontRerender = false) {
         if (fieldName === this.color.variable) {
             predefinedColor = this.color;
         }
@@ -257,13 +257,16 @@ export default class AutoQuery {
                 this.protoColor = new Color("string", colorField.options, predefinedColor);
             }
             this.colorFieldChangeSubscribers.forEach(func => func(this.colorField))
-
+            if (dontRerender) {
+                return;
+            } 
             const layers = window.renderInfrastructure.getLayersForSpecifiedIds(new Set(this.mapLayers));
             for (const layer of layers) {
                 const { feature, options } = layer;
                 feature.properties.colorInfo.currentColorField = this.colorField;
                 const color = this.getColor(feature.properties, Util.getFeatureType(feature));
                 if (feature && !options.icon) {
+                    console.log("SETTING OVER HERE")
                     layer.setStyle({ color })
                 }
                 else if(options.icon) {
@@ -431,7 +434,8 @@ export default class AutoQuery {
             updateColorFieldName: this.changeColorCodeField.bind(this),
             validColorFieldNames: Object.keys(this.data.constraints).map(Util.removePropertiesPrefix),
             subscribeToColorFieldChange: this.subscribeToColorFieldChange.bind(this),
-            colorSummary: () => { return this.protoColor?.getColorSummary() }
+            colorSummary: () => { return this.protoColor?.getColorSummary() },
+            getColor: this.getColor.bind(this)
         }
 
         if (this.getIcon())
@@ -609,6 +613,9 @@ export default class AutoQuery {
     getColor(properties, featureType) {
         const propsVarName = Util.removePropertiesPrefix(this.colorField?.name);
         const value = properties[propsVarName];
+        if(!value) {
+            return;
+        }
         return this.protoColor?.getColor(value, featureType)
     }
 }
