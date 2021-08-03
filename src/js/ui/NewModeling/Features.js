@@ -82,8 +82,8 @@ export default function Features(props) {
     function getFeatures() {
         if(Object.keys(props.features).length !== 0) {
             let allFeatures = [];
-            props.features[1].forEach((feature, index) => {
-                allFeatures.push(<IndividualCheckbox key={`${index}-${feature}`} feature={makeJSONPretty(feature)}/>)
+            props.features[1].forEach((feature) => {
+                allFeatures.push(<IndividualCheckbox key={`${props.currentTypeName}-${feature}`} feature={makeJSONPretty(feature)}/>)
             })
             return allFeatures;
         }

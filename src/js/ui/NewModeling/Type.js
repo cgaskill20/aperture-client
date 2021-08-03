@@ -83,9 +83,7 @@ export default function Type(props) {
 
     const switchType = (event) => {
         const newIndex = parseInt(event.target.value);
-        const newCurrentCategoryAndType = [...props.currentCategoryAndType];
-        newCurrentCategoryAndType[1] = newIndex;
-        props.setCurrentCategoryAndType(newCurrentCategoryAndType);
+        props.setCurrentTypeName(props.selectedCategoryTypes[newIndex].type);
         let newFeatures = [];
         newFeatures.push(props.types[newIndex].collections[0].name);
         newFeatures.push(props.types[newIndex].collections[0].features);
