@@ -82,7 +82,7 @@ export default function Hyperparameters(props) {
                 allHyperparameters.push(<HyperparameterSlider key={index} hyperparameter={hyperparameter} />)
             }
             else if(hyperparameter.type === "boolean") {
-                allHyperparameters.push(<div className={classes.checkbox}><IndividualCheckbox key={index} feature={hyperparameter.name} /></div>)
+                allHyperparameters.push(<div key={index} className={classes.checkbox}><IndividualCheckbox feature={hyperparameter.name} /></div>)
             }
             else if(hyperparameter.type === "string") {
                 allHyperparameters.push(<HyperparameterSelect key={index} hyperparameter={hyperparameter} />)
