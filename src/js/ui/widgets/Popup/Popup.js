@@ -204,7 +204,7 @@ export default function Popup() {
                 <Grid container>
                     <Grid item xs={10}>
                         <Typography variant="h4" gutterBottom>
-                            {Util.cleanUpString(obj.name)}
+                            {Util.cleanUpString(obj?.properties?.apertureName)}
                         </Typography>
                     </Grid>
                     <Grid item xs={2}>

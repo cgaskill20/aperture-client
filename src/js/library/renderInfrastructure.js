@@ -125,7 +125,7 @@ export default class RenderInfrastructure {
         Util.fixGeoJSONID(geoJsonData);
         if (specifiedId === -1) {
             const sharedLayers = this.gisjoinUpdate(geoJsonData, indexData);
-            if(sharedLayers?.length) {
+            if (sharedLayers?.length) {
                 return sharedLayers;
             }
         }
@@ -157,10 +157,9 @@ export default class RenderInfrastructure {
                 if (Util.getFeatureType(feature) === Util.FEATURETYPE.point || indexData[name].iconAddr) {
                     let latlng = Util.getLatLngFromGeoJsonFeature(feature);
                     const speccedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
-                    let iconName = Util.getNameFromGeoJsonFeature(feature, indexData);
-                    const { joinField } = indexData[Object.keys(indexData)[0]]
+                    let iconName = Util.getNameFromGeoJsonFeature(feature, indexData)
+                    feature.properties.apertureName = iconName;
                     let popupObj = {
-                        name: iconName,
                         properties: feature.properties,
                         join: { [joinField]: feature.properties[joinField] }
                     }
@@ -176,10 +175,10 @@ export default class RenderInfrastructure {
                     return;
                 }
                 layer.specifiedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
-                let iconName = Util.getNameFromGeoJsonFeature(feature, indexData);
                 const { joinField } = indexData[Object.keys(indexData)[0]]
+                let iconName = Util.getNameFromGeoJsonFeature(feature, indexData)
+                feature.properties.apertureName = iconName;
                 let popupObj = {
-                    name: iconName,
                     properties: feature.properties,
                     join: { [joinField]: feature.properties[joinField] }
                 }
@@ -256,9 +255,9 @@ export default class RenderInfrastructure {
                     //this.removeSpecifiedLayersFromMap([layer.layerID], false)
                     const layersToUpdate = this.getLayersForSpecifiedIds(new Set([layer.layerID]));
                     let sharedLayers = layersToUpdate.map(layerToUpdate => layerToUpdate.specifiedId)
-                    for(const layerToUpdate of layersToUpdate) {
+                    for (const layerToUpdate of layersToUpdate) {
                         Object.assign(layerToUpdate.feature.properties, geojson.properties)
-                        console.log({meta: layerToUpdate.feature.properties.meta, colorInfo:  layerToUpdate.feature.properties.colorInfo})
+                        console.log({ meta: layerToUpdate.feature.properties.meta, colorInfo: layerToUpdate.feature.properties.colorInfo })
                         layerToUpdate.setStyle({ color: "#000000" })
                     }
                     return sharedLayers;
@@ -315,7 +314,7 @@ export default class RenderInfrastructure {
                         acc.colorInfo.updateColorFieldName(name)
                     },
                     colorSummary: (currentColorFieldName) => {
-                        if(curr.properties.colorInfo.validColorFieldNames.includes(currentColorFieldName)) {
+                        if (curr.properties.colorInfo.validColorFieldNames.includes(currentColorFieldName)) {
                             //console.log(currentColorFieldName)
                             return curr.properties.colorInfo.colorSummary();
                         }
@@ -327,8 +326,8 @@ export default class RenderInfrastructure {
             colorInfo: {
                 validColorFieldNames: [],
                 subscribeToColorFieldChange: () => { console.log("here") },
-                updateColorFieldName: (name) => {},
-                colorSummary: () => {}
+                updateColorFieldName: (name) => { },
+                colorSummary: () => { }
             }
         });
     }
@@ -361,7 +360,7 @@ export default class RenderInfrastructure {
             }
         });
 
-        for(const GISJOIN in this.currentGISJOINLayers) {
+        for (const GISJOIN in this.currentGISJOINLayers) {
             const layer = this.currentGISJOINLayers[GISJOIN]
             if (layer.refs.length === 0) {
                 delete this.currentGISJOINLayers[GISJOIN]
@@ -428,11 +427,11 @@ export default class RenderInfrastructure {
         }
         const specifiedIdsSet = new Set(specifiedIds)
         const markerLayers = this.getMarkerLayersForSpecifiedIds(specifiedIdsSet)
-        for(const markerLayer of markerLayers) {
+        for (const markerLayer of markerLayers) {
             this.markerLayer.removeLayer(markerLayer);
         }
         const mapLayers = this.getMapLayersForSpecifiedIds(specifiedIdsSet);
-        for(const mapLayer of mapLayers) {
+        for (const mapLayer of mapLayers) {
             this.layerGroup.removeLayer(mapLayer);
         }
         const removedLayerIds = new Set([
@@ -448,7 +447,7 @@ export default class RenderInfrastructure {
         layersFound = [...layersFound, ...this.getMapLayersForSpecifiedIds(specifiedIdsSet).map(layer => layer.getLayers()[0])]
         //console.log({layersFound})
         return layersFound;
-    } 
+    }
 
     getMarkerLayersForSpecifiedIds(specifiedIdsSet) {
         let layersFound = [];
@@ -458,7 +457,7 @@ export default class RenderInfrastructure {
             }
         }.bind(this));
         return layersFound;
-    } 
+    }
 
     getMapLayersForSpecifiedIds(specifiedIdsSet) {
         let layersFound = [];
