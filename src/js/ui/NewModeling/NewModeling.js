@@ -64,7 +64,7 @@ import {makeStyles, Paper} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {prettifyJSON} from "../NewDataExploration/Workspace";
 import Type from "./Type";
-import ModelingFeatures from "./ModelingFeatures";
+import Features from "./Features";
 import Hyperparameters from "./Hyperparameters";
 import Util from "../../library/apertureUtil";
 
@@ -95,6 +95,9 @@ export default React.memo(function NewModeling() {
     const [selectedCategoryTypes, setSelectedCategoryTypes] = useState([]);
     const [selectedTypeFeatures, setSelectedTypeFeatures] = useState([]);
     const [selectedTypeHyperarameters, setSelectedTypeHyperparameters] = useState([]);
+    const [currentCategoryAndType, setCurrentCategoryAndType] = useState([0, 0])
+
+    console.log({currentCategoryAndType})
 
     const catalogMap = (catalog) => {
         const ret = {};
@@ -154,10 +157,19 @@ export default React.memo(function NewModeling() {
                 alignItems="center"
             >
                     <Grid item className={classes.topComponentWidth}>
-                        <Category categories={categories} setTypes={setSelectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
+                        <Category
+                            currentCategoryAndType={currentCategoryAndType} setCurrentCategoryAndType={setCurrentCategoryAndType}
+                            categories={categories}
+                            setTypes={setSelectedCategoryTypes}
+                            setFeatures={setSelectedTypeFeatures}
+                            setHyperparameters={setSelectedTypeHyperparameters} />
                     </Grid>
                     <Grid item className={classes.topComponentWidth}>
-                        <Type types={selectedCategoryTypes} setFeatures={setSelectedTypeFeatures} setHyperparameters={setSelectedTypeHyperparameters} />
+                        <Type
+                            currentCategoryAndType={currentCategoryAndType} setCurrentCategoryAndType={setCurrentCategoryAndType}
+                            types={selectedCategoryTypes}
+                            setFeatures={setSelectedTypeFeatures}
+                            setHyperparameters={setSelectedTypeHyperparameters} />
                     </Grid>
             </Grid>
 
@@ -169,12 +181,12 @@ export default React.memo(function NewModeling() {
             >
                 <Grid item className={classes.componentWidth}>
                     <Paper className={classes.paper} elevation={3}>
-                        <ModelingFeatures features={selectedTypeFeatures} />
+                        <Features currentCategoryAndType={currentCategoryAndType} features={selectedTypeFeatures} />
                     </Paper>
                 </Grid>
                 <Grid item className={classes.componentWidth}>
                     <Paper className={classes.paper} elevation={3}>
-                        <Hyperparameters hyperparameters={selectedTypeHyperarameters} />
+                        <Hyperparameters currentCategoryAndType={currentCategoryAndType} hyperparameters={selectedTypeHyperarameters} />
                     </Paper>
                 </Grid>
                 <Grid item className={classes.componentWidth}>

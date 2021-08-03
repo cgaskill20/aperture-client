@@ -75,7 +75,7 @@ export default function Type(props) {
         let allOptions = [];
         props.types.forEach((option, index) => {
             if(option.type) {
-                allOptions.push(<option key={index} value={index}>{makeJSONPretty(option.type)}</option>)
+                allOptions.push(<option key={`${props.currentCategoryAndType}-${index}`} value={index}>{makeJSONPretty(option.type)}</option>)
             }
         })
         return allOptions;
@@ -83,6 +83,9 @@ export default function Type(props) {
 
     const switchType = (event) => {
         const newIndex = event.target.value;
+        const newCurrentCategoryAndType = [...props.currentCategoryAndType];
+        newCurrentCategoryAndType[1] = parseInt(newIndex);
+        props.setCurrentCategoryAndType(newCurrentCategoryAndType);
         let newFeatures = [];
         newFeatures.push(props.types[newIndex].collections[0].name);
         newFeatures.push(props.types[newIndex].collections[0].features);

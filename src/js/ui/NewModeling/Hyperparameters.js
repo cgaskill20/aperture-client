@@ -79,13 +79,13 @@ export default function Hyperparameters(props) {
         let allHyperparameters = [];
         props.hyperparameters.forEach((hyperparameter, index) => {
             if(hyperparameter.type === 'integer' || hyperparameter.type === "double") {
-                allHyperparameters.push(<HyperparameterSlider key={index} hyperparameter={hyperparameter} />)
+                allHyperparameters.push(<HyperparameterSlider key={`${props.currentCategoryAndType}-${index}`} hyperparameter={hyperparameter} />)
             }
             else if(hyperparameter.type === "boolean") {
-                allHyperparameters.push(<div className={classes.checkbox}><IndividualCheckbox key={index} feature={hyperparameter.name} /></div>)
+                allHyperparameters.push(<div className={classes.checkbox}><IndividualCheckbox key={`${props.currentCategoryAndType}-${index}`} feature={hyperparameter.name} /></div>)
             }
             else if(hyperparameter.type === "string") {
-                allHyperparameters.push(<HyperparameterSelect key={index} hyperparameter={hyperparameter} />)
+                allHyperparameters.push(<HyperparameterSelect key={`${props.currentCategoryAndType}-${index}`} hyperparameter={hyperparameter} />)
             }
         })
         return allHyperparameters;
