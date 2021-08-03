@@ -123,6 +123,8 @@ export default class RenderInfrastructure {
         //console.log(geoJsonData)
 
         Util.fixGeoJSONID(geoJsonData);
+        const iconName = Util.getNameFromGeoJsonFeature(geoJsonData, indexData)
+        geoJsonData.properties.apertureName = iconName;
         if (specifiedId === -1) {
             const sharedLayers = this.gisjoinUpdate(geoJsonData, indexData);
             if (sharedLayers?.length) {
@@ -157,8 +159,6 @@ export default class RenderInfrastructure {
                 if (Util.getFeatureType(feature) === Util.FEATURETYPE.point || indexData[name].iconAddr) {
                     let latlng = Util.getLatLngFromGeoJsonFeature(feature);
                     const speccedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
-                    let iconName = Util.getNameFromGeoJsonFeature(feature, indexData)
-                    feature.properties.apertureName = iconName;
                     let popupObj = {
                         properties: feature.properties,
                         join: { [joinField]: feature.properties[joinField] }
@@ -176,8 +176,6 @@ export default class RenderInfrastructure {
                 }
                 layer.specifiedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
                 const { joinField } = indexData[Object.keys(indexData)[0]]
-                let iconName = Util.getNameFromGeoJsonFeature(feature, indexData)
-                feature.properties.apertureName = iconName;
                 let popupObj = {
                     properties: feature.properties,
                     join: { [joinField]: feature.properties[joinField] }
@@ -257,7 +255,7 @@ export default class RenderInfrastructure {
                     let sharedLayers = layersToUpdate.map(layerToUpdate => layerToUpdate.specifiedId)
                     for (const layerToUpdate of layersToUpdate) {
                         Object.assign(layerToUpdate.feature.properties, geojson.properties)
-                        console.log({ meta: layerToUpdate.feature.properties.meta, colorInfo: layerToUpdate.feature.properties.colorInfo })
+                        //console.log({ meta: layerToUpdate.feature.properties.meta, colorInfo: layerToUpdate.feature.properties.colorInfo })
                         layerToUpdate.setStyle({ color: "#000000" })
                     }
                     return sharedLayers;
@@ -301,6 +299,7 @@ export default class RenderInfrastructure {
             return {
                 ...acc,
                 ...curr.properties,
+                apertureName: `${acc.apertureName ? `${acc.apertureName} ∩` : ''} ${curr.properties.apertureName}`,
                 meta: { ...acc.meta, ...curr.properties.meta },
                 colorInfo: {
                     ...acc.colorInfo, ...curr.properties.colorInfo,
