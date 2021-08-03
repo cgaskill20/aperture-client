@@ -156,6 +156,7 @@ export default class RenderInfrastructure {
                 if (Util.getFeatureType(feature) === Util.FEATURETYPE.point || indexData[name].iconAddr) {
                     let latlng = Util.getLatLngFromGeoJsonFeature(feature);
                     const speccedId = specifiedId !== -1 ? specifiedId : this.idCounter++;
+                    const { joinField } = indexData[Object.keys(indexData)[0]]
                     let popupObj = {
                         properties: feature.properties,
                         join: { [joinField]: feature.properties[joinField] }
