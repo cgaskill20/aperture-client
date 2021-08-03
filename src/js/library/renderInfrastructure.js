@@ -261,8 +261,6 @@ export default class RenderInfrastructure {
                         console.log({meta: layerToUpdate.feature.properties.meta, colorInfo:  layerToUpdate.feature.properties.colorInfo})
                         layerToUpdate.setStyle({ color: "#000000" })
                     }
-                    //window.forceUpdatePopupObj();
-                    //console.log({layers})
                     return sharedLayers;
                 }
             }
@@ -316,12 +314,12 @@ export default class RenderInfrastructure {
                         curr.properties.colorInfo.updateColorFieldName(name);
                         acc.colorInfo.updateColorFieldName(name)
                     },
-                    colorSummary: () => {
-                        //console.log(curr.properties.colorInfo.currentColorField.name)
-                        if(curr.properties.colorInfo.validColorFieldNames.includes(curr.properties.colorInfo.currentColorField.name)) {
+                    colorSummary: (currentColorFieldName) => {
+                        if(curr.properties.colorInfo.validColorFieldNames.includes(currentColorFieldName)) {
+                            //console.log(currentColorFieldName)
                             return curr.properties.colorInfo.colorSummary();
                         }
-                        return acc.colorInfo.colorSummary();
+                        return acc.colorInfo.colorSummary(currentColorFieldName);
                     }
                 }
             }

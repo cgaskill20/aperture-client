@@ -93,19 +93,17 @@ const useStyles = makeStyles({
 export default function Popup() {
     const [obj, setObj] = useState({});
     const [globalState, setGlobalState] = useGlobalState();
-    //console.log(obj?.properties?.colorInfo)
     const [colorSummary, setColorSummary] = useState(obj?.properties?.colorInfo?.colorSummary());
     const [colorField, setColorField] = useState(obj?.properties?.colorInfo?.currentColorFieldName);
-    console.log({colorSummary})
     const classes = useStyles();
 
     useEffect(() => {
-        setColorSummary(obj?.properties?.colorInfo?.colorSummary())
+        setColorSummary(obj?.properties?.colorInfo?.colorSummary(colorField?.name))
         setColorField(obj?.properties?.colorInfo?.currentColorField)
         const onFieldChange = (newField) => {
             console.log({newField})
             setColorField(newField)
-            setColorSummary(obj?.properties?.colorInfo.colorSummary())
+            setColorSummary(obj?.properties?.colorInfo.colorSummary(newField?.name))
         }
         console.log("updating subscriber")
         obj?.properties?.colorInfo?.subscribeToColorFieldChange(onFieldChange)
