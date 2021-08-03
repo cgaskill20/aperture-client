@@ -232,25 +232,14 @@ export default class RenderInfrastructure {
                 refs: [thisRef]
             };
         }
-        else {
-            const layer = this.currentGISJOINLayers[GISJOIN];
-            layer.refs = layer.refs.filter(ref => ref.name !== thisRef.name);
-            layer.refs.push(thisRef);
 
-            if (layer.refs.length > 1) {
-                if (layer.layerID != undefined) {
-                    return this.refreshAfterRefsChanged(layer.layerID, layer.refs);
-                    // //console.log(`Removing ${layer.layerID}`)
-                    // //this.removeSpecifiedLayersFromMap([layer.layerID], false)
-                    // const layersToUpdate = this.getLayersForSpecifiedIds(new Set([layer.layerID]));
-                    // let sharedLayers = layersToUpdate.map(layerToUpdate => layerToUpdate.specifiedId)
-                    // for (const layerToUpdate of layersToUpdate) {
-                    //     Object.assign(layerToUpdate.feature.properties, geojson.properties)
-                    //     //console.log({ meta: layerToUpdate.feature.properties.meta, colorInfo: layerToUpdate.feature.properties.colorInfo })
-                    //     layerToUpdate.setStyle({ color: "#000000" })
-                    // }
-                    // return sharedLayers;
-                }
+        const layer = this.currentGISJOINLayers[GISJOIN];
+        layer.refs = layer.refs.filter(ref => ref.name !== thisRef.name);
+        layer.refs.push(thisRef);
+
+        if (layer.refs.length > 1) {
+            if (layer.layerID != undefined) {
+                return this.refreshAfterRefsChanged(layer.layerID, layer.refs);
             }
         }
     }
@@ -279,7 +268,8 @@ export default class RenderInfrastructure {
                             return curr.properties.colorInfo.colorSummary();
                         }
                         return acc.colorInfo.colorSummary(currentColorFieldName);
-                    }
+                    },
+                    currentColorField: acc.colorInfo.currentColorField
                 }
             }
         }, {
@@ -287,19 +277,23 @@ export default class RenderInfrastructure {
                 validColorFieldNames: [],
                 subscribeToColorFieldChange: () => { },
                 updateColorFieldName: () => { },
-                colorSummary: () => { }
+                colorSummary: () => { },
+                currentColorField: refs[0].properties.colorInfo.currentColorField
             }
         });
     }
 
     refreshAfterRefsChanged(layerID, refs) {
-        console.log({refs})
+        console.log({ refs })
         const properties = this.refsToProperties(refs);
         const layersToUpdate = this.getLayersForSpecifiedIds(new Set([layerID]));
         let sharedLayers = layersToUpdate.map(layerToUpdate => layerToUpdate.specifiedId)
         for (const layerToUpdate of layersToUpdate) {
+            const shouldUpdateColor = layerToUpdate.feature.properties.colorInfo.currentColorField.name !== properties.colorInfo.currentColorField.name;
             Object.assign(layerToUpdate.feature.properties, properties)
-            layerToUpdate.setStyle({ color: "#000000" })
+            if(shouldUpdateColor) {
+                layerToUpdate.feature.properties.colorInfo.updateColorFieldName(layerToUpdate.feature.properties.colorInfo.currentColorField.name);
+            }
         }
         return sharedLayers;
     }
@@ -320,6 +314,7 @@ export default class RenderInfrastructure {
                 if (!layer.refs.length) {
                     delete this.currentGISJOINLayers[joinField]
                     this.removeSpecifiedLayersFromMap([layer.layerID], collectionName, true);
+                    continue;
                 }
                 this.refreshAfterRefsChanged(layer.layerID, layer.refs);
             }
@@ -365,7 +360,7 @@ export default class RenderInfrastructure {
      */
     removeSpecifiedLayersFromMap(specifiedIds, collectionName = null, dontRemoveRefs = false) {
         const specifiedIdsSet = new Set(specifiedIds)
-        if (this.removeRefs(specifiedIdsSet, collectionName) && !dontRemoveRefs) {
+        if (!dontRemoveRefs && this.removeRefs(specifiedIdsSet, collectionName)) {
             return true;
         }
         const markerLayers = this.getMarkerLayersForSpecifiedIds(specifiedIdsSet)
