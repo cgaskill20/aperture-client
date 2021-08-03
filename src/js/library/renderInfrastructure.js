@@ -139,12 +139,12 @@ export default class RenderInfrastructure {
                 let weight = Util.getFeatureType(feature) === Util.FEATURETYPE.lineString ? 3 : 1;
                 let fillOpacity = 0.35;
                 let name = Util.getNameFromGeoJsonFeature(feature, indexData);
-
+                const colorSetter = [Util.FEATURETYPE.multiPolygon, Util.FEATURETYPE.polygon].includes(Util.getFeatureType(feature)) ? "fillColor" : "color"
                 if (datasource[name] && datasource[name]["border"] !== null && datasource[name]["border"] !== undefined)
                     weight = datasource[name]["border"];
                 if (datasource[name] && datasource[name]["opacity"] !== null && datasource[name]["opacity"] !== undefined)
                     fillOpacity = datasource[name]["opacity"];
-                return { color: datasource[name]["color"], weight: weight, fillOpacity: fillOpacity };
+                return { [colorSetter]: datasource[name]["color"], weight: weight, fillOpacity: fillOpacity, color: "#828282" };
             }.bind(this),
             filter: function (feature) {
                 Util.normalizeFeatureID(feature);
@@ -301,8 +301,8 @@ export default class RenderInfrastructure {
                 const { colorInfo } = layerToUpdate.feature.properties;
                 const color = colorInfo.getColor(layerToUpdate.feature.properties, Util.getFeatureType(layerToUpdate.feature))
                 color && layerToUpdate.feature.properties.colorInfo.updateColorFieldName(layerToUpdate.feature.properties.colorInfo.currentColorField.name, null, true)
-                console.log("SETTING INLINE")
-                color && layerToUpdate.setStyle({ color });
+                //console.log("SETTING INLINE")
+                color && layerToUpdate.setStyle({ fillColor: color });
             }
             window.forceUpdateObj(layerToUpdate.feature.properties)
         }
@@ -320,19 +320,21 @@ export default class RenderInfrastructure {
 
     removeRefs(specifiedIdsSet, collectionName) {
         let hadRefs = false;
+        let layersToBeRemoved = new Set();
         for (const [joinField, layer] of Object.entries(this.currentGISJOINLayers)) {
             if (specifiedIdsSet.has(layer.layerID)) {
                 hadRefs = true;
                 layer.refs = layer.refs.filter(ref => ref.name !== collectionName);
                 if (!layer.refs.length) {
                     delete this.currentGISJOINLayers[joinField]
-                    this.removeSpecifiedLayersFromMap([layer.layerID], collectionName, true);
+                    layersToBeRemoved.add(layer.layerID)
+                    //this.removeSpecifiedLayersFromMap([layer.layerID], collectionName, true);
                     continue;
                 }
                 this.refreshAfterRefsChanged(layer.layerID, layer.refs, true);
             }
         }
-        return hadRefs;
+        return layersToBeRemoved;
     }
 
     /**
@@ -372,9 +374,14 @@ export default class RenderInfrastructure {
      * @returns {boolean} true if ids were removed
      */
     removeSpecifiedLayersFromMap(specifiedIds, collectionName = null, dontRemoveRefs = false) {
-        const specifiedIdsSet = new Set(specifiedIds)
-        if (!dontRemoveRefs && this.removeRefs(specifiedIdsSet, collectionName)) {
-            return true;
+        let specifiedIdsSet = new Set(specifiedIds)
+        console.log({specifiedIdsSet})
+
+        if (!dontRemoveRefs) {
+            const refRemovalResult = this.removeRefs(specifiedIdsSet, collectionName);
+            if(refRemovalResult.size) {
+                specifiedIdsSet = refRemovalResult;
+            }
         }
         const markerLayers = this.getMarkerLayersForSpecifiedIds(specifiedIdsSet)
         for (const markerLayer of markerLayers) {
