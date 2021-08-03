@@ -242,12 +242,6 @@ export default class RenderInfrastructure {
     }
 
     refsToProperties(refs) {
-        const refsJoinName = refs.map(ref => ref.name).sort().join('X')
-        let currentColorField;
-        if(refs.length > 1) {
-            currentColorField = this.joinColor[refsJoinName] ?? refs[0].properties.colorInfo.currentColorField
-            this.joinColor[refsJoinName] = currentColorField;
-        }
         return refs.reduce((acc, curr) => {
             return {
                 ...acc,
@@ -284,7 +278,7 @@ export default class RenderInfrastructure {
                 subscribeToColorFieldChange: () => { },
                 updateColorFieldName: () => { },
                 colorSummary: () => { },
-                currentColorField: currentColorField ?? refs[0].properties.colorInfo.currentColorField,
+                currentColorField: refs[0].properties.colorInfo.currentColorField,
                 getColor: () => {}
             }
         });
@@ -306,6 +300,7 @@ export default class RenderInfrastructure {
                 const { colorInfo } = layerToUpdate.feature.properties;
                 const color = colorInfo.getColor(layerToUpdate.feature.properties, Util.getFeatureType(layerToUpdate.feature))
                 color && layerToUpdate.feature.properties.colorInfo.updateColorFieldName(layerToUpdate.feature.properties.colorInfo.currentColorField.name, null, true)
+                console.log("SETTING INLINE")
                 color && layerToUpdate.setStyle({ color });
             }
             window.forceUpdateObj(layerToUpdate.feature.properties)
