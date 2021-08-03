@@ -182,7 +182,6 @@ export default React.memo(function NewModeling() {
                         <Button className={classes.fullWidth} size="large" variant="outlined">Run This Model</Button>
                     </Paper>
                 </Grid>
-                <br/>
             </Grid>
         </div>
     )
