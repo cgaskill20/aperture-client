@@ -19,6 +19,8 @@ export default function CorrelogramGraph(props) {
                 })
             }
         }
+        console.log(JSON.stringify(data))
+        console.log(JSON.stringify(retData))
         let counter = 0;
         for (const [key, value] of Object.entries(retData)){
             let x = []
@@ -34,14 +36,14 @@ export default function CorrelogramGraph(props) {
                     }
                 }
                 const correlation = calculateCorrelation(x, y);
-                console.log(typeof correlation)
-                console.log(correlation)
+                //console.log(correlation)
                 data[counter][key2.split("::")[2]] = correlation.toPrecision(2)
-                console.log(correlation.toPrecision(2))
+                //console.log(correlation.toPrecision(2))
             }
             counter++;
         }
     }
+    console.log(JSON.stringify(data))
 
 
     return (
