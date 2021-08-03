@@ -286,6 +286,7 @@ export default class RenderInfrastructure {
         for (const layerToUpdate of layersToUpdate) {
             const shouldUpdateColor = layerToUpdate.feature.properties.colorInfo.currentColorField.name !== properties.colorInfo.currentColorField.name;
             Object.assign(layerToUpdate.feature.properties, properties)
+            window.forceUpdateObj(layerToUpdate.feature.properties)
             if(shouldUpdateColor) {
                 layerToUpdate.feature.properties.colorInfo.updateColorFieldName(layerToUpdate.feature.properties.colorInfo.currentColorField.name);
             }

@@ -97,7 +97,7 @@ export default function Popup() {
     const [colorField, setColorField] = useState(obj?.properties?.colorInfo?.currentColorFieldName);
     const classes = useStyles();
 
-    useEffect(() => {
+    const onObjChange = () => {
         setColorSummary(obj?.properties?.colorInfo?.colorSummary(colorField?.name))
         setColorField(obj?.properties?.colorInfo?.currentColorField)
         const onFieldChange = (newField) => {
@@ -108,13 +108,21 @@ export default function Popup() {
         return () => {
             obj?.properties?.colorInfo?.subscribeToColorFieldChange(onFieldChange, true)
         }
-    }, [obj])
+    }
+
+    useEffect(onObjChange, [obj])
 
     useEffect(() => {
         window.setPopupObj = (o) => {
             setObj(o);
             setGlobalState({ popupOpen: true, sidebarOpen: false, preloading: false });
         };
+
+        window.forceUpdateObj = (properties) => {
+            if(properties === obj.properties) {
+                onObjChange();
+            }
+        }
         return () => { window.setPopupObj = () => { } };
     }, [globalState])
 
