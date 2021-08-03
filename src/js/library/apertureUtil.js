@@ -394,6 +394,7 @@ export default {
         sampleSpacing = (sampleSpacing === 0) ? 1 : sampleSpacing;
 
         for (let i = 0; i < points.length; i += 1) {
+
             if (this.contains(points[i], bounds)) {
                 return true;
             }
@@ -425,6 +426,7 @@ export default {
                 return this.arePointsApproximatelyInBounds(entry.geometry.coordinates[0], bounds);
             }
             case this.FEATURETYPE.multiPolygon: {
+
                 let polygons = entry.geometry.coordinates;
                 return polygons.find(polygon => this.arePointsApproximatelyInBounds(polygon[0], bounds));
             }
