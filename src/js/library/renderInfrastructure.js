@@ -238,60 +238,21 @@ export default class RenderInfrastructure {
             layer.refs.push(thisRef);
 
             if (layer.refs.length > 1) {
-                const dataToEdit = indexData[oldName];
-                dataToEdit.color = this.refsToColor(layer.refs);
-                dataToEdit.opacity = this.refsToOpacity(layer.refs);
-                dataToEdit.popup = this.refsToPopup(layer.refs);
-                //console.log({refs: layer.refs})
-                geojson.properties = this.refsToProperties(layer.refs);
-                const newName = this.refsToName(layer.refs);
-                indexData[newName] = { ...indexData[oldName] };
-                delete indexData[oldName];
-
                 if (layer.layerID != undefined) {
-                    //console.log(`Removing ${layer.layerID}`)
-                    //this.removeSpecifiedLayersFromMap([layer.layerID], false)
-                    const layersToUpdate = this.getLayersForSpecifiedIds(new Set([layer.layerID]));
-                    let sharedLayers = layersToUpdate.map(layerToUpdate => layerToUpdate.specifiedId)
-                    for (const layerToUpdate of layersToUpdate) {
-                        Object.assign(layerToUpdate.feature.properties, geojson.properties)
-                        //console.log({ meta: layerToUpdate.feature.properties.meta, colorInfo: layerToUpdate.feature.properties.colorInfo })
-                        layerToUpdate.setStyle({ color: "#000000" })
-                    }
-                    return sharedLayers;
+                    return this.refreshAfterRefsChanged(layer.layerID, layer.refs);
+                    // //console.log(`Removing ${layer.layerID}`)
+                    // //this.removeSpecifiedLayersFromMap([layer.layerID], false)
+                    // const layersToUpdate = this.getLayersForSpecifiedIds(new Set([layer.layerID]));
+                    // let sharedLayers = layersToUpdate.map(layerToUpdate => layerToUpdate.specifiedId)
+                    // for (const layerToUpdate of layersToUpdate) {
+                    //     Object.assign(layerToUpdate.feature.properties, geojson.properties)
+                    //     //console.log({ meta: layerToUpdate.feature.properties.meta, colorInfo: layerToUpdate.feature.properties.colorInfo })
+                    //     layerToUpdate.setStyle({ color: "#000000" })
+                    // }
+                    // return sharedLayers;
                 }
             }
         }
-    }
-
-    refsToName(refs) {
-        return refs.reduce((acc, curr) => {
-            return `${acc} ∩ ${curr.name}`
-        }, "").substring(3);
-    }
-
-    refsToColor(refs) {
-        if (refs.length > 1) {
-            return "#242B2E";
-        }
-        else {
-            return refs[0].indexData[refs[0].name].color;
-        }
-    }
-
-    refsToOpacity(refs) {
-        if (refs.length > 1) {
-            return 0.5;
-        }
-        else {
-            return refs[0].indexData[refs[0].name].opacity;
-        }
-    }
-
-    refsToPopup(refs) {
-        return refs.reduce((acc, curr) => {
-            return `${acc}${curr.indexData[curr.name].popup}`
-        }, "");
     }
 
     refsToProperties(refs) {
@@ -324,11 +285,23 @@ export default class RenderInfrastructure {
         }, {
             colorInfo: {
                 validColorFieldNames: [],
-                subscribeToColorFieldChange: () => { console.log("here") },
-                updateColorFieldName: (name) => { },
+                subscribeToColorFieldChange: () => { },
+                updateColorFieldName: () => { },
                 colorSummary: () => { }
             }
         });
+    }
+
+    refreshAfterRefsChanged(layerID, refs) {
+        console.log({refs})
+        const properties = this.refsToProperties(refs);
+        const layersToUpdate = this.getLayersForSpecifiedIds(new Set([layerID]));
+        let sharedLayers = layersToUpdate.map(layerToUpdate => layerToUpdate.specifiedId)
+        for (const layerToUpdate of layersToUpdate) {
+            Object.assign(layerToUpdate.feature.properties, properties)
+            layerToUpdate.setStyle({ color: "#000000" })
+        }
+        return sharedLayers;
     }
 
     gisjoinUpdateLayer(geojson, layerID) {
@@ -336,52 +309,22 @@ export default class RenderInfrastructure {
         if (!GISJOIN) {
             return;
         }
-        //console.log(`Just rendered ${layerID}`)
         const layer = this.currentGISJOINLayers[GISJOIN];
         layer.layerID = layerID;
-        if (!layer.refs[layer.refs.length - 1].layerID) {
-            layer.refs[layer.refs.length - 1].layerID = layerID;
-        }
     }
 
-    removeRefs(layerIDs) {
-        const layersRemovedFrom = [];
-        const layerIDsSet = new Set(layerIDs)
-        Object.values(this.currentGISJOINLayers).forEach(layer => {
-            const lenBefore = layer.refs.length;
-
-            layer.refs = layer.refs.filter(ref => {
-                return !layerIDsSet.has(ref.layerID);
-            });
-
-            if (layer.refs.length !== lenBefore) {
-                layersRemovedFrom.push(layer.GISJOIN);
-            }
-        });
-
-        for (const GISJOIN in this.currentGISJOINLayers) {
-            const layer = this.currentGISJOINLayers[GISJOIN]
-            if (layer.refs.length === 0) {
-                delete this.currentGISJOINLayers[GISJOIN]
-            }
-            else if (layersRemovedFrom.includes(GISJOIN)) {
-                const geojson = layer.geojson;
-                geojson.properties = this.refsToProperties(layer.refs);
-                //console.log(JSON.parse(JSON.stringify(layer.refs)))
-                const indexData = {
-                    [this.refsToName(layer.refs)]: {
-                        color: this.refsToColor(layer.refs),
-                        popup: this.refsToPopup(layer.refs),
-                        opacity: this.refsToOpacity(layer.refs)
-                    }
+    removeRefs(specifiedIdsSet, collectionName) {
+        for (const [joinField, layer] of Object.entries(this.currentGISJOINLayers)) {
+            if (specifiedIdsSet.has(layer.layerID)) {
+                layer.refs = layer.refs.filter(ref => ref.name !== collectionName);
+                if (!layer.refs.length) {
+                    delete this.currentGISJOINLayers[joinField]
+                    this.removeSpecifiedLayersFromMap([layer.layerID], collectionName, true);
                 }
-                if (layer.layerID != undefined) {
-                    //console.log(`Removing ${layer.layerID}`)
-                    this.removeSpecifiedLayersFromMap([layer.layerID], false)
-                }
-                this.renderGeoJson(geojson, indexData, layer.refs[layer.refs.length - 1].layerID);
+                this.refreshAfterRefsChanged(layer.layerID, layer.refs);
             }
         }
+        return true;
     }
 
     /**
@@ -417,14 +360,14 @@ export default class RenderInfrastructure {
      * Removes a feature id from the map
      * @memberof RenderInfrastructure
      * @method removeFeatureFromMap
-     * @param {Array<int>} specifiedIds id which should be removed from map, ex: 'dam' or 'weir'
+     * @param {Array<int>} specifiedIds
      * @returns {boolean} true if ids were removed
      */
-    removeSpecifiedLayersFromMap(specifiedIds, removeRefs = true) {
-        if (removeRefs) {
-            this.removeRefs(specifiedIds);
-        }
+    removeSpecifiedLayersFromMap(specifiedIds, collectionName = null, dontRemoveRefs = false) {
         const specifiedIdsSet = new Set(specifiedIds)
+        if (this.removeRefs(specifiedIdsSet, collectionName) && !dontRemoveRefs) {
+            return true;
+        }
         const markerLayers = this.getMarkerLayersForSpecifiedIds(specifiedIdsSet)
         for (const markerLayer of markerLayers) {
             this.markerLayer.removeLayer(markerLayer);

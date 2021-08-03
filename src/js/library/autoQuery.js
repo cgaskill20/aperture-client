@@ -400,7 +400,7 @@ export default class AutoQuery {
       * @method clearMapLayers
       */
     clearMapLayers() {
-        window.renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
+        window.renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers, this.collection);
         this.mapLayers = [];
         this.layerIDs.clear();
     }
