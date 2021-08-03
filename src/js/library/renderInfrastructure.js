@@ -319,8 +319,10 @@ export default class RenderInfrastructure {
     }
 
     removeRefs(specifiedIdsSet, collectionName) {
+        let hadRefs = false;
         for (const [joinField, layer] of Object.entries(this.currentGISJOINLayers)) {
             if (specifiedIdsSet.has(layer.layerID)) {
+                hadRefs = true;
                 layer.refs = layer.refs.filter(ref => ref.name !== collectionName);
                 if (!layer.refs.length) {
                     delete this.currentGISJOINLayers[joinField]
@@ -330,7 +332,7 @@ export default class RenderInfrastructure {
                 this.refreshAfterRefsChanged(layer.layerID, layer.refs, true);
             }
         }
-        return true;
+        return hadRefs;
     }
 
     /**
