@@ -64,6 +64,22 @@ END OF TERMS AND CONDITIONS
 //many functions are still useful though, and are used througout the project.
 import Util from "./apertureUtil"
 
+let intersect = false;
+window.setIntersect = (i) => {
+    intersect = i;
+};
+
+let intersectionNumber = {
+    tracts: 0,
+    counties: 0
+}
+window.addOrSubtractIntersectionNumber = (add = true, tract = true) => {
+    let num = add ? 1 : -1;
+    const key = tract ? "tracts" : "counties"
+    intersectionNumber[key] += num;
+    console.log({intersectionNumber})
+}
+
 const FLYTOOPTIONS = { //for clicking on icons
     easeLinearity: 0.4,
     duration: 0.25,
@@ -235,10 +251,13 @@ export default class RenderInfrastructure {
         layer.refs = layer.refs.filter(ref => ref.name !== thisRef.name);
         layer.refs.push(thisRef);
 
-        if (layer.refs.length > 1) {
+        if (!intersect && layer.refs.length > 1) {
             if (layer.layerID != undefined) {
                 return this.refreshAfterRefsChanged(layer.layerID, layer.refs);
             }
+        }
+        else if(intersect) {
+
         }
     }
 

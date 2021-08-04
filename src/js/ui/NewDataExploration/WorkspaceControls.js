@@ -56,9 +56,9 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Button, ButtonGroup, Grid, Paper} from "@material-ui/core";
+import {Button, ButtonGroup, Grid, Paper, Switch} from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import WorkspaceSearchbar from "./WorkspaceSearchbar";
@@ -77,6 +77,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function WorkspaceControls(props) {
     const classes = useStyles();
+    const [intersect, setIntersect] = useState(false);
+    
+    useEffect(() => {
+        window.setIntersect(intersect)
+    }, [intersect]);
 
     if(componentIsRendering) {console.log("|WorkspaceControls Rerending|")}
     return (
@@ -86,6 +91,13 @@ export default function WorkspaceControls(props) {
                     <Button variant="outlined" startIcon={<SaveIcon />}>Save Workspace</Button>
                     <Button variant="outlined" startIcon={<FolderOpenIcon />}>Load Workspace</Button>
                 </ButtonGroup>
+                <Switch
+                    checked={intersect}
+                    onChange={(e) => {
+                        const checked = e.target.checked;
+                        setIntersect(checked)
+                    }}
+                />
             </Grid>
             <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
                                 workspace={props.workspace} setWorkspace={props.setWorkspace} />
