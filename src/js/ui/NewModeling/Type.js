@@ -57,39 +57,51 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import IndividualFeature from "./IndividualFeature";
+import FormControl from "@material-ui/core/FormControl";
+import {InputLabel, makeStyles, Select} from "@material-ui/core";
+import {makeJSONPretty} from "./NewModeling";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-    },
     formControl: {
         margin: theme.spacing(1),
+        width: "100%"
     },
 }));
 
-export default function ModelingFeatures(props) {
+export default function Type(props) {
     const classes = useStyles();
 
-    function getFeatures() {
-        let allFeatures = [];
-        props.features.forEach((feature, index) => {
-            allFeatures.push(<IndividualFeature key={index} feature={feature} />)
+    function getOptions() {
+        let allOptions = [];
+        props.types.forEach((option, index) => {
+            if(option.type) {
+                allOptions.push(<option key={`${option.type}`} value={index}>{makeJSONPretty(option.type)}</option>)
+            }
         })
-        return allFeatures;
+        return allOptions;
+    }
+
+    const switchType = (event) => {
+        const newIndex = parseInt(event.target.value);
+        props.setCurrentTypeName(props.selectedCategoryTypes[newIndex].type);
+        let newFeatures = [];
+        newFeatures.push(props.types[newIndex].collections[0].name);
+        newFeatures.push(props.types[newIndex].collections[0].features);
+        props.setFeatures(newFeatures);
+        props.setHyperparameters(props.types[newIndex].parameters);
     }
 
     return (
-        <div className={classes.root}>
-            <FormControl className={classes.formControl}>
-                <FormLabel>{props.featuresTitle}</FormLabel>
-                <FormGroup>
-                    {getFeatures()}
-                </FormGroup>
+        <div>
+            <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel>Type</InputLabel>
+                <Select
+                    native
+                    label="Type"
+                    onChange={switchType}
+                >
+                    {getOptions()}
+                </Select>
             </FormControl>
         </div>
     );

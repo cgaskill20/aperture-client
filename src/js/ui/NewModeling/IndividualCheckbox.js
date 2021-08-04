@@ -57,49 +57,23 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React, {useState} from 'react';
-import FormControl from "@material-ui/core/FormControl";
-import {InputLabel, makeStyles, Select} from "@material-ui/core";
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import {makeJSONPretty} from "./NewModeling";
 
-export default function ModelingDropdown(props) {
-    const useStyles = makeStyles((theme) => ({
-        formControl: {
-            margin: theme.spacing(1),
-            minWidth: 120,
-            width: "98%"
-        },
-    }));
-
-    const classes = useStyles();
-    const [category, setCategory] = useState(props.options[0]);
-    const handleChange = (event) => {
-        const newValue = event.target.name;
-        setCategory(newValue);
-    };
-
-    function getOptions() {
-        let allOptions = [];
-        props.options.forEach((option, index) => {
-            allOptions.push(<option key={index}>{option}</option>)
-        })
-        return allOptions;
-    }
+export default function IndividualCheckbox(props) {
+    const [checked, setChecked] = useState(true);
 
     return (
-        <div>
-            <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel htmlFor="outlined-age-native-simple">{props.title}</InputLabel>
-                <Select
-                    native
-                    value={category}
-                    onChange={handleChange}
-                    label={props.title}
-                    inputProps={{
-                        name: 'age',
-                    }}
-                >
-                    {getOptions()}
-                </Select>
-            </FormControl>
-        </div>
+        <FormControlLabel
+            control={
+                <Checkbox
+                    checked={checked}
+                    onChange={() => setChecked(!checked)}
+                    color="primary"
+                />
+            }
+            label={makeJSONPretty(props.feature)}
+        />
     );
 }

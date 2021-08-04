@@ -60,6 +60,7 @@ import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
+import {makeJSONPretty} from "./NewModeling";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -76,25 +77,26 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Hyperparameters(props) {
     const classes = useStyles();
-    const min = 0;
-    const max = 10;
-    const step = 1;
-    const [minMax, setMinMax] = useState([min, max]);
+    const min = props.hyperparameter.min;
+    const max = props.hyperparameter.max;
+    const step = props.hyperparameter.type === "integer" ? 1 : 0.01;
+    const [sliderValue, setSliderValue] = useState(props.hyperparameter.default);
     const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
 
     const buildSliderLabel = () => {
-        return <b>{minMax[0]} ➔ {minMax[1]}</b>
+        return <b>{sliderValue}</b>
     }
 
     return (
         <div className={classes.root}>
             <Typography className={classes.title} gutterBottom>
-                {props.hyperparameter.title} &nbsp;
+                {makeJSONPretty(props.hyperparameter.name)} &nbsp;
                 <span className={classes.nowrap}>{buildSliderLabel()}</span>
             </Typography>
             <Slider
-                value={minMax}
-                onChange={(event, newValue) => setMinMax(newValue)}
+                defaultValue={props.hyperparameter.default}
+                value={sliderValue}
+                onChange={(event, newValue) => setSliderValue(newValue)}
                 onChangeCommitted={(event, newValue) => setMinMaxCommited(newValue)}
                 min={min}
                 max={max}

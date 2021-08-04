@@ -59,27 +59,28 @@ END OF TERMS AND CONDITIONS
 import React, {useState} from 'react';
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel, makeStyles, Select} from "@material-ui/core";
+import {makeJSONPretty} from "./NewModeling";
 
 export default function HyperparameterSelect(props) {
     const useStyles = makeStyles((theme) => ({
         formControl: {
             margin: theme.spacing(1),
-            minWidth: 120,
             width: "98%"
         },
     }));
 
+
     const classes = useStyles();
-    const [option, setOption] = useState(props.hyperparameter.options[0]);
+    const [option, setOption] = useState(props.hyperparameter.default);
     const handleChange = (event) => {
-        const newValue = event.target.name;
-        setOption(newValue);
+        setOption(event.target.value)
+        // @Daniel get the newly selected value here, do stuff
     };
 
     function getOptions() {
         let allOptions = [];
-        props.hyperparameter.options.forEach((option, index) => {
-            allOptions.push(<option key={index}>{option}</option>)
+        props.hyperparameter.allowedValues.forEach((option, index) => {
+            allOptions.push(<option key={index} value={option}>{makeJSONPretty(option)}</option>)
         })
         return allOptions;
     }
@@ -87,15 +88,11 @@ export default function HyperparameterSelect(props) {
     return (
         <div>
             <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel>{props.hyperparameter.title}</InputLabel>
+                <InputLabel>{makeJSONPretty(props.hyperparameter.name)}</InputLabel>
                 <Select
                     native
-                    value={option}
                     onChange={handleChange}
-                    label={props.hyperparameter.title}
-                    inputProps={{
-                        name: 'age',
-                    }}
+                    label={makeJSONPretty(props.hyperparameter.name)}
                 >
                     {getOptions()}
                 </Select>

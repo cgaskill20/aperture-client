@@ -57,15 +57,19 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React from 'react';
-import FormLabel from "@material-ui/core/FormLabel";
 import {makeStyles} from "@material-ui/core/styles";
 import HyperparameterSlider from "./HyperparameterSlider"
 import HyperparameterSelect from "./HyperparameterSelect"
+import IndividualCheckbox from "./IndividualCheckbox";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        margin: theme.spacing(1),
+    heading: {
+        marginBottom: theme.spacing(2)
     },
+    checkbox: {
+        margin: theme.spacing(1)
+    }
 }));
 
 export default function Hyperparameters(props) {
@@ -74,19 +78,22 @@ export default function Hyperparameters(props) {
     function getHyperparameters() {
         let allHyperparameters = [];
         props.hyperparameters.forEach((hyperparameter, index) => {
-            if(hyperparameter.type === 'slider') {
+            if(hyperparameter.type === 'integer' || hyperparameter.type === "double") {
                 allHyperparameters.push(<HyperparameterSlider key={index} hyperparameter={hyperparameter} />)
             }
-            else if(hyperparameter.type === 'select') {
-                allHyperparameters.push(<HyperparameterSelect key={index} hyperparameter={hyperparameter}/>)
+            else if(hyperparameter.type === "boolean") {
+                allHyperparameters.push(<div key={index} className={classes.checkbox}><IndividualCheckbox feature={hyperparameter.name} /></div>)
+            }
+            else if(hyperparameter.type === "string") {
+                allHyperparameters.push(<HyperparameterSelect key={index} hyperparameter={hyperparameter} />)
             }
         })
         return allHyperparameters;
     }
 
     return (<>
-        <FormLabel className={classes.root}>Hyperparameters</FormLabel>
-        {getHyperparameters()}
+        <Typography className={classes.heading} variant="h6">Hyperparameters</Typography>
+            {getHyperparameters()}
         </>
     )
 }

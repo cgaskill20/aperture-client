@@ -56,23 +56,47 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useState} from 'react';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import IndividualCheckbox from "./IndividualCheckbox";
+import Typography from "@material-ui/core/Typography";
+import {makeJSONPretty} from "./NewModeling";
 
-export default function IndividualFeature(props) {
-    const [checked, setChecked] = useState(true);
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+    },
+    formControl: {
+        margin: theme.spacing(1),
+    },
+    heading: {
+        marginBottom: theme.spacing(2)
+    }
+}));
+
+export default function Features(props) {
+    const classes = useStyles();
+
+    function getFeatures() {
+        if(Object.keys(props.features).length !== 0) {
+            let allFeatures = [];
+            props.features[1].forEach((feature) => {
+                allFeatures.push(<IndividualCheckbox key={`${props.currentTypeName}-${feature}`} feature={makeJSONPretty(feature)}/>)
+            })
+            return allFeatures;
+        }
+    }
 
     return (
-        <FormControlLabel
-            control={
-                <Checkbox
-                    checked={checked}
-                    onChange={() => setChecked(!checked)}
-                    color="primary"
-                />
-            }
-            label={props.feature}
-        />
+        <div className={classes.root}>
+            <FormControl className={classes.formControl}>
+                <Typography className={classes.heading} variant="h6">{makeJSONPretty(props.features[0])}</Typography>
+                <FormGroup>
+                    {getFeatures()}
+                </FormGroup>
+            </FormControl>
+        </div>
     );
 }
