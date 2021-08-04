@@ -237,7 +237,6 @@ export default class RenderInfrastructure {
 
         if (layer.refs.length > 1) {
             if (layer.layerID != undefined) {
-                console.log({id: layer.layerID, refs: layer.refs})
                 return this.refreshAfterRefsChanged(layer.layerID, layer.refs);
             }
         }
@@ -286,28 +285,41 @@ export default class RenderInfrastructure {
         });
     }
 
+    bulkRefreshAfterRefsChanged(refsIDMap, deletion = false) {
+        const layersToUpdate = this.getLayersForSpecifiedIds(new Set(Object.keys(refsIDMap).map(specifiedIdString => Number(specifiedIdString))));
+        for(const layerToUpdate of layersToUpdate) {
+            const refs = refsIDMap[layerToUpdate.specifiedId];
+            const properties = this.refsToProperties(refs);
+            this.refreshIndividualLayer(layerToUpdate, properties, deletion)
+        }
+    }
+
     refreshAfterRefsChanged(layerID, refs, deletion = false) {
         const properties = this.refsToProperties(refs);
         const layersToUpdate = this.getLayersForSpecifiedIds(new Set([layerID]));
         let sharedLayers = layersToUpdate.map(layerToUpdate => layerToUpdate.specifiedId)
         for (const layerToUpdate of layersToUpdate) {
-            if(deletion) {
-                for(const key in layerToUpdate.feature.properties) {
-                    delete layerToUpdate.feature.properties[key]
-                }
-            }
-            const shouldUpdateColor = layerToUpdate?.feature?.properties?.colorInfo?.currentColorField?.name !== properties.colorInfo.currentColorField.name;
-            Object.assign(layerToUpdate.feature.properties, properties)
-            if(shouldUpdateColor) {
-                const { colorInfo } = layerToUpdate.feature.properties;
-                const color = colorInfo.getColor(layerToUpdate.feature.properties, Util.getFeatureType(layerToUpdate.feature))
-                color && layerToUpdate.feature.properties.colorInfo.updateColorFieldName(layerToUpdate.feature.properties.colorInfo.currentColorField.name, null, true)
-                //console.log("SETTING INLINE")
-                color && layerToUpdate.setStyle({ fillColor: color });
-            }
-            window.forceUpdateObj(layerToUpdate.feature.properties)
+            this.refreshIndividualLayer(layerToUpdate, properties, deletion);
         }
         return sharedLayers;
+    }
+
+    refreshIndividualLayer(layerToUpdate, properties, deletion = false) {
+        if(deletion) {
+            for(const key in layerToUpdate.feature.properties) {
+                delete layerToUpdate.feature.properties[key]
+            }
+        }
+        const shouldUpdateColor = layerToUpdate?.feature?.properties?.colorInfo?.currentColorField?.name !== properties.colorInfo.currentColorField.name;
+        Object.assign(layerToUpdate.feature.properties, properties)
+        if(shouldUpdateColor) {
+            const { colorInfo } = layerToUpdate.feature.properties;
+            const color = colorInfo.getColor(layerToUpdate.feature.properties, Util.getFeatureType(layerToUpdate.feature))
+            color && layerToUpdate.feature.properties.colorInfo.updateColorFieldName(layerToUpdate.feature.properties.colorInfo.currentColorField.name, null, true)
+            //console.log("SETTING INLINE")
+            color && layerToUpdate.setStyle({ fillColor: color });
+        }
+        window.forceUpdateObj(layerToUpdate.feature.properties)
     }
 
     gisjoinUpdateLayer(geojson, layerID) {
@@ -322,6 +334,7 @@ export default class RenderInfrastructure {
     removeRefs(specifiedIdsSet, collectionName) {
         let layersToBeRemoved = new Set();
         let hadRefs = false;
+        const refsIDMap = {};
         for (const [joinField, layer] of Object.entries(this.currentGISJOINLayers)) {
             if (specifiedIdsSet.has(layer.layerID)) {
                 hadRefs = true;
@@ -332,9 +345,11 @@ export default class RenderInfrastructure {
                     //this.removeSpecifiedLayersFromMap([layer.layerID], collectionName, true);
                     continue;
                 }
-                this.refreshAfterRefsChanged(layer.layerID, layer.refs, true);
+
+                refsIDMap[layer.layerID] = layer.refs;
             }
         }
+        this.bulkRefreshAfterRefsChanged(refsIDMap, true);
         return { hadRefs, layersToBeRemoved };
     }
 
@@ -376,10 +391,11 @@ export default class RenderInfrastructure {
      */
     removeSpecifiedLayersFromMap(specifiedIds, collectionName = null, dontRemoveRefs = false) {
         let specifiedIdsSet = new Set(specifiedIds)
-        console.log({specifiedIdsSet})
 
         if (!dontRemoveRefs) {
+            console.time("totalRemoveRefs")
             const refRemovalResult = this.removeRefs(specifiedIdsSet, collectionName);
+            console.timeEnd("totalRemoveRefs")
             if(refRemovalResult.layersToBeRemoved.size) {
                 specifiedIdsSet = refRemovalResult.layersToBeRemoved;
             }
@@ -387,6 +403,7 @@ export default class RenderInfrastructure {
                 return true;
             }
         }
+        console.time("totalRemoveLayers")
         const markerLayers = this.getMarkerLayersForSpecifiedIds(specifiedIdsSet)
         for (const markerLayer of markerLayers) {
             this.markerLayer.removeLayer(markerLayer);
@@ -400,6 +417,7 @@ export default class RenderInfrastructure {
             ...mapLayers.map(mapLayer => mapLayer.getLayers()[0]?.feature?.id)
         ]);
         this.currentLayers = new Set([...this.currentLayers].filter(layerId => !removedLayerIds.has(layerId)))
+        console.timeEnd("totalRemoveLayers")
         return true;
     }
 
