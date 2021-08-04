@@ -393,9 +393,7 @@ export default class RenderInfrastructure {
         let specifiedIdsSet = new Set(specifiedIds)
 
         if (!dontRemoveRefs) {
-            console.time("totalRemoveRefs")
             const refRemovalResult = this.removeRefs(specifiedIdsSet, collectionName);
-            console.timeEnd("totalRemoveRefs")
             if(refRemovalResult.layersToBeRemoved.size) {
                 specifiedIdsSet = refRemovalResult.layersToBeRemoved;
             }
@@ -403,7 +401,6 @@ export default class RenderInfrastructure {
                 return true;
             }
         }
-        console.time("totalRemoveLayers")
         const markerLayers = this.getMarkerLayersForSpecifiedIds(specifiedIdsSet)
         for (const markerLayer of markerLayers) {
             this.markerLayer.removeLayer(markerLayer);
@@ -417,7 +414,6 @@ export default class RenderInfrastructure {
             ...mapLayers.map(mapLayer => mapLayer.getLayers()[0]?.feature?.id)
         ]);
         this.currentLayers = new Set([...this.currentLayers].filter(layerId => !removedLayerIds.has(layerId)))
-        console.timeEnd("totalRemoveLayers")
         return true;
     }
 
