@@ -144,7 +144,7 @@ export default class RenderInfrastructure {
                     weight = datasource[name]["border"];
                 if (datasource[name] && datasource[name]["opacity"] !== null && datasource[name]["opacity"] !== undefined)
                     fillOpacity = datasource[name]["opacity"];
-                return { [colorSetter]: datasource[name]["color"], weight: weight, fillOpacity: fillOpacity, color: "#828282" };
+                return { color: "#828282", [colorSetter]: datasource[name]["color"], weight: weight, fillOpacity: fillOpacity };
             }.bind(this),
             filter: function (feature) {
                 Util.normalizeFeatureID(feature);
@@ -237,6 +237,7 @@ export default class RenderInfrastructure {
 
         if (layer.refs.length > 1) {
             if (layer.layerID != undefined) {
+                console.log({id: layer.layerID, refs: layer.refs})
                 return this.refreshAfterRefsChanged(layer.layerID, layer.refs);
             }
         }
@@ -319,13 +320,13 @@ export default class RenderInfrastructure {
     }
 
     removeRefs(specifiedIdsSet, collectionName) {
-        let hadRefs = false;
         let layersToBeRemoved = new Set();
+        let hadRefs = false;
         for (const [joinField, layer] of Object.entries(this.currentGISJOINLayers)) {
             if (specifiedIdsSet.has(layer.layerID)) {
                 hadRefs = true;
                 layer.refs = layer.refs.filter(ref => ref.name !== collectionName);
-                if (!layer.refs.length) {
+                if (!layer.refs.length) { 
                     delete this.currentGISJOINLayers[joinField]
                     layersToBeRemoved.add(layer.layerID)
                     //this.removeSpecifiedLayersFromMap([layer.layerID], collectionName, true);
@@ -334,7 +335,7 @@ export default class RenderInfrastructure {
                 this.refreshAfterRefsChanged(layer.layerID, layer.refs, true);
             }
         }
-        return layersToBeRemoved;
+        return { hadRefs, layersToBeRemoved };
     }
 
     /**
@@ -379,8 +380,11 @@ export default class RenderInfrastructure {
 
         if (!dontRemoveRefs) {
             const refRemovalResult = this.removeRefs(specifiedIdsSet, collectionName);
-            if(refRemovalResult.size) {
-                specifiedIdsSet = refRemovalResult;
+            if(refRemovalResult.layersToBeRemoved.size) {
+                specifiedIdsSet = refRemovalResult.layersToBeRemoved;
+            }
+            else if(refRemovalResult.hadRefs){
+                return true;
             }
         }
         const markerLayers = this.getMarkerLayersForSpecifiedIds(specifiedIdsSet)
