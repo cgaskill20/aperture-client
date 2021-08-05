@@ -67,6 +67,7 @@ import Util from "./apertureUtil"
 let intersect = false;
 window.setIntersect = (i) => {
     intersect = i;
+    RenderInfrastructure.refreshIntersections.forEach(refreshIntersection => refreshIntersection())
 };
 
 let intersectionNumber = {
@@ -77,7 +78,7 @@ window.addOrSubtractIntersectionNumber = (add = true, tract = true) => {
     let num = add ? 1 : -1;
     const key = tract ? "tracts" : "counties"
     intersectionNumber[key] += num;
-    console.log({intersectionNumber})
+    console.log({ intersectionNumber })
 }
 
 const FLYTOOPTIONS = { //for clicking on icons
@@ -123,7 +124,10 @@ export default class RenderInfrastructure {
         this.currentGISJOINLayers = {};
         this.joinColor = {};
         this.idCounter = 0;
+        RenderInfrastructure.refreshIntersections.push(this.updateIntersections.bind(this));
     }
+
+    static refreshIntersections = [];
 
     /**
      * Renders geojson
@@ -250,14 +254,43 @@ export default class RenderInfrastructure {
         const layer = this.currentGISJOINLayers[GISJOIN];
         layer.refs = layer.refs.filter(ref => ref.name !== thisRef.name);
         layer.refs.push(thisRef);
-
         if (!intersect && layer.refs.length > 1) {
             if (layer.layerID != undefined) {
                 return this.refreshAfterRefsChanged(layer.layerID, layer.refs);
             }
         }
-        else if(intersect) {
+        else if (intersect) {
+            if (layer.refs.length !== intersectionNumber[GISJOIN.length === 14 ? "tracts" : "counties"] && layer.refs.length === 1) {
+                layer.layerID = this.idCounter++;
+            }
+            else if (layer.refs.length > 1) {
+                this.updateIntersections(GISJOIN);
+            }
+            console.log(this.currentGISJOINLayers)
+            return [layer.layerID]
+        }
+    }
 
+    updateIntersections(specificGISJOIN = null) {
+        if (intersect) {
+            let layersToBeRemoved = [];
+            let layersToBeRefreshedMappedToRefs = {};
+            for (const GISJOIN in this.currentGISJOINLayers) {
+                if (specificGISJOIN && specificGISJOIN !== GISJOIN) {
+                    continue;
+                }
+                const level = GISJOIN.length === 14 ? "tracts" : "counties";
+                const layer = this.currentGISJOINLayers[GISJOIN]
+
+                if (layer.refs.length === intersectionNumber[level]) {
+                    layersToBeRefreshedMappedToRefs[layer.layerID] = layer.refs;
+                }
+                else {
+                    layersToBeRemoved.push(layer.layerID)
+                }
+            }
+            this.bulkRefreshAfterRefsChanged(layersToBeRefreshedMappedToRefs);
+            this.removeSpecifiedLayersFromMap(layersToBeRemoved, null, true);
         }
     }
 
@@ -299,14 +332,14 @@ export default class RenderInfrastructure {
                 updateColorFieldName: () => { },
                 colorSummary: () => { },
                 currentColorField: refs[0].properties.colorInfo.currentColorField,
-                getColor: () => {}
+                getColor: () => { }
             }
         });
     }
 
     bulkRefreshAfterRefsChanged(refsIDMap, deletion = false) {
         const layersToUpdate = this.getLayersForSpecifiedIds(new Set(Object.keys(refsIDMap).map(specifiedIdString => Number(specifiedIdString))));
-        for(const layerToUpdate of layersToUpdate) {
+        for (const layerToUpdate of layersToUpdate) {
             const refs = refsIDMap[layerToUpdate.specifiedId];
             const properties = this.refsToProperties(refs);
             this.refreshIndividualLayer(layerToUpdate, properties, deletion)
@@ -324,14 +357,14 @@ export default class RenderInfrastructure {
     }
 
     refreshIndividualLayer(layerToUpdate, properties, deletion = false) {
-        if(deletion) {
-            for(const key in layerToUpdate.feature.properties) {
+        if (deletion) {
+            for (const key in layerToUpdate.feature.properties) {
                 delete layerToUpdate.feature.properties[key]
             }
         }
         const shouldUpdateColor = layerToUpdate?.feature?.properties?.colorInfo?.currentColorField?.name !== properties.colorInfo.currentColorField.name;
         Object.assign(layerToUpdate.feature.properties, properties)
-        if(shouldUpdateColor) {
+        if (shouldUpdateColor) {
             const { colorInfo } = layerToUpdate.feature.properties;
             const color = colorInfo.getColor(layerToUpdate.feature.properties, Util.getFeatureType(layerToUpdate.feature))
             color && layerToUpdate.feature.properties.colorInfo.updateColorFieldName(layerToUpdate.feature.properties.colorInfo.currentColorField.name, null, true)
@@ -358,7 +391,7 @@ export default class RenderInfrastructure {
             if (specifiedIdsSet.has(layer.layerID)) {
                 hadRefs = true;
                 layer.refs = layer.refs.filter(ref => ref.name !== collectionName);
-                if (!layer.refs.length) { 
+                if (!layer.refs.length) {
                     delete this.currentGISJOINLayers[joinField]
                     layersToBeRemoved.add(layer.layerID)
                     //this.removeSpecifiedLayersFromMap([layer.layerID], collectionName, true);
@@ -410,13 +443,14 @@ export default class RenderInfrastructure {
      */
     removeSpecifiedLayersFromMap(specifiedIds, collectionName = null, dontRemoveRefs = false) {
         let specifiedIdsSet = new Set(specifiedIds)
+        console.log({ specifiedIdsSet })
 
         if (!dontRemoveRefs) {
             const refRemovalResult = this.removeRefs(specifiedIdsSet, collectionName);
-            if(refRemovalResult.layersToBeRemoved.size) {
+            if (refRemovalResult.layersToBeRemoved.size) {
                 specifiedIdsSet = refRemovalResult.layersToBeRemoved;
             }
-            else if(refRemovalResult.hadRefs){
+            else if (refRemovalResult.hadRefs) {
                 return true;
             }
         }
@@ -425,6 +459,7 @@ export default class RenderInfrastructure {
             this.markerLayer.removeLayer(markerLayer);
         }
         const mapLayers = this.getMapLayersForSpecifiedIds(specifiedIdsSet);
+        console.log({ mapLayers })
         for (const mapLayer of mapLayers) {
             this.layerGroup.removeLayer(mapLayer);
         }

@@ -164,8 +164,10 @@ export default class AutoQuery {
     onRemove() {
         this.clearMapLayers();
         this.killCurrentQueries();
-        if(["tracts", "counties"].includes(this.blockerGroup)) {
-            window.addOrSubtractIntersectionNumber(false, this.blockerGroup === "tracts");
+        if(this.enabled) {
+            if(["tracts", "counties"].includes(this.blockerGroup)) {
+                window.addOrSubtractIntersectionNumber(false, this.blockerGroup === "tracts");
+            }
         }
 
         const oldBlockers = JSON.stringify(AutoQuery.blockers);
