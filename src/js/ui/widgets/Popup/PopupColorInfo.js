@@ -76,49 +76,51 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
             svg.selectAll('*').remove();
             svg.attr("viewBox", [0, 0, width, height]);
 
-            const linearGradient = svg.append("defs")
-                .append("linearGradient")
-                .attr("id", "linear-gradient");
+            if (obj.properties.meta[colorFieldName]) {
+                const linearGradient = svg.append("defs")
+                    .append("linearGradient")
+                    .attr("id", "linear-gradient");
 
-            const gradientLength = colorSummary.gradient.length;
+                const gradientLength = colorSummary.gradient.length;
 
-            for (let i = 0; i < gradientLength; i++) {
-                linearGradient.append("stop")
-                    .attr("offset", `${Math.round(i * 100 / gradientLength)}%`)
-                    .attr("stop-color", colorSummary.gradient[i]);
+                for (let i = 0; i < gradientLength; i++) {
+                    linearGradient.append("stop")
+                        .attr("offset", `${Math.round(i * 100 / gradientLength)}%`)
+                        .attr("stop-color", colorSummary.gradient[i]);
+                }
+
+                //add gradient
+                svg.append("rect")
+                    .attr("transform", `translate(${marginLeftRight},0)`)
+                    .attr("x", 0)
+                    .attr("y", 0)
+                    .attr("width", width - marginLeftRight * 2)
+                    .attr("height", height - marginBottom)
+                    .style("fill", "url(#linear-gradient)");
+
+                //add line
+                const value = obj.properties[colorFieldName];
+                const xValue = (width - marginLeftRight * 2) * Math.min(Math.max((value - colorSummary.minMax[0]) / (colorSummary.minMax[1] - colorSummary.minMax[0]), 0), 1) + marginLeftRight;
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 3)
+                    .attr("x1", xValue)
+                    .attr("y1", 0)
+                    .attr("x2", xValue)
+                    .attr("y2", height - marginBottom);
+
+                //console.log({colorFieldName, obj: obj})
+                let scale = obj.properties.meta[colorFieldName].isDate ? d3.scaleUtc() : d3.scaleLinear()
+
+                //add axis
+                const linearScale = scale
+                    .domain(d3.extent(colorSummary.minMax))
+                    .range([0, width - marginLeftRight * 2])
+                    .nice()
+
+                const axis = d3.axisBottom(linearScale).ticks(5);
+                svg.append('g').attr("transform", `translate(${marginLeftRight},${height - marginBottom})`).call(axis);
             }
-
-            //add gradient
-            svg.append("rect")
-                .attr("transform", `translate(${marginLeftRight},0)`)
-                .attr("x", 0)
-                .attr("y", 0)
-                .attr("width", width - marginLeftRight * 2)
-                .attr("height", height - marginBottom)
-                .style("fill", "url(#linear-gradient)");
-
-            //add line
-            const value = obj.properties[colorFieldName];
-            const xValue = (width - marginLeftRight * 2) * Math.min(Math.max((value - colorSummary.minMax[0]) / (colorSummary.minMax[1] - colorSummary.minMax[0]), 0), 1) + marginLeftRight;
-            svg.append('line')
-                .style("stroke", "black")
-                .style("stroke-width", 3)
-                .attr("x1", xValue)
-                .attr("y1", 0)
-                .attr("x2", xValue)
-                .attr("y2", height - marginBottom);
-
-            //console.log({colorFieldName, obj: obj})
-            let scale = obj.properties.meta[colorFieldName].isDate ? d3.scaleUtc() : d3.scaleLinear()
-
-            //add axis
-            const linearScale = scale
-                .domain(d3.extent(colorSummary.minMax))
-                .range([0, width - marginLeftRight * 2])
-                .nice()
-            
-            const axis = d3.axisBottom(linearScale).ticks(5);
-            svg.append('g').attr("transform", `translate(${marginLeftRight},${height - marginBottom})`).call(axis);
         }
     }, [colorSummary]);
 

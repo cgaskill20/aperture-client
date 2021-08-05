@@ -217,7 +217,7 @@ export default class RenderInfrastructure {
             pointToLayer: function () { }.bind(this)
         });
 
-        if (layers.length) {
+        if (layers.length && specifiedId === -1) {
             this.gisjoinUpdateLayer(geoJsonData, layers[0]);
         }
 
@@ -266,7 +266,7 @@ export default class RenderInfrastructure {
             else if (layer.refs.length > 1) {
                 this.updateIntersections(GISJOIN);
             }
-            console.log(this.currentGISJOINLayers)
+
             return [layer.layerID]
         }
     }
@@ -289,8 +289,15 @@ export default class RenderInfrastructure {
                     layersToBeRemoved.push(layer.layerID)
                 }
             }
-            this.bulkRefreshAfterRefsChanged(layersToBeRefreshedMappedToRefs);
+            this.bulkRefreshAfterRefsChanged(layersToBeRefreshedMappedToRefs, false, true);
             this.removeSpecifiedLayersFromMap(layersToBeRemoved, null, true);
+        }
+        else {
+            const layersToBeRefreshedMappedToRefs = Object.values(this.currentGISJOINLayers).reduce((acc, curr) => {
+                acc[curr.layerID] = curr.refs;
+                return acc;
+            }, {})
+            this.bulkRefreshAfterRefsChanged(layersToBeRefreshedMappedToRefs, false, true);
         }
     }
 
@@ -337,12 +344,33 @@ export default class RenderInfrastructure {
         });
     }
 
-    bulkRefreshAfterRefsChanged(refsIDMap, deletion = false) {
+    bulkRefreshAfterRefsChanged(refsIDMap, deletion = false, patchHoles = false) {
         const layersToUpdate = this.getLayersForSpecifiedIds(new Set(Object.keys(refsIDMap).map(specifiedIdString => Number(specifiedIdString))));
+        let idsFound = new Set();
         for (const layerToUpdate of layersToUpdate) {
             const refs = refsIDMap[layerToUpdate.specifiedId];
+            idsFound.add(layerToUpdate.specifiedId)
             const properties = this.refsToProperties(refs);
             this.refreshIndividualLayer(layerToUpdate, properties, deletion)
+        }
+        console.log({idsFound})
+
+        if(patchHoles) {
+            const idsWithoutLayersSet = new Set(Object.keys(refsIDMap)
+                .map(id => Number(id))
+                .filter(id => !idsFound.has(id))
+            );
+
+            console.log({idsWithoutLayersSet})
+            const gisjoinLayersWithoutMapLayers = Object.values(this.currentGISJOINLayers).filter(currentGISJOINLayer => idsWithoutLayersSet.has(currentGISJOINLayer.layerID));
+            //console.log(this.currentGISJOINLayers)
+            let newRefsIDMap = {};
+            for (const gisjoinLayerWithoutMapLayer of gisjoinLayersWithoutMapLayers) {
+                //console.log({gisjoinLayerWithoutMapLayer})
+                this.renderGeoJson(gisjoinLayerWithoutMapLayer.geojson, gisjoinLayerWithoutMapLayer.refs[0].indexData, gisjoinLayerWithoutMapLayer.layerID);
+                newRefsIDMap[gisjoinLayerWithoutMapLayer.layerID] = gisjoinLayerWithoutMapLayer.refs;
+            }
+            this.bulkRefreshAfterRefsChanged(newRefsIDMap)
         }
     }
 
