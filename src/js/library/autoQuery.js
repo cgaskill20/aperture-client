@@ -1,7 +1,66 @@
+/*                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+
+Software in the Sustain Ecosystem are Released Under Terms of Apache Software License 
+
+This research has been supported by funding from the US National Science Foundation's CSSI program through awards 1931363, 1931324, 1931335, and 1931283. The project is a joint effort involving Colorado State University, Arizona State University, the University of California-Irvine, and the University of Maryland - Baltimore County. All redistributions of the software must also include this information. 
+
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+
+1. Definitions.
+
+"License" shall mean the terms and conditions for use, reproduction, and distribution as defined by Sections 1 through 9 of this document.
+
+"Licensor" shall mean the copyright owner or entity authorized by the copyright owner that is granting the License.
+
+"Legal Entity" shall mean the union of the acting entity and all other entities that control, are controlled by, or are under common control with that entity. For the purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.
+
+"You" (or "Your") shall mean an individual or Legal Entity exercising permissions granted by this License.
+
+"Source" form shall mean the preferred form for making modifications, including but not limited to software source code, documentation source, and configuration files.
+
+"Object" form shall mean any form resulting from mechanical transformation or translation of a Source form, including but not limited to compiled object code, generated documentation, and conversions to other media types.
+
+"Work" shall mean the work of authorship, whether in Source or Object form, made available under the License, as indicated by a copyright notice that is included in or attached to the work (an example is provided in the Appendix below).
+
+"Derivative Works" shall mean any work, whether in Source or Object form, that is based on (or derived from) the Work and for which the editorial revisions, annotations, elaborations, or other modifications represent, as a whole, an original work of authorship. For the purposes of this License, Derivative Works shall not include works that remain separable from, or merely link (or bind by name) to the interfaces of, the Work and Derivative Works thereof.
+
+"Contribution" shall mean any work of authorship, including the original version of the Work and any modifications or additions to that Work or Derivative Works thereof, that is intentionally submitted to Licensor for inclusion in the Work by the copyright owner or by an individual or Legal Entity authorized to submit on behalf of the copyright owner. For the purposes of this definition, "submitted" means any form of electronic, verbal, or written communication sent to the Licensor or its representatives, including but not limited to communication on electronic mailing lists, source code control systems, and issue tracking systems that are managed by, or on behalf of, the Licensor for the purpose of discussing and improving the Work, but excluding communication that is conspicuously marked or otherwise designated in writing by the copyright owner as "Not a Contribution."
+
+"Contributor" shall mean Licensor and any individual or Legal Entity on behalf of whom a Contribution has been received by Licensor and subsequently incorporated within the Work.
+
+2. Grant of Copyright License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare Derivative Works of, publicly display, publicly perform, sublicense, and distribute the Work and such Derivative Works in Source or Object form.
+
+3. Grant of Patent License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable (except as stated in this section) patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer the Work, where such license applies only to those patent claims licensable by such Contributor that are necessarily infringed by their Contribution(s) alone or by combination of their Contribution(s) with the Work to which such Contribution(s) was submitted. If You institute patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Work or a Contribution incorporated within the Work constitutes direct or contributory patent infringement, then any patent licenses granted to You under this License for that Work shall terminate as of the date such litigation is filed.
+
+4. Redistribution. You may reproduce and distribute copies of the Work or Derivative Works thereof in any medium, with or without modifications, and in Source or Object form, provided that You meet the following conditions:
+
+You must give any other recipients of the Work or Derivative Works a copy of this License; and
+You must cause any modified files to carry prominent notices stating that You changed the files; and
+You must retain, in the Source form of any Derivative Works that You distribute, all copyright, patent, trademark, and attribution notices from the Source form of the Work, excluding those notices that do not pertain to any part of the Derivative Works; and
+If the Work includes a "NOTICE" text file as part of its distribution, then any Derivative Works that You distribute must include a readable copy of the attribution notices contained within such NOTICE file, excluding those notices that do not pertain to any part of the Derivative Works, in at least one of the following places: within a NOTICE text file distributed as part of the Derivative Works; within the Source form or documentation, if provided along with the Derivative Works; or, within a display generated by the Derivative Works, if and wherever such third-party notices normally appear. The contents of the NOTICE file are for informational purposes only and do not modify the License. You may add Your own attribution notices within Derivative Works that You distribute, alongside or as an addendum to the NOTICE text from the Work, provided that such additional attribution notices cannot be construed as modifying the License. 
+
+You may add Your own copyright statement to Your modifications and may provide additional or different license terms and conditions for use, reproduction, or distribution of Your modifications, or for any such Derivative Works as a whole, provided Your use, reproduction, and distribution of the Work otherwise complies with the conditions stated in this License.
+5. Submission of Contributions. Unless You explicitly state otherwise, any Contribution intentionally submitted for inclusion in the Work by You to the Licensor shall be under the terms and conditions of this License, without any additional terms or conditions. Notwithstanding the above, nothing herein shall supersede or modify the terms of any separate license agreement you may have executed with Licensor regarding such Contributions.
+
+6. Trademarks. This License does not grant permission to use the trade names, trademarks, service marks, or product names of the Licensor, except as required for reasonable and customary use in describing the origin of the Work and reproducing the content of the NOTICE file.
+
+7. Disclaimer of Warranty. Unless required by applicable law or agreed to in writing, Licensor provides the Work (and each Contributor provides its Contributions) on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely responsible for determining the appropriateness of using or redistributing the Work and assume any risks associated with Your exercise of permissions under this License.
+
+8. Limitation of Liability. In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall any Contributor be liable to You for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of this License or out of the use or inability to use the Work (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if such Contributor has been advised of the possibility of such damages.
+
+9. Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability. 
+
+END OF TERMS AND CONDITIONS
+*/
 import Gradient from "../third-party/Gradient"
 import MapDataFilterWrapper from "./mapDataFilterWrapper"
 import Util from "./apertureUtil"
 import Query from "./Query"
+import Color from "./Color"
 
 /**
  * @class AutoQuery
@@ -32,6 +91,7 @@ export default class AutoQuery {
 
         this.streams = [];
         this.mapLayers = [];
+        this.currentGeoJSON = [];
         this.layerIDs = new Set();
         this.currentQueries = new Set();
 
@@ -41,18 +101,23 @@ export default class AutoQuery {
 
         this.linked = this.data.linkedGeometry ? true : false;
 
-        if(layerData.temporal){
+        if (layerData.temporal) {
             this.temporal = layerData.temporal;
             this.temporalFields = Object.entries(layerData.constraints)
                 .filter(([constraintName, constraint]) => constraint.temporalType != null)
                 .reduce((acc, [constraintName, constraint]) => {
-                    return {...acc, [constraintName]: constraint.temporalType}
+                    return { ...acc, [constraintName]: constraint.temporalType }
                 }, {});
         }
 
+        this.colorFieldChangeSubscribers = [];
         this.color = layerData.color;
-        this.colorStyle = layerData.color.style;
-        this.colorCode = this.buildColorCode(layerData);
+        if(this.color.variable){
+            this.changeColorCodeField(this.color.variable, this.color)
+        }
+        else {
+            Object.keys(this.constraintState)[0] ? this.changeColorCodeField(Object.keys(this.constraintState)[0]) : null;
+        }
 
         this.graphPipeID = graphPipeID;
 
@@ -61,12 +126,12 @@ export default class AutoQuery {
                 "tracts" : "counties"
             : this.data.label ?
                 this.data.label : Util.cleanUpString(this.collection);
-        
-        if(this.data.linkedGeometry === "neon_sites"){ //edge case for now
+
+        if (this.data.linkedGeometry === "neon_sites") { //edge case for now
             this.blockerGroup = "Neon Sites";
         }
-                
-        if(this.blockerGroup.charAt(this.blockerGroup.length-1) !== "s"){
+
+        if (this.blockerGroup.charAt(this.blockerGroup.length - 1) !== "s") {
             this.blockerGroup += "s";
         }
 
@@ -104,6 +169,7 @@ export default class AutoQuery {
         this.checkAndDispatch(oldBlockers);
 
         this.layerIDs.clear()
+        this.currentGeoJSON = [];
         this.enabled = false;
         this.geohashCache = [];
         MapDataFilterWrapper.removeCollection(this.collection);
@@ -171,11 +237,33 @@ export default class AutoQuery {
       * @memberof AutoQuery
       * @method killCurrentQueries
       */
-    killCurrentQueries(){
-        for(const qid of [...this.currentQueries]){
+    killCurrentQueries() {
+        for (const qid of [...this.currentQueries]) {
             Query.killQuery(qid);
         }
         this.currentQueries.clear();
+    }
+
+    changeColorCodeField(fieldName, predefinedColor=null) {
+        if(fieldName === this.color.variable){
+            predefinedColor = this.color;
+        }
+        const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
+        if(colorField){
+            this.colorField = { name: fieldName, label: colorField.label };
+            if (colorField?.type === "slider") {
+                this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);
+            }
+            else if (colorField?.type === "multiselector") {
+                this.protoColor = new Color("string", colorField.options, predefinedColor);
+            }
+            this.colorFieldChangeSubscribers.forEach(func => func(this.colorField))
+            this.clearMapLayers();
+            const currentGeoJSONCopy = JSON.parse(JSON.stringify(this.currentGeoJSON))
+            this.currentGeoJSON = []
+            MapDataFilterWrapper.removeCollection(this.collection);
+            currentGeoJSONCopy.forEach(geoJSON => this.renderGeoJSON(geoJSON))
+        }
     }
 
     /**
@@ -228,17 +316,17 @@ export default class AutoQuery {
         let id;
         const callback = (d) => {
             const { event, payload } = d;
-            if(event === "data"){
+            if (event === "data") {
                 this.renderGeoJSON(payload.data);
             }
-            else if(event === "info"){
+            else if (event === "info") {
                 payload.geohashes && this.geohashCache.push(...payload.geohashes);
-                if(payload.id) { 
+                if (payload.id) {
                     id = payload.id;
-                    this.currentQueries.add(payload.id); 
+                    this.currentQueries.add(payload.id);
                 }
             }
-            else if(event === "end"){
+            else if (event === "end") {
                 this.currentQueries.delete(id);
             }
         }
@@ -323,19 +411,34 @@ export default class AutoQuery {
         MapDataFilterWrapper.add(data, this.collection);
 
         let indexData = {};
+        //console.log(this.constraintData[this.temporal])
         indexData[this.collection] = {
-            "color": this.getColor(data.properties),
+            "color": this.getColor(data.properties, Util.getFeatureType(data)),
+            "joinField": this.data.joinField
         }
 
-        indexData[this.collection].popup = this.buildPopup();
+        data.properties.meta = this.buildMetaMap();
+        data.properties.colorInfo = {
+            currentColorField: this.colorField,
+            updateColorFieldName: this.changeColorCodeField.bind(this),
+            validColorFieldNames: Object.keys(this.data.constraints).map(Util.removePropertiesPrefix),
+            subscribeToColorFieldChange: this.subscribeToColorFieldChange.bind(this),
+            colorSummary: () => { return this.protoColor?.getColorSummary() }
+        }
+
         if (this.getIcon())
             indexData[this.collection]["iconAddr"] = `./images/map-icons/${this.getIcon()}.png`;
 
         indexData[this.collection]["border"] = this.color.border;
         indexData[this.collection]["opacity"] = this.color.opacity;
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
+        this.currentGeoJSON.push(data)
         this.layerIDs.add(id);
 
+    }
+
+    subscribeToColorFieldChange (func) {
+        this.colorFieldChangeSubscribers.push(func)
     }
 
     /**
@@ -357,7 +460,7 @@ export default class AutoQuery {
       */
     buildConstraintPipeline() {
         let pipeline = [];
-        if(this.temporal){
+        if (this.temporal) {
             pipeline = this.buildTemporalPreProcess();
         }
         for (const constraintName in this.constraintState) {
@@ -378,19 +481,19 @@ export default class AutoQuery {
     buildTemporalPreProcess() {
         let groupStage = {
             _id: `$${this.data.joinField}`,
-            [this.data.joinField]: {"$first": `$${this.data.joinField}`}
+            [this.data.joinField]: { "$first": `$${this.data.joinField}` }
         }
-        const fieldsNotGrouped = Object.keys(this.data.constraints).filter(name => !Object.keys(this.temporalFields).includes(name)) 
-        for(const field of fieldsNotGrouped){
-            groupStage[field] = {"$first": `$${field}`}
+        const fieldsNotGrouped = Object.keys(this.data.constraints).filter(name => !Object.keys(this.temporalFields).includes(name))
+        for (const field of fieldsNotGrouped) {
+            groupStage[field] = { "$first": `$${field}` }
         }
-        for(const [field, type] of Object.entries(this.temporalFields)){
-            groupStage[field] = { [`$${type}`]: `$${field}`}
+        for (const [field, type] of Object.entries(this.temporalFields)) {
+            groupStage[field] = { [`$${type}`]: `$${field}` }
         }
         groupStage = {
             "$group": groupStage
         }
-        
+
         return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, groupStage]
     }
 
@@ -402,6 +505,24 @@ export default class AutoQuery {
             }
         }
         return { "$project": project };
+    }
+
+    buildMetaMap() {
+        return Object.entries(this.data.constraints).reduce((ret, [constraintName, constraintMeta]) => {
+            const add = {};
+            add.label = constraintMeta.label;
+            add.isDate = constraintMeta.isDate;
+            add.unit = constraintMeta.unit;
+            add.reverseGradient = constraintMeta.reverseGradient;
+            add.important = this.constraintState[constraintName] ? true : false;
+            add.temporal = constraintMeta.temporalType ? {
+                temporalRange: this.constraintData[this.temporal],
+                collection: this.collection
+            } : null;
+
+            ret[Util.removePropertiesPrefix(constraintName)] = add;
+            return ret;
+        }, {})
     }
 
     /**
@@ -474,73 +595,10 @@ export default class AutoQuery {
       * being rendered.
       * @returns {string} hex color code
       */
-    getColor(properties) {
-        let value;
-        if (this.color.variable) {
-            const propsVarName = Util.removePropertiesPrefix(this.color.variable);
-            value = properties[propsVarName];
-        }
-        const skew = this.color.skew != null ? this.color.skew + 1 : 1;
-        const skewDir = this.color.skewDir != null ? this.color.skewDir : "right";
-        switch (this.colorStyle) {
-            case "solid":
-                return this.colorCode;
-            case "gradient":
-                const range = this.getConstraintMetadata(this.color.variable).range;
-                const normalizedValue = Math.min(Math.max((value - range[0]) / (range[1] - range[0]), 0), 0.9999999);
-                const skewCorrectedValue = skewDir === "right" ? (1 - (Math.pow(1 - normalizedValue, skew))) : Math.pow(normalizedValue, skew); // https://www.desmos.com/calculator/gezo3xfbfj
-                const colorindex = Math.floor(skewCorrectedValue * 32); //normalizes value on range. results in #0 - 31
-                return this.colorCode[colorindex];
-            case "sequential":
-                if (this.color.map)
-                    return this.color.map[value];
-                else {
-                    const index = this.getConstraintMetadata(this.color.variable).options.indexOf(value);
-                    return this.colorCode[index];
-                }
-        }
-    }
-
-    /**
-      * Builds a color code/spectrum for the layer
-      * @memberof AutoQuery
-      * @method buildColorCode
-      * @returns {?} color code or spectrum which is relevant to the layer
-      */
-    buildColorCode() {
-        const colorGradient = new Gradient();
-        switch (this.colorStyle) {
-            case "solid":
-                return this.data.color.colorCode;
-            case "gradient":
-                const colors = this.color.gradient ? this.color.gradient : ["#FF0000", "#00FF00"];
-                colorGradient.setGradient(colors[0], colors[1]);
-                colorGradient.setMidpoint(32);
-                return colorGradient.getArray();
-            case "sequential":
-                const numOptions = this.data.constraints[this.data.color.variable].options.length;
-                colorGradient.setGradient("#FF0000", "#00FF00");
-                colorGradient.setMidpoint(numOptions);
-                return colorGradient.getArray();
-        }
-    }
-
-    /**
-      * Generates popup text
-      * @memberof AutoQuery
-      * @method buildPopup
-      * @returns {string} popup text
-      */
-    buildPopup() {
-        let returnText = "<ul style='padding-inline-start:20px;margin-block-start:2.5px;'>";
-        for (const constraint in this.constraintState) {
-            if (this.constraintState[constraint]) {
-                const constraintNoPrefix = Util.removePropertiesPrefix(constraint);
-                const constraintLabel = this.getConstraintMetadata(constraint).label ? this.getConstraintMetadata(constraint).label : constraintNoPrefix;
-                returnText += "<li><b>" + constraintLabel + ":</b> @@" + constraintNoPrefix + "@@</li>";
-            }
-        }
-        return returnText + "</ul>";
+    getColor(properties, featureType) {
+        const propsVarName = Util.removePropertiesPrefix(this.colorField?.name);
+        const value = properties[propsVarName];
+        return this.protoColor?.getColor(value, featureType)
     }
 }
 
