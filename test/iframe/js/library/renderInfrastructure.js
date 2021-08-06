@@ -72,7 +72,7 @@ describe('RenderInfrastructure', function () {
                     "color": "red"
                 }
             });
-            assert.deepEqual(render.length, 3);
+            assert.deepEqual(render.length, 1);
         });
     });
     describe('removeSpecifiedLayersFromMap()', function () {
