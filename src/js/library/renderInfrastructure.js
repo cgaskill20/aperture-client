@@ -67,10 +67,14 @@ import Util from "./apertureUtil"
 let intersect = false;
 window.setIntersect = (i) => {
     intersect = i;
-    window.refreshIntersections();
+    window.refreshIntersections(true);
 };
 
-window.refreshIntersections = () => {
+window.refreshIntersections = (switchMode = false) => {
+    console.log(`refrsh ${switchMode}`)
+    if(!switchMode && !intersect) {
+        return;
+    }
     RenderInfrastructure.refreshIntersections.forEach(refreshIntersection => refreshIntersection())
 }
 

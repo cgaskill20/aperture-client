@@ -167,6 +167,7 @@ export default class AutoQuery {
         if(this.enabled) {
             if(["tracts", "counties"].includes(this.blockerGroup)) {
                 window.addOrSubtractIntersectionNumber(false, this.blockerGroup === "tracts");
+                window.refreshIntersections();
             }
         }
 
