@@ -19,8 +19,7 @@ export default function CorrelogramGraph(props) {
                 })
             }
         }
-        console.log(JSON.stringify(data))
-        console.log(JSON.stringify(retData))
+
         let counter = 0;
         for (const [key, value] of Object.entries(retData)){
             let x = []

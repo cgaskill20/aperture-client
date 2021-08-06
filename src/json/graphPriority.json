@@ -192,14 +192,6 @@
         "label": "Nearest Power Plant (mi)"
       }
     }
-  },
-  {
-    "collection" : "risk_county",
-    "label" : "Risk County",
-    "constraints": {
-      "RISK_RATNG" : {
-        "label" : "Risk Rating"
-      }
-    }
   }
+
 ]
