@@ -348,6 +348,9 @@ export default class AutoQuery {
             }
             else if (event === "end") {
                 this.currentQueries.delete(id);
+                if(["tracts", "counties"].includes(this.blockerGroup)) {
+                    window.refreshIntersections();
+                }
             }
         }
 

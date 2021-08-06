@@ -67,8 +67,12 @@ import Util from "./apertureUtil"
 let intersect = false;
 window.setIntersect = (i) => {
     intersect = i;
-    RenderInfrastructure.refreshIntersections.forEach(refreshIntersection => refreshIntersection())
+    window.refreshIntersections();
 };
+
+window.refreshIntersections = () => {
+    RenderInfrastructure.refreshIntersections.forEach(refreshIntersection => refreshIntersection())
+}
 
 let intersectionNumber = {
     tracts: 0,
@@ -124,6 +128,7 @@ export default class RenderInfrastructure {
         this.currentGISJOINLayers = {};
         this.layerIDToGISJOINMap = {};
         this.joinColor = {};
+        this.bulkIntersectionUpdateMayOccur = false;
         this.idCounter = 0;
         RenderInfrastructure.refreshIntersections.push(this.updateIntersections.bind(this));
     }
@@ -265,7 +270,7 @@ export default class RenderInfrastructure {
                 layer.layerID = this.idCounter++;
                 this.layerIDToGISJOINMap[layer.layerID] = GISJOIN;
             }
-            this.updateIntersections(GISJOIN);
+            //this.updateIntersections(GISJOIN);
 
             return [layer.layerID]
         }
@@ -284,7 +289,7 @@ export default class RenderInfrastructure {
                     layer.offMap = false;
                     layersToBeRefreshedMappedToRefs[layer.layerID] = layer.refs;
                 }
-                else {
+                else if(!layer.offMap) {
                     layer.offMap = true;
                     layersToBeRemoved.push(layer.layerID)
                 }
@@ -293,7 +298,7 @@ export default class RenderInfrastructure {
             if (specificGISJOIN) {
                 chooseLayerPath(specificGISJOIN)
             }
-            else {
+            else{
                 for (const GISJOIN in this.currentGISJOINLayers) {
                     chooseLayerPath(GISJOIN)
                 }

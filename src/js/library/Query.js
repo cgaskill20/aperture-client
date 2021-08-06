@@ -211,7 +211,7 @@ const Query = {
         const epsilon = 100;
         let waitingRoom = [];
         let geohashes;
-        let waitingRoomDone = false;
+        let currentDumpNums = new Set()
 
         const waitingRoomListener = (response) => {
             const { event, payload } = response;
@@ -228,12 +228,8 @@ const Query = {
                 query.callback({ event: "info", payload: { geohashes, id } })
             }
             else if (event === "end") {
-                waitingRoomDone = true;
                 if (waitingRoom.length) {
-                    dumpWaitingRoom(true);
-                }
-                else {
-                    finished();
+                    dumpWaitingRoom();
                 }
             }
         }
@@ -242,7 +238,7 @@ const Query = {
             query.callback({ event: "end" })
         }
 
-        const dumpCallback = (d, ignoreEnd = true, waitingRoomSnapshotMap) => {
+        const dumpCallback = (d, localDumpNum, waitingRoomSnapshotMap) => {
             const { event } = d;
             if (event === "data") {
                 const complimentaryData = { ...d.payload.data };
@@ -258,17 +254,19 @@ const Query = {
                 query.callback(d);
 
             }
-            else if (event === "end" && !ignoreEnd) {
-                waitingRoomSnapshotMap = null;
-                finished();
-            }
             else if (event === "end") {
+                currentDumpNums.delete(localDumpNum);
                 waitingRoomSnapshotMap = null;
+                if(!currentDumpNums.size) {
+                    finished();
+                }
             }
         }
 
         let dumpNum = 0;
-        const dumpWaitingRoom = (final = false) => {
+        const dumpWaitingRoom = () => {
+            const thisDumpNum = dumpNum++;
+            currentDumpNums.add(thisDumpNum)
             const queryDump = JSON.parse(JSON.stringify(query))
             const waitingRoomSnapshotMap = waitingRoom.reduce((acc, curr) => {
                 acc[curr[field]] = curr;
@@ -276,8 +274,8 @@ const Query = {
             }, {});
             const JOINS = Object.keys(waitingRoomSnapshotMap);
             queryDump.pipeline = [{ "$match": { [field]: { "$in": JOINS } } }, ...queryDump.pipeline]
-            queryDump.id = `${queryDump.id}_dump${dumpNum++}`
-            queryDump.callback = (d) => { dumpCallback(d, !final, waitingRoomSnapshotMap) };
+            queryDump.id = `${queryDump.id}_dump${thisDumpNum}`
+            queryDump.callback = (d) => { dumpCallback(d, thisDumpNum, waitingRoomSnapshotMap) };
             this._queryMongo(queryDump);
             waitingRoom = [];
         }
