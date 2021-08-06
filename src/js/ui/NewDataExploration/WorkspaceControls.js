@@ -58,11 +58,14 @@ END OF TERMS AND CONDITIONS
 */
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Button, ButtonGroup, Grid, Paper, Switch} from "@material-ui/core";
+import { Button, ButtonGroup, Grid, Paper, Switch, Icon } from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import WorkspaceSearchbar from "./WorkspaceSearchbar";
-import {componentIsRendering} from "../TabSystem";
+import { componentIsRendering } from "../TabSystem";
+import Ven from "../../../../images/ven.svg"
+import VenFilled from "../../../../images/venFilled.svg"
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -71,36 +74,42 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
     },
     buttons: {
-        marginBottom:theme.spacing(2),
+        marginBottom: theme.spacing(2),
     },
+    customIcon: {
+        width: "20px",
+        height: "20px",
+        transform: "translate(0, -10px)"
+    }
 }));
 
 export default function WorkspaceControls(props) {
     const classes = useStyles();
     const [intersect, setIntersect] = useState(false);
-    
+    const venIcon = <Icon>
+        <img src={intersect ? VenFilled : Ven} className={classes.customIcon} />
+    </Icon>
+
     useEffect(() => {
         window.setIntersect(intersect)
     }, [intersect]);
 
-    if(componentIsRendering) {console.log("|WorkspaceControls Rerending|")}
+    if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
     return (
         <Paper className={classes.root} elevation={3}>
             <Grid container direction="row" justify="center" alignItems="center">
                 <ButtonGroup className={classes.buttons}>
                     <Button variant="outlined" startIcon={<SaveIcon />}>Save Workspace</Button>
                     <Button variant="outlined" startIcon={<FolderOpenIcon />}>Load Workspace</Button>
+                    <Button variant="outlined" startIcon={venIcon} onClick={() => {
+                        setIntersect(!intersect)
+                    }}>
+                        {intersect ? "Intersections: on" : "Intersections: off"}
+                    </Button>
                 </ButtonGroup>
-                <Switch
-                    checked={intersect}
-                    onChange={(e) => {
-                        const checked = e.target.checked;
-                        setIntersect(checked)
-                    }}
-                />
             </Grid>
             <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
-                                workspace={props.workspace} setWorkspace={props.setWorkspace} />
+                workspace={props.workspace} setWorkspace={props.setWorkspace} />
         </Paper>
     )
 }
