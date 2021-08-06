@@ -75,8 +75,6 @@ export default function ChartingResizable() {
     let [size, setSize] = useState({ width: 700, height: 450 });
     let [coordinates, setCoordinates] = useState({x: 500, y: 100});
 
-
-    let [size, setSize] = useState({ width: 500, height: 400 });
     let [pos, setPos] = useState({ x: 900, y: 100 });
     let [chartData, setChartData] = useState({});
 
