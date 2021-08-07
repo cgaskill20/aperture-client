@@ -134,6 +134,8 @@ export default class AutoQuery {
             this.blockerGroup += "s";
         }
 
+        this.isIntersectable = ["tracts", "counties"].includes(this.blockerGroup);
+
         this.minZoom = this.data.minZoom;
         this.blocked = false;
         AutoQuery.blockers[this.blockerGroup] = 0;
@@ -150,7 +152,7 @@ export default class AutoQuery {
       */
     onAdd() {
         this.enabled = true;
-        if(["tracts", "counties"].includes(this.blockerGroup)) {
+        if(this.isIntersectable) {
             window.addOrSubtractIntersectionNumber(true, this.blockerGroup === "tracts");
         }
         this.query();
@@ -165,7 +167,7 @@ export default class AutoQuery {
         this.clearMapLayers();
         this.killCurrentQueries();
         if(this.enabled) {
-            if(["tracts", "counties"].includes(this.blockerGroup)) {
+            if(this.isIntersectable) {
                 window.addOrSubtractIntersectionNumber(false, this.blockerGroup === "tracts");
                 window.refreshIntersections();
             }
@@ -244,7 +246,8 @@ export default class AutoQuery {
       * @memberof AutoQuery
       * @method killCurrentQueries
       */
-    killCurrentQueries() {
+    killCurrentQueries() { 
+        console.log(this.currentQueries)
         for (const qid of [...this.currentQueries]) {
             Query.killQuery(qid);
         }
@@ -349,7 +352,7 @@ export default class AutoQuery {
             }
             else if (event === "end") {
                 this.currentQueries.delete(id);
-                if(["tracts", "counties"].includes(this.blockerGroup)) {
+                if(this.isIntersectable) {
                     window.refreshIntersections();
                 }
             }

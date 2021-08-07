@@ -94,11 +94,11 @@ export default function Popup() {
     const [obj, setObj] = useState({});
     const [globalState, setGlobalState] = useGlobalState();
     const [colorSummary, setColorSummary] = useState(obj?.properties?.colorInfo?.colorSummary());
-    const [colorField, setColorField] = useState(obj?.properties?.colorInfo?.currentColorFieldName);
+    const [colorField, setColorField] = useState(obj?.properties?.colorInfo?.currentColorField?.name);
     const classes = useStyles();
 
     const onObjChange = () => {
-        setColorSummary(obj?.properties?.colorInfo?.colorSummary(colorField?.name))
+        setColorSummary(obj?.properties?.colorInfo?.colorSummary(obj?.properties?.colorInfo?.currentColorField?.name))
         setColorField(obj?.properties?.colorInfo?.currentColorField)
         const onFieldChange = (newField) => {
             setColorField(newField)
