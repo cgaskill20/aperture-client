@@ -255,7 +255,6 @@ const Query = {
             }
             else if (event === "end") {
                 allowFinish = true;
-                console.log("end waitingroom")
                 if (waitingRoom.length) {
                     dumpWaitingRoom();
                 }

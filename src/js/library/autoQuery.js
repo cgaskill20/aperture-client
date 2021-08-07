@@ -350,7 +350,6 @@ export default class AutoQuery {
                 }
             }
             else if (event === "end") {
-                console.log("END")
                 this.currentQueries.delete(id);
                 if(this.isIntersectable) {
                     window.refreshIntersections();
@@ -358,7 +357,6 @@ export default class AutoQuery {
             }
         }
 
-        console.log("QUERY")
         Query.makeQuery({
             collection: this.collection,
             pipeline: this.buildConstraintPipeline(),

@@ -281,7 +281,6 @@ export default class RenderInfrastructure {
 
     updateIntersections(specificGISJOIN = null) {
         if (intersect) {
-            console.log("Update!")
             let layersToBeRemoved = [];
             let layersToBeRefreshedMappedToRefs = {};
 
@@ -313,7 +312,6 @@ export default class RenderInfrastructure {
             }
 
             if (Object.keys(layersToBeRefreshedMappedToRefs).length) {
-                console.log(`refreshing ${Object.keys(layersToBeRefreshedMappedToRefs).length} layers`)
                 this.bulkRefreshAfterRefsChanged(layersToBeRefreshedMappedToRefs, false, true);
             }
 
@@ -441,8 +439,6 @@ export default class RenderInfrastructure {
     }
 
     removeRefs(specifiedIdsSet, collectionName) {
-        console.log("removing refs")
-        console.log({specifiedIdsSet})
         let layersToBeRemoved = new Set();
         let hadRefs = false;
         const refsIDMap = {};
