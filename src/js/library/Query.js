@@ -138,13 +138,22 @@ const Query = {
         query = { ...defaultQuery, ...query }
         query.id = Math.random().toString(36).substring(2, 6);
         this.currentQueries[query.id] = query;
-        const { dontLink } = query;
+        console.log({currents: this.currentQueries})
+        const { dontLink, callback } = query;
 
         let promiseFlag = false;
         let callbackToPromise;
         if (!query.callback) {
             promiseFlag = true;
             callbackToPromise = this._callbackToPromise(query);
+        }
+        else {
+            query.callback = (res) => {
+                if (res.event === "end") {
+                    delete this.currentQueries[query.id];
+                }
+                callback(res)
+            }
         }
 
         const linked = this.linked[query.collection];
@@ -172,8 +181,11 @@ const Query = {
         });
         this.killedQueries.add(qid)
         this.currentQueries[qid].callback({ event: "end" })
-        this.currentQueries[qid].callback = () => {}
-        this.killedQueries.delete(qid)
+        if (this.currentQueries[qid]) {
+            this.currentQueries[qid].callback = () => { }
+            this.killedQueries.delete(qid)
+            delete this.currentQueries[qid];
+        }
     },
 
     _queryFineOrCoarse(query) {
@@ -212,6 +224,7 @@ const Query = {
                         ret.data = [];
                         this.killedQueries.delete(query.id)
                     }
+                    delete this.currentQueries[query.id];
                     resolve(ret);
                 }
             }
@@ -243,8 +256,12 @@ const Query = {
             }
             else if (event === "end") {
                 allowFinish = true;
+                console.log("end waitingroom")
                 if (waitingRoom.length) {
                     dumpWaitingRoom();
+                }
+                else if(!currentDumpNums.size) {
+                    finished();
                 }
             }
         }
