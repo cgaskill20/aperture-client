@@ -138,7 +138,6 @@ const Query = {
         query = { ...defaultQuery, ...query }
         query.id = Math.random().toString(36).substring(2, 6);
         this.currentQueries[query.id] = query;
-        console.log({currents: this.currentQueries})
         const { dontLink, callback } = query;
 
         let promiseFlag = false;
@@ -306,7 +305,7 @@ const Query = {
             }, {});
             const JOINS = Object.keys(waitingRoomSnapshotMap);
             queryDump.pipeline = [{ "$match": { [field]: { "$in": JOINS } } }, ...queryDump.pipeline]
-            //queryDump.id = `${queryDump.id}_dump${thisDumpNum}`
+            queryDump.id = `${queryDump.id}_dump${thisDumpNum}`
             queryDump.callback = (d) => { dumpCallback(d, thisDumpNum, waitingRoomSnapshotMap) };
             this._queryMongo(queryDump);
             waitingRoom = [];
