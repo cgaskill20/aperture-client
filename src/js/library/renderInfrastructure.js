@@ -589,11 +589,13 @@ export default class RenderInfrastructure {
         const iconHTML = document.createElement('img')
         const iconMargin = 6;
         const iconSize = 40;
+        const iconOffSet = (iconSize - (iconMargin * 2)) / 2
         iconHTML.setAttribute('src', address);
         iconHTML.setAttribute('width', iconSize)
         iconHTML.setAttribute('height', iconSize)
         iconHTML.style.padding = `${iconMargin}px`
         iconHTML.style.backgroundColor = color ?? 'white';
+        iconHTML.style.transform = `translate(-${iconOffSet}px, -${iconOffSet}px)`
         iconHTML.style.borderRadius = `${iconSize / 2}px`
 
         const icon = new L.DivIcon({
