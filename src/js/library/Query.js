@@ -77,6 +77,8 @@ const Query = {
     linked: {},
     backgroundLoader: null,
     queryWorker: new Worker(),
+    killedQueries: new Set(),
+    currentQueries: {},
     backgroundLoader: (linked) => {
         if (linked === "tract_geo_140mb_no_2d_index") {
             return window.backgroundTract;
@@ -135,6 +137,7 @@ const Query = {
     async makeQuery(query) {
         query = { ...defaultQuery, ...query }
         query.id = Math.random().toString(36).substring(2, 6);
+        this.currentQueries[query.id] = query;
         const { dontLink } = query;
 
         let promiseFlag = false;
@@ -167,6 +170,11 @@ const Query = {
             type: "kill",
             id: qid
         });
+        this.killedQueries.add(qid)
+        console.log(`edning ${qid}`)
+        this.currentQueries[qid].callback({ event: "end" })
+        this.currentQueries[qid].callback = () => {}
+        this.killedQueries.delete(qid)
     },
 
     _queryFineOrCoarse(query) {
@@ -199,6 +207,12 @@ const Query = {
                     if (geohashes) {
                         ret.geohashes = geohashes;
                     }
+
+                    if (this.killedQueries.has(query.id)) {
+                        ret.geohashes = [];
+                        ret.data = [];
+                        this.killedQueries.delete(query.id)
+                    }
                     resolve(ret);
                 }
             }
@@ -211,7 +225,8 @@ const Query = {
         const epsilon = 100;
         let waitingRoom = [];
         let geohashes;
-        let currentDumpNums = new Set()
+        let currentDumpNums = new Set();
+        let allowFinish = false;
 
         const waitingRoomListener = (response) => {
             const { event, payload } = response;
@@ -228,6 +243,7 @@ const Query = {
                 query.callback({ event: "info", payload: { geohashes, id } })
             }
             else if (event === "end") {
+                allowFinish = true;
                 if (waitingRoom.length) {
                     dumpWaitingRoom();
                 }
@@ -257,7 +273,7 @@ const Query = {
             else if (event === "end") {
                 currentDumpNums.delete(localDumpNum);
                 waitingRoomSnapshotMap = null;
-                if(!currentDumpNums.size) {
+                if (!currentDumpNums.size && allowFinish) {
                     finished();
                 }
             }
@@ -274,7 +290,7 @@ const Query = {
             }, {});
             const JOINS = Object.keys(waitingRoomSnapshotMap);
             queryDump.pipeline = [{ "$match": { [field]: { "$in": JOINS } } }, ...queryDump.pipeline]
-            queryDump.id = `${queryDump.id}_dump${thisDumpNum}`
+            //queryDump.id = `${queryDump.id}_dump${thisDumpNum}`
             queryDump.callback = (d) => { dumpCallback(d, thisDumpNum, waitingRoomSnapshotMap) };
             this._queryMongo(queryDump);
             waitingRoom = [];

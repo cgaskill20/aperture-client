@@ -351,6 +351,7 @@ export default class AutoQuery {
                 }
             }
             else if (event === "end") {
+                console.log(`end for ${id}`)
                 this.currentQueries.delete(id);
                 if(this.isIntersectable) {
                     window.refreshIntersections();
