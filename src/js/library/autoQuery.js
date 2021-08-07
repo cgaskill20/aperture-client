@@ -247,7 +247,6 @@ export default class AutoQuery {
       * @method killCurrentQueries
       */
     killCurrentQueries() { 
-        console.log(this.currentQueries)
         for (const qid of [...this.currentQueries]) {
             Query.killQuery(qid);
         }
@@ -351,7 +350,6 @@ export default class AutoQuery {
                 }
             }
             else if (event === "end") {
-                console.log(`end for ${id}`)
                 this.currentQueries.delete(id);
                 if(this.isIntersectable) {
                     window.refreshIntersections();

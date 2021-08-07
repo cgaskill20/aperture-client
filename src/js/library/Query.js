@@ -171,7 +171,6 @@ const Query = {
             id: qid
         });
         this.killedQueries.add(qid)
-        console.log(`edning ${qid}`)
         this.currentQueries[qid].callback({ event: "end" })
         this.currentQueries[qid].callback = () => {}
         this.killedQueries.delete(qid)

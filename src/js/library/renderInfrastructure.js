@@ -71,7 +71,6 @@ window.setIntersect = (i) => {
 };
 
 window.refreshIntersections = (switchMode = false) => {
-    console.log(`refrsh ${switchMode}`)
     if (!switchMode && !intersect) {
         return;
     }
@@ -86,7 +85,6 @@ window.addOrSubtractIntersectionNumber = (add = true, tract = true) => {
     let num = add ? 1 : -1;
     const key = tract ? "tracts" : "counties"
     intersectionNumber[key] += num;
-    console.log({ intersectionNumber })
 }
 
 const FLYTOOPTIONS = { //for clicking on icons
@@ -290,7 +288,7 @@ export default class RenderInfrastructure {
                 const layer = this.currentGISJOINLayers[GISJOIN]
 
                 if (layer.refs.length === intersectionNumber[level]) {
-                    if (layer.refs.length !== layer.recentNumRefs) {
+                    if (layer.refs.length !== layer.recentNumRefs || layer.offMap) {
                         layer.offMap = false;
                         layer.recentNumRefs = layer.refs.length;
                         layersToBeRefreshedMappedToRefs[layer.layerID] = layer.refs;
@@ -312,18 +310,16 @@ export default class RenderInfrastructure {
             }
 
             if (Object.keys(layersToBeRefreshedMappedToRefs).length) {
-                console.log({ toBeAdded: Object.keys(layersToBeRefreshedMappedToRefs) })
                 this.bulkRefreshAfterRefsChanged(layersToBeRefreshedMappedToRefs, false, true);
             }
 
             if (layersToBeRemoved.length) {
-                console.log({ layersToBeRemoved })
-                console.log(`Removing ${layersToBeRemoved.length} layers`)
                 this.removeSpecifiedLayersFromMap(layersToBeRemoved, null, true);
             }
         }
         else {
             const layersToBeRefreshedMappedToRefs = Object.values(this.currentGISJOINLayers).reduce((acc, curr) => {
+                curr.offMap = undefined;
                 acc[curr.layerID] = curr.refs;
                 return acc;
             }, {})
@@ -375,11 +371,8 @@ export default class RenderInfrastructure {
     }
 
     bulkRefreshAfterRefsChanged(refsIDMap, deletion = false, patchHoles = false) {
-        console.time("timeToGetIDS")
         const layersToUpdate = this.getLayersForSpecifiedIds(new Set(Object.keys(refsIDMap).map(specifiedIdString => Number(specifiedIdString))));
-        console.timeEnd("timeToGetIDS")
 
-        console.time("updateLayers")
         let idsFound = new Set();
         for (const layerToUpdate of layersToUpdate) {
             const refs = refsIDMap[layerToUpdate.specifiedId];
@@ -387,9 +380,7 @@ export default class RenderInfrastructure {
             const properties = this.refsToProperties(refs);
             this.refreshIndividualLayer(layerToUpdate, properties, deletion)
         }
-        console.timeEnd("updateLayers")
 
-        console.time("patchHoles")
         if (patchHoles) {
             const idsWithoutLayers = Object.keys(refsIDMap)
                 .map(id => Number(id))
@@ -405,7 +396,6 @@ export default class RenderInfrastructure {
                 this.bulkRefreshAfterRefsChanged(newRefsIDMap)
             }
         }
-        console.timeEnd("patchHoles")
     }
 
     refreshAfterRefsChanged(layerID, refs, deletion = false) {
