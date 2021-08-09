@@ -91,7 +91,6 @@ export default class AutoQuery {
 
         this.streams = [];
         this.mapLayers = [];
-        this.currentGeoJSON = [];
         this.layerIDs = new Set();
         this.currentQueries = new Set();
 
@@ -112,7 +111,7 @@ export default class AutoQuery {
 
         this.colorFieldChangeSubscribers = [];
         this.color = layerData.color;
-        if(this.color.variable){
+        if (this.color.variable) {
             this.changeColorCodeField(this.color.variable, this.color)
         }
         else {
@@ -135,6 +134,8 @@ export default class AutoQuery {
             this.blockerGroup += "s";
         }
 
+        this.isIntersectable = ["tracts", "counties"].includes(this.blockerGroup);
+
         this.minZoom = this.data.minZoom;
         this.blocked = false;
         AutoQuery.blockers[this.blockerGroup] = 0;
@@ -151,6 +152,9 @@ export default class AutoQuery {
       */
     onAdd() {
         this.enabled = true;
+        if(this.isIntersectable) {
+            window.addOrSubtractIntersectionNumber(true, this.blockerGroup === "tracts");
+        }
         this.query();
     }
 
@@ -162,6 +166,12 @@ export default class AutoQuery {
     onRemove() {
         this.clearMapLayers();
         this.killCurrentQueries();
+        if(this.enabled) {
+            if(this.isIntersectable) {
+                window.addOrSubtractIntersectionNumber(false, this.blockerGroup === "tracts");
+                window.refreshIntersections();
+            }
+        }
 
         const oldBlockers = JSON.stringify(AutoQuery.blockers);
         AutoQuery.blockers[this.blockerGroup] -= this.blocked;
@@ -169,7 +179,6 @@ export default class AutoQuery {
         this.checkAndDispatch(oldBlockers);
 
         this.layerIDs.clear()
-        this.currentGeoJSON = [];
         this.enabled = false;
         this.geohashCache = [];
         MapDataFilterWrapper.removeCollection(this.collection);
@@ -237,19 +246,20 @@ export default class AutoQuery {
       * @memberof AutoQuery
       * @method killCurrentQueries
       */
-    killCurrentQueries() {
+    killCurrentQueries() { 
         for (const qid of [...this.currentQueries]) {
             Query.killQuery(qid);
         }
         this.currentQueries.clear();
     }
 
-    changeColorCodeField(fieldName, predefinedColor=null) {
-        if(fieldName === this.color.variable){
+    changeColorCodeField(fieldName, predefinedColor = null, dontRerender = false) {
+        if (fieldName === this.color.variable) {
             predefinedColor = this.color;
         }
         const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
-        if(colorField){
+        if (colorField) {
+            //console.log({fieldName})
             this.colorField = { name: fieldName, label: colorField.label };
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);
@@ -258,11 +268,24 @@ export default class AutoQuery {
                 this.protoColor = new Color("string", colorField.options, predefinedColor);
             }
             this.colorFieldChangeSubscribers.forEach(func => func(this.colorField))
-            this.clearMapLayers();
-            const currentGeoJSONCopy = JSON.parse(JSON.stringify(this.currentGeoJSON))
-            this.currentGeoJSON = []
-            MapDataFilterWrapper.removeCollection(this.collection);
-            currentGeoJSONCopy.forEach(geoJSON => this.renderGeoJSON(geoJSON))
+            if (dontRerender) {
+                return;
+            } 
+            const layers = window.renderInfrastructure.getLayersForSpecifiedIds(new Set(this.mapLayers));
+            for (const layer of layers) {
+                const { feature, options } = layer;
+                feature.properties.colorInfo.currentColorField = this.colorField;
+                const color = this.getColor(feature.properties, Util.getFeatureType(feature));
+                if (feature && !options.icon) {
+                    //console.log("SETTING OVER HERE")
+                    const colorSetter = [Util.FEATURETYPE.multiPolygon, Util.FEATURETYPE.polygon].includes(Util.getFeatureType(feature)) ? "fillColor" : "color"
+                    layer.setStyle({ [colorSetter]: color })
+                }
+                else if(options.icon) {
+                    // :)
+                    options.icon.options.html.style.backgroundColor = color;
+                }
+            }
         }
     }
 
@@ -328,6 +351,9 @@ export default class AutoQuery {
             }
             else if (event === "end") {
                 this.currentQueries.delete(id);
+                if(this.isIntersectable) {
+                    window.refreshIntersections();
+                }
             }
         }
 
@@ -392,7 +418,7 @@ export default class AutoQuery {
       * @method clearMapLayers
       */
     clearMapLayers() {
-        window.renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers);
+        window.renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers, this.collection);
         this.mapLayers = [];
         this.layerIDs.clear();
     }
@@ -423,21 +449,25 @@ export default class AutoQuery {
             updateColorFieldName: this.changeColorCodeField.bind(this),
             validColorFieldNames: Object.keys(this.data.constraints).map(Util.removePropertiesPrefix),
             subscribeToColorFieldChange: this.subscribeToColorFieldChange.bind(this),
-            colorSummary: () => { return this.protoColor?.getColorSummary() }
+            colorSummary: () => { return this.protoColor?.getColorSummary() },
+            getColor: this.getColor.bind(this)
         }
 
         if (this.getIcon())
             indexData[this.collection]["iconAddr"] = `./images/map-icons/${this.getIcon()}.png`;
 
         indexData[this.collection]["border"] = this.color.border;
-        indexData[this.collection]["opacity"] = this.color.opacity;
+        //indexData[this.collection]["opacity"] = this.color.opacity;
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
-        this.currentGeoJSON.push(data)
         this.layerIDs.add(id);
 
     }
 
-    subscribeToColorFieldChange (func) {
+    subscribeToColorFieldChange(func, unsubscribe=false) {
+        if(unsubscribe) {
+            this.colorFieldChangeSubscribers.splice(this.colorFieldChangeSubscribers.indexOf(func),1)
+            return;
+        }
         this.colorFieldChangeSubscribers.push(func)
     }
 
@@ -598,6 +628,9 @@ export default class AutoQuery {
     getColor(properties, featureType) {
         const propsVarName = Util.removePropertiesPrefix(this.colorField?.name);
         const value = properties[propsVarName];
+        if(!value) {
+            return;
+        }
         return this.protoColor?.getColor(value, featureType)
     }
 }
