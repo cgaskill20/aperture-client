@@ -15,7 +15,7 @@
                 "type": "range",
                 "unit": "fahrenheit",
                 "temporalType": "max",
-                "reverseGradient": true 
+                "reverseGradient": true
             },
             {
                 "name": "year",
@@ -152,7 +152,7 @@
                 "step": 0.05,
                 "min": 0,
                 "max": 1,
-                "reverseGradient": true 
+                "reverseGradient": true
             }
         ]
     },
@@ -175,7 +175,7 @@
                 "step": 0.05,
                 "min": 0,
                 "max": 1,
-                "reverseGradient": true 
+                "reverseGradient": true
             }
         ]
     },
@@ -195,21 +195,21 @@
                 "type": "range",
                 "min": 6.2,
                 "max": 83.5,
-                "reverseGradient": true 
+                "reverseGradient": true
             },
             {
                 "name": "median_age_male",
                 "type": "range",
                 "min": 3.8,
                 "max": 85.2,
-                "reverseGradient": true 
+                "reverseGradient": true
             },
             {
                 "name": "median_age_total",
                 "type": "range",
                 "min": 5.8,
                 "max": 84.5,
-                "reverseGradient": true 
+                "reverseGradient": true
             }
         ]
     },
@@ -229,21 +229,21 @@
                 "type": "range",
                 "min": 6.2,
                 "max": 83.5,
-                "reverseGradient": true 
+                "reverseGradient": true
             },
             {
                 "name": "median_age_male",
                 "type": "range",
                 "min": 3.8,
                 "max": 85.2,
-                "reverseGradient": true 
+                "reverseGradient": true
             },
             {
                 "name": "median_age_total",
                 "type": "range",
                 "min": 5.8,
                 "max": 84.5,
-                "reverseGradient": true 
+                "reverseGradient": true
             }
         ]
     },
@@ -1007,7 +1007,6 @@
                 "label": "Minimum Station Pressure during Time Constraint",
                 "unit": "kilopascal",
                 "temporalType": "min"
-                
             },
             {
                 "name": "staPresMaximum",
@@ -2541,5 +2540,125 @@
                 "hideByDefault": true
             }
         ]
+    },
+    {
+        "collection": "all_places_of_worship_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "child_care_centers_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "colleges_and_universities_campuses_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "dhl_facilities_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "fdic_insured_banks_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "fairgrounds_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "fedex_facilities_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "general_manufacturing_facilities_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "hurricane_evacuation_routes_geo"
+    },
+    {
+        "collection": "hydrocarbon_gas_liquid_pipelines_geo"
+    },
+    {
+        "collection": "local_law_enforcement_locations_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "major_sport_venues_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "mobile_home_parks_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "ncua_insured_credit_unions_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "national_shelter_system_facilities_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "natural_gas_compressor_stations_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "natural_gas_processing_plants_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "natural_gas_storage_facilities_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "nursing_homes_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "oil_refineries_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "oil_and_natural_gas_wells_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "private_schools_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "public_refrigerated_warehouses_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "public_transit_stations_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "truck_driving_schools_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "ups_facilities_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "urgent_care_facilities_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "veterans_health_administration_medical_facilities_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "railroads_geo"
+    },
+    {
+        "collection": "prison_boundaries_geo",
+        "icon": "school"
+    },
+    {
+        "collection": "trails_geo"
     }
 ]
