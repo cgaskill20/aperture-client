@@ -6320,5 +6320,429 @@
                 "hideByDefault": true
             }
         ]
+    },
+    {
+        "collection": "tract_proximity_v2",
+        "level": "tract",
+        "fieldMetadata": [
+            {
+                "name": "nearest_transmission_line",
+                "label": "Nearest Transmission Line",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_public_school",
+                "label": "Nearest Public School",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_flood_zone",
+                "label": "Nearest Flood Zone",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_place_of_worship",
+                "label": "Nearest Place of Worship",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_child_care_center",
+                "label": "Nearest Child Care Center",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_fairground",
+                "label": "Nearest Fairground",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_mobile_home_park",
+                "label": "Nearest Mobile Home Park",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_national_shelter_system_facility",
+                "label": "Nearest National Shelter System Facility",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_railroad",
+                "label": "Nearest Railroad",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_hospital",
+                "label": "Nearest Hospital",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_power_plant",
+                "label": "Nearest Power Plant",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_fire_station",
+                "label": "Nearest Fire Station",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_dam",
+                "label": "Nearest Dam",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_natural_gas_pipeline",
+                "label": "Nearest Natural Gas Pipeline",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_electrical_substation",
+                "label": "Nearest Electrical Substation",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_college_or_university_campus",
+                "label": "Nearest College or University Campus",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_dhl_facility",
+                "label": "Nearest DHL Facility",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_fdic_insured_bank",
+                "label": "Nearest FDIC Insured Bank",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_fedex_facility",
+                "label": "Nearest Fedex Facility",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_general_manufacturing_facility",
+                "label": "Nearest General Manufacturing Facility",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_police_station",
+                "label": "Nearest Police Station",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_ncua_insured_credit_union",
+                "label": "Nearest NCUA Insured Credit Union",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_nursing_home",
+                "label": "Nearest Nursing Home",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_oil_refinery",
+                "label": "Nearest Oil Refinery",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_prison",
+                "label": "Nearest Prison",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_private_school",
+                "label": "Nearest Private School",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_public_refrigerated_warehouse",
+                "label": "Nearest Public Refrigerated Warehouse",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_truck_driving_school",
+                "label": "Nearest Truck Driving School",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_ups_facility",
+                "label": "Nearest UPS Facility",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_trail",
+                "label": "Nearest Trail",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_urgent_care_facility",
+                "label": "Nearest Urgent Care Facility",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_major_sport_venue",
+                "label": "Nearest Major Sport Venue",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_vha_medical_facility",
+                "label": "Nearest VHA Medical Facility",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_natural_gas_processing_plant",
+                "label": "Nearest Natural Gas Processing Plant",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_natural_gas_compressor_station",
+                "label": "Nearest Natural Gas Compressor Station",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_oil_or_natural_gas_well",
+                "label": "Nearest Oil or Natural Gas Well",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_natural_gas_storage_facility",
+                "label": "Nearest Natural Gas Storage Facility",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            },
+            {
+                "name": "nearest_hydrocarbon_gas_liquid_pipeline",
+                "label": "Nearest Hydrocarbon gas Liquid Pipeline",
+                "min": 0,
+                "max": 30,
+                "type": "range",
+                "step": 0.5,
+                "unit": "miles",
+                "plus": true,
+                "reverseGradient": true
+            }
+        ]
     }
 ]
