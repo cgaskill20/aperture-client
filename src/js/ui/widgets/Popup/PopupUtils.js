@@ -61,8 +61,8 @@ import fipsToState from "../../../../json/fipsToState.json"
 import defaultImportantFields from "../../../../json/defaultImportantFields.json"
 
 export const keyToDisplay = (obj, key) => {
-    if (obj?.meta?.[key]?.label) {
-        return obj.meta[key].label;
+    if (obj?.properties?.meta?.[key]?.label) {
+        return obj.properties.meta[key].label;
     }
     if (defaultImportantFields[key]) {
         return defaultImportantFields[key].label ?? Util.cleanUpString(key);
@@ -95,7 +95,7 @@ export const valueToDisplay = (obj, key, value) => {
 }
 
 export const keyValueIsValid = (key, value) => {
-    if (['meta', 'id', '_id', 'colorInfo'].includes(key)) {
+    if (['meta', 'id', '_id', 'colorInfo', 'apertureName'].includes(key)) {
         return false;
     }
     return true;

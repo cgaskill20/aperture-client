@@ -58,6 +58,7 @@ END OF TERMS AND CONDITIONS
 */
 import Query from './Query'
 import Util from './apertureUtil'
+import { minCountyZoom, minTractZoom, minGeneralZoom } from './Constants';
 /**
  * @namespace AutoMenu
  * @file Build a menu based on the metadata catalog & details provided by users about the metadata
@@ -110,12 +111,12 @@ export default {
                     autoMenuLayer.subGroup = metadata.subGroup ? metadata.subGroup : metadata.level === "tract" ? "Miscellaneous Tract" : "Miscellaneous County";
                     autoMenuLayer.linkedGeometry = metadata.linked ? metadata.linked.collection : metadata.level === "tract" ? "tract_geo_140mb_no_2d_index" : "county_geo_30mb_no_2d_index";
                     autoMenuLayer.joinField = metadata.linked ? metadata.linked.field : "GISJOIN";
-                    autoMenuLayer.minZoom = metadata.level === "tract" ? 9 : 7;
+                    autoMenuLayer.minZoom = metadata.level === "tract" ? minTractZoom : minCountyZoom;
                 }
                 else {
                     autoMenuLayer.group = "Infrastructure & Natural Features";
                     autoMenuLayer.subGroup = metadata.subGroup ? metadata.subGroup : "Miscellaneous";
-                    autoMenuLayer.minZoom = metadata.minZoom ? metadata.minZoom : 7;
+                    autoMenuLayer.minZoom = metadata.minZoom ? metadata.minZoom : minGeneralZoom;
                 }
 
 

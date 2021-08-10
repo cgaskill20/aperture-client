@@ -93,26 +93,36 @@ const useStyles = makeStyles({
 export default function Popup() {
     const [obj, setObj] = useState({});
     const [globalState, setGlobalState] = useGlobalState();
-    //console.log(obj?.properties?.colorInfo)
     const [colorSummary, setColorSummary] = useState(obj?.properties?.colorInfo?.colorSummary());
-    const [colorField, setColorField] = useState(obj?.properties?.colorInfo?.currentColorFieldName);
-
+    const [colorField, setColorField] = useState(obj?.properties?.colorInfo?.currentColorField?.name);
     const classes = useStyles();
 
-    useEffect(() => {
-        setColorSummary(obj?.properties?.colorInfo?.colorSummary())
+    const onObjChange = () => {
+        setColorSummary(obj?.properties?.colorInfo?.colorSummary(obj?.properties?.colorInfo?.currentColorField?.name))
         setColorField(obj?.properties?.colorInfo?.currentColorField)
-        obj?.properties?.colorInfo?.subscribeToColorFieldChange((newField) => {
+        const onFieldChange = (newField) => {
             setColorField(newField)
-            setColorSummary(obj?.properties?.colorInfo.colorSummary())
-        })
-    }, [obj])
+            setColorSummary(obj?.properties?.colorInfo.colorSummary(newField?.name))
+        }
+        obj?.properties?.colorInfo?.subscribeToColorFieldChange(onFieldChange)
+        return () => {
+            obj?.properties?.colorInfo?.subscribeToColorFieldChange(onFieldChange, true)
+        }
+    }
+
+    useEffect(onObjChange, [obj])
 
     useEffect(() => {
         window.setPopupObj = (o) => {
             setObj(o);
             setGlobalState({ popupOpen: true, sidebarOpen: false, preloading: false });
         };
+
+        window.forceUpdateObj = (properties) => {
+            if(properties === obj.properties) {
+                onObjChange();
+            }
+        }
         return () => { window.setPopupObj = () => { } };
     }, [globalState])
 
@@ -200,7 +210,7 @@ export default function Popup() {
                 <Grid container>
                     <Grid item xs={10}>
                         <Typography variant="h4" gutterBottom>
-                            {Util.cleanUpString(obj.name)}
+                            {Util.cleanUpString(obj?.properties?.apertureName)}
                         </Typography>
                     </Grid>
                     <Grid item xs={2}>

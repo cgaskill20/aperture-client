@@ -77,11 +77,13 @@ const Query = {
     linked: {},
     backgroundLoader: null,
     queryWorker: new Worker(),
-    backgroundLoader: (linked) => { 
-        if(linked === "tract_geo_140mb_no_2d_index"){
+    killedQueries: new Set(),
+    currentQueries: {},
+    backgroundLoader: (linked) => {
+        if (linked === "tract_geo_140mb_no_2d_index") {
             return window.backgroundTract;
         }
-        else if(linked === "county_geo_30mb_no_2d_index"){
+        else if (linked === "county_geo_30mb_no_2d_index") {
             return window.backgroundCounty;
         }
         return null;
@@ -95,7 +97,7 @@ const Query = {
     init(queryableData) {
         for (const [collection, data] of Object.entries(queryableData)) {
             if (data.linkedGeometry) {
-                this.linked[collection] = { 
+                this.linked[collection] = {
                     collection: data.linkedGeometry,
                     field: data.joinField
                 };
@@ -135,13 +137,22 @@ const Query = {
     async makeQuery(query) {
         query = { ...defaultQuery, ...query }
         query.id = Math.random().toString(36).substring(2, 6);
-        const { dontLink } = query;
+        this.currentQueries[query.id] = query;
+        const { dontLink, callback } = query;
 
         let promiseFlag = false;
         let callbackToPromise;
-        if(!query.callback){
+        if (!query.callback) {
             promiseFlag = true;
             callbackToPromise = this._callbackToPromise(query);
+        }
+        else {
+            query.callback = (res) => {
+                if (res.event === "end") {
+                    delete this.currentQueries[query.id];
+                }
+                callback(res)
+            }
         }
 
         const linked = this.linked[query.collection];
@@ -162,14 +173,21 @@ const Query = {
     * @memberof Query
     * @param {string} qid
     **/
-    killQuery(qid){
+    killQuery(qid) {
         this.queryWorker.postMessage({
             type: "kill",
             id: qid
         });
+        this.killedQueries.add(qid)
+        this.currentQueries[qid].callback({ event: "end" })
+        if (this.currentQueries[qid]) {
+            this.currentQueries[qid].callback = () => { }
+            this.killedQueries.delete(qid)
+            delete this.currentQueries[qid];
+        }
     },
 
-    _queryFineOrCoarse(query){
+    _queryFineOrCoarse(query) {
         const { granularity } = query;
         if (granularity === "coarse") {
             this._queryCoarse(query);
@@ -199,6 +217,13 @@ const Query = {
                     if (geohashes) {
                         ret.geohashes = geohashes;
                     }
+
+                    if (this.killedQueries.has(query.id)) {
+                        ret.geohashes = [];
+                        ret.data = [];
+                        this.killedQueries.delete(query.id)
+                    }
+                    delete this.currentQueries[query.id];
                     resolve(ret);
                 }
             }
@@ -206,12 +231,13 @@ const Query = {
         });
     },
 
-    _linkedQuery({collection, field}, query) {
+    _linkedQuery({ collection, field }, query) {
         const { granularity, id } = query;
         const epsilon = 100;
         let waitingRoom = [];
         let geohashes;
-        let waitingRoomDone = false;
+        let currentDumpNums = new Set();
+        let allowFinish = false;
 
         const waitingRoomListener = (response) => {
             const { event, payload } = response;
@@ -228,11 +254,11 @@ const Query = {
                 query.callback({ event: "info", payload: { geohashes, id } })
             }
             else if (event === "end") {
-                waitingRoomDone = true;
+                allowFinish = true;
                 if (waitingRoom.length) {
-                    dumpWaitingRoom(true);
+                    dumpWaitingRoom();
                 }
-                else {
+                else if(!currentDumpNums.size) {
                     finished();
                 }
             }
@@ -242,11 +268,12 @@ const Query = {
             query.callback({ event: "end" })
         }
 
-        const dumpCallback = (d, ignoreEnd = true, waitingRoomSnapshot) => {
+        const dumpCallback = (d, localDumpNum, waitingRoomSnapshotMap) => {
             const { event } = d;
             if (event === "data") {
                 const complimentaryData = { ...d.payload.data };
-                const realData = waitingRoomSnapshot.find(entry => entry[field] === complimentaryData[field]);
+                const realData = waitingRoomSnapshotMap[complimentaryData[field]];
+
                 Util.normalizeFeatureID(realData);
                 realData.id = `${realData.id}_${complimentaryData.id}`
                 realData.properties = {
@@ -255,22 +282,30 @@ const Query = {
                 }
                 d.payload.data = realData;
                 query.callback(d);
-            }
-            else if (event === "end" && !ignoreEnd) {
-                waitingRoomSnapshot = null;
-                finished();
+
             }
             else if (event === "end") {
-                waitingRoomSnapshot = null;
+                currentDumpNums.delete(localDumpNum);
+                waitingRoomSnapshotMap = null;
+                if (!currentDumpNums.size && allowFinish) {
+                    finished();
+                }
             }
         }
 
-        const dumpWaitingRoom = (final = false) => {
+        let dumpNum = 0;
+        const dumpWaitingRoom = () => {
+            const thisDumpNum = dumpNum++;
+            currentDumpNums.add(thisDumpNum)
             const queryDump = JSON.parse(JSON.stringify(query))
-            const JOINS = waitingRoom.map(entry => Util.resolvePath(field, entry));
-            const waitingRoomSnapshot = JSON.parse(JSON.stringify(waitingRoom))
+            const waitingRoomSnapshotMap = waitingRoom.reduce((acc, curr) => {
+                acc[curr[field]] = curr;
+                return acc;
+            }, {});
+            const JOINS = Object.keys(waitingRoomSnapshotMap);
             queryDump.pipeline = [{ "$match": { [field]: { "$in": JOINS } } }, ...queryDump.pipeline]
-            queryDump.callback = (d) => { dumpCallback(d, !final, waitingRoomSnapshot) };
+            queryDump.id = `${queryDump.id}_dump${thisDumpNum}`
+            queryDump.callback = (d) => { dumpCallback(d, thisDumpNum, waitingRoomSnapshotMap) };
             this._queryMongo(queryDump);
             waitingRoom = [];
         }
@@ -278,6 +313,7 @@ const Query = {
         const queryLinked = JSON.parse(JSON.stringify(query))
         queryLinked.collection = collection;
         queryLinked.pipeline = [];
+        queryLinked.id = `${queryLinked.id}_LINKED`
         queryLinked.callback = waitingRoomListener;
         this._queryFineOrCoarse(queryLinked);
     },
