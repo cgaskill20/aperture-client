@@ -73,7 +73,6 @@ const useStyles = makeStyles({
 
 export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) {
     const classes = useStyles();
-    console.log({obj})
     return <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
             <TableHead>
