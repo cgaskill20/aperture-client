@@ -76,11 +76,19 @@ export default function ScatterPlot(props) {
 
     let prepareData = (data, xVar, yVar) => {
 
+        let x = data['map_features'][xVar].map(e => e['locationName'])
+        let y = data['map_features'][yVar].map(e => e['locationName'])
+
+        let union = union_array(x,y)
+
         let retData = {};
+
         data['map_features'][xVar].map(e => {
-            retData[e['locationName']] = {
-                [xVar]: e.data,
-                [yVar] : 0,
+            if(e['locationName'] in union){
+                retData[e['locationName']] = {
+                    [xVar]: e.data,
+                    [yVar] : 0,
+                }
             }
         });
 
@@ -92,6 +100,21 @@ export default function ScatterPlot(props) {
 
         return retData;
     }
+
+    let union_array = (x, y) =>{
+        let obj = {}
+        for (let i = x.length-1; i >= 0; -- i)
+            obj[x[i]] = x[i];
+        for (let i = y.length-1; i >= 0; -- i)
+            obj[y[i]] = y[i];
+        let res = []
+        for (let k in obj) {
+            if (obj.hasOwnProperty(k))
+                res.push(obj[k]);
+        }
+        return res;
+    }
+
 
     let rerender = (width, height) => {
 
