@@ -57,10 +57,9 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 
-import React, { useEffect, useState } from "react";
-import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
-import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Tooltip } from "@material-ui/core";
-import PaletteIcon from '@material-ui/icons/Palette';
+import React from "react";
+import { keyToDisplay } from "./PopupUtils";
+import { TableCell, TableRow, makeStyles } from "@material-ui/core";
 import useHover from "../../hooks/useHover";
 import PopupTableValue from "./PopupTableValue";
 

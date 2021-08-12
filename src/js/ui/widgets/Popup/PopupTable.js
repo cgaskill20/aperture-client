@@ -58,9 +58,8 @@ END OF TERMS AND CONDITIONS
 */
 import React from "react";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles } from "@material-ui/core";
-import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
+import { keyValueIsValid } from "./PopupUtils";
 import PopupTableEntry from "./PopupTableEntry"
-import useHover from "../../hooks/useHover";
 import Util from "../../../library/apertureUtil";
 
 const drawerWidth = '450px';
