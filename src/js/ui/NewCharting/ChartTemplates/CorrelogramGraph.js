@@ -8,42 +8,47 @@ export default function CorrelogramGraph(props) {
     let retData = {};
     let keys = [];
     let data = []
-    let newobj = {}
+
+    let jeanMarc = (object,) => {
+        const keyTable = {}
+        for (const [mainKey, mapOfObjects] of Object.entries(object)) {
+            for (const [key, value] of Object.entries(mapOfObjects)) {
+                //very nice :)
+                keyTable[key] ? (() => {
+                    keyTable[key].push(value)
+                })() : (() => {
+                    keyTable[key] = [value]
+                })()
+            }
+        }
+        const result = Object.values(keyTable);
+        //get max entry length
+        const maxEntryLength = result.reduce((acc, curr) => {
+            return Math.max(acc,curr.length)
+        },0);
+        //only return the ones with the max length
+        return result.filter(entry => entry.length === maxEntryLength)
+    }
     if(props.data['map_features']) {
         for (const [key, value] of Object.entries(props.data['map_features'])) {
             if (value.length > 0) {
                 keys.push(feature.getFriendlyName(key))
                 data.push({"constraint": feature.getFriendlyName(key)});
-                newobj[key] = value;
+
                 retData[key] = {};
                 value.forEach(loc => {
                     retData[key][loc['locationName']] = loc.data;
                 })
             }
         }
-        console.log(newobj)
-        let jeanMarc = (object,) => {
-            const keyTable = {}
-            for (const [mainKey, mapOfObjects] of Object.entries(object)) {
-                for (const [key, value] of Object.entries(mapOfObjects)) {
-                    //very nice :)
-                    keyTable[key] ? (() => {
-                        keyTable[key].push(value)
-                    })() : (() => {
-                        keyTable[key] = [value]
-                    })()
-                }
+
+        let formatted =jeanMarc(retData)
+        console.log(formatted)
+        for(let i = 0; i < formatted[0].length; i++){
+            for(let j = i; j < formatted[0].length; j++){
+
             }
-            const result = Object.values(keyTable);
-            //get max entry length
-            const maxEntryLength = result.reduce((acc, curr) => {
-                return Math.max(acc,curr.length)
-            },0);
-            //only return the ones with the max length
-            return result.filter(entry => entry.length === maxEntryLength)
         }
-        console.log(props.data['map_features'])
-        console.log(jeanMarc(props.data['map_features']))
 
         let counter = 0;
         for (const [key, value] of Object.entries(retData)){
