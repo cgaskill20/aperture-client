@@ -60,7 +60,6 @@ END OF TERMS AND CONDITIONS
 import React, {useState} from "react";
 import {valueToDisplay} from "./PopupUtils";
 import {TableCell, TableRow, makeStyles, Collapse} from "@material-ui/core";
-import useHover from "../../hooks/useHover";
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import IconButton from "@material-ui/core/IconButton";
@@ -87,7 +86,6 @@ const useStyles = makeStyles({
 
 export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties }) {
     const classes = useStyles()
-    const [hoverRef, isHovered] = useHover();
     const [open, setOpen] = useState(false);
     const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
 

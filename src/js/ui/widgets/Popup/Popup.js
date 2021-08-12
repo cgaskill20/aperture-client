@@ -194,8 +194,6 @@ export default function Popup() {
         }
     }
 
-    //console.log(obj?.properties?.colorInfo.colorSummary)
-
     return <div className={classes.root}>
         <Drawer
             className={classes.drawer}
