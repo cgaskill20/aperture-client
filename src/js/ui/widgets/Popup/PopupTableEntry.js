@@ -59,13 +59,14 @@ END OF TERMS AND CONDITIONS
 
 import React, {useState} from "react";
 import {valueToDisplay} from "./PopupUtils";
-import {TableCell, TableRow, makeStyles, Collapse} from "@material-ui/core";
+import {TableCell, TableRow, makeStyles, Collapse, Select, InputLabel} from "@material-ui/core";
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import IconButton from "@material-ui/core/IconButton";
 import {makeJSONPretty} from "../../NewModeling/NewModeling";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
 
 const useStyles = makeStyles({
     root: {
@@ -73,21 +74,18 @@ const useStyles = makeStyles({
             borderBottom: 'unset',
         },
     },
-    clickable: {
-        cursor: 'pointer',
-        "&:hover": {
-            backgroundColor: '#dedede'
-        }
+    fullWidth: {
+        width: "100%"
     },
-    button: {
-        marginBottom: "15px"
-    }
 });
 
 export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties }) {
     const classes = useStyles()
     const [open, setOpen] = useState(false);
     const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
+
+    const isThisTemporal = entryProperties.isTemporal
+    console.log({isThisTemporal})
 
     const objectHasTrueValue = (obj) => {
         for(const value of Object.entries(obj)) {
@@ -98,6 +96,11 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
             }
         }
     }
+
+    /*
+    * temporal dropdown: some, first, last, average
+    * mapping: some -> SUM, fist -> FIRST, last -> LAST, average -> AVG
+    * */
 
     const colorFieldCheckbox = () => {
         return <FormControlLabel
@@ -114,6 +117,26 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
         />
     }
 
+    const isTemporal = () => {
+        if(isThisTemporal) {
+            return <div className={classes.fullWidth}>
+                <FormControl variant="outlined" className={classes.fullWidth}>
+                    <InputLabel>Temporal Range</InputLabel>
+                        <Select
+                            native
+                            label="Temporal Range"
+                        >
+                            <option value={0}>Some</option>
+                            <option value={1}>First</option>
+                            <option value={2}>Last</option>
+                            <option value={3}>Average</option>
+                        </Select>
+                </FormControl>
+
+            </div>
+        }
+    }
+
     return (
         <React.Fragment>
             <TableRow className={classes.root}>
@@ -124,9 +147,10 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
                 <TableCell align="right">{valueToDisplay(obj, keyValue, value)}</TableCell>
             </TableRow>
             <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                <TableCell colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         {colorFieldCheckbox()}
+                        {isTemporal()}
                     </Collapse>
                 </TableCell>
             </TableRow>
