@@ -43,10 +43,18 @@ export default function CorrelogramGraph(props) {
         }
 
         let formatted =jeanMarc(retData)
-        console.log(formatted)
-        for(let i = 0; i < formatted[0].length; i++){
-            for(let j = i; j < formatted[0].length; j++){
+        let points = []
 
+        for(let i = 0; i < formatted[0].length; i++){
+            let pointsArray = formatted.reduce(function(pointsArray, value){
+                pointsArray.push(value[i]);
+                return pointsArray
+            }, [])
+            points.push(pointsArray)
+        }
+        for(let i = 0; i < formatted[0].length; i++){
+            for(let j = i; j < formatted[0].length;j++){
+                console.log(calculateCorrelation(points[i], points[j]))
             }
         }
 
