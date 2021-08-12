@@ -106,7 +106,7 @@ export default function Frame(props) {
                 </div>;
                 break;
         case "line":
-            frame = <LineGraph size={props.size} data={props.data} selected={constraint}></LineGraph>; break;
+            frame = <LineGraph pos={props.pos} size={props.size} data={props.data} selected={constraint}></LineGraph>; break;
         case "piegraph":
             frame = <div><FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                 <PieGraph size={props.size} data={props.data} selected={constraint}></PieGraph></div>; break;
