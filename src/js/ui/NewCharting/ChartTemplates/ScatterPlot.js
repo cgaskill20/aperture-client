@@ -84,7 +84,7 @@ export default function ScatterPlot(props) {
         let retData = {};
 
         data['map_features'][xVar].map(e => {
-            if(e['locationName'] in union){
+            if(union.indexOf(e['locationName']) != -1){
                 retData[e['locationName']] = {
                     [xVar]: e.data,
                     [yVar] : 0,
@@ -112,6 +112,7 @@ export default function ScatterPlot(props) {
             if (obj.hasOwnProperty(k))
                 res.push(obj[k]);
         }
+
         return res;
     }
 
