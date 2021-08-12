@@ -248,14 +248,17 @@ export default class MapDataFilter {
       * @returns {string} A string that describes the entry's location
       */
     dataLocation(entry) {
-        let locationName = entry.properties.NAMELSAD10;
-        if(locationName.includes("County")){
-           return "county";
+        let locationName;
+        if(locationName = entry.properties.NAMELSAD10){
+            if(locationName.includes("County")){
+                return "county";
+            }
+            if(locationName.includes("Tract")){
+                return "tract";
+            }
+            return undefined;
         }
-        if(locationName.includes("Tract")){
-            return "tract";
-        }
-        return undefined;
+        return false;
     }
 
     /** Gets an array of models for multiple features.
