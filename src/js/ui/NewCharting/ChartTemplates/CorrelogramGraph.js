@@ -54,31 +54,11 @@ export default function CorrelogramGraph(props) {
         }
         for(let i = 0; i < formatted[0].length; i++){
             for(let j = i; j < formatted[0].length;j++){
-                console.log(calculateCorrelation(points[i], points[j]))
+                const correlation = calculateCorrelation(points[i], points[j])
+                data[i][keys[j]] = correlation.toPrecision(2)
             }
         }
 
-        let counter = 0;
-        for (const [key, value] of Object.entries(retData)){
-            let x = []
-            let y = []
-            for (const [key2, value2] of Object.entries(retData)){
-                if(key == key2){
-                    data[counter][key2] = 1;
-                }
-                for (const [key3, value3] of Object.entries(value)){
-                    if(key3 in value2){
-                        x.push(value3)
-                        y.push(value2[key3])
-                    }
-                }
-                const correlation = calculateCorrelation(x, y);
-                //console.log(correlation)
-                data[counter][key2.split("::")[2]] = correlation.toPrecision(2)
-                //console.log(correlation.toPrecision(2))
-            }
-            counter++;
-        }
     }
 
 
