@@ -61,6 +61,7 @@ import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper
 import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
 import PopupTableEntry from "./PopupTableEntry"
 import useHover from "../../hooks/useHover";
+import Util from "../../../library/apertureUtil";
 
 const drawerWidth = '450px';
 
@@ -72,7 +73,6 @@ const useStyles = makeStyles({
 
 export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) {
     const classes = useStyles();
-
     return <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
             <TableHead>
@@ -85,7 +85,11 @@ export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) 
                 {keyValPairs
                     .filter(([key, value]) => keyValueIsValid(key, value))
                     .map(([key, value]) => (
-                        <PopupTableEntry obj={obj} keyValue={key} value={value} key={key} currentColorField={colorField} /> 
+                        <PopupTableEntry obj={obj} keyValue={key} value={value} key={key} entryProperties={{
+                            isCurrentColorField: colorField?.name === key || Util.removePropertiesPrefix(colorField?.name) === key,
+                            canBeColorField: obj.properties.colorInfo.validColorFieldNames.includes(key),
+                            isTemporal: obj.properties.meta[key]?.temporal ? true : false
+                        }}/> 
                     ))}
             </TableBody>
         </Table>

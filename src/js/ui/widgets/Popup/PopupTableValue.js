@@ -62,7 +62,6 @@ import { valueToDisplay } from "./PopupUtils";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Tooltip } from "@material-ui/core";
 import PaletteIcon from '@material-ui/icons/Palette';
 import useHover from "../../hooks/useHover";
-import Util from "../../../library/apertureUtil";
 
 const useStyles = makeStyles({
     root: {
@@ -70,17 +69,17 @@ const useStyles = makeStyles({
     }
 });
 
-export default function PopupTableValue({ obj, keyValue, value, currentColorField, isHovered }) {
+export default function PopupTableValue({ obj, keyValue, value, isHovered, entryProperties }) {
     //console.log({ obj, keyValue })
     const classes = useStyles()
 
     const colorIcon = () => {
-        if (currentColorField?.name === keyValue || Util.removePropertiesPrefix(currentColorField?.name) === keyValue) {
+        if (entryProperties.isCurrentColorField) {
             return <Tooltip title="Color coding is based on this field.">
                 <PaletteIcon />
             </Tooltip>;
         }
-        else if(isHovered){
+        else if(isHovered && entryProperties.canBeColorField){
             return <PaletteIcon color="disabled"/>
         }
     }
