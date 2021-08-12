@@ -77,6 +77,10 @@ const useStyles = makeStyles({
     fullWidth: {
         width: "100%"
     },
+    collapse: {
+        paddingTop: 0,
+        paddingBottom: 0,
+    },
 });
 
 export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties }) {
@@ -89,8 +93,6 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
     * @Daniel - temporalScope is the selected dropdown feature for each given key/value pair. It is one of the strings
     *           from temporalMap. Not sure if this is what you need, but its what you get!
     */
-
-    console.log({temporalScope})
 
     const objectHasTrueValue = (obj) => {
         for(const value of Object.entries(obj)) {
@@ -152,7 +154,7 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
                 <TableCell align="right">{valueToDisplay(obj, keyValue, value)}</TableCell>
             </TableRow>
             <TableRow>
-                <TableCell colSpan={6}>
+                <TableCell className={classes.collapse} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         {colorFieldCheckbox()}
                         {isTemporal()}

@@ -62,20 +62,10 @@ import { keyValueIsValid } from "./PopupUtils";
 import PopupTableEntry from "./PopupTableEntry"
 import Util from "../../../library/apertureUtil";
 
-const drawerWidth = '450px';
-
-const useStyles = makeStyles({
-    table: {
-        maxWidth: drawerWidth,
-    }
-});
-
 export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) {
-    const classes = useStyles();
-
     return (
         <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="collapsible table">
+            <Table aria-label="collapsible table">
                 <TableHead>
                     <TableRow>
                         <TableCell />

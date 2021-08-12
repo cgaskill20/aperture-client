@@ -70,9 +70,6 @@ import defaultImportantFields from "../../../../json/defaultImportantFields.json
 const drawerWidth = '450px';
 
 const useStyles = makeStyles({
-    table: {
-        maxWidth: drawerWidth,
-    },
     root: {
         display: 'flex',
         zIndex: 10000,
