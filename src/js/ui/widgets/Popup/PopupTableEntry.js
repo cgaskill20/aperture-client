@@ -57,38 +57,98 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 
-import React from "react";
+import React, {useState} from "react";
 import { keyToDisplay } from "./PopupUtils";
-import { TableCell, TableRow, makeStyles } from "@material-ui/core";
+import {TableCell, TableRow, makeStyles, Collapse} from "@material-ui/core";
 import useHover from "../../hooks/useHover";
 import PopupTableValue from "./PopupTableValue";
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import {makeJSONPretty} from "../../NewModeling/NewModeling";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const useStyles = makeStyles({
+    root: {
+        '& > *': {
+            borderBottom: 'unset',
+        },
+    },
     clickable: {
         cursor: 'pointer',
         "&:hover": {
             backgroundColor: '#dedede'
         }
+    },
+    button: {
+        marginBottom: "15px"
     }
 });
 
 export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties }) {
-    //console.log({ obj, keyValue })
     const classes = useStyles()
     const [hoverRef, isHovered] = useHover();
+    const [open, setOpen] = useState(false);
     const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
 
-
-    return <TableRow key={keyValue} className={changeColorFieldName !== null ? classes.clickable : ''} ref={hoverRef} onClick={() => {
-        if (entryProperties.canBeColorField && !entryProperties.isCurrentColorField) {
-            changeColorFieldName(keyValue)
+    const objectHasTrueValue = (obj) => {
+        for(const value of Object.entries(obj)) {
+            if(value[1]) {
+                return <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </IconButton>
+            }
         }
-    }}>
-        <TableCell component="th" scope="row">
-            {keyToDisplay(obj, keyValue)}
-        </TableCell>
-        <TableCell>
-            <PopupTableValue obj={obj} keyValue={keyValue} value={value} entryProperties={entryProperties} isHovered={isHovered} />
-        </TableCell>
-    </TableRow>
+    }
+
+    const colorFieldCheckbox = () => {
+        return <FormControlLabel
+            control={
+                <Checkbox
+                    checked={entryProperties.isCurrentColorField}
+                    onChange={() => {
+                        changeColorFieldName(keyValue);
+                    }}
+                    color="primary"
+                />
+            }
+            label="Current color field"
+        />
+    }
+
+    return (
+        <React.Fragment>
+            <TableRow className={classes.root}>
+                <TableCell>
+                    {objectHasTrueValue(entryProperties)}
+                </TableCell>
+                <TableCell align="right">{makeJSONPretty(keyValue)}</TableCell>
+                <TableCell align="right">{value}</TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        {/*{setColorFieldButton()}*/}
+                        {colorFieldCheckbox()}
+                    </Collapse>
+                </TableCell>
+            </TableRow>
+        </React.Fragment>
+    )
+
+    // return <TableRow key={keyValue} className={changeColorFieldName !== null ? classes.clickable : ''} ref={hoverRef} onClick={() => {
+    //     if (entryProperties.canBeColorField && !entryProperties.isCurrentColorField) {
+    //         changeColorFieldName(keyValue)
+    //     }
+    // }}>
+    //     <TableCell component="th" scope="row">
+    //         {keyToDisplay(obj, keyValue)}
+    //     </TableCell>
+    //     <TableCell>
+    //         <PopupTableValue obj={obj} keyValue={keyValue} value={value} entryProperties={entryProperties} isHovered={isHovered} />
+    //     </TableCell>
+    // </TableRow>
 });
