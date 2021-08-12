@@ -75,7 +75,7 @@ export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) 
 
     return (
         <TableContainer component={Paper}>
-            <Table aria-label="collapsible table">
+            <Table className={classes.table} aria-label="collapsible table">
                 <TableHead>
                     <TableRow>
                         <TableCell />
@@ -97,26 +97,4 @@ export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) 
             </Table>
         </TableContainer>
     )
-
-    // return <TableContainer component={Paper}>
-    //     <Table className={classes.table} aria-label="simple table">
-    //         <TableHead>
-    //             <TableRow>
-    //                 <TableCell><b>Key</b></TableCell>
-    //                 <TableCell><b>Value</b></TableCell>
-    //             </TableRow>
-    //         </TableHead>
-    //         <TableBody>
-    //             {keyValPairs
-    //                 .filter(([key, value]) => keyValueIsValid(key, value))
-    //                 .map(([key, value]) => (
-    //                     <PopupTableEntry obj={obj} keyValue={key} value={value} key={key} entryProperties={{
-    //                         isCurrentColorField: colorField?.name === key || Util.removePropertiesPrefix(colorField?.name) === key,
-    //                         canBeColorField: obj.properties.colorInfo.validColorFieldNames.includes(key),
-    //                         isTemporal: obj.properties.meta[key]?.temporal ? true : false
-    //                     }}/>
-    //                 ))}
-    //         </TableBody>
-    //     </Table>
-    // </TableContainer>;
 });

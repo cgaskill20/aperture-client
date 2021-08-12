@@ -58,15 +58,12 @@ END OF TERMS AND CONDITIONS
 */
 
 import React, {useState} from "react";
-import {keyToDisplay, valueToDisplay} from "./PopupUtils";
+import {valueToDisplay} from "./PopupUtils";
 import {TableCell, TableRow, makeStyles, Collapse} from "@material-ui/core";
 import useHover from "../../hooks/useHover";
-import PopupTableValue from "./PopupTableValue";
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import {makeJSONPretty} from "../../NewModeling/NewModeling";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -137,17 +134,4 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
             </TableRow>
         </React.Fragment>
     )
-
-    // return <TableRow key={keyValue} className={changeColorFieldName !== null ? classes.clickable : ''} ref={hoverRef} onClick={() => {
-    //     if (entryProperties.canBeColorField && !entryProperties.isCurrentColorField) {
-    //         changeColorFieldName(keyValue)
-    //     }
-    // }}>
-    //     <TableCell component="th" scope="row">
-    //         {keyToDisplay(obj, keyValue)}
-    //     </TableCell>
-    //     <TableCell>
-    //         <PopupTableValue obj={obj} keyValue={keyValue} value={value} entryProperties={entryProperties} isHovered={isHovered} />
-    //     </TableCell>
-    // </TableRow>
 });
