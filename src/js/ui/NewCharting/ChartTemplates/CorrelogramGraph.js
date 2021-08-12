@@ -9,7 +9,7 @@ export default function CorrelogramGraph(props) {
     let keys = [];
     let data = []
 
-    let jeanMarc = (object,) => {
+    let findMatchingPoints = (object,) => {
         const keyTable = {}
         for (const [mainKey, mapOfObjects] of Object.entries(object)) {
             for (const [key, value] of Object.entries(mapOfObjects)) {
@@ -42,7 +42,7 @@ export default function CorrelogramGraph(props) {
             }
         }
 
-        let formatted =jeanMarc(retData)
+        let formatted = findMatchingPoints(retData)
         let points = []
 
         for(let i = 0; i < formatted[0].length; i++){
