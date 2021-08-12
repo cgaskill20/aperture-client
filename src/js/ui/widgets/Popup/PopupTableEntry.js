@@ -58,7 +58,7 @@ END OF TERMS AND CONDITIONS
 */
 
 import React, {useState} from "react";
-import { keyToDisplay } from "./PopupUtils";
+import {keyToDisplay, valueToDisplay} from "./PopupUtils";
 import {TableCell, TableRow, makeStyles, Collapse} from "@material-ui/core";
 import useHover from "../../hooks/useHover";
 import PopupTableValue from "./PopupTableValue";
@@ -126,12 +126,11 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
                     {objectHasTrueValue(entryProperties)}
                 </TableCell>
                 <TableCell align="right">{makeJSONPretty(keyValue)}</TableCell>
-                <TableCell align="right">{value}</TableCell>
+                <TableCell align="right">{valueToDisplay(obj, keyValue, value)}</TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        {/*{setColorFieldButton()}*/}
                         {colorFieldCheckbox()}
                     </Collapse>
                 </TableCell>
