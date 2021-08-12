@@ -81,11 +81,16 @@ const useStyles = makeStyles({
 
 export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties }) {
     const classes = useStyles()
+    const temporalMap = ["SUM", "FIRST", "LAST", "AVG"];
     const [open, setOpen] = useState(false);
     const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
+    const [temporalScope, setTemporalScope] = useState(temporalMap[0]);
+    /*
+    * @Daniel - temporalScope is the selected dropdown feature for each given key/value pair. It is one of the strings
+    *           from temporalMap. Not sure if this is what you need, but its what you get!
+    */
 
-    const isThisTemporal = entryProperties.isTemporal
-    console.log({isThisTemporal})
+    console.log({temporalScope})
 
     const objectHasTrueValue = (obj) => {
         for(const value of Object.entries(obj)) {
@@ -97,10 +102,9 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
         }
     }
 
-    /*
-    * temporal dropdown: some, first, last, average
-    * mapping: some -> SUM, fist -> FIRST, last -> LAST, average -> AVG
-    * */
+    const switchTemporalScope = (event) => {
+        setTemporalScope(temporalMap[event.target.value]);
+    }
 
     const colorFieldCheckbox = () => {
         return <FormControlLabel
@@ -118,15 +122,16 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
     }
 
     const isTemporal = () => {
-        if(isThisTemporal) {
+        if(entryProperties.isTemporal) {
             return <div className={classes.fullWidth}>
                 <FormControl variant="outlined" className={classes.fullWidth}>
                     <InputLabel>Temporal Range</InputLabel>
                         <Select
                             native
                             label="Temporal Range"
+                            onChange={switchTemporalScope}
                         >
-                            <option value={0}>Some</option>
+                            <option value={0}>Sum</option>
                             <option value={1}>First</option>
                             <option value={2}>Last</option>
                             <option value={3}>Average</option>
