@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import feature from "../../../library/charting/feature.js"
 import {ResponsiveHeatMap} from "nivo";
 const calculateCorrelation = require("calculate-correlation");
 
@@ -7,18 +8,42 @@ export default function CorrelogramGraph(props) {
     let retData = {};
     let keys = [];
     let data = []
-
+    let newobj = {}
     if(props.data['map_features']) {
         for (const [key, value] of Object.entries(props.data['map_features'])) {
             if (value.length > 0) {
-                keys.push(key.split("::")[2])
-                data.push({"constraint": key.split("::")[2]});
+                keys.push(feature.getFriendlyName(key))
+                data.push({"constraint": feature.getFriendlyName(key)});
+                newobj[key] = value;
                 retData[key] = {};
                 value.forEach(loc => {
                     retData[key][loc['locationName']] = loc.data;
                 })
             }
         }
+        console.log(newobj)
+        let jeanMarc = (object,) => {
+            const keyTable = {}
+            for (const [mainKey, mapOfObjects] of Object.entries(object)) {
+                for (const [key, value] of Object.entries(mapOfObjects)) {
+                    //very nice :)
+                    keyTable[key] ? (() => {
+                        keyTable[key].push(value)
+                    })() : (() => {
+                        keyTable[key] = [value]
+                    })()
+                }
+            }
+            const result = Object.values(keyTable);
+            //get max entry length
+            const maxEntryLength = result.reduce((acc, curr) => {
+                return Math.max(acc,curr.length)
+            },0);
+            //only return the ones with the max length
+            return result.filter(entry => entry.length === maxEntryLength)
+        }
+        console.log(props.data['map_features'])
+        console.log(jeanMarc(props.data['map_features']))
 
         let counter = 0;
         for (const [key, value] of Object.entries(retData)){
@@ -42,7 +67,7 @@ export default function CorrelogramGraph(props) {
             counter++;
         }
     }
-    console.log(JSON.stringify(data))
+
 
 
     return (
