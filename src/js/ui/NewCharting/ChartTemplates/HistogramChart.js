@@ -114,13 +114,16 @@ export default function HistogramGraph(props) {
         svg.select("g#yAxis").call(yAxis);
         svg.select("g#rects")
             .selectAll("rect")
-                .attr("fill", d => "steelblue")
             .data(bins)
             .join("rect")
                 .attr("x", d => x(d.x0) + 1)
                 .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
                 .attr("y", d => y(d.length))
-                .attr("height", d => y(0) - y(d.length));
+                .attr("height", d => y(0) - y(d.length))
+
+        svg.select("g#rects")
+            .selectAll("rect")
+                .attr("fill", d => "steelblue");
 
 
         if (props.kdeEnabled) {
