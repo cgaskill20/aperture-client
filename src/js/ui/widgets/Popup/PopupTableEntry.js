@@ -77,6 +77,10 @@ const useStyles = makeStyles({
     fullWidth: {
         width: "100%"
     },
+    dropdown: {
+        width: "100%",
+        paddingBottom: "10px"
+    },
     collapse: {
         paddingTop: 0,
         paddingBottom: 0,
@@ -125,7 +129,7 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
 
     const isTemporal = () => {
         if(entryProperties.isTemporal) {
-            return <div className={classes.fullWidth}>
+            return <div className={classes.dropdown}>
                 <FormControl variant="outlined" className={classes.fullWidth}>
                     <InputLabel>Temporal Range</InputLabel>
                         <Select
@@ -139,7 +143,6 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
                             <option value={3}>Average</option>
                         </Select>
                 </FormControl>
-
             </div>
         }
     }
