@@ -64,6 +64,7 @@ import Frame from './makeFrame';
 export default function ChartingWindow(props) {
     const [frames, setFrames] = useState([]);
 
+
     const addChartFrame = frame => {   
         setFrames(frames.concat([frame.type]))
     }

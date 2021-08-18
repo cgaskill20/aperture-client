@@ -59,7 +59,6 @@ END OF TERMS AND CONDITIONS
 import React, { useState, useEffect } from 'react';
 import HistogramGraph from "./ChartTemplates/HistogramChart";
 import LineGraph from "./ChartTemplates/LineGraph"
-import PieGraph from "./ChartTemplates/PieTEST";
 import ScatterPlot from "./ChartTemplates/ScatterPlot";
 import KDEWrapper from "./KDEWrapper";
 import BoxPlot from "./ChartTemplates/BoxPlotChart";
@@ -71,6 +70,7 @@ import CorrelogramGraph from "./ChartTemplates/CorrelogramGraph";
 export default function Frame(props) {
 
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
+
 
     let frame;
     const [constraint, setConstraint] = useState();
@@ -101,16 +101,13 @@ export default function Frame(props) {
                 <div>
                     <FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                     <KDEWrapper>
-                        <HistogramGraph size={props.size} data={props.data} selected={constraint}></HistogramGraph>
+                        <HistogramGraph key={id} size={props.size} data={props.data} selected={constraint}></HistogramGraph>
                     </KDEWrapper>
                 </div>;
                 break;
         case "line":
-            frame = <div><FrameControls index={props.index} remove={props.remove} numDropDowns={0}></FrameControls>
+            frame = <div><FrameControls key={id} index={props.index} remove={props.remove} numDropDowns={0}></FrameControls>
                 <LineGraph pos={props.pos} size={props.size} data={props.data} selected={constraint}></LineGraph></div>; break;
-        case "piegraph":
-            frame = <div><FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
-                <PieGraph size={props.size} data={props.data} selected={constraint}></PieGraph></div>; break;
         case "scatterplot":
             frame =
                 <div>
