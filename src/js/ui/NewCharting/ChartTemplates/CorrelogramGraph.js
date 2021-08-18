@@ -7,22 +7,26 @@ const calculateCorrelation = require("calculate-correlation");
 
 
 export default function CorrelogramGraph(props) {
-    console.log("re-rendered")
+
     const [tractVcounty,setTractVcounty] = useState(false);
-    console.log(tractVcounty)
-    console.log(props.options);
+    const [state, setState] = React.useState({
+        tractvCounty: true
+    });
+    const handleChange = name => event => {
+        setState({ ...state, [name]: event.target.checked });
+    };
+
     let retData = {};
     let keys = [];
     let data = []
 
-    let selector = ""
 
-    selector = <div><Grid component="label" container alignItems="center" spacing={1}>
+    let selector = <div><Grid component="label" container alignItems="center" spacing={1}>
         <Grid item>Tract</Grid>
         <Grid item>
             <Switch
-                checked={tractVcounty}
-
+                checked={state.tractvCounty}
+                onChange={handleChange("tractvCounty")}
                 value="Tract or County"
             />
         </Grid>
@@ -30,9 +34,17 @@ export default function CorrelogramGraph(props) {
     </Grid></div>
 
 
+
     let findMatchingPoints = (object,) => {
         const keyTable = {}
         for (const [mainKey, mapOfObjects] of Object.entries(object)) {
+            if(state.tractvCounty && props.options[1].includes(mainKey)){
+                continue;
+            }
+            else if(!state.tractvCounty && props.options[0].includes(mainKey)){
+                continue;
+            }
+
             for (const [key, value] of Object.entries(mapOfObjects)) {
                 //very nice :)
                 keyTable[key] ? (() => {
@@ -53,6 +65,12 @@ export default function CorrelogramGraph(props) {
 
     if(props?.data['map_features'] && (props.options[0].length > 0 || props.options[1].length > 0)) {
         for (const [key, value] of Object.entries(props.data['map_features'])) {
+            if(state.tractvCounty && props.options[1].includes(key)){
+                continue;
+            }
+            else if(!state.tractvCounty && props.options[0].includes(key)){
+                continue;
+            }
             if (value.length > 0) {
                 keys.push(feature.getFriendlyName(key))
                 data.push({"constraint": feature.getFriendlyName(key)});
