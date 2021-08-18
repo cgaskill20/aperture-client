@@ -872,65 +872,6 @@
         ]
     },
     {
-        "collection": "tract_proximity",
-        "label": "Tract Proximity",
-        "subGroup": "Proximity",
-        "level": "tract",
-        "color": "#4682B4",
-        "fieldMetadata": [
-            {
-                "name": "nearest_hospital",
-                "label": "Nearest Hospital (mi)",
-                "min": 0,
-                "max": 30,
-                "type": "range",
-                "step": 0.5,
-                "unit": "miles",
-                "plus": true
-            },
-            {
-                "name": "nearest_fire_station",
-                "label": "Nearest Fire Station (mi)",
-                "min": 0,
-                "max": 30,
-                "type": "range",
-                "step": 0.5,
-                "unit": "miles",
-                "plus": true
-            },
-            {
-                "name": "nearest_public_school",
-                "label": "Nearest Public School (mi)",
-                "min": 0,
-                "max": 30,
-                "type": "range",
-                "step": 0.5,
-                "unit": "miles",
-                "plus": true
-            },
-            {
-                "name": "nearest_electrical_substation",
-                "label": "Nearest Electrical Substation (mi)",
-                "min": 0,
-                "max": 30,
-                "type": "range",
-                "step": 0.5,
-                "unit": "miles",
-                "plus": true
-            },
-            {
-                "name": "nearest_power_plant",
-                "label": "Nearest Power Plant (mi)",
-                "min": 0,
-                "max": 30,
-                "type": "range",
-                "step": 0.5,
-                "unit": "miles",
-                "plus": true
-            }
-        ]
-    },
-    {
         "collection": "covid_county",
         "level": "county",
         "temporal": "epoch_time",
@@ -6323,7 +6264,11 @@
     },
     {
         "collection": "tract_proximity_v2",
+        "label": "Tract Proximity",
         "level": "tract",
+        "color": {
+            "variable": "nearest_public_school"
+        },
         "fieldMetadata": [
             {
                 "name": "nearest_transmission_line",
