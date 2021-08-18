@@ -2543,7 +2543,7 @@
     },
     {
         "collection": "all_places_of_worship_geo",
-        "icon": "school"
+        "icon": "church.svg"
     },
     {
         "collection": "child_care_centers_geo",
@@ -2551,7 +2551,7 @@
     },
     {
         "collection": "colleges_and_universities_campuses_geo",
-        "icon": "school"
+        "icon": "university.svg"
     },
     {
         "collection": "dhl_facilities_geo",
@@ -2645,11 +2645,11 @@
     },
     {
         "collection": "urgent_care_facilities_geo",
-        "icon": "school"
+        "icon": "hospital"
     },
     {
         "collection": "veterans_health_administration_medical_facilities_geo",
-        "icon": "school"
+        "icon": "hospital"
     },
     {
         "collection": "railroads_geo"
