@@ -71,6 +71,7 @@ export default function ChartingWindow(props) {
         frames.splice(index, 1);
         setFrames(frames)
     }
+
     return (
         <Grid container>
             <Grid container direction="row" alignItems="center" justify="center" spacing={1}>

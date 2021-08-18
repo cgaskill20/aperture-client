@@ -52,6 +52,7 @@ export default function CorrelogramGraph(props) {
             }, [])
             points.push(pointsArray);
         }
+
         for(let i = 0; i < formatted[0].length; i++){
             for(let j = 0; j < formatted[0].length;j++){
                 const correlation = calculateCorrelation(points[i], points[j])
