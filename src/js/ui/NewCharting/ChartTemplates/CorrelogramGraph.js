@@ -1,13 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import feature from "../../../library/charting/feature.js"
 import {ResponsiveHeatMap} from "nivo";
+import Grid from "@material-ui/core/Grid";
+import Switch from "@material-ui/core/Switch";
 const calculateCorrelation = require("calculate-correlation");
 
 
 export default function CorrelogramGraph(props) {
+    console.log("re-rendered")
+    const [tractVcounty,setTractVcounty] = useState(false);
+    console.log(tractVcounty)
+    console.log(props.options);
     let retData = {};
     let keys = [];
     let data = []
+
+    let selector = ""
+
+    selector = <div><Grid component="label" container alignItems="center" spacing={1}>
+        <Grid item>Tract</Grid>
+        <Grid item>
+            <Switch
+                checked={tractVcounty}
+
+                value="Tract or County"
+            />
+        </Grid>
+        <Grid item>County</Grid>
+    </Grid></div>
+
 
     let findMatchingPoints = (object,) => {
         const keyTable = {}
@@ -29,7 +50,8 @@ export default function CorrelogramGraph(props) {
         //only return the ones with the max length
         return result.filter(entry => entry.length === maxEntryLength)
     }
-    if(props.data['map_features']) {
+
+    if(props?.data['map_features'] && (props.options[0].length > 0 || props.options[1].length > 0)) {
         for (const [key, value] of Object.entries(props.data['map_features'])) {
             if (value.length > 0) {
                 keys.push(feature.getFriendlyName(key))
@@ -65,6 +87,8 @@ export default function CorrelogramGraph(props) {
 
 
     return (
+        <div style={{width: "100%", height: props.size.height - 80,}}>
+            {selector}
             <ResponsiveHeatMap
                 data={data}
                 keys={keys}
@@ -103,7 +127,7 @@ export default function CorrelogramGraph(props) {
                 motionDamping={9}
                 hoverTarget="cell"
                 cellHoverOthersOpacity={0.25}
-            />
+            /></div>
     );
 
 }

@@ -71,7 +71,6 @@ export default function Frame(props) {
 
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
 
-
     let frame;
     const [constraint, setConstraint] = useState();
     const [constraint2, setConstraint2] = useState();
@@ -118,11 +117,8 @@ export default function Frame(props) {
             frame = <div><FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                 <BoxPlot size={props.size} data={props.data} selected={constraint}></BoxPlot></div>; break;
         case "correlogram":
-            frame =<div style={{
-            width: "100%",
-                height: props.size.height - 80,
-        }}><FrameControls index={props.index} remove={props.remove} numDropDowns={0} selector={true} options={[countyFilters, trackFilters]}></FrameControls>
-                <CorrelogramGraph size={props.size} data={props.data} selected={constraint}></CorrelogramGraph></div>; break;
+            frame =<div><FrameControls index={props.index} remove={props.remove} numDropDowns={0} selector={true} options={[null, null]}></FrameControls>
+                <CorrelogramGraph size={props.size} data={props.data} selected={constraint} options={[countyFilters, trackFilters]} selector={true}></CorrelogramGraph></div>; break;
 
 
         default: break;

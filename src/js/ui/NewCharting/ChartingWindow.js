@@ -78,9 +78,7 @@ export default function ChartingWindow(props) {
             <Grid container direction="row" alignItems="center" justify="center" spacing={1}>
                 <Grid container direction="column" alignItems="center" justify="center" style={{ width: "90%" }}>
                     <ChartGlobalControls make={addChartFrame} />
-                      
-                    {frames.map((frameType, index) => <Frame key={index} pos={props.pos} type={frameType} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>)}
-
+                    {frames.map((frameType, index) => <Frame key={`${frameType['name']}-frame-${index}`} pos={props.pos} type={frameType} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>)}
                 </Grid>
             </Grid>
         </Grid>
