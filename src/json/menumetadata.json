@@ -6744,5 +6744,87 @@
                 "reverseGradient": true
             }
         ]
+    },
+    {
+        "collection": "tract_curated_internet_access_2015_2019",
+        "level": "tract",
+        "color": {
+            "variable": "with_an_internet_subscription_per_1000"
+        },
+        "fieldMetadata": [
+            {
+                "name": "with_an_internet_subscription_per_1000",
+                "label": "Number of Households With an Internet Subscription per 1000 Households"
+            },
+            {
+                "name": "with_dialup_per_1000",
+                "label": "Number of Households With only a Dial-Up Internet Subscription per 1000 Households"
+            },
+            {
+                "name": "with_broadband_per_1000",
+                "label": "Number of Households With a Broadband Internet Subscription per 1000 Households"
+            },
+            {
+                "name": "with_satellite_per_1000",
+                "label": "Number of Households With a Satellite Internet Subscription per 1000 Households"
+            },
+            {
+                "name": "with_other_per_1000",
+                "label": "Number of Households Some Other Type of Internet Subscription per 1000 Households"
+            },
+            {
+                "name": "access_no_subscription_per_1000",
+                "label": "Number of Households With Internet Access, but no Subscription per 1000 Households"
+            },
+            {
+                "name": "no_internet_per_1000",
+                "label": "Number of Households With No Internet Access per 1000 Households"
+            },
+            {
+                "name": "number_of_households",
+                "label": "Number of Households"
+            }
+        ]
+    },
+    {
+        "collection": "county_curated_internet_access_2015_2019",
+        "level": "county",
+        "color": {
+            "variable": "with_an_internet_subscription_per_1000"
+        },
+        "fieldMetadata": [
+            {
+                "name": "with_an_internet_subscription_per_1000",
+                "label": "Number of Households With an Internet Subscription per 1000 Households"
+            },
+            {
+                "name": "with_dialup_per_1000",
+                "label": "Number of Households With only a Dial-Up Internet Subscription per 1000 Households"
+            },
+            {
+                "name": "with_broadband_per_1000",
+                "label": "Number of Households With a Broadband Internet Subscription per 1000 Households"
+            },
+            {
+                "name": "with_satellite_per_1000",
+                "label": "Number of Households With a Satellite Internet Subscription per 1000 Households"
+            },
+            {
+                "name": "with_other_per_1000",
+                "label": "Number of Households Some Other Type of Internet Subscription per 1000 Households"
+            },
+            {
+                "name": "access_no_subscription_per_1000",
+                "label": "Number of Households With Internet Access, but no Subscription per 1000 Households"
+            },
+            {
+                "name": "no_internet_per_1000",
+                "label": "Number of Households With No Internet Access per 1000 Households"
+            },
+            {
+                "name": "number_of_households",
+                "label": "Number of Households"
+            }
+        ]
     }
 ]
