@@ -9,7 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 export default function frameControls(props) {
     const [state, setState] = React.useState({
-        checkedA: true
+        tractvCounty: true
     });
 
     const handleChange = name => event => {
@@ -22,10 +22,10 @@ export default function frameControls(props) {
     let extraDropDown = ""
 
     if(props.selector){
-        if(state.checkedA){
+        if(state.tractvCounty){
             menuOptions = props.options[0]
         }
-        if(!state.checkedA){
+        if(!state.tractvCounty){
             menuOptions = props.options[1]
         }
 
@@ -33,9 +33,9 @@ export default function frameControls(props) {
             <Grid item>Tract</Grid>
             <Grid item>
                 <Switch
-                    checked={state.checkedA}
-                    onChange={handleChange("checkedA")}
-                    value="checkedA"
+                    checked={state.tractvCounty}
+                    onChange={handleChange("tractvCounty")}
+                    value="Tract or County"
                 />
             </Grid>
             <Grid item>County</Grid>

@@ -63,7 +63,7 @@ import * as d3 from '../../../third-party/d3.min.js';
 export default function LineGraph(props) {
     let svgRef = React.createRef();
 
-    let [margin, setMargin] = useState({ top: 30, right: 20, bottom: 75, left: 50 });
+    let [margin, setMargin] = useState({ top: 30, right: 20, bottom: 130, left: 50 });
 
     let mouseIn = false;
     let onMouseMove = () => {};

@@ -106,7 +106,8 @@ export default function Frame(props) {
                 </div>;
                 break;
         case "line":
-            frame = <LineGraph pos={props.pos} size={props.size} data={props.data} selected={constraint}></LineGraph>; break;
+            frame = <div><FrameControls index={props.index} remove={props.remove} numDropDowns={0}></FrameControls>
+                <LineGraph pos={props.pos} size={props.size} data={props.data} selected={constraint}></LineGraph></div>; break;
         case "piegraph":
             frame = <div><FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
                 <PieGraph size={props.size} data={props.data} selected={constraint}></PieGraph></div>; break;
@@ -123,7 +124,7 @@ export default function Frame(props) {
             frame =<div style={{
             width: "100%",
                 height: props.size.height - 80,
-        }}><FrameControls index={props.index} remove={props.remove} numDropDowns={0}></FrameControls>
+        }}><FrameControls index={props.index} remove={props.remove} numDropDowns={0} selector={true} options={[countyFilters, trackFilters]}></FrameControls>
                 <CorrelogramGraph size={props.size} data={props.data} selected={constraint}></CorrelogramGraph></div>; break;
 
 
