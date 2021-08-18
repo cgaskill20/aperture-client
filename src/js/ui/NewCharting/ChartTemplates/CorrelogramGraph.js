@@ -48,14 +48,14 @@ export default function CorrelogramGraph(props) {
         for(let i = 0; i < formatted[0].length; i++){
             let pointsArray = formatted.reduce(function(pointsArray, value){
                 pointsArray.push(value[i]);
-                return pointsArray
+                return pointsArray;
             }, [])
-            points.push(pointsArray)
+            points.push(pointsArray);
         }
         for(let i = 0; i < formatted[0].length; i++){
             for(let j = 0; j < formatted[0].length;j++){
                 const correlation = calculateCorrelation(points[i], points[j])
-                data[i][keys[j]] = correlation.toPrecision(2)
+                data[i][keys[j]] = parseFloat(correlation.toPrecision(2));
             }
         }
 
