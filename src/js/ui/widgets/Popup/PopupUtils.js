@@ -95,7 +95,7 @@ export const valueToDisplay = (obj, key, value) => {
 }
 
 export const keyValueIsValid = (key, value) => {
-    if (['meta', 'id', '_id', 'colorInfo', 'apertureName'].includes(key)) {
+    if (['meta', 'id', '_id', 'colorInfo', 'apertureName', 'Shape_Leng', 'Shape__Length', 'SHAPE_Length', 'SHAPE_Area'].includes(key)) {
         return false;
     }
     return true;
