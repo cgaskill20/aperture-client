@@ -117,6 +117,13 @@ export const mongoObjectToSomething = (object, func) => { //this function will b
     return JSON.stringify(object);
 }
 
+export const mongoDateStringToNumber = (dateString) => {
+    if(typeof dateString === 'string' && !isNaN(new Date(dateString).valueOf())) {
+        return new Date(dateString).valueOf();
+    }
+    return -1;
+}
+
 const dateToDisplay = (value) => {
     if (typeof value === 'number') {
         return epochToDateString(value);
