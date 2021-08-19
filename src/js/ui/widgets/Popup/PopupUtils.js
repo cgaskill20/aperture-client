@@ -107,7 +107,7 @@ const specialTypeToDisplay = (type, value) => {
     }
 }
 
-const mongoObjectToSomething = (object, func) => { //this function will be extended as more mongo objects leak in
+export const mongoObjectToSomething = (object, func) => { //this function will be extended as more mongo objects leak in
     const numericTypes = ['$numberLong', '$numberDecimal'];
     for (const numericType of numericTypes) {
         if (object?.[numericType]) {
