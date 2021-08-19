@@ -276,7 +276,6 @@ export default class AutoQuery {
                 const { feature, options } = layer;
                 feature.properties.colorInfo.currentColorField = this.colorField;
                 const color = this.getColor(feature.properties, Util.getFeatureType(feature));
-                console.log(color)
                 if (feature && !options.icon) {
                     //console.log("SETTING OVER HERE")
                     const colorSetter = [Util.FEATURETYPE.multiPolygon, Util.FEATURETYPE.polygon].includes(Util.getFeatureType(feature)) ? "fillColor" : "color"
