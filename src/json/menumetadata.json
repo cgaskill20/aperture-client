@@ -2583,7 +2583,7 @@
     {
         "collection": "oil_and_natural_gas_wells_geo",
         "icon":  "fire.svg",
-        "label": "Private Schools"
+        "label": "Oil and Natural Gas Wells"
     },
     {
         "collection": "private_schools_geo",
