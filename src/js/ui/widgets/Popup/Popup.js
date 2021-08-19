@@ -83,10 +83,10 @@ const useStyles = makeStyles({
         opacity: 0.95,
     },
     contentContainer: {
-        margin: '20px',
+        margin: '5px 20px',
     },
     paper: {
-        padding: "10px",
+        padding: "15px",
         marginBottom: "20px",
     },
     subTitle: {
@@ -181,7 +181,7 @@ export default function Popup() {
                 .filter(([key, value]) => obj.properties?.meta?.[key]?.temporal)
                 .map(([key, value]) => <React.Fragment key={`${key}${JSON.stringify(obj.join)}${JSON.stringify(obj.temporalRange)}`}>
                     <Paper className={classes.paper} elevation={3}>
-                        <Typography className={classes.subTitle} gutterBottom variant={subTitleTextSize}>{Util.cleanUpString(key)}</Typography>
+                        <Typography className={classes.subTitle} align="center" gutterBottom variant={subTitleTextSize}>{Util.cleanUpString(key)}</Typography>
                         <PopupTimeChart
                             collection={obj.properties.meta[key].temporal.collection}
                             fieldToChart={key}
@@ -216,12 +216,12 @@ export default function Popup() {
         >
             <div className={classes.contentContainer}>
                 <Grid container>
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                         <Typography variant="h4" gutterBottom>
                             {Util.cleanUpString(obj?.properties?.apertureName)}
                         </Typography>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={1}>
                         <IconButton onClick={() => setGlobalState({ popupOpen: false })}>
                             <CloseIcon />
                         </IconButton>
