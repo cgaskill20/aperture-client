@@ -132,7 +132,7 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
         </Grid>
     }
     else if (colorSummary.colorMapping) {
-        return <TableContainer component={Paper}>
+        return <TableContainer>
             <Table>
                 <TableHead>
                     <TableRow>

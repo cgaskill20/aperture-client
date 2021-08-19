@@ -63,8 +63,9 @@ import PopupTableEntry from "./PopupTableEntry"
 import Util from "../../../library/apertureUtil";
 
 export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) {
+
     return (
-        <TableContainer component={Paper}>
+        <TableContainer>
             <Table aria-label="collapsible table">
                 <TableHead>
                     <TableRow>
