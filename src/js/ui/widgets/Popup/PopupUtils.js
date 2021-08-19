@@ -124,6 +124,13 @@ export const mongoDateStringToNumber = (dateString) => {
     return -1;
 }
 
+export const mongoNonNumericToNumber = (nonNumeric) => {
+    if (typeof nonNumeric === 'object') {
+        return mongoObjectToSomething(nonNumeric, (s) => s)
+    }
+    return mongoDateStringToNumber(nonNumeric)
+}
+
 const dateToDisplay = (value) => {
     if (typeof value === 'number') {
         return epochToDateString(value);

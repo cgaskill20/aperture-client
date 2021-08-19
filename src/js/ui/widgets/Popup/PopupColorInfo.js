@@ -58,7 +58,7 @@ END OF TERMS AND CONDITIONS
 */
 import React, { useEffect } from "react";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Grid } from "@material-ui/core";
-import { keyToDisplay, valueToDisplay, keyValueIsValid, mongoObjectToSomething, mongoDateStringToNumber } from "./PopupUtils";
+import { keyToDisplay, valueToDisplay, keyValueIsValid, mongoObjectToSomething, mongoDateStringToNumber, mongoNonNumericToNumber } from "./PopupUtils";
 import PopupTableEntry from "./PopupTableEntry"
 import useHover from "../../hooks/useHover";
 import Util from "../../../library/apertureUtil"
@@ -101,12 +101,7 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                 //add line
                 let value = obj.properties[colorFieldName];
                 if(isNaN(value)) {
-                    if (typeof value === 'object') {
-                        value = mongoObjectToSomething(value, (s) => s)
-                    }
-                    else {
-                        value = mongoDateStringToNumber(value)
-                    }
+                    value = mongoNonNumericToNumber(value)
                 }
                 const xValue = (width - marginLeftRight * 2) * Math.min(Math.max((value - colorSummary.minMax[0]) / (colorSummary.minMax[1] - colorSummary.minMax[0]), 0.0000001), 0.9999999) + marginLeftRight;
                 svg.append('line')
