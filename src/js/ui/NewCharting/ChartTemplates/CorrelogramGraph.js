@@ -63,7 +63,7 @@ export default function CorrelogramGraph(props) {
         return result.filter(entry => entry.length === maxEntryLength)
     }
 
-    if(props?.data['map_features'] && (props.options[0].length > 0 || props.options[1].length > 0)) {
+    if(props?.data['map_features'] && ((props.options[0].length > 0 && !tractVcounty) || (props.options[1].length > 0 && tractVcounty))) {
         for (const [key, value] of Object.entries(props.data['map_features'])) {
             if(state.tractvCounty && props.options[1].includes(key)){
                 continue;
