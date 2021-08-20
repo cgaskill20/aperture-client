@@ -62,32 +62,31 @@ import Grid from '@material-ui/core/Grid';
 import Frame from './makeFrame';
 
 export default function ChartingWindow(props) {
-    const [frames, setFrames] = useState([false,false,false,false,false,false,false,false,false,false]);
+
+    const [frames, setFrames] = useState([]);
 
 
     const addChartFrame = frame => {
-        for(const [index,element] of frames.entries()){
-            if(!element){
-                frames[index] = frame.type;
-                setFrames(frames);
-                break;
-            }
-        }
+        let state = {"active": true, "data": frame}
+        setFrames(frames.concat(state))
     }
     const removeChartFrame = index => {
-        frames[index] = false;
+        frames[index].active = false
+        setFrames(frames);
     }
 
+console.log(frames)
     return (
         <Grid container>
             <Grid container direction="row" alignItems="center" justify="center" spacing={1}>
                 <Grid container direction="column" alignItems="center" justify="center" style={{ width: "90%" }}>
                     <ChartGlobalControls make={addChartFrame} />
                     {frames.map((element, index) => {
-                        if(element){
-                            return <Frame key={index} pos={props.pos} type={element} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>
+                        console.log(element)
+                        if(element.active){
+                            return <Frame key={index} pos={props.pos} type={element.data} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>
                         }
-                     })}
+                    })}
                 </Grid>
             </Grid>
         </Grid>
