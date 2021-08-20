@@ -64,10 +64,11 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import IconButton from "@material-ui/core/IconButton";
 import {makeJSONPretty} from "../../NewModeling/NewModeling";
-import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Radio from "@material-ui/core/Radio";
+import ColorizeIcon from '@material-ui/icons/Colorize';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles({
     root: {
@@ -85,6 +86,9 @@ const useStyles = makeStyles({
     collapse: {
         paddingTop: 0,
         paddingBottom: 0,
+    },
+    tooltip: {
+        hover: "pointer",
     },
 });
 
@@ -148,10 +152,22 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
         }
     }
 
+    function paletteIcon() {
+        if(entryProperties.isCurrentColorField) {
+            return (<>
+                &nbsp;
+                <Tooltip className={classes.tooltip} title="Overlay color is currently based off of this field">
+                    <ColorizeIcon color="primary" size="small"/>
+                </Tooltip>
+            </>)
+        }
+    }
+
+
     return (
         <React.Fragment>
             <TableRow className={classes.root}>
-                <TableCell>{makeJSONPretty(keyValue)}</TableCell>
+                <TableCell>{makeJSONPretty(keyValue)}{paletteIcon()}</TableCell>
                 <TableCell>{valueToDisplay(obj, keyValue, value)}</TableCell>
                 <TableCell align="right">
                     {objectHasTrueValue(entryProperties)}
