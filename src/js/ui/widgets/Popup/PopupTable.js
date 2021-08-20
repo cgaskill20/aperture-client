@@ -69,9 +69,9 @@ export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) 
             <Table aria-label="collapsible table">
                 <TableHead>
                     <TableRow>
-                        <TableCell />
-                        <TableCell align="right">Key</TableCell>
-                        <TableCell align="right">Value</TableCell>
+                        <TableCell>Key</TableCell>
+                        <TableCell>Value</TableCell>
+                        <TableCell align="right" />
                     </TableRow>
                 </TableHead>
                      <TableBody>

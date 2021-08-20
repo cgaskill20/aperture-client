@@ -151,11 +151,11 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
     return (
         <React.Fragment>
             <TableRow className={classes.root}>
-                <TableCell>
+                <TableCell>{makeJSONPretty(keyValue)}</TableCell>
+                <TableCell>{valueToDisplay(obj, keyValue, value)}</TableCell>
+                <TableCell align="right">
                     {objectHasTrueValue(entryProperties)}
                 </TableCell>
-                <TableCell align="right">{makeJSONPretty(keyValue)}</TableCell>
-                <TableCell align="right">{valueToDisplay(obj, keyValue, value)}</TableCell>
             </TableRow>
             <TableRow>
                 <TableCell className={classes.collapse} colSpan={6}>
