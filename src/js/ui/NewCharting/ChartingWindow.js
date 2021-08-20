@@ -75,16 +75,16 @@ export default function ChartingWindow(props) {
         setFrames(frames);
     }
 
-console.log(frames)
+
     return (
         <Grid container>
             <Grid container direction="row" alignItems="center" justify="center" spacing={1}>
                 <Grid container direction="column" alignItems="center" justify="center" style={{ width: "90%" }}>
                     <ChartGlobalControls make={addChartFrame} />
                     {frames.map((element, index) => {
-                        console.log(element)
+
                         if(element.active){
-                            return <Frame key={index} pos={props.pos} type={element.data} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>
+                            return <Frame key={index} pos={props.pos} type={element.data.type} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>
                         }
                     })}
                 </Grid>
