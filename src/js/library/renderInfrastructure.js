@@ -537,7 +537,7 @@ export default class RenderInfrastructure {
     getMarkerLayersForSpecifiedIds(specifiedIdsSet) {
         let layersFound = [];
         this.markerLayer.eachLayer(function (layer) {
-            if (layer?.specifiedId && specifiedIdsSet.has(layer.specifiedId)) {
+            if (layer?.specifiedId != null && specifiedIdsSet.has(layer.specifiedId)) {
                 layersFound.push(layer)
             }
         }.bind(this));
