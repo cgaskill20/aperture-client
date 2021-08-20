@@ -67,6 +67,7 @@ import {makeJSONPretty} from "../../NewModeling/NewModeling";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
+import Radio from "@material-ui/core/Radio";
 
 const useStyles = makeStyles({
     root: {
@@ -115,7 +116,7 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
     const colorFieldCheckbox = () => {
         return <FormControlLabel
             control={
-                <Checkbox
+                <Radio
                     checked={entryProperties.isCurrentColorField}
                     onChange={() => {
                         changeColorFieldName(keyValue);
