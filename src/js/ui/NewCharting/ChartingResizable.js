@@ -77,6 +77,7 @@ export default function ChartingResizable() {
     let [chartData, setChartData] = useState({});
 
 
+
     useEffect(() => {
         window.chartSystem.registerDataConsumer('charting-resizable', setChartData);
         return () => window.chartSystem.unregisterDataConsumer('charting-resizable');
