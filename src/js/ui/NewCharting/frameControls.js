@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
 import ConstraintDropDown from "./constraintDropDown"
-import Switch from "@material-ui/core/Switch";
-import Grid from "@material-ui/core/Grid";
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ToggleSwitch from './toggleSwitch';
 
 
 
 export default function frameControls(props) {
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
         tractvCounty: true
     });
 
@@ -29,17 +28,7 @@ export default function frameControls(props) {
             menuOptions = props.options[1]
         }
 
-        selector = <div><Grid component="label" container alignItems="center" spacing={1}>
-            <Grid item>Tract</Grid>
-            <Grid item>
-                <Switch
-                    checked={state.tractvCounty}
-                    onChange={handleChange("tractvCounty")}
-                    value="Tract or County"
-                />
-            </Grid>
-            <Grid item>County</Grid>
-        </Grid></div>
+        selector = <ToggleSwitch bool={state.tractvCounty} change={handleChange}></ToggleSwitch>
     }
     if(props.numDropDowns == 2){
         extraDropDown = <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint2}></ConstraintDropDown>
@@ -52,15 +41,9 @@ export default function frameControls(props) {
 
     return(
         <div>
-            {selector}
-            {extraDropDown}
-            {dropDown}
-            <IconButton
-                onClick={() => { props.remove(props.index) }}
-                aria-label="Delete">
-                <DeleteIcon
-                    style={closeImg}
-                />
+            {selector}{extraDropDown}{dropDown}
+            <IconButton onClick={() => { props.remove(props.index) }} aria-label="Delete">
+                <DeleteIcon style={closeImg}/>
             </IconButton>
         </div>
     )

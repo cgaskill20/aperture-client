@@ -62,7 +62,7 @@ import Grid from '@material-ui/core/Grid';
 import Frame from './makeFrame';
 
 export default function ChartingWindow(props) {
-    const [frames, setFrames] = useState([false,false,false,false,false,false]);
+    const [frames, setFrames] = useState([false,false,false,false,false,false,false,false,false,false]);
 
 
     const addChartFrame = frame => {

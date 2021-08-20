@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import feature from "../../../library/charting/feature.js"
 import {ResponsiveHeatMap} from "nivo";
-import Grid from "@material-ui/core/Grid";
-import Switch from "@material-ui/core/Switch";
+import ToggleSwitch from '../toggleSwitch';
 const calculateCorrelation = require("calculate-correlation");
 
 
 export default function CorrelogramGraph(props) {
 
-    const [tractVcounty,setTractVcounty] = useState(false);
     const [state, setState] = React.useState({
         tractvCounty: true
     });
@@ -21,19 +19,7 @@ export default function CorrelogramGraph(props) {
     let data = []
 
 
-    let selector = <div><Grid component="label" container alignItems="center" spacing={1}>
-        <Grid item>Tract</Grid>
-        <Grid item>
-            <Switch
-                checked={state.tractvCounty}
-                onChange={handleChange("tractvCounty")}
-                value="Tract or County"
-            />
-        </Grid>
-        <Grid item>County</Grid>
-    </Grid></div>
-
-
+    let selector = <ToggleSwitch bool={state.tractvCounty} change={handleChange}></ToggleSwitch>
 
     let findMatchingPoints = (object,) => {
         const keyTable = {}
