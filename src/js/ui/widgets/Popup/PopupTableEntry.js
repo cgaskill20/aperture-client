@@ -57,39 +57,130 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 
-import React, { useEffect, useState } from "react";
-import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
-import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Tooltip } from "@material-ui/core";
-import PaletteIcon from '@material-ui/icons/Palette';
-import useHover from "../../hooks/useHover";
-import PopupTableValue from "./PopupTableValue";
+import React, {useState} from "react";
+import {valueToDisplay} from "./PopupUtils";
+import {TableCell, TableRow, makeStyles, Collapse, Select, InputLabel} from "@material-ui/core";
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import IconButton from "@material-ui/core/IconButton";
+import {makeJSONPretty} from "../../NewModeling/NewModeling";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import Radio from "@material-ui/core/Radio";
+import ColorizeIcon from '@material-ui/icons/Colorize';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles({
-    clickable: {
-        cursor: 'pointer',
-        "&:hover": {
-            backgroundColor: '#dedede'
-        }
-    }
+    root: {
+        '& > *': {
+            borderBottom: 'unset',
+        },
+    },
+    fullWidth: {
+        width: "100%"
+    },
+    dropdown: {
+        width: "100%",
+        paddingBottom: "10px"
+    },
+    collapse: {
+        paddingTop: 0,
+        paddingBottom: 0,
+    },
+    tooltip: {
+        hover: "pointer",
+    },
 });
 
 export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties }) {
-    //console.log({ obj, keyValue })
     const classes = useStyles()
-    const [hoverRef, isHovered] = useHover();
+    const temporalMap = ["SUM", "FIRST", "LAST", "AVG"];
+    const [open, setOpen] = useState(false);
     const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
+    const [temporalScope, setTemporalScope] = useState(temporalMap[0]);
+    /*
+    * @Daniel - temporalScope is the selected dropdown feature for each given key/value pair. It is one of the strings
+    *           from temporalMap. Not sure if this is what you need, but its what you get!
+    */
 
-
-    return <TableRow key={keyValue} className={changeColorFieldName !== null ? classes.clickable : ''} ref={hoverRef} onClick={() => {
-        if (entryProperties.canBeColorField && !entryProperties.isCurrentColorField) {
-            changeColorFieldName(keyValue)
+    const objectHasTrueValue = (obj) => {
+        for(const value of Object.entries(obj)) {
+            if(value[1]) {
+                return <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </IconButton>
+            }
         }
-    }}>
-        <TableCell component="th" scope="row">
-            {keyToDisplay(obj, keyValue)}
-        </TableCell>
-        <TableCell>
-            <PopupTableValue obj={obj} keyValue={keyValue} value={value} entryProperties={entryProperties} isHovered={isHovered} />
-        </TableCell>
-    </TableRow>
+    }
+
+    const switchTemporalScope = (event) => {
+        setTemporalScope(temporalMap[event.target.value]);
+    }
+
+    const colorFieldCheckbox = () => {
+        return <FormControlLabel
+            control={
+                <Radio
+                    checked={entryProperties.isCurrentColorField}
+                    onChange={() => {
+                        changeColorFieldName(keyValue);
+                    }}
+                    color="primary"
+                />
+            }
+            label="Current color field"
+        />
+    }
+
+    const isTemporal = () => {
+        if(entryProperties.isTemporal) {
+            return <div className={classes.dropdown}>
+                <FormControl variant="outlined" className={classes.fullWidth}>
+                    <InputLabel>Temporal Range</InputLabel>
+                        <Select
+                            native
+                            label="Temporal Range"
+                            onChange={switchTemporalScope}
+                        >
+                            <option value={0}>Sum</option>
+                            <option value={1}>First</option>
+                            <option value={2}>Last</option>
+                            <option value={3}>Average</option>
+                        </Select>
+                </FormControl>
+            </div>
+        }
+    }
+
+    function paletteIcon() {
+        if(entryProperties.isCurrentColorField) {
+            return (<>
+                &nbsp;
+                <Tooltip className={classes.tooltip} title="Overlay color is currently based off of this field">
+                    <ColorizeIcon color="primary" size="small"/>
+                </Tooltip>
+            </>)
+        }
+    }
+
+
+    return (
+        <React.Fragment>
+            <TableRow className={classes.root}>
+                <TableCell>{makeJSONPretty(keyValue)}</TableCell>
+                <TableCell>{valueToDisplay(obj, keyValue, value)}</TableCell>
+                <TableCell align="right">
+                    {objectHasTrueValue(entryProperties)}
+                </TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell className={classes.collapse} colSpan={6}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        {colorFieldCheckbox()}
+                        {isTemporal()}
+                    </Collapse>
+                </TableCell>
+            </TableRow>
+        </React.Fragment>
+    )
 });

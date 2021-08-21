@@ -58,40 +58,34 @@ END OF TERMS AND CONDITIONS
 */
 import React from "react";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles } from "@material-ui/core";
-import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
+import { keyValueIsValid } from "./PopupUtils";
 import PopupTableEntry from "./PopupTableEntry"
-import useHover from "../../hooks/useHover";
 import Util from "../../../library/apertureUtil";
 
-const drawerWidth = '450px';
-
-const useStyles = makeStyles({
-    table: {
-        maxWidth: drawerWidth,
-    }
-});
-
 export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) {
-    const classes = useStyles();
-    return <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-                <TableRow>
-                    <TableCell><b>Key</b></TableCell>
-                    <TableCell><b>Value</b></TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {keyValPairs
-                    .filter(([key, value]) => keyValueIsValid(key, value))
-                    .map(([key, value]) => (
-                        <PopupTableEntry obj={obj} keyValue={key} value={value} key={key} entryProperties={{
-                            isCurrentColorField: colorField?.name === key || Util.removePropertiesPrefix(colorField?.name) === key,
-                            canBeColorField: obj.properties.colorInfo.validColorFieldNames.includes(key),
-                            isTemporal: obj.properties.meta[key]?.temporal ? true : false
-                        }}/> 
-                    ))}
-            </TableBody>
-        </Table>
-    </TableContainer>;
+
+    return (
+        <TableContainer>
+            <Table aria-label="collapsible table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Key</TableCell>
+                        <TableCell>Value</TableCell>
+                        <TableCell align="right" />
+                    </TableRow>
+                </TableHead>
+                     <TableBody>
+                         {keyValPairs
+                        .filter(([key, value]) => keyValueIsValid(key, value))
+                        .map(([key, value]) => (
+                            <PopupTableEntry obj={obj} keyValue={key} value={value} key={key} entryProperties={{
+                                isCurrentColorField: colorField?.name === key || Util.removePropertiesPrefix(colorField?.name) === key,
+                                canBeColorField: obj.properties.colorInfo.validColorFieldNames.includes(key),
+                                isTemporal: obj.properties.meta[key]?.temporal ? true : false
+                            }}/>
+                        ))}
+                    </TableBody>
+            </Table>
+        </TableContainer>
+    )
 });
