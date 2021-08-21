@@ -454,7 +454,7 @@ export default class AutoQuery {
         }
 
         if (this.getIcon())
-            indexData[this.collection]["iconAddr"] = `./images/map-icons/${this.getIcon()}.png`;
+            indexData[this.collection]["iconAddr"] = `./images/map-icons/${this.getIcon().split('.')[0]}.${this.getIcon().includes('svg') ? 'svg' : 'png'}`;
 
         indexData[this.collection]["border"] = this.color.border;
         //indexData[this.collection]["opacity"] = this.color.opacity;

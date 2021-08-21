@@ -58,7 +58,7 @@ END OF TERMS AND CONDITIONS
 */
 import React, { useEffect } from "react";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles, Grid } from "@material-ui/core";
-import { keyToDisplay, valueToDisplay, keyValueIsValid } from "./PopupUtils";
+import { keyToDisplay, valueToDisplay, keyValueIsValid, mongoObjectToSomething, mongoDateStringToNumber, mongoNonNumericToNumber } from "./PopupUtils";
 import PopupTableEntry from "./PopupTableEntry"
 import useHover from "../../hooks/useHover";
 import Util from "../../../library/apertureUtil"
@@ -99,8 +99,11 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                     .style("fill", "url(#linear-gradient)");
 
                 //add line
-                const value = obj.properties[colorFieldName];
-                const xValue = (width - marginLeftRight * 2) * Math.min(Math.max((value - colorSummary.minMax[0]) / (colorSummary.minMax[1] - colorSummary.minMax[0]), 0), 1) + marginLeftRight;
+                let value = obj.properties[colorFieldName];
+                if(isNaN(value)) {
+                    value = mongoNonNumericToNumber(value)
+                }
+                const xValue = (width - marginLeftRight * 2) * Math.min(Math.max((value - colorSummary.minMax[0]) / (colorSummary.minMax[1] - colorSummary.minMax[0]), 0.0000001), 0.9999999) + marginLeftRight;
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 3)

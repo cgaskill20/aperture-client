@@ -164,7 +164,8 @@ export default class RenderInfrastructure {
         let layers = [];
         const newLayer = L.geoJson(geoJsonData, {
             style: function (feature) {
-                let weight = Util.getFeatureType(feature) === Util.FEATURETYPE.lineString ? 3 : 1;
+                //console.log(Util.getFeatureType(feature))
+                let weight = [Util.FEATURETYPE.lineString, Util.FEATURETYPE.multiLineString].includes(Util.getFeatureType(feature)) ? 3 : 1;
                 let fillOpacity = 0.35;
                 let name = Util.getNameFromGeoJsonFeature(feature, indexData);
                 const colorSetter = [Util.FEATURETYPE.multiPolygon, Util.FEATURETYPE.polygon].includes(Util.getFeatureType(feature)) ? "fillColor" : "color"
@@ -172,6 +173,9 @@ export default class RenderInfrastructure {
                     weight = datasource[name]["border"];
                 if (datasource[name] && datasource[name]["opacity"] !== null && datasource[name]["opacity"] !== undefined)
                     fillOpacity = datasource[name]["opacity"];
+                if(!datasource[name]["color"] && colorSetter === "color") {
+                    datasource[name]["color"] = "#000000"
+                }
                 return { color: "#828282", [colorSetter]: datasource[name]["color"], weight: weight, fillOpacity: fillOpacity };
             }.bind(this),
             filter: function (feature) {
@@ -533,7 +537,7 @@ export default class RenderInfrastructure {
     getMarkerLayersForSpecifiedIds(specifiedIdsSet) {
         let layersFound = [];
         this.markerLayer.eachLayer(function (layer) {
-            if (layer?.specifiedId && specifiedIdsSet.has(layer.specifiedId)) {
+            if (layer?.specifiedId != null && specifiedIdsSet.has(layer.specifiedId)) {
                 layersFound.push(layer)
             }
         }.bind(this));

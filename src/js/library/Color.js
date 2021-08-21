@@ -58,6 +58,7 @@ END OF TERMS AND CONDITIONS
 */
 import Gradient from "../third-party/Gradient"
 import Util from "./apertureUtil";
+import { mongoNonNumericToNumber } from "../ui/widgets/Popup/PopupUtils";
 
 /**
  * @class Color
@@ -88,6 +89,9 @@ export default class Color {
     }
 
     getColor(value, featureType) {
+        if(this.minMax && typeof value !== "number") {
+            value = mongoNonNumericToNumber(value)
+        }
         if(this.minMax && typeof value === "number"){
             const normalizedValue = Math.min(Math.max((value - this.minMax[0]) / (this.minMax[1] - this.minMax[0]), 0), 0.9999999);
             return this.gradient[Math.floor(normalizedValue * 100)]

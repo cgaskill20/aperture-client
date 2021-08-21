@@ -95,7 +95,7 @@ export const valueToDisplay = (obj, key, value) => {
 }
 
 export const keyValueIsValid = (key, value) => {
-    if (['meta', 'id', '_id', 'colorInfo', 'apertureName'].includes(key)) {
+    if (['meta', 'id', '_id', 'colorInfo', 'apertureName', 'Shape_Leng', 'Shape__Length', 'SHAPE_Length', 'SHAPE_Area', 'SHAPE__Length', 'SHAPE__Area'].includes(key)) {
         return false;
     }
     return true;
@@ -107,7 +107,7 @@ const specialTypeToDisplay = (type, value) => {
     }
 }
 
-const mongoObjectToSomething = (object, func) => { //this function will be extended as more mongo objects leak in
+export const mongoObjectToSomething = (object, func) => { //this function will be extended as more mongo objects leak in
     const numericTypes = ['$numberLong', '$numberDecimal'];
     for (const numericType of numericTypes) {
         if (object?.[numericType]) {
@@ -115,6 +115,20 @@ const mongoObjectToSomething = (object, func) => { //this function will be exten
         }
     }
     return JSON.stringify(object);
+}
+
+export const mongoDateStringToNumber = (dateString) => {
+    if(typeof dateString === 'string' && !isNaN(new Date(dateString).valueOf())) {
+        return new Date(dateString).valueOf();
+    }
+    return -1;
+}
+
+export const mongoNonNumericToNumber = (nonNumeric) => {
+    if (typeof nonNumeric === 'object') {
+        return mongoObjectToSomething(nonNumeric, (s) => s)
+    }
+    return mongoDateStringToNumber(nonNumeric)
 }
 
 const dateToDisplay = (value) => {

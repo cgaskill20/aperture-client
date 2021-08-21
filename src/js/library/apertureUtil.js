@@ -69,6 +69,7 @@ export default {
         lineString: 1,
         polygon: 2,
         multiPolygon: 3,
+        multiLineString: 4
     },
     /**
      * What is the best latLng point for a GeoJSON feature?
@@ -123,6 +124,8 @@ export default {
                     return this.FEATURETYPE.lineString;
                 case "Point":
                     return this.FEATURETYPE.point;
+                case "MultiLineString": 
+                    return this.FEATURETYPE.multiLineString;
                 default:
                     return -1;
             }
