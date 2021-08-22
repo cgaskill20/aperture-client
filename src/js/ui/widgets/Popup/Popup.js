@@ -57,7 +57,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React, { useEffect, useState } from "react";
-import { makeStyles, Drawer, Typography, IconButton, Grid } from "@material-ui/core";
+import {makeStyles, Drawer, Typography, IconButton, Grid, Paper} from "@material-ui/core";
 import { useGlobalState } from "../../global/GlobalState";
 import Util from "../../../library/apertureUtil";
 import CloseIcon from "@material-ui/icons/Close";
@@ -67,27 +67,31 @@ import PopupColorInfo from "./PopupColorInfo";
 import { keyToDisplay } from "./PopupUtils";
 import defaultImportantFields from "../../../../json/defaultImportantFields.json"
 
-const drawerWidth = '450px';
+const drawerWidth = '500px';
 
 const useStyles = makeStyles({
-    table: {
-        maxWidth: drawerWidth,
-    },
     root: {
         display: 'flex',
         zIndex: 10000,
     },
     drawer: {
         width: drawerWidth,
-        flexShrink: 0
+        flexShrink: 0,
     },
     drawerPaper: {
         width: drawerWidth,
         opacity: 0.95,
     },
     contentContainer: {
-        margin: '20px'
-    }
+        margin: '5px 20px',
+    },
+    paper: {
+        padding: "15px",
+        marginBottom: "20px",
+    },
+    subTitle: {
+        borderBottom: "1px dotted black",
+    },
 });
 
 export default function Popup() {
@@ -96,6 +100,7 @@ export default function Popup() {
     const [colorSummary, setColorSummary] = useState(obj?.properties?.colorInfo?.colorSummary());
     const [colorField, setColorField] = useState(obj?.properties?.colorInfo?.currentColorField?.name);
     const classes = useStyles();
+    const subTitleTextSize = "h6";
 
     const onObjChange = () => {
         setColorSummary(obj?.properties?.colorInfo?.colorSummary(obj?.properties?.colorInfo?.currentColorField?.name))
@@ -147,22 +152,25 @@ export default function Popup() {
                     return true;
                 });
             return <>
-                {
-                    importantFields.length ?
-                        <>
-                            <Typography variant="h6" gutterBottom>
-                                Important Fields
-                            </Typography>
-                            {makeTable(importantFields)}
-                            <br />
-                        </> : null
-                }
+                <Paper className={classes.paper} elevation={3}>
+                    {
+                        importantFields.length ?
+                            <>
+                                <Typography className={classes.subTitle} variant={subTitleTextSize} gutterBottom>
+                                    Important Fields
+                                </Typography>
+                                {makeTable(importantFields)}
+                            </> : null
+                    }
+                </Paper>
                 {makeColors()}
                 {makeCharts()}
-                <Typography variant="h6" gutterBottom>
-                    All Fields
-                </Typography>
-                {makeTable(Object.entries(obj.properties))}
+                <Paper className={classes.paper} elevation={3}>
+                    <Typography className={classes.subTitle} variant={subTitleTextSize} gutterBottom>
+                        All Fields
+                    </Typography>
+                    {makeTable(Object.entries(obj.properties))}
+                </Paper>
             </>
         }
     }
@@ -172,14 +180,15 @@ export default function Popup() {
             return Object.entries(obj.properties)
                 .filter(([key, value]) => obj.properties?.meta?.[key]?.temporal)
                 .map(([key, value]) => <React.Fragment key={`${key}${JSON.stringify(obj.join)}${JSON.stringify(obj.temporalRange)}`}>
-                    <Typography gutterBottom variant="h4">{Util.cleanUpString(key)}</Typography>
-                    <PopupTimeChart
-                        collection={obj.properties.meta[key].temporal.collection}
-                        fieldToChart={key}
-                        join={obj.join}
-                        temporalRange={obj.properties.meta[key].temporal.temporalRange}
-                    />
-                    <br />
+                    <Paper className={classes.paper} elevation={3}>
+                        <Typography className={classes.subTitle} align="center" gutterBottom variant={subTitleTextSize}>{Util.cleanUpString(key)}</Typography>
+                        <PopupTimeChart
+                            collection={obj.properties.meta[key].temporal.collection}
+                            fieldToChart={key}
+                            join={obj.join}
+                            temporalRange={obj.properties.meta[key].temporal.temporalRange}
+                        />
+                    </Paper>
                 </React.Fragment>)
         }
     }
@@ -187,14 +196,13 @@ export default function Popup() {
     const makeColors = () => {
         if (colorSummary && !colorSummary.noSummary) {
             return <>
-                <Typography gutterBottom variant="h5">Color Coding Based on {colorField.label ?? Util.cleanUpString(colorField.name)}</Typography>
-                <PopupColorInfo colorFieldName={colorField.name} colorSummary={colorSummary} obj={obj} />
-                <br />
+                <Paper className={classes.paper} elevation={3}>
+                    <Typography className={classes.subTitle} gutterBottom variant={subTitleTextSize}>Color Coding Based on {colorField.label ?? Util.cleanUpString(colorField.name)}</Typography>
+                    <PopupColorInfo colorFieldName={colorField.name} colorSummary={colorSummary} obj={obj} />
+                </Paper>
             </>
         }
     }
-
-    //console.log(obj?.properties?.colorInfo.colorSummary)
 
     return <div className={classes.root}>
         <Drawer
@@ -208,12 +216,12 @@ export default function Popup() {
         >
             <div className={classes.contentContainer}>
                 <Grid container>
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                         <Typography variant="h4" gutterBottom>
                             {Util.cleanUpString(obj?.properties?.apertureName)}
                         </Typography>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={1}>
                         <IconButton onClick={() => setGlobalState({ popupOpen: false })}>
                             <CloseIcon />
                         </IconButton>
