@@ -48,7 +48,7 @@ export default function CorrelogramGraph(props) {
         //only return the ones with the max length
         return result.filter(entry => entry.length === maxEntryLength)
     }
-
+    let heatmap = ""
     if(props?.data['map_features'] && ((props.options[0].length > 0 && state.tractvCounty) || (props.options[1].length > 0 && !state.tractvCounty))) {
         for (const [key, value] of Object.entries(props.data['map_features'])) {
             if(state.tractvCounty && props.options[1].includes(key)){
@@ -86,6 +86,46 @@ export default function CorrelogramGraph(props) {
             }
         }
 
+        heatmap = <ResponsiveHeatMap
+            data={data}
+            keys={keys}
+            indexBy="constraint"
+            margin={{ top: 100, right: 60, bottom: 60, left: 60 }}
+            forceSquare={true}
+            axisTop={{ orient: 'top', tickSize: 5, tickPadding: 5, tickRotation: -90, legend: '', legendOffset: 36 }}
+            axisRight={null}
+            axisBottom={null}
+            axisLeft={{
+                orient: 'left',
+                tickSize: 5,
+                tickPadding: 5,
+                tickRotation: 0,
+                legendPosition: 'center',
+                legendOffset: -40
+            }}
+            cellOpacity={1}
+            cellBorderColor= "#737373"
+            labelTextColor= "#737373"
+            defs={[
+                {
+                    id: 'lines',
+                    type: 'patternLines',
+                    background: 'inherit',
+                    color: 'rgba(0, 0, 0, 0.1)',
+                    rotation: -45,
+                    lineWidth: 4,
+                    spacing: 7
+                }
+            ]}
+            fill={[ { id: 'lines' } ]}
+            animate={true}
+            motionConfig="wobbly"
+            motionStiffness={80}
+            motionDamping={9}
+            hoverTarget="cell"
+            cellHoverOthersOpacity={0.25}
+        />
+
     }
 
 
@@ -93,45 +133,8 @@ export default function CorrelogramGraph(props) {
     return (
         <div style={{width: "100%", height: props.size.height - 80,}}>
             {selector}
-            <ResponsiveHeatMap
-                data={data}
-                keys={keys}
-                indexBy="constraint"
-                margin={{ top: 100, right: 60, bottom: 60, left: 60 }}
-                forceSquare={true}
-                axisTop={{ orient: 'top', tickSize: 5, tickPadding: 5, tickRotation: -90, legend: '', legendOffset: 36 }}
-                axisRight={null}
-                axisBottom={null}
-                axisLeft={{
-                    orient: 'left',
-                    tickSize: 5,
-                    tickPadding: 5,
-                    tickRotation: 0,
-                    legendPosition: 'center',
-                    legendOffset: -40
-                }}
-                cellOpacity={1}
-                cellBorderColor= "#737373"
-                labelTextColor= "#737373"
-                defs={[
-                    {
-                        id: 'lines',
-                        type: 'patternLines',
-                        background: 'inherit',
-                        color: 'rgba(0, 0, 0, 0.1)',
-                        rotation: -45,
-                        lineWidth: 4,
-                        spacing: 7
-                    }
-                ]}
-                fill={[ { id: 'lines' } ]}
-                animate={true}
-                motionConfig="wobbly"
-                motionStiffness={80}
-                motionDamping={9}
-                hoverTarget="cell"
-                cellHoverOthersOpacity={0.25}
-            /></div>
+            {heatmap}
+            </div>
     );
 
 }
