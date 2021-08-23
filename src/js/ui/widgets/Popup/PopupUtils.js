@@ -95,7 +95,8 @@ export const valueToDisplay = (obj, key, value) => {
 }
 
 export const keyValueIsValid = (key, value) => {
-    if (['meta', 'id', '_id', 'colorInfo', 'apertureName', 'Shape_Leng', 'Shape__Length', 'SHAPE_Length', 'SHAPE_Area', 'SHAPE__Length', 'SHAPE__Area'].includes(key)) {
+    if (['meta', 'id', '_id', 'colorInfo', 'apertureName', 'Shape_Leng', 'Shape__Length', 'SHAPE_Length', 'SHAPE_Area', 'SHAPE__Length', 'SHAPE__Area'].includes(key) ||
+    key.includes('_apertureClient_')) {
         return false;
     }
     return true;
