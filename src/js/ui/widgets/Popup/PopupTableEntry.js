@@ -163,12 +163,11 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
         }
     }
 
-
     return (
         <React.Fragment>
             <TableRow className={classes.root}>
                 <TableCell>{makeJSONPretty(keyValue)}</TableCell>
-                <TableCell>{valueToDisplay(obj, keyValue, value)}</TableCell>
+                <TableCell>{valueToDisplay(obj, keyValue, entryProperties.isTemporal ? obj.properties[`${keyValue}_apertureClient_${temporalAccumulator}`] : value)}</TableCell>
                 <TableCell align="right">
                     {objectHasTrueValue(entryProperties)}
                 </TableCell>
