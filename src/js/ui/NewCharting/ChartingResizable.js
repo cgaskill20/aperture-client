@@ -61,7 +61,7 @@ import { Rnd } from 'react-rnd';
 import Paper from '@material-ui/core/Paper';
 import ChartingWindow from './ChartingWindow';
 
-function shouldAvoidDragging(node) {
+export function shouldAvoidDragging(node) {
     if (!node || !node.className || !node.className.includes) {
         return false;
     }
@@ -71,9 +71,12 @@ function shouldAvoidDragging(node) {
 }
 
 export default function ChartingResizable() {
-    let [size, setSize] = useState({ width: 500, height: 400 });
+
+    let [size, setSize] = useState({ width: 700, height: 450 });
     let [pos, setPos] = useState({ x: 900, y: 100 });
     let [chartData, setChartData] = useState({});
+
+
 
     useEffect(() => {
         window.chartSystem.registerDataConsumer('charting-resizable', setChartData);
@@ -86,7 +89,7 @@ export default function ChartingResizable() {
             height: '800px',
         }}>
             <Rnd default={{
-                    x: 900,
+                    x: 500,
                     y: 100,
                     width: size.width,
                     height: size.height
@@ -109,6 +112,7 @@ export default function ChartingResizable() {
                     // Yes, this is not a mistake, the library is bugged.
                     setPos({ x: x.x, y: x.y });
                 }}
+
             >
                 <Paper className={'charting-resizable-window'}>
                     <div style={{ overflowY: "scroll", maxHeight: size.height }}>

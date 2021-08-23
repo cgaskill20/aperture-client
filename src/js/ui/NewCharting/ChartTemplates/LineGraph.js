@@ -63,7 +63,7 @@ import * as d3 from '../../../third-party/d3.min.js';
 export default function LineGraph(props) {
     let svgRef = React.createRef();
 
-    let [margin, setMargin] = useState({ top: 30, right: 20, bottom: 75, left: 50 });
+    let [margin, setMargin] = useState({ top: 30, right: 20, bottom: 130, left: 50 });
 
     let mouseIn = false;
     let onMouseMove = () => {};
@@ -114,7 +114,7 @@ export default function LineGraph(props) {
         let svg = d3.select(svgRef.current);
         let data = prepareData(props.data);
 
-        svg.attr("viewBox", [0, 0, width, height]);
+        svg.attr("viewBox", [0, 0, width, height-50]);
 
 		let x = d3.scaleUtc()
             .domain([d3.min(data, entry => d3.min(entry.data, d => d.date)), 

@@ -76,11 +76,19 @@ export default function ScatterPlot(props) {
 
     let prepareData = (data, xVar, yVar) => {
 
+        let x = data['map_features'][xVar].map(e => e['locationName'])
+        let y = data['map_features'][yVar].map(e => e['locationName'])
+
+        let union = x.filter(value => y.includes(value));
+
         let retData = {};
+
         data['map_features'][xVar].map(e => {
-            retData[e['locationName']] = {
-                [xVar]: e.data,
-                [yVar] : 0,
+            if(union.indexOf(e['locationName']) != -1){
+                retData[e['locationName']] = {
+                    [xVar]: e.data,
+                    [yVar] : 0,
+                }
             }
         });
 
@@ -93,13 +101,14 @@ export default function ScatterPlot(props) {
         return retData;
     }
 
+
     let rerender = (width, height) => {
 
         const margin = {
-            top: 0,
-            right: 10,
+            top: 20,
+            right: 20,
             bottom: 150,
-            left: 20
+            left: 80
         };
         const radius = 5;
         const color = "blue";
@@ -172,15 +181,15 @@ export default function ScatterPlot(props) {
 
 
         svg.select("#xAxisText")
-            .attr('transform', `translate(${(margin.left + drawWidth / 2)}, ${(height - margin.bottom + 30)})`)
+            .attr('transform', `translate(${(margin.left + drawWidth / 4)}, ${(height - margin.bottom + 30)})`)
             .attr('class', 'axis-label')
-            .text(xVar);
+            .text(xVar.split("::")[2]);
 
 
         svg.select("#yAxisText")
-            .attr('transform', `translate( ${(margin.left - 30)},${(margin.top + drawHeight / 2)}) rotate(-90)`)
+            .attr('transform', `translate( ${(margin.left - 60)},${(margin.top + drawHeight - 10)}) rotate(-90)`)
             .attr('class', 'axis-label')
-            .text(yVar);
+            .text(yVar.split("::")[2]);
 
 
 

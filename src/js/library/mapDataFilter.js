@@ -137,7 +137,7 @@ export default class MapDataFilter {
      * formatted "model" of this data in the filter.  
      * Only data entries whose geometry fits in the bounds will be added.
      * For instance, if you want to model temperature, this is stored as a
-     * "temp" property in the data entires, so you'd pass "temp" as
+     * "temp" property in the data entries, so you'd pass "temp" as
      * the feature.
      * Multiple features can also be passed in an array and it will model
      * each one.  
@@ -147,6 +147,7 @@ export default class MapDataFilter {
      * found in the data set.
      */
     getModel(feature, bounds) {
+
         let filteredData = this.filter(this.data, bounds);
 
         if (Array.isArray(feature)) {
@@ -175,14 +176,14 @@ export default class MapDataFilter {
       * @returns {Array<object>} a subset of the data including only entries the filter is interested in
       */
     filter(data, bounds) {
-        let filtered = Object.entries(data).map(kv => { 
+        let filtered = Object.entries(data).map(kv => {
             return { collection: kv[0], data: kv[1].filter(datum => Util.isInBounds(datum, bounds)) };
         });
 
         return filtered;
     }
 
-    /** Removes any data from the filter that is older in miliseconds than the
+    /** Removes any data from the filter that is older in milliseconds than the
       * given max age.
       * @memberof MapDataFilter
       * @method discardOldData
@@ -247,14 +248,17 @@ export default class MapDataFilter {
       * @returns {string} A string that describes the entry's location
       */
     dataLocation(entry) {
-        let locationName = entry.properties.NAMELSAD10;
-        if (/\bCounty\b/gi.test(locationName)) {
-           return "county";
+        let locationName;
+        if(locationName = entry.properties.NAMELSAD10){
+            if(locationName.includes("County")){
+                return "county";
+            }
+            if(locationName.includes("Tract")){
+                return "tract";
+            }
+            return undefined;
         }
-        if (/\Tract\b/gi.test(locationName)) {
-            return "tract";
-        }
-        return undefined;
+        return false;
     }
 
     /** Gets an array of models for multiple features.

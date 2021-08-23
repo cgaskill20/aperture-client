@@ -98,6 +98,14 @@ export const ChartingType = {
         name: "piegraph",
         wantsSources: [ DataSourceType.MAP_FEATURES ],
     },
+    BOXPLOT:{
+        name: "boxplot",
+        wantsSources: [ DataSourceType.MAP_FEATURES ],
+    },
+    CORRELOGRAM:{
+        name: "correlogram",
+        wantsSources: [ DataSourceType.MAP_FEATURES ],
+    },
 };
 
 // Chart message types that any chart can accept.

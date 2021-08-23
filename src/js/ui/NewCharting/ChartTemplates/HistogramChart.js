@@ -63,7 +63,7 @@ import KernelDensityEstimator from '../../../library/charting/kernelDensityEstim
 export default function HistogramGraph(props) {
 
     let svgRef = React.createRef();
-    let [margin, setMargin] = useState({ top: 0, right: 10, bottom: 250, left: 20 });
+    let [margin, setMargin] = useState({ top: 10, right: 10, bottom: 200, left: 30 });
     let [kde, setKde] = useState(new KernelDensityEstimator());
 
     let setup = () => {
@@ -92,7 +92,7 @@ export default function HistogramGraph(props) {
 
         let svg = d3.select(svgRef.current);
         
-		svg.attr("viewBox", [0, 0, width, height]);
+		svg.attr("viewBox", [0, 0, width, height-100]);
 
         let x = d3.scaleLinear()
             .range([margin.left, width - margin.right])
@@ -114,13 +114,16 @@ export default function HistogramGraph(props) {
         svg.select("g#yAxis").call(yAxis);
         svg.select("g#rects")
             .selectAll("rect")
-                .attr("fill", d => "steelblue")
             .data(bins)
             .join("rect")
                 .attr("x", d => x(d.x0) + 1)
                 .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 1))
                 .attr("y", d => y(d.length))
                 .attr("height", d => y(0) - y(d.length));
+
+        svg.select("g#rects")
+            .selectAll("rect")
+                .attr("fill", d => "steelblue");
 
 
         if (props.kdeEnabled) {

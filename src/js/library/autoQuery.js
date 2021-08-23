@@ -421,6 +421,7 @@ export default class AutoQuery {
         window.renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers, this.collection);
         this.mapLayers = [];
         this.layerIDs.clear();
+        MapDataFilterWrapper.removeCollection(this.collection);
     }
 
     /**
