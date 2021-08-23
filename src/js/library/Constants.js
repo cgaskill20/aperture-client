@@ -62,7 +62,7 @@ export const minGeneralZoom = 0;
 
 //object holding mongo's group aggregators (https://docs.mongodb.com/manual/reference/operator/aggregation/group/) 
 //along with labels for each
-export const mongoTemporalOptions = {
+export const mongoGroupAccumulators = {
    avg: "Average",
    first: "First",
    last: "Last",

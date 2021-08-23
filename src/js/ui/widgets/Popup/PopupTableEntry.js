@@ -69,6 +69,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Radio from "@material-ui/core/Radio";
 import ColorizeIcon from '@material-ui/icons/Colorize';
 import Tooltip from '@material-ui/core/Tooltip';
+import { mongoGroupAccumulators } from "../../../library/Constants";
 
 const useStyles = makeStyles({
     root: {
@@ -94,10 +95,9 @@ const useStyles = makeStyles({
 
 export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties }) {
     const classes = useStyles()
-    const temporalMap = ["SUM", "FIRST", "LAST", "AVG"];
     const [open, setOpen] = useState(false);
     const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
-    const [temporalScope, setTemporalScope] = useState(temporalMap[0]);
+    const [temporalAccumulator, setTemporalAccumulator] = useState(Object.keys(mongoGroupAccumulators)[0]);
     /*
     * @Daniel - temporalScope is the selected dropdown feature for each given key/value pair. It is one of the strings
     *           from temporalMap. Not sure if this is what you need, but its what you get!
@@ -113,8 +113,9 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
         }
     }
 
-    const switchTemporalScope = (event) => {
-        setTemporalScope(temporalMap[event.target.value]);
+    const switchTemporalAccumulator = (event) => {
+        console.log(event.target.value)
+        setTemporalAccumulator(event.target.value);
     }
 
     const colorFieldCheckbox = () => {
@@ -140,12 +141,11 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
                         <Select
                             native
                             label="Temporal Range"
-                            onChange={switchTemporalScope}
+                            onChange={switchTemporalAccumulator}
                         >
-                            <option value={0}>Sum</option>
-                            <option value={1}>First</option>
-                            <option value={2}>Last</option>
-                            <option value={3}>Average</option>
+                            {Object.entries(mongoGroupAccumulators).map(([accumulator, label], index) => {
+                                return <option value={accumulator} key={index}>{label}</option>
+                            })}
                         </Select>
                 </FormControl>
             </div>
