@@ -68,6 +68,5 @@ export const mongoGroupAccumulators = {
    last: "Last",
    min: "Minimum",
    max: "Maximum",
-   sum: "Sum",
-   count: "Count"
+   sum: "Sum"
 }

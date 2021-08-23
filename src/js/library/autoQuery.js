@@ -61,6 +61,7 @@ import MapDataFilterWrapper from "./mapDataFilterWrapper"
 import Util from "./apertureUtil"
 import Query from "./Query"
 import Color from "./Color"
+import { mongoGroupAccumulators } from "./Constants"
 
 /**
  * @class AutoQuery
@@ -512,21 +513,25 @@ export default class AutoQuery {
     buildTemporalPreProcess() {
         let groupStage = {
             _id: `$${this.data.joinField}`,
-            [this.data.joinField]: { "$first": `$${this.data.joinField}` }
+            [this.data.joinField]: {"$first": `$${this.data.joinField}`}
         }
-        const fieldsNotGrouped = Object.keys(this.data.constraints).filter(name => !Object.keys(this.temporalFields).includes(name))
-        for (const field of fieldsNotGrouped) {
-            groupStage[field] = { "$first": `$${field}` }
+
+        for(const field of Object.keys(this.data.constraints)){
+            groupStage[field] = {"$first": `$${field}`}
         }
-        for (const [field, type] of Object.entries(this.temporalFields)) {
-            groupStage[field] = { [`$${type}`]: `$${field}` }
+        for(const [field, type] of Object.entries(this.temporalFields)){
+            for(const accumulator of Object.keys(mongoGroupAccumulators)) {
+                groupStage[`${field}_apertureClient_${accumulator}`] = { [`$${accumulator}`]: `$${field}`}
+            }
         }
+
         groupStage = {
             "$group": groupStage
         }
-
+        
         return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, groupStage]
     }
+
 
     addMongoProject() {
         let project = { GISJOIN: 1 };
