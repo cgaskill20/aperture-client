@@ -79,7 +79,7 @@ export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) 
                         .filter(([key, value]) => keyValueIsValid(key, value))
                         .map(([key, value]) => (
                             <PopupTableEntry obj={obj} keyValue={key} value={value} key={key} entryProperties={{
-                                isCurrentColorField: colorField?.name === key || Util.removePropertiesPrefix(colorField?.name) === key,
+                                isCurrentColorField: colorField?.name === key || Util.removePropertiesPrefix(colorField?.name) === key || (obj.properties.meta[key]?.temporal ? key === colorField?.name?.substr(0, key.length) : false),
                                 canBeColorField: obj.properties.colorInfo.validColorFieldNames.includes(key),
                                 isTemporal: obj.properties.meta[key]?.temporal ? true : false
                             }}/>
