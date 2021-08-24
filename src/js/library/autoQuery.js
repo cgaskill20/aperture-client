@@ -254,14 +254,14 @@ export default class AutoQuery {
         this.currentQueries.clear();
     }
 
-    changeColorCodeField(fieldName, predefinedColor = null, dontRerender = false) {
+    changeColorCodeField(fieldName, predefinedColor = null, dontRerender = false, temporalAccumulator = null) {
         if (fieldName === this.color.variable) {
             predefinedColor = this.color;
         }
         const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
         if (colorField) {
             //console.log({fieldName})
-            this.colorField = { name: fieldName, label: colorField.label };
+            this.colorField = { name: temporalAccumulator ? `${fieldName}_apertureClient_${temporalAccumulator}` : fieldName, label: colorField.label };
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);
             }

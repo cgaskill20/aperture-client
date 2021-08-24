@@ -115,7 +115,9 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
 
     const switchTemporalAccumulator = (event) => {
         console.log(event.target.value)
-        setTemporalAccumulator(event.target.value);
+        const newTemporalAccumulator = event.target.value;
+        changeColorFieldName(keyValue, null, false, newTemporalAccumulator);
+        setTemporalAccumulator(newTemporalAccumulator);
     }
 
     const colorFieldCheckbox = () => {
