@@ -82,18 +82,19 @@ const Root = ({ map }) => {
     return <GlobalStateProvider defaultValue={defaultState}>
         <ThemeProvider theme={GlobalTheme}>
             <MuiPickersUtilsProvider utils={MomentUtils}>
+                <div style={{ zIndex: 1 }}>
+                    <div id="current-location" className="current-location">
+                        <GoTo />
+                    </div>
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
+                    <div>
+                        <Sidebar />
+                    </div>
+
+                    <ConditionalWidgetRendering />
+
+                    <Popup />
                 </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <Popup />
 
             </MuiPickersUtilsProvider>
         </ThemeProvider>
