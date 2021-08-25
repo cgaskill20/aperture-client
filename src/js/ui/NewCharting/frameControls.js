@@ -16,9 +16,9 @@ export default function frameControls(props) {
     };
 
     let menuOptions = props.options;
-    let selector = ""
-    let dropDown = ""
-    let extraDropDown = ""
+    let selector = "";
+    let dropDown = "";
+    let extraDropDown = "";
 
     if(props.selector){
         if(state.tractvCounty){

@@ -65,8 +65,6 @@ import BoxPlot from "./ChartTemplates/BoxPlotChart";
 import FrameControls from "./frameControls";
 import CorrelogramGraph from "./ChartTemplates/CorrelogramGraph";
 
-
-
 export default function Frame(props) {
 
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
@@ -92,7 +90,6 @@ export default function Frame(props) {
 
         })
     }
-
 
     switch (props.type.name) {
         case "histogram":

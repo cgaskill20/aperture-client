@@ -83,6 +83,7 @@ export default function ChartingResizable() {
         return () => window.chartSystem.unregisterDataConsumer('charting-resizable');
     }, []);
 
+    //FIXME This is where the OUTER chart box is created
     return (
         <div style={{
             width: '800px',
@@ -114,6 +115,7 @@ export default function ChartingResizable() {
                 }}
 
             >
+                {/*//FIXME Style this with makeStyles()*/}
                 <Paper className={'charting-resizable-window'}>
                     <div style={{ overflowY: "scroll", maxHeight: size.height }}>
                         <ChartingWindow size={size} pos={pos} data={chartData}/>
