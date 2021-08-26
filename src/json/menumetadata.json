@@ -885,25 +885,33 @@
             {
                 "name": "newDeathCount",
                 "label": "Mean New Death Count per Day",
-                "temporalType": "avg"
+                "temporalType": "avg",
+                "reverseGradient": true
             },
             {
                 "name": "totalDeathCount",
                 "label": "Total Death Count, End of Period",
-                "temporalType": "last"
+                "temporalType": "last",
+                "reverseGradient": true
             },
             {
                 "name": "newCaseCount",
                 "label": "Mean New Case Count per Day",
-                "temporalType": "avg"
+                "temporalType": "avg",
+                "reverseGradient": true
             },
             {
                 "name": "totalCaseCount",
                 "label": "Total Case Count, End of Period",
-                "temporalType": "last"
+                "temporalType": "last",
+                "reverseGradient": true
             },
             {
                 "name": "date",
+                "remove": true
+            },
+            {
+                "name": "epoch_time",
                 "remove": true
             }
         ]
@@ -2582,7 +2590,7 @@
     },
     {
         "collection": "oil_and_natural_gas_wells_geo",
-        "icon":  "fire.svg",
+        "icon": "fire.svg",
         "label": "Oil and Natural Gas Wells"
     },
     {
