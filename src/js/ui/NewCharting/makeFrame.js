@@ -76,6 +76,10 @@ export default function Frame(props) {
     let selectedConstraints = [];
     let trackFilters = [];
     let countyFilters = [];
+
+    const data = props.data;
+    console.log({data});
+
     if(props.data['map_features']){
         Object.keys(props.data['map_features']).map(constraint =>{
             if(props.data['map_features'][constraint].length > 0){

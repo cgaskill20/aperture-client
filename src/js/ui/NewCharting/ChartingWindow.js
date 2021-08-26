@@ -60,8 +60,18 @@ import React, { useState } from 'react';
 import ChartGlobalControls from './ChartGlobalControls';
 import Grid from '@material-ui/core/Grid';
 import Frame from './makeFrame';
+import {makeStyles, Paper} from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: "100%",
+        margin: "20px",
+        padding: "20px",
+    },
+}));
 
 export default function ChartingWindow(props) {
+    const classes = useStyles();
     const [frames, setFrames] = useState([]);
 
     const addChartFrame = frame => {
@@ -80,7 +90,9 @@ export default function ChartingWindow(props) {
                     <ChartGlobalControls make={addChartFrame} />
                     {frames.map((element, index) => {
                         if(element.active){
-                            return <Frame key={index} pos={props.pos} type={element.data.type} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>
+                            return <Paper key={index} className={classes.root} elevation={3}>
+                                <Frame pos={props.pos} type={element.data.type} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>
+                            </Paper>
                         }
                     })}
                 </Grid>
