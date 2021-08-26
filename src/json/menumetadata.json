@@ -14,7 +14,7 @@
                 "label": "Max Heatwave Temperature",
                 "type": "range",
                 "unit": "fahrenheit",
-                "temporalType": "max",
+                "temporal": true,
                 "reverseGradient": true
             },
             {
@@ -884,26 +884,26 @@
             },
             {
                 "name": "newDeathCount",
-                "label": "Mean New Death Count per Day",
-                "temporalType": "avg",
+                "label": "New Death Count",
+                "temporal": true,
                 "reverseGradient": true
             },
             {
                 "name": "totalDeathCount",
-                "label": "Total Death Count, End of Period",
-                "temporalType": "last",
+                "label": "Total Death Count",
+                "temporal": true,
                 "reverseGradient": true
             },
             {
                 "name": "newCaseCount",
-                "label": "Mean New Case Count per Day",
-                "temporalType": "avg",
+                "label": "New Case Count",
+                "temporal": true,
                 "reverseGradient": true
             },
             {
                 "name": "totalCaseCount",
-                "label": "Total Case Count, End of Period",
-                "temporalType": "last",
+                "label": "Total Case Count",
+                "temporal": true,
                 "reverseGradient": true
             },
             {
@@ -947,27 +947,28 @@
             },
             {
                 "name": "staPresMean",
-                "label": "Average Station Pressure during Time Constraint",
+                "label": "Average Station Pressure",
                 "unit": "kilopascal",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "staPresMinimum",
-                "label": "Minimum Station Pressure during Time Constraint",
+                "label": "Minimum Station Pressure",
                 "unit": "kilopascal",
-                "temporalType": "min"
+                "temporal": true
             },
             {
                 "name": "staPresMaximum",
-                "label": "Maximum Station Pressure during Time Constraint",
+                "label": "Maximum Station Pressure",
                 "unit": "kilopascal",
-                "temporalType": "max"
+                "temporal": true
             },
             {
                 "name": "staPresVariance",
                 "label": "Variance in station pressure",
                 "unit": "kilopascalsSquared",
-                "hideByDefault": true
+                "hideByDefault": true,
+                "temporal": true
             },
             {
                 "name": "staPresNumPts",
@@ -1141,7 +1142,7 @@
                 "name": "corPres",
                 "label": "Mean station pressure corrected to sea level",
                 "unit": "kilopascal",
-                "temporalType": "avg",
+                "temporal": true,
                 "hideByDefault": true
             },
             {
@@ -1207,21 +1208,21 @@
             },
             {
                 "name": "windSpeedMean",
-                "label": "Arithmetic mean of wind speed over time period",
+                "label": "Arithmetic mean of wind speed",
                 "unit": "metersPerSecond",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "windSpeedMinimum",
-                "label": "Minimum wind speed over time period",
+                "label": "Minimum wind speed",
                 "unit": "metersPerSecond",
-                "temporalType": "min"
+                "temporal": true
             },
             {
                 "name": "windSpeedMaximum",
-                "label": "Maximum wind speed over time period",
+                "label": "Maximum wind speed",
                 "unit": "metersPerSecond",
-                "temporalType": "max"
+                "temporal": true
             },
             {
                 "name": "windSpeedVariance",
@@ -1586,21 +1587,21 @@
             },
             {
                 "name": "tempSingleMean",
-                "label": "Arithmetic mean of single aspirated air temperature over time period",
+                "label": "Arithmetic mean of single aspirated air temperature",
                 "unit": "celsius",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "tempSingleMinimum",
-                "label": "Minimum single aspirated air temperature over time period",
+                "label": "Minimum single aspirated air temperature",
                 "unit": "celsius",
-                "temporalType": "min"
+                "temporal": true
             },
             {
                 "name": "tempSingleMaximum",
-                "label": "Maximum single aspirated air temperature over time period",
+                "label": "Maximum single aspirated air temperature",
                 "unit": "celsius",
-                "temporalType": "max"
+                "temporal": true
             },
             {
                 "name": "tempSingleVariance",
@@ -1845,21 +1846,21 @@
             },
             {
                 "name": "tempTripleMean",
-                "label": "Arithmetic mean of triple aspirated air temperature over time period",
+                "label": "Arithmetic mean of triple aspirated air temperature",
                 "unit": "celsius",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "tempTripleMinimum",
-                "label": "Minimum triple aspirated air temperature over time period",
+                "label": "Minimum triple aspirated air temperature",
                 "unit": "celsius",
-                "temporalType": "min"
+                "temporal": true
             },
             {
                 "name": "tempTripleMaximum",
-                "label": "Maximum triple aspirated air temperature over time period",
+                "label": "Maximum triple aspirated air temperature",
                 "unit": "celsius",
-                "temporalType": "max"
+                "temporal": true
             },
             {
                 "name": "tempTripleVariance",
@@ -2152,21 +2153,21 @@
             },
             {
                 "name": "bioTempMean",
-                "label": "Arithmetic mean of IR biological temperature over time period",
+                "label": "Arithmetic mean of IR biological temperature",
                 "unit": "celsius",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "bioTempMinimum",
-                "label": "Minimum IR biological temperature over time period",
+                "label": "Minimum IR biological temperature",
                 "unit": "celsius",
-                "temporalType": "min"
+                "temporal": true
             },
             {
                 "name": "bioTempMaximum",
-                "label": "Maximum IR biological temperature over time period",
+                "label": "Maximum IR biological temperature",
                 "unit": "celsius",
-                "temporalType": "max"
+                "temporal": true
             },
             {
                 "name": "bioTempVariance",
@@ -2375,9 +2376,9 @@
             },
             {
                 "name": "secPrecipBulk",
-                "label": "Average Bulk secondary precipitation over time period",
+                "label": "Average Bulk secondary precipitation",
                 "unit": "millimeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "secPrecipExpUncert",
@@ -2460,9 +2461,9 @@
             },
             {
                 "name": "TFPrecipBulk",
-                "label": "Mean Bulk throughfall precipitation over Time period",
+                "label": "Mean Bulk throughfall precipitation",
                 "unit": "millimeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "TFPrecipExpUncert",
@@ -2669,19 +2670,19 @@
                 "name": "PARMean",
                 "label": "Arithmetic mean of photosynthetically active radiation",
                 "unit": "micromolesPerSquareMeterPerSecond",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "PARMinimum",
                 "label": "Minimum photosynthetically active radiation",
                 "unit": "micromolesPerSquareMeterPerSecond",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "PARMaximum",
                 "label": "Maximum photosynthetically active radiation",
                 "unit": "micromolesPerSquareMeterPerSecond",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "PARVariance",
@@ -3084,19 +3085,19 @@
                 "name": "inSWMean",
                 "label": "Arithmetic mean of incoming shortwave radiation",
                 "unit": "wattsPerSquareMeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "inSWMinimum",
                 "label": "Minimum incoming shortwave radiation",
                 "unit": "wattsPerSquareMeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "inSWMaximum",
                 "label": "Maximum incoming shortwave radiation",
                 "unit": "wattsPerSquareMeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "inSWVariance",
@@ -3847,19 +3848,19 @@
                 "name": "difRadMean",
                 "label": "Arithmetic mean of diffuse radiation",
                 "unit": "wattsPerSquareMeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "difRadMinimum",
                 "label": "Minimum diffuse radiation",
                 "unit": "wattsPerSquareMeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "difRadMaximum",
                 "label": "Maximum diffuse radiation",
                 "unit": "wattsPerSquareMeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "difRadVariance",
@@ -4484,19 +4485,19 @@
                 "name": "SHFMean",
                 "label": "Arithmetic mean of soil heat flux",
                 "unit": "wattsPerSquareMeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "SHFMinimum",
                 "label": "Minimum soil heat flux",
                 "unit": "wattsPerSquareMeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "SHFMaximum",
                 "label": "Maximum soil heat flux",
                 "unit": "wattsPerSquareMeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "SHFVariance",
@@ -4773,13 +4774,13 @@
                 "name": "linePARMean",
                 "label": "Arithmetic mean of spatial average of photosynthetically active radiation over the sensor length",
                 "unit": "micromolesPerSquareMeterPerSecond",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "linePARMinimum",
                 "label": "Minimum spatial average of photosynthetically active radiation over the sensor length",
                 "unit": "micromolesPerSquareMeterPerSecond",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "linePARMaximum",
@@ -4791,7 +4792,7 @@
                 "name": "linePARVariance",
                 "label": "Variance in spatial average of photosynthetically active radiation over the sensor length",
                 "unit": "micromolesPerSquareMeterPerSecondSquared",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "linePARNumPts",
@@ -5008,19 +5009,19 @@
                 "name": "soilCO2concentrationMean",
                 "label": "Arithmetic mean of Soil CO2 concentration adjusted for temperature, pressure, oxygen, and humidity conditions",
                 "unit": "partsPerMillion",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "soilCO2concentrationMinimum",
                 "label": "Minimum Soil CO2 concentration adjusted for temperature, pressure, oxygen, and humidity conditions",
                 "unit": "partsPerMillion",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "soilCO2concentrationMaximum",
                 "label": "Maximum Soil CO2 concentration adjusted for temperature, pressure, oxygen, and humidity conditions",
                 "unit": "partsPerMillion",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "soilCO2concentrationVariance",
@@ -5303,19 +5304,19 @@
                 "name": "VSWCMean",
                 "label": "Arithmetic mean of volumetric soil water content",
                 "unit": "cubicCentimetersPerCubicCentimeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "VSWCMinimum",
                 "label": "Minimum volumetric soil water content",
                 "unit": "cubicCentimetersPerCubicCentimeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "VSWCMaximum",
                 "label": "Maximum volumetric soil water content",
                 "unit": "cubicCentimetersPerCubicCentimeter",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "VSWCVariance",
@@ -5495,19 +5496,19 @@
                 "name": "VSICMean",
                 "label": "Arithmetic mean of volumetric soil ion content",
                 "unit": "dimensionless",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "VSICMinimum",
                 "label": "Minimum volumetric soil ion content",
                 "unit": "dimensionless",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "VSICMaximum",
                 "label": "Maximum volumetric soil ion content",
                 "unit": "dimensionless",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "VSICVariance",
@@ -5754,19 +5755,19 @@
                 "name": "RHMean",
                 "label": "Arithmetic mean of relative humidity",
                 "unit": "percent",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "RHMinimum",
                 "label": "Minimum relative humidity",
                 "unit": "percent",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "RHMaximum",
                 "label": "Maximum relative humidity",
                 "unit": "percent",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "RHVariance",
@@ -5928,19 +5929,19 @@
                 "name": "tempRHMean",
                 "label": "Arithmetic mean of temperature measures by RH sensor",
                 "unit": "celsius",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "tempRHMinimum",
                 "label": "Minimum temperature measures by RH sensor",
                 "unit": "celsius",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "tempRHMaximum",
                 "label": "Maximum temperature measures by RH sensor",
                 "unit": "celsius",
-                "temporalType": "avg"
+                "temporal": true
             },
             {
                 "name": "tempRHVariance",

@@ -301,8 +301,8 @@ export default {
             if (constraint.type === "date")
                 result.isDate = true;
             
-            if (constraint.temporalType) 
-                result.temporalType = constraint.temporalType;
+            if (constraint.temporal) 
+                result.temporal = constraint.temporal;
 
             if(constraint.unit)
                 result.unit = constraint.unit;

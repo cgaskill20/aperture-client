@@ -104,9 +104,9 @@ export default class AutoQuery {
         if (layerData.temporal) {
             this.temporal = layerData.temporal;
             this.temporalFields = Object.entries(layerData.constraints)
-                .filter(([constraintName, constraint]) => constraint.temporalType != null)
+                .filter(([constraintName, constraint]) => constraint.temporal)
                 .reduce((acc, [constraintName, constraint]) => {
-                    return { ...acc, [constraintName]: constraint.temporalType }
+                    return { ...acc, [constraintName]: constraint.temporal }
                 }, {});
         }
 
@@ -551,7 +551,7 @@ export default class AutoQuery {
             add.unit = constraintMeta.unit;
             add.reverseGradient = constraintMeta.reverseGradient;
             add.important = this.constraintState[constraintName] ? true : false;
-            add.temporal = constraintMeta.temporalType ? {
+            add.temporal = constraintMeta.temporal ? {
                 temporalRange: this.constraintData[this.temporal],
                 collection: this.collection
             } : null;
