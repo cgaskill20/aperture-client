@@ -114,10 +114,11 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
         }
     }
 
-    const switchTemporalAccumulator = (newAccumulator) => {
-        console.log(newAccumulator)
+    const switchTemporalAccumulator = (newAccumulator, force = false) => {
         const newTemporalAccumulator = newAccumulator;
-        changeColorFieldName(keyValue, null, false, newTemporalAccumulator);
+        if(entryProperties.isCurrentColorField || force) {
+            changeColorFieldName(keyValue, null, false, newTemporalAccumulator);
+        }
         setTemporalAccumulator(newTemporalAccumulator);
     }
 
@@ -128,7 +129,7 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
                     checked={entryProperties.isCurrentColorField}
                     onChange={() => {
                         if(entryProperties.isTemporal) {
-                            switchTemporalAccumulator(temporalAccumulator)
+                            switchTemporalAccumulator(temporalAccumulator, true)
                         }
                         else {
                             changeColorFieldName(keyValue);

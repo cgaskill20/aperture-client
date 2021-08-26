@@ -68,7 +68,6 @@ import { temporalId } from "../../../library/Constants";
 export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary, obj }) {
     const svgRef = React.createRef();
     useEffect(() => {
-        console.log("USEFEFFECT")
         if (colorSummary.minMax) {
             const width = 350;
             const height = 85;
@@ -77,7 +76,7 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
             const svg = d3.select(svgRef.current);
             svg.selectAll('*').remove();
             svg.attr("viewBox", [0, 0, width, height]);
-            
+
             const colorFieldNameClean = colorFieldName.includes(temporalId) ? colorFieldName.substring(0,colorFieldName.indexOf(temporalId)) : colorFieldName;
             
             
@@ -104,9 +103,7 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                     .style("fill", "url(#linear-gradient)");
 
                 //add line
-                console.log({colorFieldName, props: obj.properties})
                 let value = obj.properties[colorFieldName];
-                console.log({value})
                 if(isNaN(value)) {
                     value = mongoNonNumericToNumber(value)
                 }
@@ -134,7 +131,6 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
         }
     }, [colorSummary, colorFieldName]);
 
-    console.log({colorSummary})
     if (colorSummary.minMax) {
         return <Grid container>
             <Grid item xs={12}>
