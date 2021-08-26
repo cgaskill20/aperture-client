@@ -70,6 +70,7 @@ import Radio from "@material-ui/core/Radio";
 import ColorizeIcon from '@material-ui/icons/Colorize';
 import Tooltip from '@material-ui/core/Tooltip';
 import { mongoGroupAccumulators } from "../../../library/Constants";
+import { temporalId } from "../../../library/Constants";
 
 const useStyles = makeStyles({
     root: {
@@ -113,9 +114,9 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
         }
     }
 
-    const switchTemporalAccumulator = (event) => {
-        console.log(event.target.value)
-        const newTemporalAccumulator = event.target.value;
+    const switchTemporalAccumulator = (newAccumulator) => {
+        console.log(newAccumulator)
+        const newTemporalAccumulator = newAccumulator;
         changeColorFieldName(keyValue, null, false, newTemporalAccumulator);
         setTemporalAccumulator(newTemporalAccumulator);
     }
@@ -126,7 +127,12 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
                 <Radio
                     checked={entryProperties.isCurrentColorField}
                     onChange={() => {
-                        changeColorFieldName(keyValue);
+                        if(entryProperties.isTemporal) {
+                            switchTemporalAccumulator(temporalAccumulator)
+                        }
+                        else {
+                            changeColorFieldName(keyValue);
+                        }
                     }}
                     color="primary"
                 />
@@ -143,7 +149,7 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
                         <Select
                             native
                             label="Temporal Range"
-                            onChange={switchTemporalAccumulator}
+                            onChange={(event) => switchTemporalAccumulator(event.target.value)}
                         >
                             {Object.entries(mongoGroupAccumulators).map(([accumulator, label], index) => {
                                 return <option value={accumulator} key={index}>{label}</option>
@@ -169,7 +175,7 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
         <React.Fragment>
             <TableRow className={classes.root}>
                 <TableCell>{makeJSONPretty(keyValue)}</TableCell>
-                <TableCell>{valueToDisplay(obj, keyValue, entryProperties.isTemporal ? obj.properties[`${keyValue}_apertureClient_${temporalAccumulator}`] : value)}</TableCell>
+                <TableCell>{valueToDisplay(obj, keyValue, entryProperties.isTemporal ? obj.properties[`${keyValue}${temporalId}${temporalAccumulator}`] : value)}</TableCell>
                 <TableCell align="right">
                     {objectHasTrueValue(entryProperties)}
                 </TableCell>

@@ -63,9 +63,9 @@ import PopupTableEntry from "./PopupTableEntry"
 import useHover from "../../hooks/useHover";
 import Util from "../../../library/apertureUtil"
 import * as d3 from '../../../third-party/d3.min.js';
+import { temporalId } from "../../../library/Constants";
 
 export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary, obj }) {
-    console.log({colorFieldName})
     const svgRef = React.createRef();
     useEffect(() => {
         console.log("USEFEFFECT")
@@ -77,12 +77,11 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
             const svg = d3.select(svgRef.current);
             svg.selectAll('*').remove();
             svg.attr("viewBox", [0, 0, width, height]);
-            console.log(obj.properties.meta[colorFieldName.substring(0,colorFieldName.indexOf('_apertureClient_'))])
-            let colorFieldNameGood = colorFieldName.includes('_apertureClient_') ? colorFieldName.substring(0,colorFieldName.indexOf('_apertureClient_')) : colorFieldName;
             
-            console.log({colorFieldName})
+            const colorFieldNameClean = colorFieldName.includes(temporalId) ? colorFieldName.substring(0,colorFieldName.indexOf(temporalId)) : colorFieldName;
             
-            if (obj.properties.meta[colorFieldNameGood]) {
+            
+            if (obj.properties.meta[colorFieldNameClean]) {
                 const linearGradient = svg.append("defs")
                     .append("linearGradient")
                     .attr("id", "linear-gradient");
@@ -121,7 +120,7 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                     .attr("y2", height - marginBottom);
 
                 //console.log({colorFieldName, obj: obj})
-                let scale = obj.properties.meta[colorFieldNameGood]?.isDate ? d3.scaleUtc() : d3.scaleLinear()
+                let scale = obj.properties.meta[colorFieldNameClean]?.isDate ? d3.scaleUtc() : d3.scaleLinear()
 
                 //add axis
                 const linearScale = scale

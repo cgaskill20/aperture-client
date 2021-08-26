@@ -70,3 +70,5 @@ export const mongoGroupAccumulators = {
    max: "Maximum",
    sum: "Sum"
 }
+
+export const temporalId = "_apertureTemporalField_";

@@ -61,7 +61,7 @@ import MapDataFilterWrapper from "./mapDataFilterWrapper"
 import Util from "./apertureUtil"
 import Query from "./Query"
 import Color from "./Color"
-import { mongoGroupAccumulators } from "./Constants"
+import { mongoGroupAccumulators, temporalId } from "./Constants"
 
 /**
  * @class AutoQuery
@@ -261,7 +261,7 @@ export default class AutoQuery {
         const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
         if (colorField) {
             //console.log({fieldName})
-            this.colorField = { name: temporalAccumulator ? `${fieldName}_apertureClient_${temporalAccumulator}` : fieldName, label: colorField.label };
+            this.colorField = { name: temporalAccumulator ? `${fieldName}${temporalId}${temporalAccumulator}` : fieldName, label: colorField.label };
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);
             }
@@ -521,7 +521,7 @@ export default class AutoQuery {
         }
         for(const [field, type] of Object.entries(this.temporalFields)){
             for(const accumulator of Object.keys(mongoGroupAccumulators)) {
-                groupStage[`${field}_apertureClient_${accumulator}`] = { [`$${accumulator}`]: `$${field}`}
+                groupStage[`${field}${temporalId}${accumulator}`] = { [`$${accumulator}`]: `$${field}`}
             }
         }
 
