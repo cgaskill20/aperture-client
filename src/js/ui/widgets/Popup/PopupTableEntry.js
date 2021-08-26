@@ -99,19 +99,13 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
     const [open, setOpen] = useState(false);
     const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
     const [temporalAccumulator, setTemporalAccumulator] = useState(Object.keys(mongoGroupAccumulators)[0]);
-    /*
-    * @Daniel - temporalScope is the selected dropdown feature for each given key/value pair. It is one of the strings
-    *           from temporalMap. Not sure if this is what you need, but its what you get!
-    */
 
     const objectHasTrueValue = (obj) => {
-        for(const value of Object.entries(obj)) {
-            if(value[1]) {
+            if(obj.isTemporal || obj.canBeColorField) {
                 return <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
                     {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </IconButton>
             }
-        }
     }
 
     const switchTemporalAccumulator = (newAccumulator, force = false) => {
