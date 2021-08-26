@@ -64,7 +64,9 @@ import {makeStyles, Paper} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: "100%",
+        width: "98%",
+    },
+    paper: {
         margin: "20px",
         padding: "20px",
     },
@@ -84,19 +86,24 @@ export default function ChartingWindow(props) {
     }
 
     return (
-        <Grid container>
-            <Grid container direction="row" alignItems="center" justify="center" spacing={1}>
-                <Grid container direction="column" alignItems="center" justify="center" style={{ width: "90%" }}>
-                    <ChartGlobalControls make={addChartFrame} />
-                    {frames.map((element, index) => {
-                        if(element.active){
-                            return <Paper key={index} className={classes.root} elevation={3}>
-                                <Frame pos={props.pos} type={element.data.type} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>
-                            </Paper>
-                        }
-                    })}
-                </Grid>
+        <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+        >
+            <Grid item>
+                <ChartGlobalControls make={addChartFrame} />
             </Grid>
+            {frames.map((element, index) => {
+                if(element.active){
+                    return <Grid item key={index} className={classes.root}>
+                        <Paper className={classes.paper} elevation={3}>
+                            <Frame pos={props.pos} type={element.data.type} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>
+                        </Paper>
+                    </Grid>
+                }
+            })}
         </Grid>
     );
 }
