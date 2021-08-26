@@ -169,7 +169,7 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
     return (
         <React.Fragment>
             <TableRow className={classes.root}>
-                <TableCell>{keyToDisplay(obj, keyValue)}</TableCell>
+                <TableCell>{keyToDisplay(obj, keyValue, entryProperties.isTemporal ? ` (${mongoGroupAccumulators[temporalAccumulator]})` : '')}</TableCell>
                 <TableCell>{valueToDisplay(obj, keyValue, entryProperties.isTemporal ? obj.properties[`${keyValue}${temporalId}${temporalAccumulator}`] : value)}</TableCell>
                 <TableCell align="right">
                     {objectHasTrueValue(entryProperties)}

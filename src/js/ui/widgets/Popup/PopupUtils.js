@@ -61,15 +61,15 @@ import fipsToState from "../../../../json/fipsToState.json"
 import defaultImportantFields from "../../../../json/defaultImportantFields.json"
 import { temporalId } from "../../../library/Constants";
 
-export const keyToDisplay = (obj, key) => {
+export const keyToDisplay = (obj, key, suffix = '') => {
     if (obj?.properties?.meta?.[key]?.label) {
-        return obj.properties.meta[key].label;
+        return obj.properties.meta[key].label + suffix;
     }
     if (defaultImportantFields[key]) {
-        return defaultImportantFields[key].label ?? Util.cleanUpString(key);
+        return (defaultImportantFields[key].label ?? Util.cleanUpString(key)) + suffix;
     }
 
-    return Util.cleanUpString(key);
+    return Util.cleanUpString(key) + suffix;
 }
 
 export const valueToDisplay = (obj, key, value) => {
