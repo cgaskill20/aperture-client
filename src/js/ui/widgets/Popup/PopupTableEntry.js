@@ -58,7 +58,7 @@ END OF TERMS AND CONDITIONS
 */
 
 import React, {useState} from "react";
-import {valueToDisplay} from "./PopupUtils";
+import {keyToDisplay, valueToDisplay} from "./PopupUtils";
 import {TableCell, TableRow, makeStyles, Collapse, Select, InputLabel} from "@material-ui/core";
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -167,7 +167,7 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
     return (
         <React.Fragment>
             <TableRow className={classes.root}>
-                <TableCell>{makeJSONPretty(keyValue)}</TableCell>
+                <TableCell>{keyToDisplay(obj, keyValue)}</TableCell>
                 <TableCell>{valueToDisplay(obj, keyValue, value)}</TableCell>
                 <TableCell align="right">
                     {objectHasTrueValue(entryProperties)}
