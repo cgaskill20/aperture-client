@@ -31,7 +31,7 @@ export default function FrameControls(props) {
         selector = <ToggleSwitch bool={state.tractvCounty} change={handleChange}></ToggleSwitch>
     }
     if(props.numDropDowns == 2){
-        extraDropDown = <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint2}></ConstraintDropDown>
+        extraDropDown = <ConstraintDropDown axis={"y"} options={menuOptions} setConstraint={props.setConstraint2}></ConstraintDropDown>
     }
     if(props.numDropDowns > 0){
         dropDown = <ConstraintDropDown options={menuOptions} setConstraint={props.setConstraint}></ConstraintDropDown>

@@ -67,7 +67,8 @@ import Select from '@material-ui/core/Select';
 const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
-        minWidth: 250,
+        minWidth: 180,
+        maxWidth: 250,
         float: "left",
     },
     selectEmpty: {
@@ -88,14 +89,16 @@ export default function ChartDropdown(props) {
        age = ""
     }
 
+    const dropdownName = props.axis === "y" ? "Y-Axis" : "X-Axis";
+
     return (
         <div>
             <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">Select Constraint</InputLabel>
+                <InputLabel id="demo-simple-select-label">{dropdownName}</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    label="Select Constraint"
+                    label={dropdownName}
                     value={age}
                     onChange={handleChange}
                 >
