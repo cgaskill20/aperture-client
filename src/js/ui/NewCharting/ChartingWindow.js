@@ -89,7 +89,7 @@ export default function ChartingWindow(props) {
         <Grid
             container
             direction="column"
-            justifyContent="center"
+            justify="center"
             alignItems="center"
         >
             <Grid item>

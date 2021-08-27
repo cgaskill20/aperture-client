@@ -10,8 +10,8 @@ const useStyles = makeStyles((theme) => ({
     root: {
         borderBottom: '1px solid #adadad',
     },
-    noWrap: {
-        whiteSpace: "nowrap",
+    dropdowns: {
+        width: "98%",
     },
 }));
 
@@ -68,11 +68,19 @@ export default function FrameControls(props) {
             <Grid
                 container
                 direction="row"
-                justifyContent="center"
+                justify="center"
                 alignItems="center"
             >
                 {renderDropdown(true)}
                 {renderDropdown(false)}
+            </Grid>
+            <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+            >
+
                 {renderToggle()}
                 {renderCloseButton()}
             </Grid>
