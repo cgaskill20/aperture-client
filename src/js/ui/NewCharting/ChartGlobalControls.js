@@ -90,7 +90,7 @@ export default function ChartGlobalControls(props) {
             </ButtonGroup>
 
             {/* Close button */}
-            <IconButton aria-label="close" onClick={() => setGlobalState({ chartingOpen: false })}>
+            <IconButton onClick={() => setGlobalState({ chartingOpen: false })}>
                 <CloseIcon/>
             </IconButton>
         </div>

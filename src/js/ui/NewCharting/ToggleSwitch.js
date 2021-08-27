@@ -1,19 +1,21 @@
 import React from 'react';
 import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
+import PeopleIcon from '@material-ui/icons/People';
+import PersonIcon from '@material-ui/icons/Person';
 
 export default function ToggleSwitch(props){
     return (
-        <div><Grid component="label" container alignItems="center" spacing={1}>
-            <Grid item>Tract</Grid>
+        <div><Grid component="label" container alignItems="center">
+            <Grid item><PersonIcon/></Grid>
             <Grid item>
                 <Switch
-                    checked={props.bool}
-                    onChange={props.change("tractvCounty")}
+                    checked={props.tractOrCounty}
+                    onChange={props.setTractOrCounty}
                     value="Tract or County"
                 />
             </Grid>
-            <Grid item>County</Grid>
+            <Grid item><PeopleIcon/></Grid>
         </Grid></div>
     )
 }

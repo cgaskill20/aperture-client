@@ -89,16 +89,14 @@ export default function ChartDropdown(props) {
        age = ""
     }
 
-    const dropdownName = props.axis === "y" ? "Y-Axis" : "X-Axis";
-
     return (
         <div>
             <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">{dropdownName}</InputLabel>
+                <InputLabel id="demo-simple-select-label">{props.dropdownName}</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    label={dropdownName}
+                    label={props.dropdownName}
                     value={age}
                     onChange={handleChange}
                 >
