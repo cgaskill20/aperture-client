@@ -77,7 +77,7 @@ const useStyles = makeStyles({
 export default React.memo(function PopupTimeChart({ collection, join, fieldToChart, temporalRange }) {
     const [data, setData] = useState([]);
 
-    useEffect(async () => {
+    useEffect(() => {
         const pipe = [
             { $match: join },
             {
@@ -92,21 +92,24 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
             { $sample: { size: 1000 } },
             { $project: { [fieldToChart]: 1, epoch_time: 1, [Object.keys(join)[0]]: 1 } }
         ];
-        const d = await Query.makeQuery({
+        
+        let destroyed = false;
+        Query.makeQuery({
             collection,
             pipeline: pipe,
             dontLink: true
-        })
-        setData(d.data.map(p => {
-            if (typeof p.epoch_time === 'object') {
-                p.epoch_time = p.epoch_time.$numberLong ? Number(p.epoch_time.$numberLong) : Number(p.epoch_time.$numberDecimal)
+        }).then((d) => {
+            if (!destroyed) {
+                setData(d.data.map(p => {
+                    if (typeof p.epoch_time === 'object') {
+                        p.epoch_time = p.epoch_time.$numberLong ? Number(p.epoch_time.$numberLong) : Number(p.epoch_time.$numberDecimal)
+                    }
+                    return { x: p.epoch_time, y: p[fieldToChart] }
+                }).sort((a, b) => a.x - b.x));
             }
-            return { x: p.epoch_time, y: p[fieldToChart] }
-        }).sort((a, b) => a.x - b.x));
-        // .map(p => {
-        //     p.x = new Date(p.x);
-        //     return p;
-        // }));
+        });
+
+        return () => { destroyed = true; }
     }, []);
 
     const epochTimeToShortString = (value) => {
