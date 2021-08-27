@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
+import CloseIcon from '@material-ui/icons/Close';
 import ToggleSwitch from './ToggleSwitch';
 import ChartDropdown from "./ChartDropdown";
 import {makeStyles} from "@material-ui/core";
@@ -10,15 +10,24 @@ const useStyles = makeStyles((theme) => ({
     root: {
         borderBottom: '1px solid #adadad',
     },
+    noWrap: {
+        whiteSpace: "nowrap",
+    },
 }));
 
 export default function FrameControls(props) {
     const classes = useStyles();
     const dropdownNameOptions = ["Constraint", "X-Axis County", "X-Axis Tract", "Y-Axis County", "Y-Axis Tract"];
     const [tractOrCounty, setTractOrCounty] = useState(true);
-    const [dropdownName1, setDropdownName1] = useState(dropdownNameOptions[1]);
-    const [dropdownName2, setDropdownName2] = useState(dropdownNameOptions[3]);
-    let menuOptions = props.options;
+    const [dropdownName1, setDropdownName1] = useState("");
+    const [dropdownName2, setDropdownName2] = useState("");
+    const menuOptions = props.selector ? tractOrCounty ? props.options[0] : props.options[1] : props.options;
+
+    useEffect(() => {
+        const initialDropdownName1 = props.type === "scatterplot" ? dropdownNameOptions[1] : dropdownNameOptions[0];
+        setDropdownName1(initialDropdownName1);
+        setDropdownName2(dropdownNameOptions[3]);
+    }, []);
 
     function handleToggle() {
         setTractOrCounty(!tractOrCounty);
@@ -34,7 +43,6 @@ export default function FrameControls(props) {
 
     function renderToggle() {
         if(props.selector){
-            menuOptions = tractOrCounty ? props.options[0] : props.options[1];
             return <Grid item><ToggleSwitch tractOrCounty={tractOrCounty} setTractOrCounty={() => handleToggle()}></ToggleSwitch></Grid>
         }
     }
@@ -49,8 +57,8 @@ export default function FrameControls(props) {
 
     function renderCloseButton() {
         return  <Grid item>
-            <IconButton onClick={() => { props.remove(props.index) }} aria-label="Delete">
-                <DeleteIcon/>
+            <IconButton onClick={() => { props.remove(props.index) }}>
+                <CloseIcon/>
             </IconButton>
         </Grid>
     }
@@ -63,9 +71,9 @@ export default function FrameControls(props) {
                 justifyContent="center"
                 alignItems="center"
             >
-                {renderToggle()}
                 {renderDropdown(true)}
                 {renderDropdown(false)}
+                {renderToggle()}
                 {renderCloseButton()}
             </Grid>
         </div>

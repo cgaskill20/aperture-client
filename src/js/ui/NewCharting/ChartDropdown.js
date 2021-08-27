@@ -67,12 +67,7 @@ import Select from '@material-ui/core/Select';
 const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
-        minWidth: 180,
-        maxWidth: 250,
-        float: "left",
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
+        width: 180,
     },
 }));
 
@@ -86,7 +81,7 @@ export default function ChartDropdown(props) {
     };
 
     if(age.length > 0 & !props.options.includes(age)){
-       age = ""
+       age = "";
     }
 
     return (
