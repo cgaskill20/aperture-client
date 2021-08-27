@@ -40,6 +40,7 @@
     "google-protobuf": "^3.18.0-rc.1",
     "grpc-web": "^1.0.7",
     "jquery": "^3.5.1",
+    "jsdom": "^17.0.0",
     "jsdom-global": "^3.0.2",
     "leaflet-timedimension": "^1.1.1",
     "moment": "^2.29.1",
