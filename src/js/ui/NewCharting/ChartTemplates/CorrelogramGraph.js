@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import feature from "../../../library/charting/feature.js"
 import {ResponsiveHeatMap} from "@nivo/heatmap";
-import ToggleSwitch from '../toggleSwitch';
+import ToggleSwitch from '../ToggleSwitch';
 const calculateCorrelation = require("calculate-correlation");
 
 

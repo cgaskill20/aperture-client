@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import ConstraintDropDown from "./constraintDropDown"
+import ConstraintDropDown from "./ChartDropdown"
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import ToggleSwitch from './toggleSwitch';
+import ToggleSwitch from './ToggleSwitch';
 
 
 
-export default function frameControls(props) {
+export default function FrameControls(props) {
     const [state, setState] = useState({
         tractvCounty: true
     });

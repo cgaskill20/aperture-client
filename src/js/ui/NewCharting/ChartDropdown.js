@@ -56,83 +56,54 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useState, useEffect } from 'react';
-import HistogramGraph from "./ChartTemplates/HistogramChart";
-import LineGraph from "./ChartTemplates/LineGraph"
-import ScatterPlot from "./ChartTemplates/ScatterPlot";
-import KDEWrapper from "./KDEWrapper";
-import BoxPlot from "./ChartTemplates/BoxPlotChart";
-import FrameControls from "./frameControls";
-import CorrelogramGraph from "./ChartTemplates/CorrelogramGraph";
+import React from "react"
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 
-export default function Frame(props) {
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
-    const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
 
-    let frame;
-    const [constraint, setConstraint] = useState();
-    const [constraint2, setConstraint2] = useState();
+const useStyles = makeStyles((theme) => ({
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 150,
+        float: "left",
+    },
+    selectEmpty: {
+        marginTop: theme.spacing(2),
+    },
+}));
 
-    let selectedConstraints = [];
-    let trackFilters = [];
-    let countyFilters = [];
+export default function ChartDropdown(props) {
+    const classes = useStyles();
+    let [age, setAge] = React.useState('');
 
-    const data = props.data;
-    console.log({data});
+    const handleChange = (event) => {
+        props.setConstraint(event.target.value);
+        setAge(event.target.value);
+    };
 
-    if(props.data['map_features']){
-        Object.keys(props.data['map_features']).map(constraint =>{
-            if(props.data['map_features'][constraint].length > 0){
-                selectedConstraints.push(constraint)
-                if(props.data['map_features'][constraint][0].type == "county"){
-                    countyFilters.push(constraint);
-                }
-                if(props.data['map_features'][constraint][0].type == "tract"){
-                    trackFilters.push(constraint);
-                }
-            }
-
-        })
+    if(age.length > 0 & !props.options.includes(age)){
+       age = ""
     }
-
-    switch (props.type.name) {
-        case "histogram":
-            frame =
-                <div>
-                    <FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
-                    <KDEWrapper>
-                        <HistogramGraph key={id} size={props.size} data={props.data} selected={constraint}></HistogramGraph>
-                    </KDEWrapper>
-                </div>;
-                break;
-        case "line":
-            frame = <div><FrameControls key={id} index={props.index} remove={props.remove} numDropDowns={0}></FrameControls>
-                <LineGraph pos={props.pos} size={props.size} data={props.data} selected={constraint}></LineGraph></div>; break;
-        case "scatterplot":
-            frame =
-                <div>
-                    <FrameControls index={props.index} remove={props.remove} options={[countyFilters, trackFilters]} setConstraint={setConstraint} setConstraint2={setConstraint2} numDropDowns={2} selector={true}></FrameControls>
-                    <ScatterPlot size={props.size} data={props.data} selected={[constraint, constraint2]}></ScatterPlot>
-                </div>; break;
-        case "boxplot":
-            frame = <div><FrameControls index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
-                <BoxPlot size={props.size} data={props.data} selected={constraint}></BoxPlot></div>; break;
-        case "correlogram":
-            frame =<div><FrameControls index={props.index} remove={props.remove} numDropDowns={0}></FrameControls>
-                <CorrelogramGraph size={props.size} data={props.data} selected={constraint} options={[countyFilters, trackFilters]}></CorrelogramGraph></div>; break;
-
-
-        default: break;
-    }
-
 
 
     return (
-        <div style={{
-            width: "100%",
-            height: props.size.height - 80,
-        }}>
-            {frame}
+        <div>
+            <FormControl className={classes.formControl}>
+                <InputLabel id="demo-simple-select-label">Select Constraint</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={age}
+                    onChange={handleChange}
+                >
+                    {props.options.map((name, index) => <MenuItem key={index} value={name}>{name.split("::")[2]}</MenuItem>)}
+                </Select>
+            </FormControl>
         </div>
-    );
+
+    )
 }

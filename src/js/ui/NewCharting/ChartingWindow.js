@@ -59,7 +59,7 @@ END OF TERMS AND CONDITIONS
 import React, { useState } from 'react';
 import ChartGlobalControls from './ChartGlobalControls';
 import Grid from '@material-ui/core/Grid';
-import Frame from './makeFrame';
+import Frame from './Frame';
 import {makeStyles, Paper} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
