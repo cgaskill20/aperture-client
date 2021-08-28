@@ -112,7 +112,9 @@ export default function Layer(props) {
     const [activeLayerConstraints, setActiveLayerConstraints] = useState(defaultLayerConstraints);
 
     useEffect(() => {
-        props.layer.constraintState = allLayerConstraints.filter((e,index) => activeLayerConstraints[index]).map(e => e.name);
+        if(!props.layer.forceUpdateFlag) {
+            props.layer.constraintState = allLayerConstraints.filter((e,index) => activeLayerConstraints[index]).map(e => e.name);
+        }
     }, [activeLayerConstraints]);
 
 
@@ -128,6 +130,9 @@ export default function Layer(props) {
         if(props.layer.forceUpdateFlag) {
             props.layer.forceUpdateFlag = false;
             setCheck(props.layer.on)
+            const constraintStateSet = new Set(props.layer.constraintState)
+            console.log({constraintStateSet})
+            setActiveLayerConstraints(allLayerConstraints.map(layerConstraint => constraintStateSet.has(layerConstraint.name)))
             updateQuerierOnCheckChange(props.layer.on)
         }
     })
