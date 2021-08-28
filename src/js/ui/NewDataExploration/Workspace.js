@@ -97,7 +97,9 @@ export default React.memo(function Workspace() {
                 })
             }
         })
-        console.log({relevantLayers})
+        const serialized = JSON.stringify(relevantLayers);
+        console.log()
+        return serialized;
     }
 
     function extractLayers(data) {
