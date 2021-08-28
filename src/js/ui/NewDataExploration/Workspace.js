@@ -128,7 +128,7 @@ export default React.memo(function Workspace() {
             className={classes.root}
             container
             direction="column"
-            justify="center"
+            justifyContent="center"
             alignItems="center"
         >
             <Grid item className={classes.root}>

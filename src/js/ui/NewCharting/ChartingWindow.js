@@ -78,8 +78,8 @@ export default function ChartingWindow(props) {
 
     return (
         <Grid container>
-            <Grid container direction="row" alignItems="center" justify="center" spacing={1}>
-                <Grid container direction="column" alignItems="center" justify="center" style={{ width: "90%" }}>
+            <Grid container direction="row" alignItems="center" justifyContent="center" spacing={1}>
+                <Grid container direction="column" alignItems="center" justifyContent="center" style={{ width: "90%" }}>
                     <ChartGlobalControls make={addChartFrame} />
                     {frames.map((element, index) => {
 

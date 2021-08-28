@@ -153,7 +153,7 @@ export default React.memo(function NewModeling() {
                 className={classes.fullWidth}
                 container
                 direction="row"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="center"
             >
                     <Grid item className={classes.topComponentWidth}>
@@ -178,7 +178,7 @@ export default React.memo(function NewModeling() {
             <Grid
                 container
                 direction="column"
-                justify="flex-start"
+                justifyContent="flex-start"
                 alignItems="center"
             >
                 <Grid item className={classes.componentWidth}>
