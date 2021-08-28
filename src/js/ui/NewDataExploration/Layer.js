@@ -124,8 +124,20 @@ export default function Layer(props) {
         }
     }, [querier]);
 
-    const constraints = createConstraints(activeLayerConstraints, allLayerConstraints, classes, querier);
+    useEffect(() => {
+        if(props.layer.forceUpdateFlag) {
+            props.layer.forceUpdateFlag = false;
+            setCheck(props.layer.on)
+            updateQuerierOnCheckChange(props.layer.on)
+        }
+    })
 
+    const updateQuerierOnCheckChange = (newCheck) => {
+        newCheck && querier.onAdd();
+        newCheck || querier.onRemove();
+    }
+
+    const constraints = createConstraints(activeLayerConstraints, allLayerConstraints, classes, querier);
     if(componentIsRendering) console.log("|Layer|");
     return (
         <div className={classes.root}>
@@ -140,17 +152,17 @@ export default function Layer(props) {
                     >
                         <FormControlLabel
                             aria-label="CheckLayer"
-                            onClick={(event) => event.stopPropagation()}
                             onFocus={(event) => event.stopPropagation()}
-                            onChange={() => { 
+                            onClick={(event) => {
+                                event.stopPropagation()
                                 setCheck(!check)
                                 props.layer.state = !check;
-                                !check && querier.onAdd();
-                                !check || querier.onRemove();
+                                updateQuerierOnCheckChange(!check)
                             }}
                             control={
                                 <Switch
-                                        color="primary"
+                                    color="primary"
+                                    checked={check}
                                 />
                             }
                             label={props.layerTitles[props.layerIndex]}

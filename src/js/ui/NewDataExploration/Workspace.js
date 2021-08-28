@@ -82,7 +82,6 @@ export default React.memo(function Workspace() {
     const [layers, setLayers] = useState([]);
     const [workspace, setWorkspace] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
-    console.log({layers, workspace})
     
     function serializeWorkspace() {
         const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
@@ -122,7 +121,6 @@ export default React.memo(function Workspace() {
             }
             return isIn;
         }))
-        console.log(deSerializedWorkspace)
     }
 
     function extractLayers(data) {
