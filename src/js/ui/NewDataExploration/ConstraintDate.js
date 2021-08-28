@@ -158,14 +158,14 @@ export default function ConstraintDate({ constraint, querier }) {
     if (componentIsRendering) { console.log("|ContraintSlider Rerending|") }
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
-            <Grid container direction="row" justify="center" alignItems="center">
+            <Grid container direction="row" justifyContent="center" alignItems="center">
                 <Grid item>
                     <Typography className={classes.title} id={`date-picker-${constraint.label}`} gutterBottom>
                         <span className={classes.nowrap}>{minMaxDate[0].toDateString()} - {minMaxDate[1].toDateString()}</span>
                     </Typography>
                 </Grid>
             </Grid>
-            <Grid container direction="row" justify="center" alignItems="center">
+            <Grid container direction="row" justifyContent="center" alignItems="center">
                 <Grid item className={classes.halfSize}>
                     <KeyboardDatePicker
                         label="Min Date"
@@ -199,8 +199,8 @@ export default function ConstraintDate({ constraint, querier }) {
         if (constraint.step === "30min") {
             return (
                 <div>
-                    <br />
-                    <Grid container direction="row" justify="center" alignItems="center">
+                    <br/>
+                    <Grid container direction="row" justifyContent="center" alignItems="center">
                         <Grid item className={classes.halfSize}>
                             <KeyboardTimePicker
                                 label="Min Time"
