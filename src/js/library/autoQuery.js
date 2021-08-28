@@ -342,19 +342,16 @@ export default class AutoQuery {
             return;
         }
         console.log("query")
-        let id;
+        console.log({pipeline: this.buildConstraintPipeline()})
+        const id = Math.random().toString(36).substring(2, 6);
         const callback = (d) => {
             const { event, payload } = d;
             if (event === "data") {
+                console.log(`RENDERING ${id}`)
                 this.renderGeoJSON(payload.data);
             }
             else if (event === "info") {
                 payload.geohashes && this.geohashCache.push(...payload.geohashes);
-                if (payload.id) {
-                    id = payload.id;
-                    console.log(`ADDING ${payload.id}`)
-                    this.currentQueries.add(payload.id);
-                }
             }
             else if (event === "end") {
                 console.log(`REMOVING ${id}`)
@@ -371,8 +368,11 @@ export default class AutoQuery {
             granularity: "coarse",
             callback,
             bounds: this.map.getBounds(),
-            geohashBlacklist: this.geohashCache
+            geohashBlacklist: this.geohashCache,
+            id
         });
+        console.log(`ADDING ${id}`)
+        this.currentQueries.add(id);
     }
 
     zoomIsValid() {
