@@ -111,6 +111,11 @@ export default function Layer(props) {
     const [defaultLayerConstraints, allLayerConstraints] = extractLayerConstraints(props.layer);
     const [activeLayerConstraints, setActiveLayerConstraints] = useState(defaultLayerConstraints);
 
+    useEffect(() => {
+        props.layer.constraintState = allLayerConstraints.filter((e,index) => activeLayerConstraints[index]).map(e => e.name);
+    }, [activeLayerConstraints]);
+
+
     const [ querier ] = useState(new AutoQuery(props.layer));
 
     useEffect(() => {
@@ -139,6 +144,7 @@ export default function Layer(props) {
                             onFocus={(event) => event.stopPropagation()}
                             onChange={() => { 
                                 setCheck(!check)
+                                props.layer.state = !check;
                                 !check && querier.onAdd();
                                 !check || querier.onRemove();
                             }}

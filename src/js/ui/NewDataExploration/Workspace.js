@@ -83,6 +83,23 @@ export default React.memo(function Workspace() {
     const [workspace, setWorkspace] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
     console.log({layers, workspace})
+    
+    function serializeWorkspace() {
+        const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
+            return {
+                on: layer.state ?? false,
+                activeConstraints: layer.constraintState,
+                constraints: Object.values(layer.constraints).filter(e => e.state).map((constraint) => {
+                    return {
+                        name: constraint.name,
+                        state: constraint.state
+                    }
+                })
+            }
+        })
+        console.log({relevantLayers})
+    }
+
     function extractLayers(data) {
         let tempBoolean = [];
         let tempLayers = [];
@@ -134,7 +151,7 @@ export default React.memo(function Workspace() {
         >
             <Grid item className={classes.root}>
                 <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                                   workspace={workspace} setWorkspace={setWorkspace} />
+                                   workspace={workspace} setWorkspace={setWorkspace} serializeWorkspace={serializeWorkspace}/>
             </Grid>
             <Grid item className={classes.root}>
                 <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />
