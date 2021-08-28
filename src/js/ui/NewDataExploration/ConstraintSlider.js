@@ -94,6 +94,14 @@ export default function ConstraintSlider({ constraint, querier }) {
         }
     }, []);
 
+    useEffect(() => {
+        if(constraint.forceUpdateFlag) {
+            constraint.forceUpdateFlag = false;
+            setMinMax(constraint.state)
+            setMinMaxCommited(constraint.state)
+        }
+    })
+
     const buildSliderLabel = () => {
         return <b>{minMax[0]} ➔ {minMax[1]} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
     }

@@ -131,7 +131,6 @@ export default function Layer(props) {
             props.layer.forceUpdateFlag = false;
             setCheck(props.layer.on)
             const constraintStateSet = new Set(props.layer.constraintState)
-            console.log({constraintStateSet})
             setActiveLayerConstraints(allLayerConstraints.map(layerConstraint => constraintStateSet.has(layerConstraint.name)))
             updateQuerierOnCheckChange(props.layer.on)
         }

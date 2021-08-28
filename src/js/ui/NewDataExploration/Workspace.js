@@ -116,9 +116,11 @@ export default React.memo(function Workspace() {
                 console.log({layer, deSerializedLayer})
                 layer.on = deSerializedLayer.on;
                 layer.constraintState = deSerializedLayer.constraintState;
-                console.log("UPDATED LAYER:")
-                console.log({constraintState: layer.constraintState, layer})
                 layer.forceUpdateFlag = true;
+                for(const constraint of deSerializedLayer.constraints) {
+                    layer.constraints[constraint.name].state = constraint.state;
+                    layer.constraints[constraint.name].forceUpdateFlag = true;
+                }
                 
             }
             return isIn;
