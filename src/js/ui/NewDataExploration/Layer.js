@@ -133,6 +133,7 @@ export default function Layer(props) {
     })
 
     const updateQuerierOnCheckChange = (newCheck) => {
+        props.layer.state = newCheck;
         newCheck && querier.onAdd();
         newCheck || querier.onRemove();
     }
@@ -156,7 +157,6 @@ export default function Layer(props) {
                             onClick={(event) => {
                                 event.stopPropagation()
                                 setCheck(!check)
-                                props.layer.state = !check;
                                 updateQuerierOnCheckChange(!check)
                             }}
                             control={
