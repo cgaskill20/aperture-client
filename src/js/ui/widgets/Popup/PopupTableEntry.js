@@ -69,6 +69,8 @@ import FormControl from "@material-ui/core/FormControl";
 import Radio from "@material-ui/core/Radio";
 import ColorizeIcon from '@material-ui/icons/Colorize';
 import Tooltip from '@material-ui/core/Tooltip';
+import { mongoGroupAccumulators } from "../../../library/Constants";
+import { temporalId } from "../../../library/Constants";
 
 const useStyles = makeStyles({
     root: {
@@ -94,27 +96,24 @@ const useStyles = makeStyles({
 
 export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties }) {
     const classes = useStyles()
-    const temporalMap = ["SUM", "FIRST", "LAST", "AVG"];
     const [open, setOpen] = useState(false);
     const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
-    const [temporalScope, setTemporalScope] = useState(temporalMap[0]);
-    /*
-    * @Daniel - temporalScope is the selected dropdown feature for each given key/value pair. It is one of the strings
-    *           from temporalMap. Not sure if this is what you need, but its what you get!
-    */
+    const [temporalAccumulator, setTemporalAccumulator] = useState(Object.keys(mongoGroupAccumulators)[0]);
 
     const objectHasTrueValue = (obj) => {
-        for(const value of Object.entries(obj)) {
-            if(value[1]) {
+            if(obj.isTemporal || obj.canBeColorField) {
                 return <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
                     {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </IconButton>
             }
-        }
     }
 
-    const switchTemporalScope = (event) => {
-        setTemporalScope(temporalMap[event.target.value]);
+    const switchTemporalAccumulator = (newAccumulator, force = false) => {
+        const newTemporalAccumulator = newAccumulator;
+        if(entryProperties.isCurrentColorField || force) {
+            changeColorFieldName(keyValue, null, false, newTemporalAccumulator);
+        }
+        setTemporalAccumulator(newTemporalAccumulator);
     }
 
     const colorFieldCheckbox = () => {
@@ -123,7 +122,12 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
                 <Radio
                     checked={entryProperties.isCurrentColorField}
                     onChange={() => {
-                        changeColorFieldName(keyValue);
+                        if(entryProperties.isTemporal) {
+                            switchTemporalAccumulator(temporalAccumulator, true)
+                        }
+                        else {
+                            changeColorFieldName(keyValue);
+                        }
                     }}
                     color="primary"
                 />
@@ -140,12 +144,11 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
                         <Select
                             native
                             label="Temporal Range"
-                            onChange={switchTemporalScope}
+                            onChange={(event) => switchTemporalAccumulator(event.target.value)}
                         >
-                            <option value={0}>Sum</option>
-                            <option value={1}>First</option>
-                            <option value={2}>Last</option>
-                            <option value={3}>Average</option>
+                            {Object.entries(mongoGroupAccumulators).map(([accumulator, label], index) => {
+                                return <option value={accumulator} key={index}>{label}</option>
+                            })}
                         </Select>
                 </FormControl>
             </div>
@@ -163,12 +166,11 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
         }
     }
 
-
     return (
         <React.Fragment>
             <TableRow className={classes.root}>
-                <TableCell>{keyToDisplay(obj, keyValue)}</TableCell>
-                <TableCell>{valueToDisplay(obj, keyValue, value)}</TableCell>
+                <TableCell>{keyToDisplay(obj, keyValue, entryProperties.isTemporal ? ` (${mongoGroupAccumulators[temporalAccumulator]})` : '')}</TableCell>
+                <TableCell>{valueToDisplay(obj, keyValue, entryProperties.isTemporal ? obj.properties[`${keyValue}${temporalId}${temporalAccumulator}`] : value)}</TableCell>
                 <TableCell align="right">
                     {objectHasTrueValue(entryProperties)}
                 </TableCell>

@@ -59,3 +59,16 @@ END OF TERMS AND CONDITIONS
 export const minCountyZoom = 0;
 export const minTractZoom = 7;
 export const minGeneralZoom = 0;
+
+//object holding mongo's group aggregators (https://docs.mongodb.com/manual/reference/operator/aggregation/group/) 
+//along with labels for each
+export const mongoGroupAccumulators = {
+   avg: "Average",
+   first: "First",
+   last: "Last",
+   min: "Minimum",
+   max: "Maximum",
+   sum: "Sum"
+}
+
+export const temporalId = "_apertureTemporalField_";
