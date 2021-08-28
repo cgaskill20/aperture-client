@@ -69,7 +69,7 @@ export default function ConstraintMultiSelect({ constraint, querier }) {
 
     return (
         constraint.options.map((option, index) => {
-            return (<div key={index}><ConstraintCheckbox option={option} querier={querier} constraintName={constraint.name} /></div>)
+            return (<div key={index}><ConstraintCheckbox option={option} querier={querier} constraint={constraint} /></div>)
         })
     );
 }

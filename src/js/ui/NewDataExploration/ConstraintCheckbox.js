@@ -62,12 +62,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {componentIsRendering} from "../TabSystem";
 
-export default function ConstraintCheckbox({constraintName, querier, option}) {
+export default function ConstraintCheckbox({constraint, querier, option}) {
     const [check, setCheck] = useState(true);
 
     if(componentIsRendering) {console.log("|ContraintCheckbox Rerending|")}
     useEffect(() => {
-        querier.updateConstraint(constraintName, option, check);
+        querier.updateConstraint(constraint.name, option, check);
     }, []);
     return (
         <FormGroup id={`constraint-formGroup-${option}`}>
@@ -76,8 +76,17 @@ export default function ConstraintCheckbox({constraintName, querier, option}) {
                     <Checkbox
                         checked={check}
                         onChange={() => { 
-                            setCheck(!check)
-                            querier.updateConstraint(constraintName, option, !check);
+                            const newCheck = !check;
+                            setCheck(newCheck)
+                            if(!constraint.state) {
+                                constraint.state = {};
+                            }
+                            if(!constraint.state[constraint.name]) {
+                                constraint.state[constraint.name] = {};
+                            }
+                            constraint.state[constraint.name][option] = newCheck;
+                            
+                            querier.updateConstraint(constraint.name, option, newCheck);
                         }}
                         id={`${option}`}
                         name={`${option}`}

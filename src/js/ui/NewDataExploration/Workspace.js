@@ -82,6 +82,7 @@ export default React.memo(function Workspace() {
     const [layers, setLayers] = useState([]);
     const [workspace, setWorkspace] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
+    console.log({layers, workspace})
     function extractLayers(data) {
         let tempBoolean = [];
         let tempLayers = [];

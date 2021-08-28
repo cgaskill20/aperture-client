@@ -118,6 +118,7 @@ export default function ConstraintDate({constraint, querier}) {
 
     useEffect(() => {
         const minMaxCommited = [dateToEpoch(minMaxDate[0]), dateToEpoch(minMaxDate[1])]
+        constraint.state = minMaxCommited;
         querier.updateConstraint(constraint.name, minMaxCommited);
     }, [minMaxDate]);
 
