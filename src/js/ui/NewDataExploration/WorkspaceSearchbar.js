@@ -129,6 +129,7 @@ export default function WorkspaceSearchbar(props) {
                 disableCloseOnSelect
                 id="dataset-searchbar"
                 options={props.layerTitles}
+                value={props.layerTitles.filter((e, index) => props.workspace[index])}
                 onChange={(e, layers) => {
                     if(layers.length > oldLayers.length) {
                         const indexOfAddedLayer = findLayerIndex(layers[layers.length - 1], props.layerTitles);

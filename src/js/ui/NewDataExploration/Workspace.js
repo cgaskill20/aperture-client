@@ -87,8 +87,9 @@ export default React.memo(function Workspace() {
     function serializeWorkspace() {
         const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
             return {
+                collection: layer.collection,
                 on: layer.state ?? false,
-                activeConstraints: layer.constraintState,
+                constraintState: layer.constraintState,
                 constraints: Object.values(layer.constraints).filter(e => e.state).map((constraint) => {
                     return {
                         name: constraint.name,
@@ -98,8 +99,30 @@ export default React.memo(function Workspace() {
             }
         })
         const serialized = JSON.stringify(relevantLayers);
-        console.log()
-        return serialized;
+        localStorage.setItem("workspace", serialized)
+    }
+
+    function deSerializeWorkspace() {
+        const serializedWorkspace = localStorage.getItem("workspace")
+        if(!serializedWorkspace) {
+            return;
+        }
+        const deSerializedWorkspace = JSON.parse(serializedWorkspace)
+        const collections = new Set(deSerializedWorkspace.map(e => e.collection))
+
+        setWorkspace(layers.map(layer => {
+            const isIn = collections.has(layer.collection);
+            if(isIn) {
+                const deSerializedLayer = deSerializedWorkspace.find(e => e.collection === layer.collection);
+                console.log({layer, deSerializedLayer})
+                layer.on = deSerializedLayer.on;
+                layer.constraintState = deSerializedLayer.constraintState;
+                layer.forceUpdateFlag = true;
+                
+            }
+            return isIn;
+        }))
+        console.log(deSerializedWorkspace)
     }
 
     function extractLayers(data) {
@@ -142,6 +165,7 @@ export default React.memo(function Workspace() {
         });
     }, []);
 
+    console.log({layerTitles})
     if(componentIsRendering) {console.log("|Workspace Rerending|")}
     return (
         <Grid
@@ -153,7 +177,7 @@ export default React.memo(function Workspace() {
         >
             <Grid item className={classes.root}>
                 <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                                   workspace={workspace} setWorkspace={setWorkspace} serializeWorkspace={serializeWorkspace}/>
+                                   workspace={workspace} setWorkspace={setWorkspace} serializeWorkspace={serializeWorkspace} deSerializeWorkspace={deSerializeWorkspace}/>
             </Grid>
             <Grid item className={classes.root}>
                 <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />
