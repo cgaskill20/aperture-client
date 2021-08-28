@@ -235,6 +235,7 @@ export default class AutoQuery {
       * @method reQuery
       */
     reQuery() {
+        console.log("REQUERYING")
         if (this.enabled) {
             this.clearMapLayers();
             this.killCurrentQueries();
@@ -248,7 +249,10 @@ export default class AutoQuery {
       * @method killCurrentQueries
       */
     killCurrentQueries() { 
+        console.log("KILLING CURRENT QUERIES")
+        console.log({currentQueries: this.currentQueries})
         for (const qid of [...this.currentQueries]) {
+            console.log(`KILLING ${qid}`)
             Query.killQuery(qid);
         }
         this.currentQueries.clear();
@@ -337,6 +341,7 @@ export default class AutoQuery {
         if (!this.enabled || !this.zoomIsValid()) {
             return;
         }
+        console.log("query")
         let id;
         const callback = (d) => {
             const { event, payload } = d;
@@ -347,10 +352,12 @@ export default class AutoQuery {
                 payload.geohashes && this.geohashCache.push(...payload.geohashes);
                 if (payload.id) {
                     id = payload.id;
+                    console.log(`ADDING ${payload.id}`)
                     this.currentQueries.add(payload.id);
                 }
             }
             else if (event === "end") {
+                console.log(`REMOVING ${id}`)
                 this.currentQueries.delete(id);
                 if(this.isIntersectable) {
                     window.refreshIntersections();
