@@ -182,12 +182,9 @@ const Query = {
             type: "kill",
             id: qid
         });
-        console.log(`KILLING ${qid} internally`)
         this.killedQueries.add(qid)
         this.currentQueries[qid].callback({ event: "end" })
-        console.log(this.currentQueries)
         if (this.currentQueries[qid]) {
-            console.log(`CLEARING ENDPOINT FOR ${qid}`)
             this.currentQueries[qid].callback = () => { }
             this.killedQueries.delete(qid)
             delete this.currentQueries[qid];

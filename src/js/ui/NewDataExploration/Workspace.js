@@ -113,7 +113,6 @@ export default React.memo(function Workspace() {
             const isIn = collections.has(layer.collection);
             if(isIn) {
                 const deSerializedLayer = deSerializedWorkspace.find(e => e.collection === layer.collection);
-                console.log({layer, deSerializedLayer})
                 layer.on = deSerializedLayer.on;
                 layer.constraintState = deSerializedLayer.constraintState;
                 layer.forceUpdateFlag = true;
@@ -167,7 +166,6 @@ export default React.memo(function Workspace() {
         });
     }, []);
 
-    console.log({layerTitles})
     if(componentIsRendering) {console.log("|Workspace Rerending|")}
     return (
         <Grid
