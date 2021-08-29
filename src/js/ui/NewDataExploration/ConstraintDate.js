@@ -135,7 +135,6 @@ export default function ConstraintDate({ constraint, querier }) {
         if (constraint.forceUpdateFlag) {
             constraint.forceUpdateFlag = false;
             const newDate = [epochToDate(constraint.state[0]), epochToDate(constraint.state[1])]
-            console.log({ newDate })
             setMinMaxDate(newDate);
         }
     })
