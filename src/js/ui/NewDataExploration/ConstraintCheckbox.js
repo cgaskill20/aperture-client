@@ -69,6 +69,16 @@ export default function ConstraintCheckbox({constraint, querier, option}) {
     useEffect(() => {
         querier.updateConstraint(constraint.name, option, check);
     }, []);
+    
+    useEffect(() => {
+        if(constraint.forceUpdateFlag && typeof constraint.forceUpdateFlag === 'number') {
+            constraint.forceUpdateFlag--;
+            const newCheck = constraint.state?.[option] ?? true;
+            setCheck(newCheck)
+            querier.updateConstraint(constraint.name, option, newCheck);
+        }
+    })
+
     return (
         <FormGroup id={`constraint-formGroup-${option}`}>
             <FormControlLabel
@@ -81,10 +91,7 @@ export default function ConstraintCheckbox({constraint, querier, option}) {
                             if(!constraint.state) {
                                 constraint.state = {};
                             }
-                            if(!constraint.state[constraint.name]) {
-                                constraint.state[constraint.name] = {};
-                            }
-                            constraint.state[constraint.name][option] = newCheck;
+                            constraint.state[option] = newCheck;
                             
                             querier.updateConstraint(constraint.name, option, newCheck);
                         }}
