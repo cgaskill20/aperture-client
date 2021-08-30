@@ -69,9 +69,6 @@ const useStyles = makeStyles((theme) => ({
     root: {
         margin: "20px",
     },
-    buttons: {
-        borderBottom: '2px solid #adadad',
-    },
 }));
 
 export default function ChartGlobalControls(props) {
@@ -79,7 +76,7 @@ export default function ChartGlobalControls(props) {
     const [globalState, setGlobalState] = useGlobalState();
 
     return (
-        <div className={classes.buttons}>
+        <div>
             {/* Graph creation buttons */}
             <ButtonGroup className={classes.root} variant="outlined">
                 <Button onClick={() => props.make({ type: ChartingType.HISTOGRAM })}>Histogram</Button>

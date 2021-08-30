@@ -70,6 +70,9 @@ const useStyles = makeStyles((theme) => ({
         margin: "20px",
         padding: "20px",
     },
+    buttons: {
+        borderBottom: '2px solid #adadad',
+    },
 }));
 
 export default function ChartingWindow(props) {
@@ -91,6 +94,7 @@ export default function ChartingWindow(props) {
             direction="column"
             justifyContent="center"
             alignItems="center"
+            className={classes.buttons}
         >
             <Grid item>
                 <ChartGlobalControls make={addChartFrame} />

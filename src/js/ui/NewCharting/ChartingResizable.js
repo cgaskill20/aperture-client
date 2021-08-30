@@ -60,6 +60,7 @@ import React, {useState, useEffect, createContext} from 'react';
 import { Rnd } from 'react-rnd';
 import Paper from '@material-ui/core/Paper';
 import ChartingWindow from './ChartingWindow';
+import {makeStyles} from "@material-ui/core";
 
 export function shouldAvoidDragging(node) {
     if (!node || !node.className || !node.className.includes) {
@@ -115,9 +116,8 @@ export default function ChartingResizable() {
                 }}
 
             >
-                {/*//FIXME Style this with makeStyles()*/}
                 <Paper className={'charting-resizable-window'}>
-                    <div style={{ overflowY: "scroll", maxHeight: size.height }}>
+                    <div style={{ overflowY: "auto", maxHeight: size.height }}>
                         <ChartingWindow size={size} pos={pos} data={chartData}/>
                     </div>
                 </Paper>
