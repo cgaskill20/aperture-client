@@ -96,10 +96,6 @@ export default function Frame(props) {
         })
     }
 
-    useEffect(() => {
-        
-    });
-
     switch (props.type.name) {
         case "histogram":
             frame =
