@@ -69,15 +69,11 @@ const useStyles = makeStyles((theme) => ({
     root: {
         margin: "20px",
     },
-    menu: {
-        zIndex: 2005,
-    },
 }));
 
 export default function ChartGlobalControls(props) {
     const classes = useStyles();
     const [globalState, setGlobalState] = useGlobalState();
-
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
@@ -93,12 +89,11 @@ export default function ChartGlobalControls(props) {
 
     return (
         <div>
-            <ButtonGroup className={classes.root} variant="outlined">
-                <Button startIcon={<ExpandMoreIcon/>} aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+            <ButtonGroup className={classes.root}>
+                <Button startIcon={<ExpandMoreIcon/>} onClick={handleClick}>
                     Select Chart Type
                 </Button>
                 <Menu
-                    className={classes.menu}
                     anchorEl={anchorEl}
                     keepMounted
                     open={Boolean(anchorEl)}

@@ -123,8 +123,6 @@ export default function Frame(props) {
         default: break;
     }
 
-
-
     return (
         <div style={{
             width: "100%",

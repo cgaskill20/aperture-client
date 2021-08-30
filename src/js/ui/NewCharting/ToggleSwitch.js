@@ -11,7 +11,7 @@ export default function ToggleSwitch(props){
             <Grid
                 container
                 direction="row"
-                justify="center"
+                justifyContent="center"
                 alignItems="center"
             >
                 <Grid item>
