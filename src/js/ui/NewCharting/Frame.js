@@ -70,6 +70,7 @@ export default function Frame(props) {
     const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
 
     let frame;
+    
     const [constraint, setConstraint] = useState();
     const [constraint2, setConstraint2] = useState();
 
@@ -94,6 +95,10 @@ export default function Frame(props) {
 
         })
     }
+
+    useEffect(() => {
+        
+    });
 
     switch (props.type.name) {
         case "histogram":
@@ -130,7 +135,7 @@ export default function Frame(props) {
     return (
         <div style={{
             width: "100%",
-            height: props.size.height - 80,
+            height: "100%",
         }}>
             {frame}
         </div>

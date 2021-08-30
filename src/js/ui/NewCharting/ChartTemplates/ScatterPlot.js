@@ -113,7 +113,7 @@ export default function ScatterPlot(props) {
         const radius = 5;
         const color = "blue";
         let svg = d3.select(svgRef.current);
-        svg.attr("viewBox", [0, 0, width, height]);
+        svg.attr("viewBox", [0, 0, width, height - 100]);
         if(!props.selected[0]){
             return;
         }
