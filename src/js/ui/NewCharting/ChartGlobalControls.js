@@ -56,13 +56,13 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useRef, useState} from 'react';
+import React, { useState} from 'react';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import CloseIcon from '@material-ui/icons/Close';
 import { useGlobalState } from '../global/GlobalState';
 import { ChartingType } from '../../library/charting/chartSystem';
-import {ClickAwayListener, Fade, Grow, makeStyles, Menu, MenuItem, MenuList, Paper, Popper} from "@material-ui/core";
+import {makeStyles, Menu, MenuItem} from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles((theme) => ({
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
         margin: "20px",
     },
     menu: {
-        minWidth: "180px",
+        zIndex: 2005,
     },
 }));
 
@@ -79,10 +79,15 @@ export default function ChartGlobalControls(props) {
     const [globalState, setGlobalState] = useGlobalState();
 
     const [anchorEl, setAnchorEl] = useState(null);
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
-    const handleClose = () => {
+
+    const handleClose = (chartObj) => {
+        if(chartObj.type !== "click"){
+            props.make(chartObj);
+        }
         setAnchorEl(null);
     };
 
@@ -100,24 +105,19 @@ export default function ChartGlobalControls(props) {
                     onClose={handleClose}
                 >
                     <MenuItem onClick={() => {
-                        props.make({type: ChartingType.HISTOGRAM});
-                        handleClose();
+                        handleClose({type: ChartingType.HISTOGRAM});
                     }}>Histogram</MenuItem>
                     <MenuItem onClick={() => {
-                        props.make({type: ChartingType.SCATTERPLOT});
-                        handleClose();
+                        handleClose({type: ChartingType.SCATTERPLOT});
                     }}>Scatterplot</MenuItem>
                     <MenuItem onClick={() => {
-                        props.make({type: ChartingType.LINE});
-                        handleClose();
+                        handleClose({type: ChartingType.LINE});
                     }}>COVID-19</MenuItem>
                     <MenuItem onClick={() => {
-                        props.make({type: ChartingType.BOXPLOT});
-                        handleClose();
+                        handleClose({type: ChartingType.BOXPLOT});
                     }}>Boxplot</MenuItem>
                     <MenuItem onClick={() => {
-                        props.make({type: ChartingType.CORRELOGRAM});
-                        handleClose();
+                        handleClose({type: ChartingType.CORRELOGRAM});
                     }}>Correlogram</MenuItem>
                 </Menu>
                 <Button startIcon={<CloseIcon/>} onClick={() => setGlobalState({ chartingOpen: false })}>
