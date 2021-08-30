@@ -92,7 +92,7 @@ export default function ChartingWindow(props) {
         <Grid
             container
             direction="column"
-            justifyContent="center"
+            justify="center"
             alignItems="center"
         >
             <Grid item className={classes.globalChartControl}>
@@ -100,12 +100,11 @@ export default function ChartingWindow(props) {
             </Grid>
             {frames.map((element, index) => {
                 if(element.active){
-                    return <>
-                    <Grid item key={index} className={classes.root}>
+                    return <Grid item key={index} className={classes.root}>
                         <Paper className={classes.paper} elevation={3}>
                             <Frame pos={props.pos} type={element.data.type} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>
                         </Paper>
-                    </Grid></>
+                    </Grid>
                 }
             })}
         </Grid>
