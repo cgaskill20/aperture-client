@@ -110,7 +110,7 @@ export default function LayerControls(props) {
             <Grid
                 container
                 direction="row"
-                justify="center"
+                justifyContent="center"
                 alignItems="center"
             >
                 {getLayerText(props.layer.info)}

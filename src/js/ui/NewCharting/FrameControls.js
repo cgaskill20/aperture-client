@@ -68,7 +68,7 @@ export default function FrameControls(props) {
             <Grid
                 container
                 direction="row"
-                justify="space-evenly"
+                justifyContent="space-evenly"
                 alignItems="center"
             >
                 {renderDropdown(true)}
