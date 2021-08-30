@@ -56,18 +56,21 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { useGlobalState } from '../global/GlobalState';
 import { ChartingType } from '../../library/charting/chartSystem';
-import {makeStyles} from "@material-ui/core";
+import {ClickAwayListener, Fade, Grow, makeStyles, Menu, MenuItem, MenuList, Paper, Popper} from "@material-ui/core";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         margin: "20px",
+    },
+    menu: {
+        minWidth: "180px",
     },
 }));
 
@@ -75,21 +78,37 @@ export default function ChartGlobalControls(props) {
     const classes = useStyles();
     const [globalState, setGlobalState] = useGlobalState();
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <div>
-            {/* Graph creation buttons */}
             <ButtonGroup className={classes.root} variant="outlined">
-                <Button onClick={() => props.make({ type: ChartingType.HISTOGRAM })}>Histogram</Button>
-                <Button onClick={() => props.make({ type: ChartingType.SCATTERPLOT })}>Scatterplot</Button>
-                <Button onClick={() => props.make({ type: ChartingType.LINE })}>COVID-19</Button>
-                <Button onClick={() => props.make({ type:  ChartingType.BOXPLOT })}>Box Plot</Button>
-                <Button onClick={() => props.make({ type:  ChartingType.CORRELOGRAM })}>Correlogram</Button>
+                <Button startIcon={<ExpandMoreIcon/>} aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                    Select Chart Type
+                </Button>
+                <Menu
+                    className={classes.menu}
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                >
+                    <MenuItem onClick={() => props.make({ type: ChartingType.HISTOGRAM })}>Histogram</MenuItem>
+                    <MenuItem onClick={() => props.make({ type: ChartingType.SCATTERPLOT })}>Scatterplot</MenuItem>
+                    <MenuItem onClick={() => props.make({ type: ChartingType.LINE })}>COVID-19</MenuItem>
+                    <MenuItem onClick={() => props.make({ type:  ChartingType.BOXPLOT })}>Boxplot</MenuItem>
+                    <MenuItem onClick={() => props.make({ type:  ChartingType.CORRELOGRAM })}>Correlogram</MenuItem>
+                </Menu>
+                <Button startIcon={<CloseIcon/>} onClick={() => setGlobalState({ chartingOpen: false })}>
+                    Close
+                </Button>
             </ButtonGroup>
-
-            {/* Close button */}
-            <IconButton onClick={() => setGlobalState({ chartingOpen: false })}>
-                <CloseIcon/>
-            </IconButton>
         </div>
     );
 }

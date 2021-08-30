@@ -109,7 +109,7 @@ export default function TabSystem(props) {
                 <Grid
                     container
                     spacing={3}
-                    justifyContent="center"
+                    justify="center"
                     alignItems="center"
                 >
                     <Grid item>

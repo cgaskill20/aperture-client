@@ -97,7 +97,7 @@ export default function WorkspaceControls(props) {
     if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
     return (
         <Paper className={classes.root} elevation={3}>
-            <Grid container direction="row" justifyContent="center" alignItems="center">
+            <Grid container direction="row" justify="center" alignItems="center">
                 <ButtonGroup className={classes.buttons}>
                     <Button variant="outlined" startIcon={<SaveIcon />}>Save Workspace</Button>
                     <Button variant="outlined" startIcon={<FolderOpenIcon />}>Load Workspace</Button>

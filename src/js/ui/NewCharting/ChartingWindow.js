@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
         margin: "20px",
         padding: "20px",
     },
-    buttons: {
+    globalChartControl: {
         borderBottom: '2px solid #adadad',
     },
 }));
@@ -94,18 +94,18 @@ export default function ChartingWindow(props) {
             direction="column"
             justifyContent="center"
             alignItems="center"
-            className={classes.buttons}
         >
-            <Grid item>
+            <Grid item className={classes.globalChartControl}>
                 <ChartGlobalControls make={addChartFrame} />
             </Grid>
             {frames.map((element, index) => {
                 if(element.active){
-                    return <Grid item key={index} className={classes.root}>
+                    return <>
+                    <Grid item key={index} className={classes.root}>
                         <Paper className={classes.paper} elevation={3}>
                             <Frame pos={props.pos} type={element.data.type} index={index} size={props.size} remove={removeChartFrame} data={props.data}/>
                         </Paper>
-                    </Grid>
+                    </Grid></>
                 }
             })}
         </Grid>
