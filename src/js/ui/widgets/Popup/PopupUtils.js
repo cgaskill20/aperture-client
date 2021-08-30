@@ -59,16 +59,17 @@ END OF TERMS AND CONDITIONS
 import Util from "../../../library/apertureUtil";
 import fipsToState from "../../../../json/fipsToState.json"
 import defaultImportantFields from "../../../../json/defaultImportantFields.json"
+import { temporalId } from "../../../library/Constants";
 
-export const keyToDisplay = (obj, key) => {
+export const keyToDisplay = (obj, key, suffix = '') => {
     if (obj?.properties?.meta?.[key]?.label) {
-        return obj.properties.meta[key].label;
+        return obj.properties.meta[key].label + suffix;
     }
     if (defaultImportantFields[key]) {
-        return defaultImportantFields[key].label ?? Util.cleanUpString(key);
+        return (defaultImportantFields[key].label ?? Util.cleanUpString(key)) + suffix;
     }
 
-    return Util.cleanUpString(key);
+    return Util.cleanUpString(key) + suffix;
 }
 
 export const valueToDisplay = (obj, key, value) => {
@@ -95,7 +96,8 @@ export const valueToDisplay = (obj, key, value) => {
 }
 
 export const keyValueIsValid = (key, value) => {
-    if (['meta', 'id', '_id', 'colorInfo', 'apertureName', 'Shape_Leng', 'Shape__Length', 'SHAPE_Length', 'SHAPE_Area', 'SHAPE__Length', 'SHAPE__Area'].includes(key)) {
+    if (['meta', 'id', '_id', 'colorInfo', 'apertureName', 'Shape_Leng', 'Shape__Length', 'SHAPE_Length', 'SHAPE_Area', 'SHAPE__Length', 'SHAPE__Area'].includes(key) ||
+    key.includes(temporalId)) {
         return false;
     }
     return true;

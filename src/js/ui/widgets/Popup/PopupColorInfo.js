@@ -63,6 +63,7 @@ import PopupTableEntry from "./PopupTableEntry"
 import useHover from "../../hooks/useHover";
 import Util from "../../../library/apertureUtil"
 import * as d3 from '../../../third-party/d3.min.js';
+import { temporalId } from "../../../library/Constants";
 
 export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary, obj }) {
     const svgRef = React.createRef();
@@ -76,7 +77,10 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
             svg.selectAll('*').remove();
             svg.attr("viewBox", [0, 0, width, height]);
 
-            if (obj.properties.meta[colorFieldName]) {
+            const colorFieldNameClean = colorFieldName.includes(temporalId) ? colorFieldName.substring(0,colorFieldName.indexOf(temporalId)) : colorFieldName;
+            
+            
+            if (obj.properties.meta[colorFieldNameClean]) {
                 const linearGradient = svg.append("defs")
                     .append("linearGradient")
                     .attr("id", "linear-gradient");
@@ -113,7 +117,7 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                     .attr("y2", height - marginBottom);
 
                 //console.log({colorFieldName, obj: obj})
-                let scale = obj.properties.meta[colorFieldName].isDate ? d3.scaleUtc() : d3.scaleLinear()
+                let scale = obj.properties.meta[colorFieldNameClean]?.isDate ? d3.scaleUtc() : d3.scaleLinear()
 
                 //add axis
                 const linearScale = scale
@@ -125,7 +129,7 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
                 svg.append('g').attr("transform", `translate(${marginLeftRight},${height - marginBottom})`).call(axis);
             }
         }
-    }, [colorSummary]);
+    }, [colorSummary, colorFieldName]);
 
     if (colorSummary.minMax) {
         return <Grid container>

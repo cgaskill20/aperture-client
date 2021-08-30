@@ -61,6 +61,7 @@ import MapDataFilterWrapper from "./mapDataFilterWrapper"
 import Util from "./apertureUtil"
 import Query from "./Query"
 import Color from "./Color"
+import { mongoGroupAccumulators, temporalId } from "./Constants"
 
 /**
  * @class AutoQuery
@@ -103,9 +104,9 @@ export default class AutoQuery {
         if (layerData.temporal) {
             this.temporal = layerData.temporal;
             this.temporalFields = Object.entries(layerData.constraints)
-                .filter(([constraintName, constraint]) => constraint.temporalType != null)
+                .filter(([constraintName, constraint]) => constraint.temporal)
                 .reduce((acc, [constraintName, constraint]) => {
-                    return { ...acc, [constraintName]: constraint.temporalType }
+                    return { ...acc, [constraintName]: constraint.temporal }
                 }, {});
         }
 
@@ -253,14 +254,14 @@ export default class AutoQuery {
         this.currentQueries.clear();
     }
 
-    changeColorCodeField(fieldName, predefinedColor = null, dontRerender = false) {
+    changeColorCodeField(fieldName, predefinedColor = null, dontRerender = false, temporalAccumulator = null) {
         if (fieldName === this.color.variable) {
             predefinedColor = this.color;
         }
         const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
         if (colorField) {
             //console.log({fieldName})
-            this.colorField = { name: fieldName, label: colorField.label };
+            this.colorField = { name: temporalAccumulator ? `${fieldName}${temporalId}${temporalAccumulator}` : fieldName, label: colorField.label };
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);
             }
@@ -512,21 +513,25 @@ export default class AutoQuery {
     buildTemporalPreProcess() {
         let groupStage = {
             _id: `$${this.data.joinField}`,
-            [this.data.joinField]: { "$first": `$${this.data.joinField}` }
+            [this.data.joinField]: {"$first": `$${this.data.joinField}`}
         }
-        const fieldsNotGrouped = Object.keys(this.data.constraints).filter(name => !Object.keys(this.temporalFields).includes(name))
-        for (const field of fieldsNotGrouped) {
-            groupStage[field] = { "$first": `$${field}` }
+
+        for(const field of Object.keys(this.data.constraints)){
+            groupStage[field] = {"$first": `$${field}`}
         }
-        for (const [field, type] of Object.entries(this.temporalFields)) {
-            groupStage[field] = { [`$${type}`]: `$${field}` }
+        for(const [field, type] of Object.entries(this.temporalFields)){
+            for(const accumulator of Object.keys(mongoGroupAccumulators)) {
+                groupStage[`${field}${temporalId}${accumulator}`] = { [`$${accumulator}`]: `$${field}`}
+            }
         }
+
         groupStage = {
             "$group": groupStage
         }
-
+        
         return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, groupStage]
     }
+
 
     addMongoProject() {
         let project = { GISJOIN: 1 };
@@ -546,7 +551,7 @@ export default class AutoQuery {
             add.unit = constraintMeta.unit;
             add.reverseGradient = constraintMeta.reverseGradient;
             add.important = this.constraintState[constraintName] ? true : false;
-            add.temporal = constraintMeta.temporalType ? {
+            add.temporal = constraintMeta.temporal ? {
                 temporalRange: this.constraintData[this.temporal],
                 collection: this.collection
             } : null;
