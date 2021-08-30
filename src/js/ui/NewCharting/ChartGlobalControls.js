@@ -99,11 +99,26 @@ export default function ChartGlobalControls(props) {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                 >
-                    <MenuItem onClick={() => props.make({ type: ChartingType.HISTOGRAM })}>Histogram</MenuItem>
-                    <MenuItem onClick={() => props.make({ type: ChartingType.SCATTERPLOT })}>Scatterplot</MenuItem>
-                    <MenuItem onClick={() => props.make({ type: ChartingType.LINE })}>COVID-19</MenuItem>
-                    <MenuItem onClick={() => props.make({ type:  ChartingType.BOXPLOT })}>Boxplot</MenuItem>
-                    <MenuItem onClick={() => props.make({ type:  ChartingType.CORRELOGRAM })}>Correlogram</MenuItem>
+                    <MenuItem onClick={() => {
+                        props.make({type: ChartingType.HISTOGRAM});
+                        handleClose();
+                    }}>Histogram</MenuItem>
+                    <MenuItem onClick={() => {
+                        props.make({type: ChartingType.SCATTERPLOT});
+                        handleClose();
+                    }}>Scatterplot</MenuItem>
+                    <MenuItem onClick={() => {
+                        props.make({type: ChartingType.LINE});
+                        handleClose();
+                    }}>COVID-19</MenuItem>
+                    <MenuItem onClick={() => {
+                        props.make({type: ChartingType.BOXPLOT});
+                        handleClose();
+                    }}>Boxplot</MenuItem>
+                    <MenuItem onClick={() => {
+                        props.make({type: ChartingType.CORRELOGRAM});
+                        handleClose();
+                    }}>Correlogram</MenuItem>
                 </Menu>
                 <Button startIcon={<CloseIcon/>} onClick={() => setGlobalState({ chartingOpen: false })}>
                     Close
