@@ -67,9 +67,16 @@ export default function ConstraintMultiSelect({ constraint, querier }) {
         }
     }, []);
 
+    useEffect(() => {
+        if(constraint.forceUpdateFlag) {
+            console.log({constraint})
+            constraint.forceUpdateFlag = constraint.options.length;
+        }
+    })
+
     return (
         constraint.options.map((option, index) => {
-            return (<div key={index}><ConstraintCheckbox option={option} querier={querier} constraintName={constraint.name} /></div>)
+            return (<div key={index}><ConstraintCheckbox option={option} querier={querier} constraint={constraint} /></div>)
         })
     );
 }

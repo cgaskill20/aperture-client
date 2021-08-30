@@ -115,8 +115,6 @@ function clearWorkspace(length) {
     return new Array(length).fill(false);
 }
 
-let oldLayers = [];
-
 export default function WorkspaceSearchbar(props) {
     const classes = useStyles();
 
@@ -129,22 +127,10 @@ export default function WorkspaceSearchbar(props) {
                 disableCloseOnSelect
                 id="dataset-searchbar"
                 options={props.layerTitles}
+                value={props.layerTitles.filter((e, index) => props.workspace[index])}
                 onChange={(e, layers) => {
-                    if(layers.length > oldLayers.length) {
-                        const indexOfAddedLayer = findLayerIndex(layers[layers.length - 1], props.layerTitles);
-                        props.setWorkspace(updateWorkspace(props.workspace, indexOfAddedLayer));
-                    }
-                    else if(layers.length === 0) {
-                        oldLayers = [];
-                        props.setWorkspace(clearWorkspace(props.workspace.length));
-                    }
-                    else if(layers.length < oldLayers.length) {
-                        let setOfLayers = new Set(layers);
-                        const removedLayer = oldLayers.filter(x => !setOfLayers.has(x));
-                        const indexOfRemovedLayer = findLayerIndex(removedLayer[0], props.layerTitles);
-                        props.setWorkspace(updateWorkspace(props.workspace, indexOfRemovedLayer));
-                    }
-                    oldLayers = layers;
+                    const layersSet = new Set(layers)
+                    props.setWorkspace(props.layerTitles.map(layerTitle => layersSet.has(layerTitle)))
                 }}
                 renderOption={(option, state) => {
                     const optionIndex = findLayerIndex({option}.option, props.layerTitles);

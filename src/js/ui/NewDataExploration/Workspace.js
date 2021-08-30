@@ -82,6 +82,50 @@ export default React.memo(function Workspace() {
     const [layers, setLayers] = useState([]);
     const [workspace, setWorkspace] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
+    
+    function serializeWorkspace() {
+        const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
+            return {
+                collection: layer.collection,
+                on: layer.state ?? false,
+                constraintState: layer.constraintState,
+                constraints: Object.values(layer.constraints).filter(e => e.state).map((constraint) => {
+                    return {
+                        name: constraint.name,
+                        state: constraint.state
+                    }
+                })
+            }
+        })
+        const serialized = JSON.stringify(relevantLayers);
+        localStorage.setItem("workspace", serialized)
+    }
+
+    function deSerializeWorkspace() {
+        const serializedWorkspace = localStorage.getItem("workspace")
+        if(!serializedWorkspace) {
+            return;
+        }
+        const deSerializedWorkspace = JSON.parse(serializedWorkspace)
+        const collections = new Set(deSerializedWorkspace.map(e => e.collection))
+
+        setWorkspace(layers.map(layer => {
+            const isIn = collections.has(layer.collection);
+            if(isIn) {
+                const deSerializedLayer = deSerializedWorkspace.find(e => e.collection === layer.collection);
+                layer.on = deSerializedLayer.on;
+                layer.constraintState = deSerializedLayer.constraintState;
+                layer.forceUpdateFlag = true;
+                for(const constraint of deSerializedLayer.constraints) {
+                    layer.constraints[constraint.name].state = constraint.state;
+                    layer.constraints[constraint.name].forceUpdateFlag = true;
+                }
+                
+            }
+            return isIn;
+        }))
+    }
+
     function extractLayers(data) {
         let tempBoolean = [];
         let tempLayers = [];
@@ -133,7 +177,7 @@ export default React.memo(function Workspace() {
         >
             <Grid item className={classes.root}>
                 <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                                   workspace={workspace} setWorkspace={setWorkspace} />
+                                   workspace={workspace} setWorkspace={setWorkspace} serializeWorkspace={serializeWorkspace} deSerializeWorkspace={deSerializeWorkspace}/>
             </Grid>
             <Grid item className={classes.root}>
                 <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />

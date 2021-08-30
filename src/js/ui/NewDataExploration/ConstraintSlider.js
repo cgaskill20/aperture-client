@@ -56,11 +56,11 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
-import {componentIsRendering} from "../TabSystem";
+import { componentIsRendering } from "../TabSystem";
 import Util from "../../library/apertureUtil"
 
 const useStyles = makeStyles((theme) => ({
@@ -75,14 +75,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ConstraintSlider({constraint, querier}) {
+export default function ConstraintSlider({ constraint, querier }) {
     const classes = useStyles();
     const min = constraint.range[0];
     const max = constraint.range[1];
     const step = constraint.step ? constraint.step : 1;
     const [minMax, setMinMax] = useState([min, max]);
     const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
-    
+
     useEffect(() => {
         querier.updateConstraint(constraint.name, minMaxCommited);
     }, [minMaxCommited]);
@@ -94,10 +94,18 @@ export default function ConstraintSlider({constraint, querier}) {
         }
     }, []);
 
+    useEffect(() => {
+        if(constraint.forceUpdateFlag) {
+            constraint.forceUpdateFlag = false;
+            setMinMax(constraint.state)
+            setMinMaxCommited(constraint.state)
+        }
+    })
+
     const buildSliderLabel = () => {
         return <b>{minMax[0]} ➔ {minMax[1]} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
     }
-    if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
+    if (componentIsRendering) { console.log("|ContraintSlider Rerending|") }
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
             <Typography className={classes.title} id={`range-slider-${constraint.label}`} gutterBottom>
@@ -107,7 +115,10 @@ export default function ConstraintSlider({constraint, querier}) {
             <Slider
                 value={minMax}
                 onChange={(event, newValue) => setMinMax(newValue)}
-                onChangeCommitted={(event, newValue) => setMinMaxCommited(newValue)}
+                onChangeCommitted={(event, newValue) => {
+                    setMinMaxCommited(newValue);
+                    constraint.state = newValue;
+                }}
                 aria-labelledby={`range-slider-${constraint.label}`}
                 min={min}
                 max={max}

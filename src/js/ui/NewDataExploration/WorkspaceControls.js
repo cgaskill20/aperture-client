@@ -99,8 +99,8 @@ export default function WorkspaceControls(props) {
         <Paper className={classes.root} elevation={3}>
             <Grid container direction="row" justifyContent="center" alignItems="center">
                 <ButtonGroup className={classes.buttons}>
-                    <Button variant="outlined" startIcon={<SaveIcon />}>Save Workspace</Button>
-                    <Button variant="outlined" startIcon={<FolderOpenIcon />}>Load Workspace</Button>
+                    <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => { props.serializeWorkspace() }}>Save Workspace</Button>
+                    <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { props.deSerializeWorkspace() }}>Load Workspace</Button>
                     <Button variant="outlined" startIcon={venIcon} onClick={() => {
                         setIntersect(!intersect)
                     }}>

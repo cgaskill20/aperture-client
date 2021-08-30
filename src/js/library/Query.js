@@ -136,7 +136,9 @@ const Query = {
     **/
     async makeQuery(query) {
         query = { ...defaultQuery, ...query }
-        query.id = Math.random().toString(36).substring(2, 6);
+        if(!query.id) {
+            query.id = Math.random().toString(36).substring(2, 6);
+        }
         this.currentQueries[query.id] = query;
         const { dontLink, callback } = query;
 
@@ -150,6 +152,8 @@ const Query = {
             query.callback = (res) => {
                 if (res.event === "end") {
                     delete this.currentQueries[query.id];
+                    callback(res)
+                    query.callback = () => { }
                 }
                 callback(res)
             }

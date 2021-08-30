@@ -56,13 +56,13 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import {componentIsRendering} from "../TabSystem";
+import { componentIsRendering } from "../TabSystem";
 import Grid from "@material-ui/core/Grid";
 import { KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
-import {Alert} from "@material-ui/lab";
+import { Alert } from "@material-ui/lab";
 import IconButton from "@material-ui/core/IconButton";
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
@@ -105,19 +105,22 @@ const dateToEpoch = (date) => {
     return date.valueOf() - date.getTimezoneOffset() * 60000;
 }
 
-export default function ConstraintDate({constraint, querier}) {
+export default function ConstraintDate({ constraint, querier }) {
     const classes = useStyles();
     const min = constraint.range[0];
     const max = constraint.range[1];
     const [minMaxDate, setMinMaxDate] = useState([epochToDate(min), epochToDate(max)]);
     const config = configs[constraint.step];
 
-    let errorMessageDisplay = [{display: "none"}, {display: "block", width: '100%'}];
+    let errorMessageDisplay = [{ display: "none" }, { display: "block", width: '100%' }];
     const [errorMessage, setErrorMessage] = useState(errorMessageDisplay[0]);
     const [errorMessageText, setErrorMessageText] = useState("");
 
     useEffect(() => {
         const minMaxCommited = [dateToEpoch(minMaxDate[0]), dateToEpoch(minMaxDate[1])]
+        if (!constraint.forceUpdateFlag) {
+            constraint.state = minMaxCommited;
+        }
         querier.updateConstraint(constraint.name, minMaxCommited);
     }, [minMaxDate]);
 
@@ -128,8 +131,16 @@ export default function ConstraintDate({constraint, querier}) {
         }
     }, []);
 
+    useEffect(() => {
+        if (constraint.forceUpdateFlag) {
+            constraint.forceUpdateFlag = false;
+            const newDate = [epochToDate(constraint.state[0]), epochToDate(constraint.state[1])]
+            setMinMaxDate(newDate);
+        }
+    })
+
     function handleDateUpdate(e, setMin) {
-        if(e) {
+        if (e) {
             const newTime = new Date(e.valueOf());
             if (setMin && newTime > minMaxDate[1] || !setMin && newTime < minMaxDate[0]) {
                 setErrorMessageText(setMin ? "Min Date must be less than Max Date" : "Max Date must be greater than Min Date");
@@ -143,7 +154,7 @@ export default function ConstraintDate({constraint, querier}) {
         }
     }
 
-    if(componentIsRendering) {console.log("|ContraintSlider Rerending|")}
+    if (componentIsRendering) { console.log("|ContraintSlider Rerending|") }
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
             <Grid container direction="row" justifyContent="center" alignItems="center">
@@ -165,7 +176,7 @@ export default function ConstraintDate({constraint, querier}) {
                             handleDateUpdate(e, true)
                         }}
                     />
-            </Grid>
+                </Grid>
                 <Grid item className={classes.halfSize}>
                     <KeyboardDatePicker
                         label="Max Date"
@@ -180,11 +191,11 @@ export default function ConstraintDate({constraint, querier}) {
                 </Grid>
             </Grid>
             {renderTime()}
-         </div>
+        </div>
     );
 
     function renderTime() {
-        if(constraint.step === "30min") {
+        if (constraint.step === "30min") {
             return (
                 <div>
                     <br/>
@@ -220,13 +231,13 @@ export default function ConstraintDate({constraint, querier}) {
 
     function renderErrorMessage() {
         return <div style={errorMessage}>
-            <br/>
+            <br />
             <Alert severity="error">{errorMessageText}
                 <span>
-                        <IconButton onClick={() => {setErrorMessage(errorMessageDisplay[0])}}>
-                          <HighlightOffIcon />
-                        </IconButton>
-                    </span>
+                    <IconButton onClick={() => { setErrorMessage(errorMessageDisplay[0]) }}>
+                        <HighlightOffIcon />
+                    </IconButton>
+                </span>
             </Alert>
         </div>
     }
