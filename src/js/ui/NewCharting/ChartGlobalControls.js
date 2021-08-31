@@ -89,8 +89,8 @@ export default function ChartGlobalControls(props) {
 
     return (
         <div>
-            <ButtonGroup className={classes.root}>
-                <Button startIcon={<ExpandMoreIcon/>} onClick={handleClick}>
+            <div className={classes.root}>
+                <Button variant="outlined" startIcon={<ExpandMoreIcon/>} onClick={handleClick}>
                     Select Chart Type
                 </Button>
                 <Menu
@@ -115,10 +115,10 @@ export default function ChartGlobalControls(props) {
                         handleClose({type: ChartingType.CORRELOGRAM});
                     }}>Correlogram</MenuItem>
                 </Menu>
-                <Button startIcon={<CloseIcon/>} onClick={() => setGlobalState({ chartingOpen: false })}>
+                <Button variant="outlined" startIcon={<CloseIcon/>} onClick={() => setGlobalState({ chartingOpen: false })}>
                     Close
                 </Button>
-            </ButtonGroup>
+            </div>
         </div>
     );
 }
