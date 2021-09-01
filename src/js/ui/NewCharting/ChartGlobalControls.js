@@ -58,7 +58,6 @@ END OF TERMS AND CONDITIONS
 */
 import React, { useState} from 'react';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import CloseIcon from '@material-ui/icons/Close';
 import { useGlobalState } from '../global/GlobalState';
 import { ChartingType } from '../../library/charting/chartSystem';
@@ -75,6 +74,13 @@ export default function ChartGlobalControls(props) {
     const classes = useStyles();
     const [globalState, setGlobalState] = useGlobalState();
     const [anchorEl, setAnchorEl] = useState(null);
+
+    const chartOptions = [
+        ["Histogram", {type: ChartingType.HISTOGRAM}],
+        ["Scatterplot", {type: ChartingType.SCATTERPLOT}],
+        ["COVID-19", {type: ChartingType.LINE}],
+        ["Boxplot", {type: ChartingType.BOXPLOT}],
+        ["Correlogram", {type: ChartingType.CORRELOGRAM}]];
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -99,21 +105,7 @@ export default function ChartGlobalControls(props) {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                 >
-                    <MenuItem onClick={() => {
-                        handleClose({type: ChartingType.HISTOGRAM});
-                    }}>Histogram</MenuItem>
-                    <MenuItem onClick={() => {
-                        handleClose({type: ChartingType.SCATTERPLOT});
-                    }}>Scatterplot</MenuItem>
-                    <MenuItem onClick={() => {
-                        handleClose({type: ChartingType.LINE});
-                    }}>COVID-19</MenuItem>
-                    <MenuItem onClick={() => {
-                        handleClose({type: ChartingType.BOXPLOT});
-                    }}>Boxplot</MenuItem>
-                    <MenuItem onClick={() => {
-                        handleClose({type: ChartingType.CORRELOGRAM});
-                    }}>Correlogram</MenuItem>
+                    {renderMenuItems()}
                 </Menu>
                 <Button variant="outlined" startIcon={<CloseIcon/>} onClick={() => setGlobalState({ chartingOpen: false })}>
                     Close
@@ -121,4 +113,16 @@ export default function ChartGlobalControls(props) {
             </div>
         </div>
     );
+
+    function renderMenuItems() {
+        let allCharts = [];
+        chartOptions.map((chart, index) => {
+            allCharts.push(<div key={index}>
+                <MenuItem onClick={() => handleClose(chart[1])}>
+                    {chart[0]}
+                </MenuItem>
+            </div>)
+        })
+        return allCharts;
+    }
 }
