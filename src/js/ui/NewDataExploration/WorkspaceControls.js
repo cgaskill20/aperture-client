@@ -77,8 +77,8 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(2),
     },
     customIcon: {
-        width: "20px",
-        height: "20px",
+        width: "18px",
+        height: "18px",
         transform: "translate(0, -10px)"
     }
 }));
@@ -95,8 +95,8 @@ export default function WorkspaceControls(props) {
         <Paper className={classes.root} elevation={3}>
             <Grid container direction="row" justifyContent="center" alignItems="center">
                 <ButtonGroup className={classes.buttons}>
-                    <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => { props.serializeWorkspace() }}>Save Workspace</Button>
-                    <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { props.deSerializeWorkspace() }}>Load Workspace</Button>
+                    <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => { localStorage.setItem("workspace", props.serializeWorkspace()) }}>Save Workspace</Button>
+                    <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { props.deSerializeWorkspace(localStorage.getItem("workspace")) }}>Load Workspace</Button>
                     <Button variant="outlined" startIcon={venIcon} onClick={() => {
                         props.setIntersect(!props.intersect)
                     }}>

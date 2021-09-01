@@ -108,11 +108,10 @@ export default React.memo(function Workspace() {
             intersect
         }
         const serialized = JSON.stringify(fullWorkspace);
-        localStorage.setItem("workspace", serialized)
+        return serialized;
     }
 
-    function deSerializeWorkspace() {
-        const serializedWorkspace = localStorage.getItem("workspace")
+    function deSerializeWorkspace(serializedWorkspace) {
         if(!serializedWorkspace) {
             return;
         }
