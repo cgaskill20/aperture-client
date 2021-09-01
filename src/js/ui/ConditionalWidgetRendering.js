@@ -94,13 +94,13 @@ const ConditionalWidgetRendering = () => {
         "Baltimore County.";
     const nsfPicPath = "../../../images/NSF-logo-only.png";
 
-    toRender.push(<div key="nsfLogoAndBlurb" className={classes.nsfDiv}>
-        <Tooltip
-            placement="left"
-            title={nsfText}>
-            <img src={nsfPicPath} className={classes.nsfPic} />
-        </Tooltip>
-    </div>)
+    toRender.push(
+        <div key="nsfLogoAndBlurb" className={classes.nsfDiv}>
+            <Tooltip placement="left" title={nsfText}>
+                <img src={nsfPicPath} className={classes.nsfPic} />
+            </Tooltip>
+        </div>
+    );
 
     switch (globalState.mode) {
         case "dataExploration":
