@@ -93,6 +93,7 @@ export default React.memo(function Workspace() {
             return {
                 collection: layer.collection,
                 on: layer.state ?? false,
+                expandedState: layer.expandedState ?? false,
                 constraintState: layer.constraintState,
                 constraints: Object.values(layer.constraints).filter(e => e.state).map((constraint) => {
                     return {
@@ -124,8 +125,8 @@ export default React.memo(function Workspace() {
         setWorkspace(layers.map(layer => {
             const isIn = collections.has(layer.collection);
             if(isIn) {
-                const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);
-                layer.on = deSerializedLayer.on;
+                const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);                layer.on = deSerializedLayer.on;
+                layer.expandedState = deSerializedLayer.expandedState;
                 layer.constraintState = deSerializedLayer.constraintState;
                 layer.forceUpdateFlag = true;
                 for(const constraint of deSerializedLayer.constraints) {
