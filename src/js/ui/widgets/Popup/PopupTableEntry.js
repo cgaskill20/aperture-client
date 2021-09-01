@@ -78,7 +78,7 @@ const useStyles = makeStyles({
             borderBottom: 'unset',
         },
     },
-    fullWidth: {
+    totalWidth: {
         width: "100%"
     },
     dropdown: {
@@ -139,7 +139,7 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
     const isTemporal = () => {
         if(entryProperties.isTemporal) {
             return <div className={classes.dropdown}>
-                <FormControl variant="outlined" className={classes.fullWidth}>
+                <FormControl variant="outlined" className={classes.totalWidth}>
                     <InputLabel>Temporal Range</InputLabel>
                         <Select
                             native

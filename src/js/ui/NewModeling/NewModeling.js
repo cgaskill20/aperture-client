@@ -81,7 +81,7 @@ export default React.memo(function NewModeling() {
         componentWidth: {
             width: "98%"
         },
-        fullWidth: {
+        totalWidth: {
             width: "100%"
         },
         paper: {
@@ -150,7 +150,7 @@ export default React.memo(function NewModeling() {
     return (
         <div>
             <Grid
-                className={classes.fullWidth}
+                className={classes.totalWidth}
                 container
                 direction="row"
                 justifyContent="flex-start"
@@ -193,7 +193,7 @@ export default React.memo(function NewModeling() {
                 </Grid>
                 <Grid item className={classes.componentWidth}>
                     <Paper className={classes.paper} elevation={3}>
-                        <Button className={classes.fullWidth} size="large" variant="outlined">Run This Model</Button>
+                        <Button className={classes.totalWidth} size="large" variant="outlined">Run This Model</Button>
                     </Paper>
                 </Grid>
             </Grid>

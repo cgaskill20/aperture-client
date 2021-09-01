@@ -56,32 +56,73 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react';
+import React, { useState} from 'react';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { useGlobalState } from '../global/GlobalState';
 import { ChartingType } from '../../library/charting/chartSystem';
+import {makeStyles, Menu, MenuItem} from "@material-ui/core";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        margin: "20px",
+    },
+}));
 
 export default function ChartGlobalControls(props) {
+    const classes = useStyles();
     const [globalState, setGlobalState] = useGlobalState();
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const chartOptions = [
+        ["Histogram", {type: ChartingType.HISTOGRAM}],
+        ["Scatterplot", {type: ChartingType.SCATTERPLOT}],
+        ["COVID-19", {type: ChartingType.LINE}],
+        ["Boxplot", {type: ChartingType.BOXPLOT}],
+        ["Correlogram", {type: ChartingType.CORRELOGRAM}]];
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = (chartObj) => {
+        if(chartObj.type !== "click"){
+            props.make(chartObj);
+        }
+        setAnchorEl(null);
+    };
 
     return (
         <div>
-            {/* Graph creation buttons */}
-            <ButtonGroup variant="outlined" color="primary">
-                <Button onClick={() => props.make({ type: ChartingType.HISTOGRAM })}>Histogram</Button>
-                <Button onClick={() => props.make({ type: ChartingType.SCATTERPLOT })}>Scatterplot</Button>
-                <Button onClick={() => props.make({ type: ChartingType.LINE })}>COVID-19</Button>
-                <Button onClick={() => props.make({ type:  ChartingType.BOXPLOT })}>Box Plot</Button>
-                <Button onClick={() => props.make({ type:  ChartingType.CORRELOGRAM })}>Correlogram</Button>
-            </ButtonGroup>
-
-            {/* Close button */}
-            <IconButton aria-label="close" onClick={() => setGlobalState({ chartingOpen: false })}>
-                <CloseIcon/>
-            </IconButton>
+            <div className={classes.root}>
+                <Button variant="outlined" startIcon={<ExpandMoreIcon/>} onClick={handleClick}>
+                    Select Chart Type
+                </Button>
+                <Menu
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                >
+                    {renderMenuItems()}
+                </Menu>
+                <Button variant="outlined" startIcon={<CloseIcon/>} onClick={() => setGlobalState({ chartingOpen: false })}>
+                    Close
+                </Button>
+            </div>
         </div>
     );
+
+    function renderMenuItems() {
+        let allCharts = [];
+        chartOptions.map((chart, index) => {
+            allCharts.push(<div key={index}>
+                <MenuItem onClick={() => handleClose(chart[1])}>
+                    {chart[0]}
+                </MenuItem>
+            </div>)
+        })
+        return allCharts;
+    }
 }

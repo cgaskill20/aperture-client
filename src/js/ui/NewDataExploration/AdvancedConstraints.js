@@ -112,7 +112,7 @@ export default function AdvancedConstraints(props) {
                     className={classes.modal}
                     container
                     direction="column"
-                    justify="center"
+                    justifyContent="center"
                     alignItems="stretch"
                 >
                     <Grid item>

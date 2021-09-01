@@ -113,7 +113,7 @@ export default function ScatterPlot(props) {
         const radius = 5;
         const color = "blue";
         let svg = d3.select(svgRef.current);
-        svg.attr("viewBox", [0, 0, width, height]);
+        svg.attr("viewBox", [0, 0, width, height - 100]);
         if(!props.selected[0]){
             return;
         }
@@ -181,13 +181,13 @@ export default function ScatterPlot(props) {
 
 
         svg.select("#xAxisText")
-            .attr('transform', `translate(${(margin.left + drawWidth / 4)}, ${(height - margin.bottom + 30)})`)
+            .attr('transform', `translate(${(margin.left + 42)}, ${(height - margin.bottom + 42)})`)
             .attr('class', 'axis-label')
             .text(xVar.split("::")[2]);
 
 
         svg.select("#yAxisText")
-            .attr('transform', `translate( ${(margin.left - 60)},${(margin.top + drawHeight - 10)}) rotate(-90)`)
+            .attr('transform', `translate( ${(margin.left - 60)},${(margin.top + drawHeight - 30)}) rotate(-90)`)
             .attr('class', 'axis-label')
             .text(yVar.split("::")[2]);
 

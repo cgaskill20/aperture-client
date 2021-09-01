@@ -1,33 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import feature from "../../../library/charting/feature.js"
 import {ResponsiveHeatMap} from "@nivo/heatmap";
-import ToggleSwitch from '../toggleSwitch';
+import ToggleSwitch from '../ToggleSwitch';
 const calculateCorrelation = require("calculate-correlation");
 
 
 export default function CorrelogramGraph(props) {
 
-    const [state, setState] = React.useState({
-        tractvCounty: true
-    });
-    const handleChange = name => event => {
-        setState({ ...state, [name]: event.target.checked });
-    };
+    const [tractOrCounty, setTractOrCounty] = useState( true);
 
     let retData = {};
     let keys = [];
     let data = []
 
 
-    let selector = <ToggleSwitch bool={state.tractvCounty} change={handleChange}></ToggleSwitch>
+    let selector = <ToggleSwitch tractOrCounty={tractOrCounty} setTractOrCounty={() => setTractOrCounty(!tractOrCounty)}></ToggleSwitch>
 
     let findMatchingPoints = (object,) => {
         const keyTable = {}
         for (const [mainKey, mapOfObjects] of Object.entries(object)) {
-            if(state.tractvCounty && props.options[1].includes(mainKey)){
+            if(tractOrCounty && props.options[1].includes(mainKey)){
                 continue;
             }
-            else if(!state.tractvCounty && props.options[0].includes(mainKey)){
+            else if(!tractOrCounty && props.options[0].includes(mainKey)){
                 continue;
             }
 
@@ -49,12 +44,12 @@ export default function CorrelogramGraph(props) {
         return result.filter(entry => entry.length === maxEntryLength)
     }
     let heatmap = ""
-    if(props?.data['map_features'] && ((props.options[0].length > 0 && state.tractvCounty) || (props.options[1].length > 0 && !state.tractvCounty))) {
+    if(props?.data['map_features'] && ((props.options[0].length > 0 && tractOrCounty) || (props.options[1].length > 0 && !tractOrCounty))) {
         for (const [key, value] of Object.entries(props.data['map_features'])) {
-            if(state.tractvCounty && props.options[1].includes(key)){
+            if(tractOrCounty && props.options[1].includes(key)){
                 continue;
             }
-            else if(!state.tractvCounty && props.options[0].includes(key)){
+            else if(!tractOrCounty && props.options[0].includes(key)){
                 continue;
             }
             if (value.length > 0) {

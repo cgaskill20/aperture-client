@@ -60,6 +60,7 @@ import React, {useState, useEffect, createContext} from 'react';
 import { Rnd } from 'react-rnd';
 import Paper from '@material-ui/core/Paper';
 import ChartingWindow from './ChartingWindow';
+import {makeStyles} from "@material-ui/core";
 
 export function shouldAvoidDragging(node) {
     if (!node || !node.className || !node.className.includes) {
@@ -83,6 +84,7 @@ export default function ChartingResizable() {
         return () => window.chartSystem.unregisterDataConsumer('charting-resizable');
     }, []);
 
+    //FIXME This is where the OUTER chart box is created
     return (
         <div style={{
             width: '800px',
@@ -115,7 +117,7 @@ export default function ChartingResizable() {
 
             >
                 <Paper className={'charting-resizable-window'}>
-                    <div style={{ overflowY: "scroll", maxHeight: size.height }}>
+                    <div style={{ overflowY: "auto", maxHeight: size.height }}>
                         <ChartingWindow size={size} pos={pos} data={chartData}/>
                     </div>
                 </Paper>
