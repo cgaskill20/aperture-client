@@ -144,7 +144,8 @@ export default React.memo(function Workspace() {
         setWorkspace(layers.map(layer => {
             const isIn = collections.has(layer.collection);
             if(isIn) {
-                const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);                layer.on = deSerializedLayer.on;
+                const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);                
+                layer.on = deSerializedLayer.on;
                 layer.expandedState = deSerializedLayer.expandedState;
                 layer.constraintState = deSerializedLayer.constraintState;
                 layer.forceUpdateFlag = true;
