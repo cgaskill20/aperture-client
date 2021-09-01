@@ -145,10 +145,6 @@ map.setView([40.573733, -105.086559], 11);
 L.control.layers(baseMaps).addTo(map);
 standardTiles.addTo(map);
 
-const nsfImageLocation = "./images/NSF-logo-and-blurb.png";
-const nsfImageBounds = [[40.712216, -74.22655], [40.773941, -74.12544]];
-L.imageOverlay(nsfImageLocation, nsfImageBounds).addTo(map);
-
 const zoomControl = L.control.zoom({ position: "topright" }).addTo(map);
 
 var markers = L.markerClusterGroup({
