@@ -80,8 +80,13 @@ export default React.memo(function Workspace() {
     const classes = useStyles();
 
     const [layers, setLayers] = useState([]);
+    const [intersect, setIntersect] = useState(false);
     const [workspace, setWorkspace] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
+
+    useEffect(() => {
+        window.setIntersect(intersect)
+    }, [intersect]);
     
     function serializeWorkspace() {
         const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
@@ -177,7 +182,8 @@ export default React.memo(function Workspace() {
         >
             <Grid item className={classes.root}>
                 <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                                   workspace={workspace} setWorkspace={setWorkspace} serializeWorkspace={serializeWorkspace} deSerializeWorkspace={deSerializeWorkspace}/>
+                                   workspace={workspace} setWorkspace={setWorkspace} serializeWorkspace={serializeWorkspace} deSerializeWorkspace={deSerializeWorkspace}
+                                   intersect={intersect} setIntersect={setIntersect} />
             </Grid>
             <Grid item className={classes.root}>
                 <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />

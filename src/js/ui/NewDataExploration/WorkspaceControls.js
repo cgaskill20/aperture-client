@@ -85,14 +85,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function WorkspaceControls(props) {
     const classes = useStyles();
-    const [intersect, setIntersect] = useState(false);
     const venIcon = <Icon>
-        <img src={intersect ? VenFilled : Ven} className={classes.customIcon} />
+        <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
     </Icon>
 
-    useEffect(() => {
-        window.setIntersect(intersect)
-    }, [intersect]);
 
     if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
     return (
@@ -102,9 +98,9 @@ export default function WorkspaceControls(props) {
                     <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => { props.serializeWorkspace() }}>Save Workspace</Button>
                     <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { props.deSerializeWorkspace() }}>Load Workspace</Button>
                     <Button variant="outlined" startIcon={venIcon} onClick={() => {
-                        setIntersect(!intersect)
+                        props.setIntersect(!props.intersect)
                     }}>
-                        {intersect ? "Intersections: on" : "Intersections: off"}
+                        {props.intersect ? "Intersections: on" : "Intersections: off"}
                     </Button>
                 </ButtonGroup>
             </Grid>
