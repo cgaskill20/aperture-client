@@ -117,7 +117,7 @@ export default function ChartingResizable() {
 
             >
                 <Paper className={'charting-resizable-window'}>
-                    <div style={{ overflowY: "auto", maxHeight: size.height }}>
+                    <div style={{ overflowY: "auto", overflowX: "hidden", maxHeight: size.height }}>
                         <ChartingWindow size={size} pos={pos} data={chartData}/>
                     </div>
                 </Paper>
