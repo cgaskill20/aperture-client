@@ -117,6 +117,12 @@ export default function Layer(props) {
         }
     }, [activeLayerConstraints]);
 
+    useEffect(() => {
+        if(!props.layer.forceUpdateFlag) {
+            props.layer.expandedState = layerExpanded;
+        }
+    }, [layerExpanded])
+
 
     const [ querier ] = useState(new AutoQuery(props.layer));
 
@@ -129,10 +135,13 @@ export default function Layer(props) {
     useEffect(() => {
         if(props.layer.forceUpdateFlag) {
             props.layer.forceUpdateFlag = false;
-            setCheck(props.layer.on)
             const constraintStateSet = new Set(props.layer.constraintState)
             setActiveLayerConstraints(allLayerConstraints.map(layerConstraint => constraintStateSet.has(layerConstraint.name)))
-            updateQuerierOnCheckChange(props.layer.on)
+            setLayerExpanded(props.layer.expandedState)
+            if(check !== props.layer.on) {
+                setCheck(props.layer.on)
+                updateQuerierOnCheckChange(props.layer.on)
+            }
         }
     })
 
