@@ -102,7 +102,11 @@ export default React.memo(function Workspace() {
                 })
             }
         })
-        const serialized = JSON.stringify(relevantLayers);
+        const fullWorkspace = {
+            layers: relevantLayers,
+            intersect
+        }
+        const serialized = JSON.stringify(fullWorkspace);
         localStorage.setItem("workspace", serialized)
     }
 
@@ -112,12 +116,15 @@ export default React.memo(function Workspace() {
             return;
         }
         const deSerializedWorkspace = JSON.parse(serializedWorkspace)
-        const collections = new Set(deSerializedWorkspace.map(e => e.collection))
 
+        if(deSerializedWorkspace.intersect != null) {
+            setIntersect(deSerializedWorkspace.intersect)
+        }
+        const collections = new Set(deSerializedWorkspace.layers.map(e => e.collection))
         setWorkspace(layers.map(layer => {
             const isIn = collections.has(layer.collection);
             if(isIn) {
-                const deSerializedLayer = deSerializedWorkspace.find(e => e.collection === layer.collection);
+                const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);
                 layer.on = deSerializedLayer.on;
                 layer.constraintState = deSerializedLayer.constraintState;
                 layer.forceUpdateFlag = true;
