@@ -63,7 +63,7 @@ import ClusterLegend from "./widgets/ClusterLegend"
 import PreloadingMenu from "./widgets/PreloadingMenu"
 import ChartingResizable from "./NewCharting/ChartingResizable"
 import {makeStyles} from "@material-ui/core/styles";
-import {Tooltip} from "@material-ui/core";
+import {CustomTooltip} from "./UtilityComponents";
 
 const widgetEnum = {
     defensiveOptimization: 0,
@@ -96,9 +96,9 @@ const ConditionalWidgetRendering = () => {
 
     toRender.push(
         <div key="nsfLogoAndBlurb" className={classes.nsfDiv}>
-            <Tooltip placement="left" title={nsfText}>
+            <CustomTooltip className={classes.tooltip} placement="top-start" title={nsfText}>
                 <img src={nsfPicPath} className={classes.nsfPic} />
-            </Tooltip>
+            </CustomTooltip>
         </div>
     );
 
