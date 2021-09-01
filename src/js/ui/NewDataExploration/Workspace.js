@@ -65,6 +65,7 @@ import {componentIsRendering} from "../TabSystem";
 import Query from "../../library/Query";
 import Util from "../../library/apertureUtil";
 import Grid from "@material-ui/core/Grid";
+import LZString from 'lz-string';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -108,10 +109,12 @@ export default React.memo(function Workspace() {
             intersect
         }
         const serialized = JSON.stringify(fullWorkspace);
-        return serialized;
+        const compressedSerialized = LZString.compressToBase64(serialized);
+        return compressedSerialized;
     }
 
-    function deSerializeWorkspace(serializedWorkspace) {
+    function deSerializeWorkspace(compressedSerializedWorkspace) {
+        const serializedWorkspace = LZString.decompressFromBase64(compressedSerializedWorkspace)
         if(!serializedWorkspace) {
             return;
         }
