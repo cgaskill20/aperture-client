@@ -63,10 +63,15 @@ import { useGlobalState } from '../global/GlobalState';
 import { ChartingType } from '../../library/charting/chartSystem';
 import {makeStyles, Menu, MenuItem} from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        margin: "20px",
+        margin: theme.spacing(2),
+    },
+    menu: {
+        marginRight: theme.spacing(1),
+        width: "220px",
     },
 }));
 
@@ -94,9 +99,15 @@ export default function ChartGlobalControls(props) {
     };
 
     return (
-        <div>
-            <div className={classes.root}>
-                <Button variant="outlined" startIcon={<ExpandMoreIcon/>} onClick={handleClick}>
+        <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            className={classes.root}
+        >
+            <Grid item>
+                <Button variant="outlined" startIcon={<ExpandMoreIcon/>} onClick={handleClick} className={classes.menu}>
                     Select Chart Type
                 </Button>
                 <Menu
@@ -107,11 +118,13 @@ export default function ChartGlobalControls(props) {
                 >
                     {renderMenuItems()}
                 </Menu>
+            </Grid>
+            <Grid item>
                 <Button variant="outlined" startIcon={<CloseIcon/>} onClick={() => setGlobalState({ chartingOpen: false })}>
                     Close
                 </Button>
-            </div>
-        </div>
+            </Grid>
+        </Grid>
     );
 
     function renderMenuItems() {

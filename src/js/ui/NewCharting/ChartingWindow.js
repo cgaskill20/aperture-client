@@ -71,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
         padding: "20px",
     },
     globalChartControl: {
+        width: "100%",
         borderBottom: '2px solid #adadad',
     },
 }));
