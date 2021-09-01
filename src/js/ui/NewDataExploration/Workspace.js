@@ -77,6 +77,7 @@ export function prettifyJSON(name) {
     return Util.capitalizeString(Util.underScoreToSpace(name));
 }
 
+let workspaceIsLoaded = false;
 export default React.memo(function Workspace() {
     const classes = useStyles();
 
@@ -84,10 +85,21 @@ export default React.memo(function Workspace() {
     const [intersect, setIntersect] = useState(false);
     const [workspace, setWorkspace] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
+    const [graphableLayers, setGraphableLayers] = useState([]);
+    const [workspaceOnLoad, setWorkspaceOnLoad] = useState(null)
 
     useEffect(() => {
         window.setIntersect(intersect)
     }, [intersect]);
+
+    useEffect(() => {
+        if(!workspaceIsLoaded && workspace.length && layers.length) {
+            workspaceIsLoaded = true;
+            if(workspaceOnLoad) {
+                deSerializeWorkspace(workspaceOnLoad)
+            }
+        }
+    }, [workspace, layers])
     
     function serializeWorkspace() {
         const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
@@ -110,11 +122,18 @@ export default React.memo(function Workspace() {
         }
         const serialized = JSON.stringify(fullWorkspace);
         const compressedSerialized = LZString.compressToBase64(serialized);
+        console.log(`Compressed to ${Math.floor(compressedSerialized.length/serialized.length*100)}%`)
         return compressedSerialized;
     }
 
-    function deSerializeWorkspace(compressedSerializedWorkspace) {
+    async function deSerializeWorkspace(compressedSerializedWorkspace) {
+        //if the menu isnt loaded yet, wait for it to be loaded
+        if(!workspaceIsLoaded) {
+            setWorkspaceOnLoad(compressedSerializedWorkspace)
+            return;
+        }
         const serializedWorkspace = LZString.decompressFromBase64(compressedSerializedWorkspace)
+
         if(!serializedWorkspace) {
             return;
         }
@@ -157,7 +176,6 @@ export default React.memo(function Workspace() {
         setLayerTitles(tempLayerTitles);
     }
 
-    const [graphableLayers, setGraphableLayers] = useState([]);
     function extractGraphableLayers(data) {
         let tempGraphableLayers = [];
         for (const layer in data) {

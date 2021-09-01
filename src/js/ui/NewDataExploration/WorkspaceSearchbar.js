@@ -130,6 +130,7 @@ export default function WorkspaceSearchbar(props) {
                 value={props.layerTitles.filter((e, index) => props.workspace[index])}
                 onChange={(e, layers) => {
                     const layersSet = new Set(layers)
+                    console.log("SETTING WORKSPACE MY WAY")
                     props.setWorkspace(props.layerTitles.map(layerTitle => layersSet.has(layerTitle)))
                 }}
                 renderOption={(option, state) => {
