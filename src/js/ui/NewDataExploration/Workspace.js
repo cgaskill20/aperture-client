@@ -96,8 +96,6 @@ export default React.memo(function Workspace() {
         if(!workspaceIsLoaded && workspace.length && layers.length) {
             workspaceIsLoaded = true;
             if(workspaceOnLoad) {
-                console.log("Loading WOrkspace")
-                console.log(workspaceOnLoad)
                 deSerializeWorkspace(workspaceOnLoad)
             }
         }
@@ -124,7 +122,6 @@ export default React.memo(function Workspace() {
         }
         const serialized = JSON.stringify(fullWorkspace);
         const compressedSerialized = LZString.compressToEncodedURIComponent(serialized);
-        console.log(`Compressed to ${Math.floor(compressedSerialized.length/serialized.length*100)}%`)
         return compressedSerialized;
     }
 
@@ -135,18 +132,15 @@ export default React.memo(function Workspace() {
             return;
         }
         const serializedWorkspace = LZString.decompressFromEncodedURIComponent(compressedSerializedWorkspace)
-        console.log({serializedWorkspace})
         if(!serializedWorkspace) {
             return;
         }
         const deSerializedWorkspace = JSON.parse(serializedWorkspace)
 
-        console.log({deSerializedWorkspace})
         if(deSerializedWorkspace.intersect != null) {
             setIntersect(deSerializedWorkspace.intersect)
         }
         const collections = new Set(deSerializedWorkspace.layers.map(e => e.collection))
-        console.log({layers})
         setWorkspace(layers.map(layer => {
             const isIn = collections.has(layer.collection);
             if(isIn) {
@@ -193,7 +187,6 @@ export default React.memo(function Workspace() {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const workspaceFromURL = urlParams.get('workspace');
-        console.log({workspaceFromURL})
         workspaceFromURL && setWorkspaceOnLoad(workspaceFromURL)
 
         $.getJSON("src/json/menumetadata.json", async function (mdata) {
