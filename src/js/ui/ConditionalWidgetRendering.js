@@ -88,15 +88,17 @@ const ConditionalWidgetRendering = () => {
     const [globalState, setGlobalState] = useGlobalState();
     const classes = useStyles();
     let toRender = [];
+    const nsfText = "This research has been supported by funding from the US National Science Foundation’s CSSI program " +
+        "through awards 1931363, 1931324, 1931335, and 1931283. The project is a joint effort involving Colorado State " +
+        "University, Arizona State University, the University of California-Irvine, and the University of Maryland – " +
+        "Baltimore County.";
+    const nsfPicPath = "../../../images/NSF-logo-only.png";
 
     toRender.push(<div key="nsfLogoAndBlurb" className={classes.nsfDiv}>
         <Tooltip
             placement="left"
-            title="This research has been supported by funding from the US National Science Foundation’s
-        CSSI program through awards 1931363, 1931324, 1931335, and 1931283. The project is a joint effort
-        involving Colorado State University, Arizona State University, the University of California-Irvine,
-        and the University of Maryland – Baltimore County.">
-            <img src="../../../images/NSF-logo-only.png" className={classes.nsfPic} />
+            title={nsfText}>
+            <img src={nsfPicPath} className={classes.nsfPic} />
         </Tooltip>
     </div>)
 
