@@ -62,6 +62,8 @@ import DefensiveOptimization from "./widgets/DefensiveOptimization"
 import ClusterLegend from "./widgets/ClusterLegend"
 import PreloadingMenu from "./widgets/PreloadingMenu"
 import ChartingResizable from "./NewCharting/ChartingResizable"
+import {makeStyles} from "@material-ui/core/styles";
+import {Tooltip} from "@material-ui/core";
 
 const widgetEnum = {
     defensiveOptimization: 0,
@@ -70,10 +72,34 @@ const widgetEnum = {
     chartingResizable: 3,
 }
 
+const useStyles = makeStyles((theme) => ({
+    nsfDiv: {
+        position: "absolute",
+        bottom: 15,
+        right: 0,
+        zIndex: 401,
+    },
+    nsfPic: {
+        width: "6vw",
+    },
+}));
+
 const ConditionalWidgetRendering = () => {
     const [globalState, setGlobalState] = useGlobalState();
-
+    const classes = useStyles();
     let toRender = [];
+
+    toRender.push(<div key="nsfLogoAndBlurb" className={classes.nsfDiv}>
+        <Tooltip
+            placement="left"
+            title="This research has been supported by funding from the US National Science Foundation’s
+        CSSI program through awards 1931363, 1931324, 1931335, and 1931283. The project is a joint effort
+        involving Colorado State University, Arizona State University, the University of California-Irvine,
+        and the University of Maryland – Baltimore County.">
+            <img src="../../../images/NSF-logo-only.png" className={classes.nsfPic} />
+        </Tooltip>
+    </div>)
+
     switch (globalState.mode) {
         case "dataExploration":
             toRender.push(
