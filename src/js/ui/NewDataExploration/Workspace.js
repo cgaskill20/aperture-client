@@ -66,6 +66,7 @@ import Query from "../../library/Query";
 import Util from "../../library/apertureUtil";
 import Grid from "@material-ui/core/Grid";
 import LZString from 'lz-string';
+import { useGlobalState } from '../global/GlobalState';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -86,20 +87,21 @@ export default React.memo(function Workspace() {
     const [layerTitles, setLayerTitles] = useState([]);
     const [graphableLayers, setGraphableLayers] = useState([]);
     const [workspaceOnLoad, setWorkspaceOnLoad] = useState(null)
-    const workspaceIsLoaded = useRef(false)
+    const [globalState, setGlobalState] = useGlobalState();
+    const workspaceIsLoaded = useRef(false);
 
     useEffect(() => {
         window.setIntersect(intersect)
     }, [intersect]);
 
     useEffect(() => {
-        if(!workspaceIsLoaded.current && workspace.length && layers.length) {
+        if(!workspaceIsLoaded.current && workspace.length && layers.length && !globalState.preloading) {
             workspaceIsLoaded.current = true;
             if(workspaceOnLoad) {
                 deSerializeWorkspace(workspaceOnLoad)
             }
         }
-    }, [workspace, layers])
+    }, [workspace, layers, globalState.preloading])
     
     function serializeWorkspace() {
         const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
