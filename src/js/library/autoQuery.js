@@ -100,6 +100,7 @@ export default class AutoQuery {
         this.geohashCache = [];
 
         this.linked = this.data.linkedGeometry ? true : false;
+        this.initialColorSet = true;
 
         if (layerData.temporal) {
             this.temporal = layerData.temporal;
@@ -260,6 +261,10 @@ export default class AutoQuery {
         }
         const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
         if (colorField) {
+            if(!this.initialColorSet) {
+                window.setCollectionColorState(this.collection, fieldName)
+            }
+            this.initialColorSet = false;
             //console.log({fieldName})
             this.colorField = { name: temporalAccumulator ? `${fieldName}${temporalId}${temporalAccumulator}` : fieldName, label: colorField.label };
             if (colorField?.type === "slider") {

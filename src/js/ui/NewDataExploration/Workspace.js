@@ -86,7 +86,10 @@ export default React.memo(function Workspace() {
     const [layerTitles, setLayerTitles] = useState([]);
     const [graphableLayers, setGraphableLayers] = useState([]);
     const [workspaceOnLoad, setWorkspaceOnLoad] = useState(null)
+    const [colorState, setColorState] = useState({}); //literally just for color state
     const workspaceIsLoaded = useRef(false)
+
+    console.log({colorState})
 
     useEffect(() => {
         window.setIntersect(intersect)
@@ -118,7 +121,8 @@ export default React.memo(function Workspace() {
         })
         const fullWorkspace = {
             layers: relevantLayers,
-            intersect
+            intersect,
+            colorState
         }
         const serialized = JSON.stringify(fullWorkspace);
         const compressedSerialized = LZString.compressToEncodedURIComponent(serialized);
@@ -140,6 +144,12 @@ export default React.memo(function Workspace() {
         if(deSerializedWorkspace.intersect != null) {
             setIntersect(deSerializedWorkspace.intersect)
         }
+
+        if(deSerializedWorkspace.colorState != null) {
+            console.log({newColorState: deSerializedWorkspace.colorState})
+            setColorState(deSerializedWorkspace.colorState);
+        }
+
         const collections = new Set(deSerializedWorkspace.layers.map(e => e.collection))
         setWorkspace(layers.map(layer => {
             const isIn = collections.has(layer.collection);
@@ -200,6 +210,13 @@ export default React.memo(function Workspace() {
             const graphableLayers = await AutoMenu.build(mdata, () => {});
             extractGraphableLayers(graphableLayers);
         });
+
+        window.setCollectionColorState = (collectionName, colorField) => {
+            setColorState({ 
+                ...colorState,
+                [collectionName]: colorField 
+            })
+        }
     }, []);
 
     if(componentIsRendering) {console.log("|Workspace Rerending|")}
