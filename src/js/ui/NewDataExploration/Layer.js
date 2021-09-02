@@ -103,7 +103,7 @@ function createConstraints(activeLayerConstraints, allLayerConstraints, classes,
     return constraints;
 }
 
-export default function Layer(props) {
+export default React.memo(function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState(false);
     const [layerExpanded, setLayerExpanded] = useState(false);
@@ -196,4 +196,4 @@ export default function Layer(props) {
             </Paper>
         </div>
     );
-}
+});

@@ -81,7 +81,7 @@ function createWorkspace(workspace, layers, graphableLayers, layerTitles) {
     return workspaceLayers;
 }
 
-export default function WorkspaceLayers(props) {
+export default React.memo(function WorkspaceLayers(props) {
     const classes = useStyles();
     const workspaceLayers = createWorkspace(props.workspace, props.layers, props.graphableLayers, props.layerTitles);
 
@@ -91,4 +91,4 @@ export default function WorkspaceLayers(props) {
             {workspaceLayers}
         </div>
     );
-}
+});

@@ -102,7 +102,7 @@ function sourceIcon(layerInfo) {
     }
 }
 
-export default function LayerControls(props) {
+export default React.memo(function LayerControls(props) {
     const classes = useStyles();
     if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (
@@ -133,4 +133,4 @@ export default function LayerControls(props) {
             </Grid>
         </Paper>
     )
-}
+});
