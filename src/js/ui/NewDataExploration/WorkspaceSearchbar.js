@@ -115,7 +115,7 @@ function clearWorkspace(length) {
     return new Array(length).fill(false);
 }
 
-export default function WorkspaceSearchbar(props) {
+export default React.memo(function WorkspaceSearchbar(props) {
     const classes = useStyles();
 
     if(componentIsRendering) {console.log("|WorkspaceSearchbar Rerending|")}
@@ -159,4 +159,4 @@ export default function WorkspaceSearchbar(props) {
             />
         </div>
     );
-}
+});

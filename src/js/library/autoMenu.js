@@ -80,7 +80,14 @@ export default {
       */
     build: async function (menuMetaData, overwrite) {
         const { data } = await Query.makeQuery({
-            collection: "Metadata"
+            collection: "Metadata",
+            pipeline: [
+                { 
+                    $match: {
+                        collection: { $in: menuMetaData.map(e => e.collection) }
+                    } 
+                }
+            ]   
         });
         const catalog = data.reduce((acc,feature) => {
             acc[feature.collection] = feature;

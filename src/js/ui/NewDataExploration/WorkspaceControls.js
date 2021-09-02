@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function WorkspaceControls(props) {
+export default React.memo(function WorkspaceControls(props) {
     const classes = useStyles();
     const venIcon = <Icon>
         <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
@@ -108,4 +108,4 @@ export default function WorkspaceControls(props) {
                 workspace={props.workspace} setWorkspace={props.setWorkspace} />
         </Paper>
     )
-}
+});
