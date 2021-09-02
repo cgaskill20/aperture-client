@@ -56,7 +56,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import WorkspaceControls from "./WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
@@ -84,10 +84,22 @@ export default React.memo(function Workspace() {
     const [intersect, setIntersect] = useState(false);
     const [workspace, setWorkspace] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
+    const [graphableLayers, setGraphableLayers] = useState([]);
+    const [workspaceOnLoad, setWorkspaceOnLoad] = useState(null)
+    const workspaceIsLoaded = useRef(false)
 
     useEffect(() => {
         window.setIntersect(intersect)
     }, [intersect]);
+
+    useEffect(() => {
+        if(!workspaceIsLoaded.current && workspace.length && layers.length) {
+            workspaceIsLoaded.current = true;
+            if(workspaceOnLoad) {
+                deSerializeWorkspace(workspaceOnLoad)
+            }
+        }
+    }, [workspace, layers])
     
     function serializeWorkspace() {
         const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
@@ -109,12 +121,17 @@ export default React.memo(function Workspace() {
             intersect
         }
         const serialized = JSON.stringify(fullWorkspace);
-        const compressedSerialized = LZString.compressToBase64(serialized);
+        const compressedSerialized = LZString.compressToEncodedURIComponent(serialized);
         return compressedSerialized;
     }
 
-    function deSerializeWorkspace(compressedSerializedWorkspace) {
-        const serializedWorkspace = LZString.decompressFromBase64(compressedSerializedWorkspace)
+    async function deSerializeWorkspace(compressedSerializedWorkspace) {
+        //if the menu isnt loaded yet, wait for it to be loaded
+        if(!workspaceIsLoaded.current) {
+            setWorkspaceOnLoad(compressedSerializedWorkspace)
+            return;
+        }
+        const serializedWorkspace = LZString.decompressFromEncodedURIComponent(compressedSerializedWorkspace)
         if(!serializedWorkspace) {
             return;
         }
@@ -127,7 +144,8 @@ export default React.memo(function Workspace() {
         setWorkspace(layers.map(layer => {
             const isIn = collections.has(layer.collection);
             if(isIn) {
-                const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);                layer.on = deSerializedLayer.on;
+                const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);                
+                layer.on = deSerializedLayer.on;
                 layer.expandedState = deSerializedLayer.expandedState;
                 layer.constraintState = deSerializedLayer.constraintState;
                 layer.forceUpdateFlag = true;
@@ -157,7 +175,6 @@ export default React.memo(function Workspace() {
         setLayerTitles(tempLayerTitles);
     }
 
-    const [graphableLayers, setGraphableLayers] = useState([]);
     function extractGraphableLayers(data) {
         let tempGraphableLayers = [];
         for (const layer in data) {
@@ -169,6 +186,10 @@ export default React.memo(function Workspace() {
     }
 
     useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const workspaceFromURL = urlParams.get('workspace');
+        workspaceFromURL && setWorkspaceOnLoad(workspaceFromURL)
+
         $.getJSON("src/json/menumetadata.json", async function (mdata) {
             const finalData = await AutoMenu.build(mdata, () => {});
             Query.init(finalData);
