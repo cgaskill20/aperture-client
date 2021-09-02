@@ -127,7 +127,13 @@ export default React.memo(function Layer(props) {
     const [ querier ] = useState(new AutoQuery(props.layer));
 
     useEffect(() => {
+        const onColorFieldChange = () => {
+            props.layer.colorField = querier.colorField.name;
+            console.log(props.layer.colorField)
+        }
+        querier.subscribeToColorFieldChange(onColorFieldChange)
         return () => {
+            querier.subscribeToColorFieldChange(onColorFieldChange, true)
             querier.onRemove();
         }
     }, [querier]);
@@ -142,6 +148,7 @@ export default React.memo(function Layer(props) {
                 setCheck(props.layer.on)
                 updateQuerierOnCheckChange(props.layer.on)
             }
+            querier.changeColorCodeField(props.layer.colorField);
         }
     })
 
