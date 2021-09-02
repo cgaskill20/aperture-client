@@ -56,7 +56,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import WorkspaceControls from "./WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
@@ -77,7 +77,6 @@ export function prettifyJSON(name) {
     return Util.capitalizeString(Util.underScoreToSpace(name));
 }
 
-let workspaceIsLoaded = false;
 export default React.memo(function Workspace() {
     const classes = useStyles();
 
@@ -87,14 +86,15 @@ export default React.memo(function Workspace() {
     const [layerTitles, setLayerTitles] = useState([]);
     const [graphableLayers, setGraphableLayers] = useState([]);
     const [workspaceOnLoad, setWorkspaceOnLoad] = useState(null)
+    const workspaceIsLoaded = useRef(false)
 
     useEffect(() => {
         window.setIntersect(intersect)
     }, [intersect]);
 
     useEffect(() => {
-        if(!workspaceIsLoaded && workspace.length && layers.length) {
-            workspaceIsLoaded = true;
+        if(!workspaceIsLoaded.current && workspace.length && layers.length) {
+            workspaceIsLoaded.current = true;
             if(workspaceOnLoad) {
                 deSerializeWorkspace(workspaceOnLoad)
             }
@@ -127,7 +127,7 @@ export default React.memo(function Workspace() {
 
     async function deSerializeWorkspace(compressedSerializedWorkspace) {
         //if the menu isnt loaded yet, wait for it to be loaded
-        if(!workspaceIsLoaded) {
+        if(!workspaceIsLoaded.current) {
             setWorkspaceOnLoad(compressedSerializedWorkspace)
             return;
         }
