@@ -264,6 +264,7 @@ export default class AutoQuery {
             this.initialColorSet = false;
             //console.log({fieldName})
             this.colorField = { name: temporalAccumulator ? `${fieldName}${temporalId}${temporalAccumulator}` : fieldName, label: colorField.label };
+            console.log(this.colorField)
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);
             }

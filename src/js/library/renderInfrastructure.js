@@ -347,9 +347,9 @@ export default class RenderInfrastructure {
                         curr.properties.colorInfo.subscribeToColorFieldChange(func, unsubscribe);
                         acc.colorInfo.subscribeToColorFieldChange(func, unsubscribe)
                     },
-                    updateColorFieldName: (name, predefinedColor, dontRerender) => {
-                        curr.properties.colorInfo.updateColorFieldName(name, predefinedColor, dontRerender);
-                        acc.colorInfo.updateColorFieldName(name, predefinedColor, dontRerender)
+                    updateColorFieldName: (name, predefinedColor, dontRerender, temporal) => {
+                        curr.properties.colorInfo.updateColorFieldName(name, predefinedColor, dontRerender, temporal);
+                        acc.colorInfo.updateColorFieldName(name, predefinedColor, dontRerender, temporal)
                     },
                     colorSummary: (currentColorFieldName) => {
                         if (curr.properties.colorInfo.validColorFieldNames.includes(currentColorFieldName)) {
@@ -420,7 +420,7 @@ export default class RenderInfrastructure {
                 delete layerToUpdate.feature.properties[key]
             }
         }
-        const shouldUpdateColor = layerToUpdate?.feature?.properties?.colorInfo?.currentColorField?.name !== properties.colorInfo.currentColorField.name;
+        const shouldUpdateColor = layerToUpdate?.feature?.properties?.colorInfo?.currentColorField?.name !== properties.colorInfo?.currentColorField?.name;
         Object.assign(layerToUpdate.feature.properties, properties)
         if (shouldUpdateColor) {
             const { colorInfo } = layerToUpdate.feature.properties;
