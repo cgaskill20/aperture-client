@@ -57,7 +57,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {keyToDisplay, valueToDisplay} from "./PopupUtils";
 import {TableCell, TableRow, makeStyles, Collapse, Select, InputLabel} from "@material-ui/core";
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -94,11 +94,22 @@ const useStyles = makeStyles({
     },
 });
 
-export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties }) {
+export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties, colorFieldName }) {
     const classes = useStyles()
     const [open, setOpen] = useState(false);
     const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
     const [temporalAccumulator, setTemporalAccumulator] = useState(Object.keys(mongoGroupAccumulators)[0]);
+
+    useEffect(() => {
+        console.log({colorFieldName})
+        if(colorFieldName && colorFieldName.includes(temporalId)) {
+            const temporalAccumulatorDerivedFromColorFieldName = colorFieldName.substring(colorFieldName.indexOf(temporalId) + temporalId.length, colorFieldName.length);
+            if(temporalAccumulatorDerivedFromColorFieldName !==  temporalAccumulator) {
+                console.log("SETTING IT TO " + temporalAccumulatorDerivedFromColorFieldName)
+                setTemporalAccumulator(temporalAccumulatorDerivedFromColorFieldName)
+            }
+        }
+    }, [entryProperties.isCurrentColorField]) 
 
     const objectHasTrueValue = (obj) => {
             if(obj.isTemporal || obj.canBeColorField) {
@@ -140,10 +151,11 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
         if(entryProperties.isTemporal) {
             return <div className={classes.dropdown}>
                 <FormControl variant="outlined" className={classes.totalWidth}>
-                    <InputLabel>Temporal Range</InputLabel>
+                    <InputLabel>Temporal Accumulator</InputLabel>
                         <Select
                             native
-                            label="Temporal Range"
+                            label="Temporal Accumulator"
+                            value={temporalAccumulator}
                             onChange={(event) => switchTemporalAccumulator(event.target.value)}
                         >
                             {Object.entries(mongoGroupAccumulators).map(([accumulator, label], index) => {

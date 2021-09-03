@@ -259,12 +259,12 @@ export default class AutoQuery {
         if (fieldName === this.color.variable) {
             predefinedColor = this.color;
         }
-        const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`]
+        const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`] ?? this.data.constraints[fieldName.substring(0,fieldName.indexOf(temporalId))];
+        console.log(colorField)
         if (colorField) {
             this.initialColorSet = false;
             //console.log({fieldName})
             this.colorField = { name: temporalAccumulator ? `${fieldName}${temporalId}${temporalAccumulator}` : fieldName, label: colorField.label };
-            console.log(this.colorField)
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);
             }
