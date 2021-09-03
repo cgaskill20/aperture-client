@@ -64,6 +64,7 @@ import PreloadingMenu from "./widgets/PreloadingMenu"
 import ChartingResizable from "./NewCharting/ChartingResizable"
 import {makeStyles} from "@material-ui/core/styles";
 import {CustomTooltip} from "./UtilityComponents";
+import nsfLogo from "../../../images/nsfLogo.png";
 
 const widgetEnum = {
     defensiveOptimization: 0,
@@ -92,12 +93,11 @@ const ConditionalWidgetRendering = () => {
         "through awards 1931363, 1931324, 1931335, and 1931283. The project is a joint effort involving Colorado State " +
         "University, Arizona State University, the University of California-Irvine, and the University of Maryland – " +
         "Baltimore County.";
-    const nsfPicPath = "../../../images/NSF-logo-only.png";
 
     toRender.push(
         <div key="nsfLogoAndBlurb" className={classes.nsfDiv}>
             <CustomTooltip className={classes.tooltip} placement="top-start" title={nsfText}>
-                <img src={nsfPicPath} className={classes.nsfPic} />
+                <img src={nsfLogo} className={classes.nsfPic} />
             </CustomTooltip>
         </div>
     );
