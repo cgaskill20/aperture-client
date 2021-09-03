@@ -274,6 +274,7 @@ export default class AutoQuery {
             if (dontRerender) {
                 return;
             } 
+            console.log(`Setting color on ${fieldName}`)
             const layers = window.renderInfrastructure.getLayersForSpecifiedIds(new Set(this.mapLayers));
             for (const layer of layers) {
                 const { feature, options } = layer;
