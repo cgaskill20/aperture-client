@@ -205,4 +205,14 @@ export default React.memo(function Layer(props) {
             </Paper>
         </div>
     );
+}, (prevProps, nextProps) => {
+    if(nextProps.layer.forceUpdateFlag) {
+        return false;
+    }
+    for(const key of Object.keys(prevProps)) {
+        if(prevProps[key] !== nextProps[key]) {
+            return false;
+        }
+    }
+    return true;
 });
