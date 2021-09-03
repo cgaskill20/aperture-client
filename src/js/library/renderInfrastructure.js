@@ -63,6 +63,7 @@ END OF TERMS AND CONDITIONS
 //legacy code, this giant library is being split up into smaller, more modular libraries like autoQuery.js and geometryLoader.js.
 //many functions are still useful though, and are used througout the project.
 import Util from "./apertureUtil"
+import { temporalId } from "./Constants";
 
 let intersect = false;
 window.setIntersect = (i) => {
@@ -352,6 +353,9 @@ export default class RenderInfrastructure {
                         acc.colorInfo.updateColorFieldName(name, predefinedColor, dontRerender, temporal)
                     },
                     colorSummary: (currentColorFieldName) => {
+                        if(currentColorFieldName && currentColorFieldName.includes(temporalId)){
+                            currentColorFieldName = currentColorFieldName.substring(0,currentColorFieldName.indexOf(temporalId));
+                        }
                         if (curr.properties.colorInfo.validColorFieldNames.includes(currentColorFieldName)) {
                             //console.log(currentColorFieldName)
                             return curr.properties.colorInfo.colorSummary();
