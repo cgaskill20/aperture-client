@@ -260,7 +260,6 @@ export default class AutoQuery {
             predefinedColor = this.color;
         }
         const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`] ?? this.data.constraints[fieldName.substring(0,fieldName.indexOf(temporalId))];
-        console.log(colorField)
         if (colorField) {
             this.initialColorSet = false;
             //console.log({fieldName})

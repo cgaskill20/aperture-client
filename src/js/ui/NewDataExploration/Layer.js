@@ -129,7 +129,6 @@ export default React.memo(function Layer(props) {
     useEffect(() => {
         const onColorFieldChange = () => {
             props.layer.colorField = querier.colorField.name;
-            console.log(props.layer.colorField)
         }
         querier.subscribeToColorFieldChange(onColorFieldChange)
         return () => {
@@ -148,7 +147,10 @@ export default React.memo(function Layer(props) {
                 setCheck(props.layer.on)
                 updateQuerierOnCheckChange(props.layer.on)
             }
-            querier.changeColorCodeField(props.layer.colorField);
+
+            if(props.layer.colorField){
+                querier.changeColorCodeField(props.layer.colorField);
+            }
         }
     })
 

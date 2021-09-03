@@ -101,11 +101,9 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
     const [temporalAccumulator, setTemporalAccumulator] = useState(Object.keys(mongoGroupAccumulators)[0]);
 
     useEffect(() => {
-        console.log({colorFieldName})
         if(colorFieldName && colorFieldName.includes(temporalId)) {
             const temporalAccumulatorDerivedFromColorFieldName = colorFieldName.substring(colorFieldName.indexOf(temporalId) + temporalId.length, colorFieldName.length);
             if(temporalAccumulatorDerivedFromColorFieldName !==  temporalAccumulator) {
-                console.log("SETTING IT TO " + temporalAccumulatorDerivedFromColorFieldName)
                 setTemporalAccumulator(temporalAccumulatorDerivedFromColorFieldName)
             }
         }
