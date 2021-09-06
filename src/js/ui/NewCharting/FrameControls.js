@@ -56,11 +56,15 @@ export default function FrameControls(props) {
     }
 
     function renderCloseButton() {
-        return  <Grid item>
-            <IconButton onClick={() => { props.remove(props.index) }}>
-                <CloseIcon/>
-            </IconButton>
-        </Grid>
+        if(!props.noClose) {
+            return <Grid item>
+                <IconButton onClick={() => {
+                    props.remove(props.index)
+                }}>
+                    <CloseIcon/>
+                </IconButton>
+            </Grid>
+        }
     }
 
     return(

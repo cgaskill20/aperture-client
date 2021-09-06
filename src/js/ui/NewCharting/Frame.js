@@ -97,27 +97,27 @@ export default function Frame(props) {
         case "histogram":
             frame =
                 <div>
-                    <FrameControls type={props.type.name} index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
+                    <FrameControls type={props.type.name} index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1} />
                     <KDEWrapper>
-                        <HistogramGraph key={id} size={props.size} data={props.data} selected={constraint}></HistogramGraph>
+                        <HistogramGraph key={id} size={props.size} data={props.data} selected={constraint} />
                     </KDEWrapper>
                 </div>;
                 break;
         case "line":
-            frame = <div><FrameControls type={props.type.name} key={id} index={props.index} remove={props.remove} numDropDowns={0}></FrameControls>
-                <LineGraph pos={props.pos} size={props.size} data={props.data} selected={constraint}></LineGraph></div>; break;
+            frame = <div><FrameControls type={props.type.name} key={id} index={props.index} remove={props.remove} numDropDowns={0} />
+                <LineGraph pos={props.pos} size={props.size} data={props.data} selected={constraint} /></div>; break;
         case "scatterplot":
             frame =
                 <div>
-                    <FrameControls type={props.type.name} index={props.index} remove={props.remove} options={[countyFilters, trackFilters]} setConstraint={setConstraint} setConstraint2={setConstraint2} numDropDowns={2} selector={true}></FrameControls>
-                    <ScatterPlot size={props.size} data={props.data} selected={[constraint, constraint2]}></ScatterPlot>
+                    <FrameControls type={props.type.name} index={props.index} remove={props.remove} options={[countyFilters, trackFilters]} setConstraint={setConstraint} setConstraint2={setConstraint2} numDropDowns={2} selector={true} />
+                    <ScatterPlot size={props.size} data={props.data} selected={[constraint, constraint2]} />
                 </div>; break;
         case "boxplot":
-            frame = <div><FrameControls type={props.type.name} index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1}></FrameControls>
-                <BoxPlot size={props.size} data={props.data} selected={constraint}></BoxPlot></div>; break;
+            frame = <div><FrameControls type={props.type.name} index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1} />
+                <BoxPlot size={props.size} data={props.data} selected={constraint} /></div>; break;
         case "correlogram":
-            frame =<div><FrameControls type={props.type.name} index={props.index} remove={props.remove} numDropDowns={0}></FrameControls>
-                <CorrelogramGraph size={props.size} data={props.data} selected={constraint} options={[countyFilters, trackFilters]}></CorrelogramGraph></div>; break;
+            frame =<div><FrameControls type={props.type.name} numDropDowns={0} noClose={true} />
+                <CorrelogramGraph index={props.index} remove={props.remove} size={props.size} data={props.data} selected={constraint} options={[countyFilters, trackFilters]} /></div>; break;
 
 
         default: break;
