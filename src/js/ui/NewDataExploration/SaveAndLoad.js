@@ -56,61 +56,41 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, ButtonGroup, Grid, Paper, Switch, Icon } from "@material-ui/core";
-import SaveIcon from '@material-ui/icons/Save';
-import FolderOpenIcon from '@material-ui/icons/FolderOpen';
-import WorkspaceSearchbar from "./WorkspaceSearchbar";
+import WorkspaceControls from "./WorkspaceControls";
+import WorkspaceLayers from "./WorkspaceLayers";
+import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
-import Ven from "../../../../images/ven.svg"
-import VenFilled from "../../../../images/venFilled.svg"
-import SaveAndLoad from './SaveAndLoad';
+import { Modal } from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        padding: theme.spacing(2),
-        margin: theme.spacing(1),
-    },
-    buttons: {
-        marginBottom: theme.spacing(2),
-    },
-    customIcon: {
-        width: "18px",
-        height: "18px",
-        transform: "translate(0, -10px)"
+    paper: {
+        position: 'absolute',
+        width: 400,
+        left: "30vw",
+        top: "30vh",
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
     }
 }));
 
-export default React.memo(function WorkspaceControls(props) {
+
+export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen }) {
     const classes = useStyles();
-    const venIcon = <Icon>
-        <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
-    </Icon>
-    const [modalOpen, setModalOpen] = useState(true)
 
-
-    if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
+    if (componentIsRendering) { console.log("|SaveAndLoad Rerending|") }
     return (
-        <>
-        <Paper className={classes.root} elevation={3}>
-            <Grid container direction="row" justifyContent="center" alignItems="center">
-                <ButtonGroup className={classes.buttons}>
-                    <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => { localStorage.setItem("workspace", props.serializeWorkspace()) }}>Save Workspace</Button>
-                    <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { props.deSerializeWorkspace(localStorage.getItem("workspace")) }}>Load Workspace</Button>
-                    <Button variant="outlined" startIcon={venIcon} onClick={() => {
-                        props.setIntersect(!props.intersect)
-                    }}>
-                        {props.intersect ? "Intersections: on" : "Intersections: off"}
-                    </Button>
-                </ButtonGroup>
-            </Grid>
-            <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
-                workspace={props.workspace} setWorkspace={props.setWorkspace} />
-        </Paper>
-        <SaveAndLoad modalOpen={modalOpen} setModalOpen={setModalOpen}/>
-        </>
-    )
-});
+        <Modal
+            open={modalOpen}
+            onClose={() => {setModalOpen(false)}}
+        >
+            <div className={classes.paper}>
+                
+            </div>
+        </Modal>
+    );
+})
