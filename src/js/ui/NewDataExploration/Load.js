@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
 export default React.memo(function Save() {
     const classes = useStyles();
 
-    if (componentIsRendering) { console.log("|Save Rerending|") }
+    if (componentIsRendering) { console.log("|Load Rerending|") }
     return (
         <div></div>
     );

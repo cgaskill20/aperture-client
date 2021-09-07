@@ -95,7 +95,7 @@ export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen }
                 {
                     (() => {
                         if (mode === "save") {
-
+                            return <Save />
                         }
                         else if (mode === "load") {
 

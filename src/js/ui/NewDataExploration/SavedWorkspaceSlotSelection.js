@@ -62,8 +62,8 @@ import WorkspaceControls from "./WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
 import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
-import { Switch, FormGroup, FormControlLabel, Typography } from "@material-ui/core";
-import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
+import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio } from "@material-ui/core";
+import { Folder, FolderOpen } from '@material-ui/icons';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -73,29 +73,41 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default React.memo(function Save() {
+export default React.memo(function SavedWorkspaceSlotSelection() {
     const classes = useStyles();
 
-    const [saveColor, setSaveColor] = useState(true)
-    const [saveViewport, setSaveViewport] = useState(false)
+    const [currentlySelected, setCurrentlySelected] = useState(1)
 
-    if (componentIsRendering) { console.log("|Save Rerending|") }
+    const getWorkspace = (index) => {
+        return localStorage.getItem(`workspace${index}`)
+    }
+
+    if (componentIsRendering) { console.log("|Load Rerending|") }
     return (
-        <div>
-            <Typography variant="h5">Save Workspace</Typography>
-            <FormGroup row>
-                <FormControlLabel
-                    control={<Switch checked={saveColor} onChange={(e) => { setSaveColor(e.target.checked) }} />}
-                    label="Save Color Selections"
-                />
-            </FormGroup>
-            <FormGroup row>
-                <FormControlLabel
-                    control={<Switch checked={saveViewport} onChange={(e) => { setSaveViewport(e.target.checked) }}/>}
-                    label="Save Current Viewport"
-                />
-            </FormGroup>
-            <SavedWorkspaceSlotSelection/>
-        </div>
+        <List dense>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => {
+                const workspace = getWorkspace(i);
+                return (
+                    <ListItem key={i}>
+                        <ListItemIcon>
+                            {workspace ? <Folder /> : <FolderOpen />}
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={workspace ?? "Empty Slot"}
+                        />
+                        <ListItemSecondaryAction>
+                            <Radio
+                                name="workspaceSelectionRadio"
+                                checked={currentlySelected === i}
+                                onChange={(e) => {
+                                    if (e.target.checked) {
+                                        setCurrentlySelected(i)
+                                    }
+                                }} />
+                        </ListItemSecondaryAction>
+                    </ListItem>
+                )
+            })}
+        </List >
     );
 })
