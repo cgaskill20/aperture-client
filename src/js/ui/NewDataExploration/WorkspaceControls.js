@@ -65,7 +65,7 @@ import WorkspaceSearchbar from "./WorkspaceSearchbar";
 import { componentIsRendering } from "../TabSystem";
 import Ven from "../../../../images/ven.svg"
 import VenFilled from "../../../../images/venFilled.svg"
-import SaveAndLoad from './SaveAndLoad';
+import SaveAndLoadAndShare from './SaveAndLoadAndShare';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -90,6 +90,7 @@ export default React.memo(function WorkspaceControls(props) {
         <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
     </Icon>
     const [modalOpen, setModalOpen] = useState(true)
+    const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState("save")
 
 
     if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
@@ -110,7 +111,7 @@ export default React.memo(function WorkspaceControls(props) {
             <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
                 workspace={props.workspace} setWorkspace={props.setWorkspace} />
         </Paper>
-        <SaveAndLoad modalOpen={modalOpen} setModalOpen={setModalOpen}/>
+        <SaveAndLoadAndShare modalOpen={modalOpen} setModalOpen={setModalOpen} mode={saveAndLoadAndShareMode}/>
         </>
     )
 });

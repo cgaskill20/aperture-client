@@ -63,6 +63,9 @@ import WorkspaceLayers from "./WorkspaceLayers";
 import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
 import { Modal } from "@material-ui/core";
+import Save from "./Save"
+import Load from "./Load"
+import Share from "./Share"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -86,10 +89,25 @@ export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen }
     return (
         <Modal
             open={modalOpen}
-            onClose={() => {setModalOpen(false)}}
+            onClose={() => { setModalOpen(false) }}
         >
             <div className={classes.paper}>
-                
+                {
+                    (() => {
+                        if (mode === "save") {
+
+                        }
+                        else if (mode === "load") {
+
+                        }
+                        else if (mode === "share") {
+
+                        }
+                        else {
+                            return <div>Error: Invalid mode {mode}</div>
+                        }
+                    })()
+                }
             </div>
         </Modal>
     );
