@@ -43,7 +43,7 @@ export default function FrameControls(props) {
 
     function renderToggle() {
         if(props.selector){
-            return <Grid item><ToggleSwitch tractOrCounty={tractOrCounty} setTractOrCounty={() => handleToggle()}></ToggleSwitch></Grid>
+            return <Grid item><ToggleSwitch tractOrCounty={tractOrCounty} setTractOrCounty={() => handleToggle()} /></Grid>
         }
     }
 
@@ -51,20 +51,24 @@ export default function FrameControls(props) {
         const setConstraint = first ? props.setConstraint : props.setConstraint2;
         const name = first ? dropdownName1 : dropdownName2;
         if(props.numDropDowns > 0 && (first || props.numDropDowns === 2)) {
-            return <Grid item><ChartDropdown dropdownName={name} options={menuOptions} setConstraint={setConstraint}></ChartDropdown></Grid>
+            return <Grid item><ChartDropdown dropdownName={name} options={menuOptions} setConstraint={setConstraint} /></Grid>
         }
     }
 
     function renderCloseButton() {
-        return  <Grid item>
-            <IconButton onClick={() => { props.remove(props.index) }}>
-                <CloseIcon/>
-            </IconButton>
-        </Grid>
+        if(!props.noClose) {
+            return <Grid item>
+                <IconButton onClick={() => {
+                    props.remove(props.index)
+                }}>
+                    <CloseIcon/>
+                </IconButton>
+            </Grid>
+        }
     }
 
     return(
-        <div className={classes.root}>
+        <div className={props.noClose ? {} : classes.root}>
             <Grid
                 container
                 direction="row"

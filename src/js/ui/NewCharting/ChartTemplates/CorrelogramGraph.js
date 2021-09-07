@@ -2,19 +2,25 @@ import React, { useState } from 'react';
 import feature from "../../../library/charting/feature.js"
 import {ResponsiveHeatMap} from "@nivo/heatmap";
 import ToggleSwitch from '../ToggleSwitch';
+import {makeStyles} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 const calculateCorrelation = require("calculate-correlation");
 
+const useStyles = makeStyles((theme) => ({
+    controls: {
+        borderBottom: '1px solid #adadad',
+    },
+}));
 
 export default function CorrelogramGraph(props) {
-
+    const classes = useStyles();
     const [tractOrCounty, setTractOrCounty] = useState( true);
 
     let retData = {};
     let keys = [];
     let data = []
-
-
-    let selector = <ToggleSwitch tractOrCounty={tractOrCounty} setTractOrCounty={() => setTractOrCounty(!tractOrCounty)}></ToggleSwitch>
 
     let findMatchingPoints = (object,) => {
         const keyTable = {}
@@ -123,11 +129,34 @@ export default function CorrelogramGraph(props) {
 
     }
 
+    function renderCloseButton() {
+        if(!props.noClose) {
+            return <Grid item>
+                <IconButton onClick={() => {
+                    props.remove(props.index)
+                }}>
+                    <CloseIcon/>
+                </IconButton>
+            </Grid>
+        }
+    }
 
+    function renderToggle() {
+        return <Grid item><ToggleSwitch tractOrCounty={tractOrCounty} setTractOrCounty={() => setTractOrCounty(!tractOrCounty)} /></Grid>;
+    }
 
     return (
         <div style={{width: "100%", height: props.size.height - 80,}}>
-            {selector}
+            <Grid
+                className={classes.controls}
+                container
+                direction="row"
+                justifyContent="space-evenly"
+                alignItems="center"
+            >
+                {renderToggle()}
+                {renderCloseButton()}
+            </Grid>
             {heatmap}
             </div>
     );
