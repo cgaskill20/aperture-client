@@ -62,8 +62,9 @@ import WorkspaceControls from "./WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
 import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
-import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio } from "@material-ui/core";
+import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography } from "@material-ui/core";
 import { Folder, FolderOpen } from '@material-ui/icons';
+import LZString from 'lz-string';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -73,10 +74,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default React.memo(function SavedWorkspaceSlotSelection() {
+export default React.memo(function SavedWorkspaceSlotSelection({slotCurrentlySelected, setSlotCurrentlySelected}) {
     const classes = useStyles();
-
-    const [currentlySelected, setCurrentlySelected] = useState(1)
 
     const getWorkspace = (index) => {
         return localStorage.getItem(`workspace${index}`)
@@ -84,24 +83,28 @@ export default React.memo(function SavedWorkspaceSlotSelection() {
 
     if (componentIsRendering) { console.log("|Load Rerending|") }
     return (
+        <>
+        <Typography>Select a save slot</Typography>
         <List dense>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => {
                 const workspace = getWorkspace(i);
+                const workspaceName = workspace ? JSON.parse(LZString.decompressFromEncodedURIComponent(workspace))?.name : null;
+                const checked = slotCurrentlySelected === i
                 return (
-                    <ListItem key={i}>
+                    <ListItem key={i} style={{backgroundColor: checked ? "#ADADAD" : "#FFFFFF"}}>
                         <ListItemIcon>
                             {workspace ? <Folder /> : <FolderOpen />}
                         </ListItemIcon>
                         <ListItemText
-                            primary={workspace ?? "Empty Slot"}
+                            primary={workspaceName ?? "Empty Slot"}
                         />
                         <ListItemSecondaryAction>
                             <Radio
                                 name="workspaceSelectionRadio"
-                                checked={currentlySelected === i}
+                                checked={checked}
                                 onChange={(e) => {
                                     if (e.target.checked) {
-                                        setCurrentlySelected(i)
+                                        setSlotCurrentlySelected(i)
                                     }
                                 }} />
                         </ListItemSecondaryAction>
@@ -109,5 +112,6 @@ export default React.memo(function SavedWorkspaceSlotSelection() {
                 )
             })}
         </List >
+        </>
     );
 })

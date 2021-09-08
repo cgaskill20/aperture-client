@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen }) {
+export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen, serializeWorkspace }) {
     const classes = useStyles();
 
     if (componentIsRendering) { console.log("|SaveAndLoad Rerending|") }
@@ -95,7 +95,7 @@ export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen }
                 {
                     (() => {
                         if (mode === "save") {
-                            return <Save />
+                            return <Save serializeWorkspace={serializeWorkspace} setModalOpen={setModalOpen}/>
                         }
                         else if (mode === "load") {
 

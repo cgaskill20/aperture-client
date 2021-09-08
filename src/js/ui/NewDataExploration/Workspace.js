@@ -66,6 +66,7 @@ import Query from "../../library/Query";
 import Util from "../../library/apertureUtil";
 import Grid from "@material-ui/core/Grid";
 import LZString from 'lz-string';
+import L from 'leaflet';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -101,13 +102,13 @@ export default React.memo(function Workspace() {
         }
     }, [workspace, layers])
     
-    function serializeWorkspace() {
+    function serializeWorkspace(workspaceName="workspace", saveColorState=true, saveMapViewport=false) {
         const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
             return {
                 collection: layer.collection,
                 on: layer.state ?? false,
                 expandedState: layer.expandedState ?? false,
-                colorField: layer.colorField,
+                colorField: saveColorState ? layer.colorField : undefined,
                 constraintState: layer.constraintState,
                 constraints: Object.values(layer.constraints).filter(e => e.state).map((constraint) => {
                     return {
@@ -120,7 +121,9 @@ export default React.memo(function Workspace() {
 
         const fullWorkspace = {
             layers: relevantLayers,
-            intersect
+            intersect,
+            name: workspaceName,
+            bounds: saveMapViewport ? window.map.getBounds().toBBoxString() : undefined
         }
         const serialized = JSON.stringify(fullWorkspace);
         const compressedSerialized = LZString.compressToEncodedURIComponent(serialized);
@@ -141,6 +144,12 @@ export default React.memo(function Workspace() {
 
         if(deSerializedWorkspace.intersect != null) {
             setIntersect(deSerializedWorkspace.intersect)
+        }
+
+        if(deSerializedWorkspace.bounds != null) {
+            //setIntersect(deSerializedWorkspace.intersect)
+            const bboxArray = deSerializeWorkspace.bounds.split(',')
+            window.map.fitBounds(L.latLngBounds(L.latLng(bboxArray[1] ,bboxArray[0]), L.latLng(bboxArray[4], bboxArray[3])))
         }
 
         const collections = new Set(deSerializedWorkspace.layers.map(e => e.collection))

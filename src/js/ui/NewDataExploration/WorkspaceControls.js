@@ -89,29 +89,38 @@ export default React.memo(function WorkspaceControls(props) {
     const venIcon = <Icon>
         <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
     </Icon>
-    const [modalOpen, setModalOpen] = useState(true)
+    const [saveAndLoadAndShareModalOpen, setSaveAndLoadAndShareModalOpen] = useState(true)
     const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState("save")
 
 
     if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
     return (
         <>
-        <Paper className={classes.root} elevation={3}>
-            <Grid container direction="row" justifyContent="center" alignItems="center">
-                <ButtonGroup className={classes.buttons}>
-                    <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => { localStorage.setItem("workspace", props.serializeWorkspace()) }}>Save Workspace</Button>
-                    <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { props.deSerializeWorkspace(localStorage.getItem("workspace")) }}>Load Workspace</Button>
-                    <Button variant="outlined" startIcon={venIcon} onClick={() => {
-                        props.setIntersect(!props.intersect)
-                    }}>
-                        {props.intersect ? "Intersections: on" : "Intersections: off"}
-                    </Button>
-                </ButtonGroup>
-            </Grid>
-            <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
-                workspace={props.workspace} setWorkspace={props.setWorkspace} />
-        </Paper>
-        <SaveAndLoadAndShare modalOpen={modalOpen} setModalOpen={setModalOpen} mode={saveAndLoadAndShareMode}/>
+            <Paper className={classes.root} elevation={3}>
+                <Grid container direction="row" justifyContent="center" alignItems="center">
+                    <ButtonGroup className={classes.buttons}>
+                        <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("save");
+                        }}>Save Workspace</Button>
+                        <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { props.deSerializeWorkspace(localStorage.getItem("workspace")) }}>Load Workspace</Button>
+                        <Button variant="outlined" startIcon={venIcon} onClick={() => {
+                            props.setIntersect(!props.intersect)
+                        }}>
+                            {props.intersect ? "Intersections: on" : "Intersections: off"}
+                        </Button>
+                    </ButtonGroup>
+                </Grid>
+                <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
+                    workspace={props.workspace} setWorkspace={props.setWorkspace} />
+            </Paper>
+            <SaveAndLoadAndShare
+                modalOpen={saveAndLoadAndShareModalOpen}
+                setModalOpen={setSaveAndLoadAndShareModalOpen}
+                mode={saveAndLoadAndShareMode}
+                serializeWorkspace={props.serializeWorkspace}
+                deSerializeWorkspace={props.deSerializeWorkspace}
+            />
         </>
     )
 });

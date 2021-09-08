@@ -62,7 +62,7 @@ import WorkspaceControls from "./WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
 import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
-import { Switch, FormGroup, FormControlLabel, Typography } from "@material-ui/core";
+import { Switch, FormGroup, FormControlLabel, Typography, TextField, Button } from "@material-ui/core";
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 
 
@@ -73,11 +73,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default React.memo(function Save() {
+export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const classes = useStyles();
 
     const [saveColor, setSaveColor] = useState(true)
     const [saveViewport, setSaveViewport] = useState(false)
+    const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1)
+    const [name, setName] = useState(`Saved Workspace`)
+    const validName = name.length !== 0;
+
+    const saveWorkspace = () => {
+        const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
+        localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace)
+        setModalOpen(false)
+    }
 
     if (componentIsRendering) { console.log("|Save Rerending|") }
     return (
@@ -91,11 +100,22 @@ export default React.memo(function Save() {
             </FormGroup>
             <FormGroup row>
                 <FormControlLabel
-                    control={<Switch checked={saveViewport} onChange={(e) => { setSaveViewport(e.target.checked) }}/>}
-                    label="Save Current Viewport"
+                    control={<Switch checked={saveViewport} onChange={(e) => { setSaveViewport(e.target.checked) }} />}
+                    label="Save Current Viewport Bounds"
                 />
             </FormGroup>
-            <SavedWorkspaceSlotSelection/>
+            <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
+            <TextField
+                error={!validName}
+                value={name}
+                onChange={(e) => { setName(e.target.value) }}
+                id="outlined-error-helper-text"
+                label="Enter a workspace name"
+                variant="outlined"
+            />
+            <Button variant="contained" color="primary" onClick={saveWorkspace}>
+                Save Workspace
+            </Button>
         </div>
     );
 })
