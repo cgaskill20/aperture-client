@@ -90,7 +90,7 @@ export default React.memo(function WorkspaceControls(props) {
         <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
     </Icon>
     const [saveAndLoadAndShareModalOpen, setSaveAndLoadAndShareModalOpen] = useState(true)
-    const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState("save")
+    const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState("load")
 
 
     if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
@@ -103,7 +103,10 @@ export default React.memo(function WorkspaceControls(props) {
                             setSaveAndLoadAndShareModalOpen(true);
                             setSaveAndLoadAndShareMode("save");
                         }}>Save Workspace</Button>
-                        <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { props.deSerializeWorkspace(localStorage.getItem("workspace")) }}>Load Workspace</Button>
+                        <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { 
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("load");
+                        }}>Load Workspace</Button>
                         <Button variant="outlined" startIcon={venIcon} onClick={() => {
                             props.setIntersect(!props.intersect)
                         }}>

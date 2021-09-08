@@ -141,15 +141,17 @@ export default React.memo(function Workspace() {
             return;
         }
         const deSerializedWorkspace = JSON.parse(serializedWorkspace)
-
+        console.log({deSerializedWorkspace})
         if(deSerializedWorkspace.intersect != null) {
             setIntersect(deSerializedWorkspace.intersect)
         }
 
         if(deSerializedWorkspace.bounds != null) {
             //setIntersect(deSerializedWorkspace.intersect)
-            const bboxArray = deSerializeWorkspace.bounds.split(',')
-            window.map.fitBounds(L.latLngBounds(L.latLng(bboxArray[1] ,bboxArray[0]), L.latLng(bboxArray[4], bboxArray[3])))
+            const bboxArray = deSerializedWorkspace.bounds.split(',')
+            console.log(bboxArray)
+            window.map.fitBounds(L.latLngBounds(L.latLng(Number(bboxArray[1]), Number(bboxArray[0])), 
+                L.latLng(Number(bboxArray[3]), Number(bboxArray[2]))))
         }
 
         const collections = new Set(deSerializedWorkspace.layers.map(e => e.collection))

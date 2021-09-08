@@ -62,21 +62,36 @@ import WorkspaceControls from "./WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
 import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
-import { Modal } from "@material-ui/core";
+import { Switch, FormGroup, FormControlLabel, Typography, TextField, Button } from "@material-ui/core";
+import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        
+
     }
 }));
 
 
-export default React.memo(function Save() {
+export default React.memo(function Load({deSerializeWorkspace, setModalOpen}) {
     const classes = useStyles();
+
+    const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1)
+
+    const loadWorkspace = () => {
+        console.log(`workspace${slotCurrentlySelected}`)
+        deSerializeWorkspace(localStorage.getItem(`workspace${slotCurrentlySelected}`))
+        setModalOpen(false)
+    }
 
     if (componentIsRendering) { console.log("|Load Rerending|") }
     return (
-        <div></div>
+        <div>
+            <Typography variant="h5">Load Workspace</Typography>
+            <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} onlyShowFullSlots/>
+            <Button variant="contained" color="primary" onClick={loadWorkspace}>
+                Load Workspace
+            </Button>
+        </div>
     );
 })

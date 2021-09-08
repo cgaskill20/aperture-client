@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default React.memo(function SavedWorkspaceSlotSelection({slotCurrentlySelected, setSlotCurrentlySelected}) {
+export default React.memo(function SavedWorkspaceSlotSelection({slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots}) {
     const classes = useStyles();
 
     const getWorkspace = (index) => {
@@ -86,7 +86,12 @@ export default React.memo(function SavedWorkspaceSlotSelection({slotCurrentlySel
         <>
         <Typography>Select a save slot</Typography>
         <List dense>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => {
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].filter((i) => { 
+                if(!onlyShowFullSlots) {
+                    return true;
+                }
+                return getWorkspace(i);
+            }).map((i) => {
                 const workspace = getWorkspace(i);
                 const workspaceName = workspace ? JSON.parse(LZString.decompressFromEncodedURIComponent(workspace))?.name : null;
                 const checked = slotCurrentlySelected === i
