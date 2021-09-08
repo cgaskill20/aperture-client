@@ -141,7 +141,6 @@ export default React.memo(function Workspace() {
             return;
         }
         const deSerializedWorkspace = JSON.parse(serializedWorkspace)
-        console.log({deSerializedWorkspace})
         if(deSerializedWorkspace.intersect != null) {
             setIntersect(deSerializedWorkspace.intersect)
         }
@@ -149,7 +148,6 @@ export default React.memo(function Workspace() {
         if(deSerializedWorkspace.bounds != null) {
             //setIntersect(deSerializedWorkspace.intersect)
             const bboxArray = deSerializedWorkspace.bounds.split(',')
-            console.log(bboxArray)
             window.map.fitBounds(L.latLngBounds(L.latLng(Number(bboxArray[1]), Number(bboxArray[0])), 
                 L.latLng(Number(bboxArray[3]), Number(bboxArray[2]))))
         }

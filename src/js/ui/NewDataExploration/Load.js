@@ -79,7 +79,6 @@ export default React.memo(function Load({deSerializeWorkspace, setModalOpen}) {
     const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1)
 
     const loadWorkspace = () => {
-        console.log(`workspace${slotCurrentlySelected}`)
         deSerializeWorkspace(localStorage.getItem(`workspace${slotCurrentlySelected}`))
         setModalOpen(false)
     }
