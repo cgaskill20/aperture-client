@@ -67,8 +67,8 @@ import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
 import {componentIsRendering} from "../TabSystem";
 import {isGraphable} from "./Helpers";
-import {Tooltip, withStyles} from "@material-ui/core";
 import InfoIcon from '@material-ui/icons/Info';
+import {CustomTooltip} from "../UtilityComponents";
 
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
@@ -86,12 +86,6 @@ const useStyles = makeStyles((theme) => ({
         float: 'right',
     },
 }));
-
-const CustomTooltip = withStyles((theme) => ({
-    tooltip: {
-        fontSize: 14,
-    },
-}))(Tooltip);
 
 function graphIcon(layer, graphableLayers) {
     if(isGraphable(layer, graphableLayers)) {
