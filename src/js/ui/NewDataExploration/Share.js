@@ -62,23 +62,59 @@ import WorkspaceControls from "./WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
 import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
-import { Modal } from "@material-ui/core";
+import { Switch, FormGroup, FormControlLabel, Typography, TextField, Button } from "@material-ui/core";
+import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        
+
     }
 }));
 
+const aperturePublicPage = "urban-sustain.org/services/aperture.php"
 
-export default React.memo(function Share() {
+export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
     const classes = useStyles();
+    const [includeColor, setIncludeColor] = useState(true)
+    const [includeViewport, setIncludeViewport] = useState(false)
+    const [linkCopied, setLinkCopied] = useState(false);
+    const link = `${aperturePublicPage}?workspace=${serializeWorkspace("Shared Workspace", includeColor, includeViewport)}`
 
-    if (componentIsRendering) { console.log("|Load Rerending|") }
+    const copyLink = () => {
+        const linkElement = document.getElementById("linkField")
+        linkElement.focus()
+        linkElement.select()
+        document.execCommand('copy')
+        setLinkCopied(true)
+    }
+
+    if (componentIsRendering) { console.log("|Share Rerending|") }
     return (
         <div>
-
+            <Typography variant="h5">Share Workspace</Typography>
+            <FormGroup row>
+                <FormControlLabel
+                    control={<Switch checked={includeColor} onChange={(e) => { setIncludeColor(e.target.checked) }} />}
+                    label="Include Color Selections"
+                />
+            </FormGroup>
+            <FormGroup row>
+                <FormControlLabel
+                    control={<Switch checked={includeViewport} onChange={(e) => { setIncludeViewport(e.target.checked) }} />}
+                    label="Include Current Viewport Bounds"
+                />
+            </FormGroup>
+            <Button variant="contained" color="primary" onClick={copyLink}>
+                Copy Shareable Link
+            </Button>
+            {
+                linkCopied ? <Typography>Link Copied! Share it wherever you'd like.</Typography> : null
+            }
+            <Typography>Or Manually Copy Shareable Link</Typography>
+            <TextField value={link} InputProps={{
+                readOnly: true,
+            }} id="linkField" />
         </div>
     );
 })

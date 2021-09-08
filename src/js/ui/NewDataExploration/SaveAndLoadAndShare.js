@@ -101,7 +101,7 @@ export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen, 
                             return <Load deSerializeWorkspace={deSerializeWorkspace} setModalOpen={setModalOpen}></Load>
                         }
                         else if (mode === "share") {
-
+                            return <Share serializeWorkspace={serializeWorkspace} setModalOpen={setModalOpen} />
                         }
                         else {
                             return <div>Error: Invalid mode {mode}</div>

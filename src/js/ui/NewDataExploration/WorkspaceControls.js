@@ -90,7 +90,7 @@ export default React.memo(function WorkspaceControls(props) {
         <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
     </Icon>
     const [saveAndLoadAndShareModalOpen, setSaveAndLoadAndShareModalOpen] = useState(true)
-    const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState("load")
+    const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState("share")
 
 
     if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
