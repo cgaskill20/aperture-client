@@ -61,6 +61,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, ButtonGroup, Grid, Paper, Switch, Icon } from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
+import ShareIcon from '@material-ui/icons/Share';
 import WorkspaceSearchbar from "./WorkspaceSearchbar";
 import { componentIsRendering } from "../TabSystem";
 import Ven from "../../../../images/ven.svg"
@@ -89,8 +90,8 @@ export default React.memo(function WorkspaceControls(props) {
     const venIcon = <Icon>
         <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
     </Icon>
-    const [saveAndLoadAndShareModalOpen, setSaveAndLoadAndShareModalOpen] = useState(true)
-    const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState("share")
+    const [saveAndLoadAndShareModalOpen, setSaveAndLoadAndShareModalOpen] = useState(false)
+    const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState(null)
 
 
     if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
@@ -107,6 +108,10 @@ export default React.memo(function WorkspaceControls(props) {
                             setSaveAndLoadAndShareModalOpen(true);
                             setSaveAndLoadAndShareMode("load");
                         }}>Load Workspace</Button>
+                        <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => { 
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("share");
+                        }}>Share Workspace</Button>
                         <Button variant="outlined" startIcon={venIcon} onClick={() => {
                             props.setIntersect(!props.intersect)
                         }}>
