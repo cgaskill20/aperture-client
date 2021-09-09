@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(2),
         width: "100%",
     },
-    gridItem: {
+    fullWidth: {
         width: "100%",
     },
 }));
@@ -97,14 +97,14 @@ export default React.memo(function Load({deSerializeWorkspace, setModalOpen}) {
             justifyContent="center"
             alignItems="flex-start"
         >
-            <Grid item className={classes.gridItem}>
+            <Grid item className={classes.fullWidth}>
                 <Typography className={classes.title} align="center" variant="h5">Load Workspace</Typography>
             </Grid>
-            <Grid item className={classes.gridItem}>
+            <Grid item className={classes.fullWidth}>
                 <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} onlyShowFullSlots/>
             </Grid>
-            <Grid item className={classes.gridItem}>
-                <Button variant="outlined" onClick={loadWorkspace}>
+            <Grid item className={classes.fullWidth}>
+                <Button className={classes.fullWidth} variant="outlined" onClick={loadWorkspace}>
                     Load Workspace
                 </Button>
             </Grid>
