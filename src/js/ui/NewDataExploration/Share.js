@@ -95,13 +95,13 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
             <Typography variant="h5">Share Workspace</Typography>
             <FormGroup row>
                 <FormControlLabel
-                    control={<Switch checked={includeColor} onChange={(e) => { setIncludeColor(e.target.checked) }} />}
+                    control={<Switch color="primary" checked={includeColor} onChange={(e) => { setIncludeColor(e.target.checked) }} />}
                     label="Include Color Selections"
                 />
             </FormGroup>
             <FormGroup row>
                 <FormControlLabel
-                    control={<Switch checked={includeViewport} onChange={(e) => { setIncludeViewport(e.target.checked) }} />}
+                    control={<Switch color="primary" checked={includeViewport} onChange={(e) => { setIncludeViewport(e.target.checked) }} />}
                     label="Include Current Viewport Bounds"
                 />
             </FormGroup>

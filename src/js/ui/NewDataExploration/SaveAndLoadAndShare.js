@@ -59,25 +59,22 @@ END OF TERMS AND CONDITIONS
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { componentIsRendering } from "../TabSystem";
-import { Modal } from "@material-ui/core";
-import Save from "./Save"
-import Load from "./Load"
-import Share from "./Share"
-
+import Modal from "@material-ui/core/Modal";
+import Save from "./Save";
+import Load from "./Load";
+import Share from "./Share";
+import {Paper} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
+        top: '20%',
+        left: '50%',
         position: 'absolute',
         width: 400,
-        left: "30vw",
-        top: "30vh",
         backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
+        padding: theme.spacing(2),
     }
 }));
-
 
 export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen, serializeWorkspace, deSerializeWorkspace }) {
     const classes = useStyles();
@@ -88,7 +85,7 @@ export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen, 
             open={modalOpen}
             onClose={() => { setModalOpen(false) }}
         >
-            <div className={classes.paper}>
+            <Paper className={classes.paper}>
                 {
                     (() => {
                         if (mode === "save") {
@@ -105,7 +102,7 @@ export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen, 
                         }
                     })()
                 }
-            </div>
+            </Paper>
         </Modal>
     );
 })

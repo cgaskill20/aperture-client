@@ -56,20 +56,26 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import WorkspaceControls from "./WorkspaceControls";
-import WorkspaceLayers from "./WorkspaceLayers";
-import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
 import { Switch, FormGroup, FormControlLabel, Typography, TextField, Button } from "@material-ui/core";
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
-
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-
-    }
+    spaceOnTheLeft: {
+        marginLeft: theme.spacing(2),
+    },
+    inputName: {
+        marginRight: theme.spacing(3),
+        marginLeft: theme.spacing(1),
+    },
+    title: {
+        borderBottom: '2px solid #adadad',
+        marginBottom: theme.spacing(1),
+        width: "100%",
+    },
 }));
 
 
@@ -93,32 +99,57 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
 
     if (componentIsRendering) { console.log("|Save Rerending|") }
     return (
-        <div>
-            <Typography variant="h5">Save Workspace</Typography>
-            <FormGroup row>
-                <FormControlLabel
-                    control={<Switch checked={saveColor} onChange={(e) => { setSaveColor(e.target.checked) }} />}
-                    label="Save Color Selections"
-                />
-            </FormGroup>
-            <FormGroup row>
-                <FormControlLabel
-                    control={<Switch checked={saveViewport} onChange={(e) => { setSaveViewport(e.target.checked) }} />}
-                    label="Save Current Viewport Bounds"
-                />
-            </FormGroup>
-            <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
-            <TextField
-                error={!validName}
-                value={name}
-                onChange={(e) => { setName(e.target.value) }}
-                id="outlined-error-helper-text"
-                label="Enter a workspace name"
-                variant="outlined"
-            />
-            <Button variant="contained" color="primary" onClick={saveWorkspace}>
-                Save Workspace
-            </Button>
-        </div>
+        <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="flex-start"
+        >
+            <Grid item>
+                <Typography align="center" className={classes.title} variant="h5">Save Workspace</Typography>
+                <Typography>Save Options</Typography>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={saveColor} onChange={(e) => { setSaveColor(e.target.checked) }} />}
+                        label="Save Color Selections"
+                    />
+                </FormGroup>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={saveViewport} onChange={(e) => { setSaveViewport(e.target.checked) }} />}
+                        label="Save Current Viewport Bounds"
+                    />
+                </FormGroup>
+            </Grid>
+            <Grid item>
+                <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
+            </Grid>
+            <Grid item>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="center"
+                >
+                    <Grid item>
+                        <TextField
+                            className={classes.inputName}
+                            error={!validName}
+                            value={name}
+                            onChange={(e) => { setName(e.target.value) }}
+                            id="outlined-error-helper-text"
+                            defaultValue="Enter Name"
+                            // label="Enter a workspace name"
+                            // variant="filled"
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" onClick={saveWorkspace}>
+                            Save Workspace
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
     );
 })
