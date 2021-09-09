@@ -64,6 +64,8 @@ import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+    },
     spaceOnTheLeft: {
         marginLeft: theme.spacing(2),
     },
@@ -74,6 +76,10 @@ const useStyles = makeStyles((theme) => ({
     },
     gridItem: {
         width: "100%",
+        marginBottom: theme.spacing(1),
+    },
+    dashedBorder: {
+        borderBottom: '1px dashed #adadad',
     },
 }));
 
@@ -124,26 +130,20 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                 <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
             </Grid>
             <Grid item className={classes.gridItem}>
-                <Grid
-                    container
-                    direction="row"
-                    justifyContent="space-around"
-                    alignItems="center"
-                >
-                    <Grid item>
-                        <TextField
-                            error={!validName}
-                            placeholder={name}
-                            onChange={(e) => { setName(e.target.value) }}
-                            id="outlined-error-helper-text"
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Button variant="outlined" onClick={saveWorkspace}>
-                            Save Workspace
-                        </Button>
-                    </Grid>
-                </Grid>
+                <TextField
+                    className={classes.gridItem}
+                    error={!validName}
+                    placeholder={name}
+                    onChange={(e) => { setName(e.target.value) }}
+                    id="outlined-error-helper-text"
+                    label="Workspace Name..."
+                />
+
+            </Grid>
+            <Grid item className={classes.gridItem}>
+                <Button className={classes.gridItem} variant="outlined" onClick={saveWorkspace}>
+                    Save Workspace
+                </Button>
             </Grid>
         </Grid>
     );
