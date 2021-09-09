@@ -76,10 +76,9 @@ const useStyles = makeStyles((theme) => ({
     },
     gridItem: {
         width: "100%",
-        marginBottom: theme.spacing(1),
     },
-    dashedBorder: {
-        borderBottom: '1px dashed #adadad',
+    spaceBelow: {
+        marginBottom: theme.spacing(1),
     },
 }));
 
@@ -129,7 +128,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
             <Grid item className={classes.gridItem}>
                 <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
             </Grid>
-            <Grid item className={classes.gridItem}>
+            <Grid item className={`${classes.gridItem} ${classes.spaceBelow}`}>
                 <TextField
                     className={classes.gridItem}
                     error={!validName}
