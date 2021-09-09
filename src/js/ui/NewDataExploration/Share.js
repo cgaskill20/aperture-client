@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(2),
         width: "100%",
     },
-    gridItem: {
+    fullWidth: {
         width: "100%",
     },
     alert: {
@@ -120,7 +120,7 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
             justifyContent="center"
             alignItems="flex-start"
         >
-            <Grid item className={classes.gridItem}>
+            <Grid item className={classes.fullWidth}>
                 <Typography className={classes.title} align="center" variant="h5">Share Workspace</Typography>
                 <Typography>Save Options</Typography>
                 <FormGroup row>
@@ -136,12 +136,12 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
                     />
                 </FormGroup>
             </Grid>
-            <Grid item className={classes.gridItem}>
+            <Grid item className={classes.fullWidth}>
                 <CustomTooltip title="Copy Link to Clipboard">
-                    <Button variant="outlined" startIcon={<AssignmentTurnedInIcon/>} onClick={copyLink}>
+                    <Button className={classes.fullWidth} variant="outlined" startIcon={<AssignmentTurnedInIcon/>} onClick={copyLink}>
                         <Divider orientation="vertical" flexItem />
                         &nbsp;&nbsp;
-                        <TextField value={link} InputProps={{
+                        <TextField className={classes.fullWidth} value={link} InputProps={{
                             readOnly: true,
                         }} id="linkField" />
                     </Button>
