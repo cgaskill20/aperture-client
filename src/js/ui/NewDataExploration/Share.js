@@ -70,7 +70,7 @@ import {
     TextField,
     Button,
     Tooltip,
-    IconButton
+    IconButton, Divider
 } from "@material-ui/core";
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 import {CustomTooltip} from "../UtilityComponents";
@@ -90,6 +90,10 @@ const useStyles = makeStyles((theme) => ({
     },
     gridItem: {
         width: "100%",
+    },
+    alert: {
+        width: "100%",
+        marginTop: theme.spacing(1),
     },
 }));
 
@@ -143,20 +147,19 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
                     justifyContent="space-around"
                     alignItems="center"
                 >
-                    <Grid item>
+                    <Grid>
                         <CustomTooltip title="Copy Link to Clipboard">
                             <Button variant="outlined" startIcon={<SaveIcon/>} onClick={copyLink}>
-                                Copy Link
+                                <Divider orientation="vertical" flexItem />
+                                &nbsp;&nbsp;
+                                <TextField value={link} InputProps={{
+                                    readOnly: true,
+                                }} id="linkField" />
                             </Button>
                         </CustomTooltip>
                     </Grid>
-                    <Grid item>
-                        <TextField value={link} InputProps={{
-                            readOnly: true,
-                        }} id="linkField" />
-                    </Grid>
                 </Grid>
-                <Grid item className={classes.gridItem}>
+                <Grid item className={classes.alert}>
                     <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} text="Link Copied!" />
                 </Grid>
             </Grid>
