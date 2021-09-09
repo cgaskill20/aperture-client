@@ -59,7 +59,7 @@ END OF TERMS AND CONDITIONS
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { componentIsRendering } from "../TabSystem";
-import { Switch, FormGroup, FormControlLabel, Typography, TextField, Button } from "@material-ui/core";
+import {Switch, FormGroup, FormControlLabel, Typography, TextField, Button, Divider} from "@material-ui/core";
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 import Grid from "@material-ui/core/Grid";
 
@@ -67,15 +67,15 @@ const useStyles = makeStyles((theme) => ({
     spaceOnTheLeft: {
         marginLeft: theme.spacing(2),
     },
-    inputName: {
-        marginRight: theme.spacing(3),
-        marginLeft: theme.spacing(1),
-    },
     title: {
         borderBottom: '2px solid #adadad',
         marginBottom: theme.spacing(2),
         width: "100%",
     },
+    gridItem: {
+        width: "100%",
+    },
+
 }));
 
 
@@ -105,7 +105,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
             justifyContent="center"
             alignItems="flex-start"
         >
-            <Grid item>
+            <Grid item className={classes.gridItem}>
                 <Typography align="center" className={classes.title} variant="h5">Save Workspace</Typography>
                 <Typography>Save Options</Typography>
                 <FormGroup row>
@@ -121,19 +121,18 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                     />
                 </FormGroup>
             </Grid>
-            <Grid item>
+            <Grid item className={classes.gridItem}>
                 <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
             </Grid>
-            <Grid item>
+            <Grid item className={classes.gridItem}>
                 <Grid
                     container
                     direction="row"
-                    justifyContent="center"
+                    justifyContent="space-around"
                     alignItems="center"
                 >
                     <Grid item>
                         <TextField
-                            className={classes.inputName}
                             error={!validName}
                             value={name}
                             onChange={(e) => { setName(e.target.value) }}

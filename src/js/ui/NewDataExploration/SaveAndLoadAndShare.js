@@ -67,8 +67,8 @@ import {Paper} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        top: '20%',
-        left: '50%',
+        top: '15%',
+        left: '40%',
         position: 'absolute',
         width: 400,
         backgroundColor: theme.palette.background.paper,
