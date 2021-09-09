@@ -79,7 +79,6 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
 
             const colorFieldNameClean = colorFieldName.includes(temporalId) ? colorFieldName.substring(0,colorFieldName.indexOf(temporalId)) : colorFieldName;
             
-            
             if (obj.properties.meta[colorFieldNameClean]) {
                 const linearGradient = svg.append("defs")
                     .append("linearGradient")

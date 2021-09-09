@@ -127,7 +127,12 @@ export default React.memo(function Layer(props) {
     const [ querier ] = useState(new AutoQuery(props.layer));
 
     useEffect(() => {
+        const onColorFieldChange = () => {
+            props.layer.colorField = querier.colorField.name;
+        }
+        querier.subscribeToColorFieldChange(onColorFieldChange)
         return () => {
+            querier.subscribeToColorFieldChange(onColorFieldChange, true)
             querier.onRemove();
         }
     }, [querier]);
@@ -141,6 +146,10 @@ export default React.memo(function Layer(props) {
             if(check !== props.layer.on) {
                 setCheck(props.layer.on)
                 updateQuerierOnCheckChange(props.layer.on)
+            }
+
+            if(props.layer.colorField){
+                querier.changeColorCodeField(props.layer.colorField);
             }
         }
     })
@@ -196,4 +205,14 @@ export default React.memo(function Layer(props) {
             </Paper>
         </div>
     );
+}, (prevProps, nextProps) => {
+    if(nextProps.layer.forceUpdateFlag) {
+        return false;
+    }
+    for(const key of Object.keys(prevProps)) {
+        if(prevProps[key] !== nextProps[key]) {
+            return false;
+        }
+    }
+    return true;
 });

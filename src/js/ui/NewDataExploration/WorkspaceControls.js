@@ -61,10 +61,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, ButtonGroup, Grid, Paper, Switch, Icon } from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
+import ShareIcon from '@material-ui/icons/Share';
 import WorkspaceSearchbar from "./WorkspaceSearchbar";
 import { componentIsRendering } from "../TabSystem";
 import Ven from "../../../../images/ven.svg"
 import VenFilled from "../../../../images/venFilled.svg"
+import SaveAndLoadAndShare from './SaveAndLoadAndShare';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -88,24 +90,45 @@ export default React.memo(function WorkspaceControls(props) {
     const venIcon = <Icon>
         <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
     </Icon>
+    const [saveAndLoadAndShareModalOpen, setSaveAndLoadAndShareModalOpen] = useState(false)
+    const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState(null)
 
 
     if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
     return (
-        <Paper className={classes.root} elevation={3}>
-            <Grid container direction="row" justifyContent="center" alignItems="center">
-                <ButtonGroup className={classes.buttons}>
-                    <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => { localStorage.setItem("workspace", props.serializeWorkspace()) }}>Save Workspace</Button>
-                    <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { props.deSerializeWorkspace(localStorage.getItem("workspace")) }}>Load Workspace</Button>
-                    <Button variant="outlined" startIcon={venIcon} onClick={() => {
-                        props.setIntersect(!props.intersect)
-                    }}>
-                        {props.intersect ? "Intersections: on" : "Intersections: off"}
-                    </Button>
-                </ButtonGroup>
-            </Grid>
-            <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
-                workspace={props.workspace} setWorkspace={props.setWorkspace} />
-        </Paper>
+        <>
+            <Paper className={classes.root} elevation={3}>
+                <Grid container direction="row" justifyContent="center" alignItems="center">
+                    <ButtonGroup className={classes.buttons}>
+                        <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("save");
+                        }}>Save Workspace</Button>
+                        <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { 
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("load");
+                        }}>Load Workspace</Button>
+                        <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => { 
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("share");
+                        }}>Share Workspace</Button>
+                        <Button variant="outlined" startIcon={venIcon} onClick={() => {
+                            props.setIntersect(!props.intersect)
+                        }}>
+                            {props.intersect ? "Intersections: on" : "Intersections: off"}
+                        </Button>
+                    </ButtonGroup>
+                </Grid>
+                <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
+                    workspace={props.workspace} setWorkspace={props.setWorkspace} />
+            </Paper>
+            <SaveAndLoadAndShare
+                modalOpen={saveAndLoadAndShareModalOpen}
+                setModalOpen={setSaveAndLoadAndShareModalOpen}
+                mode={saveAndLoadAndShareMode}
+                serializeWorkspace={props.serializeWorkspace}
+                deSerializeWorkspace={props.deSerializeWorkspace}
+            />
+        </>
     )
 });

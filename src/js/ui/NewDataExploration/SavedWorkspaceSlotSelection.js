@@ -56,143 +56,67 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
+import React, { useEffect, useRef, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import WorkspaceControls from "./WorkspaceControls";
+import WorkspaceLayers from "./WorkspaceLayers";
+import AutoMenu from "../../library/autoMenu";
+import { componentIsRendering } from "../TabSystem";
+import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography } from "@material-ui/core";
+import { Folder, FolderOpen } from '@material-ui/icons';
+import LZString from 'lz-string';
 
-import React, {useEffect, useState} from "react";
-import {keyToDisplay, valueToDisplay} from "./PopupUtils";
-import {TableCell, TableRow, makeStyles, Collapse, Select, InputLabel} from "@material-ui/core";
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import IconButton from "@material-ui/core/IconButton";
-import {makeJSONPretty} from "../../NewModeling/NewModeling";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import Radio from "@material-ui/core/Radio";
-import ColorizeIcon from '@material-ui/icons/Colorize';
-import Tooltip from '@material-ui/core/Tooltip';
-import { mongoGroupAccumulators } from "../../../library/Constants";
-import { temporalId } from "../../../library/Constants";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     root: {
-        '& > *': {
-            borderBottom: 'unset',
-        },
-    },
-    totalWidth: {
-        width: "100%"
-    },
-    dropdown: {
-        width: "100%",
-        paddingBottom: "10px"
-    },
-    collapse: {
-        paddingTop: 0,
-        paddingBottom: 0,
-    },
-    tooltip: {
-        hover: "pointer",
-    },
-});
 
-export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties, colorFieldName }) {
-    const classes = useStyles()
-    const [open, setOpen] = useState(false);
-    const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
-    const [temporalAccumulator, setTemporalAccumulator] = useState(Object.keys(mongoGroupAccumulators)[0]);
-    //console.log({colorFieldName})
-    useEffect(() => {
-        if(colorFieldName && colorFieldName.includes(temporalId)) {
-            const temporalAccumulatorDerivedFromColorFieldName = colorFieldName.substring(colorFieldName.indexOf(temporalId) + temporalId.length, colorFieldName.length);
-            if(temporalAccumulatorDerivedFromColorFieldName !==  temporalAccumulator) {
-                setTemporalAccumulator(temporalAccumulatorDerivedFromColorFieldName)
-            }
-        }
-    }, [entryProperties.isCurrentColorField]) 
+    }
+}));
 
-    const objectHasTrueValue = (obj) => {
-            if(obj.isTemporal || obj.canBeColorField) {
-                return <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                </IconButton>
-            }
+
+export default React.memo(function SavedWorkspaceSlotSelection({slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots}) {
+    const classes = useStyles();
+
+    const getWorkspace = (index) => {
+        return localStorage.getItem(`workspace${index}`)
     }
 
-    const switchTemporalAccumulator = (newAccumulator, force = false) => {
-        const newTemporalAccumulator = newAccumulator;
-        if(entryProperties.isCurrentColorField || force) {
-            changeColorFieldName(keyValue, null, false, newTemporalAccumulator);
-        }
-        setTemporalAccumulator(newTemporalAccumulator);
-    }
-
-    const colorFieldCheckbox = () => {
-        return <FormControlLabel
-            control={
-                <Radio
-                    checked={entryProperties.isCurrentColorField}
-                    onChange={() => {
-                        if(entryProperties.isTemporal) {
-                            switchTemporalAccumulator(temporalAccumulator, true)
-                        }
-                        else {
-                            changeColorFieldName(keyValue);
-                        }
-                    }}
-                    color="primary"
-                />
-            }
-            label="Current color field"
-        />
-    }
-
-    const isTemporal = () => {
-        if(entryProperties.isTemporal) {
-            return <div className={classes.dropdown}>
-                <FormControl variant="outlined" className={classes.totalWidth}>
-                    <InputLabel>Temporal Accumulator</InputLabel>
-                        <Select
-                            native
-                            label="Temporal Accumulator"
-                            value={temporalAccumulator}
-                            onChange={(event) => switchTemporalAccumulator(event.target.value)}
-                        >
-                            {Object.entries(mongoGroupAccumulators).map(([accumulator, label], index) => {
-                                return <option value={accumulator} key={index}>{label}</option>
-                            })}
-                        </Select>
-                </FormControl>
-            </div>
-        }
-    }
-
-    function paletteIcon() {
-        if(entryProperties.isCurrentColorField) {
-            return (<>
-                &nbsp;
-                <Tooltip className={classes.tooltip} title="Overlay color is currently based off of this field">
-                    <ColorizeIcon color="primary" size="small"/>
-                </Tooltip>
-            </>)
-        }
-    }
-
+    if (componentIsRendering) { console.log("|SavedWorkspaceSlotSelection Rerending|") }
     return (
-        <React.Fragment>
-            <TableRow className={classes.root}>
-                <TableCell>{keyToDisplay(obj, keyValue, entryProperties.isTemporal ? ` (${mongoGroupAccumulators[temporalAccumulator]})` : '')}</TableCell>
-                <TableCell>{valueToDisplay(obj, keyValue, entryProperties.isTemporal ? obj.properties[`${keyValue}${temporalId}${temporalAccumulator}`] : value)}</TableCell>
-                <TableCell align="right">
-                    {objectHasTrueValue(entryProperties)}
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell className={classes.collapse} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        {colorFieldCheckbox()}
-                        {isTemporal()}
-                    </Collapse>
-                </TableCell>
-            </TableRow>
-        </React.Fragment>
-    )
-});
+        <>
+        <Typography>Select a save slot</Typography>
+        <List dense>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((i) => { 
+                if(!onlyShowFullSlots) {
+                    return true;
+                }
+                return getWorkspace(i);
+            }).map((i) => {
+                const workspace = getWorkspace(i);
+                const workspaceName = workspace ? JSON.parse(LZString.decompressFromEncodedURIComponent(workspace))?.name : null;
+                const checked = slotCurrentlySelected === i
+                return (
+                    <ListItem key={i} style={{backgroundColor: checked ? "#ADADAD" : "#FFFFFF"}}>
+                        <ListItemIcon>
+                            {workspace ? <Folder /> : <FolderOpen />}
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={workspaceName ?? "Empty Slot"}
+                        />
+                        <ListItemSecondaryAction>
+                            <Radio
+                                name="workspaceSelectionRadio"
+                                checked={checked}
+                                onChange={(e) => {
+                                    if (e.target.checked) {
+                                        setSlotCurrentlySelected(i)
+                                    }
+                                }} />
+                        </ListItemSecondaryAction>
+                    </ListItem>
+                )
+            })}
+        </List >
+        </>
+    );
+})

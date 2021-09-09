@@ -66,6 +66,7 @@ import Query from "../../library/Query";
 import Util from "../../library/apertureUtil";
 import Grid from "@material-ui/core/Grid";
 import LZString from 'lz-string';
+import L from 'leaflet';
 import { useGlobalState } from '../global/GlobalState';
 
 const useStyles = makeStyles((theme) => ({
@@ -103,12 +104,13 @@ export default React.memo(function Workspace() {
         }
     }, [workspace, layers, globalState.preloading])
     
-    function serializeWorkspace() {
+    function serializeWorkspace(workspaceName="workspace", saveColorState=true, saveMapViewport=false) {
         const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
             return {
                 collection: layer.collection,
                 on: layer.state ?? false,
                 expandedState: layer.expandedState ?? false,
+                colorField: saveColorState ? layer.colorField : undefined,
                 constraintState: layer.constraintState,
                 constraints: Object.values(layer.constraints).filter(e => e.state).map((constraint) => {
                     return {
@@ -118,9 +120,12 @@ export default React.memo(function Workspace() {
                 })
             }
         })
+
         const fullWorkspace = {
             layers: relevantLayers,
-            intersect
+            intersect,
+            name: workspaceName,
+            bounds: saveMapViewport ? window.map.getBounds().toBBoxString() : undefined
         }
         const serialized = JSON.stringify(fullWorkspace);
         const compressedSerialized = LZString.compressToEncodedURIComponent(serialized);
@@ -138,10 +143,17 @@ export default React.memo(function Workspace() {
             return;
         }
         const deSerializedWorkspace = JSON.parse(serializedWorkspace)
-
         if(deSerializedWorkspace.intersect != null) {
             setIntersect(deSerializedWorkspace.intersect)
         }
+
+        if(deSerializedWorkspace.bounds != null) {
+            //setIntersect(deSerializedWorkspace.intersect)
+            const bboxArray = deSerializedWorkspace.bounds.split(',')
+            window.map.fitBounds(L.latLngBounds(L.latLng(Number(bboxArray[1]), Number(bboxArray[0])), 
+                L.latLng(Number(bboxArray[3]), Number(bboxArray[2]))))
+        }
+
         const collections = new Set(deSerializedWorkspace.layers.map(e => e.collection))
         setWorkspace(layers.map(layer => {
             const isIn = collections.has(layer.collection);
@@ -149,6 +161,7 @@ export default React.memo(function Workspace() {
                 const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);                
                 layer.on = deSerializedLayer.on;
                 layer.expandedState = deSerializedLayer.expandedState;
+                layer.colorField = deSerializedLayer.colorField;
                 layer.constraintState = deSerializedLayer.constraintState;
                 layer.forceUpdateFlag = true;
                 for(const constraint of deSerializedLayer.constraints) {

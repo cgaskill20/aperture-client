@@ -63,6 +63,7 @@ END OF TERMS AND CONDITIONS
 //legacy code, this giant library is being split up into smaller, more modular libraries like autoQuery.js and geometryLoader.js.
 //many functions are still useful though, and are used througout the project.
 import Util from "./apertureUtil"
+import { temporalId } from "./Constants";
 
 let intersect = false;
 window.setIntersect = (i) => {
@@ -347,11 +348,14 @@ export default class RenderInfrastructure {
                         curr.properties.colorInfo.subscribeToColorFieldChange(func, unsubscribe);
                         acc.colorInfo.subscribeToColorFieldChange(func, unsubscribe)
                     },
-                    updateColorFieldName: (name, predefinedColor, dontRerender) => {
-                        curr.properties.colorInfo.updateColorFieldName(name, predefinedColor, dontRerender);
-                        acc.colorInfo.updateColorFieldName(name, predefinedColor, dontRerender)
+                    updateColorFieldName: (name, predefinedColor, dontRerender, temporal) => {
+                        curr.properties.colorInfo.updateColorFieldName(name, predefinedColor, dontRerender, temporal);
+                        acc.colorInfo.updateColorFieldName(name, predefinedColor, dontRerender, temporal)
                     },
                     colorSummary: (currentColorFieldName) => {
+                        if(currentColorFieldName && currentColorFieldName.includes(temporalId)){
+                            currentColorFieldName = currentColorFieldName.substring(0,currentColorFieldName.indexOf(temporalId));
+                        }
                         if (curr.properties.colorInfo.validColorFieldNames.includes(currentColorFieldName)) {
                             //console.log(currentColorFieldName)
                             return curr.properties.colorInfo.colorSummary();
@@ -420,7 +424,7 @@ export default class RenderInfrastructure {
                 delete layerToUpdate.feature.properties[key]
             }
         }
-        const shouldUpdateColor = layerToUpdate?.feature?.properties?.colorInfo?.currentColorField?.name !== properties.colorInfo.currentColorField.name;
+        const shouldUpdateColor = layerToUpdate?.feature?.properties?.colorInfo?.currentColorField?.name !== properties.colorInfo?.currentColorField?.name;
         Object.assign(layerToUpdate.feature.properties, properties)
         if (shouldUpdateColor) {
             const { colorInfo } = layerToUpdate.feature.properties;

@@ -56,143 +56,69 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
+import React, { useEffect, useRef, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import WorkspaceControls from "./WorkspaceControls";
+import WorkspaceLayers from "./WorkspaceLayers";
+import AutoMenu from "../../library/autoMenu";
+import { componentIsRendering } from "../TabSystem";
+import { Switch, FormGroup, FormControlLabel, Typography, TextField, Button } from "@material-ui/core";
+import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 
-import React, {useEffect, useState} from "react";
-import {keyToDisplay, valueToDisplay} from "./PopupUtils";
-import {TableCell, TableRow, makeStyles, Collapse, Select, InputLabel} from "@material-ui/core";
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import IconButton from "@material-ui/core/IconButton";
-import {makeJSONPretty} from "../../NewModeling/NewModeling";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import Radio from "@material-ui/core/Radio";
-import ColorizeIcon from '@material-ui/icons/Colorize';
-import Tooltip from '@material-ui/core/Tooltip';
-import { mongoGroupAccumulators } from "../../../library/Constants";
-import { temporalId } from "../../../library/Constants";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     root: {
-        '& > *': {
-            borderBottom: 'unset',
-        },
-    },
-    totalWidth: {
-        width: "100%"
-    },
-    dropdown: {
-        width: "100%",
-        paddingBottom: "10px"
-    },
-    collapse: {
-        paddingTop: 0,
-        paddingBottom: 0,
-    },
-    tooltip: {
-        hover: "pointer",
-    },
-});
 
-export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties, colorFieldName }) {
-    const classes = useStyles()
-    const [open, setOpen] = useState(false);
-    const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
-    const [temporalAccumulator, setTemporalAccumulator] = useState(Object.keys(mongoGroupAccumulators)[0]);
-    //console.log({colorFieldName})
-    useEffect(() => {
-        if(colorFieldName && colorFieldName.includes(temporalId)) {
-            const temporalAccumulatorDerivedFromColorFieldName = colorFieldName.substring(colorFieldName.indexOf(temporalId) + temporalId.length, colorFieldName.length);
-            if(temporalAccumulatorDerivedFromColorFieldName !==  temporalAccumulator) {
-                setTemporalAccumulator(temporalAccumulatorDerivedFromColorFieldName)
-            }
+    }
+}));
+
+
+export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
+    const classes = useStyles();
+
+    const [saveColor, setSaveColor] = useState(true)
+    const [saveViewport, setSaveViewport] = useState(false)
+    const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1)
+    const [name, setName] = useState(`Saved Workspace`)
+    const validName = name.length !== 0;
+
+    const saveWorkspace = () => {
+        if(!validName) {
+            return;
         }
-    }, [entryProperties.isCurrentColorField]) 
-
-    const objectHasTrueValue = (obj) => {
-            if(obj.isTemporal || obj.canBeColorField) {
-                return <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                </IconButton>
-            }
+        const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
+        localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace)
+        setModalOpen(false)
     }
 
-    const switchTemporalAccumulator = (newAccumulator, force = false) => {
-        const newTemporalAccumulator = newAccumulator;
-        if(entryProperties.isCurrentColorField || force) {
-            changeColorFieldName(keyValue, null, false, newTemporalAccumulator);
-        }
-        setTemporalAccumulator(newTemporalAccumulator);
-    }
-
-    const colorFieldCheckbox = () => {
-        return <FormControlLabel
-            control={
-                <Radio
-                    checked={entryProperties.isCurrentColorField}
-                    onChange={() => {
-                        if(entryProperties.isTemporal) {
-                            switchTemporalAccumulator(temporalAccumulator, true)
-                        }
-                        else {
-                            changeColorFieldName(keyValue);
-                        }
-                    }}
-                    color="primary"
-                />
-            }
-            label="Current color field"
-        />
-    }
-
-    const isTemporal = () => {
-        if(entryProperties.isTemporal) {
-            return <div className={classes.dropdown}>
-                <FormControl variant="outlined" className={classes.totalWidth}>
-                    <InputLabel>Temporal Accumulator</InputLabel>
-                        <Select
-                            native
-                            label="Temporal Accumulator"
-                            value={temporalAccumulator}
-                            onChange={(event) => switchTemporalAccumulator(event.target.value)}
-                        >
-                            {Object.entries(mongoGroupAccumulators).map(([accumulator, label], index) => {
-                                return <option value={accumulator} key={index}>{label}</option>
-                            })}
-                        </Select>
-                </FormControl>
-            </div>
-        }
-    }
-
-    function paletteIcon() {
-        if(entryProperties.isCurrentColorField) {
-            return (<>
-                &nbsp;
-                <Tooltip className={classes.tooltip} title="Overlay color is currently based off of this field">
-                    <ColorizeIcon color="primary" size="small"/>
-                </Tooltip>
-            </>)
-        }
-    }
-
+    if (componentIsRendering) { console.log("|Save Rerending|") }
     return (
-        <React.Fragment>
-            <TableRow className={classes.root}>
-                <TableCell>{keyToDisplay(obj, keyValue, entryProperties.isTemporal ? ` (${mongoGroupAccumulators[temporalAccumulator]})` : '')}</TableCell>
-                <TableCell>{valueToDisplay(obj, keyValue, entryProperties.isTemporal ? obj.properties[`${keyValue}${temporalId}${temporalAccumulator}`] : value)}</TableCell>
-                <TableCell align="right">
-                    {objectHasTrueValue(entryProperties)}
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell className={classes.collapse} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        {colorFieldCheckbox()}
-                        {isTemporal()}
-                    </Collapse>
-                </TableCell>
-            </TableRow>
-        </React.Fragment>
-    )
-});
+        <div>
+            <Typography variant="h5">Save Workspace</Typography>
+            <FormGroup row>
+                <FormControlLabel
+                    control={<Switch checked={saveColor} onChange={(e) => { setSaveColor(e.target.checked) }} />}
+                    label="Save Color Selections"
+                />
+            </FormGroup>
+            <FormGroup row>
+                <FormControlLabel
+                    control={<Switch checked={saveViewport} onChange={(e) => { setSaveViewport(e.target.checked) }} />}
+                    label="Save Current Viewport Bounds"
+                />
+            </FormGroup>
+            <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
+            <TextField
+                error={!validName}
+                value={name}
+                onChange={(e) => { setName(e.target.value) }}
+                id="outlined-error-helper-text"
+                label="Enter a workspace name"
+                variant="outlined"
+            />
+            <Button variant="contained" color="primary" onClick={saveWorkspace}>
+                Save Workspace
+            </Button>
+        </div>
+    );
+})
