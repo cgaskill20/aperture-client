@@ -64,12 +64,18 @@ import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
 import { Switch, FormGroup, FormControlLabel, Typography, TextField, Button } from "@material-ui/core";
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
+import Grid from "@material-ui/core/Grid";
 
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-
-    }
+    title: {
+        borderBottom: '2px solid #adadad',
+        marginBottom: theme.spacing(2),
+        width: "100%",
+    },
+    gridItem: {
+        width: "100%",
+    },
 }));
 
 
@@ -85,12 +91,23 @@ export default React.memo(function Load({deSerializeWorkspace, setModalOpen}) {
 
     if (componentIsRendering) { console.log("|Load Rerending|") }
     return (
-        <div>
-            <Typography variant="h5">Load Workspace</Typography>
-            <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} onlyShowFullSlots/>
-            <Button variant="contained" color="primary" onClick={loadWorkspace}>
-                Load Workspace
-            </Button>
-        </div>
+        <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="flex-start"
+        >
+            <Grid item className={classes.gridItem}>
+                <Typography className={classes.title} align="center" variant="h5">Load Workspace</Typography>
+            </Grid>
+            <Grid item className={classes.gridItem}>
+                <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} onlyShowFullSlots/>
+            </Grid>
+            <Grid item className={classes.gridItem}>
+                <Button variant="outlined" onClick={loadWorkspace}>
+                    Load Workspace
+                </Button>
+            </Grid>
+        </Grid>
     );
 })

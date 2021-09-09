@@ -64,12 +64,21 @@ import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
 import { Switch, FormGroup, FormControlLabel, Typography, TextField, Button } from "@material-ui/core";
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
+import Grid from "@material-ui/core/Grid";
 
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-
-    }
+    spaceOnTheLeft: {
+        marginLeft: theme.spacing(2),
+    },
+    title: {
+        borderBottom: '2px solid #adadad',
+        marginBottom: theme.spacing(2),
+        width: "100%",
+    },
+    gridItem: {
+        width: "100%",
+    },
 }));
 
 const aperturePublicPage = "urban-sustain.org/services/aperture.php"
@@ -91,23 +100,33 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
 
     if (componentIsRendering) { console.log("|Share Rerending|") }
     return (
-        <div>
-            <Typography variant="h5">Share Workspace</Typography>
-            <FormGroup row>
-                <FormControlLabel
-                    control={<Switch color="primary" checked={includeColor} onChange={(e) => { setIncludeColor(e.target.checked) }} />}
-                    label="Include Color Selections"
-                />
-            </FormGroup>
-            <FormGroup row>
-                <FormControlLabel
-                    control={<Switch color="primary" checked={includeViewport} onChange={(e) => { setIncludeViewport(e.target.checked) }} />}
-                    label="Include Current Viewport Bounds"
-                />
-            </FormGroup>
-            <Button variant="contained" color="primary" onClick={copyLink}>
-                Copy Shareable Link
-            </Button>
+        <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="flex-start"
+        >
+            <Grid item className={classes.gridItem}>
+                <Typography className={classes.title} align="center" variant="h5">Share Workspace</Typography>
+                <Typography>Save Options</Typography>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={includeColor} onChange={(e) => { setIncludeColor(e.target.checked) }} />}
+                        label="Include Color Selections"
+                    />
+                </FormGroup>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={includeViewport} onChange={(e) => { setIncludeViewport(e.target.checked) }} />}
+                        label="Include Current Viewport Bounds"
+                    />
+                </FormGroup>
+            </Grid>
+            <Grid item className={classes.gridItem}>
+                <Button variant="outlined" onClick={copyLink}>
+                    Copy Shareable Link
+                </Button>
+            </Grid>
             {
                 linkCopied ? <Typography>Link Copied! Share it wherever you'd like.</Typography> : null
             }
@@ -115,6 +134,6 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
             <TextField value={link} InputProps={{
                 readOnly: true,
             }} id="linkField" />
-        </div>
+        </Grid>
     );
 })
