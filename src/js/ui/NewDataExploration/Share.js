@@ -62,9 +62,21 @@ import WorkspaceControls from "./WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
 import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
-import { Switch, FormGroup, FormControlLabel, Typography, TextField, Button } from "@material-ui/core";
+import {
+    Switch,
+    FormGroup,
+    FormControlLabel,
+    Typography,
+    TextField,
+    Button,
+    Tooltip,
+    IconButton
+} from "@material-ui/core";
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
+import {CustomTooltip} from "../UtilityComponents";
 import Grid from "@material-ui/core/Grid";
+import SaveIcon from '@material-ui/icons/Save';
+import CustomAlert from "./CustomAlert";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -88,14 +100,16 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
     const [includeColor, setIncludeColor] = useState(true)
     const [includeViewport, setIncludeViewport] = useState(false)
     const [linkCopied, setLinkCopied] = useState(false);
+    const [alertOpen, setAlertOpen] = React.useState(false);
     const link = `${aperturePublicPage}?workspace=${serializeWorkspace("Shared Workspace", includeColor, includeViewport)}`
 
     const copyLink = () => {
-        const linkElement = document.getElementById("linkField")
-        linkElement.focus()
-        linkElement.select()
-        document.execCommand('copy')
-        setLinkCopied(true)
+        const linkElement = document.getElementById("linkField");
+        linkElement.focus();
+        linkElement.select();
+        document.execCommand('copy');
+        setLinkCopied(true);
+        setAlertOpen(true);
     }
 
     if (componentIsRendering) { console.log("|Share Rerending|") }
@@ -123,17 +137,29 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
                 </FormGroup>
             </Grid>
             <Grid item className={classes.gridItem}>
-                <Button variant="outlined" onClick={copyLink}>
-                    Copy Shareable Link
-                </Button>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="space-around"
+                    alignItems="center"
+                >
+                    <Grid item>
+                        <CustomTooltip title="Copy Link to Clipboard">
+                            <Button variant="outlined" startIcon={<SaveIcon/>} onClick={copyLink}>
+                                Copy Link
+                            </Button>
+                        </CustomTooltip>
+                    </Grid>
+                    <Grid item>
+                        <TextField value={link} InputProps={{
+                            readOnly: true,
+                        }} id="linkField" />
+                    </Grid>
+                </Grid>
+                <Grid item className={classes.gridItem}>
+                    <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} text="Link Copied!" />
+                </Grid>
             </Grid>
-            {
-                linkCopied ? <Typography>Link Copied! Share it wherever you'd like.</Typography> : null
-            }
-            <Typography>Or Manually Copy Shareable Link</Typography>
-            <TextField value={link} InputProps={{
-                readOnly: true,
-            }} id="linkField" />
         </Grid>
     );
 })
