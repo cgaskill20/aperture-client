@@ -83,6 +83,9 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const validName = name.length !== 0;
 
     const saveWorkspace = () => {
+        if(!validName) {
+            return;
+        }
         const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
         localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace)
         setModalOpen(false)
