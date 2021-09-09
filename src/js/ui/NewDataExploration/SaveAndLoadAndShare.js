@@ -67,9 +67,9 @@ import {Paper} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        maxHeight: "70vh",
+        maxHeight: "90vh",
         overflowY: "scroll",
-        top: '15%',
+        top: '10%',
         left: '40%',
         position: 'absolute',
         width: 400,
