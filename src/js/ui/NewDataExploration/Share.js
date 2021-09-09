@@ -56,11 +56,8 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import WorkspaceControls from "./WorkspaceControls";
-import WorkspaceLayers from "./WorkspaceLayers";
-import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
 import {
     Switch,
@@ -72,12 +69,11 @@ import {
     Tooltip,
     IconButton, Divider
 } from "@material-ui/core";
-import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 import {CustomTooltip} from "../UtilityComponents";
 import Grid from "@material-ui/core/Grid";
 import SaveIcon from '@material-ui/icons/Save';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import CustomAlert from "./CustomAlert";
-
 
 const useStyles = makeStyles((theme) => ({
     spaceOnTheLeft: {
@@ -141,27 +137,18 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
                 </FormGroup>
             </Grid>
             <Grid item className={classes.gridItem}>
-                <Grid
-                    container
-                    direction="row"
-                    justifyContent="space-around"
-                    alignItems="center"
-                >
-                    <Grid>
-                        <CustomTooltip title="Copy Link to Clipboard">
-                            <Button variant="outlined" startIcon={<SaveIcon/>} onClick={copyLink}>
-                                <Divider orientation="vertical" flexItem />
-                                &nbsp;&nbsp;
-                                <TextField value={link} InputProps={{
-                                    readOnly: true,
-                                }} id="linkField" />
-                            </Button>
-                        </CustomTooltip>
-                    </Grid>
-                </Grid>
-                <Grid item className={classes.alert}>
-                    <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} text="Link Copied!" />
-                </Grid>
+                <CustomTooltip title="Copy Link to Clipboard">
+                    <Button variant="outlined" startIcon={<AssignmentTurnedInIcon/>} onClick={copyLink}>
+                        <Divider orientation="vertical" flexItem />
+                        &nbsp;&nbsp;
+                        <TextField value={link} InputProps={{
+                            readOnly: true,
+                        }} id="linkField" />
+                    </Button>
+                </CustomTooltip>
+            </Grid>
+            <Grid item className={classes.alert}>
+                <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} text="Link Copied!" />
             </Grid>
         </Grid>
     );
