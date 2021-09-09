@@ -81,12 +81,12 @@ export default React.memo(function SavedWorkspaceSlotSelection({slotCurrentlySel
         return localStorage.getItem(`workspace${index}`)
     }
 
-    if (componentIsRendering) { console.log("|Load Rerending|") }
+    if (componentIsRendering) { console.log("|SavedWorkspaceSlotSelection Rerending|") }
     return (
         <>
         <Typography>Select a save slot</Typography>
         <List dense>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].filter((i) => { 
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((i) => { 
                 if(!onlyShowFullSlots) {
                     return true;
                 }
