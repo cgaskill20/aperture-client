@@ -67,6 +67,7 @@ import ExploreIcon from '@material-ui/icons/Explore';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import CloseIcon from "@material-ui/icons/Close";
+import OldModeling from "./modeling/components/ModelMenu"
 
 export const componentIsRendering = false;
 
@@ -93,12 +94,18 @@ export default function TabSystem(props) {
     const [modelingButtonStyles, setModelingButtonStyles] = useState(tabSwitchingStyles[1]);
     function switchTabs(index) {
         if(index === 0) {
+            // turn on workspace
             setDataExplorationButtonStyles(tabSwitchingStyles[0]);
             setModelingButtonStyles(tabSwitchingStyles[1]);
+            window.map.removeLayer(window.dataModelingGroup)
+            window.map.addLayer(window.dataExplorationGroup)
         }
         else if(index === 1) {
+            // turn on modeling
             setDataExplorationButtonStyles(tabSwitchingStyles[1]);
             setModelingButtonStyles(tabSwitchingStyles[0]);
+            window.map.addLayer(window.dataModelingGroup)
+            window.map.removeLayer(window.dataExplorationGroup)
         }
     }
 
@@ -128,7 +135,8 @@ export default function TabSystem(props) {
                 <Workspace />
             </div>
             <div id="modeling-display" style={modelingButtonStyles[0]}>
-                <NewModeling />
+                {/* <NewModeling /> */}
+                <OldModeling/>
             </div>
         </div>
     );

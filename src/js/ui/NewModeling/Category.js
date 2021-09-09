@@ -68,6 +68,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Category(props) {
+    console.log({props})
     const classes = useStyles();
 
     let categoryNames = [];

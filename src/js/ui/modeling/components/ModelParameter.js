@@ -67,6 +67,7 @@ export default class ModelParameter extends React.Component {
         this.state = {
             value: this.props.config.default
         }
+        console.log({props})
         this.name = this.props.config.name;
         this.sliderQueue = [];
     }
@@ -78,6 +79,7 @@ export default class ModelParameter extends React.Component {
             return null;
         }
         this.updateParent()
+        console.log({name: this.name})
         return e("div", { className: "modelParameter" },
             e("label", { htmlFor: this.name }, `${Util.cleanUpString(this.name)}: ${Util.cleanUpString(this.state.value)}`),
             this.buildParameter()

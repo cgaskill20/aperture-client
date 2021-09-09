@@ -394,7 +394,7 @@ export default {
       * @returns {string} string with truncated properties.
       */
     removePropertiesPrefix: function (str) {
-        if(!str){
+        if(!str || typeof str !== "string") {
             return str;
         }
         return str.substr(0, 11) === "properties." ? str.substring(11, str.length) : str; //removes a "properties." if it exists
