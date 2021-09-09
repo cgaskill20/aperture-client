@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         borderBottom: '2px solid #adadad',
-        marginBottom: theme.spacing(1),
+        marginBottom: theme.spacing(2),
         width: "100%",
     },
 }));
@@ -85,7 +85,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const [saveColor, setSaveColor] = useState(true)
     const [saveViewport, setSaveViewport] = useState(false)
     const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1)
-    const [name, setName] = useState(`Saved Workspace`)
+    const [name, setName] = useState(`Workspace Name`)
     const validName = name.length !== 0;
 
     const saveWorkspace = () => {
@@ -138,9 +138,6 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                             value={name}
                             onChange={(e) => { setName(e.target.value) }}
                             id="outlined-error-helper-text"
-                            defaultValue="Enter Name"
-                            // label="Enter a workspace name"
-                            // variant="filled"
                         />
                     </Grid>
                     <Grid item>
