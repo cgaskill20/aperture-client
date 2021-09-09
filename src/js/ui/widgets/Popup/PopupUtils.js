@@ -84,11 +84,14 @@ export const valueToDisplay = (obj, key, value) => {
     else if (defaultImportantFields[key]?.type && !['string', 'number'].includes(defaultImportantFields[key]?.type)) {
         return specialTypeToDisplay(defaultImportantFields[key].type, value);
     }
-    else if (['string', 'number'].includes(typeof value)) {
+    else if (['string', 'number', 'object'].includes(typeof value)) {
+        if(typeof value === 'object') {
+            value = mongoObjectToSomething(value, (s) => s);
+        }
+        if(typeof value === 'number') {
+            value = Number(value.toFixed(3))
+        }
         return `${value}${unit ? ` ${Util.cleanUpString(unit)}` : ''}`;
-    }
-    else if (typeof value === 'object') {
-        return mongoObjectToSomething(value, (s) => s);
     }
     else {
         return JSON.stringify(value);
