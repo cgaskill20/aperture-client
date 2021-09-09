@@ -126,7 +126,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                 </FormGroup>
             </Grid>
             <Grid item className={classes.gridItem}>
-                <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
+                <SavedWorkspaceSlotSelection title="Select a Save Slot" slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
             </Grid>
             <Grid item className={`${classes.gridItem} ${classes.spaceBelow}`}>
                 <TextField

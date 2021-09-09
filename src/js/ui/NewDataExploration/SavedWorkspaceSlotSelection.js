@@ -63,14 +63,7 @@ import {List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Rad
 import { Folder, FolderOpen } from '@material-ui/icons';
 import LZString from 'lz-string';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-
-    },
-}));
-
-export default React.memo(function SavedWorkspaceSlotSelection({slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots}) {
-    const classes = useStyles();
+export default React.memo(function SavedWorkspaceSlotSelection({title, slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots}) {
 
     const getWorkspace = (index) => {
         return localStorage.getItem(`workspace${index}`)
@@ -79,7 +72,7 @@ export default React.memo(function SavedWorkspaceSlotSelection({slotCurrentlySel
     if (componentIsRendering) { console.log("|SavedWorkspaceSlotSelection Rerending|") }
     return (
         <>
-        <Typography>Select a Save Slot</Typography>
+        <Typography>{title}</Typography>
         <List dense>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((i) => { 
                 if(!onlyShowFullSlots) {

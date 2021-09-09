@@ -101,7 +101,7 @@ export default React.memo(function Load({deSerializeWorkspace, setModalOpen}) {
                 <Typography className={classes.title} align="center" variant="h5">Load Workspace</Typography>
             </Grid>
             <Grid item className={classes.fullWidth}>
-                <SavedWorkspaceSlotSelection slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} onlyShowFullSlots/>
+                <SavedWorkspaceSlotSelection title="Select a Saved Workspace" slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} onlyShowFullSlots/>
             </Grid>
             <Grid item className={classes.fullWidth}>
                 <Button className={classes.fullWidth} variant="outlined" onClick={loadWorkspace}>
