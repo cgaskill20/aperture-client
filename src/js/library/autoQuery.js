@@ -73,6 +73,7 @@ import { mongoGroupAccumulators, temporalId } from "./Constants"
 
 export default class AutoQuery {
     static blockers = {}
+    static intersectableColors = {}
     static blockerListener = null;
     /**
       * Constructs the instance of the autoquerier to a specific layer
@@ -112,15 +113,6 @@ export default class AutoQuery {
                 }, {});
         }
 
-        this.colorFieldChangeSubscribers = [];
-        this.color = layerData.color;
-        if (this.color.variable) {
-            this.changeColorCodeField(this.color.variable, this.color)
-        }
-        else {
-            Object.keys(this.constraintState)[0] ? this.changeColorCodeField(Object.keys(this.constraintState)[0]) : null;
-        }
-
         this.graphPipeID = graphPipeID;
 
         this.blockerGroup = this.data.linkedGeometry ?
@@ -138,6 +130,15 @@ export default class AutoQuery {
         }
 
         this.isIntersectable = ["tracts", "counties"].includes(this.blockerGroup);
+
+        this.colorFieldChangeSubscribers = [];
+        this.color = layerData.color;
+        if (this.color.variable) {
+            this.changeColorCodeField(this.color.variable, this.color)
+        }
+        else {
+            Object.keys(this.constraintState)[0] ? this.changeColorCodeField(Object.keys(this.constraintState)[0]) : null;
+        }
 
         this.minZoom = this.data.minZoom;
         this.blocked = false;
@@ -265,6 +266,10 @@ export default class AutoQuery {
             this.initialColorSet = false;
             //console.log({fieldName})
             this.colorField = { name: temporalAccumulator ? `${fieldName}${temporalId}${temporalAccumulator}` : fieldName, label: colorField.label };
+            if(this.isIntersectable) {
+                AutoQuery.intersectableColors[this.blockerGroup] = this.colorField.name;
+                console.log(AutoQuery.intersectableColors)
+            }
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);
             }

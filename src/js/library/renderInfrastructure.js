@@ -130,7 +130,6 @@ export default class RenderInfrastructure {
         this.currentLayers = new Set();
         this.currentGISJOINLayers = {};
         this.layerIDToGISJOINMap = {};
-        this.joinColor = {};
         this.bulkIntersectionUpdateMayOccur = false;
         this.idCounter = 0;
         RenderInfrastructure.refreshIntersections.push(this.updateIntersections.bind(this));

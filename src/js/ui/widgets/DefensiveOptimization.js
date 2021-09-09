@@ -83,6 +83,7 @@ function renderBlockers(blockers) {
 
 export default function DefensiveOptimization(props) {
     const [blockers, setBlockers] = useState(AutoQuery.blockers);
+    //console.log({blockers})
     useEffect(() => {
         AutoQuery.setBlockerListener((newBlockers) => { setBlockers({ ...newBlockers }) });
     });
