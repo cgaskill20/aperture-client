@@ -73,12 +73,12 @@ export const keyToDisplay = (obj, key, suffix = '') => {
 }
 
 export const valueToDisplay = (obj, key, value) => {
-    let unit = obj?.meta?.[key]?.unit;
+    let unit = obj?.properties?.meta?.[key]?.unit;
     if (unit?.toUpperCase() === 'NA') {
         unit = null;
     }
 
-    if (obj?.meta?.[key]?.isDate) {
+    if (obj?.properties?.meta?.[key]?.isDate) {
         return dateToDisplay(value);
     }
     else if (defaultImportantFields[key]?.type && !['string', 'number'].includes(defaultImportantFields[key]?.type)) {
