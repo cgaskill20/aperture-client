@@ -56,11 +56,8 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import WorkspaceControls from "./WorkspaceControls";
-import WorkspaceLayers from "./WorkspaceLayers";
-import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
 import { Modal } from "@material-ui/core";
 import Save from "./Save"
