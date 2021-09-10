@@ -82,7 +82,7 @@ export default React.memo(function SavedWorkspaceSlotSelection({title, slotCurre
             }).map((i) => {
                 const workspace = getWorkspace(i);
                 let workspaceName = workspace ? JSON.parse(LZString.decompressFromEncodedURIComponent(workspace))?.name : null;
-                workspaceName.length > 32 && (() => { workspaceName = workspaceName.substring(0,29) + '...' })()
+                workspaceName?.length > 32 && (() => { workspaceName = workspaceName.substring(0,29) + '...' })()
                 const checked = slotCurrentlySelected === i
                 return (
                     <ListItem key={i} style={{backgroundColor: checked ? "#d1d1d1" : "#fff"}}>
