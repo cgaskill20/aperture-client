@@ -105,6 +105,12 @@ export default function ConstraintSlider({ constraint, querier }) {
     const buildSliderLabel = () => {
         return <b>{minMax[0]} ➔ {minMax[1]}{constraint.plus && max === minMax[1] ? '+' : ''} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
     }
+
+    const sliderStyle = {};
+    if(minMax[0] === min && minMax[1] === max) {
+        sliderStyle.color = "#ADADAD"
+    }
+
     if (componentIsRendering) { console.log("|ContraintSlider Rerending|") }
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
@@ -125,6 +131,7 @@ export default function ConstraintSlider({ constraint, querier }) {
                 step={step}
                 id={`${constraint.label}`}
                 name={`${constraint.label}`}
+                style={sliderStyle}
             />
         </div>
     );
