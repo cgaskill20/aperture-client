@@ -103,7 +103,7 @@ export default function ConstraintSlider({ constraint, querier }) {
     })
 
     const buildSliderLabel = () => {
-        return <b>{minMax[0]} ➔ {minMax[1]} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
+        return <b>{minMax[0]} ➔ {minMax[1]}{constraint.plus && max === minMax[1] ? '+' : ''} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
     }
     if (componentIsRendering) { console.log("|ContraintSlider Rerending|") }
     return (
