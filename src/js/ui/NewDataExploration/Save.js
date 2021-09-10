@@ -89,7 +89,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const [saveColor, setSaveColor] = useState(true)
     const [saveViewport, setSaveViewport] = useState(false)
     const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1)
-    const [name, setName] = useState(`Workspace Name...`)
+    const [name, setName] = useState(`Workspace 1`)
     const validName = name.length !== 0;
 
     const saveWorkspace = () => {
@@ -133,9 +133,10 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                     className={classes.gridItem}
                     error={!validName}
                     placeholder={name}
+                    value={name}
                     onChange={(e) => { setName(e.target.value) }}
                     id="outlined-error-helper-text"
-                    label="Workspace Name..."
+                    label="Workspace Name"
                 />
 
             </Grid>
