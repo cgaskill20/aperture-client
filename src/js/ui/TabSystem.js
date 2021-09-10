@@ -62,7 +62,7 @@ import Grid from "@material-ui/core/Grid";
 import NewModeling from "./NewModeling/NewModeling";
 import Workspace from "./NewDataExploration/Workspace";
 import { useGlobalState } from "./global/GlobalState";
-import {Button, ButtonGroup} from "@material-ui/core";
+import {Button, ButtonGroup, Typography} from "@material-ui/core";
 import ExploreIcon from '@material-ui/icons/Explore';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
 import EqualizerIcon from "@material-ui/icons/Equalizer";
@@ -128,7 +128,8 @@ export default function TabSystem(props) {
                 <Workspace />
             </div>
             <div id="modeling-display" style={modelingButtonStyles[0]}>
-                <NewModeling />
+                {/* <NewModeling /> */}
+                <Typography>Modeling is temporarily unavailable.</Typography>
             </div>
         </div>
     );
