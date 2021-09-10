@@ -173,11 +173,11 @@ body {
 .warningContainer{
   position: absolute;
   z-index: 1999;
-  bottom: 0;
+  bottom: 6vw;
   right: 0;
   width: 0;
   height: 12vh;
-  padding-right: 460px;
+  width: 460px;
   margin-bottom: 10px;
 }
 

@@ -267,8 +267,8 @@ export default class AutoQuery {
             //console.log({fieldName})
             this.colorField = { name: temporalAccumulator ? `${fieldName}${temporalId}${temporalAccumulator}` : fieldName, label: colorField.label };
             if(this.isIntersectable) {
+                // TODO
                 AutoQuery.intersectableColors[this.blockerGroup] = this.colorField.name;
-                //console.log(AutoQuery.intersectableColors)
             }
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);

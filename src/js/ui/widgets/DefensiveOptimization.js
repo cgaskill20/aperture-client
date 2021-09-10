@@ -59,12 +59,15 @@ END OF TERMS AND CONDITIONS
 import React, { Component, useEffect, useState } from 'react';
 import { Alert } from 'reactstrap';
 import AutoQuery from '../../library/autoQuery';
+import Query from '../../library/Query';
 
 
-function renderAlert(blocker, text, key) {
+function renderAlert(blocker, text, key, alertType="danger", alertWidth="445px") {
     if (blocker) {
-        return <Alert color={"danger"} style={{
-            width: "445px"
+        return <Alert color={alertType} style={{
+            width: alertWidth,
+            marginRight: "15px",
+            float: 'right'
         }} key={key}>
             {text}
         </Alert>
@@ -83,10 +86,17 @@ function renderBlockers(blockers) {
 
 export default function DefensiveOptimization(props) {
     const [blockers, setBlockers] = useState(AutoQuery.blockers);
+    const [querying, setQuerying] = useState(false)
     //console.log({blockers})
     useEffect(() => {
         AutoQuery.setBlockerListener((newBlockers) => { setBlockers({ ...newBlockers }) });
     });
+
+    useEffect(() => {
+        setInterval(() => {
+            setQuerying(Object.keys(Query.currentQueries).length ? true : false)
+        }, 100)
+    }, [])
 
     const HEIGHT_EXTRA_LINE = 24;
     const extraLineHeight = Object.keys(blockers).filter(curr => { 
@@ -97,9 +107,10 @@ export default function DefensiveOptimization(props) {
         .map(curr => { return Number(curr !== 0) })
         .reduce((acc, curr) => {
             return acc + curr;
-        }, 0) * HEIGHT_PER_ALERT + extraLineHeight).toString() + "px";
+        }, querying ? 1 : 0) * HEIGHT_PER_ALERT + extraLineHeight).toString() + "px";
         
     return <div className={"warningContainer"} style={{ height: height }}>
         {renderBlockers(blockers)}
+        {querying ? renderAlert(true, "Loading...", "query_alert", "success", "110px") : null}
     </div>
 }
