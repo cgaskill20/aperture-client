@@ -445,14 +445,14 @@ export default class RenderInfrastructure {
         this.layerIDToGISJOINMap[layer.layerID] = GISJOIN;
     }
 
-    removeRefs(specifiedIdsSet, collectionName) {
+    removeRefs(specifiedIdsSet, collectionLabel) {
         let layersToBeRemoved = new Set();
         let hadRefs = false;
         const refsIDMap = {};
         for (const [joinField, layer] of Object.entries(this.currentGISJOINLayers)) {
             if (specifiedIdsSet.has(layer.layerID)) {
                 hadRefs = true;
-                layer.refs = layer.refs.filter(ref => ref.name !== collectionName);
+                layer.refs = layer.refs.filter(ref => ref.name !== collectionLabel);
                 if (!layer.refs.length) {
                     delete this.currentGISJOINLayers[joinField]
                     layersToBeRemoved.add(layer.layerID)
@@ -503,11 +503,11 @@ export default class RenderInfrastructure {
      * @param {Array<int>} specifiedIds
      * @returns {boolean} true if ids were removed
      */
-    removeSpecifiedLayersFromMap(specifiedIds, collectionName = null, dontRemoveRefs = false) {
+    removeSpecifiedLayersFromMap(specifiedIds, collectionLabel = null, dontRemoveRefs = false) {
         let specifiedIdsSet = new Set(specifiedIds)
 
         if (!dontRemoveRefs) {
-            const refRemovalResult = this.removeRefs(specifiedIdsSet, collectionName);
+            const refRemovalResult = this.removeRefs(specifiedIdsSet, collectionLabel);
             if (refRemovalResult.layersToBeRemoved.size) {
                 specifiedIdsSet = refRemovalResult.layersToBeRemoved;
             }
