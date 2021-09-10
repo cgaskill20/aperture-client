@@ -56,31 +56,27 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import WorkspaceControls from "./WorkspaceControls";
-import WorkspaceLayers from "./WorkspaceLayers";
-import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
-import { Modal } from "@material-ui/core";
-import Save from "./Save"
-import Load from "./Load"
-import Share from "./Share"
-
+import Modal from "@material-ui/core/Modal";
+import Save from "./Save";
+import Load from "./Load";
+import Share from "./Share";
+import {Paper} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
+        maxHeight: "90vh",
+        overflowY: "scroll",
+        top: '10%',
+        left: '40%',
         position: 'absolute',
         width: 400,
-        left: "30vw",
-        top: "30vh",
         backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
+        padding: theme.spacing(2),
     }
 }));
-
 
 export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen, serializeWorkspace, deSerializeWorkspace }) {
     const classes = useStyles();
@@ -91,7 +87,7 @@ export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen, 
             open={modalOpen}
             onClose={() => { setModalOpen(false) }}
         >
-            <div className={classes.paper}>
+            <Paper className={classes.paper}>
                 {
                     (() => {
                         if (mode === "save") {
@@ -108,7 +104,7 @@ export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen, 
                         }
                     })()
                 }
-            </div>
+            </Paper>
         </Modal>
     );
 })

@@ -56,20 +56,41 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import WorkspaceControls from "./WorkspaceControls";
-import WorkspaceLayers from "./WorkspaceLayers";
-import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
-import { Switch, FormGroup, FormControlLabel, Typography, TextField, Button } from "@material-ui/core";
-import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
-
+import {
+    Switch,
+    FormGroup,
+    FormControlLabel,
+    Typography,
+    TextField,
+    Button,
+    Tooltip,
+    IconButton, Divider
+} from "@material-ui/core";
+import {CustomTooltip} from "../UtilityComponents";
+import Grid from "@material-ui/core/Grid";
+import SaveIcon from '@material-ui/icons/Save';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import CustomAlert from "./CustomAlert";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-
-    }
+    spaceOnTheLeft: {
+        marginLeft: theme.spacing(2),
+    },
+    title: {
+        borderBottom: '2px solid #adadad',
+        marginBottom: theme.spacing(2),
+        width: "100%",
+    },
+    fullWidth: {
+        width: "100%",
+    },
+    alert: {
+        width: "100%",
+        marginTop: theme.spacing(1),
+    },
 }));
 
 const aperturePublicPage = "urban-sustain.org/services/aperture.php"
@@ -79,42 +100,56 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
     const [includeColor, setIncludeColor] = useState(true)
     const [includeViewport, setIncludeViewport] = useState(false)
     const [linkCopied, setLinkCopied] = useState(false);
+    const [alertOpen, setAlertOpen] = React.useState(false);
     const link = `${aperturePublicPage}?workspace=${serializeWorkspace("Shared Workspace", includeColor, includeViewport)}`
 
     const copyLink = () => {
-        const linkElement = document.getElementById("linkField")
-        linkElement.focus()
-        linkElement.select()
-        document.execCommand('copy')
-        setLinkCopied(true)
+        const linkElement = document.getElementById("linkField");
+        linkElement.focus();
+        linkElement.select();
+        document.execCommand('copy');
+        setLinkCopied(true);
+        setAlertOpen(true);
     }
 
     if (componentIsRendering) { console.log("|Share Rerending|") }
     return (
-        <div>
-            <Typography variant="h5">Share Workspace</Typography>
-            <FormGroup row>
-                <FormControlLabel
-                    control={<Switch checked={includeColor} onChange={(e) => { setIncludeColor(e.target.checked) }} />}
-                    label="Include Color Selections"
-                />
-            </FormGroup>
-            <FormGroup row>
-                <FormControlLabel
-                    control={<Switch checked={includeViewport} onChange={(e) => { setIncludeViewport(e.target.checked) }} />}
-                    label="Include Current Viewport Bounds"
-                />
-            </FormGroup>
-            <Button variant="contained" color="primary" onClick={copyLink}>
-                Copy Shareable Link
-            </Button>
-            {
-                linkCopied ? <Typography>Link Copied! Share it wherever you'd like.</Typography> : null
-            }
-            <Typography>Or Manually Copy Shareable Link</Typography>
-            <TextField value={link} InputProps={{
-                readOnly: true,
-            }} id="linkField" />
-        </div>
+        <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="flex-start"
+        >
+            <Grid item className={classes.fullWidth}>
+                <Typography className={classes.title} align="center" variant="h5">Share Workspace</Typography>
+                <Typography>Save Options</Typography>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={includeColor} onChange={(e) => { setIncludeColor(e.target.checked) }} />}
+                        label="Include Color Selections"
+                    />
+                </FormGroup>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={includeViewport} onChange={(e) => { setIncludeViewport(e.target.checked) }} />}
+                        label="Include Current Viewport Bounds"
+                    />
+                </FormGroup>
+            </Grid>
+            <Grid item className={classes.fullWidth}>
+                <CustomTooltip title="Copy Link to Clipboard">
+                    <Button className={classes.fullWidth} variant="outlined" startIcon={<AssignmentTurnedInIcon/>} onClick={copyLink}>
+                        <Divider orientation="vertical" flexItem />
+                        &nbsp;&nbsp;
+                        <TextField className={classes.fullWidth} value={link} InputProps={{
+                            readOnly: true,
+                        }} id="linkField" />
+                    </Button>
+                </CustomTooltip>
+            </Grid>
+            <Grid item className={classes.alert}>
+                <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} text="Link Copied!" />
+            </Grid>
+        </Grid>
     );
 })

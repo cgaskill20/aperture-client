@@ -56,26 +56,14 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import WorkspaceControls from "./WorkspaceControls";
-import WorkspaceLayers from "./WorkspaceLayers";
-import AutoMenu from "../../library/autoMenu";
 import { componentIsRendering } from "../TabSystem";
-import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography } from "@material-ui/core";
+import {List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography} from "@material-ui/core";
 import { Folder, FolderOpen } from '@material-ui/icons';
 import LZString from 'lz-string';
 
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-
-    }
-}));
-
-
-export default React.memo(function SavedWorkspaceSlotSelection({slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots}) {
-    const classes = useStyles();
+export default React.memo(function SavedWorkspaceSlotSelection({title, slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots}) {
 
     const getWorkspace = (index) => {
         return localStorage.getItem(`workspace${index}`)
@@ -84,7 +72,7 @@ export default React.memo(function SavedWorkspaceSlotSelection({slotCurrentlySel
     if (componentIsRendering) { console.log("|SavedWorkspaceSlotSelection Rerending|") }
     return (
         <>
-        <Typography>Select a save slot</Typography>
+        <Typography>{title}</Typography>
         <List dense>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((i) => { 
                 if(!onlyShowFullSlots) {
@@ -96,7 +84,7 @@ export default React.memo(function SavedWorkspaceSlotSelection({slotCurrentlySel
                 const workspaceName = workspace ? JSON.parse(LZString.decompressFromEncodedURIComponent(workspace))?.name : null;
                 const checked = slotCurrentlySelected === i
                 return (
-                    <ListItem key={i} style={{backgroundColor: checked ? "#ADADAD" : "#FFFFFF"}}>
+                    <ListItem key={i} style={{backgroundColor: checked ? "#d1d1d1" : "#fff"}}>
                         <ListItemIcon>
                             {workspace ? <Folder /> : <FolderOpen />}
                         </ListItemIcon>
@@ -105,6 +93,7 @@ export default React.memo(function SavedWorkspaceSlotSelection({slotCurrentlySel
                         />
                         <ListItemSecondaryAction>
                             <Radio
+                                color="primary"
                                 name="workspaceSelectionRadio"
                                 checked={checked}
                                 onChange={(e) => {
