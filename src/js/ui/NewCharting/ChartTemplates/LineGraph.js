@@ -63,7 +63,7 @@ import * as d3 from '../../../third-party/d3.min.js';
 export default function LineGraph(props) {
     let svgRef = React.createRef();
 
-    let [margin, setMargin] = useState({ top: 30, right: 20, bottom: 130, left: 50 });
+    let [margin, setMargin] = useState({ top: 30, right: 20, bottom: 130, left: 70 });
 
     let mouseIn = false;
     let onMouseMove = () => {};
@@ -80,12 +80,10 @@ export default function LineGraph(props) {
             .attr("stroke-linejoin", "round")
             .attr("stroke-linecap", "round");
         svg.append("text").attr("id", "marker");
-        svg.append("text").attr("id", "queryNotice")
-            .attr("y", 12)
-            .attr("x", 12)
-            .attr("font-size", "0.7em")
-            .attr("fill", "#666")
-            .text("getting data...");
+        svg.append("text").attr("id", "xAxisLabel")
+            .text("date");
+        svg.append("text").attr("id", "yAxisLabel")
+            .text("# of cases");
 
 		svg.on('mouseenter', (event) => { mouseIn = true; });
         svg.on('mouseleave', (event) => {
@@ -148,16 +146,13 @@ export default function LineGraph(props) {
             .style("mix-blend-mode", "multiply")
             .attr("d", d => line(d.data));
 
-        svg.select("text#title")
-            .attr("x", width / 2)
-            .attr("fill", "#111")
-            .text("TITLE");
+        svg.select("text#xAxisLabel")
+            .attr("transform", `translate(${width / 2} ${height - margin.bottom + 40})`)
+            .attr("fill", "#555");
 
-        svg.select("text#subtitle")
-            .attr("x", width / 2)
-            .attr("fill", "#666")
-            .text("SUBTITLE");
-
+        svg.select("text#yAxisLabel")
+            .attr("transform", `translate(${margin.left - 40} ${height / 2 - 40}) rotate(-90)`)
+            .attr("fill", "#555");
 
         onMouseMove = event => {
             if (svgRef.current == null) {
