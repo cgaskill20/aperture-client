@@ -108,7 +108,7 @@ export default function BoxPlotChart(props){
         svg.select("#xAxis")
             .attr("transform", "translate(0," + 150 + ")")
             .call(d3.axisBottom(y));
-        var center = 100;
+        let center = 100;
         width = 50;
         svg.select("#line1")
             .attr("y1", center)
@@ -146,7 +146,7 @@ export default function BoxPlotChart(props){
 
     return (
         <div>
-            <svg ref={svgRef}></svg>
+            <svg ref={svgRef} />
         </div>
     );
 }
