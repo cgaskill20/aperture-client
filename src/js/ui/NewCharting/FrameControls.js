@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function FrameControls(props) {
     const classes = useStyles();
-    const dropdownNameOptions = ["Constraint", "X-Axis County", "X-Axis Tract", "Y-Axis County", "Y-Axis Tract"];
+    const dropdownNameOptions = ["Dataset", "X-Axis County", "X-Axis Tract", "Y-Axis County", "Y-Axis Tract"];
     const [tractOrCounty, setTractOrCounty] = useState(true);
     const [dropdownName1, setDropdownName1] = useState("");
     const [dropdownName2, setDropdownName2] = useState("");
