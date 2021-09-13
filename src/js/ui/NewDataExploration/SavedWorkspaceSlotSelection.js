@@ -59,11 +59,11 @@ END OF TERMS AND CONDITIONS
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { componentIsRendering } from "../TabSystem";
-import {List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography} from "@material-ui/core";
+import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography } from "@material-ui/core";
 import { Folder, FolderOpen } from '@material-ui/icons';
 import LZString from 'lz-string';
 
-export default React.memo(function SavedWorkspaceSlotSelection({title, slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots}) {
+export default React.memo(function SavedWorkspaceSlotSelection({ title, slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots }) {
 
     const getWorkspace = (index) => {
         return localStorage.getItem(`workspace${index}`)
@@ -72,40 +72,48 @@ export default React.memo(function SavedWorkspaceSlotSelection({title, slotCurre
     if (componentIsRendering) { console.log("|SavedWorkspaceSlotSelection Rerending|") }
     return (
         <>
-        <Typography>{title}</Typography>
-        <List dense>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((i) => { 
-                if(!onlyShowFullSlots) {
-                    return true;
-                }
-                return getWorkspace(i);
-            }).map((i) => {
-                const workspace = getWorkspace(i);
-                const workspaceName = workspace ? JSON.parse(LZString.decompressFromEncodedURIComponent(workspace))?.name : null;
-                const checked = slotCurrentlySelected === i
-                return (
-                    <ListItem key={i} style={{backgroundColor: checked ? "#d1d1d1" : "#fff"}}>
-                        <ListItemIcon>
-                            {workspace ? <Folder /> : <FolderOpen />}
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={workspaceName ?? "Empty Slot"}
-                        />
-                        <ListItemSecondaryAction>
-                            <Radio
-                                color="primary"
-                                name="workspaceSelectionRadio"
-                                checked={checked}
-                                onChange={(e) => {
-                                    if (e.target.checked) {
-                                        setSlotCurrentlySelected(i)
-                                    }
-                                }} />
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                )
-            })}
-        </List >
+            <Typography>{title}</Typography>
+            <List dense>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((i) => {
+                    if (!onlyShowFullSlots) {
+                        return true;
+                    }
+                    return getWorkspace(i);
+                }).map((i) => {
+                    const workspace = getWorkspace(i);
+                    let workspaceName = workspace ? JSON.parse(LZString.decompressFromEncodedURIComponent(workspace))?.name : null;
+                    if (workspaceName) {
+                        const longWordRegex = /\S{29,}/g;
+                        const longWordMatches = [...(workspaceName.matchAll(longWordRegex) ?? [])]
+                        for (const longWordMatch of longWordMatches) {
+                            workspaceName = workspaceName.replace(longWordMatch[0], `${longWordMatch[0].substring(0, 26)}...`)
+                        }
+                    }
+                    //workspaceName?.length > 32 && (() => { workspaceName = workspaceName.substring(0,29) + '...' })()
+                    const checked = slotCurrentlySelected === i
+                    return (
+                        <ListItem key={i} style={{ backgroundColor: checked ? "#d1d1d1" : "#fff" }}>
+                            <ListItemIcon>
+                                {workspace ? <Folder /> : <FolderOpen />}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={workspaceName ?? "Empty Slot"}
+                            />
+                            <ListItemSecondaryAction>
+                                <Radio
+                                    color="primary"
+                                    name="workspaceSelectionRadio"
+                                    checked={checked}
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setSlotCurrentlySelected(i)
+                                        }
+                                    }} />
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                    )
+                })}
+            </List >
         </>
     );
 })

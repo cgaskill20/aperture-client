@@ -82,9 +82,14 @@ export default function ConstraintSlider({ constraint, querier }) {
     const step = constraint.step ? constraint.step : 1;
     const [minMax, setMinMax] = useState([min, max]);
     const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
+    const isCategoricalMappedToSlider = constraint.selectToRangeMap ? true : false;
+    const nonConstrained = minMax[0] === min && minMax[1] === max;
+
 
     useEffect(() => {
-        querier.updateConstraint(constraint.name, minMaxCommited);
+        if (!isCategoricalMappedToSlider) {
+            querier.updateConstraint(constraint.name, minMaxCommited);
+        }
     }, [minMaxCommited]);
 
     useEffect(() => {
@@ -103,8 +108,17 @@ export default function ConstraintSlider({ constraint, querier }) {
     })
 
     const buildSliderLabel = () => {
-        return <b>{minMax[0]} ➔ {minMax[1]} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
+        if (isCategoricalMappedToSlider) {
+            return <b>{Object.keys(constraint.selectToRangeMap)[Object.values(constraint.selectToRangeMap).indexOf(minMax[0])]} ➔ {Object.keys(constraint.selectToRangeMap)[Object.values(constraint.selectToRangeMap).indexOf(minMax[1])]}{nonConstrained ? ' (Includes All Values)' : ''}</b>
+        }
+        return <b>{minMax[0]} ➔ {minMax[1]}{constraint.plus && max === minMax[1] ? '+' : ''} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
     }
+
+    const sliderStyle = {};
+    if(nonConstrained) {
+        sliderStyle.color = "#ADADAD"
+    }
+
     if (componentIsRendering) { console.log("|ContraintSlider Rerending|") }
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
@@ -116,6 +130,12 @@ export default function ConstraintSlider({ constraint, querier }) {
                 value={minMax}
                 onChange={(event, newValue) => setMinMax(newValue)}
                 onChangeCommitted={(event, newValue) => {
+                    if(isCategoricalMappedToSlider) {
+                        for(const [name, index] of Object.entries(constraint.selectToRangeMap)) {
+                            querier.updateConstraint(constraint.name, name, newValue[0] <= index && index <= newValue[1])
+                        }
+                        return;
+                    }
                     setMinMaxCommited(newValue);
                     constraint.state = newValue;
                 }}
@@ -125,6 +145,7 @@ export default function ConstraintSlider({ constraint, querier }) {
                 step={step}
                 id={`${constraint.label}`}
                 name={`${constraint.label}`}
+                style={sliderStyle}
             />
         </div>
     );

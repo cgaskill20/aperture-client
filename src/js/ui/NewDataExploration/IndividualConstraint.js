@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function IndividualConstraint(props) {
     const classes = useStyles();
-    if(props.constraint.type === "slider") {
+    if(props.constraint.type === "slider" || props.constraint.selectToRangeMap) {
         return (
             <Grid item className={classes.root}>
                 {!props.constraint.isDate ?

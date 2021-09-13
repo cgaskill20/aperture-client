@@ -73,22 +73,25 @@ export const keyToDisplay = (obj, key, suffix = '') => {
 }
 
 export const valueToDisplay = (obj, key, value) => {
-    let unit = obj?.meta?.[key]?.unit;
+    let unit = obj?.properties?.meta?.[key]?.unit;
     if (unit?.toUpperCase() === 'NA') {
         unit = null;
     }
 
-    if (obj?.meta?.[key]?.isDate) {
+    if (obj?.properties?.meta?.[key]?.isDate) {
         return dateToDisplay(value);
     }
     else if (defaultImportantFields[key]?.type && !['string', 'number'].includes(defaultImportantFields[key]?.type)) {
         return specialTypeToDisplay(defaultImportantFields[key].type, value);
     }
-    else if (['string', 'number'].includes(typeof value)) {
+    else if (['string', 'number', 'object'].includes(typeof value)) {
+        if(typeof value === 'object') {
+            value = mongoObjectToSomething(value, (s) => s);
+        }
+        if(typeof value === 'number') {
+            value = Number(value.toFixed(3))
+        }
         return `${value}${unit ? ` ${Util.cleanUpString(unit)}` : ''}`;
-    }
-    else if (typeof value === 'object') {
-        return mongoObjectToSomething(value, (s) => s);
     }
     else {
         return JSON.stringify(value);

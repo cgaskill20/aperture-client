@@ -73,6 +73,7 @@ import { mongoGroupAccumulators, temporalId } from "./Constants"
 
 export default class AutoQuery {
     static blockers = {}
+    static intersectableColors = {}
     static blockerListener = null;
     /**
       * Constructs the instance of the autoquerier to a specific layer
@@ -84,6 +85,7 @@ export default class AutoQuery {
     constructor(layerData, graphPipeID) {
         this.data = layerData;
         this.collection = layerData.collection;
+        this.label = layerData.label ?? this.collection;
         this.map = globalThis.map;
 
         this.constraintData = {};
@@ -111,15 +113,6 @@ export default class AutoQuery {
                 }, {});
         }
 
-        this.colorFieldChangeSubscribers = [];
-        this.color = layerData.color;
-        if (this.color.variable) {
-            this.changeColorCodeField(this.color.variable, this.color)
-        }
-        else {
-            Object.keys(this.constraintState)[0] ? this.changeColorCodeField(Object.keys(this.constraintState)[0]) : null;
-        }
-
         this.graphPipeID = graphPipeID;
 
         this.blockerGroup = this.data.linkedGeometry ?
@@ -137,6 +130,15 @@ export default class AutoQuery {
         }
 
         this.isIntersectable = ["tracts", "counties"].includes(this.blockerGroup);
+
+        this.colorFieldChangeSubscribers = [];
+        this.color = layerData.color;
+        if (this.color.variable) {
+            this.changeColorCodeField(this.color.variable, this.color)
+        }
+        else {
+            Object.keys(this.constraintState)[0] ? this.changeColorCodeField(Object.keys(this.constraintState)[0]) : null;
+        }
 
         this.minZoom = this.data.minZoom;
         this.blocked = false;
@@ -264,6 +266,10 @@ export default class AutoQuery {
             this.initialColorSet = false;
             //console.log({fieldName})
             this.colorField = { name: temporalAccumulator ? `${fieldName}${temporalId}${temporalAccumulator}` : fieldName, label: colorField.label };
+            if(this.isIntersectable) {
+                // TODO
+                AutoQuery.intersectableColors[this.blockerGroup] = this.colorField.name;
+            }
             if (colorField?.type === "slider") {
                 this.protoColor = new Color("numeric", colorField.range, predefinedColor, colorField.reverseGradient);
             }
@@ -419,7 +425,7 @@ export default class AutoQuery {
       * @method clearMapLayers
       */
     clearMapLayers() {
-        window.renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers, this.collection);
+        window.renderInfrastructure.removeSpecifiedLayersFromMap(this.mapLayers, this.label);
         this.mapLayers = [];
         this.layerIDs.clear();
         MapDataFilterWrapper.removeCollection(this.collection);
@@ -440,7 +446,7 @@ export default class AutoQuery {
 
         let indexData = {};
         //console.log(this.constraintData[this.temporal])
-        indexData[this.collection] = {
+        indexData[this.label] = {
             "color": this.getColor(data.properties, Util.getFeatureType(data)),
             "joinField": this.data.joinField
         }
@@ -456,10 +462,10 @@ export default class AutoQuery {
         }
 
         if (this.getIcon())
-            indexData[this.collection]["iconAddr"] = `./images/map-icons/${this.getIcon().split('.')[0]}.${this.getIcon().includes('svg') ? 'svg' : 'png'}`;
+            indexData[this.label]["iconAddr"] = `./images/map-icons/${this.getIcon().split('.')[0]}.${this.getIcon().includes('svg') ? 'svg' : 'png'}`;
 
-        indexData[this.collection]["border"] = this.color.border;
-        //indexData[this.collection]["opacity"] = this.color.opacity;
+        indexData[this.label]["border"] = this.color.border;
+        //indexData[this.label]["opacity"] = this.color.opacity;
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.add(id);
 
