@@ -349,7 +349,9 @@ const Query = {
                     query.callback(d)
                 }
             }
-
+            if(!coarseBounds.length) {
+                query.callback({ event: "end", geohashes: [] })
+            }
             coarseBounds.forEach((coarseBound, index) => {
                 const queryClone = JSON.parse(JSON.stringify(query))
                 queryClone.pipeline.unshift({ "$match": { geometry: { "$geoIntersects": { "$geometry": { type: "Polygon", coordinates: coarseBound } } } } });
@@ -513,7 +515,6 @@ const Query = {
             queryParams: pipeline,
             senderID: id
         });
-
         const responseListener = msg => {
             const data = msg.data;
             if (data.senderID !== id)
