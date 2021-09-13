@@ -88,6 +88,7 @@ export default function KDEWrapper(props) {
             <Grid container spacing={2} alignItems="center">
                 <Grid item>
                     <Checkbox
+                        color="primary"
                         onChange={handleChange(setEnabled)}
                         checked={enabled}
                     />
