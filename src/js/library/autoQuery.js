@@ -362,6 +362,7 @@ export default class AutoQuery {
             }
         }
 
+        this.currentQueries.add(id);
         Query.makeQuery({
             collection: this.collection,
             pipeline: this.buildConstraintPipeline(),
@@ -371,7 +372,6 @@ export default class AutoQuery {
             geohashBlacklist: this.geohashCache,
             id
         });
-        this.currentQueries.add(id);
     }
 
     zoomIsValid() {
