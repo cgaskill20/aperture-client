@@ -162,7 +162,7 @@ const Query = {
                                 body: JSON.stringify({
                                     bounds: query.bounds ? query.bounds.toBBoxString() : '',
                                     collection: query?.collection,
-                                    pipeline: query?.pipeline,
+                                    pipeline: JSON.stringify(query?.pipeline ?? []),
                                     ttr: Date.now() - query.startTime
                                 }) // body data type must match "Content-Type" header
                             }).then(res => {}).catch(error => {});
