@@ -136,9 +136,10 @@ const Query = {
     **/
     async makeQuery(query) {
         query = { ...defaultQuery, ...query }
-        if(!query.id) {
+        if (!query.id) {
             query.id = Math.random().toString(36).substring(2, 6);
         }
+        query.startTime = Date.now();
         this.currentQueries[query.id] = query;
         const { dontLink, callback } = query;
 
@@ -151,6 +152,21 @@ const Query = {
         else {
             query.callback = (res) => {
                 if (res.event === "end") {
+                    try {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const apiKey = urlParams.get('apiKey');
+                        fetch(`https://urban-sustain.org/api/query?apiKey=${apiKey ?? 'bGvWMIbJwgzYuOyi'}`, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                bounds: query.bounds ? query.bounds.toBBoxString() : '',
+                                collection: query?.collection,
+                                pipeline: query?.pipeline,
+                                ttr: Date.now() - query.startTime
+
+                            }) // body data type must match "Content-Type" header
+                        }).catch(console.error)
+                    }
+                    catch { }
                     delete this.currentQueries[query.id];
                     callback(res)
                     query.callback = () => { }
@@ -262,7 +278,7 @@ const Query = {
                 if (waitingRoom.length) {
                     dumpWaitingRoom();
                 }
-                else if(!currentDumpNums.size) {
+                else if (!currentDumpNums.size) {
                     finished();
                 }
             }
@@ -349,7 +365,7 @@ const Query = {
                     query.callback(d)
                 }
             }
-            if(!coarseBounds.length) {
+            if (!coarseBounds.length) {
                 query.callback({ event: "end", geohashes: [] })
             }
             coarseBounds.forEach((coarseBound, index) => {
