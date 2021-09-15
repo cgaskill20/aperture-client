@@ -152,21 +152,23 @@ const Query = {
         else {
             query.callback = (res) => {
                 if (res.event === "end") {
-                    try {
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const apiKey = urlParams.get('apiKey');
-                        fetch(`https://urban-sustain.org/api/query?apiKey=${apiKey ?? 'bGvWMIbJwgzYuOyi'}`, {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                bounds: query.bounds ? query.bounds.toBBoxString() : '',
-                                collection: query?.collection,
-                                pipeline: query?.pipeline,
-                                ttr: Date.now() - query.startTime
-
-                            }) // body data type must match "Content-Type" header
-                        }).catch(console.error)
+                    if(window.location.origin === "https://urban-sustain.org") {
+                        try {
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const apiKey = urlParams.get('apiKey');
+                            
+                            fetch(`https://urban-sustain.org/api/query?apiKey=${apiKey ?? 'bGvWMIbJwgzYuOyi'}`, {
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    bounds: query.bounds ? query.bounds.toBBoxString() : '',
+                                    collection: query?.collection,
+                                    pipeline: query?.pipeline,
+                                    ttr: Date.now() - query.startTime
+                                }) // body data type must match "Content-Type" header
+                            }).then(res => {}).catch(error => {});
+                        }
+                        catch { }    
                     }
-                    catch { }
                     delete this.currentQueries[query.id];
                     callback(res)
                     query.callback = () => { }
