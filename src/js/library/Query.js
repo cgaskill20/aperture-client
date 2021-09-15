@@ -155,7 +155,7 @@ const Query = {
                     if(window.location.origin === "https://urban-sustain.org") {
                         try {
                             const urlParams = new URLSearchParams(window.location.search);
-                            const apiKey = urlParams.get('apiKey');
+                            const apiKey = urlParams.get('api_key');
                             
                             fetch(`https://urban-sustain.org/api/query?apiKey=${apiKey ?? 'bGvWMIbJwgzYuOyi'}`, {
                                 method: 'POST',
