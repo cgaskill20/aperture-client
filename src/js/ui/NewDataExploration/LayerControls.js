@@ -118,15 +118,15 @@ export default React.memo(function LayerControls(props) {
                     <ButtonGroup variant="outlined">
                         <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
                                              activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
-                        <Button startIcon={<RotateLeftIcon />}>
+                        {/* <Button startIcon={<RotateLeftIcon />}>
                             Reset Constraints
-                        </Button>
+                        </Button> */}
                         <Button startIcon={<TuneIcon />} onClick={() => {
                             props.setActiveLayerConstraints(props.defaultLayerConstraints);
                         }}>
                             Default Constraints
                         </Button>
-                        {graphIcon(props.layer, props.graphableLayers)}
+                        {/* {graphIcon(props.layer, props.graphableLayers)} */}
                         {sourceIcon(props.layer)}
                     </ButtonGroup>
                 </Grid>
