@@ -168,6 +168,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     
     const deleteWorkspace = () => {
         localStorage.removeItem(`workspace${slotCurrentlySelected}`);
+        setModalOpen(false);
     }
 
     if (componentIsRendering) { console.log("|Save Rerending|") }
