@@ -59,7 +59,16 @@ END OF TERMS AND CONDITIONS
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { componentIsRendering } from "../TabSystem";
-import {Switch, FormGroup, FormControlLabel, Typography, TextField, Button, Divider} from "@material-ui/core";
+import {
+    Switch,
+    FormGroup,
+    FormControlLabel,
+    Typography,
+    TextField,
+    Button,
+    Divider,
+    ButtonGroup
+} from "@material-ui/core";
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 import Grid from "@material-ui/core/Grid";
 import CustomAlert from "./CustomAlert";
@@ -91,19 +100,24 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const [saveViewport, setSaveViewport] = useState(false);
     const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1);
     const [name, setName] = useState("Empty Slot");
-    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertOverwriteOpen, setAlertOverwriteOpen] = useState(false);
+    const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
     const validName = name.length !== 0;
 
     const saveWorkspace = () => {
         if(!validName) {
             return;
         }
-        if(localStorage.getItem(`workspace${slotCurrentlySelected}`)) {
-            setAlertOpen(true);
+        if(getWorkspace()) {
+            setAlertOverwriteOpen(true);
         }
         else {
             overwriteWorkspace();
         }
+    }
+
+    const getWorkspace = () => {
+        return localStorage.getItem(`workspace${slotCurrentlySelected}`);
     }
 
     const overwriteWorkspace = () => {
@@ -113,20 +127,48 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     }
 
     const renderSaveButton = () => {
-        if(alertOpen) {
+        if(alertOverwriteOpen) {
             return (
                 <Button className={classes.gridItem} color="secondary" variant="contained" onClick={overwriteWorkspace}>
-                    Yes, Overwrite
+                    Overwrite
                 </Button>
             )
         }
         else {
             return (
                 <Button className={classes.gridItem} variant="outlined" onClick={saveWorkspace}>
-                    Save Workspace
+                    Save
                 </Button>
             )
         }
+    }
+
+    const renderDeleteButton = () => {
+        if(alertDeleteOpen) {
+            return (
+                <Button className={classes.gridItem} variant="contained" color="secondary" disabled={!getWorkspace()}
+                        onClick={deleteWorkspace}>
+                    Delete
+                </Button>
+            )
+        }
+        else {
+            return (
+                <Button className={classes.gridItem} variant="outlined" disabled={!getWorkspace()}
+                        onClick={confirmDeleteWorkspace}>
+                    Delete
+                </Button>
+            )
+        }
+    }
+
+    const confirmDeleteWorkspace = () => {
+        setAlertDeleteOpen(true);
+    }
+    
+    const deleteWorkspace = () => {
+        localStorage.removeItem(`workspace${slotCurrentlySelected}`);
+        setModalOpen(false);
     }
 
     if (componentIsRendering) { console.log("|Save Rerending|") }
@@ -168,9 +210,13 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                 />
 
             </Grid>
-            <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} severity="warning" text="Are you sure you want to overwrite this save slot?" />
+            <CustomAlert alertOpen={alertOverwriteOpen} setAlertOpen={setAlertOverwriteOpen} severity="warning" text="Are you sure you want to overwrite this save slot?" />
+            <CustomAlert alertOpen={alertDeleteOpen} setAlertOpen={setAlertDeleteOpen} severity="warning" text="Are you sure you want to delete this save slot?" />
             <Grid item className={classes.gridItem}>
-                {renderSaveButton()}
+                <ButtonGroup className={classes.gridItem}>
+                    {renderSaveButton()}
+                    {renderDeleteButton()}
+                </ButtonGroup>
             </Grid>
         </Grid>
     );
