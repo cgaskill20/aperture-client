@@ -66,12 +66,10 @@ import {
     Typography,
     TextField,
     Button,
-    Tooltip,
-    IconButton, Divider
+    Divider
 } from "@material-ui/core";
 import {CustomTooltip} from "../UtilityComponents";
 import Grid from "@material-ui/core/Grid";
-import SaveIcon from '@material-ui/icons/Save';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import CustomAlert from "./CustomAlert";
 
@@ -100,7 +98,7 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
     const [includeColor, setIncludeColor] = useState(true)
     const [includeViewport, setIncludeViewport] = useState(false)
     const [linkCopied, setLinkCopied] = useState(false);
-    const [alertOpen, setAlertOpen] = React.useState(false);
+    const [alertOpen, setAlertOpen] = useState(false);
     const link = `${aperturePublicPage}?workspace=${serializeWorkspace("Shared Workspace", includeColor, includeViewport)}`
 
     const copyLink = () => {
@@ -148,7 +146,7 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
                 </CustomTooltip>
             </Grid>
             <Grid item className={classes.alert}>
-                <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} text="Link Copied!" />
+                <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} severity="success" text="Link Copied!" />
             </Grid>
         </Grid>
     );

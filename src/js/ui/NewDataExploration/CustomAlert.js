@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
         '& > * + *': {
             marginTop: theme.spacing(2),
         },
+        marginBottom: theme.spacing(1),
     },
 }));
 
@@ -21,6 +22,7 @@ export default function CustomAlert(props) {
         <div className={classes.root}>
             <Collapse in={props.alertOpen}>
                 <Alert
+                    severity={props.severity}
                     action={
                         <IconButton
                             aria-label="close"
