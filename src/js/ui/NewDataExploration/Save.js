@@ -81,10 +81,6 @@ const useStyles = makeStyles((theme) => ({
     spaceBelow: {
         marginBottom: theme.spacing(1),
     },
-    alert: {
-        width: "100%",
-        marginTop: theme.spacing(1),
-    },
 }));
 
 
@@ -94,7 +90,6 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const [saveColor, setSaveColor] = useState(true);
     const [saveViewport, setSaveViewport] = useState(false);
     const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1);
-    const [nameOfCurrentSlot, setNameOfCurrentSlot] = useState(null);
     const [name, setName] = useState("Empty Slot");
     const [alertOpen, setAlertOpen] = useState(false);
     const validName = name.length !== 0;
@@ -103,13 +98,11 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
         if(!validName) {
             return;
         }
-        if(nameOfCurrentSlot) {
+        if(localStorage.getItem(`workspace${slotCurrentlySelected}`)) {
             setAlertOpen(true);
         }
         else {
-            const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
-            localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace);
-            setModalOpen(false);
+            overwriteWorkspace();
         }
     }
 
@@ -161,9 +154,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                 </FormGroup>
             </Grid>
             <Grid item className={classes.gridItem}>
-                <SavedWorkspaceSlotSelection title="Select a Save Slot" setNameOfCurrentSlot={setNameOfCurrentSlot}
-                                             slotCurrentlySelected={slotCurrentlySelected}
-                                             setSlotCurrentlySelected={setSlotCurrentlySelected} />
+                <SavedWorkspaceSlotSelection title="Select a Save Slot" slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
             </Grid>
             <Grid item className={`${classes.gridItem} ${classes.spaceBelow}`}>
                 <TextField

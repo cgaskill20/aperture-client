@@ -85,10 +85,6 @@ const useStyles = makeStyles((theme) => ({
     fullWidth: {
         width: "100%",
     },
-    alert: {
-        width: "100%",
-        marginTop: theme.spacing(1),
-    },
 }));
 
 const aperturePublicPage = "urban-sustain.org/services/aperture.php"
