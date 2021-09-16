@@ -62,7 +62,7 @@ import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Ra
 import { Folder, FolderOpen } from '@material-ui/icons';
 import LZString from 'lz-string';
 
-export default React.memo(function SavedWorkspaceSlotSelection({ title, slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots}) {
+export default React.memo(function SavedWorkspaceSlotSelection({ title, slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots }) {
 
     const getWorkspace = (index) => {
         return localStorage.getItem(`workspace${index}`)
