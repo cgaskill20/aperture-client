@@ -210,8 +210,8 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                 />
 
             </Grid>
-            <CustomAlert alertOpen={alertOverwriteOpen} setAlertOpen={setAlertOverwriteOpen} severity="warning" text="Are you sure you want to overwrite this save slot?" />
-            <CustomAlert alertOpen={alertDeleteOpen} setAlertOpen={setAlertDeleteOpen} severity="warning" text="Are you sure you want to delete this save slot?" />
+            <CustomAlert alertOpen={alertOverwriteOpen} setAlertOpen={setAlertOverwriteOpen} severity="warning" text="Are you sure you want to overwrite this workspace?" />
+            <CustomAlert alertOpen={alertDeleteOpen} setAlertOpen={setAlertDeleteOpen} severity="warning" text="Are you sure you want to delete this workspace?" />
             <Grid item className={classes.gridItem}>
                 <ButtonGroup className={classes.gridItem}>
                     {renderSaveButton()}
