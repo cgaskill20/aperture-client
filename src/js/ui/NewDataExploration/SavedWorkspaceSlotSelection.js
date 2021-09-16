@@ -56,13 +56,19 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react';
+import React, {useEffect} from 'react';
 import { componentIsRendering } from "../TabSystem";
 import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography } from "@material-ui/core";
 import { Folder, FolderOpen } from '@material-ui/icons';
 import LZString from 'lz-string';
 
 export default React.memo(function SavedWorkspaceSlotSelection({ title, slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots, setNameOfCurrentSlot}) {
+
+    useEffect(() => {
+        const firstSaveSlot = getWorkspace(1);
+        let firstSaveSlotName = firstSaveSlot ? JSON.parse(LZString.decompressFromEncodedURIComponent(firstSaveSlot))?.name : null;
+        setNameOfCurrentSlot(firstSaveSlotName);
+    }, []);
 
     const getWorkspace = (index) => {
         return localStorage.getItem(`workspace${index}`)
