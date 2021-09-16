@@ -177,9 +177,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                 />
 
             </Grid>
-            <Grid item className={classes.alert}>
-                <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} severity="warning" text="Are you sure you want to overwrite this save slot?" />
-            </Grid>
+            <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} severity="warning" text="Are you sure you want to overwrite this save slot?" />
             <Grid item className={classes.gridItem}>
                 {renderSaveButton()}
             </Grid>

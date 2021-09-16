@@ -145,9 +145,7 @@ export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
                     </Button>
                 </CustomTooltip>
             </Grid>
-            <Grid item className={classes.alert}>
-                <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} severity="success" text="Link Copied!" />
-            </Grid>
+            <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} severity="success" text="Link Copied!" />
         </Grid>
     );
 })
