@@ -72,6 +72,7 @@ import {
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 import Grid from "@material-ui/core/Grid";
 import CustomAlert from "./CustomAlert";
+import { useGlobalState } from "../global/GlobalState";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -96,6 +97,7 @@ const useStyles = makeStyles((theme) => ({
 export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const classes = useStyles();
 
+    const [globalState, setGlobalState] = useGlobalState();
     const [saveColor, setSaveColor] = useState(true);
     const [saveViewport, setSaveViewport] = useState(false);
     const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1);
@@ -124,6 +126,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
         const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
         localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace);
         setModalOpen(false);
+        // setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Saved" });
     }
 
     const renderSaveButton = () => {
@@ -169,6 +172,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const deleteWorkspace = () => {
         localStorage.removeItem(`workspace${slotCurrentlySelected}`);
         setModalOpen(false);
+        // setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Deleted" });
     }
 
     if (componentIsRendering) { console.log("|Save Rerending|") }
