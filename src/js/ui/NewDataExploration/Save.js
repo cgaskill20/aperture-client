@@ -87,11 +87,7 @@ const useStyles = makeStyles((theme) => ({
     gridItem: {
         width: "100%",
     },
-    spaceBelow: {
-        // marginBottom: theme.spacing(1),
-    },
 }));
-
 
 export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const classes = useStyles();
@@ -109,9 +105,9 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
         return localStorage.getItem(`workspace${slotCurrentlySelected}`);
     }
 
-    const alertTimout = (text) => {
+    const alertTimeout = () => {
         setTimeout(function() {
-            setGlobalState({ generalAlertOpen: false, severity: "success", text: text });
+            setGlobalState({ generalAlertOpen: false });
         }, 3000);
     }
 
@@ -133,7 +129,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
         localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace);
         setModalOpen(false);
         setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Saved" });
-        alertTimout("Workspace Saved");
+        alertTimeout();
     }
 
     const confirmDeleteWorkspace = () => {
@@ -145,7 +141,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
         localStorage.removeItem(`workspace${slotCurrentlySelected}`);
         setModalOpen(false);
         setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Deleted" });
-        alertTimout("Workspace Deleted");
+        alertTimeout();
     }
 
     const renderSaveButton = () => {

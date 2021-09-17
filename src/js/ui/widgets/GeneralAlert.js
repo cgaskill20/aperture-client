@@ -56,7 +56,6 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-
 import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
@@ -80,7 +79,7 @@ export default function GeneralAlert(props) {
     const classes = useStyles();
 
     useEffect(() => {
-        setGlobalState({ generalAlertOpen: false, severity: "success", text: "" });
+        setGlobalState({ generalAlertOpen: false });
     }, [])
 
     return (
