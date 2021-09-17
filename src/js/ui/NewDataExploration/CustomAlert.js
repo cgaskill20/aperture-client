@@ -4,6 +4,7 @@ import Alert from '@material-ui/lab/Alert';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -11,6 +12,11 @@ const useStyles = makeStyles((theme) => ({
         '& > * + *': {
             marginTop: theme.spacing(2),
         },
+        marginBottom: theme.spacing(1),
+    },
+    alert: {
+        width: "100%",
+        marginTop: theme.spacing(1),
     },
 }));
 
@@ -18,25 +24,28 @@ export default function CustomAlert(props) {
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
-            <Collapse in={props.alertOpen}>
-                <Alert
-                    action={
-                        <IconButton
-                            aria-label="close"
-                            color="inherit"
-                            size="small"
-                            onClick={() => {
-                                props.setAlertOpen(false);
-                            }}
-                        >
-                            <CloseIcon fontSize="inherit" />
-                        </IconButton>
-                    }
-                >
-                    {props.text}
-                </Alert>
-            </Collapse>
-        </div>
+        <Grid item className={classes.alert}>
+            <div className={classes.root}>
+                <Collapse in={props.alertOpen}>
+                    <Alert
+                        severity={props.severity}
+                        action={
+                            <IconButton
+                                aria-label="close"
+                                color="inherit"
+                                size="small"
+                                onClick={() => {
+                                    props.setAlertOpen(false);
+                                }}
+                            >
+                                <CloseIcon fontSize="inherit" />
+                            </IconButton>
+                        }
+                    >
+                        {props.text}
+                    </Alert>
+                </Collapse>
+            </div>
+        </Grid>
     );
 }

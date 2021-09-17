@@ -57,7 +57,6 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { componentIsRendering } from "../TabSystem";
 import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography } from "@material-ui/core";
 import { Folder, FolderOpen } from '@material-ui/icons';
@@ -97,7 +96,7 @@ export default React.memo(function SavedWorkspaceSlotSelection({ title, slotCurr
                                 {workspace ? <Folder /> : <FolderOpen />}
                             </ListItemIcon>
                             <ListItemText
-                                primary={workspaceName ?? "Empty Slot"}
+                                primary={workspaceName ?? "Saved Workspace..."}
                             />
                             <ListItemSecondaryAction>
                                 <Radio

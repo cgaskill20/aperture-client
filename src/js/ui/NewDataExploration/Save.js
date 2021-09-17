@@ -62,6 +62,7 @@ import { componentIsRendering } from "../TabSystem";
 import {Switch, FormGroup, FormControlLabel, Typography, TextField, Button, Divider} from "@material-ui/core";
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 import Grid from "@material-ui/core/Grid";
+import CustomAlert from "./CustomAlert";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -86,19 +87,46 @@ const useStyles = makeStyles((theme) => ({
 export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const classes = useStyles();
 
-    const [saveColor, setSaveColor] = useState(true)
-    const [saveViewport, setSaveViewport] = useState(false)
-    const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1)
-    const [name, setName] = useState(`Workspace 1`)
+    const [saveColor, setSaveColor] = useState(true);
+    const [saveViewport, setSaveViewport] = useState(false);
+    const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1);
+    const [name, setName] = useState("Saved Workspace...");
+    const [alertOpen, setAlertOpen] = useState(false);
     const validName = name.length !== 0;
 
     const saveWorkspace = () => {
         if(!validName) {
             return;
         }
+        if(localStorage.getItem(`workspace${slotCurrentlySelected}`)) {
+            setAlertOpen(true);
+        }
+        else {
+            overwriteWorkspace();
+        }
+    }
+
+    const overwriteWorkspace = () => {
         const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
-        localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace)
-        setModalOpen(false)
+        localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace);
+        setModalOpen(false);
+    }
+
+    const renderSaveButton = () => {
+        if(alertOpen) {
+            return (
+                <Button className={classes.gridItem} color="secondary" variant="contained" onClick={overwriteWorkspace}>
+                    Yes, Overwrite
+                </Button>
+            )
+        }
+        else {
+            return (
+                <Button className={classes.gridItem} variant="outlined" onClick={saveWorkspace}>
+                    Save Workspace
+                </Button>
+            )
+        }
     }
 
     if (componentIsRendering) { console.log("|Save Rerending|") }
@@ -140,10 +168,9 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                 />
 
             </Grid>
+            <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} severity="warning" text="Are you sure you want to overwrite this save slot?" />
             <Grid item className={classes.gridItem}>
-                <Button className={classes.gridItem} variant="outlined" onClick={saveWorkspace}>
-                    Save Workspace
-                </Button>
+                {renderSaveButton()}
             </Grid>
         </Grid>
     );

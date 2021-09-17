@@ -66,7 +66,6 @@ import { Switch, FormGroup, FormControlLabel, Typography, TextField, Button } fr
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 import Grid from "@material-ui/core/Grid";
 
-
 const useStyles = makeStyles((theme) => ({
     title: {
         borderBottom: '2px solid #adadad',
