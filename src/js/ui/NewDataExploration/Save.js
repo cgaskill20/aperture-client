@@ -126,7 +126,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
         const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
         localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace);
         setModalOpen(false);
-        // setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Saved" });
+        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Saved" });
     }
 
     const renderSaveButton = () => {
@@ -172,7 +172,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const deleteWorkspace = () => {
         localStorage.removeItem(`workspace${slotCurrentlySelected}`);
         setModalOpen(false);
-        // setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Deleted" });
+        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Deleted" });
     }
 
     if (componentIsRendering) { console.log("|Save Rerending|") }

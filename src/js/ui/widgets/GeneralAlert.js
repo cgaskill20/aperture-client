@@ -67,9 +67,9 @@ import { useGlobalState } from "../global/GlobalState";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        position: "static",
-        bottom: "5",
-        right: "5",
+        position: "fixed",
+        bottom: "5px",
+        right: "5px",
         zIndex: "3000",
     },
 }));
@@ -79,8 +79,16 @@ export default function GeneralAlert(props) {
     const classes = useStyles();
 
     useEffect(() => {
-        // setGlobalState({ generalAlertOpen: false, severity: "success", text: "Success" });
-    }, [globalState])
+        setGlobalState({ generalAlertOpen: false, severity: "success", text: "Success" });
+
+        const timeId = setTimeout(() => {
+            setGlobalState({ generalAlertOpen: false });
+        }, 2000)
+
+        return () => {
+            clearTimeout(timeId)
+        }
+    }, [])
 
     return (
         <div className={classes.root}>
@@ -92,7 +100,7 @@ export default function GeneralAlert(props) {
                             color="inherit"
                             size="small"
                             onClick={() => {
-                                globalState.generalAlertOpen(false);
+                                setGlobalState({ generalAlertOpen: false });
                             }}
                         >
                             <CloseIcon fontSize="inherit" />
