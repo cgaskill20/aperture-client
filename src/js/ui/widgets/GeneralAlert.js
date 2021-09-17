@@ -81,7 +81,6 @@ export default function GeneralAlert(props) {
 
     useEffect(() => {
         setGlobalState({ generalAlertOpen: false, severity: "success", text: "" });
-
     }, [])
 
     return (

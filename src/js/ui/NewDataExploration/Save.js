@@ -141,6 +141,13 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
         setAlertDeleteOpen(true);
     }
 
+    const deleteWorkspace = () => {
+        localStorage.removeItem(`workspace${slotCurrentlySelected}`);
+        setModalOpen(false);
+        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Deleted" });
+        alertTimout("Workspace Deleted");
+    }
+
     const renderSaveButton = () => {
         if(alertOverwriteOpen) {
             return (
@@ -175,13 +182,6 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                 </Button>
             )
         }
-    }
-    
-    const deleteWorkspace = () => {
-        localStorage.removeItem(`workspace${slotCurrentlySelected}`);
-        setModalOpen(false);
-        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Deleted" });
-        alertTimout("Workspace Deleted");
     }
 
     if (componentIsRendering) { console.log("|Save Rerending|") }
