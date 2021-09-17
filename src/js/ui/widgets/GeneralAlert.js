@@ -74,13 +74,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function GeneralAlert(props) {
+export default function GeneralAlert() {
     const [globalState, setGlobalState] = useGlobalState();
     const classes = useStyles();
 
     useEffect(() => {
         setGlobalState({ generalAlertOpen: false });
-    }, [])
+    }, []);
 
     return (
         <div className={classes.root}>
