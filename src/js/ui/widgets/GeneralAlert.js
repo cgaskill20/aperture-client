@@ -80,7 +80,7 @@ export default function GeneralAlert(props) {
     const classes = useStyles();
 
     useEffect(() => {
-        setGlobalState({ generalAlertOpen: false, severity: "success", text: "Success" });
+        setGlobalState({ generalAlertOpen: false, severity: "success", text: "" });
 
     }, [])
 

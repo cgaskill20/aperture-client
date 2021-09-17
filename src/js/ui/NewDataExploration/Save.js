@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
     },
     spaceBelow: {
-        marginBottom: theme.spacing(1),
+        // marginBottom: theme.spacing(1),
     },
 }));
 
@@ -121,14 +121,18 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
         return localStorage.getItem(`workspace${slotCurrentlySelected}`);
     }
 
+    const alertTimout = (text) => {
+        setTimeout(function() {
+            setGlobalState({ generalAlertOpen: false, severity: "success", text: text });
+        }, 3000);
+    }
+
     const overwriteWorkspace = () => {
         const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
         localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace);
         setModalOpen(false);
         setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Saved" });
-        setTimeout(function() {
-            setGlobalState({ generalAlertOpen: false });
-        }, 3000);
+        alertTimout("Workspace Saved");
     }
 
     const renderSaveButton = () => {
@@ -175,9 +179,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
         localStorage.removeItem(`workspace${slotCurrentlySelected}`);
         setModalOpen(false);
         setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Deleted" });
-        setTimeout(function() {
-            setGlobalState({ generalAlertOpen: false });
-        }, 3000);
+        alertTimout("Workspace Deleted");
     }
 
     if (componentIsRendering) { console.log("|Save Rerending|") }
