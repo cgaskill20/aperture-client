@@ -211,7 +211,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
             <Grid item className={classes.gridItem}>
                 <SavedWorkspaceSlotSelection title="Select a Save Slot" slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
             </Grid>
-            <Grid item className={`${classes.gridItem} ${classes.spaceBelow}`}>
+            <Grid item className={classes.gridItem}>
                 <TextField
                     className={classes.gridItem}
                     error={!validName}
@@ -223,8 +223,8 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                 />
 
             </Grid>
-            <CustomAlert alertOpen={alertOverwriteOpen} setAlertOpen={setAlertOverwriteOpen} severity="warning" text="Are you sure you want to overwrite this workspace?" />
-            <CustomAlert alertOpen={alertDeleteOpen} setAlertOpen={setAlertDeleteOpen} severity="warning" text="Are you sure you want to delete this workspace?" />
+            <CustomAlert alertOpen={alertOverwriteOpen} setAlertOpen={setAlertOverwriteOpen} severity="error" text="Are you sure you want to overwrite this workspace?" />
+            <CustomAlert alertOpen={alertDeleteOpen} setAlertOpen={setAlertDeleteOpen} severity="error" text="Are you sure you want to delete this workspace?" />
             <Grid item className={classes.gridItem}>
                 <ButtonGroup className={classes.gridItem}>
                     {renderSaveButton()}
