@@ -120,7 +120,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
             return;
         }
         if(getWorkspace()) {
-            setAlertDeleteOpen(false);
+            if(alertDeleteOpen) setAlertDeleteOpen(false);
             setAlertOverwriteOpen(true);
         }
         else {
@@ -137,7 +137,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     }
 
     const confirmDeleteWorkspace = () => {
-        setAlertOverwriteOpen(false);
+        if(alertOverwriteOpen) setAlertOverwriteOpen(false);
         setAlertDeleteOpen(true);
     }
 
