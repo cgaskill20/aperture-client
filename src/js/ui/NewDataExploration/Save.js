@@ -105,18 +105,6 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
     const validName = name.length !== 0;
 
-    const saveWorkspace = () => {
-        if(!validName) {
-            return;
-        }
-        if(getWorkspace()) {
-            setAlertOverwriteOpen(true);
-        }
-        else {
-            overwriteWorkspace();
-        }
-    }
-
     const getWorkspace = () => {
         return localStorage.getItem(`workspace${slotCurrentlySelected}`);
     }
@@ -127,12 +115,30 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
         }, 3000);
     }
 
+    const saveWorkspace = () => {
+        if(!validName) {
+            return;
+        }
+        if(getWorkspace()) {
+            setAlertDeleteOpen(false);
+            setAlertOverwriteOpen(true);
+        }
+        else {
+            overwriteWorkspace();
+        }
+    }
+
     const overwriteWorkspace = () => {
         const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
         localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace);
         setModalOpen(false);
         setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Saved" });
         alertTimout("Workspace Saved");
+    }
+
+    const confirmDeleteWorkspace = () => {
+        setAlertOverwriteOpen(false);
+        setAlertDeleteOpen(true);
     }
 
     const renderSaveButton = () => {
@@ -169,10 +175,6 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                 </Button>
             )
         }
-    }
-
-    const confirmDeleteWorkspace = () => {
-        setAlertDeleteOpen(true);
     }
     
     const deleteWorkspace = () => {
