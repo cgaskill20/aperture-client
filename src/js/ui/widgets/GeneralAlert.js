@@ -68,9 +68,11 @@ import { useGlobalState } from "../global/GlobalState";
 const useStyles = makeStyles((theme) => ({
     root: {
         position: "fixed",
-        bottom: "5px",
-        right: "5px",
-        zIndex: "3000",
+        bottom: "0px",
+        right: "0px",
+        width: "100%",
+        zIndex: "2005",
+        opacity: "0.8",
     },
 }));
 
@@ -81,13 +83,6 @@ export default function GeneralAlert(props) {
     useEffect(() => {
         setGlobalState({ generalAlertOpen: false, severity: "success", text: "Success" });
 
-        const timeId = setTimeout(() => {
-            setGlobalState({ generalAlertOpen: false });
-        }, 2000)
-
-        return () => {
-            clearTimeout(timeId)
-        }
     }, [])
 
     return (
