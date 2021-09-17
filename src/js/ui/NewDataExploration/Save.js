@@ -90,7 +90,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const [saveColor, setSaveColor] = useState(true);
     const [saveViewport, setSaveViewport] = useState(false);
     const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1);
-    const [name, setName] = useState("Empty Slot");
+    const [name, setName] = useState("Saved Workspace...");
     const [alertOpen, setAlertOpen] = useState(false);
     const validName = name.length !== 0;
 

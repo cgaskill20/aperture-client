@@ -96,7 +96,7 @@ export default React.memo(function SavedWorkspaceSlotSelection({ title, slotCurr
                                 {workspace ? <Folder /> : <FolderOpen />}
                             </ListItemIcon>
                             <ListItemText
-                                primary={workspaceName ?? "Empty Slot"}
+                                primary={workspaceName ?? "Saved Workspace..."}
                             />
                             <ListItemSecondaryAction>
                                 <Radio
