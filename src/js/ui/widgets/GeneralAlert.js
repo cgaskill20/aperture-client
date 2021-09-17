@@ -68,11 +68,10 @@ import { useGlobalState } from "../global/GlobalState";
 const useStyles = makeStyles((theme) => ({
     root: {
         position: "fixed",
-        bottom: "0px",
-        right: "0px",
-        width: "100%",
+        bottom: "15px",
+        right: "15px",
+        width: "25vw",
         zIndex: "2005",
-        opacity: "0.8",
     },
 }));
 

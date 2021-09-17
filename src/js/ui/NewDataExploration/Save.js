@@ -66,7 +66,6 @@ import {
     Typography,
     TextField,
     Button,
-    Divider,
     ButtonGroup
 } from "@material-ui/core";
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
