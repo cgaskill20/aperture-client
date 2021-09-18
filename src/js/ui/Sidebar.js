@@ -64,6 +64,7 @@ import TabSystem from "./TabSystem"
 import MenuIcon from '@material-ui/icons/Menu';
 import {Button} from "@material-ui/core";
 import { useGlobalState } from './global/GlobalState';
+import Workspace from "./NewDataExploration/Workspace";
 
 const drawerWidth = 800;
 
@@ -116,7 +117,8 @@ export default function Sidebar() {
                     paper: classes.drawerPaper,
                 }}
             >
-                <TabSystem handleDrawerClose={() => { setGlobalState({sidebarOpen: false}) }}/>
+                {/*<TabSystem handleDrawerClose={() => { setGlobalState({sidebarOpen: false}) }}/>*/}
+                <Workspace/>
             </Drawer>
         </div>
     );

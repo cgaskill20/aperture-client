@@ -88,20 +88,6 @@ export default function TabSystem(props) {
     const classes = useStyles();
     const [globalState, setGlobalState] = useGlobalState();
 
-    const tabSwitchingStyles = [[{display: 'block'}, 'contained', 'primary'], [{display: 'none'}, 'outlined', '']];
-    const [dataExplortaionButtonStyles, setDataExplorationButtonStyles] = useState(tabSwitchingStyles[0]);
-    const [modelingButtonStyles, setModelingButtonStyles] = useState(tabSwitchingStyles[1]);
-    function switchTabs(index) {
-        if(index === 0) {
-            setDataExplorationButtonStyles(tabSwitchingStyles[0]);
-            setModelingButtonStyles(tabSwitchingStyles[1]);
-        }
-        else if(index === 1) {
-            setDataExplorationButtonStyles(tabSwitchingStyles[1]);
-            setModelingButtonStyles(tabSwitchingStyles[0]);
-        }
-    }
-
     if(componentIsRendering) console.log("|TabSystem|");
     return (
         <div className={classes.root}>
@@ -114,8 +100,6 @@ export default function TabSystem(props) {
                 >
                     <Grid item>
                         <ButtonGroup className={classes.buttonSpacing} size="large">
-                            <Button variant={dataExplortaionButtonStyles[1]} color={dataExplortaionButtonStyles[2]} startIcon={<ExploreIcon/>} onClick={() => switchTabs(0)}>Data Exploration</Button>
-                            <Button variant={modelingButtonStyles[1]} color={modelingButtonStyles[2]} startIcon={<DataUsageIcon/>} onClick={() => switchTabs(1)}>Modeling</Button>
                             <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => setGlobalState({ chartingOpen: !globalState.chartingOpen })}>Graphing</Button>
                             <Button variant="outlined" startIcon={<CloseIcon/>} onClick={props.handleDrawerClose}>Close</Button>
                         </ButtonGroup>
@@ -124,12 +108,8 @@ export default function TabSystem(props) {
             </div>
 
             <br/>
-            <div id="data-exploration-display" style={dataExplortaionButtonStyles[0]}>
+            <div>
                 <Workspace />
-            </div>
-            <div id="modeling-display" style={modelingButtonStyles[0]}>
-                {/* <NewModeling /> */}
-                <Typography>Modeling is temporarily unavailable.</Typography>
             </div>
         </div>
     );

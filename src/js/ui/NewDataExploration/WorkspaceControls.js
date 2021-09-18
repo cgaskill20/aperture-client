@@ -67,6 +67,9 @@ import { componentIsRendering } from "../TabSystem";
 import Ven from "../../../../images/ven.svg"
 import VenFilled from "../../../../images/venFilled.svg"
 import SaveAndLoadAndShare from './SaveAndLoadAndShare';
+import EqualizerIcon from "@material-ui/icons/Equalizer";
+import CloseIcon from "@material-ui/icons/Close";
+import { useGlobalState } from "../global/GlobalState";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -86,6 +89,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default React.memo(function WorkspaceControls(props) {
+    const [globalState, setGlobalState] = useGlobalState();
     const classes = useStyles();
     const venIcon = <Icon>
         <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
@@ -93,6 +97,13 @@ export default React.memo(function WorkspaceControls(props) {
     const [saveAndLoadAndShareModalOpen, setSaveAndLoadAndShareModalOpen] = useState(false)
     const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState(null)
 
+    function handleDrawerClose() {
+        setGlobalState({sidebarOpen: false})
+    }
+
+    function toggleCharting() {
+        setGlobalState({ chartingOpen: !globalState.chartingOpen });
+    }
 
     if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
     return (
@@ -103,20 +114,22 @@ export default React.memo(function WorkspaceControls(props) {
                         <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => {
                             setSaveAndLoadAndShareModalOpen(true);
                             setSaveAndLoadAndShareMode("save");
-                        }}>Save Workspace</Button>
+                        }}>Save</Button>
                         <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { 
                             setSaveAndLoadAndShareModalOpen(true);
                             setSaveAndLoadAndShareMode("load");
-                        }}>Load Workspace</Button>
+                        }}>Load</Button>
                         <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => { 
                             setSaveAndLoadAndShareModalOpen(true);
                             setSaveAndLoadAndShareMode("share");
-                        }}>Share Workspace</Button>
+                        }}>Share</Button>
                         <Button variant="outlined" startIcon={venIcon} onClick={() => {
                             props.setIntersect(!props.intersect)
                         }}>
                             {props.intersect ? "Intersections: on" : "Intersections: off"}
                         </Button>
+                        <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => toggleCharting()}>Graphing</Button>
+                        <Button variant="outlined" startIcon={<CloseIcon/>} onClick={handleDrawerClose}>Close</Button>
                     </ButtonGroup>
                 </Grid>
                 <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
