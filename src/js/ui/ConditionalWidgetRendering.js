@@ -65,6 +65,7 @@ import ChartingResizable from "./NewCharting/ChartingResizable"
 import {makeStyles} from "@material-ui/core/styles";
 import {CustomTooltip} from "./UtilityComponents";
 import nsfLogo from "../../../images/nsfLogo.png";
+import GeneralAlert from "./widgets/GeneralAlert";
 
 const widgetEnum = {
     defensiveOptimization: 0,
@@ -107,6 +108,7 @@ const ConditionalWidgetRendering = () => {
             toRender.push(
                 <div id="query-block-container" key={widgetEnum.defensiveOptimization}>
                     <DefensiveOptimization />
+                    <GeneralAlert />
                 </div>
             );
             break;
