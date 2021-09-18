@@ -110,60 +110,37 @@ export default React.memo(function WorkspaceControls(props) {
         <>
             <Paper className={classes.root} elevation={3}>
                 <Grid className={classes.buttons} container direction="row" justifyContent="space-between" alignItems="center">
-                        <Grid item>
-                            <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => {
-                                setSaveAndLoadAndShareModalOpen(true);
-                                setSaveAndLoadAndShareMode("save");
-                            }}>Save</Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => {
-                                setSaveAndLoadAndShareModalOpen(true);
-                                setSaveAndLoadAndShareMode("load");
-                            }}>Load</Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => {
-                                setSaveAndLoadAndShareModalOpen(true);
-                                setSaveAndLoadAndShareMode("share");
-                            }}>Share</Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="outlined" startIcon={venIcon} onClick={() => {
-                                props.setIntersect(!props.intersect)
-                            }}>
-                                {props.intersect ? "Intersections: on" : "Intersections: off"}
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => toggleCharting()}>Graph</Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="outlined" startIcon={<CloseIcon/>} onClick={handleDrawerClose}>Close</Button>
-                        </Grid>
-
-                        {/*<Fab className={classes.fab} variant="extended" onClick={() => {*/}
-                        {/*    setSaveAndLoadAndShareModalOpen(true);*/}
-                        {/*    setSaveAndLoadAndShareMode("save");*/}
-                        {/*}}><SaveIcon/>Save</Fab>*/}
-                        {/*<Fab className={classes.fab} variant="extended" onClick={() => {*/}
-                        {/*    setSaveAndLoadAndShareModalOpen(true);*/}
-                        {/*    setSaveAndLoadAndShareMode("load");*/}
-                        {/*}}><FolderOpenIcon/>Load</Fab>*/}
-                        {/*<Fab className={classes.fab} variant="extended" onClick={() => {*/}
-                        {/*    setSaveAndLoadAndShareModalOpen(true);*/}
-                        {/*    setSaveAndLoadAndShareMode("share");*/}
-                        {/*}}><ShareIcon/>Share</Fab>*/}
-                        {/*<Fab className={classes.fab} variant="extended" onClick={() => {*/}
-                        {/*    props.setIntersect(!props.intersect)*/}
-                        {/*}}>*/}
-                        {/*    {venIcon}{props.intersect ? "Intersections: on" : "Intersections: off"}*/}
-                        {/*</Fab>*/}
-                        {/*<Fab className={classes.fab} variant="extended" id="nav-graph-button" onClick={*/}
-                        {/*    () => toggleCharting()*/}
-                        {/*}><EqualizerIcon/>Graph</Fab>*/}
-                        {/*<Fab className={classes.fab} onClick={handleDrawerClose}><CloseIcon/></Fab>*/}
-
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("save");
+                        }}>Save</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("load");
+                        }}>Load</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("share");
+                        }}>Share</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={venIcon} onClick={() => {
+                            props.setIntersect(!props.intersect)
+                        }}>
+                            {props.intersect ? "Intersections: on" : "Intersections: off"}
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => toggleCharting()}>Graph</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<CloseIcon/>} onClick={handleDrawerClose}>Close</Button>
+                    </Grid>
                 </Grid>
                 <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
                     workspace={props.workspace} setWorkspace={props.setWorkspace} />
