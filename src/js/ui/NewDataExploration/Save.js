@@ -59,10 +59,19 @@ END OF TERMS AND CONDITIONS
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { componentIsRendering } from "../TabSystem";
-import {Switch, FormGroup, FormControlLabel, Typography, TextField, Button, Divider} from "@material-ui/core";
+import {
+    Switch,
+    FormGroup,
+    FormControlLabel,
+    Typography,
+    TextField,
+    Button,
+    ButtonGroup
+} from "@material-ui/core";
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 import Grid from "@material-ui/core/Grid";
 import CustomAlert from "./CustomAlert";
+import { useGlobalState } from "../global/GlobalState";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -78,28 +87,37 @@ const useStyles = makeStyles((theme) => ({
     gridItem: {
         width: "100%",
     },
-    spaceBelow: {
-        marginBottom: theme.spacing(1),
-    },
 }));
-
 
 export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const classes = useStyles();
 
+    const [globalState, setGlobalState] = useGlobalState();
     const [saveColor, setSaveColor] = useState(true);
     const [saveViewport, setSaveViewport] = useState(false);
     const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1);
     const [name, setName] = useState("Saved Workspace...");
-    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertOverwriteOpen, setAlertOverwriteOpen] = useState(false);
+    const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
     const validName = name.length !== 0;
+
+    const getWorkspace = () => {
+        return localStorage.getItem(`workspace${slotCurrentlySelected}`);
+    }
+
+    const alertTimeout = () => {
+        setTimeout(function() {
+            setGlobalState({ generalAlertOpen: false });
+        }, 3000);
+    }
 
     const saveWorkspace = () => {
         if(!validName) {
             return;
         }
-        if(localStorage.getItem(`workspace${slotCurrentlySelected}`)) {
-            setAlertOpen(true);
+        if(getWorkspace()) {
+            if(alertDeleteOpen) setAlertDeleteOpen(false);
+            setAlertOverwriteOpen(true);
         }
         else {
             overwriteWorkspace();
@@ -110,20 +128,53 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
         const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
         localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace);
         setModalOpen(false);
+        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Saved" });
+        alertTimeout();
+    }
+
+    const confirmDeleteWorkspace = () => {
+        if(alertOverwriteOpen) setAlertOverwriteOpen(false);
+        setAlertDeleteOpen(true);
+    }
+
+    const deleteWorkspace = () => {
+        localStorage.removeItem(`workspace${slotCurrentlySelected}`);
+        setModalOpen(false);
+        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Deleted" });
+        alertTimeout();
     }
 
     const renderSaveButton = () => {
-        if(alertOpen) {
+        if(alertOverwriteOpen) {
             return (
                 <Button className={classes.gridItem} color="secondary" variant="contained" onClick={overwriteWorkspace}>
-                    Yes, Overwrite
+                    Overwrite
                 </Button>
             )
         }
         else {
             return (
                 <Button className={classes.gridItem} variant="outlined" onClick={saveWorkspace}>
-                    Save Workspace
+                    Save
+                </Button>
+            )
+        }
+    }
+
+    const renderDeleteButton = () => {
+        if(alertDeleteOpen) {
+            return (
+                <Button className={classes.gridItem} variant="contained" color="secondary" disabled={!getWorkspace()}
+                        onClick={deleteWorkspace}>
+                    Delete
+                </Button>
+            )
+        }
+        else {
+            return (
+                <Button className={classes.gridItem} variant="outlined" disabled={!getWorkspace()}
+                        onClick={confirmDeleteWorkspace}>
+                    Delete
                 </Button>
             )
         }
@@ -156,7 +207,7 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
             <Grid item className={classes.gridItem}>
                 <SavedWorkspaceSlotSelection title="Select a Save Slot" slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
             </Grid>
-            <Grid item className={`${classes.gridItem} ${classes.spaceBelow}`}>
+            <Grid item className={classes.gridItem}>
                 <TextField
                     className={classes.gridItem}
                     error={!validName}
@@ -168,9 +219,13 @@ export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
                 />
 
             </Grid>
-            <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} severity="warning" text="Are you sure you want to overwrite this save slot?" />
+            <CustomAlert alertOpen={alertOverwriteOpen} setAlertOpen={setAlertOverwriteOpen} severity="error" text="Are you sure you want to overwrite this workspace?" />
+            <CustomAlert alertOpen={alertDeleteOpen} setAlertOpen={setAlertDeleteOpen} severity="error" text="Are you sure you want to delete this workspace?" />
             <Grid item className={classes.gridItem}>
-                {renderSaveButton()}
+                <ButtonGroup className={classes.gridItem}>
+                    {renderSaveButton()}
+                    {renderDeleteButton()}
+                </ButtonGroup>
             </Grid>
         </Grid>
     );

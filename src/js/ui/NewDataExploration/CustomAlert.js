@@ -8,13 +8,6 @@ import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: '100%',
-        '& > * + *': {
-            marginTop: theme.spacing(2),
-        },
-        marginBottom: theme.spacing(1),
-    },
-    alert: {
         width: "100%",
         marginTop: theme.spacing(1),
     },
@@ -24,28 +17,26 @@ export default function CustomAlert(props) {
     const classes = useStyles();
 
     return (
-        <Grid item className={classes.alert}>
-            <div className={classes.root}>
-                <Collapse in={props.alertOpen}>
-                    <Alert
-                        severity={props.severity}
-                        action={
-                            <IconButton
-                                aria-label="close"
-                                color="inherit"
-                                size="small"
-                                onClick={() => {
-                                    props.setAlertOpen(false);
-                                }}
-                            >
-                                <CloseIcon fontSize="inherit" />
-                            </IconButton>
-                        }
-                    >
-                        {props.text}
-                    </Alert>
-                </Collapse>
-            </div>
+        <Grid item className={classes.root}>
+            <Collapse in={props.alertOpen}>
+                <Alert
+                    severity={props.severity}
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                                props.setAlertOpen(false);
+                            }}
+                        >
+                            <CloseIcon fontSize="inherit" />
+                        </IconButton>
+                    }
+                >
+                    {props.text}
+                </Alert>
+            </Collapse>
         </Grid>
     );
 }
