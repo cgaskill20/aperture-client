@@ -63,7 +63,7 @@ import EqualizerIcon from "@material-ui/icons/Equalizer";
 import TuneIcon from '@material-ui/icons/Tune';
 import LinkIcon from '@material-ui/icons/Link';
 import AdvancedConstraints from "./AdvancedConstraints";
-import {componentIsRendering} from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 import {isGraphable} from "./Helpers";
 import {makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";

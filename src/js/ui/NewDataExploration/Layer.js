@@ -65,7 +65,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {Grid, Paper, Switch} from "@material-ui/core";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import LayerControls from "./LayerControls";
-import {componentIsRendering} from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 import AutoQuery from '../../library/autoQuery';
 import IndividualConstraint from "./IndividualConstraint"
 

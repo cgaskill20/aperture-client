@@ -62,7 +62,7 @@ import Modal from '@material-ui/core/Modal';
 import {Button, Paper} from "@material-ui/core";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AdvancedConstraintCheckbox from "./AdvancedConstraintCheckbox";
-import {componentIsRendering} from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 import CloseIcon from '@material-ui/icons/Close';
 import Grid from "@material-ui/core/Grid";
 

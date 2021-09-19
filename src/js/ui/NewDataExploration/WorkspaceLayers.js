@@ -59,7 +59,7 @@ END OF TERMS AND CONDITIONS
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Layer from "./Layer";
-import {componentIsRendering} from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 
 const useStyles = makeStyles((theme) => ({
     root: {

@@ -67,6 +67,7 @@ import { useGlobalState } from './global/GlobalState';
 import Workspace from "./NewDataExploration/Workspace";
 
 const drawerWidth = 800;
+export const componentIsRendering = false;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -117,7 +118,6 @@ export default function Sidebar() {
                     paper: classes.drawerPaper,
                 }}
             >
-                {/*<TabSystem handleDrawerClose={() => { setGlobalState({sidebarOpen: false}) }}/>*/}
                 <Workspace/>
             </Drawer>
         </div>

@@ -61,7 +61,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import WorkspaceControls from "./WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
 import AutoMenu from "../../library/autoMenu";
-import {componentIsRendering} from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 import Query from "../../library/Query";
 import Util from "../../library/apertureUtil";
 import Grid from "@material-ui/core/Grid";
