@@ -194,7 +194,7 @@ export default React.memo(function Layer(props) {
                     <AccordionDetails>
                         <Grid container direction="column">
                             <Grid item>
-                                <LayerControls layer={props.layer} graphableLayers={props.graphableLayers} layerTitle={layerTitle}
+                                <LayerControls layer={props.layer} graphableLayers={props.graphableLayers}
                                                allLayerConstraints={allLayerConstraints} defaultLayerConstraints={defaultLayerConstraints}
                                                activeLayerConstraints={activeLayerConstraints} setActiveLayerConstraints={setActiveLayerConstraints}
                                                layerIndex={props.layerIndex} />

@@ -106,9 +106,6 @@ function sourceIcon(layerInfo) {
 
 export default React.memo(function LayerControls(props) {
     const classes = useStyles();
-    const datasetInfoPath = datasetInfoPaths[`${props.layerTitle}`];
-    const disabled = datasetInfoPath === undefined;
-    console.log({disabled});
     if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (
         <Paper elevation={3} className={classes.root}>
