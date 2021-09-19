@@ -160,6 +160,7 @@ export default React.memo(function Layer(props) {
         newCheck || querier.onRemove();
     }
 
+    const layerTitle = props.layerTitles[props.layerIndex];
     const constraints = createConstraints(activeLayerConstraints, allLayerConstraints, classes, querier);
     if(componentIsRendering) console.log("|Layer|");
     return (
@@ -187,13 +188,13 @@ export default React.memo(function Layer(props) {
                                     checked={check}
                                 />
                             }
-                            label={props.layerTitles[props.layerIndex]}
+                            label={layerTitle}
                         />
                     </AccordionSummary>
                     <AccordionDetails>
                         <Grid container direction="column">
                             <Grid item>
-                                <LayerControls layer={props.layer} graphableLayers={props.graphableLayers}
+                                <LayerControls layer={props.layer} graphableLayers={props.graphableLayers} layerTitle={layerTitle}
                                                allLayerConstraints={allLayerConstraints} defaultLayerConstraints={defaultLayerConstraints}
                                                activeLayerConstraints={activeLayerConstraints} setActiveLayerConstraints={setActiveLayerConstraints}
                                                layerIndex={props.layerIndex} />

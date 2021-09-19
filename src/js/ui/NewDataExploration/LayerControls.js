@@ -67,6 +67,8 @@ import {componentIsRendering} from "../TabSystem";
 import {isGraphable} from "./Helpers";
 import {makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import InfoIcon from '@material-ui/icons/Info';
+import {datasetInfoPaths} from './DatasetInfoPaths';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -96,7 +98,7 @@ function getLayerText(layerInfo) {
 
 function sourceIcon(layerInfo) {
     if(layerInfo.source){
-        return <Button startIcon={<LinkIcon />} onClick={() => window.open(layerInfo.source, "_blank")}>
+        return <Button variant="outlined" startIcon={<LinkIcon />} onClick={() => window.open(layerInfo.source, "_blank")}>
             Source
         </Button>
     }
@@ -104,32 +106,40 @@ function sourceIcon(layerInfo) {
 
 export default React.memo(function LayerControls(props) {
     const classes = useStyles();
+    const datasetInfoPath = datasetInfoPaths[`${props.layerTitle}`];
+    const disabled = datasetInfoPath === undefined;
+    console.log({disabled});
     if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (
         <Paper elevation={3} className={classes.root}>
             <Grid
                 container
                 direction="row"
-                justifyContent="center"
+                justifyContent="space-around"
                 alignItems="center"
             >
                 {getLayerText(props.layer.info)}
                 <Grid item>
-                    <ButtonGroup variant="outlined">
-                        <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
-                                             activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
-                        {/* <Button startIcon={<RotateLeftIcon />}>
-                            Reset Constraints
-                        </Button> */}
-                        <Button startIcon={<TuneIcon />} onClick={() => {
-                            props.setActiveLayerConstraints(props.defaultLayerConstraints);
-                        }}>
-                            Default Constraints
-                        </Button>
-                        {/* {graphIcon(props.layer, props.graphableLayers)} */}
-                        {sourceIcon(props.layer)}
-                    </ButtonGroup>
+                    <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
+                                         activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
+                    {/* <Button startIcon={<RotateLeftIcon />}>
+                        Reset Constraints
+                    </Button> */}
                 </Grid>
+                <Grid item>
+                    <Button variant="outlined" startIcon={<TuneIcon />} onClick={() => {
+                        props.setActiveLayerConstraints(props.defaultLayerConstraints);
+                    }}>
+                        Default Constraints
+                    </Button>
+                </Grid>
+                <Grid item>
+                    <Button variant="outlined" disabled={disabled} startIcon={<InfoIcon/>} href={datasetInfoPath} target="_blank">
+                        Dataset Info
+                    </Button>
+                </Grid>
+                    {/* {graphIcon(props.layer, props.graphableLayers)} */}
+                    {sourceIcon(props.layer)}
             </Grid>
         </Paper>
     )
