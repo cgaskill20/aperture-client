@@ -56,11 +56,10 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useState} from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import TabSystem from "./TabSystem"
 import MenuIcon from '@material-ui/icons/Menu';
 import {Button} from "@material-ui/core";
 import { useGlobalState } from './global/GlobalState';

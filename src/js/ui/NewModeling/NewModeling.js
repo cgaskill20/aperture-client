@@ -57,7 +57,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React, { useState, useEffect } from 'react';
-import { componentIsRendering } from "../TabSystem"
+import { componentIsRendering } from "../Sidebar";
 import Category from "./Category";
 import Grid from "@material-ui/core/Grid";
 import {makeStyles, Paper} from "@material-ui/core";
