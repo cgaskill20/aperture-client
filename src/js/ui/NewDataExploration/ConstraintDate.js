@@ -59,7 +59,7 @@ END OF TERMS AND CONDITIONS
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { componentIsRendering } from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 import Grid from "@material-ui/core/Grid";
 import { KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
 import { Alert } from "@material-ui/lab";

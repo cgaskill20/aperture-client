@@ -63,7 +63,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import ShareIcon from '@material-ui/icons/Share';
 import WorkspaceSearchbar from "./WorkspaceSearchbar";
-import { componentIsRendering } from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 import Ven from "../../../../images/ven.svg"
 import VenFilled from "../../../../images/venFilled.svg"
 import SaveAndLoadAndShare from './SaveAndLoadAndShare';

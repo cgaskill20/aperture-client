@@ -57,7 +57,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React from 'react';
-import { componentIsRendering } from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography } from "@material-ui/core";
 import { Folder, FolderOpen } from '@material-ui/icons';
 import LZString from 'lz-string';

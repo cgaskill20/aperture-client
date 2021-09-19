@@ -58,7 +58,7 @@ END OF TERMS AND CONDITIONS
 */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { componentIsRendering } from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 import Modal from "@material-ui/core/Modal";
 import Save from "./Save";
 import Load from "./Load";
