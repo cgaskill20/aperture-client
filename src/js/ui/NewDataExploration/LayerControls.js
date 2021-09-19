@@ -66,7 +66,7 @@ import AdvancedConstraints from "./AdvancedConstraints";
 import {componentIsRendering} from "../TabSystem";
 import {isGraphable} from "./Helpers";
 import {makeStyles} from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid"
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
     root: {
