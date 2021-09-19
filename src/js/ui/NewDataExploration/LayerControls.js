@@ -57,7 +57,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React from 'react';
-import {Button, ButtonGroup, Paper, Typography} from "@material-ui/core";
+import {Button, Paper, Typography} from "@material-ui/core";
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import TuneIcon from '@material-ui/icons/Tune';
@@ -66,8 +66,7 @@ import AdvancedConstraints from "./AdvancedConstraints";
 import {componentIsRendering} from "../TabSystem";
 import {isGraphable} from "./Helpers";
 import {makeStyles} from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import InfoIcon from '@material-ui/icons/Info';
+import Grid from "@material-ui/core/Grid"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -127,11 +126,6 @@ export default React.memo(function LayerControls(props) {
                         props.setActiveLayerConstraints(props.defaultLayerConstraints);
                     }}>
                         Default Constraints
-                    </Button>
-                </Grid>
-                <Grid item>
-                    <Button variant="outlined" disabled={disabled} startIcon={<InfoIcon/>} href={datasetInfoPath} target="_blank">
-                        Dataset Info
                     </Button>
                 </Grid>
                     {/* {graphIcon(props.layer, props.graphableLayers)} */}
