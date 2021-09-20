@@ -58,11 +58,10 @@ END OF TERMS AND CONDITIONS
 */
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { componentIsRendering } from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 import { Typography, Button } from "@material-ui/core";
 import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 import Grid from "@material-ui/core/Grid";
-import {useGlobalState} from "../global/GlobalState";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -78,20 +77,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default React.memo(function Load({deSerializeWorkspace, setModalOpen}) {
     const classes = useStyles();
-    const [globalState, setGlobalState] = useGlobalState();
     const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1)
 
     const loadWorkspace = () => {
         deSerializeWorkspace(localStorage.getItem(`workspace${slotCurrentlySelected}`))
         setModalOpen(false);
-        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Loaded" });
-        alertTimeout();
-    }
-
-    const alertTimeout = () => {
-        setTimeout(function() {
-            setGlobalState({ generalAlertOpen: false });
-        }, 3000);
     }
 
     if (componentIsRendering) { console.log("|Load Rerending|") }

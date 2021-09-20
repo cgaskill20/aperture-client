@@ -58,15 +58,18 @@ END OF TERMS AND CONDITIONS
 */
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, ButtonGroup, Grid, Paper, Switch, Icon } from "@material-ui/core";
+import {Button, ButtonGroup, Grid, Paper, Switch, Icon, Fab} from "@material-ui/core";
 import SaveIcon from '@material-ui/icons/Save';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import ShareIcon from '@material-ui/icons/Share';
 import WorkspaceSearchbar from "./WorkspaceSearchbar";
-import { componentIsRendering } from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 import Ven from "../../../../images/ven.svg"
 import VenFilled from "../../../../images/venFilled.svg"
 import SaveAndLoadAndShare from './SaveAndLoadAndShare';
+import EqualizerIcon from "@material-ui/icons/Equalizer";
+import CloseIcon from "@material-ui/icons/Close";
+import { useGlobalState } from "../global/GlobalState";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -82,10 +85,11 @@ const useStyles = makeStyles((theme) => ({
         width: "18px",
         height: "18px",
         transform: "translate(0, -10px)"
-    }
+    },
 }));
 
 export default React.memo(function WorkspaceControls(props) {
+    const [globalState, setGlobalState] = useGlobalState();
     const classes = useStyles();
     const venIcon = <Icon>
         <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
@@ -93,31 +97,50 @@ export default React.memo(function WorkspaceControls(props) {
     const [saveAndLoadAndShareModalOpen, setSaveAndLoadAndShareModalOpen] = useState(false)
     const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState(null)
 
+    function handleDrawerClose() {
+        setGlobalState({sidebarOpen: false})
+    }
+
+    function toggleCharting() {
+        setGlobalState({ chartingOpen: !globalState.chartingOpen });
+    }
 
     if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
     return (
         <>
             <Paper className={classes.root} elevation={3}>
-                <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <ButtonGroup className={classes.buttons}>
+                <Grid className={classes.buttons} container direction="row" justifyContent="space-between" alignItems="center">
+                    <Grid item>
                         <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => {
                             setSaveAndLoadAndShareModalOpen(true);
                             setSaveAndLoadAndShareMode("save");
-                        }}>Save Workspace</Button>
-                        <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => { 
+                        }}>Save</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => {
                             setSaveAndLoadAndShareModalOpen(true);
                             setSaveAndLoadAndShareMode("load");
-                        }}>Load Workspace</Button>
-                        <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => { 
+                        }}>Load</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => {
                             setSaveAndLoadAndShareModalOpen(true);
                             setSaveAndLoadAndShareMode("share");
-                        }}>Share Workspace</Button>
+                        }}>Share</Button>
+                    </Grid>
+                    <Grid item>
                         <Button variant="outlined" startIcon={venIcon} onClick={() => {
                             props.setIntersect(!props.intersect)
                         }}>
                             {props.intersect ? "Intersections: on" : "Intersections: off"}
                         </Button>
-                    </ButtonGroup>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => toggleCharting()}>Graph</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<CloseIcon/>} onClick={handleDrawerClose}>Close</Button>
+                    </Grid>
                 </Grid>
                 <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
                     workspace={props.workspace} setWorkspace={props.setWorkspace} />

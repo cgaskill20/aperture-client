@@ -60,7 +60,7 @@ import React, {useState, useEffect} from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import {componentIsRendering} from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 
 export default function ConstraintCheckbox({constraint, querier, option}) {
     const [check, setCheck] = useState(true);

@@ -57,13 +57,13 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React from 'react';
-import {Button, ButtonGroup, Paper, Typography} from "@material-ui/core";
+import {Button, Paper, Typography} from "@material-ui/core";
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import TuneIcon from '@material-ui/icons/Tune';
 import LinkIcon from '@material-ui/icons/Link';
 import AdvancedConstraints from "./AdvancedConstraints";
-import {componentIsRendering} from "../TabSystem";
+import {componentIsRendering} from "../Sidebar";
 import {isGraphable} from "./Helpers";
 import {makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -96,7 +96,7 @@ function getLayerText(layerInfo) {
 
 function sourceIcon(layerInfo) {
     if(layerInfo.source){
-        return <Button startIcon={<LinkIcon />} onClick={() => window.open(layerInfo.source, "_blank")}>
+        return <Button variant="outlined" startIcon={<LinkIcon />} onClick={() => window.open(layerInfo.source, "_blank")}>
             Source
         </Button>
     }
@@ -110,26 +110,26 @@ export default React.memo(function LayerControls(props) {
             <Grid
                 container
                 direction="row"
-                justifyContent="center"
+                justifyContent="space-around"
                 alignItems="center"
             >
                 {getLayerText(props.layer.info)}
                 <Grid item>
-                    <ButtonGroup variant="outlined">
-                        <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
-                                             activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
-                        {/* <Button startIcon={<RotateLeftIcon />}>
-                            Reset Constraints
-                        </Button> */}
-                        <Button startIcon={<TuneIcon />} onClick={() => {
-                            props.setActiveLayerConstraints(props.defaultLayerConstraints);
-                        }}>
-                            Default Constraints
-                        </Button>
-                        {/* {graphIcon(props.layer, props.graphableLayers)} */}
-                        {sourceIcon(props.layer)}
-                    </ButtonGroup>
+                    <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
+                                         activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
+                    {/* <Button startIcon={<RotateLeftIcon />}>
+                        Reset Constraints
+                    </Button> */}
                 </Grid>
+                <Grid item>
+                    <Button variant="outlined" startIcon={<TuneIcon />} onClick={() => {
+                        props.setActiveLayerConstraints(props.defaultLayerConstraints);
+                    }}>
+                        Default Constraints
+                    </Button>
+                </Grid>
+                    {/* {graphIcon(props.layer, props.graphableLayers)} */}
+                    {sourceIcon(props.layer)}
             </Grid>
         </Paper>
     )
