@@ -363,6 +363,7 @@ export default class AutoQuery {
         }
 
         this.currentQueries.add(id);
+        console.log(`tried to query over ${this.collection}`);
         Query.makeQuery({
             collection: this.collection,
             pipeline: this.buildConstraintPipeline(),

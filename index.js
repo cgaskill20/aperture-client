@@ -214,6 +214,33 @@ const overwrite = { //leaving this commented cause it explains the schema really
     //     },
     //     "noAutoQuery": true
     // },
+    gridmet_climate: {
+        label: "gridMET Climate data",
+        constraints: {
+            something: {
+                type: "slider",
+                label: "something",
+                range: [0, 10],
+                "default": [0, 10],
+                step: 1,
+            }
+        },
+        color: {
+            variable: "something"
+        },
+        onConstraintChange: (layer, constraintName, value) => {
+            console.log('onConstraintChange');
+        },
+        onAdd: () => {
+            console.log('onAdd');
+        },
+        onRemove: () => {
+            console.log('onRemove');
+        },
+        onUpdate: () => {
+            console.log('onUpdate');
+        },
+    }
 }
 
 window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplorationGroup, overwrite, {
@@ -226,7 +253,7 @@ window.chartSystem = new ChartSystem(map, "src/json/graphPriority.json", window.
 
 
 const uiRoot = document.getElementById("ui-root");
-ReactDOM.render((<Root map={map}/>), uiRoot);
+ReactDOM.render((<Root map={map} overwrite={overwrite}/>), uiRoot);
 
 // const modelContainer = document.getElementById("model-container");
 // ReactDOM.render((<ModelMenu/>), modelContainer);
