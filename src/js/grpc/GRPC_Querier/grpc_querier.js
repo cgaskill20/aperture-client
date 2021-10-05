@@ -190,6 +190,12 @@ const SustainQuerier = {
         request.setJson(query);
         return this.modelService.slidingWindowQuery(request, {});
     }
+
+    directDruidQuery: function (query) {
+        const request = new DirectDruidRequest();
+        request.setQuery(query);
+        return this.service.directDruidQuery(request, {});
+    }
 };
 
 /**
