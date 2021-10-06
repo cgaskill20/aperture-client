@@ -228,6 +228,9 @@ const overwrite = { //leaving this commented cause it explains the schema really
         color: {
             variable: "something"
         },
+        queryOverwrite: (worker) => {
+            console.log(worker);
+        },
         onConstraintChange: (layer, constraintName, value) => {
             console.log('onConstraintChange');
         },

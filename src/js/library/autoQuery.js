@@ -363,8 +363,10 @@ export default class AutoQuery {
         }
 
         this.currentQueries.add(id);
-        console.log(`tried to query over ${this.collection}`);
+        console.log(this.collection);
+
         Query.makeQuery({
+            queryOverwrite: this.data.queryOverwrite,
             collection: this.collection,
             pipeline: this.buildConstraintPipeline(),
             granularity: "coarse",

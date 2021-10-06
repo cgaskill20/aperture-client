@@ -177,16 +177,20 @@ const Query = {
             }
         }
 
-        const linked = this.linked[query.collection];
-        if (linked && !dontLink) { //making an edge case for this one cause it is fast as hell
-            this._linkedQuery(linked, query);
-        }
-        else {
-            this._queryFineOrCoarse(query);
-        }
+        if (query.queryOverwrite) {
+            query.queryOverwrite(this.queryWorker);
+        } else {
+            const linked = this.linked[query.collection];
+            if (linked && !dontLink) { //making an edge case for this one cause it is fast as hell
+                this._linkedQuery(linked, query);
+            }
+            else {
+                this._queryFineOrCoarse(query);
+            }
 
-        if (promiseFlag) {
-            return await callbackToPromise;
+            if (promiseFlag) {
+                return await callbackToPromise;
+            }
         }
     },
 

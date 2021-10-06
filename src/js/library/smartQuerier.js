@@ -97,6 +97,25 @@ class SmartQuerier {
         this.activeStreams = [];
     }
 
+    query(query, onData, onEnd, id = Math.random().toString(36).substring(2, 8)) {
+        // backwards compatibility: unspecified query types are assumed to be mongo
+        if (!query.queryType) {
+            query.queryType = "mongo";
+        }
+
+        switch (query.queryType) {
+            default:
+            case "mongo": {
+                this.mongoQuery(query.collection, query.queryParams, onData, onEnd, id);
+                break;
+            }
+            case "druid": {
+                this.druidQuery(query.body, onData, onEnd, id);
+                break;
+            }
+        }
+    }
+
     /**
      * Perform a query on the database, using the given collection, mongodb
      * aggregate query, and callbacks for data receiving and stream closure.
@@ -109,15 +128,38 @@ class SmartQuerier {
      * @param {string} [id] Optional param which gives the stream an ID, useful only for killing the stream if need be.
      * @returns {string} Associated ID for this stream. Randomly generated if not given.
      */
-    query(collection, queryParams, onDataCallback, onStreamEndCallback, id = Math.random().toString(36).substring(2,8)) {
+    mongoQuery(collection, queryParams, onDataCallback, onStreamEndCallback, id) {
         const stream = this.querier.getStreamForQuery(collection, JSON.stringify(queryParams));
         stream.on('data', (res) => {
             const data = JSON.parse(res.getData());
+            console.log('yo');
             onDataCallback(data);
         });
         stream.on('end', () => {
             this._remove(id);
             onStreamEndCallback();
+        });
+
+        this.activeStreams.push({ stream, id });
+        return id;
+    }
+
+    /** 
+     * Performs an arbitrary druid query rather than a mongoDB aggregate over collection.
+     */
+    druidQuery(query, onData, onEnd, id) {
+        const stream = this.querier.directDruidQuery(JSON.stringify(query));
+        this.registerStream(stream, id, res => res.getData(), onData, onEnd);
+    }
+
+    registerStream(stream, id, responseAccessor, onData, onEnd) {
+        stream.on('data', res => {
+            const data = JSON.parse(responseAccessor(res));
+            onData(data);
+        });
+        stream.on('end', () => {
+            this._remove(id);
+            onEnd();
         });
 
         this.activeStreams.push({ stream, id });
