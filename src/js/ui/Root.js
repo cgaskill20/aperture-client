@@ -67,9 +67,10 @@ import Sidebar from './Sidebar'
 import ConditionalWidgetRendering from './ConditionalWidgetRendering'
 import Popup from './widgets/Popup/Popup';
 
-const Root = ({ map }) => {
+const Root = ({ map, overwrite }) => {
     const defaultState = {
         map,
+        overwrite,
         mode: "dataExploration",
         chartingOpen: false,
         clusterLegendOpen: false,
@@ -77,7 +78,6 @@ const Root = ({ map }) => {
         sidebarOpen: false,
         popupOpen: false
     }
-
 
     return <GlobalStateProvider defaultValue={defaultState}>
         <ThemeProvider theme={GlobalTheme}>
