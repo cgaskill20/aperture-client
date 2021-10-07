@@ -217,7 +217,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
     gridmet_climate: {
         label: "Historical Climate",
         collection: "Gridmet_ALL_Partitioned",
-        info: "bad",
+        info: "Historical climate data from gridMET, a gridded dataset that spans the CONUS and includes variables such as air temperature, precipitation, humidity, evapotranspiration, and more. The data has been aggregated at the tract level, but because of the gridded nature of the data and the finite spatial resolution, some tracts are not included.",
         constraints: {
             time_interval: {
                 type: "slider",
