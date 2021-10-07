@@ -602,7 +602,12 @@ const Query = {
             senderID: id
         });
 
-        const responseListener = msg => {
+        const responseListener = this._getRawDruidQueryListener();
+        this.queryWorker.addEventListener("message", responseListener);
+    },
+
+    _getRawDruidQueryListener() {
+        return msg => {
             const data = msg.data;
             if (data.senderID !== id)
                 return;
@@ -620,9 +625,7 @@ const Query = {
                 callback({ event: "end" })
                 this.queryWorker.removeEventListener("message", responseListener);
             }
-        }
-
-        this.queryWorker.addEventListener("message", responseListener);
+        };
     }
 }
 
