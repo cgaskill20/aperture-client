@@ -200,7 +200,12 @@ const Query = {
             senderID: query.id,
         });
 
-        const responseListener = msg => {
+        const responseListener = this.getDruidResponseListener();
+        window.backgroundTract.addEventListener("message", responseListener);
+    },
+
+    getDruidResponseListener() {
+        return msg => {
             const data = msg.data;
             if (data.senderID !== query.id)
                 return;
@@ -222,9 +227,7 @@ const Query = {
             else if (data.type === "end") {
                 window.backgroundTract.removeEventListener("message", responseListener);
             }
-        }
-        window.backgroundTract.addEventListener("message", responseListener);
-
+        };
     },
 
     /**
