@@ -550,32 +550,35 @@ export default class AutoQuery {
                     name: constraint,
                 };
             }),
-            // Druid queries really are fucking beautiful
-            having: {
-                type: "and",
-                havingSpecs: aggregationConstraints.map(kv => {
-                    let constraint = kv[0];
-                    let bounds = kv[1];
-                    return {
-                        type: "and",
-                        havingSpecs: [
-                            {
-                                type: "greaterThan",
-                                aggregation: constraint,
-                                value: bounds[0],
-                            },
-                            {
-                                type: "lessThan",
-                                aggregation: constraint,
-                                value: bounds[1],
-                            }
-                        ]
-                    };
-                }),
-            }
+            having: this.buildDruidBodyHavingSpec(aggregationConstraints)
         };
 
         return body;
+    }
+
+    buildDruidBodyHavingSpec(aggregationConstraints) {
+        return {
+            type: "and",
+            havingSpecs: aggregationConstraints.map(kv => {
+                let constraint = kv[0];
+                let bounds = kv[1];
+                return {
+                    type: "and",
+                    havingSpecs: [
+                        {
+                            type: "greaterThan",
+                            aggregation: constraint,
+                            value: bounds[0],
+                        },
+                        {
+                            type: "lessThan",
+                            aggregation: constraint,
+                            value: bounds[1],
+                        }
+                    ]
+                };
+            }),
+        };
     }
 
     buildTemporalPreProcess() {
