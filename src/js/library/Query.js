@@ -200,12 +200,12 @@ const Query = {
             senderID: query.id,
         });
 
-        const responseListener = this.getDruidResponseListener();
+        const responseListener = this.getDruidResponseListener(query);
         window.backgroundTract.addEventListener("message", responseListener);
     },
 
-    getDruidResponseListener() {
-        return msg => {
+    getDruidResponseListener(query) {
+        let listener = msg => {
             const data = msg.data;
             if (data.senderID !== query.id)
                 return;
@@ -225,9 +225,10 @@ const Query = {
                 this._queryDruid(query, data.data.data);
             }
             else if (data.type === "end") {
-                window.backgroundTract.removeEventListener("message", responseListener);
+                window.backgroundTract.removeEventListener("message", listener);
             }
         };
+        return listener;
     },
 
     /**
@@ -602,14 +603,14 @@ const Query = {
             senderID: id
         });
 
-        const responseListener = this._getRawDruidQueryListener();
+        const responseListener = this._getRawDruidQueryListener(query, geometryData);
         this.queryWorker.addEventListener("message", responseListener);
     },
 
-    _getRawDruidQueryListener() {
-        return msg => {
+    _getRawDruidQueryListener(query, geometryData) {
+        let listener = msg => {
             const data = msg.data;
-            if (data.senderID !== id)
+            if (data.senderID !== query.id)
                 return;
             if (data.type === "data") {
                 let response = data.data.event;
@@ -619,13 +620,14 @@ const Query = {
                     ...geometry,
                     properties: response,
                 };
-                callback({ event: "data", payload: { data: geoJSON } });
+                query.callback({ event: "data", payload: { data: geoJSON } });
             }
             else if (data.type === "end") {
-                callback({ event: "end" })
-                this.queryWorker.removeEventListener("message", responseListener);
+                query.callback({ event: "end" })
+                this.queryWorker.removeEventListener("message", listener);
             }
         };
+        return listener;
     }
 }
 
