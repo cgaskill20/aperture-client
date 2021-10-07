@@ -384,7 +384,7 @@ export default class AutoQuery {
                     callback,
                     id,
                     bounds: this.map.getBounds(),
-                    body: this.makeBody(),
+                    body: this.makeDruidQueryBody(),
                 });
                 break;
             }
@@ -485,6 +485,8 @@ export default class AutoQuery {
         //indexData[this.label]["opacity"] = this.color.opacity;
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.add(id);
+        
+        console.log(data);
 
     }
 
@@ -533,7 +535,7 @@ export default class AutoQuery {
         return pipeline;
     }
 
-    makeBody() {
+    makeDruidQueryBody() {
         let aggregationConstraints = Object.entries(this.constraintData).filter(kv => kv[0] !== "time_interval");
         let temporalConstraint = this.constraintData["time_interval"];
         let body = {
@@ -542,14 +544,13 @@ export default class AutoQuery {
             granularity: "all",
             dimensions: [ "GISJOIN" ],
 
-            // FIXME Make modular!
             intervals: [ `${new Date(temporalConstraint[0]).toISOString()}/${new Date(temporalConstraint[1]).toISOString()}` ],
             aggregations: aggregationConstraints.map(kv => {
                 let constraint = kv[0];
                 return {
                     type: "doubleMean",
-                    fieldName: constraint,
-                    name: `mean_${constraint}`,
+                    fieldName: constraint.substring(2),
+                    name: constraint,
                 };
             }),
             // Druid queries really are fucking beautiful
@@ -563,12 +564,12 @@ export default class AutoQuery {
                         havingSpecs: [
                             {
                                 type: "greaterThan",
-                                aggregation: `mean_${constraint}`,
+                                aggregation: constraint,
                                 value: bounds[0],
                             },
                             {
                                 type: "lessThan",
-                                aggregation: `mean_${constraint}`,
+                                aggregation: constraint,
                                 value: bounds[1],
                             }
                         ]

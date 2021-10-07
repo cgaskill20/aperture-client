@@ -227,98 +227,98 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 "default": [283996800000, 315532800000],
                 isDate: true
             },
-            air_temperature_max: {
+            m_air_temperature_max: {
                 type: "slider",
                 label: "Max Air Temperature",
                 range: [233.1, 327.1],
                 "default": [233.1, 327.1],
                 step: 0.1,
             },
-            air_temperature_min: {
+            m_air_temperature_min: {
                 type: "slider",
                 label: "Min Air Temperature",
                 range: [225.1, 312.6],
                 "default": [225.1, 312.6],
                 step: 0.1,
             },
-            dead_fuel_moisture_1000hr: {
+            m_dead_fuel_moisture_1000hr: {
                 type: "slider",
                 label: "1000 Hour Fuel Moisture",
                 range: [0.4, 47.5],
                 "default": [0.4, 47.5],
                 step: 0.1,
             },
-            dead_fuel_moisture_100hr: {
+            m_dead_fuel_moisture_100hr: {
                 type: "slider",
                 label: "100 Hour Fuel Moisture",
                 range: [0.4, 46.7],
                 "default": [0.4, 46.7],
                 step: 0.1,
             },
-            potential_evapotranspiration_alfalfa: {
+            m_potential_evapotranspiration_alfalfa: {
                 type: "slider",
                 label: "Reference Evapotranspiration (alfalfa)",
                 range: [0, 31.8],
                 "default": [0.4, 46.7],
                 step: 0.1,
             },
-            potential_evapotranspiration_short_grass: {
+            m_potential_evapotranspiration_short_grass: {
                 type: "slider",
                 label: "Reference Evapotranspiration (short grass)",
                 range: [0, 20],
                 "default": [0, 20],
                 step: 0.1,
             },
-            precipitation_amount: {
+            m_precipitation_amount: {
                 type: "slider",
                 label: "Accumulated Precipitation",
-                range: [0, 664.9],
-                "default": [0, 644.9],
+                range: [0, 6],
+                "default": [0, 3],
                 step: 0.1,
             },
-            relative_humidity_max: {
+            m_relative_humidity_max: {
                 type: "slider",
                 label: "Maximum Relative Humidity",
                 range: [0, 100],
                 "default": [0, 100],
                 step: 0.1,
             },
-            relative_humidity_min: {
+            m_relative_humidity_min: {
                 type: "slider",
                 label: "Minimum Relative Humidity",
                 range: [0, 100],
                 "default": [0, 100],
                 step: 0.1,
             },
-            specific_humidity_mean: {
+            m_specific_humidity_mean: {
                 type: "slider",
                 label: "Mean Specific Humidity",
                 range: [0, 100],
                 "default": [0, 100],
                 step: 0.1,
             },
-            surface_downwelling_shortwave_flux_in_air: {
+            m_surface_downwelling_shortwave_flux_in_air: {
                 type: "slider",
                 label: "Mean Downward Shortwave Radiation (at surface)",
                 range: [0, 455.6],
                 "default": [0, 455.6],
                 step: 0.1,
             },
-            vapor_pressure_deficit_mean: {
+            m_vapor_pressure_deficit_mean: {
                 type: "slider",
                 label: "Mean Vapor Pressure Deficit",
                 range: [0, 10.04],
                 "default": [0, 10.04],
                 step: 0.1,
             },
-            wind_direction_mean: {
+            m_wind_direction_mean: {
                 type: "slider",
                 label: "Mean Wind Direction",
                 range: [0, 360],
                 "default": [0, 360],
                 step: 0.1,
             },
-            wind_speed_mean: {
+            m_wind_speed_mean: {
                 type: "slider",
                 label: "Mean Wind Speed",
                 range: [0, 29.1],
@@ -328,7 +328,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
         },
         color: {
             style: "gradient",
-            variable: "mean_air_temperature_max",
+            variable: "m_air_temperature_max",
             border: 1
         },
         type: "druid",
