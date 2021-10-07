@@ -216,9 +216,17 @@ const overwrite = { //leaving this commented cause it explains the schema really
     //     "noAutoQuery": true
     // },
     gridmet_climate: {
-        label: "gridMET Climate Data",
+        label: "Historical Climate",
         collection: "Gridmet_ALL_Partitioned",
+        info: "bad",
         constraints: {
+            time_interval: {
+                type: "slider",
+                label: "Date Range",
+                range: [283996800000, 1577836800000],
+                "default": [283996800000, 315532800000],
+                isDate: true
+            },
             air_temperature_max: {
                 type: "slider",
                 label: "Max Air Temperature",
@@ -226,7 +234,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 "default": [233.1, 327.1],
                 step: 0.1,
             },
-            air_temperature_max: {
+            air_temperature_min: {
                 type: "slider",
                 label: "Min Air Temperature",
                 range: [225.1, 312.6],
@@ -319,7 +327,9 @@ const overwrite = { //leaving this commented cause it explains the schema really
             },
         },
         color: {
-            variable: "air_temperature_max",
+            style: "gradient",
+            variable: "mean_air_temperature_max",
+            border: 1
         },
         type: "druid",
         datasource: "Gridmet_ALL_Partitioned",

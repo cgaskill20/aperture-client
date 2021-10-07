@@ -534,23 +534,50 @@ export default class AutoQuery {
     }
 
     makeBody() {
+        let aggregationConstraints = Object.entries(this.constraintData).filter(kv => kv[0] !== "time_interval");
+        let temporalConstraint = this.constraintData["time_interval"];
         let body = {
             queryType: "groupBy",
             dataSource: this.data.datasource,
-            granularity: "year",
+            granularity: "all",
             dimensions: [ "GISJOIN" ],
 
             // FIXME Make modular!
-            intervals: [ "1979-01-01/1980-01-01" ],
-            aggregations: Object.keys(this.data.constraints).map(c => {
+            intervals: [ `${new Date(temporalConstraint[0]).toISOString()}/${new Date(temporalConstraint[1]).toISOString()}` ],
+            aggregations: aggregationConstraints.map(kv => {
+                let constraint = kv[0];
                 return {
                     type: "doubleMean",
-                    fieldName: c,
-                    name: `mean_${c}`,
+                    fieldName: constraint,
+                    name: `mean_${constraint}`,
                 };
             }),
+            // Druid queries really are fucking beautiful
+            having: {
+                type: "and",
+                havingSpecs: aggregationConstraints.map(kv => {
+                    let constraint = kv[0];
+                    let bounds = kv[1];
+                    return {
+                        type: "and",
+                        havingSpecs: [
+                            {
+                                type: "greaterThan",
+                                aggregation: `mean_${constraint}`,
+                                value: bounds[0],
+                            },
+                            {
+                                type: "lessThan",
+                                aggregation: `mean_${constraint}`,
+                                value: bounds[1],
+                            }
+                        ]
+                    };
+                }),
+            }
         };
 
+        console.log(body);
         return body;
     }
 
