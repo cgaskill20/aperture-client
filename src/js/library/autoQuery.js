@@ -88,6 +88,8 @@ export default class AutoQuery {
         this.label = layerData.label ?? this.collection;
         this.map = globalThis.map;
 
+        this.queryType = layerData.type ?? "mongo";
+
         this.constraintData = {};
         this.constraintState = {};
         this.layerCache = {};
@@ -363,18 +365,30 @@ export default class AutoQuery {
         }
 
         this.currentQueries.add(id);
-        console.log(this.collection);
 
-        Query.makeQuery({
-            queryOverwrite: this.data.queryOverwrite,
-            collection: this.collection,
-            pipeline: this.buildConstraintPipeline(),
-            granularity: "coarse",
-            callback,
-            bounds: this.map.getBounds(),
-            geohashBlacklist: this.geohashCache,
-            id
-        });
+        switch (this.queryType) {
+            default:
+            case "mongo": {
+                Query.makeQuery({
+                    collection: this.collection,
+                    pipeline: this.buildConstraintPipeline(),
+                    granularity: "coarse",
+                    callback,
+                    bounds: this.map.getBounds(),
+                    geohashBlacklist: this.geohashCache,
+                    id,
+                });
+                break;
+            } case "druid": {
+                Query.makeDruidQuery({
+                    callback,
+                    id,
+                    bounds: this.map.getBounds(),
+                    body: this.makeBody(),
+                });
+                break;
+            }
+        }
     }
 
     zoomIsValid() {
@@ -517,6 +531,27 @@ export default class AutoQuery {
         }
 
         return pipeline;
+    }
+
+    makeBody() {
+        let body = {
+            queryType: "groupBy",
+            dataSource: this.data.datasource,
+            granularity: "year",
+            dimensions: [ "GISJOIN" ],
+
+            // FIXME Make modular!
+            intervals: [ "1979-01-01/1980-01-01" ],
+            aggregations: Object.keys(this.data.constraints).map(c => {
+                return {
+                    type: "doubleMean",
+                    fieldName: c,
+                    name: `mean_${c}`,
+                };
+            }),
+        };
+
+        return body;
     }
 
     buildTemporalPreProcess() {

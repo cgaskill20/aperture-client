@@ -177,21 +177,54 @@ const Query = {
             }
         }
 
-        if (query.queryOverwrite) {
-            query.queryOverwrite(this.queryWorker);
-        } else {
-            const linked = this.linked[query.collection];
-            if (linked && !dontLink) { //making an edge case for this one cause it is fast as hell
-                this._linkedQuery(linked, query);
-            }
-            else {
-                this._queryFineOrCoarse(query);
-            }
+        const linked = this.linked[query.collection];
+        if (linked && !dontLink) { //making an edge case for this one cause it is fast as hell
+            this._linkedQuery(linked, query);
+        }
+        else {
+            this._queryFineOrCoarse(query);
+        }
 
-            if (promiseFlag) {
-                return await callbackToPromise;
+        if (promiseFlag) {
+            return await callbackToPromise;
+        }
+    },
+
+    async makeDruidQuery(query) {
+        this.currentQueries[query.id] = query;
+
+        window.backgroundTract.postMessage({
+            type: "query",
+            bounds: query.bounds,
+            blacklist: [],
+            senderID: query.id,
+        });
+
+        const responseListener = msg => {
+            const data = msg.data;
+            if (data.senderID !== query.id)
+                return;
+            if (data.type === "data") {
+                let filterFields = data.data.GISJOINS.map(g => { 
+                    return { type: "selector", dimension: "GISJOIN", value: g }
+                });
+
+                query.body = { 
+                    ...query.body,
+                    filter: {
+                        type: "or",
+                        fields: filterFields,
+                    },
+                };
+
+                this._queryDruid(query, data.data.data);
+            }
+            else if (data.type === "end") {
+                window.backgroundTract.removeEventListener("message", responseListener);
             }
         }
+        window.backgroundTract.addEventListener("message", responseListener);
+
     },
 
     /**
@@ -554,6 +587,40 @@ const Query = {
 
         this.queryWorker.addEventListener("message", responseListener);
     },
+
+    _queryDruid(query, geometryData) {
+        const { body, callback, id } = query;
+
+        query.callback({ event: "info", payload: { id } });
+        this.queryWorker.postMessage({
+            type: "query",
+            queryType: "druid",
+            body,
+            senderID: id
+        });
+
+        const responseListener = msg => {
+            const data = msg.data;
+            if (data.senderID !== id)
+                return;
+            if (data.type === "data") {
+                let response = data.data.event;
+                let geometry = geometryData.find(d => d.GISJOIN === response.GISJOIN);
+                let geoJSON = { 
+                    id: `druid${response.GISJOIN}`,
+                    ...geometry,
+                    properties: response,
+                };
+                callback({ event: "data", payload: { data: geoJSON } });
+            }
+            else if (data.type === "end") {
+                callback({ event: "end" })
+                this.queryWorker.removeEventListener("message", responseListener);
+            }
+        }
+
+        this.queryWorker.addEventListener("message", responseListener);
+    }
 }
 
 try {

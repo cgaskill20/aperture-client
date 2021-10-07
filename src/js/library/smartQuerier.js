@@ -125,6 +125,7 @@ class SmartQuerier {
      * @param {JSON} queryParams The mongodb aggregate query, as a JS object
      * @param {Function} onDataCallback The callback to fire when data is recieved. It should take a single parameter, which is the PARSED JSON of the response. 
      * @param {Function} onStreamEndCallback The callback to fire when the stream dies.
+     body,
      * @param {string} [id] Optional param which gives the stream an ID, useful only for killing the stream if need be.
      * @returns {string} Associated ID for this stream. Randomly generated if not given.
      */
@@ -132,7 +133,6 @@ class SmartQuerier {
         const stream = this.querier.getStreamForQuery(collection, JSON.stringify(queryParams));
         stream.on('data', (res) => {
             const data = JSON.parse(res.getData());
-            console.log('yo');
             onDataCallback(data);
         });
         stream.on('end', () => {
@@ -145,7 +145,7 @@ class SmartQuerier {
     }
 
     /** 
-     * Performs an arbitrary druid query rather than a mongoDB aggregate over collection.
+     * Performs an arbitrary druid query.
      */
     druidQuery(query, onData, onEnd, id) {
         const stream = this.querier.directDruidQuery(JSON.stringify(query));

@@ -91,6 +91,7 @@ import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";
 // import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
 import Root from "./src/js/ui/Root";
+import boundsToGISJOIN from "./src/js/library/boundsToGISJOIN";
 
 //idek what to do with theses files, things break if I try to make them import specific things
 import "./src/js/third-party/leaflet.markercluster.js";
@@ -215,35 +216,114 @@ const overwrite = { //leaving this commented cause it explains the schema really
     //     "noAutoQuery": true
     // },
     gridmet_climate: {
-        label: "gridMET Climate data",
+        label: "gridMET Climate Data",
+        collection: "Gridmet_ALL_Partitioned",
         constraints: {
-            something: {
+            air_temperature_max: {
                 type: "slider",
-                label: "something",
-                range: [0, 10],
-                "default": [0, 10],
-                step: 1,
-            }
+                label: "Max Air Temperature",
+                range: [233.1, 327.1],
+                "default": [233.1, 327.1],
+                step: 0.1,
+            },
+            air_temperature_max: {
+                type: "slider",
+                label: "Min Air Temperature",
+                range: [225.1, 312.6],
+                "default": [225.1, 312.6],
+                step: 0.1,
+            },
+            dead_fuel_moisture_1000hr: {
+                type: "slider",
+                label: "1000 Hour Fuel Moisture",
+                range: [0.4, 47.5],
+                "default": [0.4, 47.5],
+                step: 0.1,
+            },
+            dead_fuel_moisture_100hr: {
+                type: "slider",
+                label: "100 Hour Fuel Moisture",
+                range: [0.4, 46.7],
+                "default": [0.4, 46.7],
+                step: 0.1,
+            },
+            potential_evapotranspiration_alfalfa: {
+                type: "slider",
+                label: "Reference Evapotranspiration (alfalfa)",
+                range: [0, 31.8],
+                "default": [0.4, 46.7],
+                step: 0.1,
+            },
+            potential_evapotranspiration_short_grass: {
+                type: "slider",
+                label: "Reference Evapotranspiration (short grass)",
+                range: [0, 20],
+                "default": [0, 20],
+                step: 0.1,
+            },
+            precipitation_amount: {
+                type: "slider",
+                label: "Accumulated Precipitation",
+                range: [0, 664.9],
+                "default": [0, 644.9],
+                step: 0.1,
+            },
+            relative_humidity_max: {
+                type: "slider",
+                label: "Maximum Relative Humidity",
+                range: [0, 100],
+                "default": [0, 100],
+                step: 0.1,
+            },
+            relative_humidity_min: {
+                type: "slider",
+                label: "Minimum Relative Humidity",
+                range: [0, 100],
+                "default": [0, 100],
+                step: 0.1,
+            },
+            specific_humidity_mean: {
+                type: "slider",
+                label: "Mean Specific Humidity",
+                range: [0, 100],
+                "default": [0, 100],
+                step: 0.1,
+            },
+            surface_downwelling_shortwave_flux_in_air: {
+                type: "slider",
+                label: "Mean Downward Shortwave Radiation (at surface)",
+                range: [0, 455.6],
+                "default": [0, 455.6],
+                step: 0.1,
+            },
+            vapor_pressure_deficit_mean: {
+                type: "slider",
+                label: "Mean Vapor Pressure Deficit",
+                range: [0, 10.04],
+                "default": [0, 10.04],
+                step: 0.1,
+            },
+            wind_direction_mean: {
+                type: "slider",
+                label: "Mean Wind Direction",
+                range: [0, 360],
+                "default": [0, 360],
+                step: 0.1,
+            },
+            wind_speed_mean: {
+                type: "slider",
+                label: "Mean Wind Speed",
+                range: [0, 29.1],
+                "default": [0, 29.1],
+                step: 0.1
+            },
         },
         color: {
-            variable: "something"
+            variable: "air_temperature_max",
         },
-        queryOverwrite: (worker) => {
-            console.log(worker);
-        },
-        onConstraintChange: (layer, constraintName, value) => {
-            console.log('onConstraintChange');
-        },
-        onAdd: () => {
-            console.log('onAdd');
-        },
-        onRemove: () => {
-            console.log('onRemove');
-        },
-        onUpdate: () => {
-            console.log('onUpdate');
-        },
-    }
+        type: "druid",
+        datasource: "Gridmet_ALL_Partitioned",
+    },
 }
 
 window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplorationGroup, overwrite, {
@@ -253,7 +333,6 @@ window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplora
     simplifyThreshold: 0.0001
 });
 window.chartSystem = new ChartSystem(map, "src/json/graphPriority.json", window.renderInfrastructure);
-
 
 const uiRoot = document.getElementById("ui-root");
 ReactDOM.render((<Root map={map} overwrite={overwrite}/>), uiRoot);
