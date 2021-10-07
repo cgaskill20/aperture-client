@@ -485,9 +485,6 @@ export default class AutoQuery {
         //indexData[this.label]["opacity"] = this.color.opacity;
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.add(id);
-        
-        console.log(data);
-
     }
 
     subscribeToColorFieldChange(func, unsubscribe=false) {
@@ -578,7 +575,6 @@ export default class AutoQuery {
             }
         };
 
-        console.log(body);
         return body;
     }
 

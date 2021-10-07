@@ -91,7 +91,6 @@ import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";
 // import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
 import Root from "./src/js/ui/Root";
-import boundsToGISJOIN from "./src/js/library/boundsToGISJOIN";
 
 //idek what to do with theses files, things break if I try to make them import specific things
 import "./src/js/third-party/leaflet.markercluster.js";
