@@ -621,6 +621,8 @@ const Query = {
                     properties: response,
                 };
                 query.callback({ event: "data", payload: { data: geoJSON } });
+
+                delete this.currentQueries[query.id];
             }
             else if (data.type === "end") {
                 query.callback({ event: "end" })
