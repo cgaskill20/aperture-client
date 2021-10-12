@@ -232,6 +232,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [233.1, 327.1],
                 "default": [233.1, 327.1],
                 step: 0.1,
+                unit: "kelvin",
             },
             m_air_temperature_min: {
                 type: "slider",
@@ -239,6 +240,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [225.1, 312.6],
                 "default": [225.1, 312.6],
                 step: 0.1,
+                unit: "kelvin",
             },
             m_dead_fuel_moisture_1000hr: {
                 type: "slider",
@@ -246,6 +248,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [0.4, 47.5],
                 "default": [0.4, 47.5],
                 step: 0.1,
+                unit: "percent",
             },
             m_dead_fuel_moisture_100hr: {
                 type: "slider",
@@ -253,6 +256,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [0.4, 46.7],
                 "default": [0.4, 46.7],
                 step: 0.1,
+                unit: "percent"
             },
             m_potential_evapotranspiration_alfalfa: {
                 type: "slider",
@@ -260,6 +264,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [0, 31.8],
                 "default": [0.4, 46.7],
                 step: 0.1,
+                unit: "mm"
             },
             m_potential_evapotranspiration_short_grass: {
                 type: "slider",
@@ -267,6 +272,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [0, 20],
                 "default": [0, 20],
                 step: 0.1,
+                unit: "mm"
             },
             m_precipitation_amount: {
                 type: "slider",
@@ -274,6 +280,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [0, 6],
                 "default": [0, 3],
                 step: 0.1,
+                unit: "mm"
             },
             m_relative_humidity_max: {
                 type: "slider",
@@ -281,6 +288,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [0, 100],
                 "default": [0, 100],
                 step: 0.1,
+                unit: "percent"
             },
             m_relative_humidity_min: {
                 type: "slider",
@@ -288,6 +296,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [0, 100],
                 "default": [0, 100],
                 step: 0.1,
+                unit: "percent"
             },
             m_specific_humidity_mean: {
                 type: "slider",
@@ -295,6 +304,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [0, 100],
                 "default": [0, 100],
                 step: 0.1,
+                unit: "kg/kg"
             },
             m_surface_downwelling_shortwave_flux_in_air: {
                 type: "slider",
@@ -302,6 +312,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [0, 455.6],
                 "default": [0, 455.6],
                 step: 0.1,
+                unit: "W m-2"
             },
             m_vapor_pressure_deficit_mean: {
                 type: "slider",
@@ -309,6 +320,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [0, 10.04],
                 "default": [0, 10.04],
                 step: 0.1,
+                unit: "kPa",
             },
             m_wind_direction_mean: {
                 type: "slider",
@@ -316,13 +328,15 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 range: [0, 360],
                 "default": [0, 360],
                 step: 0.1,
+                unit: "degrees clockwise from north",
             },
             m_wind_speed_mean: {
                 type: "slider",
                 label: "Mean Wind Speed",
                 range: [0, 29.1],
                 "default": [0, 29.1],
-                step: 0.1
+                step: 0.1,
+                unit: "m/s",
             },
         },
         color: {
