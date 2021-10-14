@@ -64,6 +64,7 @@ import KDEWrapper from "./KDEWrapper";
 import BoxPlot from "./ChartTemplates/BoxPlotChart";
 import FrameControls from "./FrameControls";
 import CorrelogramGraph from "./ChartTemplates/CorrelogramGraph";
+import RadarChart from "./ChartTemplates/RadarChart";
 
 export default function Frame(props) {
 
@@ -118,8 +119,8 @@ export default function Frame(props) {
         case "correlogram":
             frame =<div><FrameControls type={props.type.name} numDropDowns={0} noClose={true} />
                 <CorrelogramGraph index={props.index} remove={props.remove} size={props.size} data={props.data} selected={constraint} options={[countyFilters, trackFilters]} /></div>; break;
-
-
+        case "radar": 
+            frame = <div><RadarChart index={props.index} remove={props.remove} size={props.size} data={props.data}/></div>; break;
         default: break;
     }
 
