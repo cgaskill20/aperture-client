@@ -116,6 +116,7 @@ export default function RadarChart(props) {
 
             ctx.rotate(radStep / 2);
 
+            ctx.strokeStyle = '#111';
             ctx.beginPath();
             ctx.arc(0, range(d3.min(slice.data, d => d.data)), 5, 0, Math.PI * 2);
             ctx.stroke();
@@ -124,6 +125,7 @@ export default function RadarChart(props) {
             ctx.arc(0, range(d3.max(slice.data, d => d.data)), 5, 0, Math.PI * 2);
             ctx.stroke();
             
+            ctx.strokeStyle = '#aaa';
             ctx.beginPath();
             ctx.moveTo(0, range(d3.min(slice.data, d => d.data)));
             ctx.lineTo(0, range(d3.max(slice.data, d => d.data)));
@@ -132,9 +134,15 @@ export default function RadarChart(props) {
             ctx.font = '10px Arial';
             ctx.textAlign = 'center';
             ctx.fillStyle = '#999';
-
+            //ctx.fillText(`${slice.name}`, 0, (height / 2 - 50) + ((slice.index % 2 == 0) ? 20 : 0));
             for (let i = 0; i < NUM_RINGS; i++) {
-                ctx.fillText(`${slice.name}`, 0, (height / 2 - 50) + ((slice.index % 2 == 0) ? 20 : 0));
+                let value = d3.scaleLinear()
+                    .domain([0, NUM_RINGS - 1])
+                    .range([slice.min, slice.max])(i);
+                let offset = d3.scaleLinear()
+                    .domain([0, NUM_RINGS - 1])
+                    .range([30, height / 2 - 30])(i);
+                ctx.fillText(`${value.toFixed(2)}`, 0, offset);
             }
 
             ctx.beginPath();
