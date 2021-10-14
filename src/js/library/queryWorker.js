@@ -62,8 +62,7 @@ let querier;
 
 onmessage = function (msg) {
     if (msg.data.type === "query") {
-        querier.query(msg.data.collection,
-            msg.data.queryParams,
+        querier.query(msg.data,
             data => { postMessage({ type: "data", data: data, senderID: msg.data.senderID }); },
             end => { postMessage({ type: "end", senderID: msg.data.senderID }); },
             msg.data.senderID);

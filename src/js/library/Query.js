@@ -190,6 +190,47 @@ const Query = {
         }
     },
 
+    async makeDruidQuery(query) {
+        this.currentQueries[query.id] = query;
+
+        window.backgroundTract.postMessage({
+            type: "query",
+            bounds: query.bounds,
+            blacklist: [],
+            senderID: query.id,
+        });
+
+        const responseListener = this.getDruidResponseListener(query);
+        window.backgroundTract.addEventListener("message", responseListener);
+    },
+
+    getDruidResponseListener(query) {
+        let listener = msg => {
+            const data = msg.data;
+            if (data.senderID !== query.id)
+                return;
+            if (data.type === "data") {
+                let filterFields = data.data.GISJOINS.map(g => { 
+                    return { type: "selector", dimension: "GISJOIN", value: g }
+                });
+
+                query.body = { 
+                    ...query.body,
+                    filter: {
+                        type: "or",
+                        fields: filterFields,
+                    },
+                };
+
+                this._queryDruid(query, data.data.data);
+            }
+            else if (data.type === "end") {
+                window.backgroundTract.removeEventListener("message", listener);
+            }
+        };
+        return listener;
+    },
+
     /**
     * Kills a query
     * @memberof Query
@@ -550,6 +591,46 @@ const Query = {
 
         this.queryWorker.addEventListener("message", responseListener);
     },
+
+    _queryDruid(query, geometryData) {
+        const { body, callback, id } = query;
+
+        query.callback({ event: "info", payload: { id } });
+        this.queryWorker.postMessage({
+            type: "query",
+            queryType: "druid",
+            body,
+            senderID: id
+        });
+
+        const responseListener = this._getRawDruidQueryListener(query, geometryData);
+        this.queryWorker.addEventListener("message", responseListener);
+    },
+
+    _getRawDruidQueryListener(query, geometryData) {
+        let listener = msg => {
+            const data = msg.data;
+            if (data.senderID !== query.id)
+                return;
+            if (data.type === "data") {
+                let response = data.data.event;
+                let geometry = geometryData.find(d => d.GISJOIN === response.GISJOIN);
+                let geoJSON = { 
+                    id: `druid${response.GISJOIN}`,
+                    ...geometry,
+                    properties: response,
+                };
+                query.callback({ event: "data", payload: { data: geoJSON } });
+
+                delete this.currentQueries[query.id];
+            }
+            else if (data.type === "end") {
+                query.callback({ event: "end" })
+                this.queryWorker.removeEventListener("message", listener);
+            }
+        };
+        return listener;
+    }
 }
 
 try {

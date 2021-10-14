@@ -95,7 +95,8 @@ export default {
         }, {})
         //console.log(JSON.parse(JSON.stringify({catalog})))
         const autoMenu = this.bindMenuToCatalog(menuMetaData, catalog);
-        return{
+
+        return {
             ...autoMenu,
             ...overwrite,
         };

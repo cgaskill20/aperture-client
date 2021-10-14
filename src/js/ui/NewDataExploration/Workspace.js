@@ -206,13 +206,13 @@ export default React.memo(function Workspace() {
         workspaceFromURL && setWorkspaceOnLoad(workspaceFromURL)
 
         $.getJSON("src/json/menumetadata.json", async function (mdata) {
-            const finalData = await AutoMenu.build(mdata, () => {});
+            const finalData = await AutoMenu.build(mdata, globalState.overwrite);
             Query.init(finalData);
             extractLayers(finalData);
         });
 
         $.getJSON("src/json/graphPriority.json", async function (mdata) {
-            const graphableLayers = await AutoMenu.build(mdata, () => {});
+            const graphableLayers = await AutoMenu.build(mdata, globalState.overwrite);
             extractGraphableLayers(graphableLayers);
         });
     }, []);
