@@ -124,7 +124,15 @@ export default function RadarChart(props) {
 
             ctx.beginPath();
             ctx.arc(0, range(d3.min(slice.data, d => d.data)), 5, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.beginPath();
             ctx.arc(0, range(d3.max(slice.data, d => d.data)), 5, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(0, range(d3.min(slice.data, d => d.data)));
+            ctx.lineTo(0, range(d3.max(slice.data, d => d.data)));
             ctx.stroke();
 
             ctx.rotate(radStep / 2);
