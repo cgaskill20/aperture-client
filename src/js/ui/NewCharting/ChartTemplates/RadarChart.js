@@ -139,10 +139,12 @@ export default function RadarChart(props) {
             for (let i = 2; i < NUM_RINGS; i++) {
                 let value = d3.scaleLinear()
                     .domain([0, NUM_RINGS - 1])
-                    .range([slice.min, slice.max])(i);
+                    .range([slice.min, slice.max])
+                    (i);
                 let offset = d3.scaleLinear()
                     .domain([0, NUM_RINGS - 1])
-                    .range([30, height / 2 - 30])(i);
+                    .range([30, height / 2 - 30])
+                    (i);
                 ctx.fillText(`${value.toFixed(2)}`, 0, offset - 5);
             }
 
@@ -166,6 +168,12 @@ export default function RadarChart(props) {
             let mouse = { x: rawMouse[0] - center.x, y: rawMouse[1] - center.y, };
             let radius = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y);
             let theta = Math.atan2(mouse.y / radius, mouse.x / radius);
+            let thetaOffset = Math.PI / 2;
+            theta += thetaOffset;
+            if (theta > Math.PI) { 
+                theta -= Math.PI * 2;
+            }
+
             console.log(theta);
 
             let slice = d3.scaleQuantize()
