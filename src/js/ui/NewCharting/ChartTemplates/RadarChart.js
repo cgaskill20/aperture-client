@@ -65,6 +65,7 @@ const NUM_RINGS = 5;
 
 export default function RadarChart(props) {
     let canvasRef = React.createRef();
+    let [ctx, setCtx] = useState();
 
     let prepareData = data => {
         return Object.entries(data.map_features)
@@ -76,24 +77,34 @@ export default function RadarChart(props) {
             return;
         }
 
-        const canvas = d3.select(canvasRef.current);
-
-        let data = prepareData(props.data);
-
-        for (let i = 0; i < NUM_RINGS; i++) {
+        if (!ctx) {
+            return;
         }
 
-        for (let i = 0; i < data.length; i++) {
+        let data = prepareData(props.data);
+        let center = { x: width / 2, y: height / 2 };
+
+        ctx.clearRect(0, 0, width, height);
+
+        ctx.strokeStyle = '#333';
+        for (let i = 0; i < NUM_RINGS; i++) {
+            ctx.beginPath();
+            ctx.arc(center.x, center.y, d3.scaleLinear().domain([0, NUM_RINGS - 1]).range([30, height / 2 - 30])(i), 0, Math.PI * 2);
+            ctx.stroke();
         }
     }
 
-    useEffect(rerender.bind(this, props.size.width, props.size.height));
+    useEffect(() => setCtx(canvasRef.current.getContext('2d')), []);
+    useEffect(rerender.bind(this, props.size.width - 100, props.size.height - 30));
 
     return (
         <div>
             <canvas 
-                style={{width: props.size.width, height: props.size.height}}
-                ref={canvasRef}></canvas>
+                width={props.size.width - 100} 
+                height={props.size.height - 30}
+                ref={canvasRef}
+            >
+            </canvas>
         </div>
     );
 }
