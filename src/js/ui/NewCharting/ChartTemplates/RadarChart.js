@@ -64,6 +64,12 @@ import { useGlobalState } from '../../global/GlobalState';
 
 const NUM_RINGS = 5;
 
+// The `size` value that comes through props determines how big the canvas
+// should be, but it over-estimates because of margins in the charting window.
+// This is how much the actual size of the canvas will be changed 
+// to accomodate.
+const SIZE_OFFEST = { width: -100, height: -30 };
+
 export default function RadarChart(props) {
     let canvasRef = React.createRef();
     let [ctx, setCtx] = useState();
@@ -117,7 +123,8 @@ export default function RadarChart(props) {
             ctx.rotate(radStep / 2);
 
             ctx.beginPath();
-            ctx.arc(0, range(d3.mean(slice.data, d => d.data)), 5, 0, Math.PI * 2);
+            ctx.arc(0, range(d3.min(slice.data, d => d.data)), 5, 0, Math.PI * 2);
+            ctx.arc(0, range(d3.max(slice.data, d => d.data)), 5, 0, Math.PI * 2);
             ctx.stroke();
 
             ctx.rotate(radStep / 2);
@@ -129,13 +136,13 @@ export default function RadarChart(props) {
     }
 
     useEffect(() => setCtx(canvasRef.current.getContext('2d')), []);
-    useEffect(rerender.bind(this, props.size.width - 100, props.size.height - 30));
+    useEffect(rerender.bind(this, props.size.width - SIZE_OFFSET.width, props.size.height - SIZE_OFFSET.height));
 
     return (
         <div>
             <canvas 
-                width={props.size.width - 100} 
-                height={props.size.height - 30}
+                width={props.size.width - SIZE_OFFSET.width} 
+                height={props.size.height - SIZE_OFFSET.height}
                 ref={canvasRef}
             >
             </canvas>
