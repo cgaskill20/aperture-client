@@ -132,7 +132,10 @@ export default function RadarChart(props) {
             ctx.font = '10px Arial';
             ctx.textAlign = 'center';
             ctx.fillStyle = '#999';
-            ctx.fillText(`${slice.name}`, 0, (height / 2 - 50) + ((slice.index % 2 == 0) ? 20 : 0));
+
+            for (let i = 0; i < NUM_RINGS; i++) {
+                ctx.fillText(`${slice.name}`, 0, (height / 2 - 50) + ((slice.index % 2 == 0) ? 20 : 0));
+            }
 
             ctx.beginPath();
             ctx.rotate(radStep / 2);
@@ -151,15 +154,15 @@ export default function RadarChart(props) {
 
             let rawMouse = d3.pointer(event, canvasRef.current);
             
-            console.log(rawMouse);
-
             let mouse = { x: rawMouse[0] - center.x, y: rawMouse[1] - center.y, };
             let radius = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y);
-            let theta_s = Math.asin(mouse.x / radius);
-            let theta_c = Math.acos(mouse.y / radius);
+            let theta = Math.atan2(mouse.y / radius, mouse.x / radius);
+            console.log(theta);
 
-            console.log(theta_s);
-            console.log(theta_c);
+            let slice = d3.scaleQuantize()
+                .domain([-Math.PI, Math.PI])
+                .range(datasetSlices.current)(theta);
+            console.log(slice);
         });
     };
 
