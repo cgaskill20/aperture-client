@@ -118,11 +118,12 @@ export default function RadarChart(props) {
 
             ctx.strokeStyle = '#111';
             ctx.beginPath();
-            ctx.arc(0, range(d3.min(slice.data, d => d.data)), 5, 0, Math.PI * 2);
+            ctx.arc(0, 0, range(d3.min(slice.data, d => d.data)), Math.PI / 2 - radStep / 2, Math.PI / 2 + radStep / 2);
             ctx.stroke();
 
             ctx.beginPath();
-            ctx.arc(0, range(d3.max(slice.data, d => d.data)), 5, 0, Math.PI * 2);
+            ctx.arc(0, 0, range(d3.max(slice.data, d => d.data)), Math.PI / 2 - radStep / 2, Math.PI / 2 + radStep / 2);
+            ctx.stroke();
             ctx.stroke();
             
             ctx.strokeStyle = '#aaa';
@@ -135,14 +136,14 @@ export default function RadarChart(props) {
             ctx.textAlign = 'center';
             ctx.fillStyle = '#999';
             //ctx.fillText(`${slice.name}`, 0, (height / 2 - 50) + ((slice.index % 2 == 0) ? 20 : 0));
-            for (let i = 0; i < NUM_RINGS; i++) {
+            for (let i = 2; i < NUM_RINGS; i++) {
                 let value = d3.scaleLinear()
                     .domain([0, NUM_RINGS - 1])
                     .range([slice.min, slice.max])(i);
                 let offset = d3.scaleLinear()
                     .domain([0, NUM_RINGS - 1])
                     .range([30, height / 2 - 30])(i);
-                ctx.fillText(`${value.toFixed(2)}`, 0, offset);
+                ctx.fillText(`${value.toFixed(2)}`, 0, offset - 5);
             }
 
             ctx.beginPath();
@@ -194,7 +195,7 @@ export default function RadarChart(props) {
 
     useEffect(() => setCtx(canvasRef.current.getContext('2d')), []);
     useEffect(rerender.bind(this, props.size.width - SIZE_OFFSET.width, props.size.height - SIZE_OFFSET.height));
-    useEffect(updateSlices, [props.dataset]);
+    useEffect(updateSlices);
 
     return (
         <div>
