@@ -95,9 +95,6 @@ export default function RadarChart(props) {
             ctx.stroke();
         }
 
-        console.log(globalState);
-        console.log(props);
-
         if (data.length < 2) {
             return;
         }
@@ -106,7 +103,6 @@ export default function RadarChart(props) {
         let radStep = d3.scaleLinear().domain([0, data.length]).range([0, Math.PI * 2])(1);
         ctx.translate(center.x, center.y);
         for (let i = 0; i < data.length; i++) {
-            console.log(data[i]);
             let slice = { 
                 data: data[i][1],
                 max: Object.values(globalState.menuMetadata)
@@ -121,7 +117,7 @@ export default function RadarChart(props) {
             ctx.rotate(radStep / 2);
 
             ctx.beginPath();
-            ctx.arc(0, range(slice.data[0].data), 5, 0, Math.PI * 2);
+            ctx.arc(0, range(d3.mean(slice.data, d => d.data)), 5, 0, Math.PI * 2);
             ctx.stroke();
 
             ctx.rotate(radStep / 2);
