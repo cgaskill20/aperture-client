@@ -86,12 +86,41 @@ export default function RadarChart(props) {
 
         ctx.clearRect(0, 0, width, height);
 
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = '#aaa';
         for (let i = 0; i < NUM_RINGS; i++) {
             ctx.beginPath();
             ctx.arc(center.x, center.y, d3.scaleLinear().domain([0, NUM_RINGS - 1]).range([30, height / 2 - 30])(i), 0, Math.PI * 2);
             ctx.stroke();
         }
+
+        if (data.length < 2) {
+            return;
+        }
+
+        let radStep = d3.scaleLinear().domain([0, data.length]).range([0, Math.PI * 2])(1);
+        ctx.save();
+        ctx.translate(center.x, center.y);
+        for (let i = 0; i < data.length; i++) {
+            let slice = { 
+                data: data[i][1],
+                max: d3.min(data[i][1], d => d.data),
+                min: d3.max(data[i][1], d => d.data),
+            };
+            let range = d3.scaleLinear().domain([slice.min, slice.max]).range([0, height / 2]);
+
+            ctx.rotate(radStep / 2);
+
+            ctx.beginPath();
+            console.log(slice);
+            ctx.arc(0, range(slice.data[0].data), 5, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.rotate(radStep / 2);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, height / 2);
+            ctx.stroke();
+        }
+        ctx.restore();
     }
 
     useEffect(() => setCtx(canvasRef.current.getContext('2d')), []);
