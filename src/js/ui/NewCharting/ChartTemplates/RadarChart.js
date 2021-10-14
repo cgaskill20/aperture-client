@@ -66,9 +66,9 @@ const NUM_RINGS = 5;
 
 // The `size` value that comes through props determines how big the canvas
 // should be, but it over-estimates because of margins in the charting window.
-// This is how much the actual size of the canvas will be changed 
+// This is how much the actual size of the canvas will be reduced
 // to accomodate.
-const SIZE_OFFEST = { width: -100, height: -30 };
+const SIZE_OFFSET = { width: 100, height: 30 };
 
 export default function RadarChart(props) {
     let canvasRef = React.createRef();
