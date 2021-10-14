@@ -56,83 +56,51 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useState, useEffect } from 'react';
-import HistogramGraph from "./ChartTemplates/HistogramChart";
-import LineGraph from "./ChartTemplates/LineGraph"
-import ScatterPlot from "./ChartTemplates/ScatterPlot";
-import KDEWrapper from "./KDEWrapper";
-import BoxPlot from "./ChartTemplates/BoxPlotChart";
-import FrameControls from "./FrameControls";
-import CorrelogramGraph from "./ChartTemplates/CorrelogramGraph";
-import RadarChart from "./ChartTemplates/RadarChart";
-import DatasetSelectControl from "./DatasetSelectControl";
 
-export default function Frame(props) {
+import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Feature from '../../library/charting/feature.js';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import Util from '../../library/apertureUtil';
 
-    const [id, setID] = useState(`${props.type.name}-frame-${Math.random().toString(36).substring(2, 6)}`);
+const useStyles = makeStyles(theme => ({
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 200,
+    },
+}));
 
-    let frame;
-    
-    const [constraint, setConstraint] = useState();
-    const [constraint2, setConstraint2] = useState();
+export default function DatasetSelectControl(props) {
+    let classes = useStyles();
+    let [dataset, setDataset] = useState('');
 
-    let selectedConstraints = [];
-    let trackFilters = [];
-    let countyFilters = [];
+    let datasets = props.features.reduce((uniques, feature) => {
+        let dataset = Feature.getCollection(feature);
+        uniques.includes(dataset) || uniques.push({ name: dataset });
+        return uniques;
+    }, []).map(d => ({ ...d, cleanName: Util.cleanUpString(d.name) }));
 
-    if(props.data['map_features']){
-        Object.keys(props.data['map_features']).map(constraint =>{
-            if(props.data['map_features'][constraint].length > 0){
-                selectedConstraints.push(constraint)
-                if(props.data['map_features'][constraint][0].type == "county"){
-                    countyFilters.push(constraint);
-                }
-                if(props.data['map_features'][constraint][0].type == "tract"){
-                    trackFilters.push(constraint);
-                }
-            }
 
-        })
-    }
-
-    switch (props.type.name) {
-        case "histogram":
-            frame =
-                <div>
-                    <FrameControls type={props.type.name} index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1} />
-                    <KDEWrapper>
-                        <HistogramGraph key={id} size={props.size} data={props.data} selected={constraint} />
-                    </KDEWrapper>
-                </div>;
-                break;
-        case "line":
-            frame = <div><FrameControls type={props.type.name} key={id} index={props.index} remove={props.remove} numDropDowns={0} />
-                <LineGraph pos={props.pos} size={props.size} data={props.data} selected={constraint} /></div>; break;
-        case "scatterplot":
-            frame =
-                <div>
-                    <FrameControls type={props.type.name} index={props.index} remove={props.remove} options={[countyFilters, trackFilters]} setConstraint={setConstraint} setConstraint2={setConstraint2} numDropDowns={2} selector={true} />
-                    <ScatterPlot size={props.size} data={props.data} selected={[constraint, constraint2]} />
-                </div>; break;
-        case "boxplot":
-            frame = <div><FrameControls type={props.type.name} index={props.index} remove={props.remove} options={selectedConstraints} setConstraint={setConstraint} numDropDowns={1} />
-                <BoxPlot size={props.size} data={props.data} selected={constraint} /></div>; break;
-        case "correlogram":
-            frame =<div><FrameControls type={props.type.name} numDropDowns={0} noClose={true} />
-                <CorrelogramGraph index={props.index} remove={props.remove} size={props.size} data={props.data} selected={constraint} options={[countyFilters, trackFilters]} /></div>; break;
-        case "radar": 
-            frame = <div><DatasetSelectControl features={selectedConstraints}>
-                <RadarChart index={props.index} remove={props.remove} size={props.size} data={props.data}/>
-            </DatasetSelectControl></div>; break;
-        default: break;
-    }
-
-    return (
-        <div style={{
-            width: "100%",
-            height: "100%",
-        }}>
-            {frame}
-        </div>
-    );
+    return <div>
+        <FormControl className={classes.formControl}>
+            <InputLabel id='dataset-select-label'>Dataset</InputLabel>
+            <Select
+                labelId='dataset-select-label'
+                onChange={event => setDataset(event.target.value)} 
+                value={dataset}
+            >
+                {datasets.map((dataset, i) => 
+                    <MenuItem key={i} value={dataset.name}>
+                        {dataset.cleanName}
+                    </MenuItem>
+                )}
+            </Select>
+        </FormControl>
+        {React.Children.map(props.children, (child, index) => {
+            return React.cloneElement(child, {dataset: dataset});
+        })}
+    </div>;
 }

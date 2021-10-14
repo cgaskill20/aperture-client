@@ -59,30 +59,41 @@ END OF TERMS AND CONDITIONS
 
 import React, { useEffect, useState } from 'react';
 import * as d3 from '../../../third-party/d3.min.js';
+import Feature from '../../../library/charting/feature.js';
+
+const NUM_RINGS = 5;
 
 export default function RadarChart(props) {
-    let svgRef = React.createRef();
-
-    let setup = () => {
-        let svg = d3.select(svgRef.current);
-
-        svg.
-    }
+    let canvasRef = React.createRef();
 
     let prepareData = data => {
-        
+        return Object.entries(data.map_features)
+            .filter(kv => Feature.getCollection(kv[0]) == props.dataset);
     }
 
     let rerender = (width, height) => {
-        
+        if (!props.data?.map_features) {
+            return;
+        }
+
+        const canvas = d3.select(canvasRef.current);
+
+        let data = prepareData(props.data);
+
+        for (let i = 0; i < NUM_RINGS; i++) {
+        }
+
+        for (let i = 0; i < data.length; i++) {
+        }
     }
 
-    useEffect(setup, []);
     useEffect(rerender.bind(this, props.size.width, props.size.height));
 
     return (
         <div>
-            <svg ref={svgRef}></svg>
+            <canvas 
+                style={{width: props.size.width, height: props.size.height}}
+                ref={canvasRef}></canvas>
         </div>
     );
 }
