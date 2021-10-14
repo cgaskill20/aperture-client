@@ -174,12 +174,11 @@ export default function RadarChart(props) {
                 theta -= Math.PI * 2;
             }
 
-            console.log(theta);
-
             let slice = d3.scaleQuantize()
                 .domain([-Math.PI, Math.PI])
                 .range(datasetSlices.current)(theta);
-            console.log(slice);
+
+            ctx.clearRect(mouse.x, mouse.y + 50, 200, 50);
         });
     };
 

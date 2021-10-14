@@ -79,7 +79,7 @@ export default function DatasetSelectControl(props) {
 
     let datasets = props.features.reduce((uniques, feature) => {
         let dataset = Feature.getCollection(feature);
-        uniques.includes(dataset) || uniques.push({ name: dataset });
+        uniques.find(d => d.name === dataset) || uniques.push({ name: dataset });
         return uniques;
     }, []).map(d => ({ ...d, cleanName: Util.cleanUpString(d.name) }));
 
