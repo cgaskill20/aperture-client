@@ -209,6 +209,8 @@ export default React.memo(function Workspace() {
             const finalData = await AutoMenu.build(mdata, globalState.overwrite);
             Query.init(finalData);
             extractLayers(finalData);
+
+            setGlobalState({ menuMetadata: finalData });
         });
 
         $.getJSON("src/json/graphPriority.json", async function (mdata) {

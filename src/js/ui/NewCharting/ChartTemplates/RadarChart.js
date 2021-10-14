@@ -60,12 +60,14 @@ END OF TERMS AND CONDITIONS
 import React, { useEffect, useState } from 'react';
 import * as d3 from '../../../third-party/d3.min.js';
 import Feature from '../../../library/charting/feature.js';
+import { useGlobalState } from '../../global/GlobalState';
 
 const NUM_RINGS = 5;
 
 export default function RadarChart(props) {
     let canvasRef = React.createRef();
     let [ctx, setCtx] = useState();
+    let [globalState] = useGlobalState();
 
     let prepareData = data => {
         return Object.entries(data.map_features)
@@ -93,25 +95,32 @@ export default function RadarChart(props) {
             ctx.stroke();
         }
 
+        console.log(globalState);
+        console.log(props);
+
         if (data.length < 2) {
             return;
         }
 
-        let radStep = d3.scaleLinear().domain([0, data.length]).range([0, Math.PI * 2])(1);
         ctx.save();
+        let radStep = d3.scaleLinear().domain([0, data.length]).range([0, Math.PI * 2])(1);
         ctx.translate(center.x, center.y);
         for (let i = 0; i < data.length; i++) {
+            console.log(data[i]);
             let slice = { 
                 data: data[i][1],
-                max: d3.min(data[i][1], d => d.data),
-                min: d3.max(data[i][1], d => d.data),
+                max: Object.values(globalState.menuMetadata)
+                    .find(m => m.collection === props.dataset)
+                    .constraints[Feature.getName(data[i][0])].range[1],
+                min: Object.values(globalState.menuMetadata)
+                    .find(m => m.collection === props.dataset)
+                    .constraints[Feature.getName(data[i][0])].range[0],
             };
             let range = d3.scaleLinear().domain([slice.min, slice.max]).range([0, height / 2]);
 
             ctx.rotate(radStep / 2);
 
             ctx.beginPath();
-            console.log(slice);
             ctx.arc(0, range(slice.data[0].data), 5, 0, Math.PI * 2);
             ctx.stroke();
 
