@@ -57,7 +57,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import * as d3 from '../../../third-party/d3.min.js';
 import Feature from '../../../library/charting/feature.js';
 import { useGlobalState } from '../../global/GlobalState';
@@ -75,10 +75,12 @@ export default function RadarChart(props) {
     let [ctx, setCtx] = useState();
     let [globalState] = useGlobalState();
 
+    let datasetSlices = useRef([]);
+
     let prepareData = data => {
         return Object.entries(data.map_features)
             .filter(kv => Feature.getCollection(kv[0]) == props.dataset);
-    }
+    };
 
     let rerender = (width, height) => {
         if (!props.data?.map_features) {
@@ -89,7 +91,6 @@ export default function RadarChart(props) {
             return;
         }
 
-        let data = prepareData(props.data);
         let center = { x: width / 2, y: height / 2 };
 
         ctx.clearRect(0, 0, width, height);
@@ -101,23 +102,16 @@ export default function RadarChart(props) {
             ctx.stroke();
         }
 
-        if (data.length < 2) {
+        if (datasetSlices.current.length < 2) {
             return;
         }
 
+        let slices = datasetSlices.current;
+
         ctx.save();
-        let radStep = d3.scaleLinear().domain([0, data.length]).range([0, Math.PI * 2])(1);
+        let radStep = d3.scaleLinear().domain([0, slices.length]).range([0, Math.PI * 2])(1);
         ctx.translate(center.x, center.y);
-        for (let i = 0; i < data.length; i++) {
-            let slice = { 
-                data: data[i][1],
-                max: Object.values(globalState.menuMetadata)
-                    .find(m => m.collection === props.dataset)
-                    .constraints[Feature.getName(data[i][0])].range[1],
-                min: Object.values(globalState.menuMetadata)
-                    .find(m => m.collection === props.dataset)
-                    .constraints[Feature.getName(data[i][0])].range[0],
-            };
+        for (let slice of slices) {
             let range = d3.scaleLinear().domain([slice.min, slice.max]).range([0, height / 2]);
 
             ctx.rotate(radStep / 2);
@@ -135,16 +129,61 @@ export default function RadarChart(props) {
             ctx.lineTo(0, range(d3.max(slice.data, d => d.data)));
             ctx.stroke();
 
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#999';
+            ctx.fillText(`${slice.name}`, 0, (height / 2 - 50) + ((slice.index % 2 == 0) ? 20 : 0));
+
+            ctx.beginPath();
             ctx.rotate(radStep / 2);
             ctx.moveTo(0, 0);
             ctx.lineTo(0, height / 2);
             ctx.stroke();
+
         }
         ctx.restore();
-    }
+
+        let canvas = d3.select(canvasRef.current);
+        canvas.on('mousemove', event => {
+            if (!canvasRef.current || !ctx) {
+                return;
+            }
+
+            let rawMouse = d3.pointer(event, canvasRef.current);
+            
+            console.log(rawMouse);
+
+            let mouse = { x: rawMouse[0] - center.x, y: rawMouse[1] - center.y, };
+            let radius = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y);
+            let theta_s = Math.asin(mouse.x / radius);
+            let theta_c = Math.acos(mouse.y / radius);
+
+            console.log(theta_s);
+            console.log(theta_c);
+        });
+    };
+
+    let updateSlices = () => {
+        let data = prepareData(props.data);
+        let metadata = Object.values(globalState.menuMetadata)
+                .find(m => m.collection === props.dataset);
+        console.log(metadata);
+        datasetSlices.current = data.map((v, i) => {
+            let constraint = metadata.constraints[Feature.getName(v[0])];
+            return {
+                data: v[1],
+                max: constraint.range[1],
+                min: constraint.range[0],
+                units: constraint.unit,
+                name: Feature.getFriendlyName(v[0]),
+                index: i,
+            };
+        });
+    };
 
     useEffect(() => setCtx(canvasRef.current.getContext('2d')), []);
     useEffect(rerender.bind(this, props.size.width - SIZE_OFFSET.width, props.size.height - SIZE_OFFSET.height));
+    useEffect(updateSlices, [props.dataset]);
 
     return (
         <div>
