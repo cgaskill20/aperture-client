@@ -135,7 +135,6 @@ export default function RadarChart(props) {
             ctx.font = '10px Arial';
             ctx.textAlign = 'center';
             ctx.fillStyle = '#999';
-            //ctx.fillText(`${slice.name}`, 0, (height / 2 - 50) + ((slice.index % 2 == 0) ? 20 : 0));
             for (let i = 2; i < NUM_RINGS; i++) {
                 let value = d3.scaleLinear()
                     .domain([0, NUM_RINGS - 1])
@@ -178,7 +177,8 @@ export default function RadarChart(props) {
                 .domain([-Math.PI, Math.PI])
                 .range(datasetSlices.current)(theta);
 
-            ctx.clearRect(mouse.x, mouse.y + 50, 200, 50);
+            ctx.clearRect(mouse.x, mouse.y - 50, 200, 50);
+            
         });
     };
 
