@@ -71,13 +71,20 @@ const NUM_RINGS = 5;
 const SIZE_OFFSET = { width: 100, height: 30 };
 
 export default function RadarChart(props) {
-    let canvasRef = React.createRef();
-    let [ctx, setCtx] = useState();
     let [globalState] = useGlobalState();
 
+    let canvasRef = useRef();
     let datasetSlices = useRef([]);
+    let ctxr = useRef();
+    let mouseInfo = useRef({
+        inChart: false,
+    });
 
     let prepareData = data => {
+        if (!data?.map_features) {
+            return [];
+        }
+
         return Object.entries(data.map_features)
             .filter(kv => Feature.getCollection(kv[0]) == props.dataset);
     };
@@ -87,9 +94,11 @@ export default function RadarChart(props) {
             return;
         }
 
-        if (!ctx) {
+        if (!ctxr) {
             return;
         }
+
+        let ctx = ctxr.current;
 
         let center = { x: width / 2, y: height / 2 };
 
@@ -98,7 +107,15 @@ export default function RadarChart(props) {
         ctx.strokeStyle = '#aaa';
         for (let i = 0; i < NUM_RINGS; i++) {
             ctx.beginPath();
-            ctx.arc(center.x, center.y, d3.scaleLinear().domain([0, NUM_RINGS - 1]).range([30, height / 2 - 30])(i), 0, Math.PI * 2);
+            ctx.arc(center.x, 
+                center.y, 
+                d3.scaleLinear()
+                    .domain([0, NUM_RINGS - 1])
+                    .range([30, height / 2 - 30])
+                    (i), 
+                0, 
+                Math.PI * 2
+            );
             ctx.stroke();
         }
 
@@ -109,21 +126,35 @@ export default function RadarChart(props) {
         let slices = datasetSlices.current;
 
         ctx.save();
-        let radStep = d3.scaleLinear().domain([0, slices.length]).range([0, Math.PI * 2])(1);
+        let radStep = d3.scaleLinear()
+            .domain([0, slices.length])
+            .range([0, Math.PI * 2])
+            (1);
         ctx.translate(center.x, center.y);
         for (let slice of slices) {
-            let range = d3.scaleLinear().domain([slice.min, slice.max]).range([0, height / 2]);
+            let range = d3.scaleLinear()
+                .domain([slice.min, slice.max])
+                .range([0, height / 2]);
 
             ctx.rotate(radStep / 2);
 
             ctx.strokeStyle = '#111';
             ctx.beginPath();
-            ctx.arc(0, 0, range(d3.min(slice.data, d => d.data)), Math.PI / 2 - radStep / 2, Math.PI / 2 + radStep / 2);
+            ctx.arc(0, 
+                0, 
+                range(d3.min(slice.data, d => d.data)), 
+                Math.PI / 2 - radStep / 2, 
+                Math.PI / 2 + radStep / 2
+            );
             ctx.stroke();
 
             ctx.beginPath();
-            ctx.arc(0, 0, range(d3.max(slice.data, d => d.data)), Math.PI / 2 - radStep / 2, Math.PI / 2 + radStep / 2);
-            ctx.stroke();
+            ctx.arc(0, 
+                0, 
+                range(d3.max(slice.data, d => d.data)), 
+                Math.PI / 2 - radStep / 2, 
+                Math.PI / 2 + radStep / 2
+            );
             ctx.stroke();
             
             ctx.strokeStyle = '#aaa';
@@ -156,15 +187,68 @@ export default function RadarChart(props) {
         }
         ctx.restore();
 
+        if (mouseInfo.current.inChart && mouseInfo.current.slice) {
+            let mouse = mouseInfo.current;
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(mouse.pos.x, mouse.pos.y - 50, 300, 50);
+
+            ctx.fillStyle = "#111";
+            ctx.fillText(`${mouse.slice.name} (${mouse.slice.unit})`, 
+                mouse.pos.x + 10, 
+                mouse.pos.y - 50 + 12,
+            );
+            ctx.fillText(`Current min: ${d3.min(mouse.slice.data, d => d.data).toFixed(2)}`, 
+                mouse.pos.x + 10, 
+                mouse.pos.y - 50 + (12 * 2),
+            );
+            ctx.fillText(`Current max: ${d3.max(mouse.slice.data, d => d.data).toFixed(2)}`, 
+                mouse.pos.x + 10, 
+                mouse.pos.y - 50 + (12 * 3),
+            );
+        }
+
+    };
+
+    let updateSlices = () => {
+        let data = prepareData(props.data);
+        let metadata = Object.values(globalState.menuMetadata)
+                .find(m => m.collection === props.dataset);
+        datasetSlices.current = data.map((v, i) => {
+            let constraint = metadata.constraints[Feature.getName(v[0])];
+            return {
+                data: v[1],
+                max: constraint.range[1],
+                min: constraint.range[0],
+                unit: constraint.unit,
+                name: Feature.getFriendlyName(v[0]),
+                index: i,
+            };
+        });
+    };
+
+    useEffect(() => { 
+        let ctx = canvasRef.current.getContext('2d');
+        ctxr.current = ctx;
+        
         let canvas = d3.select(canvasRef.current);
+
         canvas.on('mousemove', event => {
-            if (!canvasRef.current || !ctx) {
+            if (!canvasRef.current || !ctx || datasetSlices.current.length == 0) {
                 return;
             }
 
+            mouseInfo.current.inChart = true;
+
+            let center = { 
+                x: (props.size.width - SIZE_OFFSET.width) / 2,
+                y: (props.size.height - SIZE_OFFSET.height) / 2,
+            };
+
             let rawMouse = d3.pointer(event, canvasRef.current);
-            
             let mouse = { x: rawMouse[0] - center.x, y: rawMouse[1] - center.y, };
+
+            mouseInfo.current.pos = { x: rawMouse[0], y: rawMouse[1] };
+
             let radius = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y);
             let theta = Math.atan2(mouse.y / radius, mouse.x / radius);
             let thetaOffset = Math.PI / 2;
@@ -175,34 +259,24 @@ export default function RadarChart(props) {
 
             let slice = d3.scaleQuantize()
                 .domain([-Math.PI, Math.PI])
-                .range(datasetSlices.current)(theta);
+                .range(datasetSlices.current)
+                (theta);
 
-            ctx.clearRect(mouse.x, mouse.y - 50, 200, 50);
-            
+            mouseInfo.current.slice = slice;
+
+            rerender(props.size.width - SIZE_OFFSET.width, props.size.height - SIZE_OFFSET.height);
         });
-    };
 
-    let updateSlices = () => {
-        let data = prepareData(props.data);
-        let metadata = Object.values(globalState.menuMetadata)
-                .find(m => m.collection === props.dataset);
-        console.log(metadata);
-        datasetSlices.current = data.map((v, i) => {
-            let constraint = metadata.constraints[Feature.getName(v[0])];
-            return {
-                data: v[1],
-                max: constraint.range[1],
-                min: constraint.range[0],
-                units: constraint.unit,
-                name: Feature.getFriendlyName(v[0]),
-                index: i,
-            };
+        canvas.on('mouseleave', event => {
+            mouseInfo.current.inChart = false;
         });
-    };
 
-    useEffect(() => setCtx(canvasRef.current.getContext('2d')), []);
-    useEffect(rerender.bind(this, props.size.width - SIZE_OFFSET.width, props.size.height - SIZE_OFFSET.height));
-    useEffect(updateSlices);
+    }, []);
+
+    useEffect(() => {
+        rerender(props.size.width - SIZE_OFFSET.width, props.size.height - SIZE_OFFSET.height);
+        updateSlices();
+    });
 
     return (
         <div>
