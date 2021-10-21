@@ -231,7 +231,7 @@ export default function RadarChart(props) {
                 name: Feature.getFriendlyName(v[0]),
                 index: i,
             };
-        });
+        }).filter(s => s.data.length > 0);
     };
 
     useEffect(() => { 
