@@ -183,7 +183,7 @@ export default function RadarChart(props) {
             ctx.fillRect(mouse.pos.x, mouse.pos.y - 50, 300, 50);
 
             ctx.fillStyle = "#111";
-            ctx.fillText(`${mouse.slice.name} (${mouse.slice.unit})`, 
+            ctx.fillText(`${mouse.slice.name} ${mouse.slice.unit ? `(${mouse.slice.unit})` : ''}`, 
                 mouse.pos.x + 10, 
                 mouse.pos.y - 50 + 12,
             );

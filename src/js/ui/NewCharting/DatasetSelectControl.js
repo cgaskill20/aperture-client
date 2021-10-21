@@ -79,8 +79,6 @@ export default function DatasetSelectControl(props) {
     let [dataset, setDataset] = useState('');
     let [globalState] = useGlobalState();
 
-    console.log(globalState.menuMetadata);
-
     let datasets = props.features.reduce((uniques, feature) => {
         let dataset = Feature.getCollection(feature);
         uniques.find(d => d.name === dataset) || uniques.push({ name: dataset });
