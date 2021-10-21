@@ -144,7 +144,9 @@ export default class AutoQuery {
 
         this.minZoom = this.data.minZoom;
         this.blocked = false;
-        AutoQuery.blockers[this.blockerGroup] = 0;
+        if (!AutoQuery.blockers[this.blockerGroup]) {
+            AutoQuery.blockers[this.blockerGroup] = 0;
+        }
 
         this.map.on('moveend', () => {
             this.query();
@@ -401,7 +403,9 @@ export default class AutoQuery {
             return false;
         }
         else {
-            AutoQuery.blockers[this.blockerGroup] -= this.blocked;
+            if (AutoQuery.blockers[this.blockerGroup]) {
+                AutoQuery.blockers[this.blockerGroup] -= this.blocked;
+            }
             this.blocked = false;
         }
         this.checkAndDispatch(oldBlockers);
