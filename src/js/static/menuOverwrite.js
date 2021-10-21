@@ -223,7 +223,6 @@ const overwrite = { //leaving this commented cause it explains the schema really
             border: 1
         },
         type: "druid",
-        granularity: "tract",
         datasource: "Gridmet_ALL_Partitioned",
     },
 }
@@ -237,8 +236,7 @@ export default function getOverwriteObject(options = {}) {
         return overwrite;
     }
 
-    let modifiedOverwrite = splitDatasetsToCountyAndTract(overwrite, 
-        entry => entry.type === "druid" && entry.granularity === "tract");
+    let modifiedOverwrite = splitDatasetsToCountyAndTract(overwrite, entry => entry.type === "druid");
 
     return modifiedOverwrite;
 }
