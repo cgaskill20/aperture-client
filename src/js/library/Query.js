@@ -193,25 +193,31 @@ const Query = {
     async makeDruidQuery(query) {
         this.currentQueries[query.id] = query;
 
-        window.backgroundTract.postMessage({
+        let geoWorker = query.level === "tract" 
+            ? window.backgroundTract 
+            : window.backgroundCounty;
+
+        console.log(query);
+
+        geoWorker.postMessage({
             type: "query",
             bounds: query.bounds,
             blacklist: [],
             senderID: query.id,
         });
 
-        const responseListener = this.getDruidResponseListener(query);
-        window.backgroundTract.addEventListener("message", responseListener);
+        const responseListener = this.getDruidResponseListener(geoWorker, query);
+        geoWorker.addEventListener("message", responseListener);
     },
 
-    getDruidResponseListener(query) {
+    getDruidResponseListener(worker, query) {
         let listener = msg => {
             const data = msg.data;
             if (data.senderID !== query.id)
                 return;
             if (data.type === "data") {
                 let filterFields = data.data.GISJOINS.map(g => { 
-                    return { type: "selector", dimension: "GISJOIN", value: g }
+                    return { type: "regex", dimension: "GISJOIN", pattern: g }
                 });
 
                 query.body = { 
@@ -222,10 +228,12 @@ const Query = {
                     },
                 };
 
+                console.log(query.body);
+
                 this._queryDruid(query, data.data.data);
             }
             else if (data.type === "end") {
-                window.backgroundTract.removeEventListener("message", listener);
+                worker.removeEventListener("message", listener);
             }
         };
         return listener;
@@ -603,6 +611,8 @@ const Query = {
             senderID: id
         });
 
+        console.log(body);
+
         const responseListener = this._getRawDruidQueryListener(query, geometryData);
         this.queryWorker.addEventListener("message", responseListener);
     },
@@ -614,6 +624,7 @@ const Query = {
                 return;
             if (data.type === "data") {
                 let response = data.data.event;
+                console.log(data.data);
                 let geometry = geometryData.find(d => d.GISJOIN === response.GISJOIN);
                 let geoJSON = { 
                     id: `druid${response.GISJOIN}`,

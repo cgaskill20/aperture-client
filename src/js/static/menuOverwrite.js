@@ -248,10 +248,11 @@ function splitDatasetsToCountyAndTract(overwrite, condition = (() => true)) {
             return [ 
                 [ `${kv[0]}_tract`, Object.assign(clone(entry), {
                     label: `${entry.label} (Tract)`,
+                    level: "tract",
                 }), ], 
                 [ `${kv[0]}_county`, Object.assign(clone(entry), { 
                     label: `${entry.label} (County)`,
-                    granularity: "county",
+                    level: "county",
                 }), ],
             ];
         }
