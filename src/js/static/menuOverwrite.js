@@ -249,10 +249,12 @@ function splitDatasetsToCountyAndTract(overwrite, condition = (() => true)) {
                 [ `${kv[0]}_tract`, Object.assign(clone(entry), {
                     label: `${entry.label} (Tract)`,
                     level: "tract",
+                    info: entry.info + " This is a tract-level version of the dataset, which is aggregated over individual census tracts."
                 }), ], 
                 [ `${kv[0]}_county`, Object.assign(clone(entry), { 
                     label: `${entry.label} (County)`,
                     level: "county",
+                    info: entry.info + " This is a county-level version of the dataset, which is aggregated over individual counties."
                 }), ],
             ];
         }
