@@ -197,8 +197,6 @@ const Query = {
             ? window.backgroundTract 
             : window.backgroundCounty;
 
-        console.log(query);
-
         geoWorker.postMessage({
             type: "query",
             bounds: query.bounds,
@@ -227,8 +225,6 @@ const Query = {
                         fields: filterFields,
                     },
                 };
-
-                console.log(query.body);
 
                 this._queryDruid(query, data.data.data);
             }
