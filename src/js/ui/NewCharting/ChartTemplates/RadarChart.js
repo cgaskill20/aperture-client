@@ -64,6 +64,7 @@ import { useGlobalState } from '../../global/GlobalState';
 
 const drawOpts = {
     numRings: 5,
+    ringOffset: 30,
     sizeOffset: { width: 100, height: 30 },
     fgColor: "#111",
     ringColor: "#aaa",
@@ -101,7 +102,7 @@ export default function RadarChart(props) {
                 dimensions.center.y, 
                 d3.scaleLinear()
                     .domain([0, drawOpts.numRings - 1])
-                    .range([30, dimensions.height / 2 - 30])
+                    .range([drawOpts.ringOffset, dimensions.height / 2 - drawOpts.ringOffset])
                     (i), 
                 0, 
                 Math.PI * 2
@@ -123,7 +124,7 @@ export default function RadarChart(props) {
         for (let slice of slices) {
             let range = d3.scaleLinear()
                 .domain([slice.min, slice.max])
-                .range([0, dimensions.height / 2]);
+                .range([0, dimensions.height / 2 - drawOpts.ringOffset]);
 
             ctx.rotate(radStep / 2);
 
@@ -162,7 +163,7 @@ export default function RadarChart(props) {
                     (i);
                 let offset = d3.scaleLinear()
                     .domain([0, drawOpts.numRings - 1])
-                    .range([30, dimensions.height / 2 - 30])
+                    .range([drawOpts.ringOffset, dimensions.height / 2 - drawOpts.ringOffset])
                     (i);
                 ctx.fillText(`${value.toFixed(2)}`, 0, offset - 5);
             }
