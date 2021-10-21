@@ -58,6 +58,7 @@ END OF TERMS AND CONDITIONS
 */
 
 import clone from 'just-clone';
+import Util from '../library/apertureUtil';
 
 const overwrite = { //leaving this commented cause it explains the schema really well 
     // "covid_county": {
@@ -242,20 +243,19 @@ export default function getOverwriteObject(options = {}) {
 }
 
 function splitDatasetsToCountyAndTract(overwrite, condition = (() => true)) {
+    let reformat = (kv, level, infoSuffix) => [
+        `${kv[0]}_${level}`, Object.assign(clone(kv[1]), {
+            label: `${kv[1].label} (${Util.capitalizeString(level)})`,
+            level: level,
+            info: `${kv[1].info} ${infoSuffix}`,
+        }), 
+    ];
+
     return Object.fromEntries(Object.entries(overwrite).map(kv => {
-        let entry = kv[1];
-        if (condition(entry)) {
+        if (condition(kv[1])) {
             return [ 
-                [ `${kv[0]}_tract`, Object.assign(clone(entry), {
-                    label: `${entry.label} (Tract)`,
-                    level: "tract",
-                    info: entry.info + " This is a tract-level version of the dataset, which is aggregated over individual census tracts."
-                }), ], 
-                [ `${kv[0]}_county`, Object.assign(clone(entry), { 
-                    label: `${entry.label} (County)`,
-                    level: "county",
-                    info: entry.info + " This is a county-level version of the dataset, which is aggregated over individual counties."
-                }), ],
+                reformat(kv, "tract", "This is a tract-level version of the dataset, which is aggregated over individual census tracts."),
+                reformat(kv, "county", "This is a county-level version of the dataset, which is aggregated over individual counties."),
             ];
         }
 
