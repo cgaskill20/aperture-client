@@ -65,6 +65,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Util from '../../library/apertureUtil';
+import { useGlobalState } from '../global/GlobalState';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -76,13 +77,18 @@ const useStyles = makeStyles(theme => ({
 export default function DatasetSelectControl(props) {
     let classes = useStyles();
     let [dataset, setDataset] = useState('');
+    let [globalState] = useGlobalState();
+
+    console.log(globalState.menuMetadata);
 
     let datasets = props.features.reduce((uniques, feature) => {
         let dataset = Feature.getCollection(feature);
         uniques.find(d => d.name === dataset) || uniques.push({ name: dataset });
         return uniques;
-    }, []).map(d => ({ ...d, cleanName: Util.cleanUpString(d.name) }));
-
+    }, []).map(d => ({ 
+        ...d, 
+        cleanName: Object.values(globalState.menuMetadata).find(m => m.collection === d.name).label, 
+    }));
 
     return <div>
         <FormControl className={classes.formControl}>
