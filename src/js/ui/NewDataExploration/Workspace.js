@@ -207,7 +207,6 @@ export default React.memo(function Workspace() {
 
         $.getJSON("src/json/menumetadata.json", async function (mdata) {
             const finalData = await AutoMenu.build(mdata, globalState.overwrite);
-            console.log(finalData);
             Query.init(finalData);
             extractLayers(finalData);
         });
