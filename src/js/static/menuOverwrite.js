@@ -244,17 +244,20 @@ export default function getOverwriteObject(options = {}) {
 }
 
 function splitDatasetsToCountyAndTract(overwrite, condition = (() => true)) {
-    return Object.values(overwrite).map(entry => {
+    return Object.fromEntries(Object.entries(overwrite).map(kv => {
+        let entry = kv[1];
         if (condition(entry)) {
             return [ 
-                Object.assign({
+                [ `${kv[0]}_tract`, Object.assign(clone(entry), {
                     label: `${entry.label} (Tract)`,
-                }, clone(entry)), 
-                Object.assign({ 
+                }), ], 
+                [ `${kv[0]}_county`, Object.assign(clone(entry), { 
                     label: `${entry.label} (County)`,
                     granularity: "county",
-                }, clone(entry)),
+                }), ],
             ];
         }
-    }).flat();
+
+        return kv;
+    }).flat());
 }
