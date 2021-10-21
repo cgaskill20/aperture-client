@@ -56,153 +56,205 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import "./src/css/variables.css";
-import "./src/css/darkModeSwitch.css";
-import "./src/css/imageStyles.css";
-import "./src/css/dataExploration.css";
-import "./src/css/queries.css";
-import "./src/css/modeling.css";
-import "./src/css/charts.css";
-import "./src/css/main.css";
-import "./src/css/leafletOverrides.css";
-import "./src/css/bootstrapOverrides.css";
-import "./src/css/third-party/nouislider.min.css";
-import "./src/css/third-party/bootstrap4-toggle.min.css";
-import "./src/css/third-party/bootstrap.min.css";
-import "./src/css/third-party/MarkerCluster.css";
-import "./src/css/third-party/MarkerCluster.Default.css";
 
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import clone from 'just-clone';
 
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-    iconUrl: require('leaflet/dist/images/marker-icon.png'),
-    shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-});
-
-import ChartSystem from "./src/js/library/charting/chartSystem"
-import ModelMenu from "./src/js/ui/modeling/components/ModelMenu";
-import AutoQuery from "./src/js/library/autoQuery.js";
-import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
-import AutoMenu from "./src/js/library/autoMenu.js";
-// import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
-import Root from "./src/js/ui/Root";
-import getOverwrite from "./src/js/static/menuOverwrite";
-
-//idek what to do with theses files, things break if I try to make them import specific things
-import "./src/js/third-party/leaflet.markercluster.js";
-require("./src/js/third-party/popper.min.js");
-require("./src/js/third-party/bootstrap4-toggle.min.js");
-require("bootstrap");
-require("./src/js/library/smartQuerier.js");
-
-export let finalData;
-const PAGE_URL = window.location.href;
-const DEV = PAGE_URL.includes("localhost") || PAGE_URL.includes("127.0.0.1");
-if (DEV && !localStorage.getItem("noDev")) {
-    console.log("Aperture client set to DEV mode.")
+const overwrite = { //leaving this commented cause it explains the schema really well 
+    // "covid_county": {
+    //     "group": "Tract, County, & State Data",
+    //     "subGroup": "County Level",
+    //     "constraints": {
+    //         date_range: {
+    //             "type": "slider",
+    //             "label": "Date Range",
+    //             "range": [1580169600000, 1580169600000 + 1000 * 60 * 60 * 24 * 266],
+    //             "default": [1580169600000, 1580169600000 + 1000 * 60 * 60 * 24 * 266],
+    //             "step": 1000 * 60 * 60 * 24,
+    //             "isDate": true
+    //         }
+    //     },
+    //     "onConstraintChange": function (layer, constraintName, value) {
+    //         console.log(layer + "-" + constraintName + "-");
+    //         COVID.dateStart = Number(value[0]);
+    //         COVID.dateEnd = Number(value[1]);
+    //         COVID.changeFlag = true;
+    //         COVID.makeQuery(map);
+    //     },
+    //     "onAdd": function () {
+    //         COVID.allowRender = true;
+    //     },
+    //     "onRemove": function () {
+    //         COVID.allowRender = false;
+    //         COVID.clear();
+    //     },
+    //     "onUpdate": function () {
+    //         COVID.makeQuery(map);
+    //     },
+    //     "noAutoQuery": true
+    // },
+    gridmet_climate: {
+        label: "Historical Climate",
+        collection: "Gridmet_ALL_Partitioned",
+        info: "Historical climate data from gridMET, a gridded dataset that spans the CONUS and includes variables such as air temperature, precipitation, humidity, evapotranspiration, and more.",
+        constraints: {
+            time_interval: {
+                type: "slider",
+                label: "Date Range",
+                range: [283996800000, 1577836800000],
+                "default": [283996800000, 315532800000],
+                isDate: true
+            },
+            m_air_temperature_max: {
+                type: "slider",
+                label: "Max Air Temperature",
+                range: [233.1, 327.1],
+                "default": [233.1, 327.1],
+                step: 0.1,
+                unit: "kelvin",
+            },
+            m_air_temperature_min: {
+                type: "slider",
+                label: "Min Air Temperature",
+                range: [225.1, 312.6],
+                "default": [225.1, 312.6],
+                step: 0.1,
+                unit: "kelvin",
+            },
+            m_dead_fuel_moisture_1000hr: {
+                type: "slider",
+                label: "1000 Hour Fuel Moisture",
+                range: [0.4, 47.5],
+                "default": [0.4, 47.5],
+                step: 0.1,
+                unit: "percent",
+            },
+            m_dead_fuel_moisture_100hr: {
+                type: "slider",
+                label: "100 Hour Fuel Moisture",
+                range: [0.4, 46.7],
+                "default": [0.4, 46.7],
+                step: 0.1,
+                unit: "percent"
+            },
+            m_potential_evapotranspiration_alfalfa: {
+                type: "slider",
+                label: "Reference Evapotranspiration (alfalfa)",
+                range: [0, 31.8],
+                "default": [0.4, 46.7],
+                step: 0.1,
+                unit: "mm"
+            },
+            m_potential_evapotranspiration_short_grass: {
+                type: "slider",
+                label: "Reference Evapotranspiration (short grass)",
+                range: [0, 20],
+                "default": [0, 20],
+                step: 0.1,
+                unit: "mm"
+            },
+            m_precipitation_amount: {
+                type: "slider",
+                label: "Accumulated Precipitation",
+                range: [0, 6],
+                "default": [0, 3],
+                step: 0.1,
+                unit: "mm"
+            },
+            m_relative_humidity_max: {
+                type: "slider",
+                label: "Maximum Relative Humidity",
+                range: [0, 100],
+                "default": [0, 100],
+                step: 0.1,
+                unit: "percent"
+            },
+            m_relative_humidity_min: {
+                type: "slider",
+                label: "Minimum Relative Humidity",
+                range: [0, 100],
+                "default": [0, 100],
+                step: 0.1,
+                unit: "percent"
+            },
+            m_specific_humidity_mean: {
+                type: "slider",
+                label: "Mean Specific Humidity",
+                range: [0, 100],
+                "default": [0, 100],
+                step: 0.1,
+                unit: "kg/kg"
+            },
+            m_surface_downwelling_shortwave_flux_in_air: {
+                type: "slider",
+                label: "Mean Downward Shortwave Radiation (at surface)",
+                range: [0, 455.6],
+                "default": [0, 455.6],
+                step: 0.1,
+                unit: "W m-2"
+            },
+            m_vapor_pressure_deficit_mean: {
+                type: "slider",
+                label: "Mean Vapor Pressure Deficit",
+                range: [0, 10.04],
+                "default": [0, 10.04],
+                step: 0.1,
+                unit: "kPa",
+            },
+            m_wind_direction_mean: {
+                type: "slider",
+                label: "Mean Wind Direction",
+                range: [0, 360],
+                "default": [0, 360],
+                step: 0.1,
+                unit: "degrees clockwise from north",
+            },
+            m_wind_speed_mean: {
+                type: "slider",
+                label: "Mean Wind Speed",
+                range: [0, 29.1],
+                "default": [0, 29.1],
+                step: 0.1,
+                unit: "m/s",
+            },
+        },
+        color: {
+            style: "gradient",
+            variable: "m_air_temperature_max",
+            border: 1
+        },
+        type: "druid",
+        granularity: "tract",
+        datasource: "Gridmet_ALL_Partitioned",
+    },
 }
 
-//--------------
-const standardTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    maxZoom: 18
-});
-
-const topoTiles = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
-    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    subdomains: 'abcd',
-    minZoom: 0,
-    maxZoom: 18,
-    ext: 'png'
-});
-
-const satelliteTiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-    maxZoom: 18
-});
-
-const baseMaps = {
-    "Default": standardTiles,
-    "Topography": topoTiles,
-    "Satellite": satelliteTiles
-};
-
-const map = L.map('map2', {
-    renderer: L.canvas(),
-    minZoom: 3,
-    fullscreenControl: true,
-    inertia: false,
-    timeDimension: false,
-    zoomControl: false
-});
-window.map = map;
-map.setView([40.573733, -105.086559], 11);
-
-L.control.layers(baseMaps).addTo(map);
-standardTiles.addTo(map);
-
-const zoomControl = L.control.zoom({ position: "topright" }).addTo(map);
-
-var markers = L.markerClusterGroup({
-    showCoverageOnHover: false,
-    spiderfyOnMaxZoom: true,
-    maxClusterRadius: 55,
-    animate: false
-});
-map.addLayer(markers);
-
-const dataExplorationGroup = L.featureGroup().addTo(map);
-const dataModelingGroup = L.featureGroup();
-window.dataExplorationGroup = dataExplorationGroup;
-window.dataModelingGroup = dataModelingGroup;
-
-import Worker from "./src/js/library/geometryLoaderWorker.js"
-const preloadStatusContainer = document.getElementById("preloadStatus");
-let bgTractId = "bgTract";
-let bgCountyId = "bgCounty";
-const backgroundTract = new Worker();
-const backgroundCounty = new Worker();
-globalThis.loaders = [
-    {
-        id: bgTractId,
-        loader: backgroundTract,
-        collection: "tract_geo_140mb_no_2d_index"
-    },
-    {
-        id: bgCountyId,
-        loader: backgroundCounty,
-        collection: "county_geo_30mb_no_2d_index"
+/* The options object can have the following fields:
+ *  .raw: If true, return the overwrite object exactly as it is written above, 
+ *        with no additional processing.
+ */
+export default function getOverwriteObject(options = {}) {
+    if (options.raw) {
+        return overwrite;
     }
-];
-window.backgroundTract = backgroundTract;
-window.backgroundCounty = backgroundCounty;
 
-const overwrite = getOverwrite();
+    let modifiedOverwrite = splitDatasetsToCountyAndTract(overwrite, 
+        entry => entry.type === "druid" && entry.granularity === "tract");
 
-window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplorationGroup, overwrite, {
-    queryAlertText: document.getElementById('queryInfoText'),
-    maxElements: 10000,
-    maxLayers: 20,
-    simplifyThreshold: 0.0001
-});
-window.chartSystem = new ChartSystem(map, "src/json/graphPriority.json", window.renderInfrastructure);
+    return modifiedOverwrite;
+}
 
-const uiRoot = document.getElementById("ui-root");
-ReactDOM.render((<Root map={map} overwrite={overwrite}/>), uiRoot);
-
-// const modelContainer = document.getElementById("model-container");
-// ReactDOM.render((<ModelMenu/>), modelContainer);
-
-
-// import {closeNav} from "./src/js/static/navButtons";
-import "./src/js/static/darkMode.js";
-
-// map.on('click', function () {
-//     closeNav();
-// });
-
+function splitDatasetsToCountyAndTract(overwrite, condition = (() => true)) {
+    return Object.values(overwrite).map(entry => {
+        if (condition(entry)) {
+            return [ 
+                Object.assign({
+                    label: `${entry.label} (Tract)`,
+                }, clone(entry)), 
+                Object.assign({ 
+                    label: `${entry.label} (County)`,
+                    granularity: "county",
+                }, clone(entry)),
+            ];
+        }
+    }).flat();
+}
