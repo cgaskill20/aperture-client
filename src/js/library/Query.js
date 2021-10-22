@@ -607,8 +607,6 @@ const Query = {
             senderID: id
         });
 
-        console.log(body);
-
         const responseListener = this._getRawDruidQueryListener(query, geometryData);
         this.queryWorker.addEventListener("message", responseListener);
     },
@@ -620,7 +618,6 @@ const Query = {
                 return;
             if (data.type === "data") {
                 let response = data.data.event;
-                console.log(data.data);
                 let geometry = geometryData.find(d => d.GISJOIN === response.GISJOIN);
                 let geoJSON = { 
                     id: `druid${response.GISJOIN}`,
