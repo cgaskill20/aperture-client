@@ -248,6 +248,9 @@ function splitDatasetsToCountyAndTract(overwrite, condition = (() => true)) {
             label: `${kv[1].label} (${Util.capitalizeString(level)})`,
             level: level,
             info: `${kv[1].info} ${infoSuffix}`,
+            linkedGeometry: level == "tract" 
+                ? "tract_geo_140mb_no_2d_index"
+                : "county_geo_30mb_no_2d_index",
         }), 
     ];
 
