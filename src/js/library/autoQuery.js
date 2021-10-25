@@ -387,6 +387,7 @@ export default class AutoQuery {
                     id,
                     bounds: this.map.getBounds(),
                     body: this.makeDruidQueryBody(),
+                    level: this.data.level,
                 });
                 break;
             }
@@ -543,7 +544,7 @@ export default class AutoQuery {
             queryType: "groupBy",
             dataSource: this.data.datasource,
             granularity: "all",
-            dimensions: [ "GISJOIN" ],
+            dimensions: this.buildDruidBodyDimensions(this.data.level),
 
             intervals: [ `${new Date(temporalConstraint[0]).toISOString()}/${new Date(temporalConstraint[1]).toISOString()}` ],
             aggregations: aggregationConstraints.map(kv => {
@@ -558,6 +559,23 @@ export default class AutoQuery {
         };
 
         return body;
+    }
+
+    buildDruidBodyDimensions(level) {
+        return [ level === "tract" 
+            ? "GISJOIN" 
+            : {
+                type: "extraction",
+                dimension: "GISJOIN",
+                outputName: "GISJOIN",
+                outputType: "STRING",
+                extractionFn: {
+                    type: "substring", 
+                    index: 0, 
+                    length: 8 
+                }
+            } 
+        ];
     }
 
     buildDruidBodyHavingSpec(aggregationConstraints) {
