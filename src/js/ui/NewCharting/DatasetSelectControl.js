@@ -56,88 +56,55 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useState} from 'react';
-import Button from '@material-ui/core/Button';
-import CloseIcon from '@material-ui/icons/Close';
-import { useGlobalState } from '../global/GlobalState';
-import { ChartingType } from '../../library/charting/chartSystem';
-import {makeStyles, Menu, MenuItem} from "@material-ui/core";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Grid from "@material-ui/core/Grid";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        margin: theme.spacing(2),
-    },
-    menu: {
-        marginRight: theme.spacing(1),
-        width: "220px",
+import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Feature from '../../library/charting/feature.js';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import Util from '../../library/apertureUtil';
+import { useGlobalState } from '../global/GlobalState';
+
+const useStyles = makeStyles(theme => ({
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 200,
     },
 }));
 
-export default function ChartGlobalControls(props) {
-    const classes = useStyles();
-    const [globalState, setGlobalState] = useGlobalState();
-    const [anchorEl, setAnchorEl] = useState(null);
+export default function DatasetSelectControl(props) {
+    let classes = useStyles();
+    let [dataset, setDataset] = useState('');
+    let [globalState] = useGlobalState();
 
-    const chartOptions = [
-        ["Histogram", {type: ChartingType.HISTOGRAM}],
-        ["Scatterplot", {type: ChartingType.SCATTERPLOT}],
-        ["COVID-19", {type: ChartingType.LINE}],
-        ["Boxplot", {type: ChartingType.BOXPLOT}],
-        ["Correlogram", {type: ChartingType.CORRELOGRAM}],
-        ["Radar", {type: ChartingType.RADAR}],
-    ];
+    let datasets = props.features.reduce((uniques, feature) => {
+        let dataset = Feature.getCollection(feature);
+        uniques.find(d => d.name === dataset) || uniques.push({ name: dataset });
+        return uniques;
+    }, []).map(d => ({ 
+        ...d, 
+        cleanName: Object.values(globalState.menuMetadata).find(m => m.collection === d.name).label, 
+    }));
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = (chartObj) => {
-        if(chartObj.type !== "click"){
-            props.make(chartObj);
-        }
-        setAnchorEl(null);
-    };
-
-    return (
-        <Grid
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            className={classes.root}
-        >
-            <Grid item>
-                <Button variant="outlined" startIcon={<ExpandMoreIcon/>} onClick={handleClick} className={classes.menu}>
-                    Select Chart Type
-                </Button>
-                <Menu
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    {renderMenuItems()}
-                </Menu>
-            </Grid>
-            <Grid item>
-                <Button variant="outlined" startIcon={<CloseIcon/>} onClick={() => setGlobalState({ chartingOpen: false })}>
-                    Close
-                </Button>
-            </Grid>
-        </Grid>
-    );
-
-    function renderMenuItems() {
-        let allCharts = [];
-        chartOptions.map((chart, index) => {
-            allCharts.push(<div key={index}>
-                <MenuItem onClick={() => handleClose(chart[1])}>
-                    {chart[0]}
-                </MenuItem>
-            </div>)
-        })
-        return allCharts;
-    }
+    return <div>
+        <FormControl className={classes.formControl}>
+            <InputLabel id='dataset-select-label'>Dataset</InputLabel>
+            <Select
+                labelId='dataset-select-label'
+                onChange={event => setDataset(event.target.value)} 
+                value={dataset}
+            >
+                {datasets.map((dataset, i) => 
+                    <MenuItem key={i} value={dataset.name}>
+                        {dataset.cleanName}
+                    </MenuItem>
+                )}
+            </Select>
+        </FormControl>
+        {React.Children.map(props.children, (child, index) => {
+            return React.cloneElement(child, {dataset: dataset});
+        })}
+    </div>;
 }

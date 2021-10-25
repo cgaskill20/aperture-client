@@ -56,88 +56,250 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useState} from 'react';
-import Button from '@material-ui/core/Button';
-import CloseIcon from '@material-ui/icons/Close';
-import { useGlobalState } from '../global/GlobalState';
-import { ChartingType } from '../../library/charting/chartSystem';
-import {makeStyles, Menu, MenuItem} from "@material-ui/core";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Grid from "@material-ui/core/Grid";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        margin: theme.spacing(2),
-    },
-    menu: {
-        marginRight: theme.spacing(1),
-        width: "220px",
-    },
-}));
+import React, { useEffect, useState, useRef } from 'react';
+import * as d3 from '../../../third-party/d3.min.js';
+import Feature from '../../../library/charting/feature.js';
+import { useGlobalState } from '../../global/GlobalState';
 
-export default function ChartGlobalControls(props) {
-    const classes = useStyles();
-    const [globalState, setGlobalState] = useGlobalState();
-    const [anchorEl, setAnchorEl] = useState(null);
+const drawOpts = {
+    numRings: 5,
+    ringOffset: 30,
+    sizeOffset: { width: 100, height: 30 },
+    fgColor: "#111",
+    ringColor: "#aaa",
+    labelColor: "#999",
+    bgColor: "#fff",
+    popupSize: { width: 300, height: 50 },
+    font: '10pt Arial',
+};
 
-    const chartOptions = [
-        ["Histogram", {type: ChartingType.HISTOGRAM}],
-        ["Scatterplot", {type: ChartingType.SCATTERPLOT}],
-        ["COVID-19", {type: ChartingType.LINE}],
-        ["Boxplot", {type: ChartingType.BOXPLOT}],
-        ["Correlogram", {type: ChartingType.CORRELOGRAM}],
-        ["Radar", {type: ChartingType.RADAR}],
-    ];
+export default function RadarChart(props) {
+    let [globalState] = useGlobalState();
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+    let canvasRef = useRef();
+    let datasetSlices = useRef([]);
+    let ctxr = useRef();
+    let dimensions = useRef();
+    let mouseInfo = useRef({
+        inChart: false,
+    });
 
-    const handleClose = (chartObj) => {
-        if(chartObj.type !== "click"){
-            props.make(chartObj);
+    let prepareData = data => {
+        if (!data?.map_features) {
+            return [];
         }
-        setAnchorEl(null);
+
+        return Object.entries(data.map_features)
+            .filter(kv => Feature.getCollection(kv[0]) == props.dataset);
     };
+
+    let drawRings = (ctx, dimensions) => {
+        ctx.strokeStyle = drawOpts.ringColor;
+        for (let i = 0; i < drawOpts.numRings; i++) {
+            ctx.beginPath();
+            ctx.arc(dimensions.center.x, 
+                dimensions.center.y, 
+                d3.scaleLinear()
+                    .domain([0, drawOpts.numRings - 1])
+                    .range([drawOpts.ringOffset, dimensions.height / 2 - drawOpts.ringOffset])
+                    (i), 
+                0, 
+                Math.PI * 2
+            );
+            ctx.stroke();
+        }
+    };
+
+    let drawSlices = (ctx, slices, dimensions) => {
+        ctx.save();
+
+        let radStep = d3.scaleLinear()
+            .domain([0, slices.length])
+            .range([0, Math.PI * 2])
+            (1);
+
+        ctx.translate(dimensions.center.x, dimensions.center.y);
+
+        for (let slice of slices) {
+            let range = d3.scaleLinear()
+                .domain([slice.min, slice.max])
+                .range([0, dimensions.height / 2 - drawOpts.ringOffset]);
+
+            ctx.rotate(radStep / 2);
+
+            ctx.strokeStyle = drawOpts.fgColor;
+            ctx.beginPath();
+            ctx.arc(0, 
+                0, 
+                range(d3.min(slice.data, d => d.data)), 
+                Math.PI / 2 - radStep / 2, 
+                Math.PI / 2 + radStep / 2
+            );
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(0, 
+                0, 
+                range(d3.max(slice.data, d => d.data)), 
+                Math.PI / 2 - radStep / 2, 
+                Math.PI / 2 + radStep / 2
+            );
+            ctx.stroke();
+            
+            ctx.strokeStyle = drawOpts.ringColor;
+            ctx.beginPath();
+            ctx.moveTo(0, range(d3.min(slice.data, d => d.data)));
+            ctx.lineTo(0, range(d3.max(slice.data, d => d.data)));
+            ctx.stroke();
+
+            ctx.font = drawOpts.font;
+            ctx.textAlign = 'center';
+            ctx.fillStyle = drawOpts.labelColor;
+            for (let i = 2; i < drawOpts.numRings; i++) {
+                let value = d3.scaleLinear()
+                    .domain([0, drawOpts.numRings - 1])
+                    .range([slice.min, slice.max])
+                    (i);
+                let offset = d3.scaleLinear()
+                    .domain([0, drawOpts.numRings - 1])
+                    .range([drawOpts.ringOffset, dimensions.height / 2 - drawOpts.ringOffset])
+                    (i);
+                ctx.fillText(`${value.toFixed(2)}`, 0, offset - 5);
+            }
+
+            ctx.beginPath();
+            ctx.rotate(radStep / 2);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, dimensions.height / 2);
+            ctx.stroke();
+
+        }
+        ctx.restore();
+    };
+
+    let drawPopup = (ctx, mouse, dimensions) => {
+        if (mouse.inChart && mouse.slice) {
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(mouse.pos.x, mouse.pos.y - 50, 300, 50);
+
+            ctx.fillStyle = "#111";
+            ctx.fillText(`${mouse.slice.name} ${mouse.slice.unit ? `(${mouse.slice.unit})` : ''}`, 
+                mouse.pos.x + 10, 
+                mouse.pos.y - 50 + 12,
+            );
+            ctx.fillText(`Current min: ${d3.min(mouse.slice.data, d => d.data).toFixed(2)}`, 
+                mouse.pos.x + 10, 
+                mouse.pos.y - 50 + (12 * 2),
+            );
+            ctx.fillText(`Current max: ${d3.max(mouse.slice.data, d => d.data).toFixed(2)}`, 
+                mouse.pos.x + 10, 
+                mouse.pos.y - 50 + (12 * 3),
+            );
+        }
+    };
+
+    let rerender = () => {
+        if (!props.data?.map_features || !ctxr || !dimensions) {
+            return;
+        }
+
+        let ctx = ctxr.current;
+
+        ctx.clearRect(0, 0, dimensions.current.width, dimensions.current.height);
+        drawRings(ctx, dimensions.current);
+
+        if (datasetSlices.current.length < 2) {
+            return;
+        }
+        let slices = datasetSlices.current;
+        drawSlices(ctx, slices, dimensions.current);
+
+        drawPopup(ctx, mouseInfo.current, dimensions.current);
+    };
+
+    let updateSlices = () => {
+        let data = prepareData(props.data);
+        let metadata = Object.values(globalState.menuMetadata)
+                .find(m => m.collection === props.dataset);
+        datasetSlices.current = data.map((v, i) => {
+            let constraint = metadata.constraints[Feature.getName(v[0])];
+            return {
+                data: v[1],
+                max: constraint.range[1],
+                min: constraint.range[0],
+                unit: constraint.unit,
+                name: Feature.getFriendlyName(v[0]),
+                index: i,
+            };
+        }).filter(s => s.data.length > 0);
+    };
+
+    useEffect(() => { 
+        let ctx = canvasRef.current.getContext('2d');
+        ctxr.current = ctx;
+        
+        let canvas = d3.select(canvasRef.current);
+
+        canvas.on('mousemove', event => {
+            if (!canvasRef.current || !ctx || datasetSlices.current.length == 0) {
+                return;
+            }
+
+            mouseInfo.current.inChart = true;
+
+            let rawMouse = d3.pointer(event, canvasRef.current);
+            let mouse = { 
+                x: rawMouse[0] - dimensions.current.center.x, 
+                y: rawMouse[1] - dimensions.current.center.y, 
+            };
+
+            mouseInfo.current.pos = { x: rawMouse[0], y: rawMouse[1] };
+
+            let radius = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y);
+            let theta = Math.atan2(mouse.y / radius, mouse.x / radius);
+            let thetaOffset = Math.PI / 2;
+            theta += thetaOffset;
+            if (theta > Math.PI) { 
+                theta -= Math.PI * 2;
+            }
+
+            let slice = d3.scaleQuantize()
+                .domain([-Math.PI, Math.PI])
+                .range(datasetSlices.current)
+                (theta);
+
+            mouseInfo.current.slice = slice;
+
+            rerender();
+        });
+
+        canvas.on('mouseleave', event => {
+            mouseInfo.current.inChart = false;
+        });
+
+    }, []);
+
+    useEffect(() => {
+        dimensions.current = {};
+        dimensions.current.width = props.size.width - drawOpts.sizeOffset.width;
+        dimensions.current.height = props.size.height - drawOpts.sizeOffset.height;
+        dimensions.current.center = { 
+            x: dimensions.current.width / 2,
+            y: dimensions.current.height / 2,
+        };
+        rerender();
+        updateSlices();
+    });
 
     return (
-        <Grid
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            className={classes.root}
-        >
-            <Grid item>
-                <Button variant="outlined" startIcon={<ExpandMoreIcon/>} onClick={handleClick} className={classes.menu}>
-                    Select Chart Type
-                </Button>
-                <Menu
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    {renderMenuItems()}
-                </Menu>
-            </Grid>
-            <Grid item>
-                <Button variant="outlined" startIcon={<CloseIcon/>} onClick={() => setGlobalState({ chartingOpen: false })}>
-                    Close
-                </Button>
-            </Grid>
-        </Grid>
+        <div>
+            <canvas 
+                width={props.size.width - drawOpts.sizeOffset.width} 
+                height={props.size.height - drawOpts.sizeOffset.height}
+                ref={canvasRef}
+            >
+            </canvas>
+        </div>
     );
-
-    function renderMenuItems() {
-        let allCharts = [];
-        chartOptions.map((chart, index) => {
-            allCharts.push(<div key={index}>
-                <MenuItem onClick={() => handleClose(chart[1])}>
-                    {chart[0]}
-                </MenuItem>
-            </div>)
-        })
-        return allCharts;
-    }
 }
