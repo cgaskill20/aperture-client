@@ -192,7 +192,7 @@ export default function Popup() {
                         />
                         <br />
                         <div>
-                            Change is: {change}
+                            Change is: {change}%
                             {(() => {
                                 const pipeline = [
                                     {
@@ -245,11 +245,10 @@ export default function Popup() {
                                     pipeline,
                                     dontLink: true
                                 }
-                                console.log({ q })
                                 Query.makeQuery(q).then((d) => {
-                                    console.log({ d })
+                                    // console.log({d})
+                                    setChange(d.data[0].relative_pop_change_pct)
                                 });
-                                return JSON.stringify(obj.properties.meta[key].temporal.temporalRange)
                             })()}
                         </div>
                     </Paper>
