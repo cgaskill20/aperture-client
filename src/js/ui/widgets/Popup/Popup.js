@@ -57,7 +57,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React, { useEffect, useState } from "react";
-import {makeStyles, Drawer, Typography, IconButton, Grid, Paper} from "@material-ui/core";
+import { makeStyles, Drawer, Typography, IconButton, Grid, Paper } from "@material-ui/core";
 import { useGlobalState } from "../../global/GlobalState";
 import Util from "../../../library/apertureUtil";
 import CloseIcon from "@material-ui/icons/Close";
@@ -102,6 +102,8 @@ export default function Popup() {
     const classes = useStyles();
     const subTitleTextSize = "h6";
 
+    const [change, setChange] = useState(0)
+
     const onObjChange = () => {
         setColorSummary(obj?.properties?.colorInfo?.colorSummary(obj?.properties?.colorInfo?.currentColorField?.name))
         setColorField(obj?.properties?.colorInfo?.currentColorField)
@@ -124,7 +126,7 @@ export default function Popup() {
         };
 
         window.forceUpdateObj = (properties) => {
-            if(properties === obj.properties) {
+            if (properties === obj.properties) {
                 onObjChange();
             }
         }
@@ -188,6 +190,68 @@ export default function Popup() {
                             join={obj.join}
                             temporalRange={obj.properties.meta[key].temporal.temporalRange}
                         />
+                        <br />
+                        <div>
+                            Change is: {change}
+                            {(() => {
+                                const pipeline = [
+                                    {
+                                        $match: {
+                                            GISJOIN: obj.join.GISJOIN
+                                        }
+                                    },
+                                    {
+                                        $match:
+                                        {
+                                            epoch_time: {
+                                                $gte: obj.properties.meta[key].temporal.temporalRange[0],
+                                                $lte: obj.properties.meta[key].temporal.temporalRange[1]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        $sort: {
+                                            epoch_time: 1
+                                        }
+                                    },
+                                    {
+                                        $group: {
+                                            _id: "GISJOIN",
+                                            GISJOIN: { $first: '$GISJOIN' },
+                                            first_pop: { $first: '$C7L001' },
+                                            last_pop: { $last: '$C7L001' }
+                                        }
+                                    },
+                                    {
+                                        $project: {
+                                            relative_pop_change_pct: {
+                                                $multiply: [
+                                                    {
+                                                        $divide: [
+                                                            { $subtract: ['$last_pop', '$first_pop'] },
+                                                            '$first_pop'
+                                                        ]
+                                                    },
+                                                    100
+                                                ]
+                                            },
+                                            first_pop: 1,
+                                            last_pop: 1
+                                        }
+                                    }
+                                ]
+                                const q = {
+                                    collection: obj.properties.meta[key].temporal.collection,
+                                    pipeline,
+                                    dontLink: true
+                                }
+                                console.log({ q })
+                                Query.makeQuery(q).then((d) => {
+                                    console.log({ d })
+                                });
+                                return JSON.stringify(obj.properties.meta[key].temporal.temporalRange)
+                            })()}
+                        </div>
                     </Paper>
                 </React.Fragment>)
         }
