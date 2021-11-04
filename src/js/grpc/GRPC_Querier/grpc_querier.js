@@ -204,6 +204,13 @@ const SustainQuerier = {
         request.setQuery(query);
         return this.service.druidDirectQuery(request, {});
     },
+
+    echoQuery: function (collection, query) {
+        const request = new DirectRequest();
+        request.setCollection(collection);
+        request.setQuery(query);
+        return this.service.echoQuery(request, {});
+    },
 };
 
 /**
