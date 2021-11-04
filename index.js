@@ -59,14 +59,21 @@ END OF TERMS AND CONDITIONS
 console.log("e")
 import { sustain_querier } from "./src/js/grpc/GRPC_Querier/grpc_querier.js";
 const querier = sustain_querier()
-const stream = querier.echoQuery("state_geo", "[]");
-stream.on('data', (res) => {
-    const data = JSON.parse(res.getData());
-    console.log({data})
-});
-stream.on('end', () => {
-    console.log("done")
-});
+
+const echoQueryTimed = async (collection, pipeline) => {
+    return new Promise(resolve => {
+        const startTime = Date.now()
+    const stream = querier.echoQuery(collection, JSON.stringify(pipeline));
+    stream.on('data', (res) => {
+        // const data = JSON.parse(res.getData());
+        // console.log({ data })
+    });
+    stream.on('end', () => {
+        resolve(Date.now() - startTime);
+    });
+    })
+}
+window.echoQueryTimed = echoQueryTimed
 
 // import "./src/css/variables.css";
 // import "./src/css/darkModeSwitch.css";
