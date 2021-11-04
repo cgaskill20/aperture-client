@@ -56,7 +56,6 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-console.log("e")
 import { sustain_querier } from "./src/js/grpc/GRPC_Querier/grpc_querier.js";
 const querier = sustain_querier()
 
