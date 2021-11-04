@@ -63,14 +63,14 @@ const querier = sustain_querier()
 const echoQueryTimed = async (collection, pipeline) => {
     return new Promise(resolve => {
         const startTime = Date.now()
-    const stream = querier.echoQuery(collection, JSON.stringify(pipeline));
-    stream.on('data', (res) => {
-        // const data = JSON.parse(res.getData());
-        // console.log({ data })
-    });
-    stream.on('end', () => {
-        resolve(Date.now() - startTime);
-    });
+        const stream = querier.echoQuery(collection, JSON.stringify(pipeline));
+        stream.on('data', (res) => {
+            // const data = JSON.parse(res.getData());
+            // console.log({ data })
+        });
+        stream.on('end', () => {
+            resolve(Date.now() - startTime);
+        });
     })
 }
 window.echoQueryTimed = echoQueryTimed
