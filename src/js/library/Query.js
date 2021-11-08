@@ -109,20 +109,40 @@ const Query = {
       * Posts the given query to 
       */
     logQuery(query) {
+        console.log(query);
         if(window.location.origin === "https://urban-sustain.org") {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const apiKey = urlParams.get('api_key');
+
+                const queryCollection = (query.type != "druid")
+                    ? query?.collection
+                    : query?.datasource; // In druid, "datasource" is analogous to "collection"
+
+                const queryPipeline = (query.type != "druid")
+                    ? JSON.stringify(query?.pipeline ?? [])
+                    : JSON.stringify({
+                        GISJOINS: query?.body.filter.fields.map(f => f.pattern),
+                        timeInterval: query?.body.intervals,
+                        filters: query?.body.having.havingSpecs,
+                    });
                 
-                fetch(`https://urban-sustain.org/api/query?apiKey=${apiKey ?? 'bGvWMIbJwgzYuOyi'}`, {
+                const payload = {
                     method: 'POST',
                     body: JSON.stringify({
                         bounds: query.bounds ? query.bounds.toBBoxString() : '',
-                        collection: query?.collection,
-                        pipeline: JSON.stringify(query?.pipeline ?? []),
-                        ttr: Date.now() - query.startTime
+                        collection: queryCollection,
+                        pipeline: queryPipeline,
+                        ttr: Date.now() - query.startTime,
+                        type: query.type ?? "mongo",
                     }) // body data type must match "Content-Type" header
-                }).then(res => {}).catch(error => {});
+                };
+
+                console.log(payload);
+
+                fetch(`https://urban-sustain.org/api/query?apiKey=${apiKey ?? 'bGvWMIbJwgzYuOyi'}`, payload)
+                    .then(res => {})
+                    .catch(error => {});
             }
             catch { }    
         }
@@ -236,6 +256,7 @@ const Query = {
                 this._queryDruid(query, data.data.data);
             }
             else if (data.type === "end") {
+                this.logQuery(query);
                 worker.removeEventListener("message", listener);
             }
         };

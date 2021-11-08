@@ -378,6 +378,7 @@ export default class AutoQuery {
                     callback,
                     bounds: this.map.getBounds(),
                     geohashBlacklist: this.geohashCache,
+                    type: "mongo",
                     id,
                 });
                 break;
@@ -388,6 +389,7 @@ export default class AutoQuery {
                     bounds: this.map.getBounds(),
                     body: this.makeDruidQueryBody(),
                     level: this.data.level,
+                    type: "druid",
                 });
                 break;
             }
