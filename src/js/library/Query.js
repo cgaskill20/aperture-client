@@ -106,6 +106,29 @@ const Query = {
     },
 
     /**
+      * Posts the given query to 
+      */
+    logQuery(query) {
+        if(window.location.origin === "https://urban-sustain.org") {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const apiKey = urlParams.get('api_key');
+                
+                fetch(`https://urban-sustain.org/api/query?apiKey=${apiKey ?? 'bGvWMIbJwgzYuOyi'}`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        bounds: query.bounds ? query.bounds.toBBoxString() : '',
+                        collection: query?.collection,
+                        pipeline: JSON.stringify(query?.pipeline ?? []),
+                        ttr: Date.now() - query.startTime
+                    }) // body data type must match "Content-Type" header
+                }).then(res => {}).catch(error => {});
+            }
+            catch { }    
+        }
+    },
+
+    /**
     * Makes a query
     * @memberof Query
     * @param {JSON} query JSON that matches a query schema
@@ -152,23 +175,7 @@ const Query = {
         else {
             query.callback = (res) => {
                 if (res.event === "end") {
-                    if(window.location.origin === "https://urban-sustain.org") {
-                        try {
-                            const urlParams = new URLSearchParams(window.location.search);
-                            const apiKey = urlParams.get('api_key');
-                            
-                            fetch(`https://urban-sustain.org/api/query?apiKey=${apiKey ?? 'bGvWMIbJwgzYuOyi'}`, {
-                                method: 'POST',
-                                body: JSON.stringify({
-                                    bounds: query.bounds ? query.bounds.toBBoxString() : '',
-                                    collection: query?.collection,
-                                    pipeline: JSON.stringify(query?.pipeline ?? []),
-                                    ttr: Date.now() - query.startTime
-                                }) // body data type must match "Content-Type" header
-                            }).then(res => {}).catch(error => {});
-                        }
-                        catch { }    
-                    }
+                    this.logQuery(query);
                     delete this.currentQueries[query.id];
                     callback(res)
                     query.callback = () => { }
