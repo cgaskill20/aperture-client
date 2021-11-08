@@ -109,7 +109,7 @@ const Query = {
       * Posts the given query to the logging API.
       */
     logQuery(query) {
-        if(window.location.origin === "https://urban-sustain.org" || true) {
+        if(window.location.origin === "https://urban-sustain.org") {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const apiKey = urlParams.get('api_key');
