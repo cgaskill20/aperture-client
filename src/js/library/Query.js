@@ -122,7 +122,6 @@ const Query = {
                 const queryPipeline = (query.type != "druid")
                     ? JSON.stringify(query?.pipeline ?? [])
                     : JSON.stringify({
-                        GISJOINS: query?.body.filter.fields.map(f => f.pattern),
                         timeInterval: query?.body.intervals,
                         filters: query?.body.having.havingSpecs,
                     });
