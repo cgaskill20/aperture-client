@@ -106,7 +106,7 @@ const Query = {
     },
 
     /**
-      * Posts the given query to 
+      * Posts the given query to the logging API.
       */
     logQuery(query) {
         if(window.location.origin === "https://urban-sustain.org" || true) {
