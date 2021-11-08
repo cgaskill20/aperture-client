@@ -218,6 +218,7 @@ const Query = {
 
     async makeDruidQuery(query) {
         this.currentQueries[query.id] = query;
+        query.startTime = Date.now();
 
         let geoWorker = query.level === "tract" 
             ? window.backgroundTract 
