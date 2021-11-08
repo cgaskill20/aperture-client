@@ -109,8 +109,7 @@ const Query = {
       * Posts the given query to 
       */
     logQuery(query) {
-        console.log(query);
-        if(window.location.origin === "https://urban-sustain.org") {
+        if(window.location.origin === "https://urban-sustain.org" || true) {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const apiKey = urlParams.get('api_key');
@@ -136,8 +135,6 @@ const Query = {
                         type: query.type ?? "mongo",
                     }) // body data type must match "Content-Type" header
                 };
-
-                console.log(payload);
 
                 fetch(`https://urban-sustain.org/api/query?apiKey=${apiKey ?? 'bGvWMIbJwgzYuOyi'}`, payload)
                     .then(res => {})
