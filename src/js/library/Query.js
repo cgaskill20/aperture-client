@@ -132,7 +132,7 @@ const Query = {
                         collection: queryCollection,
                         pipeline: queryPipeline,
                         ttr: Date.now() - query.startTime,
-                        type: query.type ?? "mongo",
+                        queryType: query.type ?? "mongo",
                     }) // body data type must match "Content-Type" header
                 };
 
