@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
         overflow: "auto",
         maxHeight: "60vh",
     },
-    clearButton: {
+    tableButton: {
         cursor: "pointer",
     },
 }));
@@ -157,7 +157,7 @@ export default React.memo(function WorkspaceSearchbar(props) {
     }
 
     function addAllButton() {
-        return filtering ? <Button onClick={addAllSearchedDatasets}>Add All</Button> : null;
+        return filtering ? <TableCell className={classes.tableButton} onClick={addAllSearchedDatasets}>Add All</TableCell> : <TableCell />;
     }
 
     function addAllSearchedDatasets() {
@@ -207,9 +207,9 @@ export default React.memo(function WorkspaceSearchbar(props) {
                         <Table stickyHeader>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell className={classes.clearButton} onClick={clearWorkspace}>Clear All</TableCell>
+                                    <TableCell className={classes.tableButton} onClick={clearWorkspace}>Clear All</TableCell>
                                     <TableCell>{datasetHeader()}</TableCell>
-                                    <TableCell>{addAllButton()}</TableCell>
+                                    {addAllButton()}
                                     <TableCell />
                                 </TableRow>
                             </TableHead>
