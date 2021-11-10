@@ -121,7 +121,8 @@ export default React.memo(function WorkspaceSearchbar(props) {
 
     function handleExpansion() {
         setExpanded(!expanded);
-        resetFilter();
+        setFilterText("");
+        setFiltering(false);
     }
 
     function filterDatasets(event) {
@@ -171,9 +172,20 @@ export default React.memo(function WorkspaceSearchbar(props) {
         props.setWorkspace(newWorkspace);
     }
 
-    function resetFilter() {
-        setFilterText("");
-        setFiltering(false);
+    function renderResetButton() {
+        if(expanded) {
+            return (
+                <IconButton onClick={() => {
+                    setFilterText("");
+                    setFiltering(false);
+                }}>
+                    <CustomTooltip title="Reset Search">
+                        <CloseIcon color="primary"/>
+                    </CustomTooltip>
+                </IconButton>
+            )
+        }
+        else return null;
     }
 
     return (
@@ -187,7 +199,7 @@ export default React.memo(function WorkspaceSearchbar(props) {
                         value={filterText}
                         onChange={(e) => filterDatasets(e)}
                     />
-                    <IconButton onClick={resetFilter}><CloseIcon/></IconButton>
+                    {renderResetButton()}
                     <IconButton onClick={handleExpansion}><ExpandMoreIcon/></IconButton>
                 </AccordionSummary>
                 <AccordionDetails>
