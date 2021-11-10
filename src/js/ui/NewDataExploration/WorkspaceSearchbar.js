@@ -56,101 +56,177 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import {makeStyles} from "@material-ui/core/styles";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
-import {componentIsRendering} from "../Sidebar";
 import {isGraphable} from "./Helpers";
 import InfoIcon from '@material-ui/icons/Info';
 import {CustomTooltip} from "../UtilityComponents";
+import {Accordion, AccordionDetails, Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Button from "@material-ui/core/Button";
+import CloseIcon from "@material-ui/icons/Close";
 
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
 
-function findLayerIndex(layerLabel, layerTitles) {
-    for(let i = 0; i < layerTitles.length; i++) {
-        if(layerTitles[i] === layerLabel) {
-            return i;
-        }
-    }
-}
-
 const useStyles = makeStyles((theme) => ({
-    icon: {
-        float: 'right',
+    tableBody: {
+        width: "100%",
+        overflow: "auto",
+        maxHeight: "60vh",
+    },
+    clearButton: {
+        cursor: "pointer",
     },
 }));
 
-function graphIcon(layer, graphableLayers) {
-    if(isGraphable(layer, graphableLayers)) {
-        return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
-    }
-}
-
-function infoIcon(layerInfo) {
-    if(layerInfo) {
-        return <CustomTooltip title={layerInfo} placement="right" arrow><IconButton><InfoIcon color="primary" /></IconButton></CustomTooltip>
-    }
-}
-
-function updateWorkspace(workspace, index) {
-    let newWorkspace = [...workspace];
-    newWorkspace[index] = !newWorkspace[index];
-    return newWorkspace;
-}
-
-function clearWorkspace(length) {
-    return new Array(length).fill(false);
-}
-
 export default React.memo(function WorkspaceSearchbar(props) {
     const classes = useStyles();
+    const [expanded, setExpanded] = useState(false);
+    const [filtering, setFiltering] = useState(false);
+    const [filteredDatasets, setFilteredDatsets] = useState(props.layerTitles);
+    const [filterText, setFilterText] = useState("");
+    const [datasets, setDatasets] = useState(props.layerTitles);
 
-    if(componentIsRendering) {console.log("|WorkspaceSearchbar Rerending|")}
+    useEffect(() => {
+        setDatasets(filtering ? filteredDatasets : props.layerTitles);
+    });
+
+    function graphIcon(layer) {
+        if(isGraphable(layer, props.graphableLayers)) {
+            return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
+        }
+    }
+
+    function infoIcon(layerInfo) {
+        if(layerInfo) {
+            return <CustomTooltip title={layerInfo} placement="right" arrow><IconButton><InfoIcon color="primary" /></IconButton></CustomTooltip>
+        }
+    }
+
+    function findLayerIndex(layerLabel) {
+        for(let i = 0; i < props.layerTitles.length; i++) {
+            if(props.layerTitles[i] === layerLabel) {
+                return i;
+            }
+        }
+    }
+
+    function handleExpansion() {
+        setExpanded(!expanded);
+        resetFilter();
+    }
+
+    function filterDatasets(event) {
+        setExpanded(true);
+        const input = event.target.value;
+        setFiltering(input !== "");
+        setFilterText(input);
+        const matches = props.layerTitles.filter((title) => caseInsensitiveMatch(input, title));
+        setFilteredDatsets(matches);
+    }
+
+    function caseInsensitiveMatch(input, match) {
+        return match.toLowerCase().includes(input.toLowerCase());
+    }
+
+    function handleLayerCheck(index) {
+        let newWorkspace = [...props.workspace];
+        newWorkspace[index] = !newWorkspace[index];
+        props.setWorkspace(newWorkspace);
+    }
+
+    function clearWorkspace() {
+        let emptyWorkspace = [];
+        for(const layer in props.workspace) {
+            emptyWorkspace.push(false);
+        }
+        props.setWorkspace(emptyWorkspace);
+    }
+
+    function datasetHeader() {
+        return filtering ? `${datasets.length} Datasets Matching Search` : `${datasets.length} Datasets`
+    }
+
+    function addAllButton() {
+        return filtering ? <Button onClick={addAllSearchedDatasets}>Add All</Button> : null;
+    }
+
+    function addAllSearchedDatasets() {
+        let layersToAdd = [];
+        filteredDatasets.forEach((layer) => {
+            layersToAdd.push(findLayerIndex(layer));
+        });
+        let newWorkspace = [...props.workspace];
+        layersToAdd.forEach((index) => {
+            newWorkspace[index] = true;
+        });
+        props.setWorkspace(newWorkspace);
+    }
+
+    function resetFilter() {
+        setFilterText("");
+        setFiltering(false);
+    }
+
     return (
-        <div>
-            <Autocomplete
-                className={classes.root}
-                multiple
-                disableCloseOnSelect
-                id="dataset-searchbar"
-                options={props.layerTitles}
-                value={props.layerTitles.filter((e, index) => props.workspace[index])}
-                onChange={(e, layers) => {
-                    const layersSet = new Set(layers)
-                    props.setWorkspace(props.layerTitles.map(layerTitle => layersSet.has(layerTitle)))
-                }}
-                renderOption={(option, state) => {
-                    const optionIndex = findLayerIndex({option}.option, props.layerTitles);
-                    return (
-                        <React.Fragment>
-                            <Checkbox
-                                icon={icon}
-                                color="primary"
-                                checkedIcon={checkedIcon}
-                                style={{ marginRight: 8 }}
-                                checked={props.workspace[optionIndex]}
-                            />
-                            {option}
-                            <span className={classes.icon}>{graphIcon(props.layers[optionIndex], props.graphableLayers)}</span>
-                            <span className={classes.icon}>{infoIcon(props.layers[optionIndex].info)}</span>
-                        </React.Fragment>
-                    );
-                }}
-                renderInput={params => (
+        <>
+            <Accordion expanded={expanded}>
+                <AccordionSummary>
                     <TextField
-                        {...params}
-                        variant="outlined"
                         label="Explore Datasets..."
+                        fullWidth
+                        variant="outlined"
+                        value={filterText}
+                        onChange={(e) => filterDatasets(e)}
                     />
-                )}
-            />
-        </div>
+                    <IconButton onClick={resetFilter}><CloseIcon/></IconButton>
+                    <IconButton onClick={handleExpansion}><ExpandMoreIcon/></IconButton>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <div className={classes.tableBody}>
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell className={classes.clearButton} onClick={clearWorkspace}>Clear All</TableCell>
+                                    <TableCell>{datasetHeader()}</TableCell>
+                                    <TableCell>{addAllButton()}</TableCell>
+                                    <TableCell />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {datasets.map((layer, index) => {
+                                    const trueLayerIndex = findLayerIndex(layer);
+                                    return (
+                                        <TableRow key={index}>
+                                            <TableCell>
+                                                <Checkbox
+                                                    icon={icon}
+                                                    color="primary"
+                                                    checkedIcon={checkedIcon}
+                                                    style={{ marginRight: 8 }}
+                                                    checked={props.workspace[trueLayerIndex]}
+                                                    onChange={() => handleLayerCheck(trueLayerIndex)}
+                                                />
+                                            </TableCell>
+                                            <TableCell>{layer}</TableCell>
+                                            <TableCell>{graphIcon(props.layers[trueLayerIndex])}</TableCell>
+                                            <TableCell>{infoIcon(props.layers[trueLayerIndex].info)}</TableCell>
+                                        </TableRow>
+                                    )
+                                })}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </AccordionDetails>
+            </Accordion>
+        </>
     );
 });
