@@ -84,7 +84,12 @@ const useStyles = makeStyles((theme) => ({
     },
     tableButton: {
         cursor: "pointer",
+        color: "#3f51b5"
     },
+    clearAllButton: {
+        cursor: "pointer",
+        color: "#f44336"
+    }
 }));
 
 export default React.memo(function WorkspaceSearchbar(props) {
@@ -152,14 +157,6 @@ export default React.memo(function WorkspaceSearchbar(props) {
         props.setWorkspace(emptyWorkspace);
     }
 
-    function datasetHeader() {
-        return filtering ? `${datasets.length} Datasets Matching Search` : `${datasets.length} Datasets`
-    }
-
-    function addAllButton() {
-        return filtering ? <TableCell className={classes.tableButton} onClick={addAllSearchedDatasets}>Add All</TableCell> : <TableCell />;
-    }
-
     function addAllSearchedDatasets() {
         let layersToAdd = [];
         filteredDatasets.forEach((layer) => {
@@ -188,6 +185,31 @@ export default React.memo(function WorkspaceSearchbar(props) {
         else return null;
     }
 
+    function workspaceIsNotEmpty() {
+        return props.workspace.includes(true);
+    }
+
+    function renderClearButton() {
+        if(workspaceIsNotEmpty()) {
+            return <TableCell className={classes.clearAllButton} onClick={clearWorkspace}>Clear Workspace</TableCell>;
+        }
+        else return <TableCell />;
+
+    }
+
+    function renderDatasetColumnHeader() {
+        if(filtering) {
+            return (
+                <TableCell className={classes.tableButton} onClick={addAllSearchedDatasets}>Add All {datasets.length} Datasets To Workspace</TableCell>
+            )
+        }
+        else {
+            return (
+                <TableCell>{datasets.length} Datasets</TableCell>
+            )
+        }
+    }
+
     return (
         <>
             <Accordion expanded={expanded}>
@@ -207,9 +229,9 @@ export default React.memo(function WorkspaceSearchbar(props) {
                         <Table stickyHeader>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell className={classes.tableButton} onClick={clearWorkspace}>Clear All</TableCell>
-                                    <TableCell>{datasetHeader()}</TableCell>
-                                    {addAllButton()}
+                                    {renderClearButton()}
+                                    {renderDatasetColumnHeader()}
+                                    <TableCell />
                                     <TableCell />
                                 </TableRow>
                             </TableHead>
