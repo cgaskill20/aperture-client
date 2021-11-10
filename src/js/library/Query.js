@@ -106,6 +106,45 @@ const Query = {
     },
 
     /**
+      * Posts the given query to the logging API.
+      */
+    logQuery(query) {
+        if(window.location.origin === "https://urban-sustain.org") {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const apiKey = urlParams.get('api_key');
+
+                const queryCollection = (query.type != "druid")
+                    ? query?.collection
+                    : query?.datasource; // In druid, "datasource" is analogous to "collection"
+
+                const queryPipeline = (query.type != "druid")
+                    ? JSON.stringify(query?.pipeline ?? [])
+                    : JSON.stringify({
+                        timeInterval: query?.body.intervals,
+                        filters: query?.body.having.havingSpecs,
+                    });
+                
+                const payload = {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        bounds: query.bounds ? query.bounds.toBBoxString() : '',
+                        collection: queryCollection,
+                        pipeline: queryPipeline,
+                        ttr: Date.now() - query.startTime,
+                        queryType: query.type ?? "mongo",
+                    }) // body data type must match "Content-Type" header
+                };
+
+                fetch(`https://urban-sustain.org/api/query?apiKey=${apiKey ?? 'bGvWMIbJwgzYuOyi'}`, payload)
+                    .then(res => {})
+                    .catch(error => {});
+            }
+            catch { }    
+        }
+    },
+
+    /**
     * Makes a query
     * @memberof Query
     * @param {JSON} query JSON that matches a query schema
@@ -152,23 +191,7 @@ const Query = {
         else {
             query.callback = (res) => {
                 if (res.event === "end") {
-                    if(window.location.origin === "https://urban-sustain.org") {
-                        try {
-                            const urlParams = new URLSearchParams(window.location.search);
-                            const apiKey = urlParams.get('api_key');
-                            
-                            fetch(`https://urban-sustain.org/api/query?apiKey=${apiKey ?? 'bGvWMIbJwgzYuOyi'}`, {
-                                method: 'POST',
-                                body: JSON.stringify({
-                                    bounds: query.bounds ? query.bounds.toBBoxString() : '',
-                                    collection: query?.collection,
-                                    pipeline: JSON.stringify(query?.pipeline ?? []),
-                                    ttr: Date.now() - query.startTime
-                                }) // body data type must match "Content-Type" header
-                            }).then(res => {}).catch(error => {});
-                        }
-                        catch { }    
-                    }
+                    this.logQuery(query);
                     delete this.currentQueries[query.id];
                     callback(res)
                     query.callback = () => { }
@@ -192,6 +215,7 @@ const Query = {
 
     async makeDruidQuery(query) {
         this.currentQueries[query.id] = query;
+        query.startTime = Date.now();
 
         let geoWorker = query.level === "tract" 
             ? window.backgroundTract 
@@ -229,6 +253,7 @@ const Query = {
                 this._queryDruid(query, data.data.data);
             }
             else if (data.type === "end") {
+                this.logQuery(query);
                 worker.removeEventListener("message", listener);
             }
         };
