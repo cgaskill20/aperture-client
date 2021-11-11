@@ -67,11 +67,22 @@ import IconButton from "@material-ui/core/IconButton";
 import {isGraphable} from "./Helpers";
 import InfoIcon from '@material-ui/icons/Info';
 import {CustomTooltip} from "../UtilityComponents";
-import {Accordion, AccordionDetails, Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {
+    Accordion,
+    AccordionDetails,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography
+} from "@material-ui/core";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Button from "@material-ui/core/Button";
 import CloseIcon from "@material-ui/icons/Close";
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
+
 
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
@@ -191,22 +202,40 @@ export default React.memo(function WorkspaceSearchbar(props) {
 
     function renderClearButton() {
         if(workspaceIsNotEmpty()) {
-            return <TableCell className={classes.clearAllButton} onClick={clearWorkspace}>Clear Workspace</TableCell>;
+            return (
+                <>
+                    <Typography>&nbsp;/&nbsp;</Typography>
+                    {/*<CustomTooltip title="Clear Workspace">*/}
+                    {/*    <IconButton onClick={clearWorkspace}>*/}
+                    {/*        <RemoveIcon color="primary" />*/}
+                    {/*    </IconButton>*/}
+                    {/*</CustomTooltip>*/}
+                </>
+            )
         }
-        else return <TableCell />;
+        else return null;
 
     }
 
-    function renderDatasetColumnHeader() {
+    function datasetHeaderText() {
+        return filtering ? `Found ${datasets.length} Datasets Matching Search` : `${datasets.length} Datasets`;
+    }
+
+    function renderAddAllButton() {
         if(filtering) {
             return (
-                <TableCell className={classes.tableButton} onClick={addAllSearchedDatasets}>Add All {datasets.length} Datasets To Workspace</TableCell>
+                <TableCell>
+                    <CustomTooltip title="Add All Datasets Matching Search To Workspace">
+                        <IconButton onClick={addAllSearchedDatasets}>
+                            <AddIcon color="primary" />
+                        </IconButton>
+                    </CustomTooltip>
+                    {renderClearButton()}
+                </TableCell>
             )
         }
         else {
-            return (
-                <TableCell>{datasets.length} Datasets</TableCell>
-            )
+            return <TableCell />
         }
     }
 
@@ -229,8 +258,8 @@ export default React.memo(function WorkspaceSearchbar(props) {
                         <Table stickyHeader>
                             <TableHead>
                                 <TableRow>
-                                    {renderClearButton()}
-                                    {renderDatasetColumnHeader()}
+                                    {renderAddAllButton()}
+                                    <TableCell>{datasetHeaderText()}</TableCell>
                                     <TableCell />
                                     <TableCell />
                                 </TableRow>
