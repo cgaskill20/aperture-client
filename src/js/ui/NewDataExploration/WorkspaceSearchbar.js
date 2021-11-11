@@ -201,18 +201,29 @@ export default React.memo(function WorkspaceSearchbar(props) {
     }
 
     function renderClearButton() {
-        if(workspaceIsNotEmpty()) {
+        if(workspaceIsNotEmpty() && filtering) {
             return (
-                <>
-                    <Typography>&nbsp;/&nbsp;</Typography>
-                    {/*<CustomTooltip title="Clear Workspace">*/}
-                    {/*    <IconButton onClick={clearWorkspace}>*/}
-                    {/*        <RemoveIcon color="primary" />*/}
-                    {/*    </IconButton>*/}
-                    {/*</CustomTooltip>*/}
-                </>
+                <span>
+                    <CustomTooltip title="Clear Workspace">
+                        <IconButton onClick={clearWorkspace}>
+                            <RemoveIcon color="secondary" />
+                        </IconButton>
+                    </CustomTooltip>
+                </span>
             )
         }
+        else if (workspaceIsNotEmpty()) {
+            return (
+                <TableCell>
+                    <CustomTooltip title="Clear Workspace">
+                        <IconButton onClick={clearWorkspace}>
+                            <RemoveIcon color="secondary" />
+                        </IconButton>
+                    </CustomTooltip>
+                </TableCell>
+            )
+        }
+
         else return null;
 
     }
@@ -234,9 +245,10 @@ export default React.memo(function WorkspaceSearchbar(props) {
                 </TableCell>
             )
         }
-        else {
-            return <TableCell />
+        else if(workspaceIsNotEmpty()) {
+            return renderClearButton();
         }
+        else return <TableCell />;
     }
 
     return (
