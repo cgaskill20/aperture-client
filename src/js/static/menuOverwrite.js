@@ -101,8 +101,8 @@ const overwrite = { //leaving this commented cause it explains the schema really
             time_interval: {
                 type: "slider",
                 label: "Date Range",
-                range: [283996800000, 1577836800000],
-                "default": [283996800000, 315532800000],
+                range: [283996800000, Date.now() - (1000 * 60 * 60 * 24)],
+                "default": [283996800000, Date.now() - (1000 * 60 * 60 * 24)],
                 isDate: true
             },
             m_air_temperature_max: {
