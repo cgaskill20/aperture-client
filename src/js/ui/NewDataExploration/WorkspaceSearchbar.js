@@ -229,14 +229,14 @@ export default React.memo(function WorkspaceSearchbar(props) {
     }
 
     function datasetHeaderText() {
-        return filtering ? `Found ${datasets.length} Datasets Matching Search` : `${datasets.length} Datasets`;
+        return filtering ? `Found ${datasets.length} Results Matching '${filterText}'` : `${datasets.length} Datasets`;
     }
 
     function renderAddAllButton() {
         if(filtering) {
             return (
                 <TableCell>
-                    <CustomTooltip title="Add All Datasets Matching Search To Workspace">
+                    <CustomTooltip title={`Add All ${datasets.length} Datasets Matching '${filterText}' To Workspace`}>
                         <IconButton onClick={addAllSearchedDatasets}>
                             <AddIcon color="primary" />
                         </IconButton>
