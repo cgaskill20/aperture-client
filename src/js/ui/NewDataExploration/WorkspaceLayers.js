@@ -81,6 +81,7 @@ export default React.memo(function WorkspaceLayers(props) {
                         </div>
                     );
                 }
+                else return null;
             })}
         </div>
     );

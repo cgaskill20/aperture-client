@@ -191,6 +191,7 @@ export default React.memo(function Layer(props) {
                                         </div>
                                     );
                                 }
+                                else return null;
                             })}
                         </Grid>
                     </AccordionDetails>
