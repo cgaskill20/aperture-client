@@ -60,11 +60,6 @@ END OF TERMS AND CONDITIONS
 import clone from 'just-clone';
 import Util from '../library/apertureUtil';
 
-function getEpochForYesterday() {
-    const oneDay = (1000 * 60 * 60 * 24);
-    return Date.now() - (oneDay + (Date.now() % oneDay));
-}
-
 const overwrite = { //leaving this commented cause it explains the schema really well 
     // "covid_county": {
     //     "group": "Tract, County, & State Data",
@@ -106,8 +101,8 @@ const overwrite = { //leaving this commented cause it explains the schema really
             time_interval: {
                 type: "slider",
                 label: "Date Range",
-                range: [283996800000, getEpochForYesterday()],
-                "default": [283996800000, getEpochForYesterday()],
+                range: [283996800000, 1577836800000],
+                "default": [283996800000, 315532800000],
                 isDate: true
             },
             m_air_temperature_max: {
@@ -246,7 +241,6 @@ export default function getOverwriteObject(options = {}) {
 
     return modifiedOverwrite;
 }
-
 
 function splitDatasetsToCountyAndTract(overwrite, condition = (() => true)) {
     let reformat = (kv, level, infoSuffix) => [
