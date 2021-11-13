@@ -142,7 +142,6 @@ export default React.memo(function WorkspaceSearchbar(props) {
     }
 
     function filterDatasets(event) {
-        setExpanded(true);
         const input = event.target.value;
         setFiltering(input !== "");
         setFilterText(input);
@@ -251,11 +250,16 @@ export default React.memo(function WorkspaceSearchbar(props) {
         else return <TableCell />;
     }
 
+    function handleInputClick() {
+        if(!expanded) setExpanded(true);
+    }
+
     return (
         <>
             <Accordion expanded={expanded}>
                 <AccordionSummary>
                     <TextField
+                        onClick={handleInputClick}
                         label="Explore Datasets..."
                         fullWidth
                         variant="outlined"
