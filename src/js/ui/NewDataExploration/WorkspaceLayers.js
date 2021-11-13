@@ -67,28 +67,22 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function createWorkspace(workspace, layers, graphableLayers, layerTitles) {
-    let workspaceLayers = [];
-    workspace.forEach((layer, index) => {
-        if(layer) {
-            workspaceLayers.push(
-                <div key={index} id={`layer-div-${index}`}>
-                    <Layer layer={layers[index]} layerIndex={index} graphableLayers={graphableLayers} layerTitles={layerTitles} />
-                </div>
-            );
-        }
-    });
-    return workspaceLayers;
-}
-
 export default React.memo(function WorkspaceLayers(props) {
     const classes = useStyles();
-    const workspaceLayers = createWorkspace(props.workspace, props.layers, props.graphableLayers, props.layerTitles);
 
     if(componentIsRendering) {console.log("|WorkspaceLayers Rerending|")}
     return (
         <div className={classes.root}>
-            {workspaceLayers}
+            {props.workspace.map((layer, index) => {
+                if(layer) {
+                    return (
+                        <div key={index} id={`layer-div-${index}`}>
+                            <Layer layer={props.layers[index]} layerIndex={index} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles} />
+                        </div>
+                    );
+                }
+                else return null;
+            })}
         </div>
     );
 });

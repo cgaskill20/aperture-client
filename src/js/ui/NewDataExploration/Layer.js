@@ -87,22 +87,6 @@ function extractLayerConstraints(layer) {
     return [defaultLayerConstraints, allLayerConstraints];
 }
 
-function createConstraints(activeLayerConstraints, allLayerConstraints, classes, querier) {
-    let constraints = [];
-    activeLayerConstraints.forEach((constraint, index) => {
-        if(constraint) {
-            constraints.push(
-                <div key={index}>
-                    <Paper elevation={3}>
-                        <IndividualConstraint constraint={allLayerConstraints[index]} classes={classes} querier={querier} />
-                    </Paper>
-                </div>
-            );
-        }
-    });
-    return constraints;
-}
-
 export default React.memo(function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState(false);
@@ -160,7 +144,6 @@ export default React.memo(function Layer(props) {
         newCheck || querier.onRemove();
     }
 
-    const constraints = createConstraints(activeLayerConstraints, allLayerConstraints, classes, querier);
     if(componentIsRendering) console.log("|Layer|");
     return (
         <div className={classes.root}>
@@ -198,7 +181,18 @@ export default React.memo(function Layer(props) {
                                                activeLayerConstraints={activeLayerConstraints} setActiveLayerConstraints={setActiveLayerConstraints}
                                                layerIndex={props.layerIndex} />
                             </Grid>
-                            {constraints}
+                            {activeLayerConstraints.map((constraint, index) => {
+                                if(constraint) {
+                                    return (
+                                        <div key={index}>
+                                            <Paper elevation={3}>
+                                                <IndividualConstraint constraint={allLayerConstraints[index]} classes={classes} querier={querier} />
+                                            </Paper>
+                                        </div>
+                                    );
+                                }
+                                else return null;
+                            })}
                         </Grid>
                     </AccordionDetails>
                 </Accordion>
