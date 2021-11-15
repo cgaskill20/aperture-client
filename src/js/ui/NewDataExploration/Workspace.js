@@ -58,7 +58,7 @@ END OF TERMS AND CONDITIONS
 */
 import React, {useEffect, useRef, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import WorkspaceControls from "./WorkspaceControls";
+import WorkspaceControls from "./WorkspaceControl/WorkspaceControls";
 import WorkspaceLayers from "./WorkspaceLayers";
 import AutoMenu from "../../library/autoMenu";
 import {componentIsRendering} from "../Sidebar";

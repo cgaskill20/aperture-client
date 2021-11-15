@@ -56,81 +56,97 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react';
-import {Button, Paper, Typography} from "@material-ui/core";
-import RotateLeftIcon from '@material-ui/icons/RotateLeft';
-import EqualizerIcon from "@material-ui/icons/Equalizer";
-import TuneIcon from '@material-ui/icons/Tune';
-import LinkIcon from '@material-ui/icons/Link';
-import AdvancedConstraints from "./AdvancedConstraints";
-import {componentIsRendering} from "../Sidebar";
-import {isGraphable} from "./Helpers";
-import {makeStyles} from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
+import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Slider from '@material-ui/core/Slider';
+import {componentIsRendering} from "../../../Sidebar";
+import Util from "../../../../library/apertureUtil"
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        padding: theme.spacing(2),
+        width: '100%',
+    },
+    title: {
+        textAlign: "center",
+    },
+    nowrap: {
+        whiteSpace: "nowrap",
     },
 }));
 
-function graphIcon(layer, graphableLayers) {
-    if(isGraphable(layer, graphableLayers)) {
-        return <Button startIcon={<EqualizerIcon />}>
-            Graph Me
-        </Button>
-    }
-    return;
-}
-
-function getLayerText(layerInfo) {
-    if(layerInfo) {
-        return (
-            <Grid item>
-                <Typography>{layerInfo}</Typography>
-                <br/>
-            </Grid>
-        )
-    }
-}
-
-function sourceIcon(layerInfo) {
-    if(layerInfo.source){
-        return <Button variant="outlined" startIcon={<LinkIcon />} onClick={() => window.open(layerInfo.source, "_blank")}>
-            Source
-        </Button>
-    }
-}
-
-export default React.memo(function LayerControls(props) {
+export default function ConstraintSlider({ constraint, querier }) {
     const classes = useStyles();
-    if(componentIsRendering) {console.log("|LayerControls Rerending|")}
+    const min = constraint.range[0];
+    const max = constraint.range[1];
+    const step = constraint.step ? constraint.step : 1;
+    const [minMax, setMinMax] = useState([min, max]);
+    const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
+    const isCategoricalMappedToSlider = constraint.selectToRangeMap ? true : false;
+    const nonConstrained = minMax[0] === min && minMax[1] === max;
+
+
+    useEffect(() => {
+        if (!isCategoricalMappedToSlider) {
+            querier.updateConstraint(constraint.name, minMaxCommited);
+        }
+    }, [minMaxCommited]);
+
+    useEffect(() => {
+        querier.constraintSetActive(constraint.name, true);
+        return () => {
+            querier.constraintSetActive(constraint.name, false);
+        }
+    }, []);
+
+    useEffect(() => {
+        if(constraint.forceUpdateFlag) {
+            constraint.forceUpdateFlag = false;
+            setMinMax(constraint.state)
+            setMinMaxCommited(constraint.state)
+        }
+    })
+
+    const buildSliderLabel = () => {
+        if (isCategoricalMappedToSlider) {
+            return <b>{Object.keys(constraint.selectToRangeMap)[Object.values(constraint.selectToRangeMap).indexOf(minMax[0])]} ➔ {Object.keys(constraint.selectToRangeMap)[Object.values(constraint.selectToRangeMap).indexOf(minMax[1])]}{nonConstrained ? ' (Includes All Values)' : ''}</b>
+        }
+        return <b>{minMax[0]} ➔ {minMax[1]}{constraint.plus && max === minMax[1] ? '+' : ''} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
+    }
+
+    const sliderStyle = {};
+    if(nonConstrained) {
+        sliderStyle.color = "#ADADAD"
+    }
+
+    if (componentIsRendering) { console.log("|ContraintSlider Rerending|") }
     return (
-        <Paper elevation={3} className={classes.root}>
-            <Grid
-                container
-                direction="row"
-                justifyContent="space-around"
-                alignItems="center"
-            >
-                {getLayerText(props.layer.info)}
-                <Grid item>
-                    <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
-                                         activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
-                    {/* <Button startIcon={<RotateLeftIcon />}>
-                        Reset Constraints
-                    </Button> */}
-                </Grid>
-                <Grid item>
-                    <Button variant="outlined" startIcon={<TuneIcon />} onClick={() => {
-                        props.setActiveLayerConstraints(props.defaultLayerConstraints);
-                    }}>
-                        Default Constraints
-                    </Button>
-                </Grid>
-                    {/* {graphIcon(props.layer, props.graphableLayers)} */}
-                    {sourceIcon(props.layer)}
-            </Grid>
-        </Paper>
-    )
-});
+        <div className={classes.root} id={`constraint-div-${constraint.label}`}>
+            <Typography className={classes.title} id={`range-slider-${constraint.label}`} gutterBottom>
+                {constraint.label ?? Util.cleanUpString(constraint.name)} &nbsp;
+                <span className={classes.nowrap}>{buildSliderLabel()}</span>
+            </Typography>
+            <Slider
+                value={minMax}
+                onChange={(event, newValue) => setMinMax(newValue)}
+                onChangeCommitted={(event, newValue) => {
+                    if(isCategoricalMappedToSlider) {
+                        for(const [name, index] of Object.entries(constraint.selectToRangeMap)) {
+                            querier.updateConstraint(constraint.name, name, newValue[0] <= index && index <= newValue[1])
+                        }
+                        return;
+                    }
+                    setMinMaxCommited(newValue);
+                    constraint.state = newValue;
+                }}
+                aria-labelledby={`range-slider-${constraint.label}`}
+                min={min}
+                max={max}
+                step={step}
+                id={`${constraint.label}`}
+                name={`${constraint.label}`}
+                style={sliderStyle}
+            />
+        </div>
+    );
+}
