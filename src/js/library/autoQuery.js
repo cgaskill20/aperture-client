@@ -513,8 +513,6 @@ export default class AutoQuery {
                 pipeline.push(pipelineStep);
             }
         }
-        console.log(pipeline);
-        console.log(JSON.stringify(pipeline));
 
         return pipeline;
     }
