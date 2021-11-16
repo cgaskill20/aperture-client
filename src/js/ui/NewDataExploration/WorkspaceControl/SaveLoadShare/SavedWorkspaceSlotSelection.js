@@ -56,97 +56,63 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
-import {componentIsRendering} from "../Sidebar";
-import Util from "../../library/apertureUtil"
+import React from 'react';
+import {componentIsRendering} from "../../../Sidebar";
+import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography } from "@material-ui/core";
+import { Folder, FolderOpen } from '@material-ui/icons';
+import LZString from 'lz-string';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-    },
-    title: {
-        textAlign: "center",
-    },
-    nowrap: {
-        whiteSpace: "nowrap",
-    },
-}));
+export default React.memo(function SavedWorkspaceSlotSelection({ title, slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots }) {
 
-export default function ConstraintSlider({ constraint, querier }) {
-    const classes = useStyles();
-    const min = constraint.range[0];
-    const max = constraint.range[1];
-    const step = constraint.step ? constraint.step : 1;
-    const [minMax, setMinMax] = useState([min, max]);
-    const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
-    const isCategoricalMappedToSlider = constraint.selectToRangeMap ? true : false;
-    const nonConstrained = minMax[0] === min && minMax[1] === max;
-
-
-    useEffect(() => {
-        if (!isCategoricalMappedToSlider) {
-            querier.updateConstraint(constraint.name, minMaxCommited);
-        }
-    }, [minMaxCommited]);
-
-    useEffect(() => {
-        querier.constraintSetActive(constraint.name, true);
-        return () => {
-            querier.constraintSetActive(constraint.name, false);
-        }
-    }, []);
-
-    useEffect(() => {
-        if(constraint.forceUpdateFlag) {
-            constraint.forceUpdateFlag = false;
-            setMinMax(constraint.state)
-            setMinMaxCommited(constraint.state)
-        }
-    })
-
-    const buildSliderLabel = () => {
-        if (isCategoricalMappedToSlider) {
-            return <b>{Object.keys(constraint.selectToRangeMap)[Object.values(constraint.selectToRangeMap).indexOf(minMax[0])]} ➔ {Object.keys(constraint.selectToRangeMap)[Object.values(constraint.selectToRangeMap).indexOf(minMax[1])]}{nonConstrained ? ' (Includes All Values)' : ''}</b>
-        }
-        return <b>{minMax[0]} ➔ {minMax[1]}{constraint.plus && max === minMax[1] ? '+' : ''} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
+    const getWorkspace = (index) => {
+        return localStorage.getItem(`workspace${index}`)
     }
 
-    const sliderStyle = {};
-    if(nonConstrained) {
-        sliderStyle.color = "#ADADAD"
-    }
-
-    if (componentIsRendering) { console.log("|ContraintSlider Rerending|") }
+    if (componentIsRendering) { console.log("|SavedWorkspaceSlotSelection Rerending|") }
     return (
-        <div className={classes.root} id={`constraint-div-${constraint.label}`}>
-            <Typography className={classes.title} id={`range-slider-${constraint.label}`} gutterBottom>
-                {constraint.label ?? Util.cleanUpString(constraint.name)} &nbsp;
-                <span className={classes.nowrap}>{buildSliderLabel()}</span>
-            </Typography>
-            <Slider
-                value={minMax}
-                onChange={(event, newValue) => setMinMax(newValue)}
-                onChangeCommitted={(event, newValue) => {
-                    if(isCategoricalMappedToSlider) {
-                        for(const [name, index] of Object.entries(constraint.selectToRangeMap)) {
-                            querier.updateConstraint(constraint.name, name, newValue[0] <= index && index <= newValue[1])
-                        }
-                        return;
+        <>
+            <Typography>{title}</Typography>
+            <List dense>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((i) => {
+                    if (!onlyShowFullSlots) {
+                        return true;
                     }
-                    setMinMaxCommited(newValue);
-                    constraint.state = newValue;
-                }}
-                aria-labelledby={`range-slider-${constraint.label}`}
-                min={min}
-                max={max}
-                step={step}
-                id={`${constraint.label}`}
-                name={`${constraint.label}`}
-                style={sliderStyle}
-            />
-        </div>
+                    return getWorkspace(i);
+                }).map((i) => {
+                    const workspace = getWorkspace(i);
+                    let workspaceName = workspace ? JSON.parse(LZString.decompressFromEncodedURIComponent(workspace))?.name : null;
+                    if (workspaceName) {
+                        const longWordRegex = /\S{29,}/g;
+                        const longWordMatches = [...(workspaceName.matchAll(longWordRegex) ?? [])]
+                        for (const longWordMatch of longWordMatches) {
+                            workspaceName = workspaceName.replace(longWordMatch[0], `${longWordMatch[0].substring(0, 26)}...`)
+                        }
+                    }
+                    //workspaceName?.length > 32 && (() => { workspaceName = workspaceName.substring(0,29) + '...' })()
+                    const checked = slotCurrentlySelected === i
+                    return (
+                        <ListItem key={i} style={{ backgroundColor: checked ? "#d1d1d1" : "#fff" }}>
+                            <ListItemIcon>
+                                {workspace ? <Folder /> : <FolderOpen />}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={workspaceName ?? "Empty Slot"}
+                            />
+                            <ListItemSecondaryAction>
+                                <Radio
+                                    color="primary"
+                                    name="workspaceSelectionRadio"
+                                    checked={checked}
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setSlotCurrentlySelected(i)
+                                        }
+                                    }} />
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                    )
+                })}
+            </List >
+        </>
     );
-}
+})

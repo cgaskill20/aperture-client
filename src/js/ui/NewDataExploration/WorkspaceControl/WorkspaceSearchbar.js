@@ -56,63 +56,256 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react';
-import {componentIsRendering} from "../Sidebar";
-import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography } from "@material-ui/core";
-import { Folder, FolderOpen } from '@material-ui/icons';
-import LZString from 'lz-string';
+import React, {useEffect, useState} from "react";
+import Checkbox from "@material-ui/core/Checkbox";
+import TextField from "@material-ui/core/TextField";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import {makeStyles} from "@material-ui/core/styles";
+import EqualizerIcon from "@material-ui/icons/Equalizer";
+import IconButton from "@material-ui/core/IconButton";
+import {isGraphable} from "../Utils/Helpers";
+import InfoIcon from '@material-ui/icons/Info';
+import {CustomTooltip} from "../../UtilityComponents";
+import {
+    Accordion,
+    AccordionDetails,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography
+} from "@material-ui/core";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import CloseIcon from "@material-ui/icons/Close";
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 
-export default React.memo(function SavedWorkspaceSlotSelection({ title, slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots }) {
 
-    const getWorkspace = (index) => {
-        return localStorage.getItem(`workspace${index}`)
+const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
+const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
+
+const useStyles = makeStyles((theme) => ({
+    tableBody: {
+        width: "100%",
+        overflow: "auto",
+        maxHeight: "60vh",
+    },
+    tableButton: {
+        cursor: "pointer",
+        color: "#3f51b5"
+    },
+    clearAllButton: {
+        cursor: "pointer",
+        color: "#f44336"
+    }
+}));
+
+export default React.memo(function WorkspaceSearchbar(props) {
+    const classes = useStyles();
+    const [expanded, setExpanded] = useState(false);
+    const [filtering, setFiltering] = useState(false);
+    const [filteredDatasets, setFilteredDatsets] = useState(props.layerTitles);
+    const [filterText, setFilterText] = useState("");
+    const [datasets, setDatasets] = useState(props.layerTitles);
+
+    useEffect(() => {
+        setDatasets(filtering ? filteredDatasets : props.layerTitles);
+    });
+
+    function graphIcon(layer) {
+        if(isGraphable(layer, props.graphableLayers)) {
+            return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
+        }
     }
 
-    if (componentIsRendering) { console.log("|SavedWorkspaceSlotSelection Rerending|") }
+    function infoIcon(layerInfo) {
+        if(layerInfo) {
+            return <CustomTooltip title={layerInfo} placement="right" arrow><IconButton><InfoIcon color="primary" /></IconButton></CustomTooltip>
+        }
+    }
+
+    function findLayerIndex(layerLabel) {
+        for(let i = 0; i < props.layerTitles.length; i++) {
+            if(props.layerTitles[i] === layerLabel) {
+                return i;
+            }
+        }
+    }
+
+    function handleExpansion() {
+        setExpanded(!expanded);
+        setFilterText("");
+        setFiltering(false);
+    }
+
+    function filterDatasets(event) {
+        const input = event.target.value;
+        setFiltering(input !== "");
+        setFilterText(input);
+        const matches = props.layerTitles.filter((title) => caseInsensitiveMatch(input, title));
+        setFilteredDatsets(matches);
+    }
+
+    function caseInsensitiveMatch(input, match) {
+        return match.toLowerCase().includes(input.toLowerCase());
+    }
+
+    function handleLayerCheck(index) {
+        let newWorkspace = [...props.workspace];
+        newWorkspace[index] = !newWorkspace[index];
+        props.setWorkspace(newWorkspace);
+    }
+
+    function clearWorkspace() {
+        let emptyWorkspace = [];
+        for(const layer in props.workspace) {
+            emptyWorkspace.push(false);
+        }
+        props.setWorkspace(emptyWorkspace);
+    }
+
+    function addAllSearchedDatasets() {
+        let layersToAdd = [];
+        filteredDatasets.forEach((layer) => {
+            layersToAdd.push(findLayerIndex(layer));
+        });
+        let newWorkspace = [...props.workspace];
+        layersToAdd.forEach((index) => {
+            newWorkspace[index] = true;
+        });
+        props.setWorkspace(newWorkspace);
+    }
+
+    function renderResetButton() {
+        if(expanded) {
+            return (
+                <IconButton onClick={() => {
+                    setFilterText("");
+                    setFiltering(false);
+                }}>
+                    <CustomTooltip title="Reset Search">
+                        <CloseIcon color="primary"/>
+                    </CustomTooltip>
+                </IconButton>
+            )
+        }
+        else return null;
+    }
+
+    function workspaceIsNotEmpty() {
+        return props.workspace.includes(true);
+    }
+
+    function renderClearButton() {
+        if(workspaceIsNotEmpty() && filtering) {
+            return (
+                <span>
+                    <CustomTooltip title="Clear Workspace">
+                        <IconButton onClick={clearWorkspace}>
+                            <RemoveIcon color="secondary" />
+                        </IconButton>
+                    </CustomTooltip>
+                </span>
+            )
+        }
+        else if (workspaceIsNotEmpty()) {
+            return (
+                <TableCell>
+                    <CustomTooltip title="Clear Workspace">
+                        <IconButton onClick={clearWorkspace}>
+                            <RemoveIcon color="secondary" />
+                        </IconButton>
+                    </CustomTooltip>
+                </TableCell>
+            )
+        }
+
+        else return null;
+
+    }
+
+    function datasetHeaderText() {
+        return filtering ? `Found ${datasets.length} Results Matching '${filterText}'` : `${datasets.length} Datasets`;
+    }
+
+    function renderAddAllButton() {
+        if(filtering) {
+            return (
+                <TableCell>
+                    <CustomTooltip title={`Add All ${datasets.length} Datasets Matching '${filterText}' To Workspace`}>
+                        <IconButton onClick={addAllSearchedDatasets}>
+                            <AddIcon color="primary" />
+                        </IconButton>
+                    </CustomTooltip>
+                    {renderClearButton()}
+                </TableCell>
+            )
+        }
+        else if(workspaceIsNotEmpty()) {
+            return renderClearButton();
+        }
+        else return <TableCell />;
+    }
+
+    function handleInputClick() {
+        if(!expanded) setExpanded(true);
+    }
+
     return (
         <>
-            <Typography>{title}</Typography>
-            <List dense>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((i) => {
-                    if (!onlyShowFullSlots) {
-                        return true;
-                    }
-                    return getWorkspace(i);
-                }).map((i) => {
-                    const workspace = getWorkspace(i);
-                    let workspaceName = workspace ? JSON.parse(LZString.decompressFromEncodedURIComponent(workspace))?.name : null;
-                    if (workspaceName) {
-                        const longWordRegex = /\S{29,}/g;
-                        const longWordMatches = [...(workspaceName.matchAll(longWordRegex) ?? [])]
-                        for (const longWordMatch of longWordMatches) {
-                            workspaceName = workspaceName.replace(longWordMatch[0], `${longWordMatch[0].substring(0, 26)}...`)
-                        }
-                    }
-                    //workspaceName?.length > 32 && (() => { workspaceName = workspaceName.substring(0,29) + '...' })()
-                    const checked = slotCurrentlySelected === i
-                    return (
-                        <ListItem key={i} style={{ backgroundColor: checked ? "#d1d1d1" : "#fff" }}>
-                            <ListItemIcon>
-                                {workspace ? <Folder /> : <FolderOpen />}
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={workspaceName ?? "Empty Slot"}
-                            />
-                            <ListItemSecondaryAction>
-                                <Radio
-                                    color="primary"
-                                    name="workspaceSelectionRadio"
-                                    checked={checked}
-                                    onChange={(e) => {
-                                        if (e.target.checked) {
-                                            setSlotCurrentlySelected(i)
-                                        }
-                                    }} />
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                    )
-                })}
-            </List >
+            <Accordion expanded={expanded}>
+                <AccordionSummary>
+                    <TextField
+                        onClick={handleInputClick}
+                        label="Explore Datasets..."
+                        fullWidth
+                        variant="outlined"
+                        value={filterText}
+                        onChange={(e) => filterDatasets(e)}
+                    />
+                    {renderResetButton()}
+                    <IconButton onClick={handleExpansion}><ExpandMoreIcon/></IconButton>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <div className={classes.tableBody}>
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    {renderAddAllButton()}
+                                    <TableCell>{datasetHeaderText()}</TableCell>
+                                    <TableCell />
+                                    <TableCell />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {datasets.map((layer, index) => {
+                                    const trueLayerIndex = findLayerIndex(layer);
+                                    return (
+                                        <TableRow key={index}>
+                                            <TableCell>
+                                                <Checkbox
+                                                    icon={icon}
+                                                    color="primary"
+                                                    checkedIcon={checkedIcon}
+                                                    style={{ marginRight: 8 }}
+                                                    checked={props.workspace[trueLayerIndex]}
+                                                    onChange={() => handleLayerCheck(trueLayerIndex)}
+                                                />
+                                            </TableCell>
+                                            <TableCell>{layer}</TableCell>
+                                            <TableCell>{graphIcon(props.layers[trueLayerIndex])}</TableCell>
+                                            <TableCell>{infoIcon(props.layers[trueLayerIndex].info)}</TableCell>
+                                        </TableRow>
+                                    )
+                                })}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </AccordionDetails>
+            </Accordion>
         </>
     );
-})
+});
