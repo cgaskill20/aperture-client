@@ -191,66 +191,6 @@ export default function Popup() {
                             temporalRange={obj.properties.meta[key].temporal.temporalRange}
                         />
                         <br />
-                        <div>
-                            Change is: {change}%
-                            {(() => {
-                                const pipeline = [
-                                    {
-                                        $match: {
-                                            GISJOIN: obj.join.GISJOIN
-                                        }
-                                    },
-                                    {
-                                        $match:
-                                        {
-                                            epoch_time: {
-                                                $gte: obj.properties.meta[key].temporal.temporalRange[0],
-                                                $lte: obj.properties.meta[key].temporal.temporalRange[1]
-                                            }
-                                        }
-                                    },
-                                    {
-                                        $sort: {
-                                            epoch_time: 1
-                                        }
-                                    },
-                                    {
-                                        $group: {
-                                            _id: "GISJOIN",
-                                            GISJOIN: { $first: '$GISJOIN' },
-                                            first_pop: { $first: '$C7L001' },
-                                            last_pop: { $last: '$C7L001' }
-                                        }
-                                    },
-                                    {
-                                        $project: {
-                                            relative_pop_change_pct: {
-                                                $multiply: [
-                                                    {
-                                                        $divide: [
-                                                            { $subtract: ['$last_pop', '$first_pop'] },
-                                                            '$first_pop'
-                                                        ]
-                                                    },
-                                                    100
-                                                ]
-                                            },
-                                            first_pop: 1,
-                                            last_pop: 1
-                                        }
-                                    }
-                                ]
-                                const q = {
-                                    collection: obj.properties.meta[key].temporal.collection,
-                                    pipeline,
-                                    dontLink: true
-                                }
-                                Query.makeQuery(q).then((d) => {
-                                    // console.log({d})
-                                    setChange(d.data[0].relative_pop_change_pct)
-                                });
-                            })()}
-                        </div>
                     </Paper>
                 </React.Fragment>)
         }
