@@ -528,7 +528,7 @@ export default class AutoQuery {
         let projectStage = {
             "$project": {
                 "_id" : 1,
-                "id" : 1,
+                [this.data.joinField] : 1,
             }
         }
 
