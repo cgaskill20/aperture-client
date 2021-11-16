@@ -349,6 +349,7 @@ export default class AutoQuery {
         const callback = (d) => {
             const { event, payload } = d;
             if (event === "data") {
+                console.log(payload.data)
                 this.renderGeoJSON(payload.data);
             }
             else if (event === "info") {
@@ -512,6 +513,8 @@ export default class AutoQuery {
                 pipeline.push(pipelineStep);
             }
         }
+        console.log(pipeline);
+        console.log(JSON.stringify(pipeline));
 
         return pipeline;
     }
@@ -522,20 +525,43 @@ export default class AutoQuery {
             [this.data.joinField]: {"$first": `$${this.data.joinField}`}
         }
 
+        let projectStage = {
+            "$project": {
+                "_id" : 1,
+                "id" : 1,
+            }
+        }
+
         for(const field of Object.keys(this.data.constraints)){
             groupStage[field] = {"$first": `$${field}`}
+            projectStage['$project'][field] = 1;
+
         }
         for(const [field, type] of Object.entries(this.temporalFields)){
+            let namePartOne = `${field}${temporalId}`
             for(const accumulator of Object.keys(mongoGroupAccumulators)) {
-                groupStage[`${field}${temporalId}${accumulator}`] = { [`$${accumulator}`]: `$${field}`}
+                let namePartTwo = namePartOne + accumulator;
+                groupStage[`${namePartTwo}`] = { [`$${accumulator}`]: `$${field}`}
+                projectStage['$project'][`${namePartTwo}`] = 1;
             }
+            projectStage['$project'][`relative_${field}_change_pct`] = {
+                "$multiply": [
+                    {
+                        "$divide": [
+                            { "$subtract": [`$${namePartOne}last`, `$${namePartOne}first`] },
+                            `$${namePartOne}first`
+                        ]
+                    },
+                    100
+                ]
+            };
         }
 
         groupStage = {
             "$group": groupStage
         }
         
-        return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, groupStage]
+        return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, { "$sort": {"epoch_time": 1 } },groupStage, projectStage]
     }
 
 
