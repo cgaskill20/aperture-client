@@ -261,7 +261,17 @@ export default class AutoQuery {
         if (fieldName === this.color.variable) {
             predefinedColor = this.color;
         }
-        const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`] ?? this.data.constraints[fieldName.substring(0, fieldName.indexOf(temporalId))];
+        
+        let colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`] ?? this.data.constraints[fieldName.substring(0, fieldName.indexOf(temporalId))];
+        
+
+        if (fieldName.includes('change_pct')) {
+            colorField = { 
+                range: [-100, 100],
+                type: "slider"
+            }
+        }
+
         if (colorField) {
             this.initialColorSet = false;
             //console.log({fieldName})
@@ -349,7 +359,6 @@ export default class AutoQuery {
         const callback = (d) => {
             const { event, payload } = d;
             if (event === "data") {
-                console.log(payload.data)
                 this.renderGeoJSON(payload.data);
             }
             else if (event === "info") {
@@ -456,7 +465,9 @@ export default class AutoQuery {
         data.properties.colorInfo = {
             currentColorField: this.colorField,
             updateColorFieldName: this.changeColorCodeField.bind(this),
-            validColorFieldNames: Object.keys(this.data.constraints).map(Util.removePropertiesPrefix),
+            validColorFieldNames: Object.keys(this.data.constraints).map(Util.removePropertiesPrefix).concat(Object.keys(this.temporalFields).map((field) => {
+                return `relative_${field}_change_pct`
+            })),
             subscribeToColorFieldChange: this.subscribeToColorFieldChange.bind(this),
             colorSummary: () => { return this.protoColor?.getColorSummary() },
             getColor: this.getColor.bind(this)
