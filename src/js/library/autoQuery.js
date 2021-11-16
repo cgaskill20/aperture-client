@@ -545,20 +545,16 @@ export default class AutoQuery {
                 projectStage['$project'][`${namePartTwo}`] = 1;
             }
             projectStage['$project'][`relative_${field}_change_pct`] = {
-                "$multiply": [
-                    {
-                        "$cond" : [
-                            {"$eq" : [`$${namePartOne}first`, 0]},
-                            "N/A",
-                            {"$divide": [
-                                {
-                                    "$subtract": [`$${namePartOne}last`, `$${namePartOne}first`] },
-                                    `$${namePartOne}first`
-                                ]
-                            }
-                        ]
-                    },
-                    100
+                "$cond" : [
+                    {"$eq" : [`$${namePartOne}first`, 0]}, "N/A",{"$multiply": [
+                {
+                    "$divide": [
+                        { "$subtract": [`$${namePartOne}last`, `$${namePartOne}first`] },
+                        `$${namePartOne}first`
+                    ]
+                },
+                100
+            ]}
                 ]
             };
         }
