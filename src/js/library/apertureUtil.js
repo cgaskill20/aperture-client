@@ -340,6 +340,9 @@ export default {
      * @param {Object} feature geojson feature
      */
     normalizeFeatureID: function (feature) {
+        // IF YOU ARE GETTING THE ERROR "cannot get .id" of undefined"
+        // PLEASE CHECK TO SEE IF THE DATA YOU ARE GETTING INCLUDES THE
+        // "GISJOIN" FIELD
         if (!feature.id && feature._id?.$oid) {
             feature.id = feature._id.$oid;
         }
