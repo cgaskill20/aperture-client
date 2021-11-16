@@ -156,7 +156,7 @@ export default class AutoQuery {
       */
     onAdd() {
         this.enabled = true;
-        if(this.isIntersectable) {
+        if (this.isIntersectable) {
             window.addOrSubtractIntersectionNumber(true, this.blockerGroup === "tracts");
         }
         this.query();
@@ -170,8 +170,8 @@ export default class AutoQuery {
     onRemove() {
         this.clearMapLayers();
         this.killCurrentQueries();
-        if(this.enabled) {
-            if(this.isIntersectable) {
+        if (this.enabled) {
+            if (this.isIntersectable) {
                 window.addOrSubtractIntersectionNumber(false, this.blockerGroup === "tracts");
                 window.refreshIntersections();
             }
@@ -250,7 +250,7 @@ export default class AutoQuery {
       * @memberof AutoQuery
       * @method killCurrentQueries
       */
-    killCurrentQueries() { 
+    killCurrentQueries() {
         for (const qid of [...this.currentQueries]) {
             Query.killQuery(qid);
         }
@@ -261,12 +261,12 @@ export default class AutoQuery {
         if (fieldName === this.color.variable) {
             predefinedColor = this.color;
         }
-        const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`] ?? this.data.constraints[fieldName.substring(0,fieldName.indexOf(temporalId))];
+        const colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`] ?? this.data.constraints[fieldName.substring(0, fieldName.indexOf(temporalId))];
         if (colorField) {
             this.initialColorSet = false;
             //console.log({fieldName})
             this.colorField = { name: temporalAccumulator ? `${fieldName}${temporalId}${temporalAccumulator}` : fieldName, label: colorField.label };
-            if(this.isIntersectable) {
+            if (this.isIntersectable) {
                 // TODO
                 AutoQuery.intersectableColors[this.blockerGroup] = this.colorField.name;
             }
@@ -279,7 +279,7 @@ export default class AutoQuery {
             this.colorFieldChangeSubscribers.forEach(func => func(this.colorField))
             if (dontRerender) {
                 return;
-            } 
+            }
             const layers = window.renderInfrastructure.getLayersForSpecifiedIds(new Set(this.mapLayers));
             for (const layer of layers) {
                 const { feature, options } = layer;
@@ -290,7 +290,7 @@ export default class AutoQuery {
                     const colorSetter = [Util.FEATURETYPE.multiPolygon, Util.FEATURETYPE.polygon].includes(Util.getFeatureType(feature)) ? "fillColor" : "color"
                     layer.setStyle({ [colorSetter]: color })
                 }
-                else if(options.icon) {
+                else if (options.icon) {
                     // :)
                     options.icon.options.html.style.backgroundColor = color;
                 }
@@ -357,7 +357,7 @@ export default class AutoQuery {
             }
             else if (event === "end") {
                 this.currentQueries.delete(id);
-                if(this.isIntersectable) {
+                if (this.isIntersectable) {
                     window.refreshIntersections();
                 }
             }
@@ -472,9 +472,9 @@ export default class AutoQuery {
 
     }
 
-    subscribeToColorFieldChange(func, unsubscribe=false) {
-        if(unsubscribe) {
-            this.colorFieldChangeSubscribers.splice(this.colorFieldChangeSubscribers.indexOf(func),1)
+    subscribeToColorFieldChange(func, unsubscribe = false) {
+        if (unsubscribe) {
+            this.colorFieldChangeSubscribers.splice(this.colorFieldChangeSubscribers.indexOf(func), 1)
             return;
         }
         this.colorFieldChangeSubscribers.push(func)
@@ -520,39 +520,41 @@ export default class AutoQuery {
     buildTemporalPreProcess() {
         let groupStage = {
             _id: `$${this.data.joinField}`,
-            [this.data.joinField]: {"$first": `$${this.data.joinField}`}
+            [this.data.joinField]: { "$first": `$${this.data.joinField}` }
         }
 
         let projectStage = {
             "$project": {
-                "_id" : 1,
-                [this.data.joinField] : 1,
+                "_id": 1,
+                [this.data.joinField]: 1,
             }
         }
 
-        for(const field of Object.keys(this.data.constraints)){
-            groupStage[field] = {"$first": `$${field}`}
+        for (const field of Object.keys(this.data.constraints)) {
+            groupStage[field] = { "$first": `$${field}` }
             projectStage['$project'][field] = 1;
 
         }
-        for(const [field, type] of Object.entries(this.temporalFields)){
+        for (const [field, type] of Object.entries(this.temporalFields)) {
             let namePartOne = `${field}${temporalId}`
-            for(const accumulator of Object.keys(mongoGroupAccumulators)) {
+            for (const accumulator of Object.keys(mongoGroupAccumulators)) {
                 let namePartTwo = namePartOne + accumulator;
-                groupStage[`${namePartTwo}`] = { [`$${accumulator}`]: `$${field}`}
+                groupStage[`${namePartTwo}`] = { [`$${accumulator}`]: `$${field}` }
                 projectStage['$project'][`${namePartTwo}`] = 1;
             }
             projectStage['$project'][`relative_${field}_change_pct`] = {
-                "$cond" : [
-                    {"$eq" : [`$${namePartOne}first`, 0]}, "N/A",{"$multiply": [
-                {
-                    "$divide": [
-                        { "$subtract": [`$${namePartOne}last`, `$${namePartOne}first`] },
-                        `$${namePartOne}first`
-                    ]
-                },
-                100
-            ]}
+                "$cond": [
+                    { "$eq": [`$${namePartOne}first`, 0] }, "N/A", {
+                        "$multiply": [
+                            {
+                                "$divide": [
+                                    { "$subtract": [`$${namePartOne}last`, `$${namePartOne}first`] },
+                                    `$${namePartOne}first`
+                                ]
+                            },
+                            100
+                        ]
+                    }
                 ]
             };
         }
@@ -560,8 +562,8 @@ export default class AutoQuery {
         groupStage = {
             "$group": groupStage
         }
-        
-        return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, { "$sort": {"epoch_time": 1 } },groupStage, projectStage]
+
+        return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, { "$sort": { "epoch_time": 1 } }, groupStage, projectStage]
     }
 
 
@@ -666,7 +668,7 @@ export default class AutoQuery {
     getColor(properties, featureType) {
         const propsVarName = Util.removePropertiesPrefix(this.colorField?.name);
         const value = properties[propsVarName];
-        if(!value) {
+        if (!value) {
             return;
         }
         return this.protoColor?.getColor(value, featureType)
