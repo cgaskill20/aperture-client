@@ -180,7 +180,7 @@ export default React.memo(function Workspace() {
         let tempLayerTitles = [];
         for(const layer in data) {
             const thisLayer = data[layer];
-            tempLayers.push(data[layer]);
+            tempLayers.push(thisLayer);
             const layerName = thisLayer?.label ?? prettifyJSON(thisLayer.collection);
             tempLayerTitles.push(layerName);
             tempBoolean.push(false);
