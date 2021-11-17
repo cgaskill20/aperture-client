@@ -104,6 +104,9 @@ function sourceIcon(layerInfo) {
 
 export default React.memo(function LayerControls(props) {
     const classes = useStyles();
+    const advState = {allLayerConstraints: props.state.allLayerConstraints, activeLayerConstraints: props.state.activeLayerConstraints,
+        setActiveLayerConstraints: props.state.setActiveLayerConstraints};
+
     if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (
         <Paper elevation={3} className={classes.root}>
@@ -113,23 +116,22 @@ export default React.memo(function LayerControls(props) {
                 justifyContent="space-around"
                 alignItems="center"
             >
-                {getLayerText(props.layer.info)}
+                {getLayerText(props.state.layer.info)}
                 <Grid item>
-                    <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
-                                         activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
+                    <AdvancedConstraints state={advState} />
                     {/* <Button startIcon={<RotateLeftIcon />}>
                         Reset Constraints
                     </Button> */}
                 </Grid>
                 <Grid item>
                     <Button variant="outlined" startIcon={<TuneIcon />} onClick={() => {
-                        props.setActiveLayerConstraints(props.defaultLayerConstraints);
+                        props.state.setActiveLayerConstraints(props.state.defaultLayerConstraints);
                     }}>
                         Default Constraints
                     </Button>
                 </Grid>
-                    {/* {graphIcon(props.layer, props.graphableLayers)} */}
-                    {sourceIcon(props.layer)}
+                    {/* {graphIcon(props.state.layer, props.state.graphableLayers)} */}
+                    {sourceIcon(props.state.layer)}
             </Grid>
         </Paper>
     )

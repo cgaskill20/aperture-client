@@ -92,7 +92,7 @@ export default React.memo(function WorkspaceControls(props) {
     const [globalState, setGlobalState] = useGlobalState();
     const classes = useStyles();
     const venIcon = <Icon>
-        <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
+        <img src={props.state.intersect ? VenFilled : Ven} className={classes.customIcon} />
     </Icon>
     const [saveAndLoadAndShareModalOpen, setSaveAndLoadAndShareModalOpen] = useState(false)
     const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState(null)
@@ -104,6 +104,9 @@ export default React.memo(function WorkspaceControls(props) {
     function toggleCharting() {
         setGlobalState({ chartingOpen: !globalState.chartingOpen });
     }
+
+    const searchbarState = {layers: props.state.layers, graphableLayers: props.state.graphableLayers, layerTitles: props.state.layerTitles,
+                            workspace: props.state.workspace, setWorkspace: props.state.setWorkspace};
 
     if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
     return (
@@ -130,9 +133,9 @@ export default React.memo(function WorkspaceControls(props) {
                     </Grid>
                     <Grid item>
                         <Button variant="outlined" startIcon={venIcon} onClick={() => {
-                            props.setIntersect(!props.intersect)
+                            props.state.setIntersect(!props.state.intersect)
                         }}>
-                            {props.intersect ? "Intersections: on" : "Intersections: off"}
+                            {props.state.intersect ? "Intersections: on" : "Intersections: off"}
                         </Button>
                     </Grid>
                     <Grid item>
@@ -142,15 +145,14 @@ export default React.memo(function WorkspaceControls(props) {
                         <Button variant="outlined" startIcon={<CloseIcon/>} onClick={handleDrawerClose}>Close</Button>
                     </Grid>
                 </Grid>
-                <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
-                    workspace={props.workspace} setWorkspace={props.setWorkspace} />
+                <WorkspaceSearchbar state={searchbarState} />
             </Paper>
             <SaveAndLoadAndShare
                 modalOpen={saveAndLoadAndShareModalOpen}
                 setModalOpen={setSaveAndLoadAndShareModalOpen}
                 mode={saveAndLoadAndShareMode}
-                serializeWorkspace={props.serializeWorkspace}
-                deSerializeWorkspace={props.deSerializeWorkspace}
+                serializeWorkspace={props.state.serializeWorkspace}
+                deSerializeWorkspace={props.state.deSerializeWorkspace}
             />
         </>
     )

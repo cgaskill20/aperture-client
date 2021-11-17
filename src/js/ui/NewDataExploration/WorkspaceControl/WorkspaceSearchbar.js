@@ -93,30 +93,22 @@ const useStyles = makeStyles((theme) => ({
         overflow: "auto",
         maxHeight: "60vh",
     },
-    tableButton: {
-        cursor: "pointer",
-        color: "#3f51b5"
-    },
-    clearAllButton: {
-        cursor: "pointer",
-        color: "#f44336"
-    }
 }));
 
 export default React.memo(function WorkspaceSearchbar(props) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [filtering, setFiltering] = useState(false);
-    const [filteredDatasets, setFilteredDatsets] = useState(props.layerTitles);
+    const [filteredDatasets, setFilteredDatsets] = useState(props.state.layerTitles);
     const [filterText, setFilterText] = useState("");
-    const [datasets, setDatasets] = useState(props.layerTitles);
+    const [datasets, setDatasets] = useState(props.state.layerTitles);
 
     useEffect(() => {
-        setDatasets(filtering ? filteredDatasets : props.layerTitles);
+        setDatasets(filtering ? filteredDatasets : props.state.layerTitles);
     });
 
     function graphIcon(layer) {
-        if(isGraphable(layer, props.graphableLayers)) {
+        if(isGraphable(layer, props.state.graphableLayers)) {
             return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
         }
     }
@@ -128,8 +120,8 @@ export default React.memo(function WorkspaceSearchbar(props) {
     }
 
     function findLayerIndex(layerLabel) {
-        for(let i = 0; i < props.layerTitles.length; i++) {
-            if(props.layerTitles[i] === layerLabel) {
+        for(let i = 0; i < props.state.layerTitles.length; i++) {
+            if(props.state.layerTitles[i] === layerLabel) {
                 return i;
             }
         }
@@ -145,7 +137,7 @@ export default React.memo(function WorkspaceSearchbar(props) {
         const input = event.target.value;
         setFiltering(input !== "");
         setFilterText(input);
-        const matches = props.layerTitles.filter((title) => caseInsensitiveMatch(input, title));
+        const matches = props.state.layerTitles.filter((title) => caseInsensitiveMatch(input, title));
         setFilteredDatsets(matches);
     }
 
@@ -154,17 +146,17 @@ export default React.memo(function WorkspaceSearchbar(props) {
     }
 
     function handleLayerCheck(index) {
-        let newWorkspace = [...props.workspace];
+        let newWorkspace = [...props.state.workspace];
         newWorkspace[index] = !newWorkspace[index];
-        props.setWorkspace(newWorkspace);
+        props.state.setWorkspace(newWorkspace);
     }
 
     function clearWorkspace() {
         let emptyWorkspace = [];
-        for(const layer in props.workspace) {
+        for(const layer in props.state.workspace) {
             emptyWorkspace.push(false);
         }
-        props.setWorkspace(emptyWorkspace);
+        props.state.setWorkspace(emptyWorkspace);
     }
 
     function addAllSearchedDatasets() {
@@ -172,11 +164,11 @@ export default React.memo(function WorkspaceSearchbar(props) {
         filteredDatasets.forEach((layer) => {
             layersToAdd.push(findLayerIndex(layer));
         });
-        let newWorkspace = [...props.workspace];
+        let newWorkspace = [...props.state.workspace];
         layersToAdd.forEach((index) => {
             newWorkspace[index] = true;
         });
-        props.setWorkspace(newWorkspace);
+        props.state.setWorkspace(newWorkspace);
     }
 
     function renderResetButton() {
@@ -196,7 +188,7 @@ export default React.memo(function WorkspaceSearchbar(props) {
     }
 
     function workspaceIsNotEmpty() {
-        return props.workspace.includes(true);
+        return props.state.workspace.includes(true);
     }
 
     function renderClearButton() {
@@ -291,13 +283,13 @@ export default React.memo(function WorkspaceSearchbar(props) {
                                                     color="primary"
                                                     checkedIcon={checkedIcon}
                                                     style={{ marginRight: 8 }}
-                                                    checked={props.workspace[trueLayerIndex]}
+                                                    checked={props.state.workspace[trueLayerIndex]}
                                                     onChange={() => handleLayerCheck(trueLayerIndex)}
                                                 />
                                             </TableCell>
                                             <TableCell>{layer}</TableCell>
-                                            <TableCell>{graphIcon(props.layers[trueLayerIndex])}</TableCell>
-                                            <TableCell>{infoIcon(props.layers[trueLayerIndex].info)}</TableCell>
+                                            <TableCell>{graphIcon(props.state.layers[trueLayerIndex])}</TableCell>
+                                            <TableCell>{infoIcon(props.state.layers[trueLayerIndex].info)}</TableCell>
                                         </TableRow>
                                     )
                                 })}

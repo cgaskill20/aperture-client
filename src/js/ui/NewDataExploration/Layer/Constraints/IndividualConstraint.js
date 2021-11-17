@@ -78,22 +78,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function IndividualConstraint(props) {
     const classes = useStyles();
-    if(props.constraint.type === "slider" || props.constraint.selectToRangeMap) {
+    if(props.state.constraint.type === "slider" || props.state.constraint.selectToRangeMap) {
         return (
             <Grid item className={classes.root}>
-                {!props.constraint.isDate ?
-                    <ConstraintSlider constraint={props.constraint} querier={props.querier} /> :
-                    <ConstraintDate constraint={props.constraint} querier={props.querier} />
+                {!props.state.constraint.isDate ?
+                    <ConstraintSlider constraint={props.state.constraint} querier={props.state.querier} /> :
+                    <ConstraintDate constraint={props.state.constraint} querier={props.state.querier} />
                 }
             </Grid>
         );
     }
 
-    else if(props.constraint.type === "multiselector") {
+    else if(props.state.constraint.type === "multiselector") {
         return (
             <Grid item className={classes.root}>
-                <Typography className={classes.heading}>{props.constraint.label}</Typography>
-                <ConstraintMultiSelect constraint={props.constraint} querier={props.querier}/>
+                <Typography className={classes.heading}>{props.state.constraint.label}</Typography>
+                <ConstraintMultiSelect constraint={props.state.constraint} querier={props.state.querier}/>
             </Grid>
         );
     }

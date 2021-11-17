@@ -129,10 +129,10 @@ export default function AdvancedConstraints(props) {
                     </Grid>
                     <Grid item>
                         <Paper elevation={3} className={classes.constraintSection}>
-                            {props.allLayerConstraints.map((constraint, index) => {
+                            {props.state.allLayerConstraints.map((constraint, index) => {
                                 return (
                                     <div key={index}>
-                                        <AdvancedConstraintCheckbox activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints}
+                                        <AdvancedConstraintCheckbox activeLayerConstraints={props.state.activeLayerConstraints} setActiveLayerConstraints={props.state.setActiveLayerConstraints}
                                                                     constraintIndex={index} constraint={constraint}/>
                                     </div>)
                             })}

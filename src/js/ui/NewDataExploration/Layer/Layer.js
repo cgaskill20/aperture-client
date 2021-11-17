@@ -92,27 +92,27 @@ export default React.memo(function Layer(props) {
     const [check, setCheck] = useState(false);
     const [layerExpanded, setLayerExpanded] = useState(false);
 
-    const [defaultLayerConstraints, allLayerConstraints] = extractLayerConstraints(props.layer);
+    const [defaultLayerConstraints, allLayerConstraints] = extractLayerConstraints(props.state.layer);
     const [activeLayerConstraints, setActiveLayerConstraints] = useState(defaultLayerConstraints);
 
     useEffect(() => {
-        if(!props.layer.forceUpdateFlag) {
-            props.layer.constraintState = allLayerConstraints.filter((e,index) => activeLayerConstraints[index]).map(e => e.name);
+        if(!props.state.layer.forceUpdateFlag) {
+            props.state.layer.constraintState = allLayerConstraints.filter((e,index) => activeLayerConstraints[index]).map(e => e.name);
         }
     }, [activeLayerConstraints]);
 
     useEffect(() => {
-        if(!props.layer.forceUpdateFlag) {
-            props.layer.expandedState = layerExpanded;
+        if(!props.state.layer.forceUpdateFlag) {
+            props.state.layer.expandedState = layerExpanded;
         }
     }, [layerExpanded])
 
 
-    const [ querier ] = useState(new AutoQuery(props.layer));
+    const [ querier ] = useState(new AutoQuery(props.state.layer));
 
     useEffect(() => {
         const onColorFieldChange = () => {
-            props.layer.colorField = querier.colorField.name;
+            props.state.layer.colorField = querier.colorField.name;
         }
         querier.subscribeToColorFieldChange(onColorFieldChange)
         return () => {
@@ -122,27 +122,31 @@ export default React.memo(function Layer(props) {
     }, [querier]);
 
     useEffect(() => {
-        if(props.layer.forceUpdateFlag) {
-            props.layer.forceUpdateFlag = false;
-            const constraintStateSet = new Set(props.layer.constraintState)
+        if(props.state.layer.forceUpdateFlag) {
+            props.state.layer.forceUpdateFlag = false;
+            const constraintStateSet = new Set(props.state.layer.constraintState)
             setActiveLayerConstraints(allLayerConstraints.map(layerConstraint => constraintStateSet.has(layerConstraint.name)))
-            setLayerExpanded(props.layer.expandedState)
-            if(check !== props.layer.on) {
-                setCheck(props.layer.on)
-                updateQuerierOnCheckChange(props.layer.on)
+            setLayerExpanded(props.state.layer.expandedState)
+            if(check !== props.state.layer.on) {
+                setCheck(props.state.layer.on)
+                updateQuerierOnCheckChange(props.state.layer.on)
             }
 
-            if(props.layer.colorField){
-                querier.changeColorCodeField(props.layer.colorField);
+            if(props.state.layer.colorField){
+                querier.changeColorCodeField(props.state.layer.colorField);
             }
         }
     })
 
     const updateQuerierOnCheckChange = (newCheck) => {
-        props.layer.state = newCheck;
+        props.state.layer.state = newCheck;
         newCheck && querier.onAdd();
         newCheck || querier.onRemove();
     }
+
+    const controlState = {layer: props.state.layer, graphableLayers: props.state.graphableLayers,
+        allLayerConstraints, defaultLayerConstraints, activeLayerConstraints, setActiveLayerConstraints,
+        layerIndex: props.state.layerIndex};
 
     if(componentIsRendering) console.log("|Layer|");
     return (
@@ -170,23 +174,21 @@ export default React.memo(function Layer(props) {
                                     checked={check}
                                 />
                             }
-                            label={props.layerTitles[props.layerIndex]}
+                            label={props.state.layerTitles[props.state.layerIndex]}
                         />
                     </AccordionSummary>
                     <AccordionDetails>
                         <Grid container direction="column">
                             <Grid item>
-                                <LayerControls layer={props.layer} graphableLayers={props.graphableLayers}
-                                               allLayerConstraints={allLayerConstraints} defaultLayerConstraints={defaultLayerConstraints}
-                                               activeLayerConstraints={activeLayerConstraints} setActiveLayerConstraints={setActiveLayerConstraints}
-                                               layerIndex={props.layerIndex} />
+                                <LayerControls state={controlState} />
                             </Grid>
                             {activeLayerConstraints.map((constraint, index) => {
                                 if(constraint) {
+                                    const constraintState = {constraint: allLayerConstraints[index], classes, querier};
                                     return (
                                         <div key={index}>
                                             <Paper elevation={3}>
-                                                <IndividualConstraint constraint={allLayerConstraints[index]} classes={classes} querier={querier} />
+                                                <IndividualConstraint state={constraintState} />
                                             </Paper>
                                         </div>
                                     );

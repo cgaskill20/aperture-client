@@ -219,6 +219,9 @@ export default React.memo(function Workspace() {
         });
     }, []);
 
+    const controlState = {layers, graphableLayers, layerTitles, workspace, setWorkspace, serializeWorkspace, deSerializeWorkspace, intersect, setIntersect};
+    const layerState = {layers, graphableLayers, layerTitles, workspace};
+
     if(componentIsRendering) {console.log("|Workspace Rerending|")}
     return (
         <Grid
@@ -229,12 +232,10 @@ export default React.memo(function Workspace() {
             alignItems="center"
         >
             <Grid item className={classes.root}>
-                <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                                   workspace={workspace} setWorkspace={setWorkspace} serializeWorkspace={serializeWorkspace} deSerializeWorkspace={deSerializeWorkspace}
-                                   intersect={intersect} setIntersect={setIntersect} />
+                <WorkspaceControls state={controlState} />
             </Grid>
             <Grid item className={classes.root}>
-                <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />
+                <WorkspaceLayers state={layerState} />
             </Grid>
         </Grid>
     );
