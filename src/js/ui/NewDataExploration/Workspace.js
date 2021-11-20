@@ -84,6 +84,7 @@ export default React.memo(function Workspace() {
 
     const [layers, setLayers] = useState([]);
     const [intersect, setIntersect] = useState(false);
+    const [ws, setWS] = useState(new Set());
     const [workspace, setWorkspace] = useState([]);
     const [layerTitles, setLayerTitles] = useState([]);
     const [graphableLayers, setGraphableLayers] = useState([]);
@@ -96,13 +97,13 @@ export default React.memo(function Workspace() {
     }, [intersect]);
 
     useEffect(() => {
-        if(!workspaceIsLoaded.current && workspace.length && layers.length && !globalState.preloading) {
+        if(!workspaceIsLoaded.current && layers.length && !globalState.preloading) {
             workspaceIsLoaded.current = true;
             if(workspaceOnLoad) {
                 deSerializeWorkspace(workspaceOnLoad)
             }
         }
-    }, [workspace, layers, globalState.preloading])
+    }, [layers, globalState.preloading])
     
     function serializeWorkspace(workspaceName="workspace", saveColorState=true, saveMapViewport=false) {
         const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
@@ -175,19 +176,16 @@ export default React.memo(function Workspace() {
     }
 
     function extractLayers(data) {
-        let tempBoolean = [];
         let tempLayers = [];
-        let tempLayerTitles = [];
         for(const layer in data) {
             const thisLayer = data[layer];
-            tempLayers.push(data[layer]);
             const layerName = thisLayer?.label ?? prettifyJSON(thisLayer.collection);
-            tempLayerTitles.push(layerName);
-            tempBoolean.push(false);
+            thisLayer.label = layerName;
+            tempLayers.push(data[layer]);
         }
         setLayers(tempLayers);
-        setWorkspace(tempBoolean);
-        setLayerTitles(tempLayerTitles);
+        const tempWS = new Set();
+        setWS(tempWS);
     }
 
     function extractGraphableLayers(data) {
@@ -231,10 +229,10 @@ export default React.memo(function Workspace() {
             <Grid item className={classes.root}>
                 <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
                                    workspace={workspace} setWorkspace={setWorkspace} serializeWorkspace={serializeWorkspace} deSerializeWorkspace={deSerializeWorkspace}
-                                   intersect={intersect} setIntersect={setIntersect} />
+                                   intersect={intersect} setIntersect={setIntersect} ws={ws} setWS={setWS} />
             </Grid>
             <Grid item className={classes.root}>
-                <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />
+                <WorkspaceLayers ws={ws} layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />
             </Grid>
         </Grid>
     );

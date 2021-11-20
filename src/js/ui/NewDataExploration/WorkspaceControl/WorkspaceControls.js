@@ -142,8 +142,7 @@ export default React.memo(function WorkspaceControls(props) {
                         <Button variant="outlined" startIcon={<CloseIcon/>} onClick={handleDrawerClose}>Close</Button>
                     </Grid>
                 </Grid>
-                <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
-                    workspace={props.workspace} setWorkspace={props.setWorkspace} />
+                <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} ws={props.ws} setWS={props.setWS} />
             </Paper>
             <SaveAndLoadAndShare
                 modalOpen={saveAndLoadAndShareModalOpen}

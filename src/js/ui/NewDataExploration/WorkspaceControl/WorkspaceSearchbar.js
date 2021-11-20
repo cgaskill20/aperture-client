@@ -107,12 +107,12 @@ export default React.memo(function WorkspaceSearchbar(props) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [filtering, setFiltering] = useState(false);
-    const [filteredDatasets, setFilteredDatsets] = useState(props.layerTitles);
+    const [filteredDatasets, setFilteredDatsets] = useState(props.layers);
     const [filterText, setFilterText] = useState("");
-    const [datasets, setDatasets] = useState(props.layerTitles);
+    const [datasets, setDatasets] = useState([]);
 
     useEffect(() => {
-        setDatasets(filtering ? filteredDatasets : props.layerTitles);
+        setDatasets(filtering ? filteredDatasets : props.layers);
     });
 
     function graphIcon(layer) {
@@ -127,14 +127,6 @@ export default React.memo(function WorkspaceSearchbar(props) {
         }
     }
 
-    function findLayerIndex(layerLabel) {
-        for(let i = 0; i < props.layerTitles.length; i++) {
-            if(props.layerTitles[i] === layerLabel) {
-                return i;
-            }
-        }
-    }
-
     function handleExpansion() {
         setExpanded(!expanded);
         setFilterText("");
@@ -145,38 +137,25 @@ export default React.memo(function WorkspaceSearchbar(props) {
         const input = event.target.value;
         setFiltering(input !== "");
         setFilterText(input);
-        const matches = props.layerTitles.filter((title) => caseInsensitiveMatch(input, title));
+        const matches = props.layers.filter((layer) => layer.label.toLowerCase().includes(input.toLowerCase()));
         setFilteredDatsets(matches);
     }
 
-    function caseInsensitiveMatch(input, match) {
-        return match.toLowerCase().includes(input.toLowerCase());
-    }
-
-    function handleLayerCheck(index) {
-        let newWorkspace = [...props.workspace];
-        newWorkspace[index] = !newWorkspace[index];
-        props.setWorkspace(newWorkspace);
+    function handleLayerCheck(layer) {
+        let tempWS = new Set(props.ws);
+        if(props.ws.has(layer)) tempWS.delete(layer);
+        else tempWS.add(layer);
+        props.setWS(tempWS);
     }
 
     function clearWorkspace() {
-        let emptyWorkspace = [];
-        for(const layer in props.workspace) {
-            emptyWorkspace.push(false);
-        }
-        props.setWorkspace(emptyWorkspace);
+        props.setWS(new Set());
     }
 
     function addAllSearchedDatasets() {
-        let layersToAdd = [];
-        filteredDatasets.forEach((layer) => {
-            layersToAdd.push(findLayerIndex(layer));
-        });
-        let newWorkspace = [...props.workspace];
-        layersToAdd.forEach((index) => {
-            newWorkspace[index] = true;
-        });
-        props.setWorkspace(newWorkspace);
+        let tempWS = new Set(props.ws);
+        filteredDatasets.forEach(layer => tempWS.add(layer));
+        props.setWS(tempWS);
     }
 
     function renderResetButton() {
@@ -196,7 +175,7 @@ export default React.memo(function WorkspaceSearchbar(props) {
     }
 
     function workspaceIsNotEmpty() {
-        return props.workspace.includes(true);
+        return props.ws.size > 0;
     }
 
     function renderClearButton() {
@@ -228,14 +207,14 @@ export default React.memo(function WorkspaceSearchbar(props) {
     }
 
     function datasetHeaderText() {
-        return filtering ? `Found ${datasets.length} Results Matching '${filterText}'` : `${datasets.length} Datasets`;
+        return filtering ? `Found SIZE HERE PLZ Results Matching '${filterText}'` : `SIZE HERE PLZ Datasets`;
     }
 
     function renderAddAllButton() {
         if(filtering) {
             return (
                 <TableCell>
-                    <CustomTooltip title={`Add All ${datasets.length} Datasets Matching '${filterText}' To Workspace`}>
+                    <CustomTooltip title={`Add All SIZE HERE PLZ Datasets Matching '${filterText}' To Workspace`}>
                         <IconButton onClick={addAllSearchedDatasets}>
                             <AddIcon color="primary" />
                         </IconButton>
@@ -282,7 +261,6 @@ export default React.memo(function WorkspaceSearchbar(props) {
                             </TableHead>
                             <TableBody>
                                 {datasets.map((layer, index) => {
-                                    const trueLayerIndex = findLayerIndex(layer);
                                     return (
                                         <TableRow key={index}>
                                             <TableCell>
@@ -291,13 +269,13 @@ export default React.memo(function WorkspaceSearchbar(props) {
                                                     color="primary"
                                                     checkedIcon={checkedIcon}
                                                     style={{ marginRight: 8 }}
-                                                    checked={props.workspace[trueLayerIndex]}
-                                                    onChange={() => handleLayerCheck(trueLayerIndex)}
+                                                    checked={props.ws.has(layer)}
+                                                    onChange={() => handleLayerCheck(layer)}
                                                 />
                                             </TableCell>
-                                            <TableCell>{layer}</TableCell>
-                                            <TableCell>{graphIcon(props.layers[trueLayerIndex])}</TableCell>
-                                            <TableCell>{infoIcon(props.layers[trueLayerIndex].info)}</TableCell>
+                                            <TableCell>{layer.label}</TableCell>
+                                            <TableCell>{graphIcon(layer)}</TableCell>
+                                            <TableCell>{infoIcon(layer.info)}</TableCell>
                                         </TableRow>
                                     )
                                 })}

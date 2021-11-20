@@ -73,15 +73,12 @@ export default React.memo(function WorkspaceLayers(props) {
     if(componentIsRendering) {console.log("|WorkspaceLayers Rerending|")}
     return (
         <div className={classes.root}>
-            {props.workspace.map((layer, index) => {
-                if(layer) {
-                    return (
-                        <div key={index} id={`layer-div-${index}`}>
-                            <Layer layer={props.layers[index]} layerIndex={index} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles} />
-                        </div>
-                    );
-                }
-                else return null;
+            {Array.from(props.ws).map((layer, index) => {
+                return (
+                    <div key={index} id={`layer-div-${index}`}>
+                        <Layer layer={layer} layerIndex={index} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles} />
+                    </div>
+                );
             })}
         </div>
     );

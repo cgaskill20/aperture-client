@@ -170,7 +170,7 @@ export default React.memo(function Layer(props) {
                                     checked={check}
                                 />
                             }
-                            label={props.layerTitles[props.layerIndex]}
+                            label={props.layer.label}
                         />
                     </AccordionSummary>
                     <AccordionDetails>
