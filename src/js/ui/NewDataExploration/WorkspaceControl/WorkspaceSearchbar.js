@@ -64,7 +64,6 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import {makeStyles} from "@material-ui/core/styles";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import IconButton from "@material-ui/core/IconButton";
-import {isGraphable} from "../Utils/Helpers";
 import InfoIcon from '@material-ui/icons/Info';
 import {CustomTooltip} from "../../UtilityComponents";
 import {
@@ -118,12 +117,14 @@ export default React.memo(function WorkspaceSearchbar(props) {
         if(layer.isGraphable) {
             return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
         }
+        else return null;
     }
 
     function infoIcon(layerInfo) {
         if(layerInfo) {
             return <CustomTooltip title={layerInfo} placement="right" arrow><IconButton><InfoIcon color="primary" /></IconButton></CustomTooltip>
         }
+        else return null;
     }
 
     function handleExpansion() {
@@ -206,14 +207,14 @@ export default React.memo(function WorkspaceSearchbar(props) {
     }
 
     function datasetHeaderText() {
-        return filtering ? `Found SIZE HERE PLZ Results Matching '${filterText}'` : `SIZE HERE PLZ Datasets`;
+        return filtering ? `Found ${datasets.length} Results Matching '${filterText}'` : `${datasets.length} Datasets`;
     }
 
     function renderAddAllButton() {
         if(filtering) {
             return (
                 <TableCell>
-                    <CustomTooltip title={`Add All SIZE HERE PLZ Datasets Matching '${filterText}' To Workspace`}>
+                    <CustomTooltip title={`Add ${datasets.length} Datasets Matching '${filterText}' To Workspace`}>
                         <IconButton onClick={addAllSearchedDatasets}>
                             <AddIcon color="primary" />
                         </IconButton>

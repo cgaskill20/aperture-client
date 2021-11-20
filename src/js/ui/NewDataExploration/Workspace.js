@@ -152,7 +152,8 @@ export default React.memo(function Workspace() {
                 L.latLng(Number(bboxArray[3]), Number(bboxArray[2]))));
         }
 
-        const collections = new Set(deSerializedWorkspace.layers.map(e => e.collection))
+        const collections = new Set(deSerializedWorkspace.layers.map(e => e.collection));
+        console.log({collections})
         setWorkspace(layers.map(layer => {
             const isIn = collections.has(layer.collection);
             if(isIn) {
@@ -166,7 +167,6 @@ export default React.memo(function Workspace() {
                     layer.constraints[constraint.name].state = constraint.state;
                     layer.constraints[constraint.name].forceUpdateFlag = true;
                 }
-                
             }
             return isIn;
         }))
