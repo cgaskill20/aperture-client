@@ -72,6 +72,20 @@ function updateLayerConstraints(activeLayerConstraints, index) {
 export default function AdvancedConstraintCheckbox(props) {
     const [check, setCheck] = useState(props.activeLayerConstraints[props.constraintIndex]);
 
+    function updateConstraintsForLayer() {
+        let tempActiveConstraints = [...props.activeConstraintsForLayer];
+        const name = props.constraint.label ?? Util.cleanUpString(props.constraint.name);
+        if(!(Object.entries(tempActiveConstraints).map((entry) => entry[1].label).includes(name))) {
+            tempActiveConstraints.push(props.constraint);
+        }
+        else {
+            let set = new Set(tempActiveConstraints);
+            set.delete(props.constraint);
+            tempActiveConstraints = Array.from(set);
+        }
+        props.setActiveConstraintsForLayer(tempActiveConstraints);
+    }
+
     if(componentIsRendering) {console.log("|AdvancedContraintCheckbox Rerending|")}
     return (
         <FormGroup>
@@ -81,12 +95,13 @@ export default function AdvancedConstraintCheckbox(props) {
                         checked={check}
                         onChange={() => {
                             setCheck(!check);
+                            updateConstraintsForLayer();
                             props.setActiveLayerConstraints(updateLayerConstraints(props.activeLayerConstraints, props.constraintIndex));
                         }}
                         color="primary"
                     />
                 }
-                label={props.constraint.label ?? Util.cleanUpString(props.constraint.name)}
+                label={props.constraint.label}
             />
         </FormGroup>
     );

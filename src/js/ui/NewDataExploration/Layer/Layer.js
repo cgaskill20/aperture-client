@@ -68,6 +68,7 @@ import LayerControls from "./LayerControls";
 import {componentIsRendering} from "../../Sidebar";
 import AutoQuery from '../../../library/autoQuery';
 import IndividualConstraint from "./Constraints/IndividualConstraint"
+import Util from "../../../library/apertureUtil";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -96,16 +97,18 @@ export default React.memo(function Layer(props) {
         let tempConstraintsForLayer = [];
         let allConstraintsForLayer = [];
         for(const constraint in props.layer.constraints) {
-            allConstraintsForLayer.push(props.layer.constraints[constraint]);
-            if(!props.layer.constraints[constraint].hide) tempConstraintsForLayer.push(props.layer.constraints[constraint]);
+            let currentConstraint = props.layer.constraints[constraint];
+            currentConstraint.label = currentConstraint.label ?? Util.cleanUpString(constraint);
+            allConstraintsForLayer.push(currentConstraint);
+            if(!currentConstraint.hide) tempConstraintsForLayer.push(currentConstraint);
         }
         return [tempConstraintsForLayer, allConstraintsForLayer];
     }
 
     const [defaultConstraintsForLayer, allConstraintsForLayer] = getConstraintsForLayer();
-    console.log({defaultConstraintsForLayer})
-    console.log({allConstraintsForLayer})
     const [activeConstraintsForLayer, setActiveConstraintsForLayer] = useState(defaultConstraintsForLayer);
+
+    console.log({activeConstraintsForLayer})
 
     const [defaultLayerConstraints, allLayerConstraints] = extractLayerConstraints(props.layer);
 
@@ -197,17 +200,15 @@ export default React.memo(function Layer(props) {
                                                allLayerConstraints={allLayerConstraints} defaultLayerConstraints={defaultLayerConstraints}
                                                activeLayerConstraints={activeLayerConstraints} setActiveLayerConstraints={setActiveLayerConstraints} />
                             </Grid>
-                            {activeLayerConstraints.map((constraint, index) => {
-                                if(constraint) {
-                                    return (
-                                        <div key={index}>
-                                            <Paper elevation={3}>
-                                                <IndividualConstraint constraint={allLayerConstraints[index]} classes={classes} querier={querier} />
-                                            </Paper>
-                                        </div>
-                                    );
-                                }
-                                else return null;
+                            {activeConstraintsForLayer.map((constraint, index) => {
+                                console.log({constraint})
+                                return (
+                                    <div key={index}>
+                                        <Paper elevation={3}>
+                                            <IndividualConstraint constraint={constraint} classes={classes} querier={querier} />
+                                        </Paper>
+                                    </div>
+                                );
                             })}
                         </Grid>
                     </AccordionDetails>

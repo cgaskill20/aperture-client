@@ -127,7 +127,6 @@ export default function AdvancedConstraints(props) {
                     <Grid item>
                         <Paper elevation={3} className={classes.constraintSection}>
                             {props.allConstraintsForLayer.map((constraint, index) => {
-                            // {props.allLayerConstraints.map((constraint, index) => {
                                 return (
                                     <div key={index}>
                                         <AdvancedConstraintCheckbox activeConstraintsForLayer={props.activeConstraintsForLayer} setActiveConstraintsForLayer={props.setActiveConstraintsForLayer}
