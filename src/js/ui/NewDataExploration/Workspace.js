@@ -190,6 +190,8 @@ export default React.memo(function Workspace() {
 
         $.getJSON("src/json/menumetadata.json", async function (mdata) {
             const metaData = await AutoMenu.build(mdata, globalState.overwrite);
+            Query.init(metaData);
+            setGlobalState({ menuMetadata: metaData });
             $.getJSON("src/json/graphPriority.json", async function (mdata) {
                 const graphableData = await AutoMenu.build(mdata, globalState.overwrite);
                 setUpLayers(metaData, graphableData);
