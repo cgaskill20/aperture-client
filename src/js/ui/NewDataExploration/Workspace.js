@@ -197,7 +197,6 @@ export default React.memo(function Workspace() {
                 setUpLayers(metaData, graphableData);
             });
         });
-
     }, []);
 
     if(componentIsRendering) {console.log("|Workspace Rerending|")}

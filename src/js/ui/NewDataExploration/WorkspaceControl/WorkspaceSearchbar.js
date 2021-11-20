@@ -143,8 +143,7 @@ export default React.memo(function WorkspaceSearchbar(props) {
 
     function handleLayerCheck(layer) {
         let tempWS = new Set(props.ws);
-        if(props.ws.has(layer)) tempWS.delete(layer);
-        else tempWS.add(layer);
+        tempWS.has(layer) ? tempWS.delete(layer) : tempWS.add(layer);
         props.setWS(tempWS);
     }
 

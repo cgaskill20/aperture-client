@@ -70,13 +70,16 @@ const useStyles = makeStyles((theme) => ({
 export default React.memo(function WorkspaceLayers(props) {
     const classes = useStyles();
 
+    const workspace = Array.from(props.ws);
+    console.log({workspace});
+
     if(componentIsRendering) {console.log("|WorkspaceLayers Rerending|")}
     return (
         <div className={classes.root}>
             {Array.from(props.ws).map((layer, index) => {
                 return (
                     <div key={index} id={`layer-div-${index}`}>
-                        <Layer layer={layer} layerIndex={index} />
+                        <Layer layer={layer} />
                     </div>
                 );
             })}

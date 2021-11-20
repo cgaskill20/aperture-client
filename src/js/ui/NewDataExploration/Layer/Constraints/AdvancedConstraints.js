@@ -100,9 +100,6 @@ export default function AdvancedConstraints(props) {
                 Advanced...
             </Button>
             <Modal
-                //FIXME According to https://material-ui.com/api/modal/ these should prevent the modal from 'focusing' but they don't
-                // disableEnforceFocus={true}
-                // disableAutoFocus={true}
                 aria-labelledby="adv-constraints"
                 open={open}
                 onClose={() => setOpen(false)}
@@ -129,10 +126,13 @@ export default function AdvancedConstraints(props) {
                     </Grid>
                     <Grid item>
                         <Paper elevation={3} className={classes.constraintSection}>
-                            {props.allLayerConstraints.map((constraint, index) => {
+                            {props.allConstraintsForLayer.map((constraint, index) => {
+                            // {props.allLayerConstraints.map((constraint, index) => {
                                 return (
                                     <div key={index}>
-                                        <AdvancedConstraintCheckbox activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints}
+                                        <AdvancedConstraintCheckbox activeConstraintsForLayer={props.activeConstraintsForLayer} setActiveConstraintsForLayer={props.setActiveConstraintsForLayer}
+
+                                                                    activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints}
                                                                     constraintIndex={index} constraint={constraint}/>
                                     </div>)
                             })}

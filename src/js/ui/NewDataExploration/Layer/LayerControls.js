@@ -103,11 +103,11 @@ export default React.memo(function LayerControls(props) {
             >
                 {getLayerText(props.layer.info)}
                 <Grid item>
-                    <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
+                    <AdvancedConstraints allConstraintsForLayer={props.allConstraintsForLayer} defaultConstraintsForLayer={props.defaultConstraintsForLayer}
+                                         activeConstraintsForLayer={props.activeConstraintsForLayer} setActiveConstraintsForLayer={props.setActiveConstraintsForLayer}
+
+                                         allLayerConstraints={props.allLayerConstraints}
                                          activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
-                    {/* <Button startIcon={<RotateLeftIcon />}>
-                        Reset Constraints
-                    </Button> */}
                 </Grid>
                 <Grid item>
                     <Button variant="outlined" startIcon={<TuneIcon />} onClick={() => {

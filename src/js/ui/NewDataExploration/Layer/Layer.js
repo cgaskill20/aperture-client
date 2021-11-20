@@ -92,8 +92,25 @@ export default React.memo(function Layer(props) {
     const [check, setCheck] = useState(false);
     const [layerExpanded, setLayerExpanded] = useState(false);
 
+    function getConstraintsForLayer() {
+        let tempConstraintsForLayer = [];
+        let allConstraintsForLayer = [];
+        for(const constraint in props.layer.constraints) {
+            allConstraintsForLayer.push(props.layer.constraints[constraint]);
+            if(!props.layer.constraints[constraint].hide) tempConstraintsForLayer.push(props.layer.constraints[constraint]);
+        }
+        return [tempConstraintsForLayer, allConstraintsForLayer];
+    }
+
+    const [defaultConstraintsForLayer, allConstraintsForLayer] = getConstraintsForLayer();
+    console.log({defaultConstraintsForLayer})
+    console.log({allConstraintsForLayer})
+    const [activeConstraintsForLayer, setActiveConstraintsForLayer] = useState(defaultConstraintsForLayer);
+
     const [defaultLayerConstraints, allLayerConstraints] = extractLayerConstraints(props.layer);
+
     const [activeLayerConstraints, setActiveLayerConstraints] = useState(defaultLayerConstraints);
+    const [ querier ] = useState(new AutoQuery(props.layer));
 
     useEffect(() => {
         if(!props.layer.forceUpdateFlag) {
@@ -105,10 +122,7 @@ export default React.memo(function Layer(props) {
         if(!props.layer.forceUpdateFlag) {
             props.layer.expandedState = layerExpanded;
         }
-    }, [layerExpanded])
-
-
-    const [ querier ] = useState(new AutoQuery(props.layer));
+    }, [layerExpanded]);
 
     useEffect(() => {
         const onColorFieldChange = () => {
@@ -136,7 +150,7 @@ export default React.memo(function Layer(props) {
                 querier.changeColorCodeField(props.layer.colorField);
             }
         }
-    })
+    });
 
     const updateQuerierOnCheckChange = (newCheck) => {
         props.layer.state = newCheck;
@@ -177,9 +191,11 @@ export default React.memo(function Layer(props) {
                         <Grid container direction="column">
                             <Grid item>
                                 <LayerControls layer={props.layer}
+                                               activeConstraintsForLayer={activeConstraintsForLayer} setActiveConstraintsForLayer={setActiveConstraintsForLayer}
+                                               allConstraintsForLayer={allConstraintsForLayer} defaultConstraintsForLayer={defaultConstraintsForLayer}
+
                                                allLayerConstraints={allLayerConstraints} defaultLayerConstraints={defaultLayerConstraints}
-                                               activeLayerConstraints={activeLayerConstraints} setActiveLayerConstraints={setActiveLayerConstraints}
-                                               layerIndex={props.layerIndex} />
+                                               activeLayerConstraints={activeLayerConstraints} setActiveLayerConstraints={setActiveLayerConstraints} />
                             </Grid>
                             {activeLayerConstraints.map((constraint, index) => {
                                 if(constraint) {
