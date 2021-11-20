@@ -83,11 +83,9 @@ export default React.memo(function Workspace() {
     const classes = useStyles();
 
     const [layers, setLayers] = useState([]);
-    const [intersect, setIntersect] = useState(false);
     const [ws, setWS] = useState(new Set());
+    const [intersect, setIntersect] = useState(false);
     const [workspace, setWorkspace] = useState([]);
-    const [layerTitles, setLayerTitles] = useState([]);
-    const [graphableLayers, setGraphableLayers] = useState([]);
     const [workspaceOnLoad, setWorkspaceOnLoad] = useState(null)
     const [globalState, setGlobalState] = useGlobalState();
     const workspaceIsLoaded = useRef(false);
@@ -136,23 +134,22 @@ export default React.memo(function Workspace() {
     async function deSerializeWorkspace(compressedSerializedWorkspace) {
         //if the menu isnt loaded yet, wait for it to be loaded
         if(!workspaceIsLoaded.current) {
-            setWorkspaceOnLoad(compressedSerializedWorkspace)
+            setWorkspaceOnLoad(compressedSerializedWorkspace);
             return;
         }
-        const serializedWorkspace = LZString.decompressFromEncodedURIComponent(compressedSerializedWorkspace)
+        const serializedWorkspace = LZString.decompressFromEncodedURIComponent(compressedSerializedWorkspace);
         if(!serializedWorkspace) {
             return;
         }
-        const deSerializedWorkspace = JSON.parse(serializedWorkspace)
+        const deSerializedWorkspace = JSON.parse(serializedWorkspace);
         if(deSerializedWorkspace.intersect != null) {
-            setIntersect(deSerializedWorkspace.intersect)
+            setIntersect(deSerializedWorkspace.intersect);
         }
 
         if(deSerializedWorkspace.bounds != null) {
-            //setIntersect(deSerializedWorkspace.intersect)
-            const bboxArray = deSerializedWorkspace.bounds.split(',')
+            const bboxArray = deSerializedWorkspace.bounds.split(',');
             window.map.fitBounds(L.latLngBounds(L.latLng(Number(bboxArray[1]), Number(bboxArray[0])), 
-                L.latLng(Number(bboxArray[3]), Number(bboxArray[2]))))
+                L.latLng(Number(bboxArray[3]), Number(bboxArray[2]))));
         }
 
         const collections = new Set(deSerializedWorkspace.layers.map(e => e.collection))
@@ -175,46 +172,30 @@ export default React.memo(function Workspace() {
         }))
     }
 
-    function extractLayers(data) {
+    function setUpLayers(layerData, graphableData) {
         let tempLayers = [];
-        for(const layer in data) {
-            const thisLayer = data[layer];
-            const layerName = thisLayer?.label ?? prettifyJSON(thisLayer.collection);
-            thisLayer.label = layerName;
-            tempLayers.push(data[layer]);
+        for(const layer in layerData) {
+            const currentLayer = layerData[layer];
+            currentLayer.label = currentLayer?.label ?? prettifyJSON(currentLayer.collection);
+            currentLayer.isGraphable = Object.keys(graphableData).includes(currentLayer.collection);
+            tempLayers.push(currentLayer);
         }
         setLayers(tempLayers);
-        const tempWS = new Set();
-        setWS(tempWS);
-    }
-
-    function extractGraphableLayers(data) {
-        let tempGraphableLayers = [];
-        for (const layer in data) {
-            const thisLayer = data[layer];
-            const layerName = thisLayer.collection;
-            tempGraphableLayers.push(layerName);
-        }
-        setGraphableLayers(tempGraphableLayers);
     }
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const workspaceFromURL = urlParams.get('workspace');
-        workspaceFromURL && setWorkspaceOnLoad(workspaceFromURL)
+        workspaceFromURL && setWorkspaceOnLoad(workspaceFromURL);
 
         $.getJSON("src/json/menumetadata.json", async function (mdata) {
-            const finalData = await AutoMenu.build(mdata, globalState.overwrite);
-            Query.init(finalData);
-            extractLayers(finalData);
-
-            setGlobalState({ menuMetadata: finalData });
+            const metaData = await AutoMenu.build(mdata, globalState.overwrite);
+            $.getJSON("src/json/graphPriority.json", async function (mdata) {
+                const graphableData = await AutoMenu.build(mdata, globalState.overwrite);
+                setUpLayers(metaData, graphableData);
+            });
         });
 
-        $.getJSON("src/json/graphPriority.json", async function (mdata) {
-            const graphableLayers = await AutoMenu.build(mdata, globalState.overwrite);
-            extractGraphableLayers(graphableLayers);
-        });
     }, []);
 
     if(componentIsRendering) {console.log("|Workspace Rerending|")}
@@ -227,12 +208,15 @@ export default React.memo(function Workspace() {
             alignItems="center"
         >
             <Grid item className={classes.root}>
-                <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
-                                   workspace={workspace} setWorkspace={setWorkspace} serializeWorkspace={serializeWorkspace} deSerializeWorkspace={deSerializeWorkspace}
-                                   intersect={intersect} setIntersect={setIntersect} ws={ws} setWS={setWS} />
+                <WorkspaceControls layers={layers}
+                                   serializeWorkspace={serializeWorkspace}
+                                   deSerializeWorkspace={deSerializeWorkspace}
+                                   intersect={intersect}
+                                   setIntersect={setIntersect}
+                                   ws={ws} setWS={setWS} />
             </Grid>
             <Grid item className={classes.root}>
-                <WorkspaceLayers ws={ws} layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />
+                <WorkspaceLayers ws={ws} layers={layers} />
             </Grid>
         </Grid>
     );

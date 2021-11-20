@@ -83,7 +83,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
-
 const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
 const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
 
@@ -116,7 +115,7 @@ export default React.memo(function WorkspaceSearchbar(props) {
     });
 
     function graphIcon(layer) {
-        if(isGraphable(layer, props.graphableLayers)) {
+        if(layer.isGraphable) {
             return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
         }
     }

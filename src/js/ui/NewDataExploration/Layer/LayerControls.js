@@ -58,13 +58,10 @@ END OF TERMS AND CONDITIONS
 */
 import React from 'react';
 import {Button, Paper, Typography} from "@material-ui/core";
-import RotateLeftIcon from '@material-ui/icons/RotateLeft';
-import EqualizerIcon from "@material-ui/icons/Equalizer";
 import TuneIcon from '@material-ui/icons/Tune';
 import LinkIcon from '@material-ui/icons/Link';
 import AdvancedConstraints from "./Constraints/AdvancedConstraints";
 import {componentIsRendering} from "../../Sidebar";
-import {isGraphable} from "../Utils/Helpers";
 import {makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 
@@ -73,15 +70,6 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2),
     },
 }));
-
-function graphIcon(layer, graphableLayers) {
-    if(isGraphable(layer, graphableLayers)) {
-        return <Button startIcon={<EqualizerIcon />}>
-            Graph Me
-        </Button>
-    }
-    return;
-}
 
 function getLayerText(layerInfo) {
     if(layerInfo) {
@@ -128,7 +116,6 @@ export default React.memo(function LayerControls(props) {
                         Default Constraints
                     </Button>
                 </Grid>
-                    {/* {graphIcon(props.layer, props.graphableLayers)} */}
                     {sourceIcon(props.layer)}
             </Grid>
         </Paper>

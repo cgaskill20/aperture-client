@@ -76,7 +76,7 @@ export default React.memo(function WorkspaceLayers(props) {
             {Array.from(props.ws).map((layer, index) => {
                 return (
                     <div key={index} id={`layer-div-${index}`}>
-                        <Layer layer={layer} layerIndex={index} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles} />
+                        <Layer layer={layer} layerIndex={index} />
                     </div>
                 );
             })}
