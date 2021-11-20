@@ -103,15 +103,14 @@ export default React.memo(function LayerControls(props) {
             >
                 {getLayerText(props.layer.info)}
                 <Grid item>
-                    <AdvancedConstraints allConstraintsForLayer={props.allConstraintsForLayer} defaultConstraintsForLayer={props.defaultConstraintsForLayer}
-                                         activeConstraintsForLayer={props.activeConstraintsForLayer} setActiveConstraintsForLayer={props.setActiveConstraintsForLayer}
-
-                                         allLayerConstraints={props.allLayerConstraints}
-                                         activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
+                    <AdvancedConstraints allConstraintsForLayer={props.allConstraintsForLayer}
+                                         activeConstraintsForLayer={props.activeConstraintsForLayer}
+                                         setActiveConstraintsForLayer={props.setActiveConstraintsForLayer}
+                    />
                 </Grid>
                 <Grid item>
                     <Button variant="outlined" startIcon={<TuneIcon />} onClick={() => {
-                        props.setActiveLayerConstraints(props.defaultLayerConstraints);
+                        props.setActiveConstraintsForLayer(props.defaultConstraintsForLayer);
                     }}>
                         Default Constraints
                     </Button>

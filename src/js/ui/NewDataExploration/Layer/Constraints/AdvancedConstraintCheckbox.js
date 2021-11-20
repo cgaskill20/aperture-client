@@ -70,18 +70,22 @@ function updateLayerConstraints(activeLayerConstraints, index) {
 }
 
 export default function AdvancedConstraintCheckbox(props) {
-    const [check, setCheck] = useState(props.activeLayerConstraints[props.constraintIndex]);
+    const [check, setCheck] = useState(constraintIsActive());
+
+    function constraintIsActive() {
+        return Object.entries(props.activeConstraintsForLayer).map((entry) => entry[1].label).includes(props.constraint.label);
+    }
 
     function updateConstraintsForLayer() {
-        let tempActiveConstraints = [...props.activeConstraintsForLayer];
-        const name = props.constraint.label ?? Util.cleanUpString(props.constraint.name);
-        if(!(Object.entries(tempActiveConstraints).map((entry) => entry[1].label).includes(name))) {
+        let tempActiveConstraints = [...props.activeConstraintsForLayer];;
+        if(!constraintIsActive()) {
             tempActiveConstraints.push(props.constraint);
         }
         else {
-            let set = new Set(tempActiveConstraints);
-            set.delete(props.constraint);
-            tempActiveConstraints = Array.from(set);
+            const index = tempActiveConstraints.indexOf(props.constraint);
+            if (index > -1) {
+                tempActiveConstraints.splice(index, 1);
+            }
         }
         props.setActiveConstraintsForLayer(tempActiveConstraints);
     }
@@ -96,7 +100,6 @@ export default function AdvancedConstraintCheckbox(props) {
                         onChange={() => {
                             setCheck(!check);
                             updateConstraintsForLayer();
-                            props.setActiveLayerConstraints(updateLayerConstraints(props.activeLayerConstraints, props.constraintIndex));
                         }}
                         color="primary"
                     />

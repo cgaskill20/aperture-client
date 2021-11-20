@@ -77,21 +77,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function extractLayerConstraints(layer) {
-    let defaultLayerConstraints = [];
-    let allLayerConstraints = [];
-    for(const constraint in layer.constraints) {
-        defaultLayerConstraints.push(!layer.constraints[constraint].hide);
-        layer.constraints[constraint].name = constraint;
-        allLayerConstraints.push(layer.constraints[constraint]);
-    }
-    return [defaultLayerConstraints, allLayerConstraints];
-}
-
 export default React.memo(function Layer(props) {
     const classes = useStyles();
     const [check, setCheck] = useState(false);
     const [layerExpanded, setLayerExpanded] = useState(false);
+
+    const [defaultConstraintsForLayer, allConstraintsForLayer] = getConstraintsForLayer();
+    const [activeConstraintsForLayer, setActiveConstraintsForLayer] = useState(defaultConstraintsForLayer);
+
+    const [ querier ] = useState(new AutoQuery(props.layer));
 
     function getConstraintsForLayer() {
         let tempConstraintsForLayer = [];
@@ -105,21 +99,12 @@ export default React.memo(function Layer(props) {
         return [tempConstraintsForLayer, allConstraintsForLayer];
     }
 
-    const [defaultConstraintsForLayer, allConstraintsForLayer] = getConstraintsForLayer();
-    const [activeConstraintsForLayer, setActiveConstraintsForLayer] = useState(defaultConstraintsForLayer);
-
-    console.log({activeConstraintsForLayer})
-
-    const [defaultLayerConstraints, allLayerConstraints] = extractLayerConstraints(props.layer);
-
-    const [activeLayerConstraints, setActiveLayerConstraints] = useState(defaultLayerConstraints);
-    const [ querier ] = useState(new AutoQuery(props.layer));
-
     useEffect(() => {
         if(!props.layer.forceUpdateFlag) {
-            props.layer.constraintState = allLayerConstraints.filter((e,index) => activeLayerConstraints[index]).map(e => e.name);
+            props.layer.constraintState = activeConstraintsForLayer.map(constraint => constraint.name);
+            // props.layer.constraintState = allConstraintsForLayer.filter((e,index) => activeLayerConstraints[index]).map(e => e.name);
         }
-    }, [activeLayerConstraints]);
+    }, [activeConstraintsForLayer]);
 
     useEffect(() => {
         if(!props.layer.forceUpdateFlag) {
@@ -141,12 +126,13 @@ export default React.memo(function Layer(props) {
     useEffect(() => {
         if(props.layer.forceUpdateFlag) {
             props.layer.forceUpdateFlag = false;
-            const constraintStateSet = new Set(props.layer.constraintState)
-            setActiveLayerConstraints(allLayerConstraints.map(layerConstraint => constraintStateSet.has(layerConstraint.name)))
-            setLayerExpanded(props.layer.expandedState)
+            const constraintStateSet = new Set(props.layer.constraintState);
+            setActiveConstraintsForLayer(Array.from(constraintStateSet));
+            // setActiveLayerConstraints(allLayerConstraints.map(layerConstraint => constraintStateSet.has(layerConstraint.name)));
+            setLayerExpanded(props.layer.expandedState);
             if(check !== props.layer.on) {
-                setCheck(props.layer.on)
-                updateQuerierOnCheckChange(props.layer.on)
+                setCheck(props.layer.on);
+                updateQuerierOnCheckChange(props.layer.on);
             }
 
             if(props.layer.colorField){
@@ -194,14 +180,13 @@ export default React.memo(function Layer(props) {
                         <Grid container direction="column">
                             <Grid item>
                                 <LayerControls layer={props.layer}
-                                               activeConstraintsForLayer={activeConstraintsForLayer} setActiveConstraintsForLayer={setActiveConstraintsForLayer}
-                                               allConstraintsForLayer={allConstraintsForLayer} defaultConstraintsForLayer={defaultConstraintsForLayer}
-
-                                               allLayerConstraints={allLayerConstraints} defaultLayerConstraints={defaultLayerConstraints}
-                                               activeLayerConstraints={activeLayerConstraints} setActiveLayerConstraints={setActiveLayerConstraints} />
+                                               activeConstraintsForLayer={activeConstraintsForLayer}
+                                               setActiveConstraintsForLayer={setActiveConstraintsForLayer}
+                                               allConstraintsForLayer={allConstraintsForLayer}
+                                               defaultConstraintsForLayer={defaultConstraintsForLayer}
+                               />
                             </Grid>
                             {activeConstraintsForLayer.map((constraint, index) => {
-                                console.log({constraint})
                                 return (
                                     <div key={index}>
                                         <Paper elevation={3}>
