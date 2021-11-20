@@ -95,9 +95,6 @@ export default React.memo(function Layer(props) {
     const [defaultLayerConstraints, allLayerConstraints] = extractLayerConstraints(props.layer);
     const [activeLayerConstraints, setActiveLayerConstraints] = useState(defaultLayerConstraints);
 
-    const layer = props.layer
-    console.log({layer})
-
     useEffect(() => {
         if(!props.layer.forceUpdateFlag) {
             props.layer.constraintState = allLayerConstraints.filter((e,index) => activeLayerConstraints[index]).map(e => e.name);

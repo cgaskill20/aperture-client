@@ -74,7 +74,6 @@ export default React.memo(function WorkspaceLayers(props) {
     return (
         <div className={classes.root}>
             {Array.from(props.ws).map((layer, index) => {
-                console.log({layer})
                 return (
                     <div key={index} id={`layer-div-${index}`}>
                         <Layer layer={layer} layerIndex={index} />
