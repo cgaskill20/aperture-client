@@ -232,7 +232,7 @@ export default React.memo(function Workspace() {
                                    ws={ws} setWS={setWS} />
             </Grid>
             <Grid item className={classes.root}>
-                <WorkspaceLayers ws={ws} layers={layers} />
+                <WorkspaceLayers ws={ws} />
             </Grid>
         </Grid>
     );
