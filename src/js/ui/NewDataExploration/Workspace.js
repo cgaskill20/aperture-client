@@ -154,7 +154,7 @@ export default React.memo(function Workspace() {
 
         const collections = new Set(deSerializedWorkspace.layers.map(e => e.collection));
         console.log({collections})
-        setWS(new Set(layers.map(layer => {
+        const loadMe = (new Set(layers.map(layer => {
             if(collections.has(layer.collection)) {
                 const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);
                 layer.on = deSerializedLayer.on;
@@ -167,8 +167,11 @@ export default React.memo(function Workspace() {
                     layer.constraints[constraint.name].forceUpdateFlag = true;
                 }
             }
+            console.log({layer})
             return layer;
         })));
+        console.log({loadMe})
+        setWS(loadMe);
         // setWorkspace(layers.map(layer => {
         //     const isIn = collections.has(layer.collection);
         //     if(isIn) {
