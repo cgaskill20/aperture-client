@@ -104,7 +104,7 @@ export default React.memo(function Workspace() {
     }, [layers, globalState.preloading])
     
     function serializeWorkspace(workspaceName="workspace", saveColorState=true, saveMapViewport=false) {
-        const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
+        const relevantLayers = Array.from(ws).map(layer => {
             return {
                 collection: layer.collection,
                 on: layer.state ?? false,
@@ -154,10 +154,9 @@ export default React.memo(function Workspace() {
 
         const collections = new Set(deSerializedWorkspace.layers.map(e => e.collection));
         console.log({collections})
-        setWorkspace(layers.map(layer => {
-            const isIn = collections.has(layer.collection);
-            if(isIn) {
-                const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);                
+        setWS(new Set(layers.map(layer => {
+            if(collections.has(layer.collection)) {
+                const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);
                 layer.on = deSerializedLayer.on;
                 layer.expandedState = deSerializedLayer.expandedState;
                 layer.colorField = deSerializedLayer.colorField;
@@ -168,8 +167,24 @@ export default React.memo(function Workspace() {
                     layer.constraints[constraint.name].forceUpdateFlag = true;
                 }
             }
-            return isIn;
-        }))
+            return layer;
+        })));
+        // setWorkspace(layers.map(layer => {
+        //     const isIn = collections.has(layer.collection);
+        //     if(isIn) {
+        //         const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);
+        //         layer.on = deSerializedLayer.on;
+        //         layer.expandedState = deSerializedLayer.expandedState;
+        //         layer.colorField = deSerializedLayer.colorField;
+        //         layer.constraintState = deSerializedLayer.constraintState;
+        //         layer.forceUpdateFlag = true;
+        //         for(const constraint of deSerializedLayer.constraints) {
+        //             layer.constraints[constraint.name].state = constraint.state;
+        //             layer.constraints[constraint.name].forceUpdateFlag = true;
+        //         }
+        //     }
+        //     return isIn;
+        // }))
     }
 
     function setUpLayers(layerData, graphableData) {
