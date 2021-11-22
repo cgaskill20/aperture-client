@@ -87,18 +87,6 @@ export default React.memo(function Layer(props) {
 
     const [ querier ] = useState(new AutoQuery(props.layer));
 
-    function getConstraintsForLayer() {
-        let tempConstraintsForLayer = [];
-        let allConstraintsForLayer = [];
-        for(const constraint in props.layer.constraints) {
-            let currentConstraint = props.layer.constraints[constraint];
-            currentConstraint.label = currentConstraint.label ?? Util.cleanUpString(constraint);
-            allConstraintsForLayer.push(currentConstraint);
-            if(!currentConstraint.hide) tempConstraintsForLayer.push(currentConstraint);
-        }
-        return [tempConstraintsForLayer, allConstraintsForLayer];
-    }
-
     useEffect(() => {
         if(!props.layer.forceUpdateFlag) {
             props.layer.constraintState = activeConstraintsForLayer.map(constraint => constraint.name);
@@ -140,6 +128,18 @@ export default React.memo(function Layer(props) {
             }
         }
     });
+
+    function getConstraintsForLayer() {
+        let tempConstraintsForLayer = [];
+        let allConstraintsForLayer = [];
+        for(const constraint in props.layer.constraints) {
+            let currentConstraint = props.layer.constraints[constraint];
+            currentConstraint.label = currentConstraint.label ?? Util.cleanUpString(constraint);
+            allConstraintsForLayer.push(currentConstraint);
+            if(!currentConstraint.hide) tempConstraintsForLayer.push(currentConstraint);
+        }
+        return [tempConstraintsForLayer, allConstraintsForLayer];
+    }
 
     const updateQuerierOnCheckChange = (newCheck) => {
         props.layer.state = newCheck;
@@ -188,7 +188,7 @@ export default React.memo(function Layer(props) {
                             </Grid>
                             {activeConstraintsForLayer.map((constraint, index) => {
                                 return (
-                                    <div key={index}>
+                                    <div key={`${constraint.label}-${index}`}>
                                         <Paper elevation={3}>
                                             <IndividualConstraint constraint={constraint} classes={classes} querier={querier} />
                                         </Paper>

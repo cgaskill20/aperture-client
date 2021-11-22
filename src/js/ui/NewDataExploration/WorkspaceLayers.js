@@ -70,9 +70,6 @@ const useStyles = makeStyles((theme) => ({
 export default React.memo(function WorkspaceLayers(props) {
     const classes = useStyles();
 
-    const workspace = Array.from(props.ws);
-    console.log({workspace});
-
     if(componentIsRendering) {console.log("|WorkspaceLayers Rerending|")}
     return (
         <div className={classes.root}>

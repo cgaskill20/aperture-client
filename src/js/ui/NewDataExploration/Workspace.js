@@ -91,6 +91,22 @@ export default React.memo(function Workspace() {
     const workspaceIsLoaded = useRef(false);
 
     useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const workspaceFromURL = urlParams.get('workspace');
+        workspaceFromURL && setWorkspaceOnLoad(workspaceFromURL);
+
+        $.getJSON("src/json/menumetadata.json", async function (mdata) {
+            const metaData = await AutoMenu.build(mdata, globalState.overwrite);
+            Query.init(metaData);
+            setGlobalState({ menuMetadata: metaData });
+            $.getJSON("src/json/graphPriority.json", async function (mdata) {
+                const graphableData = await AutoMenu.build(mdata, globalState.overwrite);
+                setUpLayers(metaData, graphableData);
+            });
+        });
+    }, []);
+
+    useEffect(() => {
         window.setIntersect(intersect)
     }, [intersect]);
 
@@ -101,7 +117,18 @@ export default React.memo(function Workspace() {
                 deSerializeWorkspace(workspaceOnLoad)
             }
         }
-    }, [layers, globalState.preloading])
+    }, [layers, globalState.preloading]);
+
+    function setUpLayers(layerData, graphableData) {
+        let tempLayers = [];
+        for(const layer in layerData) {
+            const currentLayer = layerData[layer];
+            currentLayer.label = currentLayer?.label ?? prettifyJSON(currentLayer.collection);
+            currentLayer.isGraphable = Object.keys(graphableData).includes(currentLayer.collection);
+            tempLayers.push(currentLayer);
+        }
+        setLayers(tempLayers);
+    }
     
     function serializeWorkspace(workspaceName="workspace", saveColorState=true, saveMapViewport=false) {
         const relevantLayers = Array.from(ws).map(layer => {
@@ -189,33 +216,6 @@ export default React.memo(function Workspace() {
         //     return isIn;
         // }))
     }
-
-    function setUpLayers(layerData, graphableData) {
-        let tempLayers = [];
-        for(const layer in layerData) {
-            const currentLayer = layerData[layer];
-            currentLayer.label = currentLayer?.label ?? prettifyJSON(currentLayer.collection);
-            currentLayer.isGraphable = Object.keys(graphableData).includes(currentLayer.collection);
-            tempLayers.push(currentLayer);
-        }
-        setLayers(tempLayers);
-    }
-
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const workspaceFromURL = urlParams.get('workspace');
-        workspaceFromURL && setWorkspaceOnLoad(workspaceFromURL);
-
-        $.getJSON("src/json/menumetadata.json", async function (mdata) {
-            const metaData = await AutoMenu.build(mdata, globalState.overwrite);
-            Query.init(metaData);
-            setGlobalState({ menuMetadata: metaData });
-            $.getJSON("src/json/graphPriority.json", async function (mdata) {
-                const graphableData = await AutoMenu.build(mdata, globalState.overwrite);
-                setUpLayers(metaData, graphableData);
-            });
-        });
-    }, []);
 
     if(componentIsRendering) {console.log("|Workspace Rerending|")}
     return (

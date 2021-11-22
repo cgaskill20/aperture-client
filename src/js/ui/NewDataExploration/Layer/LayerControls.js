@@ -92,6 +92,11 @@ function sourceIcon(layerInfo) {
 
 export default React.memo(function LayerControls(props) {
     const classes = useStyles();
+
+    function setDefaultConstraints() {
+        props.setActiveConstraintsForLayer(props.defaultConstraintsForLayer);
+    }
+
     if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (
         <Paper elevation={3} className={classes.root}>
@@ -109,9 +114,7 @@ export default React.memo(function LayerControls(props) {
                     />
                 </Grid>
                 <Grid item>
-                    <Button variant="outlined" startIcon={<TuneIcon />} onClick={() => {
-                        props.setActiveConstraintsForLayer(props.defaultConstraintsForLayer);
-                    }}>
+                    <Button variant="outlined" startIcon={<TuneIcon />} onClick={setDefaultConstraints}>
                         Default Constraints
                     </Button>
                 </Grid>
