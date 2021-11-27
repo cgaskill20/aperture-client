@@ -78,6 +78,10 @@ const configs = {
         views: ["year", "month", "day"],
         format: "MM/DD/yyyy"
     },
+    "1hr": {
+        views: ["year", "month", "day"],
+        format: "MM/DD/yyyy"
+    }
 }
 
 
