@@ -56,101 +56,92 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from "react";
-import Checkbox from "@material-ui/core/Checkbox";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import {makeStyles} from "@material-ui/core/styles";
-import EqualizerIcon from "@material-ui/icons/Equalizer";
-import IconButton from "@material-ui/core/IconButton";
-import {componentIsRendering} from "../Sidebar";
-import {isGraphable} from "./Helpers";
-import InfoIcon from '@material-ui/icons/Info';
-import {CustomTooltip} from "../UtilityComponents";
-
-const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
-const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
-
-function findLayerIndex(layerLabel, layerTitles) {
-    for(let i = 0; i < layerTitles.length; i++) {
-        if(layerTitles[i] === layerLabel) {
-            return i;
-        }
-    }
-}
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import {componentIsRendering} from "../../../Sidebar";
+import {
+    Switch,
+    FormGroup,
+    FormControlLabel,
+    Typography,
+    TextField,
+    Button,
+    Divider
+} from "@material-ui/core";
+import {CustomTooltip} from "../../../UtilityComponents";
+import Grid from "@material-ui/core/Grid";
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import CustomAlert from "../../Utils/CustomAlert";
 
 const useStyles = makeStyles((theme) => ({
-    icon: {
-        float: 'right',
+    spaceOnTheLeft: {
+        marginLeft: theme.spacing(2),
+    },
+    title: {
+        borderBottom: '2px solid #adadad',
+        marginBottom: theme.spacing(2),
+        width: "100%",
+    },
+    fullWidth: {
+        width: "100%",
     },
 }));
 
-function graphIcon(layer, graphableLayers) {
-    if(isGraphable(layer, graphableLayers)) {
-        return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
-    }
-}
+const aperturePublicPage = "urban-sustain.org/services/aperture.php"
 
-function infoIcon(layerInfo) {
-    if(layerInfo) {
-        return <CustomTooltip title={layerInfo} placement="right" arrow><IconButton><InfoIcon color="primary" /></IconButton></CustomTooltip>
-    }
-}
-
-function updateWorkspace(workspace, index) {
-    let newWorkspace = [...workspace];
-    newWorkspace[index] = !newWorkspace[index];
-    return newWorkspace;
-}
-
-function clearWorkspace(length) {
-    return new Array(length).fill(false);
-}
-
-export default React.memo(function WorkspaceSearchbar(props) {
+export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
     const classes = useStyles();
+    const [includeColor, setIncludeColor] = useState(true)
+    const [includeViewport, setIncludeViewport] = useState(false)
+    const [linkCopied, setLinkCopied] = useState(false);
+    const [alertOpen, setAlertOpen] = useState(false);
+    const link = `${aperturePublicPage}?workspace=${serializeWorkspace("Shared Workspace", includeColor, includeViewport)}`
 
-    if(componentIsRendering) {console.log("|WorkspaceSearchbar Rerending|")}
+    const copyLink = () => {
+        const linkElement = document.getElementById("linkField");
+        linkElement.focus();
+        linkElement.select();
+        document.execCommand('copy');
+        setLinkCopied(true);
+        setAlertOpen(true);
+    }
+
+    if (componentIsRendering) { console.log("|Share Rerending|") }
     return (
-        <div>
-            <Autocomplete
-                className={classes.root}
-                multiple
-                disableCloseOnSelect
-                id="dataset-searchbar"
-                options={props.layerTitles}
-                value={props.layerTitles.filter((e, index) => props.workspace[index])}
-                onChange={(e, layers) => {
-                    const layersSet = new Set(layers)
-                    props.setWorkspace(props.layerTitles.map(layerTitle => layersSet.has(layerTitle)))
-                }}
-                renderOption={(option, state) => {
-                    const optionIndex = findLayerIndex({option}.option, props.layerTitles);
-                    return (
-                        <React.Fragment>
-                            <Checkbox
-                                icon={icon}
-                                color="primary"
-                                checkedIcon={checkedIcon}
-                                style={{ marginRight: 8 }}
-                                checked={props.workspace[optionIndex]}
-                            />
-                            {option}
-                            <span className={classes.icon}>{graphIcon(props.layers[optionIndex], props.graphableLayers)}</span>
-                            <span className={classes.icon}>{infoIcon(props.layers[optionIndex].info)}</span>
-                        </React.Fragment>
-                    );
-                }}
-                renderInput={params => (
-                    <TextField
-                        {...params}
-                        variant="outlined"
-                        label="Explore Datasets..."
+        <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="flex-start"
+        >
+            <Grid item className={classes.fullWidth}>
+                <Typography className={classes.title} align="center" variant="h5">Share Workspace</Typography>
+                <Typography>Save Options</Typography>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={includeColor} onChange={(e) => { setIncludeColor(e.target.checked) }} />}
+                        label="Include Color Selections"
                     />
-                )}
-            />
-        </div>
+                </FormGroup>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={includeViewport} onChange={(e) => { setIncludeViewport(e.target.checked) }} />}
+                        label="Include Current Viewport Bounds"
+                    />
+                </FormGroup>
+            </Grid>
+            <Grid item className={classes.fullWidth}>
+                <CustomTooltip title="Copy Link to Clipboard">
+                    <Button className={classes.fullWidth} variant="outlined" startIcon={<AssignmentTurnedInIcon/>} onClick={copyLink}>
+                        <Divider orientation="vertical" flexItem />
+                        &nbsp;&nbsp;
+                        <TextField className={classes.fullWidth} value={link} InputProps={{
+                            readOnly: true,
+                        }} id="linkField" />
+                    </Button>
+                </CustomTooltip>
+            </Grid>
+            <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} severity="success" text="Link Copied!" />
+        </Grid>
     );
-});
+})

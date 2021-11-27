@@ -6829,5 +6829,17 @@
                 "temporal": true
             }
         ]
+    },
+    {
+        "collection": "county_total_population",
+        "level": "county",
+        "color": {
+            "variable": "2010_total_population"
+        },
+        "fieldMetadata": [
+            {
+                "name": "2010_total_population"
+            }
+        ]
     }
 ]

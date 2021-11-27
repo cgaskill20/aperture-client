@@ -56,92 +56,38 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import {componentIsRendering} from "../Sidebar";
-import {
-    Switch,
-    FormGroup,
-    FormControlLabel,
-    Typography,
-    TextField,
-    Button,
-    Divider
-} from "@material-ui/core";
-import {CustomTooltip} from "../UtilityComponents";
-import Grid from "@material-ui/core/Grid";
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
-import CustomAlert from "./CustomAlert";
+import React, {useState} from 'react';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import {componentIsRendering} from "../../../Sidebar";
+import Util from "../../../../library/apertureUtil"
 
-const useStyles = makeStyles((theme) => ({
-    spaceOnTheLeft: {
-        marginLeft: theme.spacing(2),
-    },
-    title: {
-        borderBottom: '2px solid #adadad',
-        marginBottom: theme.spacing(2),
-        width: "100%",
-    },
-    fullWidth: {
-        width: "100%",
-    },
-}));
+function updateLayerConstraints(activeLayerConstraints, index) {
+    let tempActiveConstraints = [...activeLayerConstraints];
+    tempActiveConstraints[index] = !tempActiveConstraints[index];
+    return tempActiveConstraints;
+}
 
-const aperturePublicPage = "urban-sustain.org/services/aperture.php"
+export default function AdvancedConstraintCheckbox(props) {
+    const [check, setCheck] = useState(props.activeLayerConstraints[props.constraintIndex]);
 
-export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
-    const classes = useStyles();
-    const [includeColor, setIncludeColor] = useState(true)
-    const [includeViewport, setIncludeViewport] = useState(false)
-    const [linkCopied, setLinkCopied] = useState(false);
-    const [alertOpen, setAlertOpen] = useState(false);
-    const link = `${aperturePublicPage}?workspace=${serializeWorkspace("Shared Workspace", includeColor, includeViewport)}`
-
-    const copyLink = () => {
-        const linkElement = document.getElementById("linkField");
-        linkElement.focus();
-        linkElement.select();
-        document.execCommand('copy');
-        setLinkCopied(true);
-        setAlertOpen(true);
-    }
-
-    if (componentIsRendering) { console.log("|Share Rerending|") }
+    if(componentIsRendering) {console.log("|AdvancedContraintCheckbox Rerending|")}
     return (
-        <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="flex-start"
-        >
-            <Grid item className={classes.fullWidth}>
-                <Typography className={classes.title} align="center" variant="h5">Share Workspace</Typography>
-                <Typography>Save Options</Typography>
-                <FormGroup row>
-                    <FormControlLabel
-                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={includeColor} onChange={(e) => { setIncludeColor(e.target.checked) }} />}
-                        label="Include Color Selections"
+        <FormGroup>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={check}
+                        onChange={() => {
+                            setCheck(!check);
+                            props.setActiveLayerConstraints(updateLayerConstraints(props.activeLayerConstraints, props.constraintIndex));
+                        }}
+                        color="primary"
                     />
-                </FormGroup>
-                <FormGroup row>
-                    <FormControlLabel
-                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={includeViewport} onChange={(e) => { setIncludeViewport(e.target.checked) }} />}
-                        label="Include Current Viewport Bounds"
-                    />
-                </FormGroup>
-            </Grid>
-            <Grid item className={classes.fullWidth}>
-                <CustomTooltip title="Copy Link to Clipboard">
-                    <Button className={classes.fullWidth} variant="outlined" startIcon={<AssignmentTurnedInIcon/>} onClick={copyLink}>
-                        <Divider orientation="vertical" flexItem />
-                        &nbsp;&nbsp;
-                        <TextField className={classes.fullWidth} value={link} InputProps={{
-                            readOnly: true,
-                        }} id="linkField" />
-                    </Button>
-                </CustomTooltip>
-            </Grid>
-            <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} severity="success" text="Link Copied!" />
-        </Grid>
+                }
+                label={props.constraint.label ?? Util.cleanUpString(props.constraint.name)}
+            />
+        </FormGroup>
     );
-})
+}

@@ -56,90 +56,53 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
-import {Button, Paper} from "@material-ui/core";
-import SettingsIcon from "@material-ui/icons/Settings";
-import AdvancedConstraintCheckbox from "./AdvancedConstraintCheckbox";
-import {componentIsRendering} from "../Sidebar";
-import CloseIcon from '@material-ui/icons/Close';
+import {componentIsRendering} from "../../../Sidebar";
+import { Typography, Button } from "@material-ui/core";
+import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
 import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
-    modal: {
-        top: '20%',
-        left: '70%',
-        position: 'absolute',
-        width: 400,
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(2),
+    title: {
+        borderBottom: '2px solid #adadad',
+        marginBottom: theme.spacing(2),
+        width: "100%",
     },
-    constraintSection: {
-        overflowY: "auto",
-        maxHeight: "50vh",
-        padding: theme.spacing(1),
-    },
-    closeButtonSection: {
-        marginBottom: theme.spacing(1),
-        padding: theme.spacing(1),
-    },
-    closeButton : {
-        width: '100%',
+    fullWidth: {
+        width: "100%",
     },
 }));
 
-export default function AdvancedConstraints(props) {
-    const classes = useStyles();
-    const [open, setOpen] = useState(false);
 
-    if(componentIsRendering) {console.log("|AdvancedConstraints Rerending|")}
+export default React.memo(function Load({deSerializeWorkspace, setModalOpen}) {
+    const classes = useStyles();
+    const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1)
+
+    const loadWorkspace = () => {
+        deSerializeWorkspace(localStorage.getItem(`workspace${slotCurrentlySelected}`))
+        setModalOpen(false);
+    }
+
+    if (componentIsRendering) { console.log("|Load Rerending|") }
     return (
-        <>
-            <Button variant="outlined" startIcon={<SettingsIcon/>} onClick={() => setOpen(true)}>
-                Advanced...
-            </Button>
-            <Modal
-                //FIXME According to https://material-ui.com/api/modal/ these should prevent the modal from 'focusing' but they don't
-                // disableEnforceFocus={true}
-                // disableAutoFocus={true}
-                aria-labelledby="adv-constraints"
-                open={open}
-                onClose={() => setOpen(false)}
-            >
-                <Grid
-                    id="adv-constraints"
-                    className={classes.modal}
-                    container
-                    direction="column"
-                    justifyContent="center"
-                    alignItems="stretch"
-                >
-                    <Grid item>
-                        <Paper className={classes.closeButtonSection} elevation={3}>
-                            <Button
-                                className={classes.closeButton}
-                                startIcon={<CloseIcon/>}
-                                variant="outlined"
-                                onClick={() => setOpen(false)}
-                            >
-                                Close
-                            </Button>
-                        </Paper>
-                    </Grid>
-                    <Grid item>
-                        <Paper elevation={3} className={classes.constraintSection}>
-                            {props.allLayerConstraints.map((constraint, index) => {
-                                return (
-                                    <div key={index}>
-                                        <AdvancedConstraintCheckbox activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints}
-                                                                    constraintIndex={index} constraint={constraint}/>
-                                    </div>)
-                            })}
-                        </Paper>
-                    </Grid>
-                </Grid>
-            </Modal>
-        </>
+        <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="flex-start"
+        >
+            <Grid item className={classes.fullWidth}>
+                <Typography className={classes.title} align="center" variant="h5">Load Workspace</Typography>
+            </Grid>
+            <Grid item className={classes.fullWidth}>
+                <SavedWorkspaceSlotSelection title="Select a Saved Workspace" slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} onlyShowFullSlots/>
+            </Grid>
+            <Grid item className={classes.fullWidth}>
+                <Button className={classes.fullWidth} variant="outlined" onClick={loadWorkspace}>
+                    Load Workspace
+                </Button>
+            </Grid>
+        </Grid>
     );
-}
+})

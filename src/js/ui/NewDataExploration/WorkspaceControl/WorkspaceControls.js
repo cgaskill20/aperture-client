@@ -56,81 +56,102 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react';
-import {Button, Paper, Typography} from "@material-ui/core";
-import RotateLeftIcon from '@material-ui/icons/RotateLeft';
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import {Button, ButtonGroup, Grid, Paper, Switch, Icon, Fab} from "@material-ui/core";
+import SaveIcon from '@material-ui/icons/Save';
+import FolderOpenIcon from '@material-ui/icons/FolderOpen';
+import ShareIcon from '@material-ui/icons/Share';
+import WorkspaceSearchbar from "./WorkspaceSearchbar";
+import {componentIsRendering} from "../../Sidebar";
+import Ven from "../../../../../images/ven.svg"
+import VenFilled from "../../../../../images/venFilled.svg"
+import SaveAndLoadAndShare from './SaveLoadShare/SaveAndLoadAndShare';
 import EqualizerIcon from "@material-ui/icons/Equalizer";
-import TuneIcon from '@material-ui/icons/Tune';
-import LinkIcon from '@material-ui/icons/Link';
-import AdvancedConstraints from "./AdvancedConstraints";
-import {componentIsRendering} from "../Sidebar";
-import {isGraphable} from "./Helpers";
-import {makeStyles} from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
+import CloseIcon from "@material-ui/icons/Close";
+import { useGlobalState } from "../../global/GlobalState";
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        width: '100%',
         padding: theme.spacing(2),
+        margin: theme.spacing(1),
+    },
+    buttons: {
+        marginBottom: theme.spacing(2),
+    },
+    customIcon: {
+        width: "18px",
+        height: "18px",
+        transform: "translate(0, -10px)"
     },
 }));
 
-function graphIcon(layer, graphableLayers) {
-    if(isGraphable(layer, graphableLayers)) {
-        return <Button startIcon={<EqualizerIcon />}>
-            Graph Me
-        </Button>
-    }
-    return;
-}
-
-function getLayerText(layerInfo) {
-    if(layerInfo) {
-        return (
-            <Grid item>
-                <Typography>{layerInfo}</Typography>
-                <br/>
-            </Grid>
-        )
-    }
-}
-
-function sourceIcon(layerInfo) {
-    if(layerInfo.source){
-        return <Button variant="outlined" startIcon={<LinkIcon />} onClick={() => window.open(layerInfo.source, "_blank")}>
-            Source
-        </Button>
-    }
-}
-
-export default React.memo(function LayerControls(props) {
+export default React.memo(function WorkspaceControls(props) {
+    const [globalState, setGlobalState] = useGlobalState();
     const classes = useStyles();
-    if(componentIsRendering) {console.log("|LayerControls Rerending|")}
+    const venIcon = <Icon>
+        <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
+    </Icon>
+    const [saveAndLoadAndShareModalOpen, setSaveAndLoadAndShareModalOpen] = useState(false)
+    const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState(null)
+
+    function handleDrawerClose() {
+        setGlobalState({sidebarOpen: false})
+    }
+
+    function toggleCharting() {
+        setGlobalState({ chartingOpen: !globalState.chartingOpen });
+    }
+
+    if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
     return (
-        <Paper elevation={3} className={classes.root}>
-            <Grid
-                container
-                direction="row"
-                justifyContent="space-around"
-                alignItems="center"
-            >
-                {getLayerText(props.layer.info)}
-                <Grid item>
-                    <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
-                                         activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
-                    {/* <Button startIcon={<RotateLeftIcon />}>
-                        Reset Constraints
-                    </Button> */}
+        <>
+            <Paper className={classes.root} elevation={3}>
+                <Grid className={classes.buttons} container direction="row" justifyContent="space-between" alignItems="center">
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("save");
+                        }}>Save</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("load");
+                        }}>Load</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("share");
+                        }}>Share</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={venIcon} onClick={() => {
+                            props.setIntersect(!props.intersect)
+                        }}>
+                            {props.intersect ? "Intersections: on" : "Intersections: off"}
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => toggleCharting()}>Graph</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<CloseIcon/>} onClick={handleDrawerClose}>Close</Button>
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    <Button variant="outlined" startIcon={<TuneIcon />} onClick={() => {
-                        props.setActiveLayerConstraints(props.defaultLayerConstraints);
-                    }}>
-                        Default Constraints
-                    </Button>
-                </Grid>
-                    {/* {graphIcon(props.layer, props.graphableLayers)} */}
-                    {sourceIcon(props.layer)}
-            </Grid>
-        </Paper>
+                <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
+                    workspace={props.workspace} setWorkspace={props.setWorkspace} />
+            </Paper>
+            <SaveAndLoadAndShare
+                modalOpen={saveAndLoadAndShareModalOpen}
+                setModalOpen={setSaveAndLoadAndShareModalOpen}
+                mode={saveAndLoadAndShareMode}
+                serializeWorkspace={props.serializeWorkspace}
+                deSerializeWorkspace={props.deSerializeWorkspace}
+            />
+        </>
     )
 });

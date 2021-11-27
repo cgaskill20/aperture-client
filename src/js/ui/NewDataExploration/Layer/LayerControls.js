@@ -56,53 +56,81 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import {componentIsRendering} from "../Sidebar";
-import { Typography, Button } from "@material-ui/core";
-import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
+import React from 'react';
+import {Button, Paper, Typography} from "@material-ui/core";
+import RotateLeftIcon from '@material-ui/icons/RotateLeft';
+import EqualizerIcon from "@material-ui/icons/Equalizer";
+import TuneIcon from '@material-ui/icons/Tune';
+import LinkIcon from '@material-ui/icons/Link';
+import AdvancedConstraints from "./Constraints/AdvancedConstraints";
+import {componentIsRendering} from "../../Sidebar";
+import {isGraphable} from "../Utils/Helpers";
+import {makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
-    title: {
-        borderBottom: '2px solid #adadad',
-        marginBottom: theme.spacing(2),
-        width: "100%",
-    },
-    fullWidth: {
-        width: "100%",
+    root: {
+        padding: theme.spacing(2),
     },
 }));
 
-
-export default React.memo(function Load({deSerializeWorkspace, setModalOpen}) {
-    const classes = useStyles();
-    const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1)
-
-    const loadWorkspace = () => {
-        deSerializeWorkspace(localStorage.getItem(`workspace${slotCurrentlySelected}`))
-        setModalOpen(false);
+function graphIcon(layer, graphableLayers) {
+    if(isGraphable(layer, graphableLayers)) {
+        return <Button startIcon={<EqualizerIcon />}>
+            Graph Me
+        </Button>
     }
+    return;
+}
 
-    if (componentIsRendering) { console.log("|Load Rerending|") }
+function getLayerText(layerInfo) {
+    if(layerInfo) {
+        return (
+            <Grid item>
+                <Typography>{layerInfo}</Typography>
+                <br/>
+            </Grid>
+        )
+    }
+}
+
+function sourceIcon(layerInfo) {
+    if(layerInfo.source){
+        return <Button variant="outlined" startIcon={<LinkIcon />} onClick={() => window.open(layerInfo.source, "_blank")}>
+            Source
+        </Button>
+    }
+}
+
+export default React.memo(function LayerControls(props) {
+    const classes = useStyles();
+    if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (
-        <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="flex-start"
-        >
-            <Grid item className={classes.fullWidth}>
-                <Typography className={classes.title} align="center" variant="h5">Load Workspace</Typography>
+        <Paper elevation={3} className={classes.root}>
+            <Grid
+                container
+                direction="row"
+                justifyContent="space-around"
+                alignItems="center"
+            >
+                {getLayerText(props.layer.info)}
+                <Grid item>
+                    <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
+                                         activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
+                    {/* <Button startIcon={<RotateLeftIcon />}>
+                        Reset Constraints
+                    </Button> */}
+                </Grid>
+                <Grid item>
+                    <Button variant="outlined" startIcon={<TuneIcon />} onClick={() => {
+                        props.setActiveLayerConstraints(props.defaultLayerConstraints);
+                    }}>
+                        Default Constraints
+                    </Button>
+                </Grid>
+                    {/* {graphIcon(props.layer, props.graphableLayers)} */}
+                    {sourceIcon(props.layer)}
             </Grid>
-            <Grid item className={classes.fullWidth}>
-                <SavedWorkspaceSlotSelection title="Select a Saved Workspace" slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} onlyShowFullSlots/>
-            </Grid>
-            <Grid item className={classes.fullWidth}>
-                <Button className={classes.fullWidth} variant="outlined" onClick={loadWorkspace}>
-                    Load Workspace
-                </Button>
-            </Grid>
-        </Grid>
-    );
-})
+        </Paper>
+    )
+});

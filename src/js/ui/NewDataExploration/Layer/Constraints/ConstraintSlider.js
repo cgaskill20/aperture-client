@@ -59,33 +59,11 @@ END OF TERMS AND CONDITIONS
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import {componentIsRendering} from "../Sidebar";
-import Grid from "@material-ui/core/Grid";
-import { KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
-import { Alert } from "@material-ui/lab";
-import IconButton from "@material-ui/core/IconButton";
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import Slider from '@material-ui/core/Slider';
+import {componentIsRendering} from "../../../Sidebar";
+import Util from "../../../../library/apertureUtil"
 
-const configs = {
-    year: {
-        views: ["year"]
-    },
-    day: {
-        views: ["year", "month", "day"],
-        format: "MM/DD/yyyy"
-    },
-    "30min": {
-        views: ["year", "month", "day"],
-        format: "MM/DD/yyyy"
-    },
-    "1hr": {
-        views: ["year", "month", "day"],
-        format: "MM/DD/yyyy"
-    }
-}
-
-
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
     },
@@ -95,38 +73,24 @@ const useStyles = makeStyles({
     nowrap: {
         whiteSpace: "nowrap",
     },
-    halfSize: {
-        width: '50%',
-    },
-});
+}));
 
-const epochToDate = (epoch) => {
-    const refrenceTime = new Date(epoch);
-    return new Date(epoch + refrenceTime.getTimezoneOffset() * 60000);
-}
-
-const dateToEpoch = (date) => {
-    return date.valueOf() - date.getTimezoneOffset() * 60000;
-}
-
-export default function ConstraintDate({ constraint, querier }) {
+export default function ConstraintSlider({ constraint, querier }) {
     const classes = useStyles();
     const min = constraint.range[0];
     const max = constraint.range[1];
-    const [minMaxDate, setMinMaxDate] = useState([epochToDate(min), epochToDate(max)]);
-    const config = configs[constraint.step];
+    const step = constraint.step ? constraint.step : 1;
+    const [minMax, setMinMax] = useState([min, max]);
+    const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
+    const isCategoricalMappedToSlider = constraint.selectToRangeMap ? true : false;
+    const nonConstrained = minMax[0] === min && minMax[1] === max;
 
-    let errorMessageDisplay = [{ display: "none" }, { display: "block", width: '100%' }];
-    const [errorMessage, setErrorMessage] = useState(errorMessageDisplay[0]);
-    const [errorMessageText, setErrorMessageText] = useState("");
 
     useEffect(() => {
-        const minMaxCommited = [dateToEpoch(minMaxDate[0]), dateToEpoch(minMaxDate[1])]
-        if (!constraint.forceUpdateFlag) {
-            constraint.state = minMaxCommited;
+        if (!isCategoricalMappedToSlider) {
+            querier.updateConstraint(constraint.name, minMaxCommited);
         }
-        querier.updateConstraint(constraint.name, minMaxCommited);
-    }, [minMaxDate]);
+    }, [minMaxCommited]);
 
     useEffect(() => {
         querier.constraintSetActive(constraint.name, true);
@@ -136,113 +100,53 @@ export default function ConstraintDate({ constraint, querier }) {
     }, []);
 
     useEffect(() => {
-        if (constraint.forceUpdateFlag) {
+        if(constraint.forceUpdateFlag) {
             constraint.forceUpdateFlag = false;
-            const newDate = [epochToDate(constraint.state[0]), epochToDate(constraint.state[1])]
-            setMinMaxDate(newDate);
+            setMinMax(constraint.state)
+            setMinMaxCommited(constraint.state)
         }
     })
 
-    function handleDateUpdate(e, setMin) {
-        if (e) {
-            const newTime = new Date(e.valueOf());
-            if (setMin && newTime > minMaxDate[1] || !setMin && newTime < minMaxDate[0]) {
-                setErrorMessageText(setMin ? "Min Date must be less than Max Date" : "Max Date must be greater than Min Date");
-                setErrorMessage(errorMessageDisplay[1]);
-            }
-            else {
-                setErrorMessage(errorMessageDisplay[0]);
-                setMin ? setMinMaxDate([new Date(e.valueOf()), minMaxDate[1]]) :
-                    setMinMaxDate([minMaxDate[0], new Date(e.valueOf())]);
-            }
+    const buildSliderLabel = () => {
+        if (isCategoricalMappedToSlider) {
+            return <b>{Object.keys(constraint.selectToRangeMap)[Object.values(constraint.selectToRangeMap).indexOf(minMax[0])]} ➔ {Object.keys(constraint.selectToRangeMap)[Object.values(constraint.selectToRangeMap).indexOf(minMax[1])]}{nonConstrained ? ' (Includes All Values)' : ''}</b>
         }
+        return <b>{minMax[0]} ➔ {minMax[1]}{constraint.plus && max === minMax[1] ? '+' : ''} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
+    }
+
+    const sliderStyle = {};
+    if(nonConstrained) {
+        sliderStyle.color = "#ADADAD"
     }
 
     if (componentIsRendering) { console.log("|ContraintSlider Rerending|") }
     return (
         <div className={classes.root} id={`constraint-div-${constraint.label}`}>
-            <Grid container direction="row" justifyContent="center" alignItems="center">
-                <Grid item>
-                    <Typography className={classes.title} id={`date-picker-${constraint.label}`} gutterBottom>
-                        <span className={classes.nowrap}>{minMaxDate[0].toDateString()} - {minMaxDate[1].toDateString()}</span>
-                    </Typography>
-                </Grid>
-            </Grid>
-            <Grid container direction="row" justifyContent="center" alignItems="center">
-                <Grid item className={classes.halfSize}>
-                    <KeyboardDatePicker
-                        label="Min Date"
-                        format="MM/DD/yyyy"
-                        value={minMaxDate[0]}
-                        minDate={epochToDate(min)}
-                        maxDate={minMaxDate[1]}
-                        onChange={(e) => {
-                            handleDateUpdate(e, true)
-                        }}
-                    />
-                </Grid>
-                <Grid item className={classes.halfSize}>
-                    <KeyboardDatePicker
-                        label="Max Date"
-                        format="MM/DD/yyyy"
-                        value={minMaxDate[1]}
-                        minDate={minMaxDate[0]}
-                        maxDate={epochToDate(max)}
-                        onChange={(e) => {
-                            handleDateUpdate(e, false)
-                        }}
-                    />
-                </Grid>
-            </Grid>
-            {renderTime()}
+            <Typography className={classes.title} id={`range-slider-${constraint.label}`} gutterBottom>
+                {constraint.label ?? Util.cleanUpString(constraint.name)} &nbsp;
+                <span className={classes.nowrap}>{buildSliderLabel()}</span>
+            </Typography>
+            <Slider
+                value={minMax}
+                onChange={(event, newValue) => setMinMax(newValue)}
+                onChangeCommitted={(event, newValue) => {
+                    if(isCategoricalMappedToSlider) {
+                        for(const [name, index] of Object.entries(constraint.selectToRangeMap)) {
+                            querier.updateConstraint(constraint.name, name, newValue[0] <= index && index <= newValue[1])
+                        }
+                        return;
+                    }
+                    setMinMaxCommited(newValue);
+                    constraint.state = newValue;
+                }}
+                aria-labelledby={`range-slider-${constraint.label}`}
+                min={min}
+                max={max}
+                step={step}
+                id={`${constraint.label}`}
+                name={`${constraint.label}`}
+                style={sliderStyle}
+            />
         </div>
     );
-
-    function renderTime() {
-        if (constraint.step === "30min") {
-            return (
-                <div>
-                    <br/>
-                    <Grid container direction="row" justifyContent="center" alignItems="center">
-                        <Grid item className={classes.halfSize}>
-                            <KeyboardTimePicker
-                                label="Min Time"
-                                value={minMaxDate[0]}
-                                minDate={epochToDate(min)}
-                                maxDate={minMaxDate[1]}
-                                onChange={(e) => {
-                                    handleDateUpdate(e, true)
-                                }}
-                            />
-                        </Grid>
-                        <Grid item className={classes.halfSize}>
-                            <KeyboardTimePicker
-                                label="Max Time"
-                                value={minMaxDate[1]}
-                                minDate={minMaxDate[0]}
-                                maxDate={epochToDate(max)}
-                                onChange={(e) => {
-                                    handleDateUpdate(e, false)
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
-                    {renderErrorMessage()}
-                </div>
-            );
-        }
-    }
-
-    function renderErrorMessage() {
-        return <div style={errorMessage}>
-            <br />
-            <Alert severity="error">{errorMessageText}
-                <span>
-                    <IconButton onClick={() => { setErrorMessage(errorMessageDisplay[0]) }}>
-                        <HighlightOffIcon />
-                    </IconButton>
-                </span>
-            </Alert>
-        </div>
-    }
 }

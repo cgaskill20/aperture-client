@@ -56,97 +56,177 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
-import {componentIsRendering} from "../Sidebar";
-import Util from "../../library/apertureUtil"
+import {componentIsRendering} from "../../../Sidebar";
+import {
+    Switch,
+    FormGroup,
+    FormControlLabel,
+    Typography,
+    TextField,
+    Button,
+    ButtonGroup
+} from "@material-ui/core";
+import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
+import Grid from "@material-ui/core/Grid";
+import CustomAlert from "../../Utils/CustomAlert";
+import { useGlobalState } from "../../../global/GlobalState";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: '100%',
+    },
+    spaceOnTheLeft: {
+        marginLeft: theme.spacing(2),
     },
     title: {
-        textAlign: "center",
+        borderBottom: '2px solid #adadad',
+        marginBottom: theme.spacing(2),
+        width: "100%",
     },
-    nowrap: {
-        whiteSpace: "nowrap",
+    gridItem: {
+        width: "100%",
     },
 }));
 
-export default function ConstraintSlider({ constraint, querier }) {
+export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
     const classes = useStyles();
-    const min = constraint.range[0];
-    const max = constraint.range[1];
-    const step = constraint.step ? constraint.step : 1;
-    const [minMax, setMinMax] = useState([min, max]);
-    const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
-    const isCategoricalMappedToSlider = constraint.selectToRangeMap ? true : false;
-    const nonConstrained = minMax[0] === min && minMax[1] === max;
 
+    const [globalState, setGlobalState] = useGlobalState();
+    const [saveColor, setSaveColor] = useState(true);
+    const [saveViewport, setSaveViewport] = useState(false);
+    const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1);
+    const [name, setName] = useState("Saved Workspace...");
+    const [alertOverwriteOpen, setAlertOverwriteOpen] = useState(false);
+    const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
+    const validName = name.length !== 0;
 
-    useEffect(() => {
-        if (!isCategoricalMappedToSlider) {
-            querier.updateConstraint(constraint.name, minMaxCommited);
-        }
-    }, [minMaxCommited]);
-
-    useEffect(() => {
-        querier.constraintSetActive(constraint.name, true);
-        return () => {
-            querier.constraintSetActive(constraint.name, false);
-        }
-    }, []);
-
-    useEffect(() => {
-        if(constraint.forceUpdateFlag) {
-            constraint.forceUpdateFlag = false;
-            setMinMax(constraint.state)
-            setMinMaxCommited(constraint.state)
-        }
-    })
-
-    const buildSliderLabel = () => {
-        if (isCategoricalMappedToSlider) {
-            return <b>{Object.keys(constraint.selectToRangeMap)[Object.values(constraint.selectToRangeMap).indexOf(minMax[0])]} ➔ {Object.keys(constraint.selectToRangeMap)[Object.values(constraint.selectToRangeMap).indexOf(minMax[1])]}{nonConstrained ? ' (Includes All Values)' : ''}</b>
-        }
-        return <b>{minMax[0]} ➔ {minMax[1]}{constraint.plus && max === minMax[1] ? '+' : ''} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
+    const getWorkspace = () => {
+        return localStorage.getItem(`workspace${slotCurrentlySelected}`);
     }
 
-    const sliderStyle = {};
-    if(nonConstrained) {
-        sliderStyle.color = "#ADADAD"
+    const alertTimeout = () => {
+        setTimeout(function() {
+            setGlobalState({ generalAlertOpen: false });
+        }, 3000);
     }
 
-    if (componentIsRendering) { console.log("|ContraintSlider Rerending|") }
+    const saveWorkspace = () => {
+        if(!validName) {
+            return;
+        }
+        if(getWorkspace()) {
+            if(alertDeleteOpen) setAlertDeleteOpen(false);
+            setAlertOverwriteOpen(true);
+        }
+        else {
+            overwriteWorkspace();
+        }
+    }
+
+    const overwriteWorkspace = () => {
+        const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
+        localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace);
+        setModalOpen(false);
+        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Saved" });
+        alertTimeout();
+    }
+
+    const confirmDeleteWorkspace = () => {
+        if(alertOverwriteOpen) setAlertOverwriteOpen(false);
+        setAlertDeleteOpen(true);
+    }
+
+    const deleteWorkspace = () => {
+        localStorage.removeItem(`workspace${slotCurrentlySelected}`);
+        setModalOpen(false);
+        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Deleted" });
+        alertTimeout();
+    }
+
+    const renderSaveButton = () => {
+        if(alertOverwriteOpen) {
+            return (
+                <Button className={classes.gridItem} color="secondary" variant="contained" onClick={overwriteWorkspace}>
+                    Overwrite
+                </Button>
+            )
+        }
+        else {
+            return (
+                <Button className={classes.gridItem} variant="outlined" onClick={saveWorkspace}>
+                    Save
+                </Button>
+            )
+        }
+    }
+
+    const renderDeleteButton = () => {
+        if(alertDeleteOpen) {
+            return (
+                <Button className={classes.gridItem} variant="contained" color="secondary" disabled={!getWorkspace()}
+                        onClick={deleteWorkspace}>
+                    Delete
+                </Button>
+            )
+        }
+        else {
+            return (
+                <Button className={classes.gridItem} variant="outlined" disabled={!getWorkspace()}
+                        onClick={confirmDeleteWorkspace}>
+                    Delete
+                </Button>
+            )
+        }
+    }
+
+    if (componentIsRendering) { console.log("|Save Rerending|") }
     return (
-        <div className={classes.root} id={`constraint-div-${constraint.label}`}>
-            <Typography className={classes.title} id={`range-slider-${constraint.label}`} gutterBottom>
-                {constraint.label ?? Util.cleanUpString(constraint.name)} &nbsp;
-                <span className={classes.nowrap}>{buildSliderLabel()}</span>
-            </Typography>
-            <Slider
-                value={minMax}
-                onChange={(event, newValue) => setMinMax(newValue)}
-                onChangeCommitted={(event, newValue) => {
-                    if(isCategoricalMappedToSlider) {
-                        for(const [name, index] of Object.entries(constraint.selectToRangeMap)) {
-                            querier.updateConstraint(constraint.name, name, newValue[0] <= index && index <= newValue[1])
-                        }
-                        return;
-                    }
-                    setMinMaxCommited(newValue);
-                    constraint.state = newValue;
-                }}
-                aria-labelledby={`range-slider-${constraint.label}`}
-                min={min}
-                max={max}
-                step={step}
-                id={`${constraint.label}`}
-                name={`${constraint.label}`}
-                style={sliderStyle}
-            />
-        </div>
+        <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="flex-start"
+        >
+            <Grid item className={classes.gridItem}>
+                <Typography align="center" className={classes.title} variant="h5">Save Workspace</Typography>
+                <Typography>Save Options</Typography>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={saveColor} onChange={(e) => { setSaveColor(e.target.checked) }} />}
+                        label="Save Color Selections"
+                    />
+                </FormGroup>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={saveViewport} onChange={(e) => { setSaveViewport(e.target.checked) }} />}
+                        label="Save Current Viewport Bounds"
+                    />
+                </FormGroup>
+            </Grid>
+            <Grid item className={classes.gridItem}>
+                <SavedWorkspaceSlotSelection title="Select a Save Slot" slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
+            </Grid>
+            <Grid item className={classes.gridItem}>
+                <TextField
+                    className={classes.gridItem}
+                    error={!validName}
+                    placeholder={name}
+                    value={name}
+                    onChange={(e) => { setName(e.target.value) }}
+                    id="outlined-error-helper-text"
+                    label="Workspace Name"
+                />
+
+            </Grid>
+            <CustomAlert alertOpen={alertOverwriteOpen} setAlertOpen={setAlertOverwriteOpen} severity="error" text="Are you sure you want to overwrite this workspace?" />
+            <CustomAlert alertOpen={alertDeleteOpen} setAlertOpen={setAlertDeleteOpen} severity="error" text="Are you sure you want to delete this workspace?" />
+            <Grid item className={classes.gridItem}>
+                <ButtonGroup className={classes.gridItem}>
+                    {renderSaveButton()}
+                    {renderDeleteButton()}
+                </ButtonGroup>
+            </Grid>
+        </Grid>
     );
-}
+})
