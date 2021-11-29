@@ -6806,6 +6806,31 @@
         ]
     },
     {
+        "collection": "epa_aqi_pm25",
+        "icon": "science",
+        "linked": {
+            "collection": "epa_aqi_monitors",
+            "field": "monitor_id"
+        },
+        "temporal": "epoch_time",
+        "source": "https://aqs.epa.gov/aqsweb/documents/data_api.html",
+        "label": "EPA AQI Monitors PM2.5 - Local Conditions",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "1hr"
+            },
+            {
+                "name": "sample",
+                "label": "PM 2.5",
+                "unit": "Micrograms/cubic meter (LC)",
+                "temporal": true
+            }
+        ]
+    },
+    {
         "collection": "county_total_population",
         "level": "county",
         "color": {
