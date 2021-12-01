@@ -6841,5 +6841,66 @@
                 "name": "2010_total_population"
             }
         ]
+    },
+    {
+        "collection": "soils_statsgo",
+        "fieldMetadata":[
+            {
+                "name": "properties.AWC",
+                "label": "Available Water Capacity",
+                "unit": "inches"
+            },
+            {
+                "name": "properties.CLAY",
+                "label": "Clay Content",
+                "unit": "% of soil < 2mm in size"
+            },
+            {
+                "name": "properties.KFFACT",
+                "label": "Soil Erodibility F-Factor"
+            },
+            {
+                "name": "properties.OM",
+                "label": "Organic Matter Content",
+                "unit": "% by weight"
+            },
+            {
+                "name": "properties.PERM",
+                "label": "Permeability Rates",
+                "unit": "inches/hour"
+            },
+            {
+                "name": "properties.THICK",
+                "label": "Total Thickness of all Sampled Soil Layers",
+                "unit": "inches"
+            },
+            {
+                "name": "properties.HYGRP",
+                "label": "Soil Index variables (1=well drained to 4=poorly drained)"
+            },
+            {
+                "name": "properties.DRAIN",
+                "label": "Drainage Rates (1=well drained to 7=poorly drained)"
+            },
+            {
+                "name": "properties.SLOPE",
+                "label": "Average Slope",
+                "unit": "%"
+            },
+            {
+                "name": "properties.LL",
+                "label": "Liquid Limit",
+                "unit": "% moisture by weight"
+            },
+            {
+                "name": "properties.IFHYDRIC",
+                "label": "Hydric Soil Indicator (1 if hydric)",
+                "unit": "inches/hour"
+            },
+            {
+                "name": "properties.AFLDFREQ",
+                "label": "annual flood frequency (1 = frequent (>50% chance) 2 = occasional (5-50% chance), 3 = rare (<5% chance))"
+            }
+        ]
     }
 ]
