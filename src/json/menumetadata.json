@@ -6931,6 +6931,31 @@
         ]
     },
     {
+        "collection": "epa_aqi_nitrogen",
+        "icon": "science",
+        "linked": {
+            "collection": "epa_aqi_monitors",
+            "field": "monitor_id"
+        },
+        "temporal": "epoch_time",
+        "source": "https://aqs.epa.gov/aqsweb/documents/data_api.html",
+        "label": "EPA AQI Monitors Nitrogen dioxide (NO2)",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "1hr"
+            },
+            {
+                "name": "sample",
+                "label": "Nitrogen dioxide (NO2)",
+                "unit": "Micrograms/cubic meter (LC)",
+                "temporal": true
+            }
+        ]
+    },
+    {
         "collection": "county_total_population",
         "level": "county",
         "color": {
