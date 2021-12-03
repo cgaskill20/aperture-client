@@ -6831,6 +6831,131 @@
         ]
     },
     {
+        "collection": "epa_aqi_lead_tsp",
+        "icon": "science",
+        "linked": {
+            "collection": "epa_aqi_monitors",
+            "field": "monitor_id"
+        },
+        "temporal": "epoch_time",
+        "source": "https://aqs.epa.gov/aqsweb/documents/data_api.html",
+        "label": "EPA AQI Monitors Lead (TSP) LC",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "1hr"
+            },
+            {
+                "name": "sample",
+                "label": "Lead (TSP) LC",
+                "unit": "Micrograms/cubic meter (LC)",
+                "temporal": true
+            }
+        ]
+    },
+    {
+        "collection": "epa_aqi_lead_pm10",
+        "icon": "science",
+        "linked": {
+            "collection": "epa_aqi_monitors",
+            "field": "monitor_id"
+        },
+        "temporal": "epoch_time",
+        "source": "https://aqs.epa.gov/aqsweb/documents/data_api.html",
+        "label": "EPA AQI Monitors Lead PM10 LC FRM/FEM",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "1hr"
+            },
+            {
+                "name": "sample",
+                "label": "Lead PM10 LC FRM/FEM",
+                "unit": "Micrograms/cubic meter (LC)",
+                "temporal": true
+            }
+        ]
+    },
+    {
+        "collection": "epa_aqi_pm10_total",
+        "icon": "science",
+        "linked": {
+            "collection": "epa_aqi_monitors",
+            "field": "monitor_id"
+        },
+        "temporal": "epoch_time",
+        "source": "https://aqs.epa.gov/aqsweb/documents/data_api.html",
+        "label": "EPA AQI Monitors PM10 Total 0-10um STP",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "1hr"
+            },
+            {
+                "name": "sample",
+                "label": "PM10 Total 0-10um STP",
+                "unit": "Micrograms/cubic meter (LC)",
+                "temporal": true
+            }
+        ]
+    },
+    {
+        "collection": "epa_aqi_ozone",
+        "icon": "science",
+        "linked": {
+            "collection": "epa_aqi_monitors",
+            "field": "monitor_id"
+        },
+        "temporal": "epoch_time",
+        "source": "https://aqs.epa.gov/aqsweb/documents/data_api.html",
+        "label": "EPA AQI Monitors Ozone",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "1hr"
+            },
+            {
+                "name": "sample",
+                "label": "Ozone",
+                "unit": "Micrograms/cubic meter (LC)",
+                "temporal": true
+            }
+        ]
+    },
+    {
+        "collection": "epa_aqi_nitrogen",
+        "icon": "science",
+        "linked": {
+            "collection": "epa_aqi_monitors",
+            "field": "monitor_id"
+        },
+        "temporal": "epoch_time",
+        "source": "https://aqs.epa.gov/aqsweb/documents/data_api.html",
+        "label": "EPA AQI Monitors Nitrogen Dioxide (NO2)",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "1hr"
+            },
+            {
+                "name": "sample",
+                "label": "Nitrogen dioxide (NO2)",
+                "unit": "Micrograms/cubic meter (LC)",
+                "temporal": true
+            }
+        ]
+    },
+    {
         "collection": "county_total_population",
         "level": "county",
         "color": {
