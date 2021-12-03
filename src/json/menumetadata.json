@@ -6843,7 +6843,10 @@
         ]
     },
     {
-        "collection": "soils_statsgo",
+        "collection": "soils_statsgo_clean",
+        "label": "Soils STATSGO",
+        "info": "The Digital General Soil Map of the United States or STATSGO2 is a broad-based inventory of soils and non-soil areas that occur in a repeatable pattern on the landscape and that can be cartographically shown. The dataset was created by generalizing more detailed soil survey maps. Where more detailed soil survey maps were not available, data on geology, topography, vegetation, and climate were assembled and related to Land Remote Sensing Satellite (LANDSAT) images. Soils of similar areas were studied, and the probable classification and extent of the soils were determined.",
+        "source": "https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/geo/?cid=nrcs142p2_053629",
         "fieldMetadata":[
             {
                 "name": "properties.AWC",
