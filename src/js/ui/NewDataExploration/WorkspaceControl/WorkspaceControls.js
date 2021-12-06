@@ -56,52 +56,102 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useState, useEffect} from 'react';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import {componentIsRendering} from "../Sidebar";
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import {Button, ButtonGroup, Grid, Paper, Switch, Icon, Fab} from "@material-ui/core";
+import SaveIcon from '@material-ui/icons/Save';
+import FolderOpenIcon from '@material-ui/icons/FolderOpen';
+import ShareIcon from '@material-ui/icons/Share';
+import WorkspaceSearchbar from "./WorkspaceSearchbar";
+import {componentIsRendering} from "../../Sidebar";
+import Ven from "../../../../../images/ven.svg"
+import VenFilled from "../../../../../images/venFilled.svg"
+import SaveAndLoadAndShare from './SaveLoadShare/SaveAndLoadAndShare';
+import EqualizerIcon from "@material-ui/icons/Equalizer";
+import CloseIcon from "@material-ui/icons/Close";
+import { useGlobalState } from "../../global/GlobalState";
 
-export default function ConstraintCheckbox({constraint, querier, option}) {
-    const [check, setCheck] = useState(true);
 
-    if(componentIsRendering) {console.log("|ContraintCheckbox Rerending|")}
-    useEffect(() => {
-        querier.updateConstraint(constraint.name, option, check);
-    }, []);
-    
-    useEffect(() => {
-        if(constraint.forceUpdateFlag && typeof constraint.forceUpdateFlag === 'number') {
-            constraint.forceUpdateFlag--;
-            const newCheck = constraint.state?.[option] ?? true;
-            setCheck(newCheck)
-            querier.updateConstraint(constraint.name, option, newCheck);
-        }
-    })
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+        padding: theme.spacing(2),
+        margin: theme.spacing(1),
+    },
+    buttons: {
+        marginBottom: theme.spacing(2),
+    },
+    customIcon: {
+        width: "18px",
+        height: "18px",
+        transform: "translate(0, -10px)"
+    },
+}));
 
+export default React.memo(function WorkspaceControls(props) {
+    const [globalState, setGlobalState] = useGlobalState();
+    const classes = useStyles();
+    const venIcon = <Icon>
+        <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
+    </Icon>
+    const [saveAndLoadAndShareModalOpen, setSaveAndLoadAndShareModalOpen] = useState(false)
+    const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState(null)
+
+    function handleDrawerClose() {
+        setGlobalState({sidebarOpen: false})
+    }
+
+    function toggleCharting() {
+        setGlobalState({ chartingOpen: !globalState.chartingOpen });
+    }
+
+    if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
     return (
-        <FormGroup id={`constraint-formGroup-${option}`}>
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={check}
-                        onChange={() => { 
-                            const newCheck = !check;
-                            setCheck(newCheck)
-                            if(!constraint.state) {
-                                constraint.state = {};
-                            }
-                            constraint.state[option] = newCheck;
-                            
-                            querier.updateConstraint(constraint.name, option, newCheck);
-                        }}
-                        id={`${option}`}
-                        name={`${option}`}
-                        color="primary"
-                    />
-                }
-                label={option}
+        <>
+            <Paper className={classes.root} elevation={3}>
+                <Grid className={classes.buttons} container direction="row" justifyContent="space-between" alignItems="center">
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("save");
+                        }}>Save</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("load");
+                        }}>Load</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("share");
+                        }}>Share</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={venIcon} onClick={() => {
+                            props.setIntersect(!props.intersect)
+                        }}>
+                            {props.intersect ? "Intersections: on" : "Intersections: off"}
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => toggleCharting()}>Graph</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<CloseIcon/>} onClick={handleDrawerClose}>Close</Button>
+                    </Grid>
+                </Grid>
+                <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
+                    workspace={props.workspace} setWorkspace={props.setWorkspace} />
+            </Paper>
+            <SaveAndLoadAndShare
+                modalOpen={saveAndLoadAndShareModalOpen}
+                setModalOpen={setSaveAndLoadAndShareModalOpen}
+                mode={saveAndLoadAndShareMode}
+                serializeWorkspace={props.serializeWorkspace}
+                deSerializeWorkspace={props.deSerializeWorkspace}
             />
-        </FormGroup>
-    );
-}
+        </>
+    )
+});

@@ -85,7 +85,9 @@ export default function ChartGlobalControls(props) {
         ["Scatterplot", {type: ChartingType.SCATTERPLOT}],
         ["COVID-19", {type: ChartingType.LINE}],
         ["Boxplot", {type: ChartingType.BOXPLOT}],
-        ["Correlogram", {type: ChartingType.CORRELOGRAM}]];
+        ["Correlogram", {type: ChartingType.CORRELOGRAM}],
+        ["Radar", {type: ChartingType.RADAR}],
+    ];
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);

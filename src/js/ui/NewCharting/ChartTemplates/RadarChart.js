@@ -56,177 +56,250 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import {componentIsRendering} from "../Sidebar";
-import {
-    Switch,
-    FormGroup,
-    FormControlLabel,
-    Typography,
-    TextField,
-    Button,
-    ButtonGroup
-} from "@material-ui/core";
-import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
-import Grid from "@material-ui/core/Grid";
-import CustomAlert from "./CustomAlert";
-import { useGlobalState } from "../global/GlobalState";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-    },
-    spaceOnTheLeft: {
-        marginLeft: theme.spacing(2),
-    },
-    title: {
-        borderBottom: '2px solid #adadad',
-        marginBottom: theme.spacing(2),
-        width: "100%",
-    },
-    gridItem: {
-        width: "100%",
-    },
-}));
+import React, { useEffect, useState, useRef } from 'react';
+import * as d3 from '../../../third-party/d3.min.js';
+import Feature from '../../../library/charting/feature.js';
+import { useGlobalState } from '../../global/GlobalState';
 
-export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
-    const classes = useStyles();
+const drawOpts = {
+    numRings: 5,
+    ringOffset: 30,
+    sizeOffset: { width: 100, height: 30 },
+    fgColor: "#111",
+    ringColor: "#aaa",
+    labelColor: "#999",
+    bgColor: "#fff",
+    popupSize: { width: 300, height: 50 },
+    font: '10pt Arial',
+};
 
-    const [globalState, setGlobalState] = useGlobalState();
-    const [saveColor, setSaveColor] = useState(true);
-    const [saveViewport, setSaveViewport] = useState(false);
-    const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1);
-    const [name, setName] = useState("Saved Workspace...");
-    const [alertOverwriteOpen, setAlertOverwriteOpen] = useState(false);
-    const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
-    const validName = name.length !== 0;
+export default function RadarChart(props) {
+    let [globalState] = useGlobalState();
 
-    const getWorkspace = () => {
-        return localStorage.getItem(`workspace${slotCurrentlySelected}`);
-    }
+    let canvasRef = useRef();
+    let datasetSlices = useRef([]);
+    let ctxr = useRef();
+    let dimensions = useRef();
+    let mouseInfo = useRef({
+        inChart: false,
+    });
 
-    const alertTimeout = () => {
-        setTimeout(function() {
-            setGlobalState({ generalAlertOpen: false });
-        }, 3000);
-    }
+    let prepareData = data => {
+        if (!data?.map_features) {
+            return [];
+        }
 
-    const saveWorkspace = () => {
-        if(!validName) {
+        return Object.entries(data.map_features)
+            .filter(kv => Feature.getCollection(kv[0]) == props.dataset);
+    };
+
+    let drawRings = (ctx, dimensions) => {
+        ctx.strokeStyle = drawOpts.ringColor;
+        for (let i = 0; i < drawOpts.numRings; i++) {
+            ctx.beginPath();
+            ctx.arc(dimensions.center.x, 
+                dimensions.center.y, 
+                d3.scaleLinear()
+                    .domain([0, drawOpts.numRings - 1])
+                    .range([drawOpts.ringOffset, dimensions.height / 2 - drawOpts.ringOffset])
+                    (i), 
+                0, 
+                Math.PI * 2
+            );
+            ctx.stroke();
+        }
+    };
+
+    let drawSlices = (ctx, slices, dimensions) => {
+        ctx.save();
+
+        let radStep = d3.scaleLinear()
+            .domain([0, slices.length])
+            .range([0, Math.PI * 2])
+            (1);
+
+        ctx.translate(dimensions.center.x, dimensions.center.y);
+
+        for (let slice of slices) {
+            let range = d3.scaleLinear()
+                .domain([slice.min, slice.max])
+                .range([0, dimensions.height / 2 - drawOpts.ringOffset]);
+
+            ctx.rotate(radStep / 2);
+
+            ctx.strokeStyle = drawOpts.fgColor;
+            ctx.beginPath();
+            ctx.arc(0, 
+                0, 
+                range(d3.min(slice.data, d => d.data)), 
+                Math.PI / 2 - radStep / 2, 
+                Math.PI / 2 + radStep / 2
+            );
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(0, 
+                0, 
+                range(d3.max(slice.data, d => d.data)), 
+                Math.PI / 2 - radStep / 2, 
+                Math.PI / 2 + radStep / 2
+            );
+            ctx.stroke();
+            
+            ctx.strokeStyle = drawOpts.ringColor;
+            ctx.beginPath();
+            ctx.moveTo(0, range(d3.min(slice.data, d => d.data)));
+            ctx.lineTo(0, range(d3.max(slice.data, d => d.data)));
+            ctx.stroke();
+
+            ctx.font = drawOpts.font;
+            ctx.textAlign = 'center';
+            ctx.fillStyle = drawOpts.labelColor;
+            for (let i = 2; i < drawOpts.numRings; i++) {
+                let value = d3.scaleLinear()
+                    .domain([0, drawOpts.numRings - 1])
+                    .range([slice.min, slice.max])
+                    (i);
+                let offset = d3.scaleLinear()
+                    .domain([0, drawOpts.numRings - 1])
+                    .range([drawOpts.ringOffset, dimensions.height / 2 - drawOpts.ringOffset])
+                    (i);
+                ctx.fillText(`${value.toFixed(2)}`, 0, offset - 5);
+            }
+
+            ctx.beginPath();
+            ctx.rotate(radStep / 2);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, dimensions.height / 2);
+            ctx.stroke();
+
+        }
+        ctx.restore();
+    };
+
+    let drawPopup = (ctx, mouse, dimensions) => {
+        if (mouse.inChart && mouse.slice) {
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(mouse.pos.x, mouse.pos.y - 50, 300, 50);
+
+            ctx.fillStyle = "#111";
+            ctx.fillText(`${mouse.slice.name} ${mouse.slice.unit ? `(${mouse.slice.unit})` : ''}`, 
+                mouse.pos.x + 10, 
+                mouse.pos.y - 50 + 12,
+            );
+            ctx.fillText(`Current min: ${d3.min(mouse.slice.data, d => d.data).toFixed(2)}`, 
+                mouse.pos.x + 10, 
+                mouse.pos.y - 50 + (12 * 2),
+            );
+            ctx.fillText(`Current max: ${d3.max(mouse.slice.data, d => d.data).toFixed(2)}`, 
+                mouse.pos.x + 10, 
+                mouse.pos.y - 50 + (12 * 3),
+            );
+        }
+    };
+
+    let rerender = () => {
+        if (!props.data?.map_features || !ctxr || !dimensions) {
             return;
         }
-        if(getWorkspace()) {
-            if(alertDeleteOpen) setAlertDeleteOpen(false);
-            setAlertOverwriteOpen(true);
-        }
-        else {
-            overwriteWorkspace();
-        }
-    }
 
-    const overwriteWorkspace = () => {
-        const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
-        localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace);
-        setModalOpen(false);
-        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Saved" });
-        alertTimeout();
-    }
+        let ctx = ctxr.current;
 
-    const confirmDeleteWorkspace = () => {
-        if(alertOverwriteOpen) setAlertOverwriteOpen(false);
-        setAlertDeleteOpen(true);
-    }
+        ctx.clearRect(0, 0, dimensions.current.width, dimensions.current.height);
+        drawRings(ctx, dimensions.current);
 
-    const deleteWorkspace = () => {
-        localStorage.removeItem(`workspace${slotCurrentlySelected}`);
-        setModalOpen(false);
-        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Deleted" });
-        alertTimeout();
-    }
-
-    const renderSaveButton = () => {
-        if(alertOverwriteOpen) {
-            return (
-                <Button className={classes.gridItem} color="secondary" variant="contained" onClick={overwriteWorkspace}>
-                    Overwrite
-                </Button>
-            )
+        if (datasetSlices.current.length < 2) {
+            return;
         }
-        else {
-            return (
-                <Button className={classes.gridItem} variant="outlined" onClick={saveWorkspace}>
-                    Save
-                </Button>
-            )
-        }
-    }
+        let slices = datasetSlices.current;
+        drawSlices(ctx, slices, dimensions.current);
 
-    const renderDeleteButton = () => {
-        if(alertDeleteOpen) {
-            return (
-                <Button className={classes.gridItem} variant="contained" color="secondary" disabled={!getWorkspace()}
-                        onClick={deleteWorkspace}>
-                    Delete
-                </Button>
-            )
-        }
-        else {
-            return (
-                <Button className={classes.gridItem} variant="outlined" disabled={!getWorkspace()}
-                        onClick={confirmDeleteWorkspace}>
-                    Delete
-                </Button>
-            )
-        }
-    }
+        drawPopup(ctx, mouseInfo.current, dimensions.current);
+    };
 
-    if (componentIsRendering) { console.log("|Save Rerending|") }
+    let updateSlices = () => {
+        let data = prepareData(props.data);
+        let metadata = Object.values(globalState.menuMetadata)
+                .find(m => m.collection === props.dataset);
+        datasetSlices.current = data.map((v, i) => {
+            let constraint = metadata.constraints[Feature.getName(v[0])];
+            return {
+                data: v[1],
+                max: constraint.range[1],
+                min: constraint.range[0],
+                unit: constraint.unit,
+                name: Feature.getFriendlyName(v[0]),
+                index: i,
+            };
+        }).filter(s => s.data.length > 0);
+    };
+
+    useEffect(() => { 
+        let ctx = canvasRef.current.getContext('2d');
+        ctxr.current = ctx;
+        
+        let canvas = d3.select(canvasRef.current);
+
+        canvas.on('mousemove', event => {
+            if (!canvasRef.current || !ctx || datasetSlices.current.length == 0) {
+                return;
+            }
+
+            mouseInfo.current.inChart = true;
+
+            let rawMouse = d3.pointer(event, canvasRef.current);
+            let mouse = { 
+                x: rawMouse[0] - dimensions.current.center.x, 
+                y: rawMouse[1] - dimensions.current.center.y, 
+            };
+
+            mouseInfo.current.pos = { x: rawMouse[0], y: rawMouse[1] };
+
+            let radius = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y);
+            let theta = Math.atan2(mouse.y / radius, mouse.x / radius);
+            let thetaOffset = Math.PI / 2;
+            theta += thetaOffset;
+            if (theta > Math.PI) { 
+                theta -= Math.PI * 2;
+            }
+
+            let slice = d3.scaleQuantize()
+                .domain([-Math.PI, Math.PI])
+                .range(datasetSlices.current)
+                (theta);
+
+            mouseInfo.current.slice = slice;
+
+            rerender();
+        });
+
+        canvas.on('mouseleave', event => {
+            mouseInfo.current.inChart = false;
+        });
+
+    }, []);
+
+    useEffect(() => {
+        dimensions.current = {};
+        dimensions.current.width = props.size.width - drawOpts.sizeOffset.width;
+        dimensions.current.height = props.size.height - drawOpts.sizeOffset.height;
+        dimensions.current.center = { 
+            x: dimensions.current.width / 2,
+            y: dimensions.current.height / 2,
+        };
+        rerender();
+        updateSlices();
+    });
+
     return (
-        <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="flex-start"
-        >
-            <Grid item className={classes.gridItem}>
-                <Typography align="center" className={classes.title} variant="h5">Save Workspace</Typography>
-                <Typography>Save Options</Typography>
-                <FormGroup row>
-                    <FormControlLabel
-                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={saveColor} onChange={(e) => { setSaveColor(e.target.checked) }} />}
-                        label="Save Color Selections"
-                    />
-                </FormGroup>
-                <FormGroup row>
-                    <FormControlLabel
-                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={saveViewport} onChange={(e) => { setSaveViewport(e.target.checked) }} />}
-                        label="Save Current Viewport Bounds"
-                    />
-                </FormGroup>
-            </Grid>
-            <Grid item className={classes.gridItem}>
-                <SavedWorkspaceSlotSelection title="Select a Save Slot" slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
-            </Grid>
-            <Grid item className={classes.gridItem}>
-                <TextField
-                    className={classes.gridItem}
-                    error={!validName}
-                    placeholder={name}
-                    value={name}
-                    onChange={(e) => { setName(e.target.value) }}
-                    id="outlined-error-helper-text"
-                    label="Workspace Name"
-                />
-
-            </Grid>
-            <CustomAlert alertOpen={alertOverwriteOpen} setAlertOpen={setAlertOverwriteOpen} severity="error" text="Are you sure you want to overwrite this workspace?" />
-            <CustomAlert alertOpen={alertDeleteOpen} setAlertOpen={setAlertDeleteOpen} severity="error" text="Are you sure you want to delete this workspace?" />
-            <Grid item className={classes.gridItem}>
-                <ButtonGroup className={classes.gridItem}>
-                    {renderSaveButton()}
-                    {renderDeleteButton()}
-                </ButtonGroup>
-            </Grid>
-        </Grid>
+        <div>
+            <canvas 
+                width={props.size.width - drawOpts.sizeOffset.width} 
+                height={props.size.height - drawOpts.sizeOffset.height}
+                ref={canvasRef}
+            >
+            </canvas>
+        </div>
     );
-})
+}

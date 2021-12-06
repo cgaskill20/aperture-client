@@ -56,163 +56,63 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, {useState, useEffect} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {Grid, Paper, Switch} from "@material-ui/core";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import LayerControls from "./LayerControls";
-import {componentIsRendering} from "../Sidebar";
-import AutoQuery from '../../library/autoQuery';
-import IndividualConstraint from "./IndividualConstraint"
+import React from 'react';
+import {componentIsRendering} from "../../../Sidebar";
+import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography } from "@material-ui/core";
+import { Folder, FolderOpen } from '@material-ui/icons';
+import LZString from 'lz-string';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        margin: theme.spacing(1),
-    },
-}));
+export default React.memo(function SavedWorkspaceSlotSelection({ title, slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots }) {
 
-function extractLayerConstraints(layer) {
-    let defaultLayerConstraints = [];
-    let allLayerConstraints = [];
-    for(const constraint in layer.constraints) {
-        defaultLayerConstraints.push(!layer.constraints[constraint].hide);
-        layer.constraints[constraint].name = constraint;
-        allLayerConstraints.push(layer.constraints[constraint]);
-    }
-    return [defaultLayerConstraints, allLayerConstraints];
-}
-
-function createConstraints(activeLayerConstraints, allLayerConstraints, classes, querier) {
-    let constraints = [];
-    activeLayerConstraints.forEach((constraint, index) => {
-        if(constraint) {
-            constraints.push(
-                <div key={index}>
-                    <Paper elevation={3}>
-                        <IndividualConstraint constraint={allLayerConstraints[index]} classes={classes} querier={querier} />
-                    </Paper>
-                </div>
-            );
-        }
-    });
-    return constraints;
-}
-
-export default React.memo(function Layer(props) {
-    const classes = useStyles();
-    const [check, setCheck] = useState(false);
-    const [layerExpanded, setLayerExpanded] = useState(false);
-
-    const [defaultLayerConstraints, allLayerConstraints] = extractLayerConstraints(props.layer);
-    const [activeLayerConstraints, setActiveLayerConstraints] = useState(defaultLayerConstraints);
-
-    useEffect(() => {
-        if(!props.layer.forceUpdateFlag) {
-            props.layer.constraintState = allLayerConstraints.filter((e,index) => activeLayerConstraints[index]).map(e => e.name);
-        }
-    }, [activeLayerConstraints]);
-
-    useEffect(() => {
-        if(!props.layer.forceUpdateFlag) {
-            props.layer.expandedState = layerExpanded;
-        }
-    }, [layerExpanded])
-
-
-    const [ querier ] = useState(new AutoQuery(props.layer));
-
-    useEffect(() => {
-        const onColorFieldChange = () => {
-            props.layer.colorField = querier.colorField.name;
-        }
-        querier.subscribeToColorFieldChange(onColorFieldChange)
-        return () => {
-            querier.subscribeToColorFieldChange(onColorFieldChange, true)
-            querier.onRemove();
-        }
-    }, [querier]);
-
-    useEffect(() => {
-        if(props.layer.forceUpdateFlag) {
-            props.layer.forceUpdateFlag = false;
-            const constraintStateSet = new Set(props.layer.constraintState)
-            setActiveLayerConstraints(allLayerConstraints.map(layerConstraint => constraintStateSet.has(layerConstraint.name)))
-            setLayerExpanded(props.layer.expandedState)
-            if(check !== props.layer.on) {
-                setCheck(props.layer.on)
-                updateQuerierOnCheckChange(props.layer.on)
-            }
-
-            if(props.layer.colorField){
-                querier.changeColorCodeField(props.layer.colorField);
-            }
-        }
-    })
-
-    const updateQuerierOnCheckChange = (newCheck) => {
-        props.layer.state = newCheck;
-        newCheck && querier.onAdd();
-        newCheck || querier.onRemove();
+    const getWorkspace = (index) => {
+        return localStorage.getItem(`workspace${index}`)
     }
 
-    const constraints = createConstraints(activeLayerConstraints, allLayerConstraints, classes, querier);
-    if(componentIsRendering) console.log("|Layer|");
+    if (componentIsRendering) { console.log("|SavedWorkspaceSlotSelection Rerending|") }
     return (
-        <div className={classes.root}>
-            <Paper elevation={3}>
-                <Accordion
-                    color="primary"
-                    expanded={layerExpanded}
-                >
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon color="primary" />}
-                        onClick={() => setLayerExpanded(!layerExpanded)}
-                    >
-                        <FormControlLabel
-                            aria-label="CheckLayer"
-                            onFocus={(event) => event.stopPropagation()}
-                            onClick={(event) => {
-                                event.stopPropagation()
-                                setCheck(!check)
-                                updateQuerierOnCheckChange(!check)
-                            }}
-                            control={
-                                <Switch
+        <>
+            <Typography>{title}</Typography>
+            <List dense>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((i) => {
+                    if (!onlyShowFullSlots) {
+                        return true;
+                    }
+                    return getWorkspace(i);
+                }).map((i) => {
+                    const workspace = getWorkspace(i);
+                    let workspaceName = workspace ? JSON.parse(LZString.decompressFromEncodedURIComponent(workspace))?.name : null;
+                    if (workspaceName) {
+                        const longWordRegex = /\S{29,}/g;
+                        const longWordMatches = [...(workspaceName.matchAll(longWordRegex) ?? [])]
+                        for (const longWordMatch of longWordMatches) {
+                            workspaceName = workspaceName.replace(longWordMatch[0], `${longWordMatch[0].substring(0, 26)}...`)
+                        }
+                    }
+                    //workspaceName?.length > 32 && (() => { workspaceName = workspaceName.substring(0,29) + '...' })()
+                    const checked = slotCurrentlySelected === i
+                    return (
+                        <ListItem key={i} style={{ backgroundColor: checked ? "#d1d1d1" : "#fff" }}>
+                            <ListItemIcon>
+                                {workspace ? <Folder /> : <FolderOpen />}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={workspaceName ?? "Empty Slot"}
+                            />
+                            <ListItemSecondaryAction>
+                                <Radio
                                     color="primary"
-                                    checked={check}
-                                />
-                            }
-                            label={props.layerTitles[props.layerIndex]}
-                        />
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Grid container direction="column">
-                            <Grid item>
-                                <LayerControls layer={props.layer} graphableLayers={props.graphableLayers}
-                                               allLayerConstraints={allLayerConstraints} defaultLayerConstraints={defaultLayerConstraints}
-                                               activeLayerConstraints={activeLayerConstraints} setActiveLayerConstraints={setActiveLayerConstraints}
-                                               layerIndex={props.layerIndex} />
-                            </Grid>
-                            {constraints}
-                        </Grid>
-                    </AccordionDetails>
-                </Accordion>
-            </Paper>
-        </div>
+                                    name="workspaceSelectionRadio"
+                                    checked={checked}
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setSlotCurrentlySelected(i)
+                                        }
+                                    }} />
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                    )
+                })}
+            </List >
+        </>
     );
-}, (prevProps, nextProps) => {
-    if(nextProps.layer.forceUpdateFlag) {
-        return false;
-    }
-    for(const key of Object.keys(prevProps)) {
-        if(prevProps[key] !== nextProps[key]) {
-            return false;
-        }
-    }
-    return true;
-});
+})

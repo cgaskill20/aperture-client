@@ -57,54 +57,80 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import {componentIsRendering} from "../Sidebar";
-import Modal from "@material-ui/core/Modal";
-import Save from "./Save";
-import Load from "./Load";
-import Share from "./Share";
-import {Paper} from "@material-ui/core";
+import {Button, Paper, Typography} from "@material-ui/core";
+import RotateLeftIcon from '@material-ui/icons/RotateLeft';
+import EqualizerIcon from "@material-ui/icons/Equalizer";
+import TuneIcon from '@material-ui/icons/Tune';
+import LinkIcon from '@material-ui/icons/Link';
+import AdvancedConstraints from "./Constraints/AdvancedConstraints";
+import {componentIsRendering} from "../../Sidebar";
+import {isGraphable} from "../Utils/Helpers";
+import {makeStyles} from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
-    paper: {
-        maxHeight: "95vh",
-        overflowY: "scroll",
-        top: '2.5vh',
-        left: '40%',
-        position: 'absolute',
-        width: 400,
-        backgroundColor: theme.palette.background.paper,
+    root: {
         padding: theme.spacing(2),
-    }
+    },
 }));
 
-export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen, serializeWorkspace, deSerializeWorkspace }) {
-    const classes = useStyles();
+function graphIcon(layer, graphableLayers) {
+    if(isGraphable(layer, graphableLayers)) {
+        return <Button startIcon={<EqualizerIcon />}>
+            Graph Me
+        </Button>
+    }
+    return;
+}
 
-    if (componentIsRendering) { console.log("|SaveAndLoad Rerending|") }
+function getLayerText(layerInfo) {
+    if(layerInfo) {
+        return (
+            <Grid item>
+                <Typography>{layerInfo}</Typography>
+                <br/>
+            </Grid>
+        )
+    }
+}
+
+function sourceIcon(layerInfo) {
+    if(layerInfo.source){
+        return <Button variant="outlined" startIcon={<LinkIcon />} onClick={() => window.open(layerInfo.source, "_blank")}>
+            Source
+        </Button>
+    }
+}
+
+export default React.memo(function LayerControls(props) {
+    const classes = useStyles();
+    if(componentIsRendering) {console.log("|LayerControls Rerending|")}
     return (
-        <Modal
-            open={modalOpen}
-            onClose={() => { setModalOpen(false) }}
-        >
-            <Paper className={classes.paper}>
-                {
-                    (() => {
-                        if (mode === "save") {
-                            return <Save serializeWorkspace={serializeWorkspace} setModalOpen={setModalOpen}/>
-                        }
-                        else if (mode === "load") {
-                            return <Load deSerializeWorkspace={deSerializeWorkspace} setModalOpen={setModalOpen}></Load>
-                        }
-                        else if (mode === "share") {
-                            return <Share serializeWorkspace={serializeWorkspace} setModalOpen={setModalOpen} />
-                        }
-                        else {
-                            return <div>Error: Invalid mode {mode}</div>
-                        }
-                    })()
-                }
-            </Paper>
-        </Modal>
-    );
-})
+        <Paper elevation={3} className={classes.root}>
+            <Grid
+                container
+                direction="row"
+                justifyContent="space-around"
+                alignItems="center"
+            >
+                {getLayerText(props.layer.info)}
+                <Grid item>
+                    <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
+                                         activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
+                    {/* <Button startIcon={<RotateLeftIcon />}>
+                        Reset Constraints
+                    </Button> */}
+                </Grid>
+                <Grid item>
+                    <Button variant="outlined" startIcon={<TuneIcon />} onClick={() => {
+                        props.setActiveLayerConstraints(props.defaultLayerConstraints);
+                    }}>
+                        Default Constraints
+                    </Button>
+                </Grid>
+                    {/* {graphIcon(props.layer, props.graphableLayers)} */}
+                    {sourceIcon(props.layer)}
+            </Grid>
+        </Paper>
+    )
+});

@@ -91,6 +91,7 @@ import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";
 // import DefensiveOptimization from "./src/js/ui/DefensiveOptimization";
 import Root from "./src/js/ui/Root";
+import getOverwrite from "./src/js/static/menuOverwrite";
 
 //idek what to do with theses files, things break if I try to make them import specific things
 import "./src/js/third-party/leaflet.markercluster.js";
@@ -181,40 +182,7 @@ globalThis.loaders = [
 window.backgroundTract = backgroundTract;
 window.backgroundCounty = backgroundCounty;
 
-const overwrite = { //leaving this commented cause it explains the schema really well 
-    // "covid_county": {
-    //     "group": "Tract, County, & State Data",
-    //     "subGroup": "County Level",
-    //     "constraints": {
-    //         date_range: {
-    //             "type": "slider",
-    //             "label": "Date Range",
-    //             "range": [1580169600000, 1580169600000 + 1000 * 60 * 60 * 24 * 266],
-    //             "default": [1580169600000, 1580169600000 + 1000 * 60 * 60 * 24 * 266],
-    //             "step": 1000 * 60 * 60 * 24,
-    //             "isDate": true
-    //         }
-    //     },
-    //     "onConstraintChange": function (layer, constraintName, value) {
-    //         console.log(layer + "-" + constraintName + "-");
-    //         COVID.dateStart = Number(value[0]);
-    //         COVID.dateEnd = Number(value[1]);
-    //         COVID.changeFlag = true;
-    //         COVID.makeQuery(map);
-    //     },
-    //     "onAdd": function () {
-    //         COVID.allowRender = true;
-    //     },
-    //     "onRemove": function () {
-    //         COVID.allowRender = false;
-    //         COVID.clear();
-    //     },
-    //     "onUpdate": function () {
-    //         COVID.makeQuery(map);
-    //     },
-    //     "noAutoQuery": true
-    // },
-}
+const overwrite = getOverwrite();
 
 window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplorationGroup, overwrite, {
     queryAlertText: document.getElementById('queryInfoText'),
@@ -224,9 +192,8 @@ window.renderInfrastructure = new RenderInfrastructure(map, markers, dataExplora
 });
 window.chartSystem = new ChartSystem(map, "src/json/graphPriority.json", window.renderInfrastructure);
 
-
 const uiRoot = document.getElementById("ui-root");
-ReactDOM.render((<Root map={map}/>), uiRoot);
+ReactDOM.render((<Root map={map} overwrite={overwrite}/>), uiRoot);
 
 // const modelContainer = document.getElementById("model-container");
 // ReactDOM.render((<ModelMenu/>), modelContainer);

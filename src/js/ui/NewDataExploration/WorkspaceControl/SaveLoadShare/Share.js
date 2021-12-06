@@ -58,7 +58,7 @@ END OF TERMS AND CONDITIONS
 */
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {componentIsRendering} from "../Sidebar";
+import {componentIsRendering} from "../../../Sidebar";
 import {
     Switch,
     FormGroup,
@@ -68,10 +68,10 @@ import {
     Button,
     Divider
 } from "@material-ui/core";
-import {CustomTooltip} from "../UtilityComponents";
+import {CustomTooltip} from "../../../UtilityComponents";
 import Grid from "@material-ui/core/Grid";
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
-import CustomAlert from "./CustomAlert";
+import CustomAlert from "../../Utils/CustomAlert";
 
 const useStyles = makeStyles((theme) => ({
     spaceOnTheLeft: {

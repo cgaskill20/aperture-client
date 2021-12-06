@@ -56,81 +56,55 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react';
-import {Button, Paper, Typography} from "@material-ui/core";
-import RotateLeftIcon from '@material-ui/icons/RotateLeft';
-import EqualizerIcon from "@material-ui/icons/Equalizer";
-import TuneIcon from '@material-ui/icons/Tune';
-import LinkIcon from '@material-ui/icons/Link';
-import AdvancedConstraints from "./AdvancedConstraints";
-import {componentIsRendering} from "../Sidebar";
-import {isGraphable} from "./Helpers";
-import {makeStyles} from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        padding: theme.spacing(2),
+import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Feature from '../../library/charting/feature.js';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import Util from '../../library/apertureUtil';
+import { useGlobalState } from '../global/GlobalState';
+
+const useStyles = makeStyles(theme => ({
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 200,
     },
 }));
 
-function graphIcon(layer, graphableLayers) {
-    if(isGraphable(layer, graphableLayers)) {
-        return <Button startIcon={<EqualizerIcon />}>
-            Graph Me
-        </Button>
-    }
-    return;
-}
+export default function DatasetSelectControl(props) {
+    let classes = useStyles();
+    let [dataset, setDataset] = useState('');
+    let [globalState] = useGlobalState();
 
-function getLayerText(layerInfo) {
-    if(layerInfo) {
-        return (
-            <Grid item>
-                <Typography>{layerInfo}</Typography>
-                <br/>
-            </Grid>
-        )
-    }
-}
+    let datasets = props.features.reduce((uniques, feature) => {
+        let dataset = Feature.getCollection(feature);
+        uniques.find(d => d.name === dataset) || uniques.push({ name: dataset });
+        return uniques;
+    }, []).map(d => ({ 
+        ...d, 
+        cleanName: Object.values(globalState.menuMetadata).find(m => m.collection === d.name).label, 
+    }));
 
-function sourceIcon(layerInfo) {
-    if(layerInfo.source){
-        return <Button variant="outlined" startIcon={<LinkIcon />} onClick={() => window.open(layerInfo.source, "_blank")}>
-            Source
-        </Button>
-    }
-}
-
-export default React.memo(function LayerControls(props) {
-    const classes = useStyles();
-    if(componentIsRendering) {console.log("|LayerControls Rerending|")}
-    return (
-        <Paper elevation={3} className={classes.root}>
-            <Grid
-                container
-                direction="row"
-                justifyContent="space-around"
-                alignItems="center"
+    return <div>
+        <FormControl className={classes.formControl}>
+            <InputLabel id='dataset-select-label'>Dataset</InputLabel>
+            <Select
+                labelId='dataset-select-label'
+                onChange={event => setDataset(event.target.value)} 
+                value={dataset}
             >
-                {getLayerText(props.layer.info)}
-                <Grid item>
-                    <AdvancedConstraints allLayerConstraints={props.allLayerConstraints} layerIndex={props.layerIndex}
-                                         activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints} />
-                    {/* <Button startIcon={<RotateLeftIcon />}>
-                        Reset Constraints
-                    </Button> */}
-                </Grid>
-                <Grid item>
-                    <Button variant="outlined" startIcon={<TuneIcon />} onClick={() => {
-                        props.setActiveLayerConstraints(props.defaultLayerConstraints);
-                    }}>
-                        Default Constraints
-                    </Button>
-                </Grid>
-                    {/* {graphIcon(props.layer, props.graphableLayers)} */}
-                    {sourceIcon(props.layer)}
-            </Grid>
-        </Paper>
-    )
-});
+                {datasets.map((dataset, i) => 
+                    <MenuItem key={i} value={dataset.name}>
+                        {dataset.cleanName}
+                    </MenuItem>
+                )}
+            </Select>
+        </FormControl>
+        {React.Children.map(props.children, (child, index) => {
+            return React.cloneElement(child, {dataset: dataset});
+        })}
+    </div>;
+}
