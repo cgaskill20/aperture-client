@@ -1,4 +1,7 @@
-/* 
+/*                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
 
 Software in the Sustain Ecosystem are Released Under Terms of Apache Software License 
 
@@ -52,135 +55,91 @@ You may add Your own copyright statement to Your modifications and may provide a
 9. Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability. 
 
 END OF TERMS AND CONDITIONS
-
 */
+import React, {useState} from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
+import {Button, Paper} from "@material-ui/core";
+import SettingsIcon from "@material-ui/icons/Settings";
+import AdvancedConstraintCheckbox from "./AdvancedConstraintCheckbox";
+import {componentIsRendering} from "../../../Sidebar";
+import CloseIcon from '@material-ui/icons/Close';
+import Grid from "@material-ui/core/Grid";
 
-import { sustain_querier } from "../grpc/GRPC_Querier/grpc_querier.js";
+const useStyles = makeStyles((theme) => ({
+    modal: {
+        top: '20%',
+        left: '70%',
+        position: 'absolute',
+        width: 400,
+        backgroundColor: theme.palette.background.paper,
+        padding: theme.spacing(2),
+    },
+    constraintSection: {
+        overflowY: "auto",
+        maxHeight: "50vh",
+        padding: theme.spacing(1),
+    },
+    closeButtonSection: {
+        marginBottom: theme.spacing(1),
+        padding: theme.spacing(1),
+    },
+    closeButton : {
+        width: '100%',
+    },
+}));
 
-let _querier;
+export default function AdvancedConstraints(props) {
+    const classes = useStyles();
+    const [open, setOpen] = useState(false);
 
-/**
-  * Gets a SmartQuerier instance for the database.
-  * ALL query requests should be made through this instance.
-  * @returns {Object} the SmartQuerier that should be used for all requests
-  */
-export function getSustainQuerier() {
-    if (!_querier) {
-        _querier = new SmartQuerier()
-    }
-    return _querier;
+    if(componentIsRendering) {console.log("|AdvancedConstraints Rerending|")}
+    return (
+        <>
+            <Button variant="outlined" startIcon={<SettingsIcon/>} onClick={() => setOpen(true)}>
+                Advanced...
+            </Button>
+            <Modal
+                //FIXME According to https://material-ui.com/api/modal/ these should prevent the modal from 'focusing' but they don't
+                // disableEnforceFocus={true}
+                // disableAutoFocus={true}
+                aria-labelledby="adv-constraints"
+                open={open}
+                onClose={() => setOpen(false)}
+            >
+                <Grid
+                    id="adv-constraints"
+                    className={classes.modal}
+                    container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="stretch"
+                >
+                    <Grid item>
+                        <Paper className={classes.closeButtonSection} elevation={3}>
+                            <Button
+                                className={classes.closeButton}
+                                startIcon={<CloseIcon/>}
+                                variant="outlined"
+                                onClick={() => setOpen(false)}
+                            >
+                                Close
+                            </Button>
+                        </Paper>
+                    </Grid>
+                    <Grid item>
+                        <Paper elevation={3} className={classes.constraintSection}>
+                            {props.allLayerConstraints.map((constraint, index) => {
+                                return (
+                                    <div key={index}>
+                                        <AdvancedConstraintCheckbox activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints}
+                                                                    constraintIndex={index} constraint={constraint}/>
+                                    </div>)
+                            })}
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </Modal>
+        </>
+    );
 }
-
-/**
-  * @class  SmartQuerier
-  * @file   High-level wrapper for the sustain querier. This is a singleton class.
-  * @author Pierce Smith
-  */
-class SmartQuerier {
-    static dbMachine = "lattice-46";
-    static dbPort = 27017;
-    static bucketMaxSize = 100;
-
-    // Collections whose queries should not be changed.
-    static unmodifiableCollections = ['tract_geo_140mb_no_2d_index', 'county_geo_30mb_no_2d_index'];
-
-    /**
-      * Constructs a SmartQuerier.
-      * This method should NOT be called directly. Use getSustainQuerier to get
-      * an instance of a SmartQuerier.
-      * @class SmartQuerier
-      * @method constructor
-      * @see getSustainQuerier
-      */
-    constructor() {
-        this.querier = sustain_querier();
-        this.activeStreams = [];
-    }
-
-    query(query, onData, onEnd, id = Math.random().toString(36).substring(2, 8)) {
-        // backwards compatibility: unspecified query types are assumed to be mongo
-        if (!query.queryType) {
-            query.queryType = "mongo";
-        }
-
-        switch (query.queryType) {
-            default:
-            case "mongo": {
-                this.mongoQuery(query.collection, query.queryParams, onData, onEnd, id);
-                break;
-            }
-            case "druid": {
-                this.druidQuery(query.body, onData, onEnd, id);
-                break;
-            }
-        }
-    }
-
-    /**
-     * Perform a query on the database, using the given collection, mongodb
-     * aggregate query, and callbacks for data receiving and stream closure.
-     * @memberof SmartQuerier
-     * @method query
-     * @param {string} collection The name of the collection to query over
-     * @param {JSON} queryParams The mongodb aggregate query, as a JS object
-     * @param {Function} onDataCallback The callback to fire when data is recieved. It should take a single parameter, which is the PARSED JSON of the response. 
-     * @param {Function} onStreamEndCallback The callback to fire when the stream dies.
-     body,
-     * @param {string} [id] Optional param which gives the stream an ID, useful only for killing the stream if need be.
-     * @returns {string} Associated ID for this stream. Randomly generated if not given.
-     */
-    mongoQuery(collection, queryParams, onDataCallback, onStreamEndCallback, id) {
-        const stream = this.querier.getStreamForQuery(collection, JSON.stringify(queryParams));
-        stream.on('data', (res) => {
-            const data = JSON.parse(res.getData());
-            onDataCallback(data);
-        });
-        stream.on('end', () => {
-            this._remove(id);
-            onStreamEndCallback();
-        });
-
-        this.activeStreams.push({ stream, id });
-        return id;
-    }
-
-    /** 
-     * Performs an arbitrary druid query.
-     */
-    druidQuery(query, onData, onEnd, id) {
-        const stream = this.querier.directDruidQuery(JSON.stringify(query));
-        this.registerStream(stream, id, res => res.getData(), onData, onEnd);
-    }
-
-    registerStream(stream, id, responseAccessor, onData, onEnd) {
-        stream.on('data', res => {
-            const data = JSON.parse(responseAccessor(res));
-            onData(data);
-        });
-        stream.on('end', () => {
-            this._remove(id);
-            onEnd();
-        });
-
-        this.activeStreams.push({ stream, id });
-        return id;
-    }
-
-    /**
-     * Kills a stream by the given id
-     * @memberof SmartQuerier
-     * @method kill
-     * @param {string} id id of stream to kill
-     * @returns {boolean} true if successful, false otherwise
-     */
-    kill(id) { 
-        const stream = this.activeStreams.find(stream => stream.id === id)?.stream
-        stream?.cancel();
-        stream && this._remove(id);
-    }
-
-    _remove(id) {
-        this.activeStreams = this.activeStreams.filter(stream => stream.id !== id);
-    }
-}
-

@@ -1,4 +1,7 @@
-/* 
+/*                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
 
 Software in the Sustain Ecosystem are Released Under Terms of Apache Software License 
 
@@ -52,135 +55,257 @@ You may add Your own copyright statement to Your modifications and may provide a
 9. Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability. 
 
 END OF TERMS AND CONDITIONS
-
 */
+import React, {useEffect, useState} from "react";
+import Checkbox from "@material-ui/core/Checkbox";
+import TextField from "@material-ui/core/TextField";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import {makeStyles} from "@material-ui/core/styles";
+import EqualizerIcon from "@material-ui/icons/Equalizer";
+import IconButton from "@material-ui/core/IconButton";
+import {isGraphable} from "../Utils/Helpers";
+import InfoIcon from '@material-ui/icons/Info';
+import {CustomTooltip} from "../../UtilityComponents";
+import {
+    Accordion,
+    AccordionDetails,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography
+} from "@material-ui/core";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import CloseIcon from "@material-ui/icons/Close";
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 
-import { sustain_querier } from "../grpc/GRPC_Querier/grpc_querier.js";
 
-let _querier;
+const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
+const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
 
-/**
-  * Gets a SmartQuerier instance for the database.
-  * ALL query requests should be made through this instance.
-  * @returns {Object} the SmartQuerier that should be used for all requests
-  */
-export function getSustainQuerier() {
-    if (!_querier) {
-        _querier = new SmartQuerier()
+const useStyles = makeStyles((theme) => ({
+    tableBody: {
+        width: "100%",
+        overflow: "auto",
+        maxHeight: "60vh",
+    },
+    tableButton: {
+        cursor: "pointer",
+        color: "#3f51b5"
+    },
+    clearAllButton: {
+        cursor: "pointer",
+        color: "#f44336"
     }
-    return _querier;
-}
+}));
 
-/**
-  * @class  SmartQuerier
-  * @file   High-level wrapper for the sustain querier. This is a singleton class.
-  * @author Pierce Smith
-  */
-class SmartQuerier {
-    static dbMachine = "lattice-46";
-    static dbPort = 27017;
-    static bucketMaxSize = 100;
+export default React.memo(function WorkspaceSearchbar(props) {
+    const classes = useStyles();
+    const [expanded, setExpanded] = useState(false);
+    const [filtering, setFiltering] = useState(false);
+    const [filteredDatasets, setFilteredDatsets] = useState(props.layerTitles);
+    const [filterText, setFilterText] = useState("");
+    const [datasets, setDatasets] = useState(props.layerTitles);
 
-    // Collections whose queries should not be changed.
-    static unmodifiableCollections = ['tract_geo_140mb_no_2d_index', 'county_geo_30mb_no_2d_index'];
+    useEffect(() => {
+        setDatasets(filtering ? filteredDatasets : props.layerTitles);
+    });
 
-    /**
-      * Constructs a SmartQuerier.
-      * This method should NOT be called directly. Use getSustainQuerier to get
-      * an instance of a SmartQuerier.
-      * @class SmartQuerier
-      * @method constructor
-      * @see getSustainQuerier
-      */
-    constructor() {
-        this.querier = sustain_querier();
-        this.activeStreams = [];
+    function graphIcon(layer) {
+        if(isGraphable(layer, props.graphableLayers)) {
+            return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
+        }
     }
 
-    query(query, onData, onEnd, id = Math.random().toString(36).substring(2, 8)) {
-        // backwards compatibility: unspecified query types are assumed to be mongo
-        if (!query.queryType) {
-            query.queryType = "mongo";
+    function infoIcon(layerInfo) {
+        if(layerInfo) {
+            return <CustomTooltip title={layerInfo} placement="right" arrow><IconButton><InfoIcon color="primary" /></IconButton></CustomTooltip>
+        }
+    }
+
+    function findLayerIndex(layerLabel) {
+        for(let i = 0; i < props.layerTitles.length; i++) {
+            if(props.layerTitles[i] === layerLabel) {
+                return i;
+            }
+        }
+    }
+
+    function handleExpansion() {
+        setExpanded(!expanded);
+        setFilterText("");
+        setFiltering(false);
+    }
+
+    function filterDatasets(event) {
+        const input = event.target.value;
+        setFiltering(input !== "");
+        setFilterText(input);
+        const matches = props.layerTitles.filter((title) => caseInsensitiveMatch(input, title));
+        setFilteredDatsets(matches);
+    }
+
+    function caseInsensitiveMatch(input, match) {
+        return match.toLowerCase().includes(input.toLowerCase());
+    }
+
+    function handleLayerCheck(index) {
+        let newWorkspace = [...props.workspace];
+        newWorkspace[index] = !newWorkspace[index];
+        props.setWorkspace(newWorkspace);
+    }
+
+    function clearWorkspace() {
+        let emptyWorkspace = [];
+        for(const layer in props.workspace) {
+            emptyWorkspace.push(false);
+        }
+        props.setWorkspace(emptyWorkspace);
+    }
+
+    function addAllSearchedDatasets() {
+        let layersToAdd = [];
+        filteredDatasets.forEach((layer) => {
+            layersToAdd.push(findLayerIndex(layer));
+        });
+        let newWorkspace = [...props.workspace];
+        layersToAdd.forEach((index) => {
+            newWorkspace[index] = true;
+        });
+        props.setWorkspace(newWorkspace);
+    }
+
+    function renderResetButton() {
+        if(expanded) {
+            return (
+                <IconButton onClick={() => {
+                    setFilterText("");
+                    setFiltering(false);
+                }}>
+                    <CustomTooltip title="Reset Search">
+                        <CloseIcon color="primary"/>
+                    </CustomTooltip>
+                </IconButton>
+            )
+        }
+        else return null;
+    }
+
+    function workspaceIsNotEmpty() {
+        return props.workspace.includes(true);
+    }
+
+    function renderClearButton() {
+        if(workspaceIsNotEmpty() && filtering) {
+            return (
+                <span>
+                    <CustomTooltip title="Clear Workspace">
+                        <IconButton onClick={clearWorkspace}>
+                            <RemoveIcon color="secondary" />
+                        </IconButton>
+                    </CustomTooltip>
+                </span>
+            )
+        }
+        else if (workspaceIsNotEmpty()) {
+            return (
+                <TableCell>
+                    <CustomTooltip title="Clear Workspace">
+                        <IconButton onClick={clearWorkspace}>
+                            <RemoveIcon color="secondary" />
+                        </IconButton>
+                    </CustomTooltip>
+                </TableCell>
+            )
         }
 
-        switch (query.queryType) {
-            default:
-            case "mongo": {
-                this.mongoQuery(query.collection, query.queryParams, onData, onEnd, id);
-                break;
-            }
-            case "druid": {
-                this.druidQuery(query.body, onData, onEnd, id);
-                break;
-            }
+        else return null;
+
+    }
+
+    function datasetHeaderText() {
+        return filtering ? `Found ${datasets.length} Results Matching '${filterText}'` : `${datasets.length} Datasets`;
+    }
+
+    function renderAddAllButton() {
+        if(filtering) {
+            return (
+                <TableCell>
+                    <CustomTooltip title={`Add All ${datasets.length} Datasets Matching '${filterText}' To Workspace`}>
+                        <IconButton onClick={addAllSearchedDatasets}>
+                            <AddIcon color="primary" />
+                        </IconButton>
+                    </CustomTooltip>
+                    {renderClearButton()}
+                </TableCell>
+            )
         }
+        else if(workspaceIsNotEmpty()) {
+            return renderClearButton();
+        }
+        else return <TableCell />;
     }
 
-    /**
-     * Perform a query on the database, using the given collection, mongodb
-     * aggregate query, and callbacks for data receiving and stream closure.
-     * @memberof SmartQuerier
-     * @method query
-     * @param {string} collection The name of the collection to query over
-     * @param {JSON} queryParams The mongodb aggregate query, as a JS object
-     * @param {Function} onDataCallback The callback to fire when data is recieved. It should take a single parameter, which is the PARSED JSON of the response. 
-     * @param {Function} onStreamEndCallback The callback to fire when the stream dies.
-     body,
-     * @param {string} [id] Optional param which gives the stream an ID, useful only for killing the stream if need be.
-     * @returns {string} Associated ID for this stream. Randomly generated if not given.
-     */
-    mongoQuery(collection, queryParams, onDataCallback, onStreamEndCallback, id) {
-        const stream = this.querier.getStreamForQuery(collection, JSON.stringify(queryParams));
-        stream.on('data', (res) => {
-            const data = JSON.parse(res.getData());
-            onDataCallback(data);
-        });
-        stream.on('end', () => {
-            this._remove(id);
-            onStreamEndCallback();
-        });
-
-        this.activeStreams.push({ stream, id });
-        return id;
+    function handleInputClick() {
+        if(!expanded) setExpanded(true);
     }
 
-    /** 
-     * Performs an arbitrary druid query.
-     */
-    druidQuery(query, onData, onEnd, id) {
-        const stream = this.querier.directDruidQuery(JSON.stringify(query));
-        this.registerStream(stream, id, res => res.getData(), onData, onEnd);
-    }
-
-    registerStream(stream, id, responseAccessor, onData, onEnd) {
-        stream.on('data', res => {
-            const data = JSON.parse(responseAccessor(res));
-            onData(data);
-        });
-        stream.on('end', () => {
-            this._remove(id);
-            onEnd();
-        });
-
-        this.activeStreams.push({ stream, id });
-        return id;
-    }
-
-    /**
-     * Kills a stream by the given id
-     * @memberof SmartQuerier
-     * @method kill
-     * @param {string} id id of stream to kill
-     * @returns {boolean} true if successful, false otherwise
-     */
-    kill(id) { 
-        const stream = this.activeStreams.find(stream => stream.id === id)?.stream
-        stream?.cancel();
-        stream && this._remove(id);
-    }
-
-    _remove(id) {
-        this.activeStreams = this.activeStreams.filter(stream => stream.id !== id);
-    }
-}
-
+    return (
+        <>
+            <Accordion expanded={expanded}>
+                <AccordionSummary>
+                    <TextField
+                        onClick={handleInputClick}
+                        label="Explore Datasets..."
+                        fullWidth
+                        variant="outlined"
+                        value={filterText}
+                        onChange={(e) => filterDatasets(e)}
+                    />
+                    {renderResetButton()}
+                    <IconButton onClick={handleExpansion}><ExpandMoreIcon/></IconButton>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <div className={classes.tableBody}>
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    {renderAddAllButton()}
+                                    <TableCell>{datasetHeaderText()}</TableCell>
+                                    <TableCell />
+                                    <TableCell />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {datasets.map((layer, index) => {
+                                    const trueLayerIndex = findLayerIndex(layer);
+                                    return (
+                                        <TableRow key={index}>
+                                            <TableCell>
+                                                <Checkbox
+                                                    icon={icon}
+                                                    color="primary"
+                                                    checkedIcon={checkedIcon}
+                                                    style={{ marginRight: 8 }}
+                                                    checked={props.workspace[trueLayerIndex]}
+                                                    onChange={() => handleLayerCheck(trueLayerIndex)}
+                                                />
+                                            </TableCell>
+                                            <TableCell>{layer}</TableCell>
+                                            <TableCell>{graphIcon(props.layers[trueLayerIndex])}</TableCell>
+                                            <TableCell>{infoIcon(props.layers[trueLayerIndex].info)}</TableCell>
+                                        </TableRow>
+                                    )
+                                })}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </AccordionDetails>
+            </Accordion>
+        </>
+    );
+});

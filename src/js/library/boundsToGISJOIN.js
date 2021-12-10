@@ -93,14 +93,14 @@ export default {
         return []
     },
 
-    boundsToLengthNGeohashes: function (bounds, blacklist) {
+    boundsToLengthNGeohashes: function (bounds, blacklist, includeGISJOINS) {
         const geohashCorners = {
             sw: encode_geohash(bounds._southWest.lat, bounds._southWest.lng, this.geohashResolution),
             se: encode_geohash(bounds._southWest.lat, bounds._northEast.lng, this.geohashResolution),
             nw: encode_geohash(bounds._northEast.lat, bounds._southWest.lng, this.geohashResolution),
             ne: encode_geohash(bounds._northEast.lat, bounds._northEast.lng, this.geohashResolution)
         }
-        return this.fillInSpace(geohashCorners).filter((geohash) => {
+        let geohashes = this.fillInSpace(geohashCorners).filter((geohash) => {
             return !blacklist.includes(geohash);
         }).filter((geohash) => {
             try {
@@ -108,6 +108,8 @@ export default {
             }
             catch { return true; }
         });
+
+        return geohashes;
     },
 
     fillInSpace: function (corners) {

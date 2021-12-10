@@ -43,6 +43,7 @@
     "jquery": "^3.5.1",
     "jsdom": "^17.0.0",
     "jsdom-global": "^3.0.2",
+    "just-clone": "^3.2.1",
     "leaflet-timedimension": "^1.1.1",
     "lz-string": "^1.4.4",
     "moment": "^2.29.1",

@@ -192,6 +192,53 @@
         "label": "Nearest Power Plant (mi)"
       }
     }
+  },
+  {
+    "collection": "Gridmet_ALL_Partitioned",
+    "label": "Historical Climate",
+    "constraints": {
+        "m_air_temperature_max": {
+            "label": "Max Air Temperature"
+        },
+        "m_air_temperature_min": {
+            "label": "Min Air Temperature"
+        },
+        "m_dead_fuel_moisture_1000hr": {
+            "label": "1000 Hour Fuel Moisture"
+        },
+        "m_dead_fuel_moisture_100hr": {
+            "label": "100 Hour Fuel Moisture"
+        },
+        "m_potential_evapotranspiration_alfalfa": {
+            "label": "Reference Evapotranspiration (alfalfa)"
+        },
+        "m_potential_evapotranspiration_short_grass": {
+            "label": "Reference Evapotranspiration (short grass)"
+        },
+        "m_precipitation_amount": {
+            "label": "Accumulated Precipitation"
+        },
+        "m_relative_humidity_max": {
+            "label": "Maximum Relative Humidity"
+        },
+        "m_relative_humidity_min": {
+            "label": "Minimum Relative Humidity"
+        },
+        "m_specific_humidity_mean": {
+            "label": "Mean Specific Humidity"
+        },
+        "m_surface_downwelling_shortwave_flux_in_air": {
+            "label": "Mean Downward Shortwave Radiation (at surface)"
+        },
+        "m_vapor_pressure_deficit_mean": {
+            "label": "Mean Vapor Pressure Deficit"
+        },
+        "m_wind_direction_mean": {
+            "label": "Mean Wind Direction"
+        },
+        "m_wind_speed_mean": {
+            "label": "Mean Wind Speed"
+        }
+    }
   }
-
 ]

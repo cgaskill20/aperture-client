@@ -88,6 +88,8 @@ export default class AutoQuery {
         this.label = layerData.label ?? this.collection;
         this.map = globalThis.map;
 
+        this.queryType = layerData.type ?? "mongo";
+
         this.constraintData = {};
         this.constraintState = {};
         this.layerCache = {};
@@ -142,7 +144,9 @@ export default class AutoQuery {
 
         this.minZoom = this.data.minZoom;
         this.blocked = false;
-        AutoQuery.blockers[this.blockerGroup] = 0;
+        if (!AutoQuery.blockers[this.blockerGroup]) {
+            AutoQuery.blockers[this.blockerGroup] = 0;
+        }
 
         this.map.on('moveend', () => {
             this.query();
@@ -373,15 +377,33 @@ export default class AutoQuery {
         }
 
         this.currentQueries.add(id);
-        Query.makeQuery({
-            collection: this.collection,
-            pipeline: this.buildConstraintPipeline(),
-            granularity: "coarse",
-            callback,
-            bounds: this.map.getBounds(),
-            geohashBlacklist: this.geohashCache,
-            id
-        });
+
+        switch (this.queryType) {
+            default:
+            case "mongo": {
+                Query.makeQuery({
+                    collection: this.collection,
+                    pipeline: this.buildConstraintPipeline(),
+                    granularity: "coarse",
+                    callback,
+                    bounds: this.map.getBounds(),
+                    geohashBlacklist: this.geohashCache,
+                    type: "mongo",
+                    id,
+                });
+                break;
+            } case "druid": {
+                Query.makeDruidQuery({
+                    callback,
+                    id,
+                    bounds: this.map.getBounds(),
+                    body: this.makeDruidQueryBody(),
+                    level: this.data.level,
+                    type: "druid",
+                });
+                break;
+            }
+        }
     }
 
     zoomIsValid() {
@@ -394,7 +416,9 @@ export default class AutoQuery {
             return false;
         }
         else {
-            AutoQuery.blockers[this.blockerGroup] -= this.blocked;
+            if (AutoQuery.blockers[this.blockerGroup]) {
+                AutoQuery.blockers[this.blockerGroup] -= this.blocked;
+            }
             this.blocked = false;
         }
         this.checkAndDispatch(oldBlockers);
@@ -481,7 +505,6 @@ export default class AutoQuery {
         //indexData[this.label]["opacity"] = this.color.opacity;
         this.mapLayers = this.mapLayers.concat(window.renderInfrastructure.renderGeoJson(data, indexData));
         this.layerIDs.add(id);
-
     }
 
     subscribeToColorFieldChange(func, unsubscribe = false) {
@@ -527,6 +550,72 @@ export default class AutoQuery {
         }
 
         return pipeline;
+    }
+
+    makeDruidQueryBody() {
+        let aggregationConstraints = Object.entries(this.constraintData).filter(kv => kv[0] !== "time_interval");
+        let temporalConstraint = this.constraintData["time_interval"];
+        let body = {
+            queryType: "groupBy",
+            dataSource: this.data.datasource,
+            granularity: "all",
+            dimensions: this.buildDruidBodyDimensions(this.data.level),
+
+            intervals: [ `${new Date(temporalConstraint[0]).toISOString()}/${new Date(temporalConstraint[1]).toISOString()}` ],
+            aggregations: aggregationConstraints.map(kv => {
+                let constraint = kv[0];
+                return {
+                    type: "doubleMean",
+                    fieldName: constraint.substring(2),
+                    name: constraint,
+                };
+            }),
+            having: this.buildDruidBodyHavingSpec(aggregationConstraints)
+        };
+
+        return body;
+    }
+
+    buildDruidBodyDimensions(level) {
+        return [ level === "tract" 
+            ? "GISJOIN" 
+            : {
+                type: "extraction",
+                dimension: "GISJOIN",
+                outputName: "GISJOIN",
+                outputType: "STRING",
+                extractionFn: {
+                    type: "substring", 
+                    index: 0, 
+                    length: 8 
+                }
+            } 
+        ];
+    }
+
+    buildDruidBodyHavingSpec(aggregationConstraints) {
+        return {
+            type: "and",
+            havingSpecs: aggregationConstraints.map(kv => {
+                let constraint = kv[0];
+                let bounds = kv[1];
+                return {
+                    type: "and",
+                    havingSpecs: [
+                        {
+                            type: "greaterThan",
+                            aggregation: constraint,
+                            value: bounds[0],
+                        },
+                        {
+                            type: "lessThan",
+                            aggregation: constraint,
+                            value: bounds[1],
+                        }
+                    ]
+                };
+            }),
+        };
     }
 
     buildTemporalPreProcess() {

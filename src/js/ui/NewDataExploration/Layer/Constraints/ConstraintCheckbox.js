@@ -56,53 +56,52 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import {componentIsRendering} from "../Sidebar";
-import { Typography, Button } from "@material-ui/core";
-import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
-import Grid from "@material-ui/core/Grid";
+import React, {useState, useEffect} from 'react';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import {componentIsRendering} from "../../../Sidebar";
 
-const useStyles = makeStyles((theme) => ({
-    title: {
-        borderBottom: '2px solid #adadad',
-        marginBottom: theme.spacing(2),
-        width: "100%",
-    },
-    fullWidth: {
-        width: "100%",
-    },
-}));
+export default function ConstraintCheckbox({constraint, querier, option}) {
+    const [check, setCheck] = useState(true);
 
+    if(componentIsRendering) {console.log("|ContraintCheckbox Rerending|")}
+    useEffect(() => {
+        querier.updateConstraint(constraint.name, option, check);
+    }, []);
+    
+    useEffect(() => {
+        if(constraint.forceUpdateFlag && typeof constraint.forceUpdateFlag === 'number') {
+            constraint.forceUpdateFlag--;
+            const newCheck = constraint.state?.[option] ?? true;
+            setCheck(newCheck)
+            querier.updateConstraint(constraint.name, option, newCheck);
+        }
+    })
 
-export default React.memo(function Load({deSerializeWorkspace, setModalOpen}) {
-    const classes = useStyles();
-    const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1)
-
-    const loadWorkspace = () => {
-        deSerializeWorkspace(localStorage.getItem(`workspace${slotCurrentlySelected}`))
-        setModalOpen(false);
-    }
-
-    if (componentIsRendering) { console.log("|Load Rerending|") }
     return (
-        <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="flex-start"
-        >
-            <Grid item className={classes.fullWidth}>
-                <Typography className={classes.title} align="center" variant="h5">Load Workspace</Typography>
-            </Grid>
-            <Grid item className={classes.fullWidth}>
-                <SavedWorkspaceSlotSelection title="Select a Saved Workspace" slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} onlyShowFullSlots/>
-            </Grid>
-            <Grid item className={classes.fullWidth}>
-                <Button className={classes.fullWidth} variant="outlined" onClick={loadWorkspace}>
-                    Load Workspace
-                </Button>
-            </Grid>
-        </Grid>
+        <FormGroup id={`constraint-formGroup-${option}`}>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={check}
+                        onChange={() => { 
+                            const newCheck = !check;
+                            setCheck(newCheck)
+                            if(!constraint.state) {
+                                constraint.state = {};
+                            }
+                            constraint.state[option] = newCheck;
+                            
+                            querier.updateConstraint(constraint.name, option, newCheck);
+                        }}
+                        id={`${option}`}
+                        name={`${option}`}
+                        color="primary"
+                    />
+                }
+                label={option}
+            />
+        </FormGroup>
     );
-})
+}

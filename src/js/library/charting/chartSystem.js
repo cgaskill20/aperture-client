@@ -106,6 +106,10 @@ export const ChartingType = {
         name: "correlogram",
         wantsSources: [ DataSourceType.MAP_FEATURES ],
     },
+    RADAR: {
+        name: "radar",
+        wantsSources: [ DataSourceType.MAP_FEATURES ],
+    },
 };
 
 // Chart message types that any chart can accept.
