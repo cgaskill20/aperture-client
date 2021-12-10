@@ -664,7 +664,7 @@ export default class AutoQuery {
             "$group": groupStage
         }
 
-        return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, { "$sort": { "epoch_time": 1 } }, groupStage, projectStage]
+        return [{ "$match": this.buildConstraint(this.temporal, this.constraintData[this.temporal]) }, groupStage, projectStage]
     }
 
 
