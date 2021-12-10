@@ -66,6 +66,7 @@ import * as d3 from '../../../third-party/d3.min.js';
 import { temporalId } from "../../../library/Constants";
 
 export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary, obj }) {
+    console.log(colorSummary);
     const svgRef = React.createRef();
     useEffect(() => {
         if (colorSummary.minMax) {
@@ -76,10 +77,8 @@ export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary
             const svg = d3.select(svgRef.current);
             svg.selectAll('*').remove();
             svg.attr("viewBox", [0, 0, width, height]);
-
             const colorFieldNameClean = colorFieldName.includes(temporalId) ? colorFieldName.substring(0,colorFieldName.indexOf(temporalId)) : colorFieldName;
-            
-            if (obj.properties.meta[colorFieldNameClean]) {
+            if (obj.properties.meta[colorFieldNameClean] || colorFieldName.includes("relative")) {
                 const linearGradient = svg.append("defs")
                     .append("linearGradient")
                     .attr("id", "linear-gradient");
