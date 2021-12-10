@@ -462,12 +462,13 @@ export default class AutoQuery {
         }
 
         data.properties.meta = this.buildMetaMap();
+        let hardCodedColorField = this.temporalFields ? Object.keys(this.temporalFields).map((field) => {
+            return `relative_${field}_change_pct`
+        }) : []
         data.properties.colorInfo = {
             currentColorField: this.colorField,
             updateColorFieldName: this.changeColorCodeField.bind(this),
-            validColorFieldNames: Object.keys(this.data.constraints).map(Util.removePropertiesPrefix).concat(Object.keys(this.temporalFields).map((field) => {
-                return `relative_${field}_change_pct`
-            })),
+            validColorFieldNames: Object.keys(this.data.constraints).map(Util.removePropertiesPrefix).concat(hardCodedColorField),
             subscribeToColorFieldChange: this.subscribeToColorFieldChange.bind(this),
             colorSummary: () => { return this.protoColor?.getColorSummary() },
             getColor: this.getColor.bind(this)
