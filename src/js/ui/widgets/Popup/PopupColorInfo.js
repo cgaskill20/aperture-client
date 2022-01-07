@@ -66,7 +66,6 @@ import * as d3 from '../../../third-party/d3.min.js';
 import { temporalId } from "../../../library/Constants";
 
 export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary, obj }) {
-    console.log(colorSummary);
     const svgRef = React.createRef();
     useEffect(() => {
         if (colorSummary.minMax) {
