@@ -268,7 +268,10 @@ export default class AutoQuery {
         
         let colorField = this.data.constraints[fieldName] ?? this.data.constraints[`properties.${fieldName}`] ?? this.data.constraints[fieldName.substring(0, fieldName.indexOf(temporalId))];
         
-
+        /*
+         *  Hardcode in the colorfield if doing a change over time, as the possible min and max for every
+         *  collection and every date would not be possible.
+         */
         if (fieldName.includes('change_pct')) {
             colorField = { 
                 range: [-100, 100],
