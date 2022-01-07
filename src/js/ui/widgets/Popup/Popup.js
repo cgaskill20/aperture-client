@@ -57,7 +57,7 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React, { useEffect, useState } from "react";
-import {makeStyles, Drawer, Typography, IconButton, Grid, Paper} from "@material-ui/core";
+import { makeStyles, Drawer, Typography, IconButton, Grid, Paper } from "@material-ui/core";
 import { useGlobalState } from "../../global/GlobalState";
 import Util from "../../../library/apertureUtil";
 import CloseIcon from "@material-ui/icons/Close";
@@ -102,6 +102,8 @@ export default function Popup() {
     const classes = useStyles();
     const subTitleTextSize = "h6";
 
+    const [change, setChange] = useState(0)
+
     const onObjChange = () => {
         setColorSummary(obj?.properties?.colorInfo?.colorSummary(obj?.properties?.colorInfo?.currentColorField?.name))
         setColorField(obj?.properties?.colorInfo?.currentColorField)
@@ -124,7 +126,7 @@ export default function Popup() {
         };
 
         window.forceUpdateObj = (properties) => {
-            if(properties === obj.properties) {
+            if (properties === obj.properties) {
                 onObjChange();
             }
         }
@@ -188,6 +190,7 @@ export default function Popup() {
                             join={obj.join}
                             temporalRange={obj.properties.meta[key].temporal.temporalRange}
                         />
+                        <br />
                     </Paper>
                 </React.Fragment>)
         }
