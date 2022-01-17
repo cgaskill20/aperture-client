@@ -140,6 +140,17 @@ export default class Color {
         else if (predefinedColor.style === "sequential" || this.options) {
             this._createDefaultColorMapping()
         }
+        else if (predefinedColor.style === "aqi_special") {
+            this.gradient = [ // FIXME Where do I put the logic to associate the aqi to the color?
+                "#00e400", // 0-50
+                "#ffff00", // 51-100
+                "#ff7e00", // 101-150
+                "#ff0000", // 151-200
+                "#8f3f97", // 201-300
+                "#7e0023"  // 301-500
+            ]
+        }
+        console.log(this.gradient)
     }
 
     _createGradient(gradientArr, resolution = 100) {
