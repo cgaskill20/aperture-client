@@ -632,6 +632,8 @@ const Query = {
             senderID: id
         });
 
+        console.log(body);
+
         const responseListener = this._getRawDruidQueryListener(query, geometryData);
         this.queryWorker.addEventListener("message", responseListener);
     },

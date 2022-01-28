@@ -330,7 +330,7 @@ const overwrite = { //leaving this commented cause it explains the schema really
             border: 1
         },
         type: "druid",
-        datasource: "Gridmet_ALL_Partitioned",
+        datasource: "MACA_CanESM2_rcp45_2021_2050",
     },
 }
 
