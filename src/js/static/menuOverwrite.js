@@ -243,14 +243,6 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 "default": [1609459200000, 1735689600000],
                 isDate: true
             },
-            m_specific_humidity: {
-                type: "slider",
-                label: "Specific Humidity",
-                range: [1.0, 100.0],
-                "default": [1.0, 100.0],
-                step: 0.1,
-                unit: "kg kg-1",
-            },
             m_max_relative_humidity: {
                 type: "slider",
                 label: "Maximum Relative Humidity",
@@ -315,18 +307,10 @@ const overwrite = { //leaving this commented cause it explains the schema really
                 step: 0.1,
                 unit: "mm"
             },
-            m_vapor_pressure_deficit: {
-                type: "slider",
-                label: "Mean Vapor Pressure Deficit",
-                range: [0, 100],
-                "default": [0, 100],
-                step: 0.1,
-                unit: "kPa"
-            },
         },
         color: {
             style: "gradient",
-            variable: "m_air_temperature_max",
+            variable: "m_maximum_air_temperature",
             border: 1
         },
         type: "druid",
