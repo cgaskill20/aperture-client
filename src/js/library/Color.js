@@ -141,16 +141,15 @@ export default class Color {
             this._createDefaultColorMapping()
         }
         else if (predefinedColor.style === "aqi_special") {
-            this.gradient = [ // FIXME Where do I put the logic to associate the aqi to the color?
-                "#00e400", // 0-50
-                "#ffff00", // 51-100
-                "#ff7e00", // 101-150
-                "#ff0000", // 151-200
-                "#8f3f97", // 201-300
-                "#7e0023"  // 301-500
-            ]
+            const green = Array(10).fill("#00e400");
+            const yellow = Array(10).fill("#ffff00");
+            const orange = Array(10).fill("#ff7e00");
+            const red = Array(10).fill("#ff0000");
+            const purple = Array(20).fill("#8f3f97");
+            const cherry = Array(40).fill("#7e0023");
+            const aqi_colors = green.concat(yellow, orange, red, purple, cherry);
+            this.gradient = aqi_colors;
         }
-        console.log(this.gradient)
     }
 
     _createGradient(gradientArr, resolution = 100) {

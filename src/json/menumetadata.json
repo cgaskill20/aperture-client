@@ -7031,7 +7031,7 @@
                     "style": "aqi_special",
                     "min": 0,
                     "max": 500,
-                    "variable": "WHAT SHOULD THIS BE?"
+                    "variable": "aqi"
                 }
             }
         ]
