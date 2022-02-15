@@ -128,6 +128,16 @@ export default class Color {
             this.overrideColor = predefinedColor.colorCode;
             return;
         }
+        else if (predefinedColor.style === "aqi_special") {
+            const green = Array(10).fill("#00e400");
+            const yellow = Array(10).fill("#ffff00");
+            const orange = Array(10).fill("#ff7e00");
+            const red = Array(10).fill("#ff0000");
+            const purple = Array(20).fill("#8f3f97");
+            const cherry = Array(40).fill("#7e0023");
+            const aqi_colors = [...green, ...yellow, ...orange, ...red, ...purple, ...cherry];
+            this.gradient = aqi_colors;
+        }
         else if (predefinedColor.style === "gradient" && predefinedColor.gradient) {
             this.gradient = this._createGradient(predefinedColor.gradient)
         }
@@ -139,16 +149,6 @@ export default class Color {
         }
         else if (predefinedColor.style === "sequential" || this.options) {
             this._createDefaultColorMapping()
-        }
-        else if (predefinedColor.style === "aqi_special") {
-            const green = Array(10).fill("#00e400");
-            const yellow = Array(10).fill("#ffff00");
-            const orange = Array(10).fill("#ff7e00");
-            const red = Array(10).fill("#ff0000");
-            const purple = Array(20).fill("#8f3f97");
-            const cherry = Array(40).fill("#7e0023");
-            const aqi_colors = green.concat(yellow, orange, red, purple, cherry);
-            this.gradient = aqi_colors;
         }
     }
 

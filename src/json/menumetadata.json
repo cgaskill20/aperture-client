@@ -7012,6 +7012,10 @@
         "label": "EPA AQI Score",
         "temporal": "epoch_time",
         "source": "https://aqs.epa.gov/aqsweb/documents/data_api.html",
+        "color": {
+            "style": "aqi_special",
+            "variable": "aqi"
+        },
         "level": "county",
         "fieldMetadata": [
             {
@@ -7027,13 +7031,9 @@
             {
                 "name": "aqi",
                 "type": "range",
-                "color": {
-                    "label": "aqi",
-                    "style": "aqi_special",
-                    "min": 0,
-                    "max": 500,
-                    "variable": "aqi"
-                }
+                "min": 0,
+                "max": 500,
+                "temporal": "epoch_time"
             }
         ]
     },
