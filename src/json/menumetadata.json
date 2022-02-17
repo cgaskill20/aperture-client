@@ -7005,6 +7005,40 @@
             }
         ]
     },
+
+
+    {
+        "collection": "epa_aqi_general_score",
+        "label": "EPA AQI Score",
+        "temporal": "epoch_time",
+        "source": "https://aqs.epa.gov/aqsweb/documents/data_api.html",
+        "color": {
+            "style": "aqi_special",
+            "variable": "aqi"
+        },
+        "level": "county",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Year",
+                "step": "year"
+            },
+            {
+                "name": "GISJOIN",
+                "label": "GIS Join Match Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "aqi",
+                "type": "range",
+                "min": 0,
+                "max": 500,
+                "temporal": "epoch_time"
+            }
+        ]
+    },
+
+
     {
         "collection": "county_total_population",
         "level": "county",
@@ -7389,5 +7423,4 @@
              }
     	]
     }
-    
 ]
