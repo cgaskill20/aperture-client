@@ -86,6 +86,9 @@ export default React.memo(function PopupTimeChart({ collection, join, fieldToCha
                     epoch_time: {
                         $gte: temporalRange[0],
                         $lte: temporalRange[1]
+                    },
+                    [fieldToChart]: {
+                        $exists: true
                     }
                 }
             },
