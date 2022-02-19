@@ -7005,8 +7005,6 @@
             }
         ]
     },
-
-
     {
         "collection": "epa_aqi_general_score",
         "label": "EPA AQI Score",
@@ -7037,8 +7035,6 @@
             }
         ]
     },
-
-
     {
         "collection": "county_total_population",
         "level": "county",
@@ -7056,7 +7052,7 @@
         "label": "Soils STATSGO",
         "info": "The Digital General Soil Map of the United States or STATSGO2 is a broad-based inventory of soils and non-soil areas that occur in a repeatable pattern on the landscape and that can be cartographically shown. The dataset was created by generalizing more detailed soil survey maps. Where more detailed soil survey maps were not available, data on geology, topography, vegetation, and climate were assembled and related to Land Remote Sensing Satellite (LANDSAT) images. Soils of similar areas were studied, and the probable classification and extent of the soils were determined.",
         "source": "https://www.nrcs.usda.gov/wps/portal/nrcs/detail/soils/survey/geo/?cid=nrcs142p2_053629",
-        "fieldMetadata":[
+        "fieldMetadata": [
             {
                 "name": "properties.AWC",
                 "label": "Available Water Capacity",
@@ -7116,311 +7112,577 @@
         ]
     },
     {
-         "collection": "county_population_history",
-         "temporal": "epoch_time",
-         "level": "county",
-         "fieldMetadata": [
-             {
-                 "name": "epoch_time",
-                 "label": "Year",
-                 "step": "year"
-             },
-             {
-                 "name": "GISJOIN",
-                 "label": "GIS Join Match Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "YEAR",
-                 "label": "Data File Year",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "REGIONA",
-                 "label": "Region Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "DIVISIONA",
-                 "label": "Division Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "STATE",
-                 "label": "State Name",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "STATEA",
-                 "label": "State Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "SMSAA",
-                 "label": "Standard Metropolitan Statistical Area Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "COUNTY",
-                 "label": "County Name",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "COUNTYA",
-                 "label": "County Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "CTY_SUBA",
-                 "label": "County Subdivision Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "PLACEA",
-                 "label": "Place Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "TRACTA",
-                 "label": "Census Tract Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "BLCK_GRPA",
-                 "label": "Block Group Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "BLOCKA",
-                 "label": "Block Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "EDINDA",
-                 "label": "Enumeration District Indicator Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "ENUMDISTA",
-                 "label": "Enumeration District Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "SCSAA",
-                 "label": "Standard Consolidated Statistical Area Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "URB_AREAA",
-                 "label": "Urban Area Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "CDA",
-                 "label": "Congressional District (111th Congress) Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "AIANHHA",
-                 "label": "American Indian Area/Alaska Native Area/Hawaiian Home Land Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "MCDSEQNOA",
-                 "label": "MCD Sequence Number Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "ZIPA",
-                 "label": "5-Digit Zip Code Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "AREANAME",
-                 "label": "Area Name",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "C7L001",
-                 "label": "Population",
-                 "hideByDefault": false,
-                 "temporal": true
-             },
-             {
-                 "name": "ANRCA",
-                 "label": "Alaska Native Regional Corporation Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "RES_ONLYA",
-                 "label": "American Indian Reservation with Trust Lands; reservation only Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "TRUSTA",
-                 "label": "American Indian Reservation with Trust Lands; trust lands only Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "RES_TRSTA",
-                 "label": "Reservation/Trust Lands Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "CD101A",
-                 "label": "Congressional District (101st) Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "C_CITYA",
-                 "label": "Consolidated City Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "MSA_CMSAA",
-                 "label": "Metropolitan Statistical Area/Consolidated Metropolitan Statistical Area Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "PMSAA",
-                 "label": "Primary Metropolitan Statistical Area Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "URBRURALA",
-                 "label": "Urban/Rural Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "CD103A",
-                 "label": "Congressional District (103rd) Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "ANPSADPI",
-                 "label": "Area Name/PSAD Term/Part Indicator",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "TRBL_CTA",
-                 "label": "Tribal Census Tract Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "TRBL_BGA",
-                 "label": "Tribal Block Group Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "TRBL_SUBA",
-                 "label": "Tribal Subdivision Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "NECMAA",
-                 "label": "New England County Metropolitan Area Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "CD106A",
-                 "label": "Congressional District (106th) Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "CD108A",
-                 "label": "Congressional District (108th) Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "CD109A",
-                 "label": "Congressional District (109th) Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "ZIP3A",
-                 "label": "3-Digit Zip Code Tabulation Area Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "ZCTAA",
-                 "label": "5-Digit Zip Code Tabulation Area Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "NAME",
-                 "label": "Area Name-Legal/Statistical Area Description (LSAD) Term-Part Indicator",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "AITSCEA",
-                 "label": "Tribal Subdivision/Remainder Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "CBSAA",
-                 "label": "Metropolitan Statistical Area/Micropolitan Statistical Area Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "METDIVA",
-                 "label": "Metropolitan Division Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "CSAA",
-                 "label": "Combined Statistical Area Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "NECTAA",
-                 "label": "New England City and Town Area Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "NECTADIVA",
-                 "label": "NECTA Division Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "CNECTAA",
-                 "label": "Combined New England City and Town Area Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "SLDUA",
-                 "label": "State Legislative District (Upper Chamber) Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "SLDLA",
-                 "label": "State Legislative District (Lower Chamber) Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "SUBMCDA",
-                 "label": "Subminor Civil Division Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "SDELMA",
-                 "label": "School District (Elementary)/Remainder Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "SDSECA",
-                 "label": "School District (Secondary)/Remainder Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "SDUNIA",
-                 "label": "School District (Unified)/Remainder Code",
-                 "hideByDefault": true
-             },
-             {
-                 "name": "SABINSA",
-                 "label": "School Attendance Area Code",
-                 "hideByDefault": true
-             }
-    	]
+        "collection": "county_population_history",
+        "temporal": "epoch_time",
+        "level": "county",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Year",
+                "step": "year"
+            },
+            {
+                "name": "GISJOIN",
+                "label": "GIS Join Match Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "YEAR",
+                "label": "Data File Year",
+                "hideByDefault": true
+            },
+            {
+                "name": "REGIONA",
+                "label": "Region Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "DIVISIONA",
+                "label": "Division Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "STATE",
+                "label": "State Name",
+                "hideByDefault": true
+            },
+            {
+                "name": "STATEA",
+                "label": "State Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SMSAA",
+                "label": "Standard Metropolitan Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "COUNTY",
+                "label": "County Name",
+                "hideByDefault": true
+            },
+            {
+                "name": "COUNTYA",
+                "label": "County Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CTY_SUBA",
+                "label": "County Subdivision Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "PLACEA",
+                "label": "Place Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "TRACTA",
+                "label": "Census Tract Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "BLCK_GRPA",
+                "label": "Block Group Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "BLOCKA",
+                "label": "Block Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "EDINDA",
+                "label": "Enumeration District Indicator Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "ENUMDISTA",
+                "label": "Enumeration District Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SCSAA",
+                "label": "Standard Consolidated Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "URB_AREAA",
+                "label": "Urban Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CDA",
+                "label": "Congressional District (111th Congress) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "AIANHHA",
+                "label": "American Indian Area/Alaska Native Area/Hawaiian Home Land Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "MCDSEQNOA",
+                "label": "MCD Sequence Number Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "ZIPA",
+                "label": "5-Digit Zip Code Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "AREANAME",
+                "label": "Area Name",
+                "hideByDefault": true
+            },
+            {
+                "name": "C7L001",
+                "label": "Population",
+                "hideByDefault": false,
+                "temporal": true
+            },
+            {
+                "name": "ANRCA",
+                "label": "Alaska Native Regional Corporation Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "RES_ONLYA",
+                "label": "American Indian Reservation with Trust Lands; reservation only Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "TRUSTA",
+                "label": "American Indian Reservation with Trust Lands; trust lands only Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "RES_TRSTA",
+                "label": "Reservation/Trust Lands Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CD101A",
+                "label": "Congressional District (101st) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "C_CITYA",
+                "label": "Consolidated City Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "MSA_CMSAA",
+                "label": "Metropolitan Statistical Area/Consolidated Metropolitan Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "PMSAA",
+                "label": "Primary Metropolitan Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "URBRURALA",
+                "label": "Urban/Rural Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CD103A",
+                "label": "Congressional District (103rd) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "ANPSADPI",
+                "label": "Area Name/PSAD Term/Part Indicator",
+                "hideByDefault": true
+            },
+            {
+                "name": "TRBL_CTA",
+                "label": "Tribal Census Tract Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "TRBL_BGA",
+                "label": "Tribal Block Group Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "TRBL_SUBA",
+                "label": "Tribal Subdivision Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "NECMAA",
+                "label": "New England County Metropolitan Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CD106A",
+                "label": "Congressional District (106th) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CD108A",
+                "label": "Congressional District (108th) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CD109A",
+                "label": "Congressional District (109th) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "ZIP3A",
+                "label": "3-Digit Zip Code Tabulation Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "ZCTAA",
+                "label": "5-Digit Zip Code Tabulation Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "NAME",
+                "label": "Area Name-Legal/Statistical Area Description (LSAD) Term-Part Indicator",
+                "hideByDefault": true
+            },
+            {
+                "name": "AITSCEA",
+                "label": "Tribal Subdivision/Remainder Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CBSAA",
+                "label": "Metropolitan Statistical Area/Micropolitan Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "METDIVA",
+                "label": "Metropolitan Division Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CSAA",
+                "label": "Combined Statistical Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "NECTAA",
+                "label": "New England City and Town Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "NECTADIVA",
+                "label": "NECTA Division Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "CNECTAA",
+                "label": "Combined New England City and Town Area Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SLDUA",
+                "label": "State Legislative District (Upper Chamber) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SLDLA",
+                "label": "State Legislative District (Lower Chamber) Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SUBMCDA",
+                "label": "Subminor Civil Division Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SDELMA",
+                "label": "School District (Elementary)/Remainder Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SDSECA",
+                "label": "School District (Secondary)/Remainder Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SDUNIA",
+                "label": "School District (Unified)/Remainder Code",
+                "hideByDefault": true
+            },
+            {
+                "name": "SABINSA",
+                "label": "School Attendance Area Code",
+                "hideByDefault": true
+            }
+        ]
+    },
+    {
+        "collection": "larimer_water_quality_data",
+        "icon": "science",
+        "linked": {
+            "collection": "larimer_water_quality_sites",
+            "field": "MonitoringLocationIdentifier"
+        },
+        "temporal": "epoch_time",
+        "fieldMetadata": [
+            {
+                "name": "pH",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Ammonia and ammonium",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Orthophosphate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Stream flow, instantaneous",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Oxygen",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "epoch_time",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Phosphorus",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "unit",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Bacteria mix, unspecified",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Specific conductance",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Temperature, water",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "RBP Stream width",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Turbidity",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Barometric pressure",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Acidity, (H+)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Inorganic nitrogen (nitrate and nitrite)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Organic Nitrogen",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "RBP High water mark",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Kjeldahl nitrogen",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Detergent, severity (choice list)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Floating Garbage Severity (choice List)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Chlorophyll a",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Pheophytin a",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Fish Kill, Severity (choice list)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Floating algae mat - severity (choice list)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Nitrate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Floating debris - severity (choice list)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Odor, atmospheric",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Turbidity severity (choice list)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Nitrite",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Oil and Grease",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Total dissolved solids",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Chloride",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Magnesium",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Elevation, MSL",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Potassium",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Sulfur Sulfate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Sodium",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Alkalinity, bicarbonate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Carbonate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Calcium",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Alkalinity",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Carbon dioxide",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Hardness, non-carbonate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Hardness, Ca, Mg",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Fluoride",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Silica",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Sulfate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Sodium, percent total cations",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Sodium adsorption ratio [(Na)/(sq root of 1/2 Ca + Mg)]",
+                "temporal": true,
+                "hideByDefault": false
+            }
+        ]
     }
 ]
