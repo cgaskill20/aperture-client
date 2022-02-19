@@ -7429,6 +7429,12 @@
         "temporal": "epoch_time",
         "fieldMetadata": [
             {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "1hr"
+            },
+            {
                 "name": "pH",
                 "temporal": true,
                 "hideByDefault": false
@@ -7450,11 +7456,6 @@
             },
             {
                 "name": "Oxygen",
-                "temporal": true,
-                "hideByDefault": false
-            },
-            {
-                "name": "epoch_time",
                 "temporal": true,
                 "hideByDefault": false
             },
