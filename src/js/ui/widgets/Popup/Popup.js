@@ -153,6 +153,7 @@ export default function Popup() {
                     importantNames.add(keyDisp)
                     return true;
                 });
+            console.log({importantFields})
             return <>
                 <Paper className={classes.paper} elevation={3}>
                     {
@@ -180,7 +181,7 @@ export default function Popup() {
     const makeCharts = () => {
         if (obj.properties) {
             return Object.entries(obj.properties)
-                .filter(([key, value]) => obj.properties?.meta?.[key]?.temporal)
+                .filter(([key, value]) => obj.properties?.meta?.[key]?.temporal && value != null)
                 .map(([key, value]) => <React.Fragment key={`${key}${JSON.stringify(obj.join)}${JSON.stringify(obj.temporalRange)}`}>
                     <Paper className={classes.paper} elevation={3}>
                         <Typography className={classes.subTitle} align="center" gutterBottom variant={subTitleTextSize}>{keyToDisplay(obj, key)}</Typography>
