@@ -228,7 +228,7 @@ export default React.memo(function WorkspaceSearchbar(props) {
     }
 
     function datasetHeaderText() {
-        return filtering ? `Found ${datasets.length} Results Matching '${filterText}'` : `${datasets.length} Datasets`;
+        return filtering ? `Found ${datasets.length} Results Matching '${filterText}'` : null;
     }
 
     function renderAddAllButton() {
