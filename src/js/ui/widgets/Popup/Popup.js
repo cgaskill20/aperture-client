@@ -153,7 +153,6 @@ export default function Popup() {
                     importantNames.add(keyDisp)
                     return true;
                 });
-            console.log({importantFields})
             return <>
                 <Paper className={classes.paper} elevation={3}>
                     {
