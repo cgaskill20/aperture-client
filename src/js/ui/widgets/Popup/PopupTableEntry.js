@@ -99,7 +99,12 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
     const [open, setOpen] = useState(false);
     const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
     const [temporalAccumulator, setTemporalAccumulator] = useState(Object.keys(mongoGroupAccumulators)[0]);
-    //console.log({colorFieldName})
+    const [valueIsNull, setValueIsNull] = useState(false)
+
+    useEffect(() => {
+        setValueIsNull(valueToDisplay(obj, keyValue, entryProperties.isTemporal ? obj.properties[`${keyValue}${temporalId}${temporalAccumulator}`] : value) === 'null');
+    }, [obj])
+
     useEffect(() => {
         if(colorFieldName && colorFieldName.includes(temporalId)) {
             const temporalAccumulatorDerivedFromColorFieldName = colorFieldName.substring(colorFieldName.indexOf(temporalId) + temporalId.length, colorFieldName.length);
@@ -176,23 +181,28 @@ export default React.memo(function PopupTableEntry({ obj, keyValue, value, entry
         }
     }
 
-    return (
-        <React.Fragment>
-            <TableRow className={classes.root}>
-                <TableCell>{keyToDisplay(obj, keyValue, entryProperties.isTemporal ? ` (${mongoGroupAccumulators[temporalAccumulator]})` : '')}</TableCell>
-                <TableCell>{valueToDisplay(obj, keyValue, entryProperties.isTemporal ? obj.properties[`${keyValue}${temporalId}${temporalAccumulator}`] : value)}</TableCell>
-                <TableCell align="right">
-                    {objectHasTrueValue(entryProperties)}
-                </TableCell>
-            </TableRow>
-            <TableRow>
-                <TableCell className={classes.collapse} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        {colorFieldCheckbox()}
-                        {isTemporal()}
-                    </Collapse>
-                </TableCell>
-            </TableRow>
-        </React.Fragment>
-    )
+    if(valueIsNull) {
+        return null;
+    }
+    else {
+        return (
+            <React.Fragment>
+                <TableRow className={classes.root}>
+                    <TableCell>{keyToDisplay(obj, keyValue, entryProperties.isTemporal ? ` (${mongoGroupAccumulators[temporalAccumulator]})` : '')}</TableCell>
+                    <TableCell>{valueToDisplay(obj, keyValue, entryProperties.isTemporal ? obj.properties[`${keyValue}${temporalId}${temporalAccumulator}`] : value)}</TableCell>
+                    <TableCell align="right">
+                        {objectHasTrueValue(entryProperties)}
+                    </TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell className={classes.collapse} colSpan={6}>
+                        <Collapse in={open} timeout="auto" unmountOnExit>
+                            {colorFieldCheckbox()}
+                            {isTemporal()}
+                        </Collapse>
+                    </TableCell>
+                </TableRow>
+            </React.Fragment>
+        )
+    }
 });
