@@ -7421,7 +7421,7 @@
     },
     {
         "collection": "larimer_water_quality_data",
-        "icon": "science",
+        "icon": "DrippingFaucet",
         "linked": {
             "collection": "larimer_water_quality_sites",
             "field": "MonitoringLocationIdentifier"
