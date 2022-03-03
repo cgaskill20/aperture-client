@@ -7422,5 +7422,22 @@
                  "hideByDefault": true
              }
     	]
+    },
+    {
+        "collection": "X1_Elevation",
+        "linked": {
+            "collection": "nhd_shapes",
+            "field": "GridCode"
+        }
+    },
+    {
+        "collection": "THI15",
+        "linked": {
+            "collection": "nhd_shapes",
+            "field": "GridCode"
+        }
+    },
+    {
+        "collection": "nhd_shapes"
     }
 ]
