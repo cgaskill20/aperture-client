@@ -231,6 +231,91 @@ const overwrite = { //leaving this commented cause it explains the schema really
         type: "druid",
         datasource: "Gridmet_ALL_Partitioned",
     },
+    maca_climate: {
+        label: "Future Climate",
+        collection: "MACA_CanESM2_rcp45_2021_2050",
+        info: "Predicted climate data from MACA, a predictive gridded dataset that uses earth system models to project several climate variables across the CONUS.",
+        constraints: {
+            time_interval: {
+                type: "slider",
+                label: "Date Range",
+                range: [1609459200000, 2524608000000],
+                "default": [1609459200000, 1735689600000],
+                isDate: true
+            },
+            m_max_relative_humidity: {
+                type: "slider",
+                label: "Maximum Relative Humidity",
+                range: [1.0, 100.0],
+                "default": [1.0, 100.0],
+                step: 0.1,
+                unit: "percent",
+            },
+            m_min_relative_humidity: {
+                type: "slider",
+                label: "Minimum Relative Humidity",
+                range: [1.0, 100.0],
+                "default": [1.0, 100.0],
+                step: 0.1,
+                unit: "percent",
+            },
+            m_maximum_air_temperature: {
+                type: "slider",
+                label: "Maximum Near-Surface Air Temperature",
+                range: [236.3, 329.2],
+                "default": [236.3, 329.2],
+                step: 0.1,
+                unit: "kelvin"
+            },
+            m_minimum_air_temperature: {
+                type: "slider",
+                label: "Minimum Near-Surface Air Temperature",
+                range: [223.7, 314.7],
+                "default": [223.7, 314.7],
+                step: 0.1,
+                unit: "kelvin"
+            },
+            m_downwelling_solar_radiation: {
+                type: "slider",
+                label: "Surface Downwelling Solar Radiation",
+                range: [9.1, 453.8],
+                "default": [9.1, 453.8],
+                step: 0.1,
+                unit: "W m-2"
+            },
+            m_eastward_wind_component: {
+                type: "slider",
+                label: "Eastward Wind Speed",
+                range: [-21.9, 27.37],
+                "default": [-21.9, 27.37],
+                step: 0.1,
+                unit: "m s-1"
+            },
+            m_northward_wind_component: {
+                type: "slider",
+                label: "Northward Wind Speed",
+                range: [0, 10.3],
+                "default": [0, 10.3],
+                step: 0.1,
+                unit: "m s-1"
+            },
+            m_precipitation: {
+                type: "slider",
+                label: "Precipitation",
+                range: [0, 865.5],
+                "default": [0, 865.5],
+                step: 0.1,
+                unit: "mm"
+            },
+        },
+        color: {
+            style: "gradient",
+            variable: "m_maximum_air_temperature",
+            border: 1
+        },
+        type: "druid",
+        datasource: "MACA_CanESM2_rcp45_2021_2050",
+    },
 }
 
 /* The options object can have the following fields:
