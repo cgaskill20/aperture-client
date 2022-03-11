@@ -116,7 +116,7 @@ const Query = {
 
                 const queryCollection = (query.type != "druid")
                     ? query?.collection
-                    : query?.datasource; // In druid, "datasource" is analogous to "collection"
+                    : query?.body.dataSource; // In druid, "dataSource" is analogous to "collection"
 
                 const queryPipeline = (query.type != "druid")
                     ? JSON.stringify(query?.pipeline ?? [])
