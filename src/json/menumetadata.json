@@ -7419,6 +7419,280 @@
             }
         ]
     },
+
+
+    {
+        "collection": "larimer_water_quality_point_data",
+        "icon": "DrippingFaucet",
+        "linked": {
+            "collection": "larimer_water_quality_sites",
+            "field": "MonitoringLocationIdentifier"
+        },
+        "temporal": "epoch_time",
+        "fieldMetadata": [
+            {
+                "name": "epoch_time",
+                "label": "Date",
+                "type": "date",
+                "step": "1hr"
+            },
+            {
+                "name": "pH",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Ammonia and ammonium",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Orthophosphate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Stream flow, instantaneous",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Oxygen",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Phosphorus",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "unit",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Bacteria mix, unspecified",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Specific conductance",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Temperature, water",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "RBP Stream width",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Turbidity",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Barometric pressure",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Acidity, (H+)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Inorganic nitrogen (nitrate and nitrite)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Organic Nitrogen",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "RBP High water mark",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Kjeldahl nitrogen",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Detergent, severity (choice list)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Floating Garbage Severity (choice List)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Chlorophyll a",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Pheophytin a",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Fish Kill, Severity (choice list)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Floating algae mat - severity (choice list)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Nitrate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Floating debris - severity (choice list)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Odor, atmospheric",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Turbidity severity (choice list)",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Nitrite",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Oil and Grease",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Total dissolved solids",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Chloride",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Magnesium",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Elevation, MSL",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Potassium",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Sulfur Sulfate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Sodium",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Alkalinity, bicarbonate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Carbonate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Calcium",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Alkalinity",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Carbon dioxide",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Hardness, non-carbonate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Hardness, Ca, Mg",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Fluoride",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Silica",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Sulfate",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Sodium, percent total cations",
+                "temporal": true,
+                "hideByDefault": false
+            },
+            {
+                "name": "Sodium adsorption ratio [(Na)/(sq root of 1/2 Ca + Mg)]",
+                "temporal": true,
+                "hideByDefault": false
+            }
+        ]
+    },
+
+
+
+
+
     {
         "collection": "larimer_water_quality_natural_water_data",
         "linked": {
