@@ -7420,11 +7420,10 @@
         ]
     },
     {
-        "collection": "larimer_water_quality_data",
-        "icon": "DrippingFaucet",
+        "collection": "larimer_water_quality_natural_water_data",
         "linked": {
-            "collection": "larimer_water_quality_sites",
-            "field": "MonitoringLocationIdentifier"
+            "collection": "osm_larimer_water_polygons",
+            "field": "BodyOfWater"
         },
         "temporal": "epoch_time",
         "fieldMetadata": [
