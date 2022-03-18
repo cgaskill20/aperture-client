@@ -7422,7 +7422,8 @@
 
 
     {
-        "collection": "larimer_water_quality_point_data",
+        "collection": "larimer_water_quality_point_data_2",
+        "label" : "Larimer Water Quality: Pipes",
         "icon": "DrippingFaucet",
         "linked": {
             "collection": "larimer_water_quality_sites",
@@ -7695,6 +7696,7 @@
 
     {
         "collection": "larimer_water_quality_natural_water_data",
+        "label": "Larimer Water Quality: Body of Water",
         "linked": {
             "collection": "osm_larimer_water_polygons",
             "field": "BodyOfWater"
