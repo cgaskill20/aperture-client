@@ -7428,16 +7428,43 @@
         "linked": {
             "collection": "nhd_shapes",
             "field": "GridCode"
-        }
+        },
+        "minZoom": 13
+    },
+    {
+        "collection": "X2_DNBR",
+        "linked": {
+            "collection": "nhd_shapes",
+            "field": "GridCode"
+        },
+        "minZoom": 13
+    },
+    {
+        "collection": "X3_Soil",
+        "linked": {
+            "collection": "nhd_shapes",
+            "field": "GridCode"
+        },
+        "minZoom": 13
+    },
+    {
+        "collection": "DStorm",
+        "linked": {
+            "collection": "nhd_shapes",
+            "field": "GridCode"
+        },
+        "minZoom": 13
     },
     {
         "collection": "THI15",
         "linked": {
             "collection": "nhd_shapes",
             "field": "GridCode"
-        }
+        },
+        "minZoom": 13
     },
     {
-        "collection": "nhd_shapes"
+        "collection": "nhd_shapes",
+        "minZoom": 13
     }
 ]
