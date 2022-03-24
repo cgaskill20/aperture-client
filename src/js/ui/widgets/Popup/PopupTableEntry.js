@@ -63,7 +63,7 @@ import {TableCell, TableRow, makeStyles, Collapse, Select, InputLabel} from "@ma
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import IconButton from "@material-ui/core/IconButton";
-import {makeJSONPretty} from "../../NewModeling/NewModeling";
+import {makeJSONPretty} from "../../../../../LegacyCode/NewModeling/NewModeling";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Radio from "@material-ui/core/Radio";

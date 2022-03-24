@@ -57,16 +57,16 @@ You may add Your own copyright statement to Your modifications and may provide a
 END OF TERMS AND CONDITIONS
 */
 import React, { useState, useEffect } from 'react';
-import { componentIsRendering } from "../Sidebar";
+import { componentIsRendering } from "../../src/js/ui/Sidebar";
 import Category from "./Category";
 import Grid from "@material-ui/core/Grid";
 import {makeStyles, Paper} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import {prettifyJSON} from "../NewDataExploration/Workspace";
+import {prettifyJSON} from "../../src/js/ui/NewDataExploration/Workspace";
 import Type from "./Type";
 import Features from "./Features";
 import Hyperparameters from "./Hyperparameters";
-import Util from "../../library/apertureUtil";
+import Util from "../../src/js/library/apertureUtil";
 
 export function makeJSONPretty(name) {
     return Util.camelCaseToSpaced(prettifyJSON(name));
