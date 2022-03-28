@@ -7422,7 +7422,7 @@
 
 
     {
-        "collection": "larimer_water_quality_point_data",
+        "collection": "larimer_water_quality_point_data_2",
         "icon": "DrippingFaucet",
         "label": "Water Qaulity: Pipes",
         "linked": {
@@ -7695,7 +7695,7 @@
 
 
     {
-        "collection": "larimer_water_quality_natural_water_data",
+        "collection": "larimer_water_quality_polygon_data",
         "label": "Water Quality: Bodies of Water",
         "linked": {
             "collection": "osm_larimer_water_polygons",
