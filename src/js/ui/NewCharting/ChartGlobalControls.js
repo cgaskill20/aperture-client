@@ -87,6 +87,7 @@ export default function ChartGlobalControls(props) {
         ["Boxplot", {type: ChartingType.BOXPLOT}],
         ["Correlogram", {type: ChartingType.CORRELOGRAM}],
         ["Radar", {type: ChartingType.RADAR}],
+        ["Pie Chart", {type: ChartingType.PIEGRAPH}],
     ];
 
     const handleClick = (event) => {
