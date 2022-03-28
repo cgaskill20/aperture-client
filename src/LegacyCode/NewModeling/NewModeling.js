@@ -56,48 +56,147 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, { useState, useEffect } from 'react';
+import { componentIsRendering } from "../../js/ui/dataExploration/Sidebar";
+import Category from "./Category";
+import Grid from "@material-ui/core/Grid";
+import {makeStyles, Paper} from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import {prettifyJSON} from "../../js/ui/dataExploration/Workspace";
+import Type from "./Type";
+import Features from "./Features";
+import Hyperparameters from "./Hyperparameters";
+import Util from "../../js/library/apertureUtil";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
-    }
-
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
+export function makeJSONPretty(name) {
+    return Util.camelCaseToSpaced(prettifyJSON(name));
 }
 
-export default Root;
+export default React.memo(function NewModeling() {
+    const useStyles = makeStyles((theme) => ({
+        topComponentWidth: {
+            width: "47%",
+            margin: theme.spacing(1)
+        },
+        componentWidth: {
+            width: "98%"
+        },
+        totalWidth: {
+            width: "100%"
+        },
+        paper: {
+            margin: theme.spacing(1),
+            padding: theme.spacing(1)
+        }
+    }));
+
+    const classes = useStyles();
+    const [categories, setCategories] = useState([]);
+    const [selectedCategoryTypes, setSelectedCategoryTypes] = useState([]);
+    const [selectedTypeFeatures, setSelectedTypeFeatures] = useState([]);
+    const [selectedTypeHyperarameters, setSelectedTypeHyperparameters] = useState([]);
+    const [currentTypeName, setCurrentTypeName] = useState("");
+
+    const catalogMap = (catalog) => {
+        const ret = {};
+        for (const entry in catalog) {
+            if (!ret[catalog[entry].category])
+                ret[catalog[entry].category] = {}
+
+            ret[catalog[entry].category][catalog[entry].type] = catalog[entry];
+        }
+        return ret;
+    }
+
+    useEffect(async () => {
+        const { data } = await Query.makeQuery({
+            collection: "model_catalogue"
+        });
+        const catalog = data.reduce((acc, entry) => {
+            acc[entry.type] = entry;
+            return acc;
+        }, {});
+
+        const mappedCatalog = catalogMap(catalog);
+
+        let initialCategories = [];
+        for(const category in mappedCatalog) {
+            for(const extractCategoryLabel in mappedCatalog[category]) {
+                const categoryLabelName = mappedCatalog[category][extractCategoryLabel].category;
+                mappedCatalog[category].label = makeJSONPretty(categoryLabelName);
+                break;
+            }
+            initialCategories.push(mappedCatalog[category]);
+        }
+        setCategories(initialCategories);
+
+        let initialSelectedCategoryTypes = [];
+        for(const type in initialCategories[0]) {
+            initialSelectedCategoryTypes.push(initialCategories[0][type]);
+        }
+        setSelectedCategoryTypes(initialSelectedCategoryTypes);
+
+        let initialTypeFeatures = [];
+        initialTypeFeatures.push(makeJSONPretty(initialSelectedCategoryTypes[0].collections[0].name));
+        initialTypeFeatures.push(initialSelectedCategoryTypes[0].collections[0].features);
+        setSelectedTypeFeatures(initialTypeFeatures);
+
+        setCurrentTypeName(initialSelectedCategoryTypes[0].type);
+
+        setSelectedTypeHyperparameters(initialSelectedCategoryTypes[0].parameters)
+    }, [])
+
+    if (componentIsRendering) console.log("|NewModeling|");
+    return (
+        <div>
+            <Grid
+                className={classes.totalWidth}
+                container
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+            >
+                    <Grid item className={classes.topComponentWidth}>
+                        <Category
+                            setCurrentTypeName={setCurrentTypeName}
+                            selectedCategoryTypes={selectedCategoryTypes}
+                            categories={categories}
+                            types={selectedCategoryTypes} setTypes={setSelectedCategoryTypes}
+                            setFeatures={setSelectedTypeFeatures}
+                            setHyperparameters={setSelectedTypeHyperparameters} />
+                    </Grid>
+                    <Grid item className={classes.topComponentWidth}>
+                        <Type
+                            setCurrentTypeName={setCurrentTypeName}
+                            selectedCategoryTypes={selectedCategoryTypes}
+                            types={selectedCategoryTypes}
+                            setFeatures={setSelectedTypeFeatures}
+                            setHyperparameters={setSelectedTypeHyperparameters} />
+                    </Grid>
+            </Grid>
+
+            <Grid
+                container
+                direction="column"
+                justifyContent="flex-start"
+                alignItems="center"
+            >
+                <Grid item className={classes.componentWidth}>
+                    <Paper className={classes.paper} elevation={3}>
+                        <Features currentTypeName={currentTypeName} features={selectedTypeFeatures} />
+                    </Paper>
+                </Grid>
+                <Grid item className={classes.componentWidth}>
+                    <Paper className={classes.paper} elevation={3}>
+                        <Hyperparameters hyperparameters={selectedTypeHyperarameters} />
+                    </Paper>
+                </Grid>
+                <Grid item className={classes.componentWidth}>
+                    <Paper className={classes.paper} elevation={3}>
+                        <Button className={classes.totalWidth} size="large" variant="outlined">Run This Model</Button>
+                    </Paper>
+                </Grid>
+            </Grid>
+        </div>
+    )
+})

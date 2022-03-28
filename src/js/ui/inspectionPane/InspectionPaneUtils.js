@@ -56,48 +56,101 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import Util from "../../library/apertureUtil";
+import fipsToState from "../../../json/fipsToState.json"
+import defaultImportantFields from "../../../json/defaultImportantFields.json"
+import { temporalId } from "../../library/Constants";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+export const keyToDisplay = (obj, key, suffix = '') => {
+    if (obj?.properties?.meta?.[key]?.label) {
+        return obj.properties.meta[key].label + suffix;
+    }
+    if (defaultImportantFields[key]) {
+        return (defaultImportantFields[key].label ?? Util.cleanUpString(key)) + suffix;
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
+    return Util.cleanUpString(key) + suffix;
 }
 
-export default Root;
+export const valueToDisplay = (obj, key, value) => {
+    let unit = obj?.properties?.meta?.[key]?.unit;
+    if (unit?.toUpperCase() === 'NA') {
+        unit = null;
+    }
+
+    if (obj?.properties?.meta?.[key]?.isDate) {
+        return dateToDisplay(value);
+    }
+    else if (defaultImportantFields[key]?.type && !['string', 'number'].includes(defaultImportantFields[key]?.type)) {
+        return specialTypeToDisplay(defaultImportantFields[key].type, value);
+    }
+    else if (['string', 'number', 'object'].includes(typeof value)) {
+        if(typeof value === 'object') {
+            value = mongoObjectToSomething(value, (s) => s);
+        }
+        if(typeof value === 'number') {
+            value = Number(value.toFixed(3))
+        }
+        return `${value}${unit ? ` ${Util.cleanUpString(unit)}` : ''}`;
+    }
+    else {
+        return JSON.stringify(value);
+    }
+}
+
+export const keyValueIsValid = (key, value) => {
+    if (['meta', 'id', '_id', 'colorInfo', 'apertureName', 'Shape_Leng', 'Shape__Length', 'SHAPE_Length', 'SHAPE_Area', 'SHAPE__Length', 'SHAPE__Area'].includes(key) ||
+    key.includes(temporalId)) {
+        return false;
+    }
+    return true;
+}
+
+const specialTypeToDisplay = (type, value) => {
+    if (type === "stateFips") {
+        return fipsToState[value];
+    }
+}
+
+export const mongoObjectToSomething = (object, func) => { //this function will be extended as more mongo objects leak in
+    const numericTypes = ['$numberLong', '$numberDecimal'];
+    for (const numericType of numericTypes) {
+        if (object?.[numericType]) {
+            return func(Number(object[numericType]));
+        }
+    }
+    return JSON.stringify(object);
+}
+
+export const mongoDateStringToNumber = (dateString) => {
+    if(typeof dateString === 'string' && !isNaN(new Date(dateString).valueOf())) {
+        return new Date(dateString).valueOf();
+    }
+    return -1;
+}
+
+export const mongoNonNumericToNumber = (nonNumeric) => {
+    if (typeof nonNumeric === 'object') {
+        return mongoObjectToSomething(nonNumeric, (s) => s)
+    }
+    return mongoDateStringToNumber(nonNumeric)
+}
+
+const dateToDisplay = (value) => {
+    if (typeof value === 'number') {
+        return epochToDateString(value);
+    }
+    else if (typeof value === 'object') {
+        return mongoObjectToDateString(value);
+    }
+    return JSON.stringify(value)
+}
+
+const epochToDateString = (epoch) => {
+    const str = new Date(epoch).toUTCString();
+    return str.substr(0, str.length - 4);
+}
+
+const mongoObjectToDateString = (object) => {
+    return mongoObjectToSomething(object, epochToDateString);
+}

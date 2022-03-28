@@ -56,48 +56,143 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+import React, {useEffect, useState} from "react";
+import {keyToDisplay, valueToDisplay} from "./InspectionPaneUtils";
+import {TableCell, TableRow, makeStyles, Collapse, Select, InputLabel} from "@material-ui/core";
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import IconButton from "@material-ui/core/IconButton";
+import {makeJSONPretty} from "../../../LegacyCode/NewModeling/NewModeling";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import Radio from "@material-ui/core/Radio";
+import ColorizeIcon from '@material-ui/icons/Colorize';
+import Tooltip from '@material-ui/core/Tooltip';
+import { mongoGroupAccumulators } from "../../library/Constants";
+import { temporalId } from "../../library/Constants";
+
+const useStyles = makeStyles({
+    root: {
+        '& > *': {
+            borderBottom: 'unset',
+        },
+    },
+    totalWidth: {
+        width: "100%"
+    },
+    dropdown: {
+        width: "100%",
+        paddingBottom: "10px"
+    },
+    collapse: {
+        paddingTop: 0,
+        paddingBottom: 0,
+    },
+    tooltip: {
+        hover: "pointer",
+    },
+});
+
+export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties, colorFieldName }) {
+    const classes = useStyles()
+    const [open, setOpen] = useState(false);
+    const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;
+    const [temporalAccumulator, setTemporalAccumulator] = useState(Object.keys(mongoGroupAccumulators)[0]);
+    //console.log({colorFieldName})
+    useEffect(() => {
+        if(colorFieldName && colorFieldName.includes(temporalId)) {
+            const temporalAccumulatorDerivedFromColorFieldName = colorFieldName.substring(colorFieldName.indexOf(temporalId) + temporalId.length, colorFieldName.length);
+            if(temporalAccumulatorDerivedFromColorFieldName !==  temporalAccumulator) {
+                setTemporalAccumulator(temporalAccumulatorDerivedFromColorFieldName)
+            }
+        }
+    }, [entryProperties.isCurrentColorField]) 
+
+    const objectHasTrueValue = (obj) => {
+            if(obj.isTemporal || obj.canBeColorField) {
+                return <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </IconButton>
+            }
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+    const switchTemporalAccumulator = (newAccumulator, force = false) => {
+        const newTemporalAccumulator = newAccumulator;
+        if(entryProperties.isCurrentColorField || force) {
+            changeColorFieldName(keyValue, null, false, newTemporalAccumulator);
+        }
+        setTemporalAccumulator(newTemporalAccumulator);
+    }
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
+    const colorFieldCheckbox = () => {
+        return <FormControlLabel
+            control={
+                <Radio
+                    checked={entryProperties.isCurrentColorField}
+                    onChange={() => {
+                        if(entryProperties.isTemporal) {
+                            switchTemporalAccumulator(temporalAccumulator, true)
+                        }
+                        else {
+                            changeColorFieldName(keyValue);
+                        }
+                    }}
+                    color="primary"
+                />
+            }
+            label="Current color field"
+        />
+    }
 
-                <div>
-                    <Sidebar/>
-                </div>
+    const isTemporal = () => {
+        if(entryProperties.isTemporal) {
+            return <div className={classes.dropdown}>
+                <FormControl variant="outlined" className={classes.totalWidth}>
+                    <InputLabel>Temporal Accumulator</InputLabel>
+                        <Select
+                            native
+                            label="Temporal Accumulator"
+                            value={temporalAccumulator}
+                            onChange={(event) => switchTemporalAccumulator(event.target.value)}
+                        >
+                            {Object.entries(mongoGroupAccumulators).map(([accumulator, label], index) => {
+                                return <option value={accumulator} key={index}>{label}</option>
+                            })}
+                        </Select>
+                </FormControl>
+            </div>
+        }
+    }
 
-                <ConditionalWidgetRendering/>
+    function paletteIcon() {
+        if(entryProperties.isCurrentColorField) {
+            return (<>
+                &nbsp;
+                <Tooltip className={classes.tooltip} title="Overlay color is currently based off of this field">
+                    <ColorizeIcon color="primary" size="small"/>
+                </Tooltip>
+            </>)
+        }
+    }
 
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
-}
-
-export default Root;
+    return (
+        <React.Fragment>
+            <TableRow className={classes.root}>
+                <TableCell>{keyToDisplay(obj, keyValue, entryProperties.isTemporal ? ` (${mongoGroupAccumulators[temporalAccumulator]})` : '')}</TableCell>
+                <TableCell>{valueToDisplay(obj, keyValue, entryProperties.isTemporal ? obj.properties[`${keyValue}${temporalId}${temporalAccumulator}`] : value)}</TableCell>
+                <TableCell align="right">
+                    {objectHasTrueValue(entryProperties)}
+                </TableCell>
+            </TableRow>
+            <TableRow>
+                <TableCell className={classes.collapse} colSpan={6}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        {colorFieldCheckbox()}
+                        {isTemporal()}
+                    </Collapse>
+                </TableCell>
+            </TableRow>
+        </React.Fragment>
+    )
+});

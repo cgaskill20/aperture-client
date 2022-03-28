@@ -56,48 +56,92 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import {componentIsRendering} from "../../Sidebar";
+import {
+    Switch,
+    FormGroup,
+    FormControlLabel,
+    Typography,
+    TextField,
+    Button,
+    Divider
+} from "@material-ui/core";
+import {CustomTooltip} from "../../../widgets/UtilityComponents";
+import Grid from "@material-ui/core/Grid";
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import CustomAlert from "../../Utils/CustomAlert";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+const useStyles = makeStyles((theme) => ({
+    spaceOnTheLeft: {
+        marginLeft: theme.spacing(2),
+    },
+    title: {
+        borderBottom: '2px solid #adadad',
+        marginBottom: theme.spacing(2),
+        width: "100%",
+    },
+    fullWidth: {
+        width: "100%",
+    },
+}));
+
+const aperturePublicPage = "urban-sustain.org/services/aperture.php"
+
+export default React.memo(function Share({ serializeWorkspace, setModalOpen }) {
+    const classes = useStyles();
+    const [includeColor, setIncludeColor] = useState(true)
+    const [includeViewport, setIncludeViewport] = useState(false)
+    const [linkCopied, setLinkCopied] = useState(false);
+    const [alertOpen, setAlertOpen] = useState(false);
+    const link = `${aperturePublicPage}?workspace=${serializeWorkspace("Shared Workspace", includeColor, includeViewport)}`
+
+    const copyLink = () => {
+        const linkElement = document.getElementById("linkField");
+        linkElement.focus();
+        linkElement.select();
+        document.execCommand('copy');
+        setLinkCopied(true);
+        setAlertOpen(true);
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
-}
-
-export default Root;
+    if (componentIsRendering) { console.log("|Share Rerending|") }
+    return (
+        <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="flex-start"
+        >
+            <Grid item className={classes.fullWidth}>
+                <Typography className={classes.title} align="center" variant="h5">Share Workspace</Typography>
+                <Typography>Save Options</Typography>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={includeColor} onChange={(e) => { setIncludeColor(e.target.checked) }} />}
+                        label="Include Color Selections"
+                    />
+                </FormGroup>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={includeViewport} onChange={(e) => { setIncludeViewport(e.target.checked) }} />}
+                        label="Include Current Viewport Bounds"
+                    />
+                </FormGroup>
+            </Grid>
+            <Grid item className={classes.fullWidth}>
+                <CustomTooltip title="Copy Link to Clipboard">
+                    <Button className={classes.fullWidth} variant="outlined" startIcon={<AssignmentTurnedInIcon/>} onClick={copyLink}>
+                        <Divider orientation="vertical" flexItem />
+                        &nbsp;&nbsp;
+                        <TextField className={classes.fullWidth} value={link} InputProps={{
+                            readOnly: true,
+                        }} id="linkField" />
+                    </Button>
+                </CustomTooltip>
+            </Grid>
+            <CustomAlert alertOpen={alertOpen} setAlertOpen={setAlertOpen} severity="success" text="Link Copied!" />
+        </Grid>
+    );
+})

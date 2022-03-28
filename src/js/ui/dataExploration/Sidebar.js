@@ -56,48 +56,69 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React from 'react';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import MenuIcon from '@material-ui/icons/Menu';
+import {Button} from "@material-ui/core";
+import { useGlobalState } from '../global/GlobalState';
+import Workspace from "./Workspace";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
-    }
+const drawerWidth = 800;
+export const componentIsRendering = false;
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+        zIndex: 2001,
+    },
+    menuButton: {
+        margin: theme.spacing(5),
+        zIndex: 2002,
+        top: -20,
+        left: -20,
+    },
+    hide: {
+        display: 'none',
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+    },
+    drawerPaper: {
+        width: drawerWidth,
+        opacity: 0.95,
+    },
+}));
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
+export default function Sidebar() {
+    const classes = useStyles();
+    const [globalState, setGlobalState] = useGlobalState();
 
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
+    return (
+        <div className={classes.root}>
+            <Button
+                variant="outlined"
+                color="inherit"
+                className={clsx(classes.menuButton, globalState.sidebarOpen && classes.hide)}
+                startIcon={<MenuIcon />}
+                aria-label="open drawer"
+                onClick={() => setGlobalState({sidebarOpen: true, popupOpen: false})}
+            >
+                Menu
+            </Button>
+            <Drawer
+                className={classes.drawer}
+                variant="persistent"
+                anchor="left"
+                open={globalState.sidebarOpen}
+                classes={{
+                    paper: classes.drawerPaper,
+                }}
+            >
+                <Workspace/>
+            </Drawer>
+        </div>
+    );
 }
-
-export default Root;

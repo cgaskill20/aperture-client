@@ -56,48 +56,120 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, { Component } from 'react';
+const e = React.createElement;
+import noUiSlider from "../../../js/third-party/nouislider.min.js";
+import Util from '../../../js/library/apertureUtil';
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+export default class ModelParameter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: this.props.config.default
+        }
+        this.name = this.props.config.name;
+        this.sliderQueue = [];
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+    render() {
+        if (this.state.value == null) {
+            console.error("Value not set after constructor!!!!")
+            console.error(this.props.config)
+            return null;
+        }
+        this.updateParent()
+        return e("div", { className: "modelParameter" },
+            e("label", { htmlFor: this.name }, `${Util.cleanUpString(this.name)}: ${Util.cleanUpString(this.state.value)}`),
+            this.buildParameter()
+        );
+    }
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
+    componentDidMount() {
+        this.sliderQueue.forEach(slider => {
+            document.getElementById(slider.id).appendChild(slider.e);
+        });
+        this.sliderQueue = [];
+    }
 
-                <div>
-                    <Sidebar/>
-                </div>
+    getType() {
+        return this.props.config.type;
+    }
 
-                <ConditionalWidgetRendering/>
+    buildParameter() {
+        switch (this.getType()) {
+            case "integer":
+                return this.buildSlider();
+            case "double":
+                return this.buildSlider();
+            case "boolean":
+                return this.buildCheckbox();
+            case "string":
+                return this.buildSelect();
+            default:
+                console.error(`Did not recongnize ${this.getType()}!`);
+                return null;
+        }
+    }
 
-                <InspectionPane />
+    buildSelect() {
+        return e("select", {
+            id: "categorySelector",
+            className: "form-control",
+            onChange: (e) => {
+                this.setState({ value: e.target.value })
+            },
+            value: this.state.value
+        }, ...this.getSelections());
+    }
 
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
+    getSelections() {
+        return this.props.config.allowedValues.map(o => {
+            return e("option", null, o);
+        });
+    }
+
+    buildSlider() {
+        const slider = document.createElement("div");
+        noUiSlider.create(slider, {
+            start: this.state.value,
+            step: this.getType() === "integer" ? 1 : this.props.config.default < 0.01 ? this.props.config.default : 0.01,
+            range: {
+                'min': this.props.config.min,
+                'max': this.props.config.max
+            }
+        });
+
+        slider.noUiSlider.on('slide', function (_, _1, values) {
+            let newValue = values[0];
+            if (this.getType() !== "integer") {
+                if (this.props.config.default < 0.01) {
+                    newValue = newValue.toFixed(6);
+                }
+                else {
+                    newValue = newValue.toFixed(2);
+                }
+                newValue = Number(newValue);
+            }
+            if (newValue !== this.state.value) {
+                this.setState({ value: newValue });
+            }
+        }.bind(this));
+
+        this.sliderQueue.push({ id: this.name, e: slider }); //the slider will be injected after render() is called
+        return e("div", { id: `${this.name}` });
+    }
+
+    buildCheckbox() {
+        return e("input", {
+            type: "checkbox",
+            checked: this.state.value,
+            onChange: (e) => {
+                this.setState({ value: e.target.checked })
+            }
+        })
+    }
+
+    updateParent() {
+        this.props.setParameter(this.name, this.state.value)
+    }
 }
-
-export default Root;

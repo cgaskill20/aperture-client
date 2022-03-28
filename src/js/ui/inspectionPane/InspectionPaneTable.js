@@ -56,48 +56,36 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React from "react";
+import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles } from "@material-ui/core";
+import { keyValueIsValid } from "./InspectionPaneUtils";
+import PopupTableEntry from "./InspectionPaneTableEntry"
+import Util from "../../library/apertureUtil";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
-    }
+export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) {
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
-}
-
-export default Root;
+    return (
+        <TableContainer>
+            <Table aria-label="collapsible table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Key</TableCell>
+                        <TableCell>Value</TableCell>
+                        <TableCell align="right" />
+                    </TableRow>
+                </TableHead>
+                     <TableBody>
+                         {keyValPairs
+                        .filter(([key, value]) => keyValueIsValid(key, value))
+                        .map(([key, value]) => (
+                            <PopupTableEntry obj={obj} keyValue={key} value={value} key={key} entryProperties={{
+                                isCurrentColorField: colorField?.name === key || Util.removePropertiesPrefix(colorField?.name) === key || (obj.properties.meta[key]?.temporal ? key === colorField?.name?.substr(0, key.length) : false),
+                                canBeColorField: obj.properties.colorInfo.validColorFieldNames.includes(key),
+                                isTemporal: obj.properties.meta[key]?.temporal ? true : false
+                            }} colorFieldName={colorField?.name}/>
+                        ))}
+                    </TableBody>
+            </Table>
+        </TableContainer>
+    )
+});

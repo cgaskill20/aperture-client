@@ -56,48 +56,102 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import {Button, ButtonGroup, Grid, Paper, Switch, Icon, Fab} from "@material-ui/core";
+import SaveIcon from '@material-ui/icons/Save';
+import FolderOpenIcon from '@material-ui/icons/FolderOpen';
+import ShareIcon from '@material-ui/icons/Share';
+import WorkspaceSearchbar from "./WorkspaceSearchbar";
+import {componentIsRendering} from "../Sidebar";
+import Ven from "../../../../../images/ven.svg"
+import VenFilled from "../../../../../images/venFilled.svg"
+import SaveAndLoadAndShare from './SaveLoadShare/SaveAndLoadAndShare';
+import EqualizerIcon from "@material-ui/icons/Equalizer";
+import CloseIcon from "@material-ui/icons/Close";
+import { useGlobalState } from "../../global/GlobalState";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+        padding: theme.spacing(2),
+        margin: theme.spacing(1),
+    },
+    buttons: {
+        marginBottom: theme.spacing(2),
+    },
+    customIcon: {
+        width: "18px",
+        height: "18px",
+        transform: "translate(0, -10px)"
+    },
+}));
+
+export default React.memo(function WorkspaceControls(props) {
+    const [globalState, setGlobalState] = useGlobalState();
+    const classes = useStyles();
+    const venIcon = <Icon>
+        <img src={props.intersect ? VenFilled : Ven} className={classes.customIcon} />
+    </Icon>
+    const [saveAndLoadAndShareModalOpen, setSaveAndLoadAndShareModalOpen] = useState(false)
+    const [saveAndLoadAndShareMode, setSaveAndLoadAndShareMode] = useState(null)
+
+    function handleDrawerClose() {
+        setGlobalState({sidebarOpen: false})
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+    function toggleCharting() {
+        setGlobalState({ chartingOpen: !globalState.chartingOpen });
+    }
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
-}
-
-export default Root;
+    if (componentIsRendering) { console.log("|WorkspaceControls Rerending|") }
+    return (
+        <>
+            <Paper className={classes.root} elevation={3}>
+                <Grid className={classes.buttons} container direction="row" justifyContent="space-between" alignItems="center">
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<SaveIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("save");
+                        }}>Save</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<FolderOpenIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("load");
+                        }}>Load</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => {
+                            setSaveAndLoadAndShareModalOpen(true);
+                            setSaveAndLoadAndShareMode("share");
+                        }}>Share</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={venIcon} onClick={() => {
+                            props.setIntersect(!props.intersect)
+                        }}>
+                            {props.intersect ? "Intersections: on" : "Intersections: off"}
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<EqualizerIcon/>} id="nav-graph-button" onClick={() => toggleCharting()}>Graph</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="outlined" startIcon={<CloseIcon/>} onClick={handleDrawerClose}>Close</Button>
+                    </Grid>
+                </Grid>
+                <WorkspaceSearchbar layers={props.layers} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles}
+                    workspace={props.workspace} setWorkspace={props.setWorkspace} />
+            </Paper>
+            <SaveAndLoadAndShare
+                modalOpen={saveAndLoadAndShareModalOpen}
+                setModalOpen={setSaveAndLoadAndShareModalOpen}
+                mode={saveAndLoadAndShareMode}
+                serializeWorkspace={props.serializeWorkspace}
+                deSerializeWorkspace={props.deSerializeWorkspace}
+            />
+        </>
+    )
+});

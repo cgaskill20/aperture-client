@@ -56,48 +56,177 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import {componentIsRendering} from "../../Sidebar";
+import {
+    Switch,
+    FormGroup,
+    FormControlLabel,
+    Typography,
+    TextField,
+    Button,
+    ButtonGroup
+} from "@material-ui/core";
+import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
+import Grid from "@material-ui/core/Grid";
+import CustomAlert from "../../Utils/CustomAlert";
+import { useGlobalState } from "../../../global/GlobalState";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+const useStyles = makeStyles((theme) => ({
+    root: {
+    },
+    spaceOnTheLeft: {
+        marginLeft: theme.spacing(2),
+    },
+    title: {
+        borderBottom: '2px solid #adadad',
+        marginBottom: theme.spacing(2),
+        width: "100%",
+    },
+    gridItem: {
+        width: "100%",
+    },
+}));
+
+export default React.memo(function Save({serializeWorkspace, setModalOpen}) {
+    const classes = useStyles();
+
+    const [globalState, setGlobalState] = useGlobalState();
+    const [saveColor, setSaveColor] = useState(true);
+    const [saveViewport, setSaveViewport] = useState(false);
+    const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1);
+    const [name, setName] = useState("Saved Workspace...");
+    const [alertOverwriteOpen, setAlertOverwriteOpen] = useState(false);
+    const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
+    const validName = name.length !== 0;
+
+    const getWorkspace = () => {
+        return localStorage.getItem(`workspace${slotCurrentlySelected}`);
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+    const alertTimeout = () => {
+        setTimeout(function() {
+            setGlobalState({ generalAlertOpen: false });
+        }, 3000);
+    }
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
+    const saveWorkspace = () => {
+        if(!validName) {
+            return;
+        }
+        if(getWorkspace()) {
+            if(alertDeleteOpen) setAlertDeleteOpen(false);
+            setAlertOverwriteOpen(true);
+        }
+        else {
+            overwriteWorkspace();
+        }
+    }
 
-                <div>
-                    <Sidebar/>
-                </div>
+    const overwriteWorkspace = () => {
+        const serializedWorkspace = serializeWorkspace(name, saveColor, saveViewport);
+        localStorage.setItem(`workspace${slotCurrentlySelected}`, serializedWorkspace);
+        setModalOpen(false);
+        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Saved" });
+        alertTimeout();
+    }
 
-                <ConditionalWidgetRendering/>
+    const confirmDeleteWorkspace = () => {
+        if(alertOverwriteOpen) setAlertOverwriteOpen(false);
+        setAlertDeleteOpen(true);
+    }
 
-                <InspectionPane />
+    const deleteWorkspace = () => {
+        localStorage.removeItem(`workspace${slotCurrentlySelected}`);
+        setModalOpen(false);
+        setGlobalState({ generalAlertOpen: true, severity: "success", text: "Workspace Deleted" });
+        alertTimeout();
+    }
 
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
-}
+    const renderSaveButton = () => {
+        if(alertOverwriteOpen) {
+            return (
+                <Button className={classes.gridItem} color="secondary" variant="contained" onClick={overwriteWorkspace}>
+                    Overwrite
+                </Button>
+            )
+        }
+        else {
+            return (
+                <Button className={classes.gridItem} variant="outlined" onClick={saveWorkspace}>
+                    Save
+                </Button>
+            )
+        }
+    }
 
-export default Root;
+    const renderDeleteButton = () => {
+        if(alertDeleteOpen) {
+            return (
+                <Button className={classes.gridItem} variant="contained" color="secondary" disabled={!getWorkspace()}
+                        onClick={deleteWorkspace}>
+                    Delete
+                </Button>
+            )
+        }
+        else {
+            return (
+                <Button className={classes.gridItem} variant="outlined" disabled={!getWorkspace()}
+                        onClick={confirmDeleteWorkspace}>
+                    Delete
+                </Button>
+            )
+        }
+    }
+
+    if (componentIsRendering) { console.log("|Save Rerending|") }
+    return (
+        <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="flex-start"
+        >
+            <Grid item className={classes.gridItem}>
+                <Typography align="center" className={classes.title} variant="h5">Save Workspace</Typography>
+                <Typography>Save Options</Typography>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={saveColor} onChange={(e) => { setSaveColor(e.target.checked) }} />}
+                        label="Save Color Selections"
+                    />
+                </FormGroup>
+                <FormGroup row>
+                    <FormControlLabel
+                        control={<Switch className={classes.spaceOnTheLeft} color="primary" checked={saveViewport} onChange={(e) => { setSaveViewport(e.target.checked) }} />}
+                        label="Save Current Viewport Bounds"
+                    />
+                </FormGroup>
+            </Grid>
+            <Grid item className={classes.gridItem}>
+                <SavedWorkspaceSlotSelection title="Select a Save Slot" slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} />
+            </Grid>
+            <Grid item className={classes.gridItem}>
+                <TextField
+                    className={classes.gridItem}
+                    error={!validName}
+                    placeholder={name}
+                    value={name}
+                    onChange={(e) => { setName(e.target.value) }}
+                    id="outlined-error-helper-text"
+                    label="Workspace Name"
+                />
+
+            </Grid>
+            <CustomAlert alertOpen={alertOverwriteOpen} setAlertOpen={setAlertOverwriteOpen} severity="error" text="Are you sure you want to overwrite this workspace?" />
+            <CustomAlert alertOpen={alertDeleteOpen} setAlertOpen={setAlertDeleteOpen} severity="error" text="Are you sure you want to delete this workspace?" />
+            <Grid item className={classes.gridItem}>
+                <ButtonGroup className={classes.gridItem}>
+                    {renderSaveButton()}
+                    {renderDeleteButton()}
+                </ButtonGroup>
+            </Grid>
+        </Grid>
+    );
+})

@@ -56,48 +56,186 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, {useEffect, useRef, useState} from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import WorkspaceControls from "./WorkspaceControl/WorkspaceControls";
+import WorkspaceLayers from "./WorkspaceLayers";
+import AutoMenu from "../../library/autoMenu";
+import {componentIsRendering} from "./Sidebar";
+import Query from "../../library/Query";
+import Util from "../../library/apertureUtil";
+import Grid from "@material-ui/core/Grid";
+import LZString from 'lz-string';
+import L from 'leaflet';
+import { useGlobalState } from '../global/GlobalState';
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
-    }
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '98%',
+    },
+}));
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
+export function prettifyJSON(name) {
+    return Util.capitalizeString(Util.underScoreToSpace(name));
 }
 
-export default Root;
+export default React.memo(function Workspace() {
+    const classes = useStyles();
+
+    const [layers, setLayers] = useState([]);
+    const [intersect, setIntersect] = useState(false);
+    const [workspace, setWorkspace] = useState([]);
+    const [layerTitles, setLayerTitles] = useState([]);
+    const [graphableLayers, setGraphableLayers] = useState([]);
+    const [workspaceOnLoad, setWorkspaceOnLoad] = useState(null)
+    const [globalState, setGlobalState] = useGlobalState();
+    const workspaceIsLoaded = useRef(false);
+
+    useEffect(() => {
+        window.setIntersect(intersect)
+    }, [intersect]);
+
+    useEffect(() => {
+        if(!workspaceIsLoaded.current && workspace.length && layers.length && !globalState.preloading) {
+            workspaceIsLoaded.current = true;
+            if(workspaceOnLoad) {
+                deSerializeWorkspace(workspaceOnLoad)
+            }
+        }
+    }, [workspace, layers, globalState.preloading])
+    
+    function serializeWorkspace(workspaceName="workspace", saveColorState=true, saveMapViewport=false) {
+        const relevantLayers = layers.filter((e, index) => workspace[index]).map(layer => {
+            return {
+                collection: layer.collection,
+                on: layer.state ?? false,
+                expandedState: layer.expandedState ?? false,
+                colorField: saveColorState ? layer.colorField : undefined,
+                constraintState: layer.constraintState,
+                constraints: Object.values(layer.constraints).filter(e => e.state).map((constraint) => {
+                    return {
+                        name: constraint.name,
+                        state: constraint.state
+                    }
+                })
+            }
+        })
+
+        const fullWorkspace = {
+            layers: relevantLayers,
+            intersect,
+            name: workspaceName,
+            bounds: saveMapViewport ? window.map.getBounds().toBBoxString() : undefined
+        }
+        const serialized = JSON.stringify(fullWorkspace);
+        const compressedSerialized = LZString.compressToEncodedURIComponent(serialized);
+        return compressedSerialized;
+    }
+
+    async function deSerializeWorkspace(compressedSerializedWorkspace) {
+        //if the menu isnt loaded yet, wait for it to be loaded
+        if(!workspaceIsLoaded.current) {
+            setWorkspaceOnLoad(compressedSerializedWorkspace)
+            return;
+        }
+        const serializedWorkspace = LZString.decompressFromEncodedURIComponent(compressedSerializedWorkspace)
+        if(!serializedWorkspace) {
+            return;
+        }
+        const deSerializedWorkspace = JSON.parse(serializedWorkspace)
+        if(deSerializedWorkspace.intersect != null) {
+            setIntersect(deSerializedWorkspace.intersect)
+        }
+
+        if(deSerializedWorkspace.bounds != null) {
+            //setIntersect(deSerializedWorkspace.intersect)
+            const bboxArray = deSerializedWorkspace.bounds.split(',')
+            window.map.fitBounds(L.latLngBounds(L.latLng(Number(bboxArray[1]), Number(bboxArray[0])), 
+                L.latLng(Number(bboxArray[3]), Number(bboxArray[2]))))
+        }
+
+        const collections = new Set(deSerializedWorkspace.layers.map(e => e.collection))
+        setWorkspace(layers.map(layer => {
+            const isIn = collections.has(layer.collection);
+            if(isIn) {
+                const deSerializedLayer = deSerializedWorkspace.layers.find(e => e.collection === layer.collection);                
+                layer.on = deSerializedLayer.on;
+                layer.expandedState = deSerializedLayer.expandedState;
+                layer.colorField = deSerializedLayer.colorField;
+                layer.constraintState = deSerializedLayer.constraintState;
+                layer.forceUpdateFlag = true;
+                for(const constraint of deSerializedLayer.constraints) {
+                    layer.constraints[constraint.name].state = constraint.state;
+                    layer.constraints[constraint.name].forceUpdateFlag = true;
+                }
+                
+            }
+            return isIn;
+        }))
+    }
+
+    function extractLayers(data) {
+        let tempBoolean = [];
+        let tempLayers = [];
+        let tempLayerTitles = [];
+        for(const layer in data) {
+            const thisLayer = data[layer];
+            tempLayers.push(data[layer]);
+            const layerName = thisLayer?.label ?? prettifyJSON(thisLayer.collection);
+            tempLayerTitles.push(layerName);
+            tempBoolean.push(false);
+        }
+        setLayers(tempLayers);
+        setWorkspace(tempBoolean);
+        setLayerTitles(tempLayerTitles);
+    }
+
+    function extractGraphableLayers(data) {
+        let tempGraphableLayers = [];
+        for (const layer in data) {
+            const thisLayer = data[layer];
+            const layerName = thisLayer.collection;
+            tempGraphableLayers.push(layerName);
+        }
+        setGraphableLayers(tempGraphableLayers);
+    }
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const workspaceFromURL = urlParams.get('workspace');
+        workspaceFromURL && setWorkspaceOnLoad(workspaceFromURL)
+
+        $.getJSON("src/json/menumetadata.json", async function (mdata) {
+            const finalData = await AutoMenu.build(mdata, globalState.overwrite);
+            Query.init(finalData);
+            extractLayers(finalData);
+
+            setGlobalState({ menuMetadata: finalData });
+        });
+
+        $.getJSON("src/json/graphPriority.json", async function (mdata) {
+            const graphableLayers = await AutoMenu.build(mdata, globalState.overwrite);
+            extractGraphableLayers(graphableLayers);
+        });
+    }, []);
+
+    if(componentIsRendering) {console.log("|Workspace Rerending|")}
+    return (
+        <Grid
+            className={classes.root}
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+        >
+            <Grid item className={classes.root}>
+                <WorkspaceControls layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles}
+                                   workspace={workspace} setWorkspace={setWorkspace} serializeWorkspace={serializeWorkspace} deSerializeWorkspace={deSerializeWorkspace}
+                                   intersect={intersect} setIntersect={setIntersect} />
+            </Grid>
+            <Grid item className={classes.root}>
+                <WorkspaceLayers layers={layers} graphableLayers={graphableLayers} layerTitles={layerTitles} workspace={workspace} />
+            </Grid>
+        </Grid>
+    );
+})

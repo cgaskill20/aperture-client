@@ -56,48 +56,184 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, { useEffect, useState } from "react";
+import { makeStyles, Drawer, Typography, IconButton, Grid, Paper } from "@material-ui/core";
+import { useGlobalState } from "../global/GlobalState";
+import Util from "../../library/apertureUtil";
+import CloseIcon from "@material-ui/icons/Close";
+import PopupTable from "./InspectionPaneTable";
+import PopupTimeChart from "./InspectionPaneTimeChart";
+import PopupColorInfo from "./InspectionPaneColorInfo";
+import { keyToDisplay } from "./InspectionPaneUtils";
+import defaultImportantFields from "../../../json/defaultImportantFields.json"
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+const drawerWidth = '500px';
+
+const useStyles = makeStyles({
+    root: {
+        display: 'flex',
+        zIndex: 10000,
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+    },
+    drawerPaper: {
+        width: drawerWidth,
+        opacity: 0.95,
+    },
+    contentContainer: {
+        margin: '5px 20px',
+    },
+    paper: {
+        padding: "15px",
+        marginBottom: "20px",
+    },
+    subTitle: {
+        borderBottom: "1px dotted black",
+    },
+});
+
+export default function InspectionPane() {
+    const [obj, setObj] = useState({});
+    const [globalState, setGlobalState] = useGlobalState();
+    const [colorSummary, setColorSummary] = useState(obj?.properties?.colorInfo?.colorSummary());
+    const [colorField, setColorField] = useState(obj?.properties?.colorInfo?.currentColorField?.name);
+    const classes = useStyles();
+    const subTitleTextSize = "h6";
+
+    const [change, setChange] = useState(0)
+
+    const onObjChange = () => {
+        setColorSummary(obj?.properties?.colorInfo?.colorSummary(obj?.properties?.colorInfo?.currentColorField?.name))
+        setColorField(obj?.properties?.colorInfo?.currentColorField)
+        const onFieldChange = (newField) => {
+            setColorField(newField)
+            setColorSummary(obj?.properties?.colorInfo.colorSummary(newField?.name))
+        }
+        obj?.properties?.colorInfo?.subscribeToColorFieldChange(onFieldChange)
+        return () => {
+            obj?.properties?.colorInfo?.subscribeToColorFieldChange(onFieldChange, true)
+        }
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+    useEffect(onObjChange, [obj])
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
+    useEffect(() => {
+        window.setPopupObj = (o) => {
+            setObj(o);
+            setGlobalState({ popupOpen: true, sidebarOpen: false, preloading: false });
+        };
 
-                <div>
-                    <Sidebar/>
-                </div>
+        window.forceUpdateObj = (properties) => {
+            if (properties === obj.properties) {
+                onObjChange();
+            }
+        }
+        return () => { window.setPopupObj = () => { } };
+    }, [globalState])
 
-                <ConditionalWidgetRendering/>
+    const makeTable = (keyValPairs) => {
+        if (!keyValPairs || !keyValPairs.length) {
+            return;
+        }
+        return <PopupTable keyValPairs={keyValPairs} obj={obj} colorField={colorField} />
+    }
 
-                <InspectionPane />
+    const makeTables = () => {
+        if (obj.properties) {
+            const importantNames = new Set();
+            const importantFields = Object.entries(obj.properties)
+                .filter(([key, value]) => obj.properties?.meta?.[key]?.important || defaultImportantFields[key] || key === colorField?.name)
+                .filter(([key, value]) => {
+                    const keyDisp = keyToDisplay(obj, key);
+                    if (importantNames.has(keyDisp)) {
+                        return false;
+                    }
+                    importantNames.add(keyDisp)
+                    return true;
+                });
+            return <>
+                <Paper className={classes.paper} elevation={3}>
+                    {
+                        importantFields.length ?
+                            <>
+                                <Typography className={classes.subTitle} variant={subTitleTextSize} gutterBottom>
+                                    Important Fields
+                                </Typography>
+                                {makeTable(importantFields)}
+                            </> : null
+                    }
+                </Paper>
+                {makeColors()}
+                {makeCharts()}
+                <Paper className={classes.paper} elevation={3}>
+                    <Typography className={classes.subTitle} variant={subTitleTextSize} gutterBottom>
+                        All Fields
+                    </Typography>
+                    {makeTable(Object.entries(obj.properties))}
+                </Paper>
+            </>
+        }
+    }
 
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
+    const makeCharts = () => {
+        if (obj.properties) {
+            return Object.entries(obj.properties)
+                .filter(([key, value]) => obj.properties?.meta?.[key]?.temporal)
+                .map(([key, value]) => <React.Fragment key={`${key}${JSON.stringify(obj.join)}${JSON.stringify(obj.temporalRange)}`}>
+                    <Paper className={classes.paper} elevation={3}>
+                        <Typography className={classes.subTitle} align="center" gutterBottom variant={subTitleTextSize}>{keyToDisplay(obj, key)}</Typography>
+                        <PopupTimeChart
+                            collection={obj.properties.meta[key].temporal.collection}
+                            fieldToChart={key}
+                            join={obj.join}
+                            temporalRange={obj.properties.meta[key].temporal.temporalRange}
+                        />
+                        <br />
+                    </Paper>
+                </React.Fragment>)
+        }
+    }
+
+    const makeColors = () => {
+        if (colorSummary && !colorSummary.noSummary) {
+            return <>
+                <Paper className={classes.paper} elevation={3}>
+                    <Typography className={classes.subTitle} gutterBottom variant={subTitleTextSize}>Color Coding Based on {colorField.label ?? Util.cleanUpString(colorField.name)}</Typography>
+                    <PopupColorInfo colorFieldName={colorField.name} colorSummary={colorSummary} obj={obj} />
+                </Paper>
+            </>
+        }
+    }
+
+    return <div className={classes.root}>
+        <Drawer
+            className={classes.drawer}
+            variant="persistent"
+            anchor="right"
+            open={globalState.popupOpen}
+            classes={{
+                paper: classes.drawerPaper,
+            }}
+        >
+            <div className={classes.contentContainer}>
+                <Grid container>
+                    <Grid item xs={11}>
+                        <Typography variant="h4" gutterBottom>
+                            {Util.cleanUpString(obj?.properties?.apertureName)}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <IconButton onClick={() => setGlobalState({ popupOpen: false })}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={12}>
+                        {makeTables()}
+                    </Grid>
+                </Grid>
+            </div>
+        </Drawer>
+    </div>
 }
-
-export default Root;

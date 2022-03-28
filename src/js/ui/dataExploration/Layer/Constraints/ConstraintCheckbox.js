@@ -56,48 +56,52 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, {useState, useEffect} from 'react';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import {componentIsRendering} from "../../Sidebar";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
-    }
+export default function ConstraintCheckbox({constraint, querier, option}) {
+    const [check, setCheck] = useState(true);
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+    if(componentIsRendering) {console.log("|ContraintCheckbox Rerending|")}
+    useEffect(() => {
+        querier.updateConstraint(constraint.name, option, check);
+    }, []);
+    
+    useEffect(() => {
+        if(constraint.forceUpdateFlag && typeof constraint.forceUpdateFlag === 'number') {
+            constraint.forceUpdateFlag--;
+            const newCheck = constraint.state?.[option] ?? true;
+            setCheck(newCheck)
+            querier.updateConstraint(constraint.name, option, newCheck);
+        }
+    })
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
+    return (
+        <FormGroup id={`constraint-formGroup-${option}`}>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={check}
+                        onChange={() => { 
+                            const newCheck = !check;
+                            setCheck(newCheck)
+                            if(!constraint.state) {
+                                constraint.state = {};
+                            }
+                            constraint.state[option] = newCheck;
+                            
+                            querier.updateConstraint(constraint.name, option, newCheck);
+                        }}
+                        id={`${option}`}
+                        name={`${option}`}
+                        color="primary"
+                    />
+                }
+                label={option}
+            />
+        </FormGroup>
+    );
 }
-
-export default Root;

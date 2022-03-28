@@ -56,48 +56,39 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, { Component } from 'react';
+const e = React.createElement;
+import Util from '../../../js/library/apertureUtil';
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+export default class ModelCollection extends React.Component {
+    constructor(props) {
+        super(props);
+        this.name = this.props.config.name;
+    }
+    
+    render() {
+        return e("div", {className: "modelCollection"},
+            e("label", {htmlFor: this.name}, `${Util.cleanUpString(this.name)}: `),
+            this.buildCollection()
+        );
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
+    buildCollection(){
+        let key = 0;
+        return this.props.config.features.map(feature => {
+            const checked = true;
+            if(checked)
+                this.props.setCollection(this.name,feature,true);
+            return e("div",{className: "modelCollectionFeatures", key: key++},
+                e("label", {htmlFor: `${feature}_feature`}, `${Util.cleanUpString(feature)}: `),
+                e("input", {
+                    type: "checkbox", 
+                    id:`${feature}_feature`, 
+                    className: "modelCollectionCheckbox",
+                    defaultChecked: checked,
+                    onChange: (e) => {this.props.setCollection(this.name,feature,e.target.checked)}
+                })
+            );
+        });
+    }
 }
-
-export default Root;

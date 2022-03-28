@@ -58,7 +58,7 @@ END OF TERMS AND CONDITIONS
 */
 import Gradient from "../third-party/Gradient"
 import Util from "./apertureUtil";
-import { mongoNonNumericToNumber } from "../ui/widgets/Popup/PopupUtils";
+import { mongoNonNumericToNumber } from "../ui/inspectionPane/InspectionPaneUtils";
 
 /**
  * @class Color

@@ -56,48 +56,53 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import {componentIsRendering} from "../../Sidebar";
+import { Typography, Button } from "@material-ui/core";
+import SavedWorkspaceSlotSelection from './SavedWorkspaceSlotSelection';
+import Grid from "@material-ui/core/Grid";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+const useStyles = makeStyles((theme) => ({
+    title: {
+        borderBottom: '2px solid #adadad',
+        marginBottom: theme.spacing(2),
+        width: "100%",
+    },
+    fullWidth: {
+        width: "100%",
+    },
+}));
+
+
+export default React.memo(function Load({deSerializeWorkspace, setModalOpen}) {
+    const classes = useStyles();
+    const [slotCurrentlySelected, setSlotCurrentlySelected] = useState(1)
+
+    const loadWorkspace = () => {
+        deSerializeWorkspace(localStorage.getItem(`workspace${slotCurrentlySelected}`))
+        setModalOpen(false);
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
-}
-
-export default Root;
+    if (componentIsRendering) { console.log("|Load Rerending|") }
+    return (
+        <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="flex-start"
+        >
+            <Grid item className={classes.fullWidth}>
+                <Typography className={classes.title} align="center" variant="h5">Load Workspace</Typography>
+            </Grid>
+            <Grid item className={classes.fullWidth}>
+                <SavedWorkspaceSlotSelection title="Select a Saved Workspace" slotCurrentlySelected={slotCurrentlySelected} setSlotCurrentlySelected={setSlotCurrentlySelected} onlyShowFullSlots/>
+            </Grid>
+            <Grid item className={classes.fullWidth}>
+                <Button className={classes.fullWidth} variant="outlined" onClick={loadWorkspace}>
+                    Load Workspace
+                </Button>
+            </Grid>
+        </Grid>
+    );
+})

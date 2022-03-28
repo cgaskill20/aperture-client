@@ -56,48 +56,97 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Slider from '@material-ui/core/Slider';
+import {componentIsRendering} from "../../Sidebar";
+import Util from "../../../../library/apertureUtil"
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+    },
+    title: {
+        textAlign: "center",
+    },
+    nowrap: {
+        whiteSpace: "nowrap",
+    },
+}));
+
+export default function ConstraintSlider({ constraint, querier }) {
+    const classes = useStyles();
+    const min = constraint.range[0];
+    const max = constraint.range[1];
+    const step = constraint.step ? constraint.step : 1;
+    const [minMax, setMinMax] = useState([min, max]);
+    const [minMaxCommited, setMinMaxCommited] = useState([min, max]);
+    const isCategoricalMappedToSlider = constraint.selectToRangeMap ? true : false;
+    const nonConstrained = minMax[0] === min && minMax[1] === max;
+
+
+    useEffect(() => {
+        if (!isCategoricalMappedToSlider) {
+            querier.updateConstraint(constraint.name, minMaxCommited);
+        }
+    }, [minMaxCommited]);
+
+    useEffect(() => {
+        querier.constraintSetActive(constraint.name, true);
+        return () => {
+            querier.constraintSetActive(constraint.name, false);
+        }
+    }, []);
+
+    useEffect(() => {
+        if(constraint.forceUpdateFlag) {
+            constraint.forceUpdateFlag = false;
+            setMinMax(constraint.state)
+            setMinMaxCommited(constraint.state)
+        }
+    })
+
+    const buildSliderLabel = () => {
+        if (isCategoricalMappedToSlider) {
+            return <b>{Object.keys(constraint.selectToRangeMap)[Object.values(constraint.selectToRangeMap).indexOf(minMax[0])]} ➔ {Object.keys(constraint.selectToRangeMap)[Object.values(constraint.selectToRangeMap).indexOf(minMax[1])]}{nonConstrained ? ' (Includes All Values)' : ''}</b>
+        }
+        return <b>{minMax[0]} ➔ {minMax[1]}{constraint.plus && max === minMax[1] ? '+' : ''} {constraint.unit ? ` (${constraint.unit})` : ""}</b>
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+    const sliderStyle = {};
+    if(nonConstrained) {
+        sliderStyle.color = "#ADADAD"
+    }
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
+    if (componentIsRendering) { console.log("|ContraintSlider Rerending|") }
+    return (
+        <div className={classes.root} id={`constraint-div-${constraint.label}`}>
+            <Typography className={classes.title} id={`range-slider-${constraint.label}`} gutterBottom>
+                {constraint.label ?? Util.cleanUpString(constraint.name)} &nbsp;
+                <span className={classes.nowrap}>{buildSliderLabel()}</span>
+            </Typography>
+            <Slider
+                value={minMax}
+                onChange={(event, newValue) => setMinMax(newValue)}
+                onChangeCommitted={(event, newValue) => {
+                    if(isCategoricalMappedToSlider) {
+                        for(const [name, index] of Object.entries(constraint.selectToRangeMap)) {
+                            querier.updateConstraint(constraint.name, name, newValue[0] <= index && index <= newValue[1])
+                        }
+                        return;
+                    }
+                    setMinMaxCommited(newValue);
+                    constraint.state = newValue;
+                }}
+                aria-labelledby={`range-slider-${constraint.label}`}
+                min={min}
+                max={max}
+                step={step}
+                id={`${constraint.label}`}
+                name={`${constraint.label}`}
+                style={sliderStyle}
+            />
+        </div>
+    );
 }
-
-export default Root;

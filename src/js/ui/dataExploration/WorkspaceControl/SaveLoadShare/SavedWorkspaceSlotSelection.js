@@ -56,48 +56,63 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React from 'react';
+import {componentIsRendering} from "../../Sidebar";
+import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Radio, Typography } from "@material-ui/core";
+import { Folder, FolderOpen } from '@material-ui/icons';
+import LZString from 'lz-string';
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+export default React.memo(function SavedWorkspaceSlotSelection({ title, slotCurrentlySelected, setSlotCurrentlySelected, onlyShowFullSlots }) {
+
+    const getWorkspace = (index) => {
+        return localStorage.getItem(`workspace${index}`)
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
-}
-
-export default Root;
+    if (componentIsRendering) { console.log("|SavedWorkspaceSlotSelection Rerending|") }
+    return (
+        <>
+            <Typography>{title}</Typography>
+            <List dense>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter((i) => {
+                    if (!onlyShowFullSlots) {
+                        return true;
+                    }
+                    return getWorkspace(i);
+                }).map((i) => {
+                    const workspace = getWorkspace(i);
+                    let workspaceName = workspace ? JSON.parse(LZString.decompressFromEncodedURIComponent(workspace))?.name : null;
+                    if (workspaceName) {
+                        const longWordRegex = /\S{29,}/g;
+                        const longWordMatches = [...(workspaceName.matchAll(longWordRegex) ?? [])]
+                        for (const longWordMatch of longWordMatches) {
+                            workspaceName = workspaceName.replace(longWordMatch[0], `${longWordMatch[0].substring(0, 26)}...`)
+                        }
+                    }
+                    //workspaceName?.length > 32 && (() => { workspaceName = workspaceName.substring(0,29) + '...' })()
+                    const checked = slotCurrentlySelected === i
+                    return (
+                        <ListItem key={i} style={{ backgroundColor: checked ? "#d1d1d1" : "#fff" }}>
+                            <ListItemIcon>
+                                {workspace ? <Folder /> : <FolderOpen />}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={workspaceName ?? "Empty Slot"}
+                            />
+                            <ListItemSecondaryAction>
+                                <Radio
+                                    color="primary"
+                                    name="workspaceSelectionRadio"
+                                    checked={checked}
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setSlotCurrentlySelected(i)
+                                        }
+                                    }} />
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                    )
+                })}
+            </List >
+        </>
+    );
+})

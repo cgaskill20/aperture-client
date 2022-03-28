@@ -56,48 +56,55 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import {componentIsRendering} from "../../Sidebar";
+import Modal from "@material-ui/core/Modal";
+import Save from "./Save";
+import Load from "./Load";
+import Share from "./Share";
+import {Paper} from "@material-ui/core";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        maxHeight: "95vh",
+        overflowY: "scroll",
+        top: '2.5vh',
+        left: '40%',
+        position: 'absolute',
+        width: 400,
+        backgroundColor: theme.palette.background.paper,
+        padding: theme.spacing(2),
     }
+}));
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+export default React.memo(function SaveAndLoad({ mode, modalOpen, setModalOpen, serializeWorkspace, deSerializeWorkspace }) {
+    const classes = useStyles();
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
-}
-
-export default Root;
+    if (componentIsRendering) { console.log("|SaveAndLoad Rerending|") }
+    return (
+        <Modal
+            open={modalOpen}
+            onClose={() => { setModalOpen(false) }}
+        >
+            <Paper className={classes.paper}>
+                {
+                    (() => {
+                        if (mode === "save") {
+                            return <Save serializeWorkspace={serializeWorkspace} setModalOpen={setModalOpen}/>
+                        }
+                        else if (mode === "load") {
+                            return <Load deSerializeWorkspace={deSerializeWorkspace} setModalOpen={setModalOpen}></Load>
+                        }
+                        else if (mode === "share") {
+                            return <Share serializeWorkspace={serializeWorkspace} setModalOpen={setModalOpen} />
+                        }
+                        else {
+                            return <div>Error: Invalid mode {mode}</div>
+                        }
+                    })()
+                }
+            </Paper>
+        </Modal>
+    );
+})

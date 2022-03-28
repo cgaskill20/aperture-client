@@ -56,48 +56,256 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, {useEffect, useState} from "react";
+import Checkbox from "@material-ui/core/Checkbox";
+import TextField from "@material-ui/core/TextField";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import {makeStyles} from "@material-ui/core/styles";
+import EqualizerIcon from "@material-ui/icons/Equalizer";
+import IconButton from "@material-ui/core/IconButton";
+import {isGraphable} from "../Utils/Helpers";
+import InfoIcon from '@material-ui/icons/Info';
+import {CustomTooltip} from "../../widgets/UtilityComponents";
+import {
+    Accordion,
+    AccordionDetails,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography
+} from "@material-ui/core";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import CloseIcon from "@material-ui/icons/Close";
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+
+const icon = <CheckBoxOutlineBlankIcon color="primary" fontSize="small" />;
+const checkedIcon = <CheckBoxIcon color="primary" fontSize="small" />;
+
+const useStyles = makeStyles((theme) => ({
+    tableBody: {
+        width: "100%",
+        overflow: "auto",
+        maxHeight: "60vh",
+    },
+    tableButton: {
+        cursor: "pointer",
+        color: "#3f51b5"
+    },
+    clearAllButton: {
+        cursor: "pointer",
+        color: "#f44336"
+    }
+}));
+
+export default React.memo(function WorkspaceSearchbar(props) {
+    const classes = useStyles();
+    const [expanded, setExpanded] = useState(false);
+    const [filtering, setFiltering] = useState(false);
+    const [filteredDatasets, setFilteredDatsets] = useState(props.layerTitles);
+    const [filterText, setFilterText] = useState("");
+    const [datasets, setDatasets] = useState(props.layerTitles);
+
+    useEffect(() => {
+        setDatasets(filtering ? filteredDatasets : props.layerTitles);
+    });
+
+    function graphIcon(layer) {
+        if(isGraphable(layer, props.graphableLayers)) {
+            return <CustomTooltip title="This dataset can be graphed" placement="right" arrow><IconButton><EqualizerIcon color="primary" /></IconButton></CustomTooltip>
+        }
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+    function infoIcon(layerInfo) {
+        if(layerInfo) {
+            return <CustomTooltip title={layerInfo} placement="right" arrow><IconButton><InfoIcon color="primary" /></IconButton></CustomTooltip>
+        }
+    }
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
+    function findLayerIndex(layerLabel) {
+        for(let i = 0; i < props.layerTitles.length; i++) {
+            if(props.layerTitles[i] === layerLabel) {
+                return i;
+            }
+        }
+    }
 
-                <div>
-                    <Sidebar/>
-                </div>
+    function handleExpansion() {
+        setExpanded(!expanded);
+        setFilterText("");
+        setFiltering(false);
+    }
 
-                <ConditionalWidgetRendering/>
+    function filterDatasets(event) {
+        const input = event.target.value;
+        setFiltering(input !== "");
+        setFilterText(input);
+        const matches = props.layerTitles.filter((title) => caseInsensitiveMatch(input, title));
+        setFilteredDatsets(matches);
+    }
 
-                <InspectionPane />
+    function caseInsensitiveMatch(input, match) {
+        return match.toLowerCase().includes(input.toLowerCase());
+    }
 
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
-}
+    function handleLayerCheck(index) {
+        let newWorkspace = [...props.workspace];
+        newWorkspace[index] = !newWorkspace[index];
+        props.setWorkspace(newWorkspace);
+    }
 
-export default Root;
+    function clearWorkspace() {
+        let emptyWorkspace = [];
+        for(const layer in props.workspace) {
+            emptyWorkspace.push(false);
+        }
+        props.setWorkspace(emptyWorkspace);
+    }
+
+    function addAllSearchedDatasets() {
+        let layersToAdd = [];
+        filteredDatasets.forEach((layer) => {
+            layersToAdd.push(findLayerIndex(layer));
+        });
+        let newWorkspace = [...props.workspace];
+        layersToAdd.forEach((index) => {
+            newWorkspace[index] = true;
+        });
+        props.setWorkspace(newWorkspace);
+    }
+
+    function renderResetButton() {
+        if(expanded) {
+            return (
+                <IconButton onClick={() => {
+                    setFilterText("");
+                    setFiltering(false);
+                }}>
+                    <CustomTooltip title="Reset Search">
+                        <CloseIcon color="primary"/>
+                    </CustomTooltip>
+                </IconButton>
+            )
+        }
+        else return null;
+    }
+
+    function workspaceIsNotEmpty() {
+        return props.workspace.includes(true);
+    }
+
+    function renderClearButton() {
+        if(workspaceIsNotEmpty() && filtering) {
+            return (
+                <span>
+                    <CustomTooltip title="Clear Workspace">
+                        <IconButton onClick={clearWorkspace}>
+                            <RemoveIcon color="secondary" />
+                        </IconButton>
+                    </CustomTooltip>
+                </span>
+            )
+        }
+        else if (workspaceIsNotEmpty()) {
+            return (
+                <TableCell>
+                    <CustomTooltip title="Clear Workspace">
+                        <IconButton onClick={clearWorkspace}>
+                            <RemoveIcon color="secondary" />
+                        </IconButton>
+                    </CustomTooltip>
+                </TableCell>
+            )
+        }
+
+        else return null;
+
+    }
+
+    function datasetHeaderText() {
+        return filtering ? `Found ${datasets.length} Results Matching '${filterText}'` : null;
+    }
+
+    function renderAddAllButton() {
+        if(filtering) {
+            return (
+                <TableCell>
+                    <CustomTooltip title={`Add All ${datasets.length} Datasets Matching '${filterText}' To Workspace`}>
+                        <IconButton onClick={addAllSearchedDatasets}>
+                            <AddIcon color="primary" />
+                        </IconButton>
+                    </CustomTooltip>
+                    {renderClearButton()}
+                </TableCell>
+            )
+        }
+        else if(workspaceIsNotEmpty()) {
+            return renderClearButton();
+        }
+        else return <TableCell />;
+    }
+
+    function handleInputClick() {
+        if(!expanded) setExpanded(true);
+    }
+
+    return (
+        <>
+            <Accordion expanded={expanded}>
+                <AccordionSummary>
+                    <TextField
+                        onClick={handleInputClick}
+                        label="Explore Datasets..."
+                        fullWidth
+                        variant="outlined"
+                        value={filterText}
+                        onChange={(e) => filterDatasets(e)}
+                    />
+                    {renderResetButton()}
+                    <IconButton onClick={handleExpansion}><ExpandMoreIcon/></IconButton>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <div className={classes.tableBody}>
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    {renderAddAllButton()}
+                                    <TableCell>{datasetHeaderText()}</TableCell>
+                                    <TableCell />
+                                    <TableCell />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {datasets.map((layer, index) => {
+                                    const trueLayerIndex = findLayerIndex(layer);
+                                    return (
+                                        <TableRow key={index}>
+                                            <TableCell>
+                                                <Checkbox
+                                                    icon={icon}
+                                                    color="primary"
+                                                    checkedIcon={checkedIcon}
+                                                    style={{ marginRight: 8 }}
+                                                    checked={props.workspace[trueLayerIndex]}
+                                                    onChange={() => handleLayerCheck(trueLayerIndex)}
+                                                />
+                                            </TableCell>
+                                            <TableCell>{layer}</TableCell>
+                                            <TableCell>{graphIcon(props.layers[trueLayerIndex])}</TableCell>
+                                            <TableCell>{infoIcon(props.layers[trueLayerIndex].info)}</TableCell>
+                                        </TableRow>
+                                    )
+                                })}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </AccordionDetails>
+            </Accordion>
+        </>
+    );
+});

@@ -56,48 +56,38 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, {useState} from 'react';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import {componentIsRendering} from "../../Sidebar";
+import Util from "../../../../library/apertureUtil"
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
-    }
-
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
+function updateLayerConstraints(activeLayerConstraints, index) {
+    let tempActiveConstraints = [...activeLayerConstraints];
+    tempActiveConstraints[index] = !tempActiveConstraints[index];
+    return tempActiveConstraints;
 }
 
-export default Root;
+export default function AdvancedConstraintCheckbox(props) {
+    const [check, setCheck] = useState(props.activeLayerConstraints[props.constraintIndex]);
+
+    if(componentIsRendering) {console.log("|AdvancedContraintCheckbox Rerending|")}
+    return (
+        <FormGroup>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={check}
+                        onChange={() => {
+                            setCheck(!check);
+                            props.setActiveLayerConstraints(updateLayerConstraints(props.activeLayerConstraints, props.constraintIndex));
+                        }}
+                        color="primary"
+                    />
+                }
+                label={props.constraint.label ?? Util.cleanUpString(props.constraint.name)}
+            />
+        </FormGroup>
+    );
+}

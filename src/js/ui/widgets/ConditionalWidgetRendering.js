@@ -56,48 +56,96 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React from "react";
+import { useGlobalState } from "../global/GlobalState"
+import DefensiveOptimization from "./DefensiveOptimization"
+import ClusterLegend from "./ClusterLegend"
+import PreloadingMenu from "./PreloadingMenu"
+import ChartingResizable from "../charting/ChartingResizable"
+import {makeStyles} from "@material-ui/core/styles";
+import {CustomTooltip} from "./UtilityComponents";
+import nsfLogo from "../../../../images/nsfLogo.png";
+import GeneralAlert from "./GeneralAlert";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
-    }
-
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
+const widgetEnum = {
+    defensiveOptimization: 0,
+    clusterLegend: 1,
+    preloading: 2,
+    chartingResizable: 3,
 }
 
-export default Root;
+const useStyles = makeStyles((theme) => ({
+    nsfDiv: {
+        position: "absolute",
+        bottom: 15,
+        right: 0,
+        zIndex: 401,
+    },
+    nsfPic: {
+        width: "6vw",
+    },
+}));
+
+const ConditionalWidgetRendering = () => {
+    const [globalState, setGlobalState] = useGlobalState();
+    const classes = useStyles();
+    let toRender = [];
+    const nsfText = "This research has been supported by funding from the US National Science Foundation’s CSSI program " +
+        "through awards 1931363, 1931324, 1931335, and 1931283. The project is a joint effort involving Colorado State " +
+        "University, Arizona State University, the University of California-Irvine, and the University of Maryland – " +
+        "Baltimore County.";
+
+    toRender.push(
+        <div key="nsfLogoAndBlurb" className={classes.nsfDiv}>
+            <CustomTooltip className={classes.tooltip} placement="top-start" title={nsfText}>
+                <img src={nsfLogo} className={classes.nsfPic} />
+            </CustomTooltip>
+        </div>
+    );
+
+    switch (globalState.mode) {
+        case "dataExploration":
+            toRender.push(
+                <div id="query-block-container" key={widgetEnum.defensiveOptimization}>
+                    <DefensiveOptimization />
+                    <GeneralAlert />
+                </div>
+            );
+            break;
+        case "modeling":
+            if (globalState.clusterLegendOpen) {
+                toRender.push(
+                    <div id="clusterLegendContainer" key={widgetEnum.clusterLegend}>
+                        <ClusterLegend />
+                    </div>
+                );
+            }
+    }
+
+    if (globalState.preloading) {
+        toRender.push(
+            <div id="preloadBlocker" key={widgetEnum.preloading}>
+                <div id="preloadStatus">
+                    <PreloadingMenu loaders={globalThis.loaders} onFinish={() => {
+                        setGlobalState({ preloading: false })
+                    }} />
+                </div>
+            </div>
+        );
+    }
+
+    if (globalState.chartingOpen) {
+
+        toRender.push(
+            <div id="charting-resizable-container" key={widgetEnum.chartingResizable}>
+                <ChartingResizable />
+            </div>
+        );
+    }
+
+    return <div>
+        {toRender}
+    </div>
+}
+
+export default ConditionalWidgetRendering;

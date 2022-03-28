@@ -85,7 +85,7 @@ L.Icon.Default.mergeOptions({
 });
 
 import ChartSystem from "./src/js/library/charting/chartSystem"
-import ModelMenu from "./src/js/ui/modeling/components/ModelMenu";
+import ModelMenu from "./src/LegacyCode/modeling/components/ModelMenu";
 import AutoQuery from "./src/js/library/autoQuery.js";
 import RenderInfrastructure from "./src/js/library/renderInfrastructure.js";
 import AutoMenu from "./src/js/library/autoMenu.js";

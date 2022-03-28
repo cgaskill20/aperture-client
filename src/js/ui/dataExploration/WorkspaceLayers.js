@@ -56,48 +56,33 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Layer from "./Layer/Layer";
+import {componentIsRendering} from "./Sidebar";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
-    }
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+    },
+}));
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+export default React.memo(function WorkspaceLayers(props) {
+    const classes = useStyles();
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
-}
-
-export default Root;
+    if(componentIsRendering) {console.log("|WorkspaceLayers Rerending|")}
+    return (
+        <div className={classes.root}>
+            {props.workspace.map((layer, index) => {
+                if(layer) {
+                    return (
+                        <div key={index} id={`layer-div-${index}`}>
+                            <Layer layer={props.layers[index]} layerIndex={index} graphableLayers={props.graphableLayers} layerTitles={props.layerTitles} />
+                        </div>
+                    );
+                }
+                else return null;
+            })}
+        </div>
+    );
+});

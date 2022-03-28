@@ -56,48 +56,109 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, { useEffect, useState } from "react";
+import { makeStyles, Typography } from "@material-ui/core";
+import Query from "../../library/Query";
+import { ResponsiveLineCanvas } from '@nivo/line'
+import Util from "../../library/apertureUtil";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
+const useStyles = makeStyles({
+    root: {
+        height: '300px'
+    },
+    tooltip: {
+        backgroundColor: 'white',
+        padding: '2.5px',
+        borderRadius: '2.5px'
+    }
+});
+
+//react.memo means this wont re-render unless the props change
+export default React.memo(function PopupTimeChart({ collection, join, fieldToChart, temporalRange }) {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        const pipe = [
+            { $match: join },
+            {
+                $match:
+                {
+                    epoch_time: {
+                        $gte: temporalRange[0],
+                        $lte: temporalRange[1]
+                    }
+                }
+            },
+            { $sample: { size: 1000 } },
+            { $project: { [fieldToChart]: 1, epoch_time: 1, [Object.keys(join)[0]]: 1 } }
+        ];
+        
+        let destroyed = false;
+        Query.makeQuery({
+            collection,
+            pipeline: pipe,
+            dontLink: true
+        }).then((d) => {
+            if (!destroyed) {
+                setData(d.data.map(p => {
+                    if (typeof p.epoch_time === 'object') {
+                        p.epoch_time = p.epoch_time.$numberLong ? Number(p.epoch_time.$numberLong) : Number(p.epoch_time.$numberDecimal)
+                    }
+                    return { x: p.epoch_time, y: p[fieldToChart] }
+                }).sort((a, b) => a.x - b.x));
+            }
+        });
+
+        return () => { destroyed = true; }
+    }, []);
+
+    const epochTimeToShortString = (value) => {
+        const offset = new Date(value).getTimezoneOffset() * 60000
+        return new Date(value + offset).toLocaleDateString("en-US");
     }
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+    const classes = useStyles();
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
+    const renderChart = (data) => {
+        if (data.length) {
+            const bottomTicks = data.filter((d, i) => i % Math.floor(data.length / 4) === 0 || i === data.length - 1).map(d => d.x);
+            return <ResponsiveLineCanvas
+                data={[
+                    {
+                        id: collection,
+                        data
+                    }
+                ]}
+                margin={{ top: 20, right: 50, bottom: 50, left: 50 }}
+                yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
+                curve="cardinal"
+                colors="rgb(27, 158, 119)"
+                axisTop={null}
+                isInteractive={true}
+                enablePoints={data.length < 50}
+                enableGridX={false}
+                enableGridY={false}
+                axisLeft={{
+                    legend: Util.cleanUpString(fieldToChart),
+                    legendOffset: -39
+                }}
+                axisBottom={{
+                    legend: "Date",
+                    legendOffset: 36,
+                    format: epochTimeToShortString,
+                    tickValues: bottomTicks
+                }}
+                tooltip={(e) => {
+                    return <div className={classes.tooltip}>
+                        <Typography gutterBottom>{`Date: ${epochTimeToShortString(e.point.data.x)}`}</Typography>
+                        <Typography>{`${Util.cleanUpString(fieldToChart)}: ${e.point.data.y}`}</Typography>
+                    </div>
+                }}
+            />
+        }
+    }
 
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
-}
-
-export default Root;
+    return <div className={classes.root}>
+        {renderChart(data)}
+    </div>
+});

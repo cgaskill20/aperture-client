@@ -56,48 +56,90 @@ You may add Your own copyright statement to Your modifications and may provide a
 
 END OF TERMS AND CONDITIONS
 */
-import React from 'react'
-import { ThemeProvider } from '@material-ui/core';
-import { GlobalStateProvider } from './global/GlobalState'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import GlobalTheme from './global/GlobalTheme'
-import GoTo from './widgets/GoTo'
-import Sidebar from './dataExploration/Sidebar'
-import ConditionalWidgetRendering from './widgets/ConditionalWidgetRendering'
-import InspectionPane from './inspectionPane/InspectionPane';
+import React, {useState} from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
+import {Button, Paper} from "@material-ui/core";
+import SettingsIcon from "@material-ui/icons/Settings";
+import AdvancedConstraintCheckbox from "./AdvancedConstraintCheckbox";
+import {componentIsRendering} from "../../Sidebar";
+import CloseIcon from '@material-ui/icons/Close';
+import Grid from "@material-ui/core/Grid";
 
-const Root = ({ map, overwrite }) => {
-    const defaultState = {
-        map,
-        overwrite,
-        mode: "dataExploration",
-        chartingOpen: false,
-        clusterLegendOpen: false,
-        preloading: true,
-        sidebarOpen: false,
-        popupOpen: false
-    }
+const useStyles = makeStyles((theme) => ({
+    modal: {
+        top: '20%',
+        left: '70%',
+        position: 'absolute',
+        width: 400,
+        backgroundColor: theme.palette.background.paper,
+        padding: theme.spacing(2),
+    },
+    constraintSection: {
+        overflowY: "auto",
+        maxHeight: "50vh",
+        padding: theme.spacing(1),
+    },
+    closeButtonSection: {
+        marginBottom: theme.spacing(1),
+        padding: theme.spacing(1),
+    },
+    closeButton : {
+        width: '100%',
+    },
+}));
 
-    return <GlobalStateProvider defaultValue={defaultState}>
-        <ThemeProvider theme={GlobalTheme}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+export default function AdvancedConstraints(props) {
+    const classes = useStyles();
+    const [open, setOpen] = useState(false);
 
-                <div id="current-location" className="current-location">
-                    <GoTo />
-                </div>
-
-                <div>
-                    <Sidebar/>
-                </div>
-
-                <ConditionalWidgetRendering/>
-
-                <InspectionPane />
-
-            </MuiPickersUtilsProvider>
-        </ThemeProvider>
-    </GlobalStateProvider>
+    if(componentIsRendering) {console.log("|AdvancedConstraints Rerending|")}
+    return (
+        <>
+            <Button variant="outlined" startIcon={<SettingsIcon/>} onClick={() => setOpen(true)}>
+                Advanced...
+            </Button>
+            <Modal
+                //FIXME According to https://material-ui.com/api/modal/ these should prevent the modal from 'focusing' but they don't
+                // disableEnforceFocus={true}
+                // disableAutoFocus={true}
+                aria-labelledby="adv-constraints"
+                open={open}
+                onClose={() => setOpen(false)}
+            >
+                <Grid
+                    id="adv-constraints"
+                    className={classes.modal}
+                    container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="stretch"
+                >
+                    <Grid item>
+                        <Paper className={classes.closeButtonSection} elevation={3}>
+                            <Button
+                                className={classes.closeButton}
+                                startIcon={<CloseIcon/>}
+                                variant="outlined"
+                                onClick={() => setOpen(false)}
+                            >
+                                Close
+                            </Button>
+                        </Paper>
+                    </Grid>
+                    <Grid item>
+                        <Paper elevation={3} className={classes.constraintSection}>
+                            {props.allLayerConstraints.map((constraint, index) => {
+                                return (
+                                    <div key={index}>
+                                        <AdvancedConstraintCheckbox activeLayerConstraints={props.activeLayerConstraints} setActiveLayerConstraints={props.setActiveLayerConstraints}
+                                                                    constraintIndex={index} constraint={constraint}/>
+                                    </div>)
+                            })}
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </Modal>
+        </>
+    );
 }
-
-export default Root;
