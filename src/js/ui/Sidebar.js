@@ -61,6 +61,7 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import MenuIcon from '@material-ui/icons/Menu';
+import SettingsIcon from '@material-ui/icons/Settings';
 import {Button} from "@material-ui/core";
 import { useGlobalState } from './global/GlobalState';
 import Workspace from "./NewDataExploration/Workspace";
@@ -78,6 +79,12 @@ const useStyles = makeStyles((theme) => ({
         zIndex: 2002,
         top: -20,
         left: -20,
+    },
+    settingsButton: {
+        margin: theme.spacing(5),
+        zIndex: 2002,
+        top: 30,
+        left: -195,
     },
     hide: {
         display: 'none',
@@ -107,6 +114,16 @@ export default function Sidebar() {
                 onClick={() => setGlobalState({sidebarOpen: true, popupOpen: false})}
             >
                 Menu
+            </Button>
+            <Button
+                variant="outlined"
+                color="inherit"
+                className={clsx(classes.settingsButton, globalState.sidebarOpen && classes.hide)}
+                startIcon={<SettingsIcon />}
+                aria-label="open drawer"
+                onClick={() => setGlobalState({sidebarOpen: true, popupOpen: false})}
+            >
+                Settings
             </Button>
             <Drawer
                 className={classes.drawer}
