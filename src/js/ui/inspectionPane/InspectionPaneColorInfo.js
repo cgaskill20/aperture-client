@@ -65,7 +65,7 @@ import Util from "../../library/apertureUtil"
 import * as d3 from '../../third-party/d3.min.js';
 import { temporalId } from "../../library/Constants";
 
-export default React.memo(function PopupColorInfo({ colorFieldName, colorSummary, obj }) {
+export default React.memo(function InspectionPaneColorInfo({ colorFieldName, colorSummary, obj }) {
     const svgRef = React.createRef();
     useEffect(() => {
         if (colorSummary.minMax) {

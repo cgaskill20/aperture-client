@@ -74,7 +74,7 @@ const useStyles = makeStyles({
 });
 
 //react.memo means this wont re-render unless the props change
-export default React.memo(function PopupTimeChart({ collection, join, fieldToChart, temporalRange }) {
+export default React.memo(function InspectionPaneTimeChart({ collection, join, fieldToChart, temporalRange }) {
     const [data, setData] = useState([]);
 
     useEffect(() => {

@@ -94,7 +94,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default React.memo(function PopupTableEntry({ obj, keyValue, value, entryProperties, colorFieldName }) {
+export default React.memo(function InspectionPaneTableEntry({ obj, keyValue, value, entryProperties, colorFieldName }) {
     const classes = useStyles()
     const [open, setOpen] = useState(false);
     const changeColorFieldName = entryProperties.canBeColorField ? obj.properties.colorInfo.updateColorFieldName : null;

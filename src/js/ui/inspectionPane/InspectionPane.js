@@ -61,9 +61,9 @@ import { makeStyles, Drawer, Typography, IconButton, Grid, Paper } from "@materi
 import { useGlobalState } from "../global/GlobalState";
 import Util from "../../library/apertureUtil";
 import CloseIcon from "@material-ui/icons/Close";
-import PopupTable from "./InspectionPaneTable";
-import PopupTimeChart from "./InspectionPaneTimeChart";
-import PopupColorInfo from "./InspectionPaneColorInfo";
+import InspectionPaneTable from "./InspectionPaneTable";
+import InspectionPaneTimeChart from "./InspectionPaneTimeChart";
+import InspectionPaneColorInfo from "./InspectionPaneColorInfo";
 import { keyToDisplay } from "./InspectionPaneUtils";
 import defaultImportantFields from "../../../json/defaultImportantFields.json"
 
@@ -137,7 +137,7 @@ export default function InspectionPane() {
         if (!keyValPairs || !keyValPairs.length) {
             return;
         }
-        return <PopupTable keyValPairs={keyValPairs} obj={obj} colorField={colorField} />
+        return <InspectionPaneTable keyValPairs={keyValPairs} obj={obj} colorField={colorField} />
     }
 
     const makeTables = () => {
@@ -184,7 +184,7 @@ export default function InspectionPane() {
                 .map(([key, value]) => <React.Fragment key={`${key}${JSON.stringify(obj.join)}${JSON.stringify(obj.temporalRange)}`}>
                     <Paper className={classes.paper} elevation={3}>
                         <Typography className={classes.subTitle} align="center" gutterBottom variant={subTitleTextSize}>{keyToDisplay(obj, key)}</Typography>
-                        <PopupTimeChart
+                        <InspectionPaneTimeChart
                             collection={obj.properties.meta[key].temporal.collection}
                             fieldToChart={key}
                             join={obj.join}
@@ -201,7 +201,7 @@ export default function InspectionPane() {
             return <>
                 <Paper className={classes.paper} elevation={3}>
                     <Typography className={classes.subTitle} gutterBottom variant={subTitleTextSize}>Color Coding Based on {colorField.label ?? Util.cleanUpString(colorField.name)}</Typography>
-                    <PopupColorInfo colorFieldName={colorField.name} colorSummary={colorSummary} obj={obj} />
+                    <InspectionPaneColorInfo colorFieldName={colorField.name} colorSummary={colorSummary} obj={obj} />
                 </Paper>
             </>
         }

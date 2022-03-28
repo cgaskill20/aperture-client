@@ -59,10 +59,10 @@ END OF TERMS AND CONDITIONS
 import React from "react";
 import { Table, TableContainer, TableHead, TableCell, TableRow, TableBody, Paper, makeStyles } from "@material-ui/core";
 import { keyValueIsValid } from "./InspectionPaneUtils";
-import PopupTableEntry from "./InspectionPaneTableEntry"
+import InspectionPaneTableEntry from "./InspectionPaneTableEntry"
 import Util from "../../library/apertureUtil";
 
-export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) {
+export default React.memo(function InspectionPaneTable({ keyValPairs, obj, colorField }) {
 
     return (
         <TableContainer>
@@ -78,7 +78,7 @@ export default React.memo(function PopupTable({ keyValPairs, obj, colorField }) 
                          {keyValPairs
                         .filter(([key, value]) => keyValueIsValid(key, value))
                         .map(([key, value]) => (
-                            <PopupTableEntry obj={obj} keyValue={key} value={value} key={key} entryProperties={{
+                            <InspectionPaneTableEntry obj={obj} keyValue={key} value={value} key={key} entryProperties={{
                                 isCurrentColorField: colorField?.name === key || Util.removePropertiesPrefix(colorField?.name) === key || (obj.properties.meta[key]?.temporal ? key === colorField?.name?.substr(0, key.length) : false),
                                 canBeColorField: obj.properties.colorInfo.validColorFieldNames.includes(key),
                                 isTemporal: obj.properties.meta[key]?.temporal ? true : false
